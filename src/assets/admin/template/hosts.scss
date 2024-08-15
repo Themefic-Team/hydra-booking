@@ -65,7 +65,7 @@
           padding: 2px 8px 2px 8px;
           border-radius: 16px;
           background-color: $success50;
-          color: $success600;
+          color: $success700 !important;
           font-weight: 600 !important;
           font-size: 11px !important;
           &.tfhb-hosts-status-warning {
@@ -82,7 +82,7 @@
     }
   }
   .tfhbb-host-profile-page {
-    padding: 24px;
+    padding: 16px;
     background-color: #fff;
     border-radius: 8px;
     margin: 0 auto;
@@ -92,8 +92,9 @@
       margin-right: 16px !important;
     }
     .tfhb-dashboard-heading {
-      margin-bottom: 24px !important;
+      margin-bottom: 8px !important;
       height: auto !important;
+      margin-left: 0 !important;
     }
 
     .tfhb-host-single-information{

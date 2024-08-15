@@ -194,6 +194,7 @@ class TransStrings {
 			'Deactivate'                                  => __( 'Deactivate', 'hydra-booking' ),
 			'Delete'                                      => __( 'Delete', 'hydra-booking' ),
 			'Edit'                                        => __( 'Edit', 'hydra-booking' ),
+			'View & Edit'                                        => __( 'View & Edit', 'hydra-booking' ),
 			'Profile'                                     => __( 'Profile', 'hydra-booking' ),
 			'Information'                                 => __( 'Information', 'hydra-booking' ),
 			'Stripe'                                      => __( 'Stripe', 'hydra-booking' ),

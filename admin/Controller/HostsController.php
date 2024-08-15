@@ -177,11 +177,19 @@ class HostsController {
 	public function getHostsData() {
 		// Get all wp users list with
 		$users    = get_users( array( 'role__in' => array( 'administrator', 'editor', 'tfhb_host' ) ) );
-		$userData = array();
+		$userData = array(
+			array(
+				'name' => __( 'Create new user', 'hydra-booking' ),
+				'value' => 0,
+			)
+		);
 		foreach ( $users as $user ) {
-			$userData[ $user->ID ] = $user->display_name . ' ( ' . $user->user_email . ' )' . ' - ( ' . $user->roles[0] . ' )';
-		}
-		$userData[0] = __( 'Create new user', 'hydra-booking' );
+			// $userData[ $user->ID ] = $user->display_name . ' ( ' . $user->user_email . ' )' . ' - ( ' . $user->roles[0] . ' )';
+			$userData[] = array(
+				'name'  => $user->display_name . ' ( ' . $user->user_email . ' )' . ' - ( ' . $user->roles[0] . ' )',
+				'value' => $user->ID,
+			);
+		} 
 
 		// Hosts Lists
 		$host      = new Host();

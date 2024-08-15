@@ -41,11 +41,11 @@ const props = defineProps({
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                         <div class="tfhb-dropdown-wrap"> 
                             <!-- route link -->
-                            <router-link :to="{ name: 'HostsProfile', params: { id: host.user_id } }" class="tfhb-dropdown-single">{{ $tfhb_trans['Edit'] }}</router-link>
+                            <router-link :to="{ name: 'HostsProfile', params: { id: host.user_id } }" class="tfhb-dropdown-single">{{ $tfhb_trans['View & Edit'] }}</router-link>
                             <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
                             <span class="tfhb-dropdown-single" @click="emit('update-host-status',host.id, host.user_id, host.status)">{{host.status == 'activate' ? 'Deactivate' : 'Activate'}}</span>
                        
-                            <span class="tfhb-dropdown-single" @click="emit('delete-host', host.id, host.user_id)">{{ $tfhb_trans['Delete'] }}</span>
+                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ $tfhb_trans['Delete'] }}</span>
                          </div>
                     </div>
                 </div> 

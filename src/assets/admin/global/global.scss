@@ -313,6 +313,7 @@
                 border-radius: 4px 0px 0px 0px; 
                 background-color: #fff;
                 margin: 0 !important;
+                color: $Text-Paragraph;
                 &.tfhb-dropdown-error{
                     background-color: $Error-Background;
                     color: $Error-Text;
@@ -456,6 +457,7 @@
             }
             ul {
                 display: inline-block;
+                width: 100%;
             }
         }
     

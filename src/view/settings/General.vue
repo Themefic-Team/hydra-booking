@@ -144,7 +144,7 @@ onBeforeMount(() => {
                 <p>{{ $tfhb_trans['Manage your time zone settings and bookings'] }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn"> {{ $tfhb_trans['View Documentation'] }}<Icon name="ArrowUpRight" size="15" /></a>
+                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans['View Documentation'] }}  <Icon name="ArrowUpRight" size="20" /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
@@ -337,7 +337,7 @@ onBeforeMount(() => {
                  
             </div>  
 
-            <button class="tfhb-btn boxed-btn" @click="UpdateGeneralSettings">{{ $tfhb_trans['Update General Settings'] }}</button>
+            <button class="tfhb-btn boxed-btn flex-btn" @click="UpdateGeneralSettings">{{ $tfhb_trans['Update General Settings'] }} <Icon name="ChevronRight" size="20" /> </button>
             <!--Bookings -->
 
 

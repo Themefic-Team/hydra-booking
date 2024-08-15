@@ -176,7 +176,7 @@ onBeforeMount(() => {
                 />
             </div>
 
-            <button class="tfhb-btn boxed-btn" @click="UpdateAppearanceSettings">{{ $tfhb_trans['Save'] }}</button>
+            <button class="tfhb-btn boxed-btn flex-btn" @click="UpdateAppearanceSettings">{{ $tfhb_trans['Save'] }} <Icon name="ChevronRight" size="20" /></button>
 
         </div>
     </div>
