@@ -25,7 +25,7 @@ const closePopup = () => {
 <template>
       <!-- webhook Integrations  -->
       <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box "> 
-        <!-- <span class="tfhb-badge tfhb-badge-pro">{{ $tfhb_trans['Pro'] }}</span> -->
+        <span class="tfhb-badge tfhb-badge-pro">{{ $tfhb_trans['Pro'] }}</span>
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/zoho.png'" alt="">
@@ -38,8 +38,8 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <HbSwitch  @change="emit('update-integrations', 'zoho_crm', zoho_crm_data)" v-model="zoho_crm_data.status"    />
-            <!-- <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a> -->
+            <!-- <HbSwitch  @change="emit('update-integrations', 'zoho_crm', zoho_crm_data)" v-model="zoho_crm_data.status"    /> -->
+            <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
  
         </div>
 

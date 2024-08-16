@@ -541,6 +541,32 @@ class SettingsController {
 				'message' => 'Paypal Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
+		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity' || $key == 'webhook' ) { 
+
+			$_tfhb_integration_settings[$key]['type']        = sanitize_text_field( $data['type'] );
+			$_tfhb_integration_settings[$key]['status']      = sanitize_text_field( $data['status'] ); 
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$name = ucfirst($key);
+			$data = array(
+				'status'  => true,
+				'option'  => $option,
+				'message' => $name . ' Settings Updated Successfully',
+			);
+			return rest_ensure_response( $data );
+		}else{ 
+
+		 	apply_filters( 'tfhb_update_integration_settings', $key, $data ); 
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'options'  => $option,
+				'message' => 'Integration Settings Updated Successfully',
+			);
+
 		}
 	}
 
@@ -646,8 +672,7 @@ class SettingsController {
 		$request              = json_decode( file_get_contents( 'php://input' ), true );
 		$_tfhb_hosts_settings = ! empty( get_option( '_tfhb_hosts_settings' ) ) ? get_option( '_tfhb_hosts_settings' ) : array();
 
-		// delete option
-		// delete_option('_tfhb_hosts_settings');
+
 
 		if ( isset( $request['hosts_settings']['others_information']['enable_others_information'] ) ) {
 			$_tfhb_hosts_settings['others_information']['enable_others_information'] = sanitize_text_field( $request['hosts_settings']['others_information']['enable_others_information'] );

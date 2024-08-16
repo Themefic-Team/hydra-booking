@@ -1,9 +1,10 @@
 <script setup>
 import { ref, reactive, onBeforeMount } from 'vue';
+import { useRouter, RouterView } from 'vue-router' 
+const router = useRouter();
 import { toast } from "vue3-toastify"; 
 import Icon from '@/components/icon/LucideIcon.vue'
-import HbDateTime from '@/components/form-fields/HbDateTime.vue';
-import CreateMeetingPopup from '@/components/meetings/CreateMeetingPopup.vue';
+import HbDateTime from '@/components/form-fields/HbDateTime.vue'; 
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import { Host } from '@/store/hosts'
 import { Meeting } from '@/store/meetings'
@@ -81,6 +82,13 @@ const copyMeeting = (link) => {
     toast.success(link + ' is Copied');
 }
 
+const meeting = reactive({});
+const TfhbMeetingType = (type, router) => {
+    meeting.meeting_type = type;
+    Meeting.CreatePopupMeeting(meeting, router);
+}
+
+
 </script>
 <template>
 <!-- {{ filterData }} -->
@@ -101,7 +109,55 @@ const copyMeeting = (link) => {
         </div> 
     </div>
 
-    <CreateMeetingPopup v-if="isModalOpened" @modal-close="closeModal" @meetings-create="Meeting.CreatePopupMeeting"  />
+ 
+    <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="400px" name="first-modal">
+        <template #header> 
+            <!-- {{ google_calendar }} -->
+            <h2>{{ $tfhb_trans['Create New Meeting Type'] }}</h2>
+            
+        </template>
+
+        <template #content>  
+            <div class="tfhb-meeting-person-type">
+                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-one', router)">
+                    <div class="tfhb-meeting-type-content">
+                        <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
+                            <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
+                                <Icon name="UserRound" size="20" /> 
+                                <Icon name="ArrowRight" size="20" /> 
+                                <Icon name="UserRound" size="20" /> 
+                            </div>
+                            <h3>{{ $tfhb_trans['One to One'] }}</h3>
+                        </div>
+                        <p>{{ $tfhb_trans['One host with one invitee. Good for: 1:1 interview, coffee chats'] }}</p>
+                    </div>
+                    <div class="tfhb-meeting-type-icon">
+                        <Icon name="ArrowRight" width="20"/>
+                    </div>
+                </div>
+            </div>
+            <div class="tfhb-meeting-person-type">
+                
+                <span class="tfhb-badge tfhb-badge-pro">{{ $tfhb_trans['Pro'] }}</span>
+                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24">
+                    <div class="tfhb-meeting-type-content">
+                        <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
+                            <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
+                                <Icon name="UserRound" size="20" /> 
+                                <Icon name="ArrowRight" size="20" /> 
+                                <Icon name="UsersRound" size="20" /> 
+                            </div>
+                            <h3>{{ $tfhb_trans['One to Group'] }}</h3>
+                        </div>
+                        <p>{{ $tfhb_trans['One host with group of invitee. Good for: webinars, online clasess'] }}</p>
+                    </div>
+                    <div class="tfhb-meeting-type-icon">
+                        <!-- <Icon name="ArrowRight" width="20"/> -->
+                    </div>
+                </div>
+            </div>
+        </template> 
+    </HbPopup>
 
     <div class="tfhb-filter-box-content" v-show="FilterPreview">
         <div class="tfhb-filter-form">
