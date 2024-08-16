@@ -262,7 +262,7 @@ onBeforeMount(() => {
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
                 <h1 >{{ $tfhb_trans['Integrations'] }}</h1> 
-                <p>{{ $tfhb_trans['One-liner description'] }}</p>
+                <p>{{ $tfhb_trans['Configure integration for conferencing, calendar and payment'] }}</p>
             </div>
             <div class="thb-admin-btn right"> 
                 <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans['View Documentation'] }}<Icon name="ArrowUpRight" size="20" /></a>

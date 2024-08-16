@@ -262,7 +262,7 @@ const tfhbValidateInput = (fieldName) => {
  
 
 <template> 
-   <div v-show="isOpen" class="tfhb-popup tfhb-availability-popup">
+   <div v-show="isOpen" class="tfhb-popup tfhb-availability-popup tfhb-scrollbar">
         <div class="tfhb-popup-wrap tfhb-availability-popup-wrap">
             <div  class="tfhb-dashboard-heading ">
                 <div class="tfhb-admin-title"> 

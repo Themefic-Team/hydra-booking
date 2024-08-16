@@ -40,7 +40,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ $tfhb_trans['Zoom'] }}</h3>
-                <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
+                <p>{{ $tfhb_trans['Streamlined virtual meetings'] }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

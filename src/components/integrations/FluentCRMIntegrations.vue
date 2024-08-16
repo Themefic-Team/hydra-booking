@@ -1,12 +1,7 @@
 <script setup>
 
 import { ref, reactive, onBeforeMount, } from 'vue'; 
-import Icon from '@/components/icon/LucideIcon.vue'
-
-// import Form Field 
-import HbText from '@/components/form-fields/HbText.vue' 
-import HbPopup from '@/components/widgets/HbPopup.vue';  
-import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
+import Icon from '@/components/icon/LucideIcon.vue';
 
 const props = defineProps([
     'class', 
