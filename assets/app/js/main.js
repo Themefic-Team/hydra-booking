@@ -196,6 +196,18 @@
 				
 			});
 
+			// Full Description Showing
+			$('span.tfhb-see-description').on('click', function() {
+				$('.tfhb-short-description').slideUp();
+				$('.tfhb-full-description').slideDown();
+			});
+	
+			// See Less Description Showing
+			$('span.tfhb-see-less-description').on('click', function() {
+				$('.tfhb-full-description').slideUp();
+				$('.tfhb-short-description').slideDown();
+			});
+
 			$(document).on('click', '.tfhb-meeting-booking-form .tfhb-back-btn', function (e) {
 				$this.find('.tfhb-meeting-card').append(preloader);
 

@@ -66,7 +66,22 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 	<div class="tfhb-meeting-details">
 		<?php echo ! empty( $meeting['title'] ) ? '<h2>' . esc_html( $meeting['title'] ) . '</h2>' : ''; ?> 
-		<?php echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : ''; ?> 
+
+		<div class="tfhb-short-description">
+            <?php 
+            if(strlen($meeting['description']) > 110 ){
+                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 110))) . '<span class="tfhb-see-description">See more</span>';
+            }else{
+                echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : ''; 
+            }
+            ?>
+        </div>
+        <div class="tfhb-full-description">
+            <?php 
+                echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : '';
+                echo '<span class="tfhb-see-less-description">See less</span>';
+            ?>
+        </div>
 		
 
 		<ul>

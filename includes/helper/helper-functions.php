@@ -8,3 +8,16 @@ if ( ! function_exists( 'tfhb_print_r' ) ) {
 		exit;
 	}
 }
+
+
+function tfhb_character_limit_callback( $str, $limit, $dots = true ) {
+	if ( strlen( $str ) > $limit ) {
+		if ( $dots == true ) {
+			return substr( $str, 0, $limit ) . '...';
+		} else {
+			return substr( $str, 0, $limit );
+		}
+	} else {
+		return $str;
+	}
+}
