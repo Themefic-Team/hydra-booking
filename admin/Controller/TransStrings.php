@@ -19,6 +19,9 @@ class TransStrings {
 			'Upgrade to Pro'                              => __( 'Upgrade to Pro', 'hydra-booking' ),
 			'Start'                              => __( 'Start', 'hydra-booking' ),
 			'End'                              => __( 'End', 'hydra-booking' ),
+			'Confirmation'                              => __( 'Confirmation', 'hydra-booking' ),
+			'Are you absolutely sure??'                              => __( 'Are you absolutely sure??', 'hydra-booking' ),
+			'Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.'                              => __( 'Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking' ),
 
 			// General Settings
 			'General'                                     => __( 'General', 'hydra-booking' ),

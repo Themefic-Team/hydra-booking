@@ -21,6 +21,8 @@ const props = defineProps([
     'single_key',
     'selected',
     'icon',
+    'tooltip',
+    'tooltipText',
   ])
 
  
@@ -39,7 +41,15 @@ const handleChange = (e) => {
       :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }" 
     >
       <div class="tfhb-single-form-field-wrap tfhb-field-dropdown"> 
-          <label v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> </label>
+        <label class="tfhb-flexbox tfhb-gap-4" v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span>  
+          <span v-if="tooltip" class="tfhb-tooltip">
+            <Icon name="Info" size="15" />
+            <span class="tfhb-tooltiptext"> 
+              {{ tooltipText }}
+            </span>
+          </span>
+        
+        </label>
           <h4 v-if="subtitle">{{ subtitle }}</h4>
           <p v-if="description">{{ description }}</p>  
             <div v-if="country">

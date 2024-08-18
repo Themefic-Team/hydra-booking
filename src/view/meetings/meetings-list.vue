@@ -14,7 +14,20 @@ const FilterHostPreview = ref(false);
 const FilterCatgoryPreview = ref(false);
 const isModalOpened = ref(false);
 const sharePopup = ref(false)
-
+const deletePopup = ref(false)
+const deleteItem = reactive({
+    id: 0,
+    post_id: 0
+});
+const deleteItemData = (id, post_id) => {
+    deleteItem.id = id;
+    deleteItem.post_id = post_id;
+    deletePopup.value = true;
+}
+const deleteItemConfirm = () => {
+    Meeting.deleteMeeting(deleteItem.id, deleteItem.post_id);
+    deletePopup.value = false;
+}
 const openModal = () => {
   isModalOpened.value = true;
 };
@@ -79,7 +92,7 @@ const copyMeeting = (link) => {
     document.body.removeChild(textarea);
     
     // Show a toast notification or perform any other action
-    toast.success(link + ' is Copied');
+    toast.success( link + ' is Copied' );
 }
 
 const meeting = reactive({});
@@ -156,6 +169,30 @@ const TfhbMeetingType = (type, router) => {
                     </div>
                 </div>
             </div>
+        </template> 
+    </HbPopup>
+
+    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
+        <template #header> 
+            <!-- {{ google_calendar }} -->
+            <h2>{{ $tfhb_trans['Confirmation'] }}</h2>
+            
+        </template>
+
+        <template #content>  
+            <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+                <div class="tfhb-close-icon">
+                    <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+                </div>
+                <div class="tfhb-close-content">
+                    <h3>{{ $tfhb_trans['Are you absolutely sure??'] }}  </h3>  
+                    <p>{{ $tfhb_trans['Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.'] }}</p>
+                </div>
+                <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ $tfhb_trans['Cancel'] }}</button>
+                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ $tfhb_trans['Delete'] }}</button>
+                </div>
+            </div> 
         </template> 
     </HbPopup>
 
@@ -319,7 +356,8 @@ const TfhbMeetingType = (type, router) => {
                             <!-- route link -->
                             <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans['Edit'] }}</router-link>
                             
-                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span>
+                            <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span> -->
+                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span>
                         </div>
                     </div>
                 </div>

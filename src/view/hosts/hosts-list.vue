@@ -1,5 +1,7 @@
 <script setup>
+import { ref, reactive } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
+import HbPopup from '@/components/widgets/HbPopup.vue';
 const emit = defineEmits(["delete-host", "update-host-status"]); 
 const props = defineProps({
     host_list: {
@@ -12,8 +14,46 @@ const props = defineProps({
     }
 });
 
+const deletePopup = ref(false)
+const deleteItem = reactive({
+    id: 0,
+    user_id: 0
+});
+const deleteItemData = (id, user_id) => {
+    deleteItem.id = id;
+    deleteItem.user_id = user_id;
+    deletePopup.value = true;
+}
+const deleteItemConfirm = () => { 
+    emit('delete-host', deleteItem.id, deleteItem.user_id)
+    deletePopup.value = false;
+}
+
 </script>
 <template>
+    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
+        <template #header> 
+            <!-- {{ google_calendar }} -->
+            <h2>{{ $tfhb_trans['Confirmation'] }}</h2>
+            
+        </template>
+
+        <template #content>  
+            <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+                <div class="tfhb-close-icon">
+                    <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+                </div>
+                <div class="tfhb-close-content">
+                    <h3>{{ $tfhb_trans['Are you absolutely sure??'] }}  </h3>  
+                    <p>{{ $tfhb_trans['Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.'] }}</p>
+                </div>
+                <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ $tfhb_trans['Cancel'] }}</button>
+                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ $tfhb_trans['Delete'] }}</button>
+                </div>
+            </div> 
+        </template> 
+    </HbPopup>
 
     <div class="tfhb-hosts-list-content" >
         <div class="tfhb-hosts-list-wrap tfhb-flexbox" :class="{ 'tfhb-skeleton': host_skeleton }"> 
@@ -45,7 +85,8 @@ const props = defineProps({
                             <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
                             <span class="tfhb-dropdown-single" @click="emit('update-host-status',host.id, host.user_id, host.status)">{{host.status == 'activate' ? 'Deactivate' : 'Activate'}}</span>
                        
-                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ $tfhb_trans['Delete'] }}</span>
+                            <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ $tfhb_trans['Delete'] }}</span> -->
+                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(host.id, host.user_id)">{{ $tfhb_trans['Delete'] }}</span>
                          </div>
                     </div>
                 </div> 

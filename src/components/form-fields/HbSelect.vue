@@ -10,7 +10,9 @@ const props = defineProps([
     'placeholder',
     'description', 
     'option',
-    'errors'
+    'errors',
+    'tooltip',
+    'tooltipText'
 ])
 const emit = defineEmits(['update:modelValue', 'tfhb-onchange'])
 </script>
@@ -21,7 +23,16 @@ const emit = defineEmits(['update:modelValue', 'tfhb-onchange'])
     >
       <div class="tfhb-single-form-field-wrap tfhb-field-select">
               
-          <label v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> </label>
+        <label class="tfhb-flexbox tfhb-gap-4" v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span>  
+          <span v-if="tooltip" class="tfhb-tooltip">
+            <Icon name="Info" size="15" />
+            <span class="tfhb-tooltiptext"> 
+              {{ tooltipText }}
+            </span>
+          </span>
+        
+        </label>
+        
           <h4 v-if="subtitle">{{ subtitle }}</h4>
           <p v-if="description">{{ description }}</p>
           

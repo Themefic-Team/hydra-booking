@@ -23,16 +23,25 @@ const Meeting = reactive({
 
     // Delete Meeting
     async deleteMeeting ($id, $post_id){ 
+        if($id == '' || $post_id == ''){
+            toast.error('Something went wrong. Please try again', {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+            return;
+        }
         let deleteMeeting = {
             id: $id,
             post_id: $post_id
         }
         try { 
             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/delete', deleteMeeting, {
-                   
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                } 
             } );
             if (response.data.status) { 
-                this.meetings = response.data.meetings;  
+                this.meetings = response.data.meetings;   
                 toast.success(response.data.message); 
             }
         } catch (error) {

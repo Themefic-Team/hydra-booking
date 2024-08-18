@@ -54,7 +54,7 @@ class THB_INIT {
 		new HydraBooking\Services\Integrations\Zoho\Zoho();
 		new HydraBooking\Services\Integrations\FluentCRM\FluentCRM();
 
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ) ); 
 		add_filter( 'authenticate', array( new HydraBooking\Admin\Controller\AuthController(), 'tfhb_restrict_unverified_user' ), 10, 3 );
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'tfhb_enqueue_scripts' ) );

@@ -169,9 +169,7 @@ class MeetingController {
 			)
 		);
 	}
-	// Meeting List
-	public function getMeetingsData() {
-
+	public function getMeetingList() {
 		$current_user = wp_get_current_user();
 		// get user role
 		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
@@ -187,6 +185,12 @@ class MeetingController {
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$MeetingsList = $meeting->get( null, null, $current_user_id );
 		}
+		return $MeetingsList;
+	}
+	// Meeting List
+	public function getMeetingsData() {
+
+		$MeetingsList = $this->getMeetingList();
 
 		// Return response
 		$data = array(
@@ -666,9 +670,10 @@ class MeetingController {
 		$meeting       = new Meeting();
 		$meetingDelete = $meeting->delete( $meeting_id );
 		if ( ! $meetingDelete ) {
+			
 			return rest_ensure_response(
 				array(
-					'status'  => false,
+					'status'  => false, 
 					'message' => 'Error while deleting meeting',
 				)
 			);
@@ -683,13 +688,7 @@ class MeetingController {
 		}
 
 		// Meeting Lists
-		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
-			$MeetingsList = $meeting->get();
-		}
-
-		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
-			$MeetingsList = $meeting->get( null, null, $current_user_id );
-		}
+		$MeetingsList = $this->getMeetingList();  
 		// Return response
 		$data = array(
 			'status'   => true,
