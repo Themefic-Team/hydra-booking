@@ -1186,7 +1186,7 @@ class MeetingController {
 
 			// Check for cURL errors
 			if ( curl_errno( $ch ) ) {
-				echo 'Error:' . curl_error( $ch );
+				echo 'Error:' . esc_attr(curl_error( $ch ));
 			}
 			// Close the cURL session
 			curl_close( $ch );
@@ -1334,7 +1334,7 @@ class MeetingController {
 
 		$response = curl_exec( $ch );
 		if ( curl_errno( $ch ) ) {
-			echo 'Error:' . curl_error( $ch );
+			echo 'Error:' . esc_attr(curl_error( $ch ));
 		}
 		curl_close( $ch );
 

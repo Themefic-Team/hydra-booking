@@ -128,7 +128,7 @@ END:VCALENDAR";
 		try {
 			// /calendars/YOUR-ICLOUD-USER-ID/CALENDAR-ID/
 			$url = $calendarUrl . $eventId . '.ics';
-			echo $url;
+			echo esc_url($url);
 			exit;
 			$data = $this->client->request(
 				'PUT',
@@ -144,7 +144,7 @@ END:VCALENDAR";
 			print_r( $data );
 			echo '</pre>';
 		} catch ( Exception $e ) {
-			echo 'Error: ', $e->getMessage(), "\n";
+			echo 'Error: ', esc_attr($e->getMessage()), "\n";
 		}
 	}
 
@@ -175,7 +175,7 @@ END:VCALENDAR";
 				}
 			}
 		} catch ( Exception $e ) {
-			echo 'Error: ', $e->getMessage(), "\n";
+			echo 'Error: ', esc_attr($e->getMessage()), "\n";
 		}
 	}
 }
