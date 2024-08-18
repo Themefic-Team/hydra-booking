@@ -30,6 +30,9 @@ const exportData = reactive({
     start_date: '',
     end_dates: ''
 });
+const select_all = ref(false);
+const selected_items = ref([]);
+const host_id = ref('');
 
 
 // Export CSV
@@ -168,6 +171,39 @@ const Booking_Status_Callback = (e) => {
     UpdateMeetingStatus(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id, e.value);
 }
 
+const Bulk_Status_Callback = async (e) => {
+
+    let bookings = {
+        items: selected_items,
+        status: e.value
+    }
+    try { 
+            // axisos sent dataHeader Nonce Data
+            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/bulk-update', bookings, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                } 
+            } );
+
+            if (response.data.status) {  
+                Booking.bookings = response.data.booking; 
+                Booking.calendarbooking.events = response.data.booking_calendar;
+                BookingEditPopup.value = false;
+
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+            }else{
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        } 
+}
 
 
 // Pagination
@@ -199,6 +235,24 @@ const prevPage = () => {
   }
 };
 
+
+// Select All
+const toggleSelectAll = (e) => {
+    if(e.target.checked){
+        select_all.value = true;
+    }else{
+        select_all.value = false;
+    } 
+
+    if (select_all.value) {
+        // If 'select_all' is true, select all items
+        selected_items.value = paginatedBooking.value.map(item => item.id);
+    } else {
+        // If 'select_all' is false, deselect all items
+        selected_items.value = [];
+    }
+}
+
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -223,16 +277,15 @@ const prevPage = () => {
         </div>
     </div>
     <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
-        <HbDropdown  
-            v-model="status" 
-            :selected = "1"
+        <HbDropdown   
+            v-if="selected_items.length > 0"
             placeholder="Status"   
             :option = "[
                 {'name': 'Pending', 'value': 'pending'},  
                 {'name': 'Confirmed', 'value': 'confirmed'},   
                 {'name': 'Canceled', 'value': 'canceled'}
             ]"
-            @tfhb-onchange="Booking_Status_Callback" 
+            @tfhb-onchange="Bulk_Status_Callback" 
         />  
         <button @click="ExportAsCSV = true" class="tfhb-btn boxed-secondary-btn flex-btn">
             <!-- <Icon name="PlusCircle " size="20" />   -->
@@ -447,6 +500,12 @@ const prevPage = () => {
         <thead>
             <tr>
                 <th> 
+                    <div class="select-checkbox-lists">
+                        <label>
+                            <input type="checkbox" v-model="select_all" @change="toggleSelectAll">   
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
                 </th>
                 <th>{{ $tfhb_trans['Date & Time'] }}</th>
                 <th>{{ $tfhb_trans['Title'] }}</th>
@@ -463,7 +522,7 @@ const prevPage = () => {
                 <td>
                     <div class="checkbox-lists">
                         <label>
-                            <input type="checkbox" :value="book.id">   
+                            <input type="checkbox" v-model="selected_items" :value="book.id" :checked="select_all == true ? true : false">   
                             <span class="checkmark"></span>
                         </label>
                     </div>

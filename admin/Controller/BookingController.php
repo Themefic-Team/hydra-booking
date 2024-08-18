@@ -65,6 +65,14 @@ class BookingController {
 				'callback' => array( $this, 'updateBooking' ),
 			)
 		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/bulk-update',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'updateBulkStatus' ),
+			)
+		);
 
 		// Pre Booking Data
 		register_rest_route(
@@ -681,6 +689,86 @@ class BookingController {
 
 		if ( 'schedule' == $request['status'] ) {
 			do_action( 'hydra_booking/after_booking_schedule', $single_booking_meta );
+		}
+
+		// Return response
+		$data = array(
+			'status'           => true,
+			'booking'          => $bookingsList,
+			'booking_calendar' => $booking_array,
+			'message'          => 'Booking Updated Successfully',
+		);
+		return rest_ensure_response( $data );
+	}
+
+	// Update Booking Bulk Option
+	public function updateBulkStatus() {
+		$request       = json_decode( file_get_contents( 'php://input' ), true );
+		$status    = $request['status'];
+		$items    = $request['items']['_value'];
+		$booking_owner = !empty($request['host']) ? $request['host'] : '';
+
+
+		$booking = new Booking();
+		if(!empty($items)){
+			foreach($items as $item){
+				$data = array(
+					'id'     => $item,
+					'status' => isset( $status ) ? sanitize_text_field( $status ) : '',
+				);
+
+				// Booking Update
+				$bookingUpdate = $booking->update( $data );
+			}
+		}
+
+		if(!empty($booking_owner)){
+			$current_user = get_userdata( $booking_owner );
+			// get user role
+			$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
+			$current_user_id   = $current_user->ID;
+		}
+
+		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
+			$host         = new Host();
+			$HostData     = $host->get( $current_user_id );
+			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->user_id );
+
+		}else{
+			$bookingsList = $booking->get( null, true );
+		}
+
+		$extractedBookings = array_map(
+			function ( $booking ) {
+				return array(
+					'id'            => $booking->id,
+					'title'         => $booking->title,
+					'meeting_dates' => $booking->meeting_dates,
+					'start_time'    => $booking->start_time,
+					'end_time'      => $booking->end_time,
+					'status'        => $booking->booking_status,
+					'host_id'       => $booking->host_id,
+				);
+			},
+			$bookingsList
+		);
+
+		$booking_array = array();
+		foreach ( $extractedBookings as $book ) {
+			// Convert start and end times to 24-hour format
+			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
+			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
+
+			$booking_array[] = array(
+				'booking_id'   => $book['id'],
+				'title'        => $book['title'],
+				'start'        => $book['meeting_dates'] . 'T' . $start_time_24hr,
+				'end'          => $book['meeting_dates'] . 'T' . $end_time_24hr,
+				'status'       => $book['status'],
+				'booking_date' => $book['meeting_dates'],
+				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
+				'host_id'      => $book['host_id'],
+			);
 		}
 
 		// Return response
