@@ -72,7 +72,61 @@
     }
 
 
+    .tfhb-closing-confirmation-pupup{
+        justify-content: center !important;
+        text-align: center;
+        h3{
+            margin-bottom: 16px;
+        }
+    }
 
+    // Tooltip
+    .tfhb-tooltip {
+        position: relative;
+        display: inline-block;
+
+        .tfhb-tooltiptext {
+            // visibility: hidden;
+            background: var(--Surface-Primary, #FAF5F7); 
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            min-width: 150px;
+            border-radius: 8px;
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position it above the input */
+            left: 50%;
+            transform: translateX(-50%);
+            
+            /* Fade in tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            
+            /* Arrow */
+            &:after {
+                content: '';
+                position: absolute;
+                top: 100%; /* At the bottom of the tooltip */
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #FAF5F7 transparent transparent transparent;
+            }
+        }
+        &:hover .tfhb-tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+   
+    
+   
+    // Tooltip
+
+    // Button
     .tfhb-badge{
         &.tfhb-badge-pro {
             position: absolute;
