@@ -5,6 +5,7 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
+import HbButton from '@/components/form-fields/HbButton.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
 import AvailabilityPopupSingle from '@/components/availability/AvailabilityPopupSingle.vue';
@@ -58,8 +59,8 @@ const StepTwo = () => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>Take control of your schedule</h2>
-            <p>You can streamline your appointment booking process by using your availability.</p>
+            <h2>{{$tfhb_trans['Take control of your schedule']}}</h2>
+            <p>{{$tfhb_trans['You can streamline your appointment booking process by using your availability.']}}</p> 
         </div>
         <div class="tfhb-content-wrap tfhb-s-w-availability-wrap tfhb-flexbox tfhb-gap-tb-24">
 
@@ -68,8 +69,24 @@ const StepTwo = () => {
     
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
-            <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="props.setupWizard.currentStep = 'step-one'" > <Icon name="ChevronLeft" size="20" /> Back </button>
-            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"@click="StepTwo" >Next<Icon name="ChevronRight" size="20" />  </button>
+            <HbButton 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                @click="props.setupWizard.currentStep = 'step-one'" 
+                :buttonText="$tfhb_trans['Back']"
+                icon="ChevronLeft" 
+                hover_icon="ArrowLeft" 
+                :hover_animation="true"
+                icon_position="left"
+            /> 
+            <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                @click="StepTwo" 
+                :buttonText="$tfhb_trans['Next']"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            /> 
+            
             <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size="20" />  </button> -->
         </div>
      </div>

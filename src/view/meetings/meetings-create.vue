@@ -6,6 +6,7 @@ import axios from 'axios'
 import { toast } from "vue3-toastify"; 
 import useValidators from '@/store/validator'
 import { Availability } from '@/store/availability';
+import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
 const { errors } = useValidators();
 
 const route = useRoute();
@@ -28,6 +29,7 @@ const formsList = reactive({});
 const meetingData = reactive({
     id: 0,
     user_id: 0,
+    slug: '',
     host_id: '',
     post_id: '',
     title: '',
@@ -348,6 +350,7 @@ const meetingId = route.params.id;
             meetingData.id = response.data.meeting.id
             meetingData.user_id = response.data.meeting.user_id
             meetingData.host_id = response.data.meeting.host_id && response.data.meeting.host_id!=0 ? response.data.meeting.host_id : '';
+            meetingData.slug = response.data.meeting.slug  ? response.data.meeting.slug : response.data.meeting.title;
             meetingData.post_id = response.data.meeting.post_id
             meetingData.title = response.data.meeting.title
             meetingData.description = response.data.meeting.description
@@ -488,6 +491,7 @@ const UpdateMeetingData = async (validator_field) => {
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/details/update', meetingData);
         if (response.data.status == true) { 
+            meetingData.slug = response.data.meeting.slug;
             toast.success(response.data.message); 
             if("MeetingsCreateDetails"==route.name){
                 router.push({ name: 'MeetingsCreateAvailability' });
@@ -541,24 +545,54 @@ const TfhbPrevNavigator = () => {
         router.push({ name: 'MeetingsCreatePayment' });
     }
 }
+
+const sharePopup = reactive({
+    value: false
+})
+// Share Popup Data
+const shareData = reactive({
+    title: '',
+    time: '',
+    meeting_type: '',
+    share_type: 'link',
+    link: '',
+    shortcode: '',
+    embed: ''
+})
+const sharePopupData = (data) => { 
+    shareData.share_type = 'link'
+    shareData.title = meetingData.title
+    shareData.time = meetingData.duration
+    shareData.meeting_type = meetingData.meeting_type
+    shareData.shortcode = '[hydra_booking id="'+meetingData.id+'"]'
+    shareData.link = tfhb_core_apps.admin_url + '/' + meetingData.slug
+    shareData.embed = '<iframe src="'+ tfhb_core_apps.admin_url +'/?hydra-booking=meeting&meeting-id='+meetingData.id+'&type=iframe" title="description"  height="600" width="100%" ></iframe>'
+
+    // Popup open
+    sharePopup.value = true; 
+}
+
 </script>
 
 <template>
     <div class="tfhb-meeting-create" :class="{ 'tfhb-skeleton': skeleton }">
-        <div class="tfhb-meeting-create-notice tfhb-mb-32">
-            <div class="tfhb-meeting-heading tfhb-flexbox">
-                <div class="prev-navigator" @click="TfhbPrevNavigator()">
-                    <Icon name="ArrowLeft" size="20" /> 
-                </div>
-                <h3 v-if="meetingData.title != ''">{{ meetingData.title }}</h3>
-                <h3 v-else >{{ $tfhb_trans['Create One-to-One booking type'] }}</h3>
+        <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
+            <div class="tfhb-meeting-heading-wrap">
+                <div class="tfhb-meeting-heading tfhb-flexbox">
+                    <div class="prev-navigator" @click="TfhbPrevNavigator()">
+                        <Icon name="ArrowLeft" size="20" /> 
+                    </div>
+                    <h3 v-if="meetingData.title != ''">{{ meetingData.title }}</h3>
+                    <h3 v-else >{{ $tfhb_trans['Create One-to-One booking type'] }}</h3>
+                </div> 
+                <!-- <div  class="tfhb-meeting-subtitle">
+                    {{ $tfhb_trans['Create and manage booking/appointment form'] }}
+                </div> -->
             </div>
-            <div v-if="meetingData.description != ''" class="tfhb-meeting-subtitle">
-                {{ meetingData.description }}
-            </div>
-            <div v-else class="tfhb-meeting-subtitle">
-                {{ $tfhb_trans['Create and manage booking/appointment form'] }}
-            </div>
+           
+            <div class="thb-admin-btn right"> 
+                <button  @click="sharePopupData(smeeting)" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans['Share'] }}  <Icon name="ArrowUpRight" size="20" /></button>
+            </div> 
         </div>
         <nav class="tfhb-booking-tabs tfhb-meeting-tabs tfhb-mb-32"> 
             <ul>
@@ -577,7 +611,7 @@ const TfhbPrevNavigator = () => {
             </ul>  
         </nav>
 
-        <div class="tfhb-hydra-dasboard-content"> 
+        <div class="tfhb-hydra-dasboard-content">  
             <router-view 
             :meetingId ="meetingId" 
             :meeting="meetingData" 
@@ -597,6 +631,8 @@ const TfhbPrevNavigator = () => {
             @add-overrides-time="addOverridesTime"
             @remove-overrides-time="removeOverridesTime"
             />
+            <!-- Share Meeting -->
+            <ShareMeeting :shareData="shareData" :sharePopup="sharePopup"  />
         </div> 
     </div>
 </template>

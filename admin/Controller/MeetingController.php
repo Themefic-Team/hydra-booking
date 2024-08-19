@@ -1031,12 +1031,13 @@ class MeetingController {
 			update_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', $data );
 
 		}
-
+		$MeetingData = $meeting->get( $meeting_id );
 		// Return response
 		$data = array(
 			'status'  => true,
 			'message' => 'Meeting Updated Successfully',
 			'data'    => $data,
+			'meeting' => $MeetingData,
 		);
 		return rest_ensure_response( $data );
 	}

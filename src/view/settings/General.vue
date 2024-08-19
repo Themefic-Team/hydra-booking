@@ -13,6 +13,7 @@ const { errors, isEmpty } = useValidators();
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
 
 const generalSettings = reactive({
   admin_email: '{{wp.admin_email}}',
@@ -337,9 +338,14 @@ onBeforeMount(() => {
                  
             </div>  
 
-            <button class="tfhb-btn boxed-btn flex-btn" @click="UpdateGeneralSettings">{{ $tfhb_trans['Update General Settings'] }} <Icon name="ChevronRight" size="20" /> </button>
-            <!--Bookings -->
-
+            <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="UpdateGeneralSettings" 
+                :buttonText="$tfhb_trans['Update General Settings']"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            /> 
 
         </div>
     </div>

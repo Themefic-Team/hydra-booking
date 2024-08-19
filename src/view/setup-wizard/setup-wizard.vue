@@ -34,7 +34,7 @@ onBeforeMount(() => {
         <div class="tfhb-s-w-cta tfhb-flexbox tfhb-gap-16">
             <a href="#">Need Help</a>
             <span></span>
-            <a href="#">Faq</a>
+            <a href="#">FAQ</a>
         </div>
      </div>
 

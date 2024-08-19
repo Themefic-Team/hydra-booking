@@ -7,6 +7,7 @@ import HbText from '../form-fields/HbText.vue';
 import HbDateTime from '../form-fields/HbDateTime.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
 import AvailabilityTime from '@/store/times'
 import { toast } from "vue3-toastify"; 
 import useValidators from '@/store/validator'
@@ -474,7 +475,15 @@ const tfhbValidateInput = (fieldName) => {
 
 
                 <!-- Create Or Update Availability -->
-                <button class="tfhb-btn boxed-btn" @click="UpdateAvailabilitySettings(['title', 'time_zone'])">{{ is_host ? $tfhb_trans['Save Availability'] : $tfhb_trans['Update Availability'] }}</button>
+                <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="UpdateAvailabilitySettings(['title', 'time_zone'])" 
+                        :buttonText="is_host ? $tfhb_trans['Save Availability'] : $tfhb_trans['Update Availability']"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true"
+                    />  
+                <!-- <button class="tfhb-btn boxed-btn" @click="UpdateAvailabilitySettings(['title', 'time_zone'])">{{ is_host ? $tfhb_trans['Save Availability'] : $tfhb_trans['Update Availability'] }}</button> -->
             </div>
         </div>
    </div>

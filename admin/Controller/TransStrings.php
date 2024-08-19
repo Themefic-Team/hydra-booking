@@ -415,6 +415,26 @@ class TransStrings {
 			'Select fields from your CSV file to map against booking fields, or to ignore during import.' => __( 'Select fields from your CSV file to map against booking fields, or to ignore during import.', 'hydra-booking' ),
 			'This tool allows you to import or merge booking data to your store from a CSV file.' => __( 'This tool allows you to import or merge booking data to your store from a CSV file.', 'hydra-booking' ),
 
+
+			// Setup Wizard
+			'Welcome to Hydrabooking!'             => __( 'Welcome to Hydrabooking!', 'hydra-booking' ),
+			'Thank you for choosing Hydrabooking, the ultimate solution for seamless appointment and meeting bookings.'             => __( 'Thank you for choosing Hydrabooking, the ultimate solution for seamless appointment and meeting bookings.', 'hydra-booking' ),
+			'Enter your email'             => __( 'Enter your email', 'hydra-booking' ),
+			'Email'             => __( 'Email', 'hydra-booking' ),
+			'Receive updates and promotions'             => __( 'Receive updates and promotions', 'hydra-booking' ),
+			'Get Started in a Minute'             => __( 'Get Started in a Minute', 'hydra-booking' ),
+			'Simplify Your Work with Hydrabooking'             => __( 'Simplify Your Work with Hydrabooking', 'hydra-booking' ),
+			'Our intuitive setup process makes Hydrabooking a breeze to use, even for non-technical users.'             => __( 'Our intuitive setup process makes Hydrabooking a breeze to use, even for non-technical users.', 'hydra-booking' ),
+			'Your business type?'             => __( 'Your business type?', 'hydra-booking' ),
+			'Import demo data'             => __( 'Import demo data', 'hydra-booking' ),
+			'Experience Hydrabooking in Action (Instantly!)'             => __( 'Experience Hydrabooking in Action (Instantly!)', 'hydra-booking' ),
+			'Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.'             => __( 'Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.', 'hydra-booking' ),
+			'Take control of your schedule'             => __( 'Take control of your schedule', 'hydra-booking' ),
+			'You can streamline your appointment booking process by using your availability.'             => __( 'You can streamline your appointment booking process by using your availability.', 'hydra-booking' ),
+			'Your Meeting is ready!'             => __( 'Your Meeting is ready!', 'hydra-booking' ),
+			'All set! Your Hydrabooking meeting is good to go.   Click "Preview" to peek at your booking page or "Share" to send the link to your attendees'             => __( 'All set! Your Hydrabooking meeting is good to go.   Click "Preview" to peek at your booking page or "Share" to send the link to your attendees', 'hydra-booking' ),
+			'Congratulations! You are All Set Up!'             => __( 'Congratulations! You are All Set Up!', 'hydra-booking' ),
+			'You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.'             => __( 'You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.', 'hydra-booking' ),
 		);
 	}
 }
