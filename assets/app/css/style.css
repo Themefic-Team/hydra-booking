@@ -159,13 +159,24 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone {
   border-radius: 8px;
-  border: 0.5px solid rgba(227, 207, 215, 0.2);
   background: #ffffff;
-  box-shadow: 0px 8px 16px 0px rgba(40, 16, 26, 0.04);
   padding: 8px 12px;
   justify-content: space-between;
   padding: 0 !important;
   position: relative;
+  z-index: 1;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone::before, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: 8px; /* Same as the main element */
+  background: linear-gradient(to bottom right, rgba(227, 207, 215, 0), rgb(227, 207, 215), rgba(227, 207, 215, 0));
+  z-index: -1;
+  pointer-events: none; /* Prevents the pseudo-element from interfering with user interactions */
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone select, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone select {
   background-image: none !important;
@@ -263,11 +274,38 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation {
   display: flex;
   border-radius: 8px;
-  border: 0.5px solid rgba(227, 207, 215, 0);
   background: #ffffff;
   box-shadow: 0px 8px 16px 0px rgba(40, 16, 26, 0.04);
-  width: 92px;
+  width: 94px;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  height: 36px;
+  align-items: center;
+  padding: 0 8px 0 8px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation::before, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: 8px; /* Same as the main element */
+  background: linear-gradient(to bottom right, rgba(227, 207, 215, 0), rgb(227, 207, 215), rgba(227, 207, 215, 0));
+  z-index: -1;
+  pointer-events: none; /* Prevents the pseudo-element from interfering with user interactions */
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation::after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation::after {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-radius: 8px;
+  background: #ffffff;
+  z-index: -1;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span {
   cursor: pointer;
@@ -277,9 +315,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: 0.3s all ease;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span svg path {
   stroke: var(--tfhb-primary-color);
+  transition: 0.3s all ease;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover {
+  background-color: var(--tfhb-primary-color);
+  border-radius: 5px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover svg path {
+  stroke: #fff;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span#tfhb-calendar-next, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span#tfhb-calendar-next {
   position: relative;
@@ -291,7 +338,7 @@
   height: 8px;
   background-color: var(--tfhb-paragraph-color);
   border-radius: 50%;
-  left: -30px;
+  left: -24px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-current-date, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-current-date {
   color: var(--tfhb-secondary-color);
