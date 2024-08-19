@@ -69,8 +69,8 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 		<div class="tfhb-short-description">
             <?php 
-            if(strlen($meeting['description']) > 110 ){
-                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 110))) . '<span class="tfhb-see-description">See more</span>';
+            if(strlen($meeting['description']) > 100 ){
+                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 100))) . '<span class="tfhb-see-description">See more</span>';
             }else{
                 echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : ''; 
             }
