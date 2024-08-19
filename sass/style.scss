@@ -478,6 +478,7 @@
                 position: relative;
                 z-index: 0;
                 background: $ui0;
+                display: flex;
                 &::before {
                     content: '';
                     position: absolute;
@@ -502,25 +503,29 @@
                     gap: 8px;
                     display: inline-flex;
                     li{
+                        width: 40px;
+                        display: inline-block;
+                        padding: 4px 8px;
+                        height: 28px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         label{
-                            display: inline-block;
-                            padding: 4px 8px;
                             color: $ui500;
                             font-size: 11px;
                             font-style: normal;
                             font-weight: 600;
                             line-height: 16px; /* 145.455% */
                             cursor: pointer;
-                            width: 40px;
                             text-align: center;
                             input{
                                 display: none;
                             }
                         }
                         &.active{
+                            border-radius: 4px;
+                            background: $ui50;
                             label{
-                                border-radius: 4px;
-                                background: $ui50;
                                 color: $ui800;
                             }
                         }

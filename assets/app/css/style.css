@@ -486,6 +486,7 @@
   position: relative;
   z-index: 0;
   background: #ffffff;
+  display: flex;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs::before, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs::before {
   content: "";
@@ -517,24 +518,32 @@
   gap: 8px;
   display: inline-flex;
 }
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label {
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li {
+  width: 40px;
   display: inline-block;
   padding: 4px 8px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label {
   color: #8F707D;
   font-size: 11px;
   font-style: normal;
   font-weight: 600;
   line-height: 16px; /* 145.455% */
   cursor: pointer;
-  width: 40px;
   text-align: center;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label input, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label input {
   display: none;
 }
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label {
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active {
   border-radius: 4px;
   background: #F6EEF2;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label {
   color: var(--tfhb-secondary-color);
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times h3, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times h3 {
