@@ -1,12 +1,18 @@
 <script setup>
 import { RouterView } from 'vue-router' 
 import Header from '@/components/Header.vue';
+import { ref, onMounted  } from 'vue';
+import { Notification } from '@/store/notification';
+onMounted(() => { 
+    Notification.fetchNotifications();
+}); 
+
 </script>
 <template>
 
 <!-- {{ tfhbClass }} -->
 <div class="tfhb-admin-meetings">
-    <Header title="Meetings" />
+    <Header title="Meetings" :notifications="Notification.Data" />
     
     <router-view />
 </div> 

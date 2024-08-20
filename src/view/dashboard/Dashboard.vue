@@ -9,6 +9,7 @@ import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 // Store 
 import { Dashboard } from '@/store/dashboard';
+import { Notification } from '@/store/notification';
  
 const datachart_box_dropdown = ref(false);
 const datachart_dropdown = ref(false);
@@ -16,6 +17,7 @@ const datachart_dropdown = ref(false);
 onMounted(() => {
     Dashboard.fetcDashboard(); 
     Dashboard.fetcDashboardStatistics();
+    Notification.fetchNotifications();
 }); 
 
 const updateDashboardDay = (day) => { 
@@ -52,8 +54,8 @@ const  ChangeStatisticData = (day) => {
 <template>
 
 <!-- {{ tfhbClass }} -->
-<div class="tfhb-admin-dashboard tfhb-admin-meetings ">
-    <Header title="Dashboard" /> 
+<div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
+    <Header title="Dashboard" :notifications="Notification.Data" /> 
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox">
         <div class="thb-admin-title">
             <h2>{{ $tfhb_trans['Data'] }}</h2>

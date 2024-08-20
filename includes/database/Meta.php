@@ -27,8 +27,8 @@ class Meta {
                 object_type VARCHAR(255) NOT NULL,  
                 meta_key VARCHAR(255) NOT NULL,  
                 value LONGTEXT NULL,
-                created_at DATE NOT NULL,
-                updated_at DATE NOT NULL, 
+                created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (id)
             ) $charset_collate";
 
@@ -50,6 +50,22 @@ class Meta {
 	public function add( $request ) {
 
 		global $wpdb;
+		$table_name = $wpdb->prefix . $this->table;
+
+		// insert availability
+		$result = $wpdb->insert(
+			$table_name,
+			$request
+		);
+
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status'    => true,
+				'insert_id' => $wpdb->insert_id,
+			);
+		}
 	}
 	/**
 	 * Update the database availability.
@@ -59,9 +75,27 @@ class Meta {
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $where = null, $filterData = '' ) {
-
+	public function get( $where = null, $join = false, $FirstOrFaill = false, $limit = false ) {
 		global $wpdb;
+		$table_name = $wpdb->prefix . $this->table;
+		$sql        = "SELECT * FROM $table_name";
+		if ( $where != null ) {
+			foreach ( $where as $key => $value ) {
+				$sql .= ' WHERE ' . $value['column'] . ' ' . $value['operator'] . ' ' . $value['value'] . '';
+
+			}
+
+			 
+
+		} else {
+			$sql .= ' ORDER BY id DESC';
+		}
+		// limit
+		if ( $limit != false ) {
+			$sql .= ' LIMIT ' . $limit;
+		} 
+		$data = $wpdb->get_results( $sql );
+		return $data;
 	}
 
 	// delete

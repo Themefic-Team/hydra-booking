@@ -4,6 +4,7 @@ namespace HydraBooking\Admin;
 use HydraBooking\Admin\Controller\Enqueue;
 use HydraBooking\Admin\Controller\AdminMenu;
 use HydraBooking\Admin\Controller\AvailabilityController;
+use HydraBooking\Admin\Controller\Notification;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Migration\Migration;
 
@@ -29,6 +30,9 @@ class Admin {
 
 		// availability controller
 		new AvailabilityController();
+
+		// Notification controller
+		// new Notification();
 
 		// activation hooks
 		register_activation_hook( THB_URL, array( $this, 'activate' ) );

@@ -2,8 +2,36 @@
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'title',
+    'notifications'
      
-]) 
+])
+
+// make a vue time 2024-08-20 16:15:39 to 6m example
+const timeAgo = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) {
+        return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
+
 </script>
 
 
@@ -25,53 +53,34 @@ const props = defineProps([
             </svg> 
             <h2 class="tfhb-admin-header-title">{{ props.title }}</h2>
         </div>
-        <div class="tfhb-header-notification">
+        <div v-if="props.notifications" class="tfhb-header-notification">
             <div class="tfhb-dropdown tfhb-mega-dropdown">
             <span> <Icon name="Bell" size="24" /> </span>
            
             <div class="tfhb-dropdown-wrap ">   <!-- active class-->
                 <div class="tfhb-flexbox">
                     <h3>{{ $tfhb_trans['Notifications'] }}</h3>
-                    <a href="#" class="tfhb-btn">{{ $tfhb_trans['Mark as read'] }}</a>
+                    <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans['Mark as read'] }}</a> -->
+                    <!-- {{ notifications }} -->
                 </div>
 
                 <div class="tfhb-notification-wrap">
+                    
                     <!-- Single Notifaction wrap -->
-                    <div class="tfhb-single-notification tfhb-flexbox tfhb-gap-8"> 
+                    <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16">
                         <div class="tfhb-single-notification-img">
-                            <img src="https://via.placeholder.com/32" alt="Notification Image">
+                            <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Notification Image">
                         </div> 
-                        <div class="tfhb-single-notification-content">
-                            <h4>John Doe</h4>
-                            <p>Has booked a room</p>
+                        <div class="tfhb-single-notification-content"> 
+                            <h4>{{notification.value.attendee_name}}</h4>
+                            <p> {{notification.value.message}}</p>
+
+                        <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago</span>
                         </div>
-                        <span class="tfhb-notification-time">6m</span>
-                    </div>
-                    <!-- Single Notifaction wrap --> 
-                    <!-- Single Notifaction wrap -->
-                    <div class="tfhb-single-notification tfhb-flexbox tfhb-gap-8"> 
-                        <div class="tfhb-single-notification-img">
-                            <img src="https://via.placeholder.com/32" alt="Notification Image">
-                        </div> 
-                        <div class="tfhb-single-notification-content">
-                            <h4>John Doe</h4>
-                            <p>Has booked a room</p>
-                        </div>
-                        <span class="tfhb-notification-time">6m</span>
-                    </div>
-                    <!-- Single Notifaction wrap --> 
-                    <!-- Single Notifaction wrap -->
-                    <div class="tfhb-single-notification tfhb-flexbox tfhb-gap-8"> 
-                        <div class="tfhb-single-notification-img">
-                            <img src="https://via.placeholder.com/32" alt="Notification Image">
-                        </div> 
-                        <div class="tfhb-single-notification-content">
-                            <h4>John Doe</h4>
-                            <p>Has booked a room</p>
-                        </div>
-                        <span class="tfhb-notification-time">6m</span>
-                    </div>
-                    <!-- Single Notifaction wrap --> 
+                        
+
+
+                    </div> 
                 </div>
             </div>
         </div>

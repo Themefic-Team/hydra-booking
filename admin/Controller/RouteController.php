@@ -13,6 +13,7 @@ use HydraBooking\Services\Integrations\OutlookCalendar\OutlookCalendar;
 use HydraBooking\Services\Integrations\Zoho\Zoho;
 use HydraBooking\Admin\Controller\SetupWizard;
 use HydraBooking\Admin\Controller\ImportExport;
+use HydraBooking\Admin\Controller\Notification;
 
 
 // Use DB
@@ -38,6 +39,7 @@ class RouteController {
 		$this->create( new Zoho(), 'create_endpoint' );
 		$this->create( new SetupWizard(), 'create_endpoint' );
 		$this->create( new ImportExport(), 'create_endpoint' );
+		$this->create( new Notification(), 'create_endpoint' );
 	}
 
 	public function create( $class, $function ) {

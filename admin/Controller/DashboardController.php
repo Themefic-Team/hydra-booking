@@ -40,6 +40,7 @@ class DashboardController {
 			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+ 
 	}
 
 
@@ -269,4 +270,6 @@ class DashboardController {
 
 		return rest_ensure_response( $data );
 	}
+
+ 
 }

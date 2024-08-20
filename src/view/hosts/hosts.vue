@@ -8,9 +8,8 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbSelect from  '@/components/form-fields/HbSelect.vue';
 import HbText from  '@/components/form-fields/HbText.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
-// Import for redirect route  
- 
-
+// Import for redirect route   
+import { Notification } from '@/store/notification'; 
 import { toast } from "vue3-toastify"; 
 const router = useRouter();
 const isModalOpened = ref(false);
@@ -119,6 +118,8 @@ const updateHostStatus = async ($id, $user_id, $status) => {
 
 onBeforeMount(() => { 
     fetchHosts();
+
+    Notification.fetchNotifications();
 });
 
 // Filtering
@@ -151,7 +152,7 @@ const Tfhb_Host_Filter = async (e) =>{
 
     <!-- {{ tfhbClass }} -->
     <div :class="{ 'tfhb-skeleton': skeleton }"  class="tfhb-admin-hosts">
-        <Header title="Hosts" />
+        <Header title="Hosts" :notifications="Notification.Data" />
         <div class="tfhb-dashboard-heading tfhb-flexbox">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 

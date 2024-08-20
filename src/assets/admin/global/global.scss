@@ -682,6 +682,7 @@
                     margin-bottom: 16px;
                     border-radius: 12px;
                     transition: 0.5s;
+                    justify-content: start !important;
                     &:hover {
                         background: $ui25;
                         border-color: $ui50;
@@ -691,6 +692,8 @@
                         height: 32px;
                         img {
                             border-radius: 50%;
+                            height: 100%;
+                            width: 100%;
                         }
                     }
 
