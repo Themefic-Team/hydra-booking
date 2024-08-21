@@ -64,8 +64,9 @@ const deleteItemConfirm = () => {
                     <span class="tfhb-hosts-status tfhb-hosts-status-warning" v-else>{{ $tfhb_trans['Deactivate'] }}</span>
 
                     <div class="tfhb-hosts-info tfhb-flexbox">
-                        <div class="hosts-avatar" v-if="host.avatar !='' " >
-                            <img :src="host.avatar" alt="Hosts Avatar">
+                        <div class="hosts-avatar" >
+                            <img  v-if="host.avatar !='' " :src="host.avatar" alt="Hosts Avatar">
+                            <img  v-else  :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">
                         </div>
                         <div class="hosts-details">
                             <h3>{{ host.first_name }} {{ host.last_name }}</h3> 

@@ -113,6 +113,9 @@ class DashboardController {
 		$total_bookings['total']      = count( $bookings );
 		$total_bookings_previous      = count( $previous_date_bookings );
 		$total_bookings['percentage'] = $total_bookings_previous != 0 ? 100 * ( $total_bookings['total'] - $total_bookings_previous ) / $total_bookings_previous : 100;
+		// make only 2 decimal after dots exp 10.00
+		$total_bookings['percentage'] = number_format( $total_bookings['percentage'], 2 );
+		$total_bookings['percentage'] = $total_bookings['percentage'] == 100 ? 0 : $total_bookings['percentage'];
 		$total_bookings['growth']     = $total_bookings['percentage'] < 0 ? 'decrease' : 'increase';
 
 		// total cancelled Booking and collect percentage
@@ -133,6 +136,8 @@ class DashboardController {
 			)
 		);
 		$cancelled['percentage'] = $cancelled_previous != 0 ? 100 * ( $cancelled['total'] - $cancelled_previous ) / $cancelled_previous : 100;
+		// make only 2 decimal after dots exp 10.00
+		$cancelled['percentage'] = number_format( $cancelled['percentage'], 2 );
 		$cancelled['growth']     = $cancelled['percentage'] < 0 ? 'decrease' : 'increase';
 
 		// count wich status is completed for Bookings array
@@ -153,6 +158,8 @@ class DashboardController {
 			)
 		);
 		$completed['percentage'] = $completed_previous != 0 ? 100 * ( $completed['total'] - $completed_previous ) / $completed_previous : 100;
+		// make only 2 decimal after dots exp 10.00
+		$completed['percentage'] = number_format( $completed['percentage'], 2 );
 		$completed['growth']     = $completed['percentage'] < 0 ? 'decrease' : 'increase';
 
 		$data = array(

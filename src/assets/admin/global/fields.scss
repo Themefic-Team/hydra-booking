@@ -2,6 +2,9 @@
 
     
     .tfhb-single-form-field-wrap{
+        > label{
+            justify-content: start !important;
+        }
         width: 100%;
         // Select Field
         &.tfhb-field-select{ 

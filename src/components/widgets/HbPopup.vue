@@ -58,7 +58,7 @@ const showData = ref(false);
           <div v-if="props.isOpen" >
             <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-m-0">
                 <div class="tfhb-admin-title"> 
-                    <slot name="header"> default header </slot>
+                    <slot name="header">  </slot>
                 </div>
                 <div class="thb-admin-btn"> 
                     <span class="tfhb-popup-close tfhb-cursor-pointer" @click.stop="emit('modal-close')"><Icon name="X" size="20" /> </span> 

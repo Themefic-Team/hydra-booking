@@ -280,7 +280,7 @@ function formatTime(time) {
     />
 
     <!-- Settings Data -->
-    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24" v-if="Settings_avalibility && 'settings'==host.availability_type">  
+    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24 tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==host.availability_type">  
         <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-full-width">
             <div class="tfhb-admin-title"> 
                 <h3> {{ $tfhb_trans['Weekly hours'] }} </h3>  

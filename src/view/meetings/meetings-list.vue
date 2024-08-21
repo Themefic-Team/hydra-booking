@@ -159,11 +159,7 @@ const TfhbMeetingType = (type, router) => {
     </HbPopup>
 
     <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
-        <template #header> 
-            <!-- {{ google_calendar }} -->
-            <h2>{{ $tfhb_trans['Confirmation'] }}</h2>
-            
-        </template>
+       
 
         <template #content>  
             <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">

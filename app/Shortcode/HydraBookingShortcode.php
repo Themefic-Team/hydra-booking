@@ -99,11 +99,12 @@ class HydraBookingShortcode {
 
 			$booking_data = $get_booking;
 		}
-
+ 
 		// GetHost meta Data
-		$host_id   = isset( $meta_data['host_id'] ) ? $meta_data['host_id'] : 0;
-		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
+		$host_id   = isset( $meta_data['user_id'] ) ? $meta_data['user_id'] : 0;
 
+		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
+		// tfhb_print_r($host_meta);
 		// Time Zone
 		$DateTimeZone = new DateTimeController( 'UTC' );
 		$time_zone    = $DateTimeZone->TimeZone();
@@ -131,6 +132,7 @@ class HydraBookingShortcode {
 			?>
 			<!-- <form  method="post" action="" class="tfhb-meeting-form ajax-submit"  enctype="multipart/form-data"> -->
 				<div class="tfhb-meeting-card">
+				
 						<?php
 						// Load Meeting Info Template
 						load_template(
@@ -144,7 +146,7 @@ class HydraBookingShortcode {
 							)
 						);
 						?>
-						<div class="tfhb-calander-times tfhb-flexbox">
+						<div class="tfhb-calander-times tfhb-flexbox"> 
 							<?php
 							// Load Meeting Calendar Template
 							load_template( THB_PATH . '/app/Content/Template/meeting-calendar.php', false, $meta_data );

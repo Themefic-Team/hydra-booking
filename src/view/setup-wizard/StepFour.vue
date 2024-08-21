@@ -7,6 +7,7 @@ import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import { setupWizard } from '@/store/setupWizard';
 
 // Toast
@@ -272,8 +273,25 @@ const copyMeeting = (link) => {
         </div>
       
         <div class="tfhb-submission-btn tfhb-flexbox">
-            <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="props.setupWizard.currentStep = 'step-three'" > <Icon name="ChevronLeft" size="20" /> Back </button>
-            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size="20" />  </button>
+            <HbButton 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                @click="props.setupWizard.currentStep = 'step-three'" 
+                :buttonText="$tfhb_trans['Back']"
+                icon="ChevronLeft" 
+                hover_icon="ArrowLeft" 
+                :hover_animation="true" 
+                icon_position="left"
+            /> 
+            <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                @click="StepFour" 
+                :buttonText="$tfhb_trans['Complete setup']"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"  
+            /> 
+            <!-- <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="" > <Icon name="ChevronLeft" size="20" /> Back </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size="20" />  </button> -->
         </div>
      </div>
      <!-- Step Four -->

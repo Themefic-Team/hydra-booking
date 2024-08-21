@@ -16,8 +16,7 @@ defined( 'ABSPATH' ) || exit;
 $meeting      = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host         = isset( $args['host'] ) ? $args['host'] : array();
 $time_zone    = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
-$booking_data = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
-
+$booking_data = isset( $args['booking_data'] ) ? $args['booking_data'] : array(); 
 // Stripe Public api Key
 $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 $stripePublicKey            = ! empty( $_tfhb_integration_settings['stripe']['public_key'] ) ? $_tfhb_integration_settings['stripe']['public_key'] : '';

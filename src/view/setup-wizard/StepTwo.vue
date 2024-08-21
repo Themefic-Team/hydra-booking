@@ -65,7 +65,7 @@ const StepTwo = () => {
         <div class="tfhb-content-wrap tfhb-s-w-availability-wrap tfhb-flexbox tfhb-gap-tb-24">
 
            
-            <AvailabilityPopupSingle v-if="isModalOpened" :timeZone="props.setupWizard.time_zone" :availabilityDataSingle="props.setupWizard.data.availabilityDataSingle" :isOpen="isModalOpened" @modal-close="closeModal"  @update-availability="fetchAvailabilitySettingsUpdate" />
+            <AvailabilityPopupSingle max_width="1000px" v-if="isModalOpened" :timeZone="props.setupWizard.time_zone" :availabilityDataSingle="props.setupWizard.data.availabilityDataSingle" :isOpen="isModalOpened" @modal-close="closeModal"  @update-availability="fetchAvailabilitySettingsUpdate" />
     
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">

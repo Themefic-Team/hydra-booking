@@ -418,6 +418,7 @@ class TransStrings {
 
 			// Setup Wizard
 			'Welcome to Hydrabooking!'             => __( 'Welcome to Hydrabooking!', 'hydra-booking' ),
+			'Complete setup'             => __( 'Complete setup', 'hydra-booking' ),
 			'Thank you for choosing Hydrabooking, the ultimate solution for seamless appointment and meeting bookings.'             => __( 'Thank you for choosing Hydrabooking, the ultimate solution for seamless appointment and meeting bookings.', 'hydra-booking' ),
 			'Enter your email'             => __( 'Enter your email', 'hydra-booking' ),
 			'Email'             => __( 'Email', 'hydra-booking' ),

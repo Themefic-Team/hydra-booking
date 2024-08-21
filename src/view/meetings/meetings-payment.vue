@@ -54,8 +54,8 @@ const attendee = ref(false);
                         placeholder="Select Payment Method"  
                         :option = "[
                             {name: 'Woocommerce', value: 'woo_payment'},  
-                            {name: 'Stripe Pay', value: 'stripe_payment'},  
-                            {name: 'Paypal', value: 'paypal_payment'},  
+                            {name: 'Paypal', value: 'paypal_payment'}, 
+                            {name: 'Stripe Pay', value: 'stripe_payment', disable: true}, 
                         ]"   
                     /> 
                     <!-- Woo Integrations  -->

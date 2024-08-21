@@ -21,6 +21,7 @@ const props = defineProps({
   availabilityDataSingle: {},
   timeZone: {}, 
   is_host: Boolean,
+  max_width: String,
 });
 const emit = defineEmits(["update:availabilityData", "modal-close", "update-availability"]); 
 
@@ -265,7 +266,7 @@ const tfhbValidateInput = (fieldName) => {
  
 
 <template> 
-<HbPopup   :isOpen="props.isOpen" :enableAvailabilityClass="true" @modal-close="emit('modal-close')"  name="first-modal">
+<HbPopup :isOpen="props.isOpen" :max_width="max_width" :enableAvailabilityClass="true" @modal-close="emit('modal-close')"  name="first-modal">
         <template #header> 
             <h2> {{ $tfhb_trans['Add New Availability'] }} </h2>   
         </template>

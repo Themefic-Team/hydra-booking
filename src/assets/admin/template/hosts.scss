@@ -38,6 +38,11 @@
         .tfhb-hosts-info {
           justify-content: normal !important;
           gap: 8px !important;
+          h3{
+            font-size: 15px;
+            font-weight: 400 !important;
+            line-height: 24px;
+          }
           .hosts-avatar{
             height: 32px;
             width: 32px;

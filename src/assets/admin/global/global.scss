@@ -69,6 +69,7 @@
     ul li{
         margin: 0;
         font-family: "Inter", sans-serif;
+        margin-bottom: 2px;
     }
 
 
@@ -337,7 +338,7 @@
                 font-size: 15px !important;
               }
               .tfhb-calender-move-icon {
-                margin-top: 20px;
+                margin-top: 4px;
             }
         }
        
@@ -628,7 +629,7 @@
             width: 132px;
             box-sizing: border-box;
             position: relative;
-            height: 40px;
+            // height: 40px;
             z-index: 0;
             svg{
                 position: absolute;
@@ -707,7 +708,14 @@
     }
      
 }
+.tfhb-availability-details-wrap{
+    // max-width: 70%;
+    // Responsive
+    @media #{$max1140}{
+        max-width: 100%;
+    }
 
+}
 .tfhb-availability-schedule-btn {
     border: none;
     background-color: transparent; 
@@ -1205,6 +1213,39 @@ button.question-edit-btn{
     align-items: center;
     justify-content: center;
 }
+.meeting-create-details{
+    .tfhb-availability-details-wrap{
+        .tfhb-availability-schedule-wrap {
+            width: auto !important;
+        }
+        .tfhb-availability-schedule-time {
+            width: auto !important;
+        }
+    }
+    .tfhb-availability-schedule-single{
+        .tfhb-availability-schedule-wrap {
+             width: 60%; 
+            .tfhb-availability-schedule-time {
+                width: 85%;
+            }
+        }
+        
+    }
+}
+
+.tfhb-host-availability{
+    .tfhb-availability-details-wrap{
+        .tfhb-availability-schedule-single{
+            .tfhb-availability-schedule-wrap { 
+                .tfhb-availability-schedule-time {
+                    width: 100% !important;
+                }
+            }
+        }
+    }
+   
+}
+
 
 @media only screen and (max-width: 991px){
     .tfhb-hydra-dasboard-content .tfhb-general-card .tfhb-single-form-field,
@@ -1214,7 +1255,10 @@ button.question-edit-btn{
         width: 100% !important;
     }
 
-    .tfhb-availability-schedule-wrap .tfhb-single-form-field{
-        width: 95px !important;
+    .tfhb-availability-schedule-wrap {
+        width: auto !important;
+        .tfhb-single-form-field{
+            width: 95px !important;
+        }
     }
 }

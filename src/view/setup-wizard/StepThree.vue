@@ -47,7 +47,7 @@ const props = defineProps({
             </button>
              
         </div>
-        <div class="tfhb-submission-btn tfhb-flexbox"> 
+        <div class="tfhb-submission-btn tfhb-flexbox tfhb-gap-8"> 
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
@@ -57,7 +57,7 @@ const props = defineProps({
                 :hover_animation="true" 
                 icon_position="left"
             /> 
-            <!-- <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" >Next<Icon name="ChevronRight" size="20" />  </button> -->
+            <button  @click="props.setupWizard.currentStep = 'step-end'"  class="tfhb-btn  tfhb-flexbox tfhb-gap-8" >Skip </button>
         </div>
      </div>
      <!-- Step Three -->

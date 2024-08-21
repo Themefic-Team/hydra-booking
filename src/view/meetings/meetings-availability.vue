@@ -419,7 +419,7 @@ const isobjectempty = (data) => {
         <!-- Time Zone --> 
         <!-- Settings Data -->
         
-        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
+        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
             <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox">
                 <div class="tfhb-admin-title"> 
                     <h3> {{ $tfhb_trans['Weekly hours'] }} </h3>  
@@ -462,6 +462,9 @@ const isobjectempty = (data) => {
                     </div>
                     
                 </div>
+                <div v-else class="tfhb-availability-schedule-wrap"> 
+                   <h4 class="tfhb-availability-schedule">Unavailable</h4>
+                </div>
             </div>
 
             <!-- Date Overrides -->
@@ -488,7 +491,7 @@ const isobjectempty = (data) => {
         </div>  
 
         <!-- Custom Data -->
-        <div class="tfhb-admin-card-box tfhb-gap-24" v-if="'custom'==meeting.availability_type">  
+        <div class="tfhb-admin-card-box tfhb-gap-24  " v-if="'custom'==meeting.availability_type">  
             <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox">
                 <div class="tfhb-admin-title"> 
                     <h3> {{ $tfhb_trans['Weekly hours'] }} </h3>  
@@ -515,7 +518,7 @@ const isobjectempty = (data) => {
                             <HbDropdown 
                                 v-model="time.start"  
                                 required= "true" 
-                                width="50"
+                                width="60"
                                 :selected = "1"
                                 placeholder="Start"   
                                 :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
