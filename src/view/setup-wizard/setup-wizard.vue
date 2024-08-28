@@ -12,11 +12,12 @@ import StepEnd from './StepEnd.vue';
 
 
 // add class into body
-document.body.classList.add('tfhb-setup-wizard-body');
-
+// route is #/setup-wizard add class into body
 onBeforeMount(() => { 
-    setupWizard.fetchSetupWizard(); 
+    setupWizard.fetchSetupWizard();  
+   
 });
+ 
 
  
 </script>

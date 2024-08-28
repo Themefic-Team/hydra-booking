@@ -114,6 +114,14 @@
       &:last-child{
         margin-bottom: 0 !important;
       }
+      .tfhb-integrations-single-block{
+        position: relative !important;
+        .tfhb-badge.tfhb-badge-pro {
+            margin: 0 !important; 
+            font-size: 11px !important; 
+            line-height: 1.1 !important;
+        }
+      }
     }
   }
 }

@@ -250,6 +250,7 @@ const routes = [
      {
         path: '/setup-wizard',
         component: setupWizard,
+        name: 'setupWizard',
         meta: { Capabilities: 'tfhb_manage_settings' },
         // redirect: { name: 'SettingsGeneral' },
        
@@ -268,6 +269,12 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => { 
 
 //   alert('to.meta.Capabilities: ' + to.meta.Capabilities);
+    console.log(to.name)
+    if (to.name == 'setupWizard') { 
+        document.body.classList.add('tfhb-setup-wizard-body');
+    }else{ 
+        document.body.classList.remove('tfhb-setup-wizard-body');
+    }
     if (to.meta.Capabilities === undefined) {
         // If no capabilities are defined for the route, proceed to the next route
         next();
@@ -280,6 +287,7 @@ router.beforeEach(async (to, from, next) => {
 
         // Check if the user has the required capabilities for the route
         const hasCapabilities = AuthData.Capabilities(to.meta.Capabilities);   
+        
         if (hasCapabilities) {
             // Host Route for if use is host 
             if(  user_role == 'tfhb_host' && to.name == 'HostsLists' ){

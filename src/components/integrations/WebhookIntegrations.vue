@@ -24,7 +24,7 @@ const closePopup = () => {
 
 <template>
       <!-- webhook Integrations  -->
-      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box "> 
+      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box tfhb-pro"> 
         <span class="tfhb-badge tfhb-badge-pro">{{ $tfhb_trans['Pro'] }}</span>
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">

@@ -239,6 +239,14 @@
         .tfhb-host-integrations.tfhb-integrations-single-block.tfhb-admin-card-box {
             width: calc(50% - 12px) !important;
             margin-bottom: 0 !important;
+            
+            position: relative !important;
+            .tfhb-badge.tfhb-badge-pro {
+                margin: 0 !important; 
+                font-size: 11px !important; 
+                line-height: 1.1 !important;
+            }
+            
         }
 
         .tfhb-s-w-integrations-dropdown {
