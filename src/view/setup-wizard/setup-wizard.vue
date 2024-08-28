@@ -12,11 +12,12 @@ import StepEnd from './StepEnd.vue';
 
 
 // add class into body
-document.body.classList.add('tfhb-setup-wizard-body');
-
+// route is #/setup-wizard add class into body
 onBeforeMount(() => { 
-    setupWizard.fetchSetupWizard(); 
+    setupWizard.fetchSetupWizard();  
+   
 });
+ 
 
  
 </script>
@@ -34,7 +35,7 @@ onBeforeMount(() => {
         <div class="tfhb-s-w-cta tfhb-flexbox tfhb-gap-16">
             <a href="#">Need Help</a>
             <span></span>
-            <a href="#">Faq</a>
+            <a href="#">FAQ</a>
         </div>
      </div>
 

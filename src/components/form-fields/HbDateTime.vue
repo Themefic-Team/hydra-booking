@@ -20,7 +20,9 @@ const props = defineProps([
     'placeholder',
     'description', 
     'change', 
-    'icon'
+    'icon',
+    'tooltip',
+    'tooltipText'
 ])
 const emit = defineEmits(['update:modelValue'])
 
@@ -46,11 +48,19 @@ const flatPickrChange = (e) => {
     <div class="tfhb-single-form-field-wrap tfhb-field-date">
          <!--if has label show label with tag else remove tags  -->
          
-        <label v-if="label !=''" :for="name">{{ label }} <span  v-if="required == 'true'"> *  </span> </label>
+         <label class="tfhb-flexbox tfhb-gap-4" v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span>  
+          <span v-if="tooltip" class="tfhb-tooltip">
+            <Icon name="Info" size="15" />
+            <span class="tfhb-tooltiptext"> 
+              {{ tooltipText }}
+            </span>
+          </span>
+        
+        </label>
         <h4 v-if="subtitle">{{ subtitle }}</h4>
         <p v-if="description">{{ description }}</p>
         
-        <flatPickr  @input="emit('update:modelValue', $event.target.value)"  :value="props.modelValue" :config="config" @change="flatPickrChange"  />
+        <flatPickr  @input="emit('update:modelValue', $event.target.value)"  :placeholder="props.placeholder" :value="props.modelValue" :config="config" @change="flatPickrChange"  />
     
         <span class="tfhb-flat-icon"><Icon v-if="icon" :name="icon" size="20" /> </span>
              

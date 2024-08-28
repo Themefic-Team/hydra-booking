@@ -4,6 +4,7 @@ import { useRouter, RouterView,} from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbImageSelect from '@/components/form-fields/HbImageSelect.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
 import axios from 'axios' 
 import { toast } from "vue3-toastify";
 import LvColorpicker from 'lightvue/color-picker';
@@ -175,8 +176,14 @@ onBeforeMount(() => {
                     
                 />
             </div>
-
-            <button class="tfhb-btn boxed-btn" @click="UpdateAppearanceSettings">{{ $tfhb_trans['Save'] }}</button>
+            <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="UpdateAppearanceSettings" 
+                :buttonText="$tfhb_trans['Save']"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />   
 
         </div>
     </div>

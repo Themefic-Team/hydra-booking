@@ -3,11 +3,13 @@ import { reactive, onBeforeMount, ref } from 'vue';
 import { useRouter, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import Icon from '@/components/icon/LucideIcon.vue'
-import Header from '@/components/Header.vue';
-import CreateHostPopup from '@/components/hosts/CreateHostPopup.vue';
-// Import for redirect route  
- 
-
+import Header from '@/components/Header.vue'; 
+import HbPopup from '@/components/widgets/HbPopup.vue';  
+import HbSelect from  '@/components/form-fields/HbSelect.vue';
+import HbText from  '@/components/form-fields/HbText.vue';
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+// Import for redirect route   
+import { Notification } from '@/store/notification'; 
 import { toast } from "vue3-toastify"; 
 const router = useRouter();
 const isModalOpened = ref(false);
@@ -19,6 +21,7 @@ const openModal = () => {
   isModalOpened.value = true;
 };
 const hosts = reactive({});
+const host  = reactive({});
 const usersData = reactive({});
  // Fetch generalSettings
 const fetchHosts = async () => {
@@ -35,7 +38,7 @@ const fetchHosts = async () => {
     } 
 } 
 // Hosts
-const CreateHosts = async (host) => {    
+const CreateHosts = async () => {    
     // redirect with router argument
    
     try { 
@@ -115,6 +118,8 @@ const updateHostStatus = async ($id, $user_id, $status) => {
 
 onBeforeMount(() => { 
     fetchHosts();
+
+    Notification.fetchNotifications();
 });
 
 // Filtering
@@ -147,19 +152,74 @@ const Tfhb_Host_Filter = async (e) =>{
 
     <!-- {{ tfhbClass }} -->
     <div :class="{ 'tfhb-skeleton': skeleton }"  class="tfhb-admin-hosts">
-        <Header title="Hosts" />
+        <Header title="Hosts" :notifications="Notification.Data" />
         <div class="tfhb-dashboard-heading tfhb-flexbox">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 
                 <span><Icon name="Search" size="20" /></span>
            </div>
             <div class="thb-admin-btn right">
-               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="15" /> {{ $tfhb_trans['Add New Host'] }}</button> 
+               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans['Add New Host'] }}</button> 
             </div> 
         </div>
         <div class="tfhb-hosts-content">  
-            <CreateHostPopup v-if="isModalOpened" :isOpen="isModalOpened" :usersData="usersData.data" @modal-close="closeModal" @hosts-create="CreateHosts"   />
-            <router-view :host_list="hosts.data" @update-host-status="updateHostStatus" @delete-host="deleteHost" :host_skeleton="skeleton" /> 
+            <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
+                <template #header> 
+                    <h2>{{$tfhb_trans['Add New Host']}}</h2>   
+                </template>
+
+                <template #content>  
+                    <!-- Select User --> 
+                    <HbDropdown    
+                        v-model="host.id"  
+                        required= "true"  
+                        :label="$tfhb_trans['Select User']"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans['Select User']" 
+                        :option = "usersData.data" 
+                    /> 
+                    <!-- Select User --> 
+                    <!-- UsernName -->
+                    <HbText  
+                        v-if="host.id == 0"
+                        v-model="host.username"  
+                        required= "true"  
+                        :label="$tfhb_trans['Username']"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans['Type Username']"  
+                    /> 
+                    <!-- UsernName -->
+                    <!-- Email -->
+                    <HbText  
+                    v-if="host.id == 0"
+                        v-model="host.email"  
+                        required= "true"  
+                        type= "email"  
+                        :label="$tfhb_trans['Email']"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans['Type User Email']"  
+                    /> 
+                    <!-- Email -->
+
+                    <!-- Password -->
+                    
+                    <HbText  
+                        v-if="host.id == 0"
+                        v-model="host.password"  
+                        required= "true"  
+                        type= "password"  
+                        :label="$tfhb_trans['Password']"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans['Type User Password']"  
+                    /> 
+                    <!-- Password -->
+                    
+
+                    <!-- Create Or Update Availability -->
+                    <button class="tfhb-btn boxed-btn" @click="CreateHosts">{{ $tfhb_trans['Create Hosts'] }}</button>
+                </template> 
+            </HbPopup>
+             <router-view :host_list="hosts.data" @update-host-status="updateHostStatus" @delete-host="deleteHost" :host_skeleton="skeleton" /> 
         </div> 
     </div>
 </template>

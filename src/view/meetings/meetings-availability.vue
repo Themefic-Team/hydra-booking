@@ -329,18 +329,17 @@ const isobjectempty = (data) => {
                             :config="{
                             }"
                             width="41"
-                            placeholder="Type your schedule title"   
+                            :placeholder="$tfhb_trans['Start']"
                         /> 
                         <Icon name="MoveRight" size="20" /> 
                         <HbDateTime  
                             v-model="meeting.availability_range.end"
-                            icon="CalendarDays"
-                            :label="$tfhb_trans['End']"  
+                            icon="CalendarDays" 
                             selected = "1"
                             :config="{
                             }"
                             width="41"
-                            placeholder="Type your schedule title"   
+                            :placeholder="$tfhb_trans['End']"   
                         /> 
 
                     </div>
@@ -420,7 +419,7 @@ const isobjectempty = (data) => {
         <!-- Time Zone --> 
         <!-- Settings Data -->
         
-        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
+        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
             <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox">
                 <div class="tfhb-admin-title"> 
                     <h3> {{ $tfhb_trans['Weekly hours'] }} </h3>  
@@ -431,7 +430,7 @@ const isobjectempty = (data) => {
             </div>
             
             <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline">
-                <div class="tfhb-swicher-wrap  tfhb-flexbox">
+                <div class="tfhb-swicher-wrap tfhb-gap-8  tfhb-flexbox">
                     <label class="tfhb-schedule-swicher" for="swicher"> {{time_slot.day}}</label>
                     <!-- Swicher -->
                 </div>
@@ -463,6 +462,9 @@ const isobjectempty = (data) => {
                     </div>
                     
                 </div>
+                <div v-else class="tfhb-availability-schedule-wrap"> 
+                   <h4 class="tfhb-availability-schedule">Unavailable</h4>
+                </div>
             </div>
 
             <!-- Date Overrides -->
@@ -489,7 +491,7 @@ const isobjectempty = (data) => {
         </div>  
 
         <!-- Custom Data -->
-        <div class="tfhb-admin-card-box tfhb-gap-24" v-if="'custom'==meeting.availability_type">  
+        <div class="tfhb-admin-card-box tfhb-gap-24  " v-if="'custom'==meeting.availability_type">  
             <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox">
                 <div class="tfhb-admin-title"> 
                     <h3> {{ $tfhb_trans['Weekly hours'] }} </h3>  
@@ -500,7 +502,7 @@ const isobjectempty = (data) => {
             </div>
             
             <div v-for="(time_slot, key) in meeting.availability_custom.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline">
-                <div class="tfhb-swicher-wrap tfhb-flexbox">
+                <div class="tfhb-swicher-wrap tfhb-gap-8 tfhb-flexbox">
                     <!-- Checkbox swicher -->
                     <label class="switch">
                         <input id="swicher" v-model="time_slot.status" true-value="1" type="checkbox">
@@ -516,11 +518,12 @@ const isobjectempty = (data) => {
                             <HbDropdown 
                                 v-model="time.start"  
                                 required= "true" 
-                                width="50"
+                                width="60"
                                 :selected = "1"
                                 placeholder="Start"   
                                 :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
                                 @tfhb_start_change="TfhbStartDataEvent"
+                                icon="Clock"
                                 :parent_key = "key"
                                 :single_key = "tkey"
                             />                
@@ -530,6 +533,7 @@ const isobjectempty = (data) => {
                                 required= "true" 
                                 width="50"
                                 :selected = "1"
+                                 icon="Clock"
                                 placeholder="End"   
                                 :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
                                 @tfhb_start_change="TfhbEndDataEvent"

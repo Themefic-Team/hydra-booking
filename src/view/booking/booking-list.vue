@@ -4,8 +4,10 @@ import axios from 'axios'
 import 'primevue/resources/themes/aura-light-green/theme.css'
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbSelect from '@/components/form-fields/HbSelect.vue';
+import HbRadio from '@/components/form-fields/HbRadio.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import { toast } from "vue3-toastify"; 
 import useDateFormat from '@/store/dateformat'
 const { Tfhb_Date, Tfhb_Time } = useDateFormat();
@@ -19,9 +21,64 @@ import interactionPlugin from '@fullcalendar/interaction'
 
 const BookingDetailsPopup = ref(false);
 const BookingEditPopup = ref(false);
+const ExportAsCSV = ref(false);
 const itemsPerPage = ref(10);
 const currentPage = ref(1);
 const bookingView = ref('calendar');
+const exportData = reactive({
+    date_range: 'days',
+    start_date: '',
+    end_dates: ''
+});
+const select_all = ref(false);
+const selected_items = ref([]);
+const host_id = ref('');
+
+
+// Export CSV
+const ExportBookingAsCSV = async () => {
+    try { 
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/export-csv', exportData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+            } 
+        } );
+
+        if (response.data.status) {  
+
+            // Booking.bookings = response.data.booking; 
+            // Booking.calendarbooking.events = response.data.booking_calendar;
+            // BookingEditPopup.value = false;
+            // export csv file data
+            const url = window.URL.createObjectURL(new Blob([response.data.data]));
+            const link = document.createElement('a');
+            const file_name = response.data.file_name;
+
+            link.href = url;
+
+            link.setAttribute('download', file_name);
+
+            // Append to the DOM
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up
+            link.remove();
+            window.URL.revokeObjectURL(url);
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });   
+        }else{
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }   
+}
 
 const TfhbFormatMeetingLocation = (address) => {
     const meeting_address = JSON.parse(address)
@@ -114,6 +171,39 @@ const Booking_Status_Callback = (e) => {
     UpdateMeetingStatus(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id, e.value);
 }
 
+const Bulk_Status_Callback = async (e) => {
+
+    let bookings = {
+        items: selected_items,
+        status: e.value
+    }
+    try { 
+            // axisos sent dataHeader Nonce Data
+            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/bulk-update', bookings, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                } 
+            } );
+
+            if (response.data.status) {  
+                Booking.bookings = response.data.booking; 
+                Booking.calendarbooking.events = response.data.booking_calendar;
+                BookingEditPopup.value = false;
+
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+            }else{
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        } 
+}
 
 
 // Pagination
@@ -145,6 +235,24 @@ const prevPage = () => {
   }
 };
 
+
+// Select All
+const toggleSelectAll = (e) => {
+    if(e.target.checked){
+        select_all.value = true;
+    }else{
+        select_all.value = false;
+    } 
+
+    if (select_all.value) {
+        // If 'select_all' is true, select all items
+        selected_items.value = paginatedBooking.value.map(item => item.id);
+    } else {
+        // If 'select_all' is false, deselect all items
+        selected_items.value = [];
+    }
+}
+
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -168,15 +276,83 @@ const prevPage = () => {
             <span><Icon name="Search" size="20" /></span>
         </div>
     </div>
-    <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button">
-        <HbSelect 
-            :selected = "1"
-            placeholder="Status"  
-            :option = "{'12_hours': '30 minutes', '24_hours': '10 minutes'}" 
-        />
+    <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
+        <HbDropdown   
+            v-if="selected_items.length > 0"
+            placeholder="Status"   
+            :option = "[
+                {'name': 'Pending', 'value': 'pending'},  
+                {'name': 'Confirmed', 'value': 'confirmed'},   
+                {'name': 'Canceled', 'value': 'canceled'}
+            ]"
+            @tfhb-onchange="Bulk_Status_Callback" 
+        />  
+        <button @click="ExportAsCSV = true" class="tfhb-btn boxed-secondary-btn flex-btn">
+            <!-- <Icon name="PlusCircle " size="20" />   -->
+            {{ $tfhb_trans['Export as CSV'] }}
+        </button>
         <router-link :to="{ name: 'BookingCreate' }" class="tfhb-btn boxed-btn flex-btn"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans['Add New Booking'] }}</router-link>
     </div> 
 </div>
+
+<!-- Export CSV POPup -->
+<HbPopup  :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
+    <template #header>  
+        <h3>Export Bookings as CSV</h3>
+    </template>
+
+    <template #content> 
+        
+        <HbRadio  
+            required= "true"
+            v-model="exportData.date_range"
+            name="request_header"
+            :label="$tfhb_trans['Date Range']"
+            :groups="true" 
+            :options="[
+                {'label': 'Today', 'value': 'days'},  
+                {'label': 'Last 7 Days', 'value': 'weeks'},
+                {'label': 'Current Month', 'value': 'months'},
+                {'label': 'Last Year', 'value': 'years'}, 
+                {'label': 'All', 'value': 'all'}, 
+                {'label': 'Custom', 'value': 'custom'} 
+            ]" 
+        />
+      <div v-if="exportData.date_range == 'custom'" class="custom-date-range" >
+        <label for="">{{ $tfhb_trans['Select Date Range'] }}</label>
+        <div class="tfhb-filter-dates tfhb-flexbox">
+            
+            <div class="tfhb-filter-start-date">
+                <HbDateTime 
+                    v-model="exportData.start_date"
+                    :label="$tfhb_trans['start Date']"
+                    width="45"
+                    enableTime='true'
+                    placeholder="From"   
+                /> 
+                <Icon name="CalendarDays" size="20" /> 
+            </div>
+            <div class="tfhb-calender-move-icon">
+                <Icon name="MoveRight" size="20px" /> 
+            </div>
+            <div class="tfhb-filter-end-date">
+                <HbDateTime 
+                    v-model="exportData.end_date"
+                    width="45"
+                    enableTime='true'
+                    placeholder="To"   
+                /> 
+                <Icon name="CalendarDays" size="20" /> 
+            </div>
+        </div> 
+      </div>
+
+      <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
+        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size="20" /> {{ $tfhb_trans['Export Meeting'] }}</button> 
+      </div>
+    </template> 
+</HbPopup>
+<!-- Export CSV POPup -->
 
 <!-- Booking Quick View Start -->
 
@@ -255,12 +431,13 @@ const prevPage = () => {
 <!-- Booking Quick View End -->
 
 <!-- Booking Calendar View -->
-<div class="tfhb-booking-calendar tfhb-mt-32" v-if="bookingView=='calendar'">
-    <FullCalendar class='demo-app-calendar' :options='Booking.calendarbooking'>
+<div class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
+    <FullCalendar class='demo-app-calendar tfhb-scrollbar' :options='Booking.calendarbooking'>
         <template v-slot:eventContent='arg'>
-            <!-- <b>{{ arg.timeText }}</b> -->
-            <!-- {{ arg.event.extendedProps.status }} -->
-            <b class="tfhb-calendar-popup" :class="arg.event.extendedProps.status" @click="bookingCalendarPopup(arg.event)">{{ arg.event.title }}</b>
+            <!-- {{ arg.event.booking_date }}
+            <b>{{ arg.timeText }}</b>
+            {{ arg.event.extendedProps.booking_time }} -->
+            <b class="tfhb-calendar-popup" :class="arg.event.extendedProps.status" @click="bookingCalendarPopup(arg.event)">{{ arg.event.title }}  ( {{  arg.event.extendedProps.booking_time }} )</b>
         </template>
     </FullCalendar>
 </div>
@@ -322,7 +499,14 @@ const prevPage = () => {
     <table class="table" cellpadding="0" :cellspacing="0">
         <thead>
             <tr>
-                <th></th>
+                <th> 
+                    <div class="select-checkbox-lists">
+                        <label>
+                            <input type="checkbox" v-model="select_all" @change="toggleSelectAll">   
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </th>
                 <th>{{ $tfhb_trans['Date & Time'] }}</th>
                 <th>{{ $tfhb_trans['Title'] }}</th>
                 <th>{{ $tfhb_trans['Host'] }}</th>
@@ -338,7 +522,7 @@ const prevPage = () => {
                 <td>
                     <div class="checkbox-lists">
                         <label>
-                            <input type="checkbox" :value="book.id">   
+                            <input type="checkbox" v-model="selected_items" :value="book.id" :checked="select_all == true ? true : false">   
                             <span class="checkmark"></span>
                         </label>
                     </div>

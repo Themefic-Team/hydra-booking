@@ -28,6 +28,7 @@
     height: 100% !important;
     width: 100% !important;
     overflow: auto;
+    
 
     .tfhb-s-w-preloader{
         height: 20px;
@@ -38,7 +39,7 @@
     .tfhb-s-w-geting-start {
         .tfhb-single-form-field {
             min-width: 400px !important;
-            margin-bottom: 8px;
+            margin-bottom: 16px;
         }
     }
 
@@ -82,12 +83,39 @@
         border: 2px solid $ui50;
         background: #FFF;
         box-shadow: 0px 8px 16px 0px rgba(40, 16, 26, 0.04);
-        width: 60%;
-        // height: 669px;
+        // width: 60%;
+        // // height: 669px;
         padding: 64px 120px;
         flex-direction: column;
-        gap: 56px !important;
+        // gap: 56px !important;
         justify-content: center !important;
+        &.tfhb-s-w-step-end {
+            width: 90%;
+            padding: 64px 30px;
+            .cartbox-text {
+                max-width: 230px !important;
+            }
+        }
+
+        &.tfhb-s-w-step-two {
+            width: 70%;
+            .tfhb-popup-open {
+                .tfhb-popup-wrap {
+                    animation: none !important;
+                }
+            }
+            .tfhb-dashboard-heading {
+                display: none !important;
+              }
+            .tfhb-popup-wrap {
+                max-width: 800px !important;
+                .tfhb-popup-wrap {
+                    box-shadow: none !important;
+                    border: none !important;
+                    padding: 0 !important;
+                  }
+            }
+        }
 
         .tfhb-s-w-icon-text {
             text-align: center;
@@ -193,6 +221,11 @@
                     border-radius: 4px;
                     border: 1px solid var(--Border, #F6EEF2);
                     background: #FFF;
+                    &:focus, &:active {
+                        outline: none;
+                        box-shadow: none; 
+                        border-color: $ui900;
+                    }
                 }
 
                 svg {
@@ -206,11 +239,22 @@
         .tfhb-host-integrations.tfhb-integrations-single-block.tfhb-admin-card-box {
             width: calc(50% - 12px) !important;
             margin-bottom: 0 !important;
+            
+            position: relative !important;
+            .tfhb-badge.tfhb-badge-pro {
+                margin: 0 !important; 
+                font-size: 11px !important; 
+                line-height: 1.1 !important;
+            }
+            
         }
 
         .tfhb-s-w-integrations-dropdown {
             padding: 8px;
 
+             > span{
+                font-weight: 600 !important;
+            }
             .tfhb-dropdown-wrap {
                 background-color: #fff !important;
 

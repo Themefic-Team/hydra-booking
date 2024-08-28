@@ -1,5 +1,9 @@
+.toplevel_page_hydra-booking #wpcontent {
+	padding: 0;
+}
 #tfhb-admin-app {
-    margin-top: 20px;
+
+    // margin-top: 20px;
     a,
     h1,
     h2,
@@ -13,7 +17,9 @@
         font-family: 'Inter', sans-serif;
         margin: 0;
     }
-
+    .lucide {
+        stroke-width: 1.5;
+    }
     button {
         cursor: pointer;
     }
@@ -63,12 +69,86 @@
     ul li{
         margin: 0;
         font-family: "Inter", sans-serif;
+        margin-bottom: 2px;
+    }
+
+
+    .tfhb-closing-confirmation-pupup{
+        justify-content: center !important;
+        text-align: center;
+        h3{
+            margin-bottom: 16px;
+        }
+    }
+
+    // Tooltip
+    .tfhb-tooltip {
+        position: relative;
+        display: inline-block;
+
+        .tfhb-tooltiptext {
+            // visibility: hidden;
+            background: var(--Surface-Primary, #FAF5F7); 
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            min-width: 150px;
+            border-radius: 8px;
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position it above the input */
+            left: 50%;
+            transform: translateX(-50%);
+            
+            /* Fade in tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            
+            /* Arrow */
+            &:after {
+                content: '';
+                position: absolute;
+                top: 100%; /* At the bottom of the tooltip */
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #FAF5F7 transparent transparent transparent;
+            }
+        }
+        &:hover .tfhb-tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+   
+    
+   
+    // Tooltip
+
+    // Button
+    .tfhb-badge{
+        &.tfhb-badge-pro {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: #F62881 !important;
+            background-color: $primaryi50;
+            font-weight: 600 !important;
+          }
     }
     .tfhb-mb-32{
         margin-bottom: 32px !important;
     }
     .tfhb-mt-32{
         margin-top: 32px !important;
+    }
+    .tfhb-mt-72{
+        margin-top: 72px !important;
     }
     .tfhb-mb-24{
         margin-bottom: 24px !important;
@@ -99,6 +179,9 @@
     }
     .tfhb-p-0{
         padding: 0px !important;
+    }
+    .tfhb-pro {
+        opacity: 0.6;
     }
     
     //flow-root
@@ -147,7 +230,7 @@
     }
 
     .tfhb-admin-title {
-        margin-bottom: 16px;
+        margin-bottom: 16px; 
     }
     .tfhb-mail-shortcode-badge {
         background-color: $ui25;
@@ -258,7 +341,7 @@
                 font-size: 15px !important;
               }
               .tfhb-calender-move-icon {
-                margin-top: 20px;
+                margin-top: 4px;
             }
         }
        
@@ -289,6 +372,11 @@
                 border-radius: 4px 0px 0px 0px; 
                 background-color: #fff;
                 margin: 0 !important;
+                color: $Text-Paragraph;
+                &.tfhb-dropdown-error{
+                    background-color: $Error-Background;
+                    color: $Error-Text;
+                }
                 &:hover {
                     background-color: $ui25;
                 }
@@ -385,14 +473,15 @@
     .tfhb-dashboard-heading {  
         // height: 60px;  
         border-radius: 4px; 
-        // margin-right: 16px;
+        margin-left: 16px;
         h2 {
-            font-size: 24px;
+            font-size: 17px;
             font-weight: 600;
-            color: #000;
+            // color: #000;
             text-decoration: none;
             outline: none;
             box-shadow: none;
+            margin: 0 !important;
             margin-left: 5px;
         }
         .tfhb-action-filter-button{
@@ -427,6 +516,7 @@
             }
             ul {
                 display: inline-block;
+                width: 100%;
             }
         }
     
@@ -435,6 +525,9 @@
             padding: 24px;
             @media #{$max1140}{
                 width: calc(100% - 200px);
+            }
+            .tfhb-dashboard-heading{
+                margin-left: 0 !important;
             }
         }
     
@@ -454,8 +547,12 @@
 		z-index: 9999;
         display: flex;
         justify-content: center;
-        align-items: center;
-		
+        align-items: center; 
+        // &.tfhb-popup-open {
+        //         visibility: visible;
+        //         opacity: 1; 
+        // }
+            
 		.tfhb-popup-wrap {
 			max-width: 800px;
 			padding: 24px;
@@ -468,6 +565,7 @@
             
             .tfhb-dashboard-heading {
                 .tfhb-admin-title{
+                    position: relative;
                     margin-bottom: 0 !important;
                 }
                 margin-bottom: 24px !important;
@@ -475,6 +573,23 @@
             .tfhb-popup-close {
                 border: none;
                 background-color: transparent; 
+                height: 35px;
+                border-radius: 50%;
+                width: 35px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                /*! padding-top: 5px; */
+                border-radius: 50% !important;
+                transition: 0.4s;
+
+                &:hover {
+                    background-color: $Surface-Primary !important;
+                  }
+            }
+            h3{
+                font-size: 17px !important;
             }
 		}
     }
@@ -490,10 +605,11 @@
           width: 100%;
           height: 40px;
           box-sizing: border-box;
-          &:focus {
+          &:focus, &:active {
             outline: none;
-            box-shadow: none;
-          }
+            box-shadow: none; 
+            border-color: $ui900;
+        }
         }
         span {
           position: absolute;
@@ -504,10 +620,58 @@
           color: $ui600 !important;
         }
       }
-
+      .tfhb-filter-dates{
+        gap: 8px !important;
+        padding: 24px;
+        border-bottom: 1px solid $ui50; 
+        .tfhb-filter-start-date,
+        .tfhb-filter-end-date{
+            border-radius: 8px;
+            border: 1px solid $ui50;
+            padding: 8px 8px 8px 12px; 
+            width: 132px;
+            box-sizing: border-box;
+            position: relative;
+            // height: 40px;
+            z-index: 0;
+            svg{
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                margin-top: -10px;
+                z-index: -1;
+            }
+            .tfhb-single-form-field{
+                width: 100% !important;
+                input{
+                    min-width: auto !important;
+                    width: 100%;
+                    border: 0px solid;
+                    margin: 0 !important;
+                    min-height: auto;
+                    height: 20px;
+                    padding: 0px;
+                }
+                h4,p,label{
+                    display: none;
+                }
+            }
+        }
+    }
+    .custom-date-range {
+        .tfhb-filter-dates {
+            padding: 0 !important;
+            padding-top: 8px !important;
+        }
+    }
     
  
     .tfhb-header-notification {
+        .tfhb-dropdown{
+            svg{
+                stroke: #9089A9 !important;
+            }
+        }
         .tfhb-dropdown-wrap {
             padding: 24px !important;
             border-radius: 8px !important;
@@ -522,6 +686,7 @@
                     margin-bottom: 16px;
                     border-radius: 12px;
                     transition: 0.5s;
+                    justify-content: start !important;
                     &:hover {
                         background: $ui25;
                         border-color: $ui50;
@@ -531,6 +696,8 @@
                         height: 32px;
                         img {
                             border-radius: 50%;
+                            height: 100%;
+                            width: 100%;
                         }
                     }
 
@@ -544,10 +711,21 @@
     }
      
 }
+.tfhb-availability-details-wrap{
+    // max-width: 70%;
+    // Responsive
+    @media #{$max1140}{
+        max-width: 100%;
+    }
 
+}
 .tfhb-availability-schedule-btn {
     border: none;
     background-color: transparent; 
+    transition: 0.4s;
+    &:hover{
+        color: $primaryi;
+    }
 }
 .tfhb-notification-button-tabs{
     justify-content: normal !important;
@@ -579,6 +757,10 @@
                 .tfhb-inc,
                 .tfhb-dec{
                     cursor: pointer;
+                    transition: 0.4s;
+                    &:hover{
+                        color: $primaryi;
+                    }
                 }
             }
             select { 
@@ -608,6 +790,7 @@
     width: 100% !important; 
     justify-content: normal !important;
     .tfhb-integrations-single-block{
+        position: relative;
         margin: 0;
         width: calc(30% - 48px);
         display: flow-root !important;
@@ -897,21 +1080,85 @@
 // Prime Vue Dropdown
 .p-dropdown-panel {
     z-index: 99999 !important;
+    
+        
+        .p-dropdown-header {
+            margin-bottom: 10px !important;
+        }
+        .p-dropdown-filter {
+            width: 100%;
+            border-radius: 4px !important; 
+            background: #FFF !important; 
+             
+            &:focus, &:active {
+                outline: none;
+                box-shadow: none; 
+                border-color: $ui900;
+            }
+        }
     .p-dropdown-items {
         .p-dropdown-item{
-            &:last-child{
-                margin: 0px !important;
-            }
+            border-radius: 4px;
+            background: $ui0;
+            margin: 2px;
+
+            
+ 
             &.p-highlight {
                 color: #F62881 !important;
-                background: #FEE6F0 !important;
+                background: $primaryi50 !important;
+                span {
+                    color: $ui900 !important
+                    
+                }
             }
             &.p-focus {
-                background: #FEE6F0 !important;
+                background: $ui25;
+                span {
+                    color: $ui900 !important
+                    
+                }
+            }
+
+            span {
+                font-size: 15px;
+                color: $ui600 !important;
             }
         }
     }
 } 
+// Tostify
+.Toastify__toast--error {
+    border: none !important;
+    border-radius: 8px;
+    border: 0.5px solid $warning700;
+    background: $warning50 !important;
+    .Toastify__progress-bar--error {
+        visibility: hidden;
+       opacity: 0;
+       
+     } 
+      .Toastify__toast-body {
+        color: $warning700;
+      }
+  }
+ 
+  .Toastify__toast--success {
+    border: none !important;
+    border-radius: 8px;
+    border: 0.5px solid $success700;
+    background: $success50 !important;
+    .Toastify__progress-bar--success {
+        visibility: hidden;
+       opacity: 0;
+       
+     } 
+      .Toastify__toast-body {
+        color: $success700;
+      }
+  }
+ 
+// Tostify
 
 // Pagination
 .tfhb-booking-details-pagination{
@@ -969,6 +1216,39 @@ button.question-edit-btn{
     align-items: center;
     justify-content: center;
 }
+.meeting-create-details{
+    .tfhb-availability-details-wrap{
+        .tfhb-availability-schedule-wrap {
+            width: auto !important;
+        }
+        .tfhb-availability-schedule-time {
+            width: auto !important;
+        }
+    }
+    .tfhb-availability-schedule-single{
+        .tfhb-availability-schedule-wrap {
+             width: 60%; 
+            .tfhb-availability-schedule-time {
+                width: 85%;
+            }
+        }
+        
+    }
+}
+
+.tfhb-host-availability{
+    .tfhb-availability-details-wrap{
+        .tfhb-availability-schedule-single{
+            .tfhb-availability-schedule-wrap { 
+                .tfhb-availability-schedule-time {
+                    width: 100% !important;
+                }
+            }
+        }
+    }
+   
+}
+
 
 @media only screen and (max-width: 991px){
     .tfhb-hydra-dasboard-content .tfhb-general-card .tfhb-single-form-field,
@@ -978,7 +1258,10 @@ button.question-edit-btn{
         width: 100% !important;
     }
 
-    .tfhb-availability-schedule-wrap .tfhb-single-form-field{
-        width: 95px !important;
+    .tfhb-availability-schedule-wrap {
+        width: auto !important;
+        .tfhb-single-form-field{
+            width: 95px !important;
+        }
     }
 }

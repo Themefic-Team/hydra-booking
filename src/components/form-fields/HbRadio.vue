@@ -11,7 +11,9 @@ const props = defineProps( {
     description : String,
     groups : Boolean,
     options : Array,
-    names : String
+    names : String,
+    tooltip : Boolean,
+    tooltipText : String
 
     
  
@@ -42,7 +44,15 @@ const MulticheckedValue = (e) => {
     > 
     <div class="tfhb-single-form-field-wrap tfhb-field-radio">
         <div class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal"> 
-            <span style="width: 100%; font-size: 13px;" v-if="label && groups == true " :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> </span>
+            <span style="width: 100%; font-size: 13px;" v-if="label && groups == true " :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> 
+            <span v-if="tooltip" class="tfhb-tooltip">
+                <Icon name="Info" size="15" />
+                <span class="tfhb-tooltiptext"> 
+                {{ tooltipText }}
+                </span>
+            </span>
+            
+        </span>
             <h4 v-if="subtitle && groups == true">{{ subtitle }}</h4>
             <p v-if="description && groups == true">{{ description }}</p>
             

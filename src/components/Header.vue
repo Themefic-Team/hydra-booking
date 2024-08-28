@@ -2,14 +2,42 @@
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'title',
+    'notifications'
      
-]) 
+])
+
+// make a vue time 2024-08-20 16:15:39 to 6m example
+const timeAgo = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) {
+        return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
+
 </script>
 
 
 <template>
     <div class="thb-admin-header">
-        <div class="thb-admin-header-icon tfhb-flexbox">
+        <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16">
             <svg width="40" height="40" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="128" height="128" rx="32" fill="url(#paint0_radial_1_31)"/>
                 <path d="M69.9489 96.522L52.2774 78.8506L48.0965 74.6696L45.6437 72.2168L35.9996 62.5728V103.1H69.9489C71.9557 103.1 73.9068 102.821 75.7465 102.32L69.9489 96.522Z" fill="white"/>
@@ -25,53 +53,34 @@ const props = defineProps([
             </svg> 
             <h2 class="tfhb-admin-header-title">{{ props.title }}</h2>
         </div>
-        <div class="tfhb-header-notification">
+        <div v-if="props.notifications" class="tfhb-header-notification">
             <div class="tfhb-dropdown tfhb-mega-dropdown">
-            <span> <Icon name="BellDot" size="24" /> </span>
+            <span> <Icon name="Bell" size="24" /> </span>
            
             <div class="tfhb-dropdown-wrap ">   <!-- active class-->
                 <div class="tfhb-flexbox">
                     <h3>{{ $tfhb_trans['Notifications'] }}</h3>
-                    <a href="#" class="tfhb-btn">{{ $tfhb_trans['Mark as read'] }}</a>
+                    <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans['Mark as read'] }}</a> -->
+                    <!-- {{ notifications }} -->
                 </div>
 
                 <div class="tfhb-notification-wrap">
+                    
                     <!-- Single Notifaction wrap -->
-                    <div class="tfhb-single-notification tfhb-flexbox tfhb-gap-8"> 
+                    <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16">
                         <div class="tfhb-single-notification-img">
-                            <img src="https://via.placeholder.com/32" alt="Notification Image">
+                            <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Notification Image">
                         </div> 
-                        <div class="tfhb-single-notification-content">
-                            <h4>John Doe</h4>
-                            <p>Has booked a room</p>
+                        <div class="tfhb-single-notification-content"> 
+                            <h4>{{notification.value.attendee_name}}</h4>
+                            <p> {{notification.value.message}}</p>
+
+                        <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago</span>
                         </div>
-                        <span class="tfhb-notification-time">6m</span>
-                    </div>
-                    <!-- Single Notifaction wrap --> 
-                    <!-- Single Notifaction wrap -->
-                    <div class="tfhb-single-notification tfhb-flexbox tfhb-gap-8"> 
-                        <div class="tfhb-single-notification-img">
-                            <img src="https://via.placeholder.com/32" alt="Notification Image">
-                        </div> 
-                        <div class="tfhb-single-notification-content">
-                            <h4>John Doe</h4>
-                            <p>Has booked a room</p>
-                        </div>
-                        <span class="tfhb-notification-time">6m</span>
-                    </div>
-                    <!-- Single Notifaction wrap --> 
-                    <!-- Single Notifaction wrap -->
-                    <div class="tfhb-single-notification tfhb-flexbox tfhb-gap-8"> 
-                        <div class="tfhb-single-notification-img">
-                            <img src="https://via.placeholder.com/32" alt="Notification Image">
-                        </div> 
-                        <div class="tfhb-single-notification-content">
-                            <h4>John Doe</h4>
-                            <p>Has booked a room</p>
-                        </div>
-                        <span class="tfhb-notification-time">6m</span>
-                    </div>
-                    <!-- Single Notifaction wrap --> 
+                        
+
+
+                    </div> 
                 </div>
             </div>
         </div>
@@ -91,7 +100,7 @@ const props = defineProps([
         border-bottom: 1px solid #eaeaea;
         border-radius: 8px;
         box-shadow: 0 1px 1px rgba(0,0,0,.04);
-        margin-right: 16px;
+        /* margin-right: 16px; */
         margin-bottom: 24px;
     }
     .thb-admin-header .header-navigation ul { 
@@ -113,6 +122,9 @@ const props = defineProps([
         outline: none;
         box-shadow: none;
         margin-left: 5px;
+    }
+    .tfhb-admin-header-title{
+        font-size: 24px;
     }
     .thb-admin-header .header-navigation ul li a:hover,
     .thb-admin-header .header-navigation ul li a.active{

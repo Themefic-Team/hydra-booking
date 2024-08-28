@@ -183,13 +183,24 @@
 					font-size: 15px;
 					font-family: inter;
 					color: $ui600;
-					&.active {
+					
+					&.active, &.active .setings-taps-dropdown-arrow, &:hover {
 						background-color: $primaryi50;
-						color: $primaryi;
+						color: $primaryi !important;
 					}
 					&:focus {
 						outline: none;
 						box-shadow: none;
+					}
+
+					&.integrations-submenu{
+						position: relative;
+					}
+					.setings-taps-dropdown-arrow {
+						margin: 0 !important;
+						position: absolute;
+						right: 16px;
+						top: 16px;
 					}
 				}
 				.dropdown {
@@ -201,8 +212,10 @@
 						a {
 							padding-left: 32px !important;
 							border-radius: 6px; 
+							padding-top: 8px;
+							padding-bottom: 8px;
 							color: $ui600;
-							&.active {
+							&.active, &:hover {
 								background-color: $ui25;
 								color: $primaryi;
 							}

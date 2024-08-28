@@ -1,27 +1,25 @@
-<?php 
+<?php
 namespace HydraBooking\DB;
 
 class Meeting {
-    
-    public  $table = 'tfhb_meetings';
-    public function __construct() {   
 
-        
-    }
+	public $table = 'tfhb_meetings';
+	public function __construct() {
+	}
 
-    /**
-     * Run the database migration.
-     */
-    public function migrate() {
-        
-        global $wpdb;
+	/**
+	 * Run the database migration.
+	 */
+	public function migrate() {
 
-        $table_name = $wpdb->prefix . $this->table;
+		global $wpdb;
 
-        $charset_collate = $wpdb->get_charset_collate();
- 
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $sql = "CREATE TABLE $table_name (
+		$table_name = $wpdb->prefix . $this->table;
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT, 
                 slug VARCHAR(255) NULL,
                 host_id INT(11) NULL,
@@ -69,212 +67,196 @@ class Meeting {
                 updated_at DATE NOT NULL, 
                 PRIMARY KEY (id)
             ) $charset_collate";
-            
-            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-            dbDelta($sql);
-        }
-    }
 
-    /**
-     * Rollback the database migration.
-     */
-    public function rollback() {
-          global $wpdb;
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			dbDelta( $sql );
+		}
+	}
 
-        $table_name = $wpdb->prefix . $this->table;
+	/**
+	 * Rollback the database migration.
+	 */
+	public function rollback() {
+		global $wpdb;
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_meetings" );
+	}
 
-        $sql = "DROP TABLE IF EXISTS $table_name;";
+	/**
+	 * Create the database meeting.
+	 */
+	public function add( $request ) {
 
-        $wpdb->query( $sql );
-    }
+		global $wpdb;
 
-     /**
-     * Create the database meeting. 
-     */
-    public function add($request) {
-        
-        global $wpdb;
+		$table_name = $wpdb->prefix . $this->table;
+		// insert meeting
+		$result = $wpdb->insert(
+			$table_name,
+			$request
+		);
 
-        $table_name = $wpdb->prefix . $this->table;
-        // insert meeting
-        $result =  $wpdb->insert(
-            $table_name,
-            $request
-        );
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status'    => true,
+				'insert_id' => $wpdb->insert_id,
+			);
+		}
+	}
+	/**
+	 * Update the database meeting.
+	 */
+	public function update( $request ) {
 
+		global $wpdb;
 
-        if($result === false){ 
-            return false;
-        }else{
-            return [
-                'status' => true,
-                'insert_id' => $wpdb->insert_id
-            ];
-        } 
+		$table_name = $wpdb->prefix . $this->table;
 
-    }
-     /**
-     * Update the database meeting. 
-     */ 
+		$id = $request['id'];
+		unset( $request['id'] );
 
-    public function update($request) {
-        
-        global $wpdb;
+		// encode json in array data
+		if ( $request['meeting_locations'] ) {
+			$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] );
+		}
+		if ( $request['availability_range'] ) {
+			$request['availability_range'] = wp_json_encode( $request['availability_range'] );
+		}
+		if ( $request['availability_custom'] ) {
+			$request['availability_custom'] = wp_json_encode( $request['availability_custom'] );
+		}
+		if ( $request['booking_frequency'] ) {
+			$request['booking_frequency'] = wp_json_encode( $request['booking_frequency'] );
+		}
+		if ( $request['recurring_repeat'] ) {
+			$request['recurring_repeat'] = wp_json_encode( $request['recurring_repeat'] );
+		}
+		if ( $request['questions'] ) {
+			$request['questions'] = wp_json_encode( $request['questions'] );
+		}
+		if ( $request['notification'] ) {
+			$request['notification'] = wp_json_encode( $request['notification'] );
+		}
+		if ( $request['payment_meta'] ) {
+			$request['payment_meta'] = wp_json_encode( $request['payment_meta'] );
+		}
 
-        $table_name = $wpdb->prefix . $this->table;
+		// Update meeting
+		$result = $wpdb->update(
+			$table_name,
+			$request,
+			array( 'id' => $id )
+		);
 
-        $id = $request['id'];
-        unset($request['id']);
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status'    => true,
+				'update_id' => $wpdb->insert_id,
+			);
+		}
+	}
+	/**
+	 * Get all  meeting Data.
+	 */
+	public function get( $id = null, $filterData = null, $user_id = null ) {
 
-        // encode json in array data
-        if($request['meeting_locations']){
-            $request['meeting_locations'] = wp_json_encode($request['meeting_locations']);
-        }
-        if($request['availability_range']){
-            $request['availability_range'] = wp_json_encode($request['availability_range']);
-        }
-        if($request['availability_custom']){
-            $request['availability_custom'] = wp_json_encode($request['availability_custom']);
-        }
-        if($request['booking_frequency']){
-            $request['booking_frequency'] = wp_json_encode($request['booking_frequency']);
-        }
-        if($request['recurring_repeat']){
-            $request['recurring_repeat'] = wp_json_encode($request['recurring_repeat']);
-        }
-        if($request['questions']){
-            $request['questions'] = wp_json_encode($request['questions']);
-        }
-        if($request['notification']){
-            $request['notification'] = wp_json_encode($request['notification']);
-        }
-        if($request['payment_meta']){
-            $request['payment_meta'] = wp_json_encode($request['payment_meta']);
-        }
+		global $wpdb;
 
+		$table_name = $wpdb->prefix . $this->table;
+		$host_table = $wpdb->prefix . 'tfhb_hosts';
 
-        // Update meeting
-        $result =  $wpdb->update(
-            $table_name,
-            $request,
-            array('id' => $id)
-        );
+		if ( $id ) {
+			$data = $wpdb->get_row(
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_meetings WHERE id = %s", $id )
+			);
+		} elseif ( ! empty( $filterData['title'] ) || ! empty( $filterData['fhosts'] ) || ! empty( $filterData['fcategory'] ) || ( ! empty( $filterData['startDate'] ) && ! empty( $filterData['endDate'] ) ) ) {
+			$sql = "SELECT * FROM $table_name WHERE";
 
+			if ( ! empty( $filterData['title'] ) ) {
+				$title = '%' . $filterData['title'] . '%'; // Wrap title with % for LIKE comparison
+				$sql  .= $wpdb->prepare( ' title LIKE %s', $title );
+			}
 
-        if($result === false){ 
-            return false;
-        }else{
-            return [
-                'status' => true,
-                'update_id' => $wpdb->insert_id
-            ];
-        } 
+			if ( isset( $filterData['fhosts'] ) ) {
+				$host_ids = implode( ',', array_map( 'intval', $filterData['fhosts'] ) );
+				$sql     .= ! empty( $filterData['title'] ) ? ' AND' : '';
+				$sql     .= " host_id IN ($host_ids)";
+			}
 
-    }
-     /**
-     * Get all  meeting Data. 
-     */
-    public function get($id = null, $filterData = null, $user_id = null) {
-        
-        global $wpdb;
+			if ( isset( $filterData['fcategory'] ) ) {
+				$category_ids = implode( ',', array_map( 'intval', $filterData['fcategory'] ) );
+				$sql         .= ( ! empty( $filterData['title'] ) || isset( $filterData['fhosts'] ) ) ? ' AND' : '';
+				$sql         .= " meeting_category IN ($category_ids)";
+			}
 
-        $table_name = $wpdb->prefix . $this->table;
-        $host_table = $wpdb->prefix . 'tfhb_hosts';
+			$data = $wpdb->get_results( $sql );
 
-        if($id){
-            $data = $wpdb->get_row(
-                $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s", $id )
-            );
-        }elseif(!empty($filterData['title']) || !empty($filterData['fhosts']) || !empty($filterData['fcategory']) || (!empty($filterData['startDate']) && !empty($filterData['endDate'])) ){
-            $sql = "SELECT * FROM $table_name WHERE";
+			if ( ! empty( $filterData['startDate'] ) && ! empty( $filterData['endDate'] ) ) {
 
-            if (!empty($filterData['title'])) {
-                $title = '%' . $filterData['title'] . '%'; // Wrap title with % for LIKE comparison
-                $sql .= $wpdb->prepare(" title LIKE %s", $title);
-            }
-            
-            if (isset($filterData['fhosts'])) {
-                $host_ids = implode(',', array_map('intval', $filterData['fhosts'])); 
-                $sql .= !empty($filterData['title']) ? " AND" : "";
-                $sql .= " host_id IN ($host_ids)";
-            }
-            
-            if (isset($filterData['fcategory'])) {
-                $category_ids = implode(',', array_map('intval', $filterData['fcategory'])); 
-                $sql .= (!empty($filterData['title']) || isset($filterData['fhosts'])) ? " AND" : "";
-                $sql .= " meeting_category IN ($category_ids)";
-            }
-           
-            $data = $wpdb->get_results($sql);
+				$startDate = gmdate( 'Y-m-d', strtotime( $filterData['startDate'] ) );
+				$endDate   = gmdate( 'Y-m-d', strtotime( $filterData['endDate'] ) );
 
-            if (!empty($filterData['startDate']) && !empty($filterData['endDate'])) {
-                
-                $startDate = date('Y-m-d', strtotime($filterData['startDate']));
-                $endDate = date('Y-m-d', strtotime($filterData['endDate']));
+				$filteredData = array_filter(
+					$data,
+					function ( $row ) use ( $startDate, $endDate ) {
+						$customAvailableData = json_decode( $row->availability_custom, true );
+						if ( json_last_error() !== JSON_ERROR_NONE ) {
+							// Handle JSON decoding error if any
+							return false;
+						}
 
-                $filteredData = array_filter($data, function($row) use ($startDate, $endDate) {
-                    $customAvailableData = json_decode($row->availability_custom, true);
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        // Handle JSON decoding error if any
-                        return false;
-                    }
-                
-                    if (!isset($customAvailableData['date_slots'])) {
-                        return false;
-                    }
-                    foreach ($customAvailableData['date_slots'] as $dateSlot) {
-                        // Split the dates if they are comma-separated
-                        $dates = explode(', ', $dateSlot['date']);
-                        
-                        foreach ($dates as $date) {
-                            if ($date >= $startDate && $date <= $endDate) {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                });
+						if ( ! isset( $customAvailableData['date_slots'] ) ) {
+							return false;
+						}
+						foreach ( $customAvailableData['date_slots'] as $dateSlot ) {
+							// Split the dates if they are comma-separated
+							$dates = explode( ', ', $dateSlot['date'] );
 
-            }
+							foreach ( $dates as $date ) {
+								if ( $date >= $startDate && $date <= $endDate ) {
+									return true;
+								}
+							}
+						}
+						return false;
+					}
+				);
 
-        }elseif(!empty($user_id)){
-            $data = $wpdb->get_results(
-                $wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %s", $user_id )
-            );
-        }else{
-            $sql = "SELECT * FROM $table_name";
+			}
+		} elseif ( ! empty( $user_id ) ) {
+			$data = $wpdb->get_results(
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_meetings WHERE user_id = %s", $user_id )
+			);
+		} else {
 
-            $data = $wpdb->get_results(
-                $wpdb->prepare( $sql )
-            ); 
-        }
+			$data = $wpdb->get_results(
+				"SELECT * FROM {$wpdb->prefix}tfhb_meetings"
+			);
+		}
 
-        // if any data has json data decode that data
-       
-        
-        // Get all data
-       
-        return $data; 
+		// if any data has json data decode that data
 
-    }
+		// Get all data
 
-    // delete
-    public function delete($id){ 
-        global $wpdb;
+		return $data;
+	}
 
-        $table_name = $wpdb->prefix . $this->table;
-        $result = $wpdb->delete( $table_name, array( 'id' => $id ) );
-        if($result === false){ 
-            return false;
-        }else{
-            return [
-                'status' => true,
-                'delete_id' => $id
-            ];
-        } 
-    }
+	// delete
+	public function delete( $id ) {
+		global $wpdb;
 
+		$table_name = $wpdb->prefix . $this->table;
+		$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status'    => true,
+				'delete_id' => $id,
+			);
+		}
+	}
 }
-
-
-?>

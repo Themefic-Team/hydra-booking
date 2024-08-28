@@ -197,7 +197,7 @@ onBeforeMount(() => {
         <!-- Host Integration -->
         <GoogleCalendarIntegrations v-if="Integration.google_calendar.status == '1'" display="list" class="tfhb-flexbox tfhb-host-integrations" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
         <OutlookCalendarIntegrations v-if="Integration.outlook_calendar.status == '1'" display="list" class="tfhb-flexbox tfhb-host-integrations" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
-        <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" />
+        <!-- <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" /> -->
  
 
     </div> 

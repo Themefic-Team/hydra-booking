@@ -3,6 +3,7 @@
 import { onBeforeMount } from 'vue';
 import { RouterView } from 'vue-router'  
 import Icon from '@/components/icon/LucideIcon.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
 
 // Store 
 import { hostsSettings } from '@/store/settings/hostsSettings';
@@ -41,7 +42,14 @@ const updateHosts = async () => {
                 <router-view :hostsSettings="hostsSettings.settings" />
 
                 <div class="tfhb-submission-btn tfhb-mt-16">
-                    <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateHosts">{{ $tfhb_trans['Update Host Settings'] }} </button>
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="updateHosts" 
+                        :buttonText="$tfhb_trans['Update Host Settings']"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true"
+                    />  
                 </div> 
 
             </div> 

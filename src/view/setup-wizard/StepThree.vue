@@ -4,6 +4,7 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
+import HbButton from '@/components/form-fields/HbButton.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
 
@@ -33,8 +34,8 @@ const props = defineProps({
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>Experience Hydrabooking in Action (Instantly!)</h2>
-            <p>Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.</p>
+            <h2>{{$tfhb_trans['Experience Hydrabooking in Action (Instantly!)']}}</h2>
+            <p>{{$tfhb_trans['Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.']}}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
@@ -46,9 +47,17 @@ const props = defineProps({
             </button>
              
         </div>
-        <div class="tfhb-submission-btn tfhb-flexbox">
-            <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" > <Icon name="ChevronLeft" size="20" /> Back </button>
-            <!-- <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" >Next<Icon name="ChevronRight" size="20" />  </button> -->
+        <div class="tfhb-submission-btn tfhb-flexbox tfhb-gap-8"> 
+            <HbButton 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                @click="props.setupWizard.currentStep = 'step-two'" 
+                :buttonText="$tfhb_trans['Back']"
+                icon="ChevronLeft" 
+                hover_icon="ArrowLeft" 
+                :hover_animation="true" 
+                icon_position="left"
+            /> 
+            <button  @click="props.setupWizard.currentStep = 'step-end'"  class="tfhb-btn  tfhb-flexbox tfhb-gap-8" >Skip </button>
         </div>
      </div>
      <!-- Step Three -->

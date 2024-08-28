@@ -32,7 +32,7 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['Google Calendar'] }}</h3> 
+                <h3>{{ $tfhb_trans['Google Calendar/Meet'] }}</h3> 
                 <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
 
             </div>

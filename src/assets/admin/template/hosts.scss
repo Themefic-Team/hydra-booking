@@ -15,6 +15,7 @@
     margin-top: 32px;
   }
   .tfhb-hosts-list-wrap {
+    margin-left: 16px;
     justify-content: normal !important;
     .tfhb-single-hosts {
       width: calc(33.333% - 24px);
@@ -37,6 +38,11 @@
         .tfhb-hosts-info {
           justify-content: normal !important;
           gap: 8px !important;
+          h3{
+            font-size: 15px;
+            font-weight: 400 !important;
+            line-height: 24px;
+          }
           .hosts-avatar{
             height: 32px;
             width: 32px;
@@ -64,7 +70,7 @@
           padding: 2px 8px 2px 8px;
           border-radius: 16px;
           background-color: $success50;
-          color: $success600;
+          color: $success700 !important;
           font-weight: 600 !important;
           font-size: 11px !important;
           &.tfhb-hosts-status-warning {
@@ -81,7 +87,7 @@
     }
   }
   .tfhbb-host-profile-page {
-    padding: 24px;
+    padding: 16px;
     background-color: #fff;
     border-radius: 8px;
     margin: 0 auto;
@@ -91,8 +97,9 @@
       margin-right: 16px !important;
     }
     .tfhb-dashboard-heading {
-      margin-bottom: 24px !important;
+      margin-bottom: 8px !important;
       height: auto !important;
+      margin-left: 0 !important;
     }
 
     .tfhb-host-single-information{
@@ -106,6 +113,14 @@
     .tfhb-host-integrations{
       &:last-child{
         margin-bottom: 0 !important;
+      }
+      .tfhb-integrations-single-block{
+        position: relative !important;
+        .tfhb-badge.tfhb-badge-pro {
+            margin: 0 !important; 
+            font-size: 11px !important; 
+            line-height: 1.1 !important;
+        }
       }
     }
   }

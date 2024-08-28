@@ -166,7 +166,7 @@
 			$(document).on('click', '.tfhb-available-times li .time', function (e) {
 				$this.find('.tfhb-meeting-card').append(preloader);
 				$this_time = $(this);
-
+				$('.tfhb-available-times li .time').removeClass('active');
 				setTimeout(function(){
 					// Your code here 
 					$('.tfhb-available-times li .next').remove(); 
@@ -176,6 +176,7 @@
 					$this.find("input[name='meeting_time_end']").val(selected_time_end);
 				
 					$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> Next<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
+					$this_time.addClass('active');
 				
 					$this.find('.tfhb-preloader').remove();
 				}, 1000); // 2000 milliseconds = 2 seconds
@@ -187,6 +188,7 @@
 
 				setTimeout(function(){
 					// Your code here 
+					$this.find('.tfhb-timezone').hide();
 					$this.find('.tfhb-calander-times').hide();
 					$this.find('.tfhb-meeting-booking-form').show(); 
 
@@ -196,11 +198,23 @@
 				
 			});
 
+			// Full Description Showing
+			$('span.tfhb-see-description').on('click', function() {
+				$('.tfhb-short-description').slideUp();
+				$('.tfhb-full-description').slideDown();
+			});
+	
+			// See Less Description Showing
+			$('span.tfhb-see-less-description').on('click', function() {
+				$('.tfhb-full-description').slideUp();
+				$('.tfhb-short-description').slideDown();
+			});
+
 			$(document).on('click', '.tfhb-meeting-booking-form .tfhb-back-btn', function (e) {
 				$this.find('.tfhb-meeting-card').append(preloader);
 
 				setTimeout(function(){
-					
+					$this.find('.tfhb-timezone').show();
 					$this.find('.tfhb-calander-times').css('display', 'flex');
 					$this.find('.tfhb-meeting-booking-form').hide();
 
@@ -299,7 +313,6 @@
 		   var name = $this.find("#name").val(); 
 		   var email = $this.find("#email").val(); 
 		   var address = $this.find("#address").val(); 
-		   var tfhb_booking_checkbox = $this.find("#tfhb_booking_checkbox").val(); 
 
 		   var payment_type = $this.find("#payment_method").val();
 		   var meeting_price = $this.find("#meeting_price").val();

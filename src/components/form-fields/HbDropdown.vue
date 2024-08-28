@@ -1,6 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 import Dropdown from 'primevue/dropdown';
+import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'modelValue',
     'name',
@@ -17,7 +18,11 @@ const props = defineProps([
     'optionType',
     'country',
     'parent_key',
-    'single_key'
+    'single_key',
+    'selected',
+    'icon',
+    'tooltip',
+    'tooltipText',
   ])
 
  
@@ -36,7 +41,15 @@ const handleChange = (e) => {
       :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }" 
     >
       <div class="tfhb-single-form-field-wrap tfhb-field-dropdown"> 
-          <label v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> </label>
+        <label class="tfhb-flexbox tfhb-gap-4" v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span>  
+          <span v-if="tooltip" class="tfhb-tooltip">
+            <Icon name="Info" size="15" />
+            <span class="tfhb-tooltiptext"> 
+              {{ tooltipText }}
+            </span>
+          </span>
+        
+        </label>
           <h4 v-if="subtitle">{{ subtitle }}</h4>
           <p v-if="description">{{ description }}</p>  
             <div v-if="country">
@@ -78,7 +91,13 @@ const handleChange = (e) => {
                     :placeholder="placeholder"  
                     :optionDisabled="disabled"
                     :style="{ 'width': '100%' }"  
-                />
+                    :selected="selected"
+                >
+                <template v-if="props.icon" #dropdownicon>
+
+                    <Icon :name="props.icon" size="16" />
+                </template>
+                </Dropdown>
                 <Dropdown 
                     v-else
                     v-model="props.modelValue"  
@@ -92,7 +111,12 @@ const handleChange = (e) => {
                     :style="{ 'width': '100%' }"  
                     @click="emit('add-click')"
                     :class="errors ? 'tfhb-required' : ''"
-                />
+                >
+                <template v-if="props.icon" #dropdownicon>
+
+                    <Icon :name="props.icon" size="16" />
+                </template>
+                </Dropdown>
             </div>
      
     

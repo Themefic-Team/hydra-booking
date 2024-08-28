@@ -54,8 +54,8 @@ const attendee = ref(false);
                         placeholder="Select Payment Method"  
                         :option = "[
                             {name: 'Woocommerce', value: 'woo_payment'},  
-                            {name: 'Stripe Pay', value: 'stripe_payment'},  
-                            {name: 'Paypal', value: 'paypal_payment'},  
+                            {name: 'Paypal', value: 'paypal_payment'}, 
+                            {name: 'Stripe Pay', value: 'stripe_payment', disable: true}, 
                         ]"   
                     /> 
                     <!-- Woo Integrations  -->
@@ -78,10 +78,21 @@ const attendee = ref(false);
                     <label>{{ $tfhb_trans['Price'] }} <span> *</span></label>
                     <div class="tfhb-meeting-currency tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
                         <input v-model="meeting.meeting_price" required="" type="text" placeholder="00.000">
-                        <select v-model="meeting.payment_currency" placeholder="USD">
+                        <!-- <select v-model="meeting.payment_currency" placeholder="USD">
                             <option value="USD">USD</option>
                             <option value="EUR">Euro</option>
-                        </select>
+                        </select> -->
+                        <HbDropdown 
+                            v-model="meeting.payment_currency"   
+                            name="payment_method"
+                            placeholder="Currency"  
+                            :option = "[
+                                {name: 'USD', value: 'USD'},  
+                                {name: 'EUR', value: 'EUR'},   
+                            ]"   
+                        /> 
+                        
+                       
                     </div>
                 </div>
             </div>

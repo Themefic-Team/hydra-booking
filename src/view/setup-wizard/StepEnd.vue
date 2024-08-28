@@ -19,7 +19,13 @@ import AppleCalendarIntegrations from '@/components/integrations/AppleCalendarIn
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue'; 
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
-
+import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
+import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
+import ForminatorIntegrations from '@/components/integrations/ForminatorIntegrations.vue'; 
+import GravityFormsIntegrations from '@/components/integrations/GravityFormsIntegrations.vue'; 
+import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
+import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
+import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
 // Toast
 import { toast } from "vue3-toastify"; 
 //  Load Time Zone 
@@ -179,6 +185,34 @@ const Integration = reactive( {
         client_id: '',
         secret_key: '',
     },
+    cf7 : {
+        type: 'forms', 
+        status: 0, 
+    },
+    fluent : {
+        type: 'forms', 
+        status: 0, 
+    },
+    forminator : {
+        type: 'forms', 
+        status: 0, 
+    },
+    gravity : {
+        type: 'forms', 
+        status: 0, 
+    },
+    webhook : {
+        type: 'others', 
+        status: 0, 
+    },
+    fluent_crm : {
+        type: 'others', 
+        status: 0, 
+    },
+    zoho_crm : {
+        type: 'others', 
+        status: 0, 
+    }
 });
 
 //  update Integration
@@ -264,8 +298,9 @@ onBeforeMount(() => {
     <div  class="tfhb-setup-wizard-content-wrap tfhb-hydra-dasboard-content tfhb-s-w-step-end tfhb-flexbox">
         <div class="tfhb-s-w-icon-text">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
-            <h2>Congratulations! You're All Set Up!</h2>
-            <p>You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.</p>
+            <h2>{{$tfhb_trans['Congratulations! You are All Set Up!']}}</h2>
+            <p>{{$tfhb_trans['You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.']}}</p> 
+       
         </div>
         <div class="tfhb-s-w-step-end tfhb-flexbox">
 
@@ -277,11 +312,12 @@ onBeforeMount(() => {
                         <span @click="selectedFilterIntegrations"  data-filter="conference"> Conference</span>
                         <span @click="selectedFilterIntegrations"  data-filter="calendars"> Calendars</span>
                         <span @click="selectedFilterIntegrations"  data-filter="payments"> Payments</span>
+                        <span @click="selectedFilterIntegrations"  data-filter="forms"> Froms</span>
                     </div>
                 </div>
                 <div class="tfhb-integrations-searchbar">
                     <input @keyup="FilterBySearch" type="text" placeholder="Search Integrations">
-                    <Icon name="ChevronRight" size="20" /> 
+                    <Icon name="Search" size="20" /> 
                 </div>
             </div>
 
@@ -328,13 +364,7 @@ onBeforeMount(() => {
                 />
                 <!-- Outlook intrigation -->
 
-                <!-- Apple intrigation -->
-                <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :apple_calendar="Integration.apple_calendar" 
-                @update-integrations="UpdateIntegration"
-                :ispopup="outlookpopup" 
-                v-if="currentHash === 'all' || currentHash === 'calendars'"
-                />
+                <!-- Apple intrigation -->  
                 <!-- Apple intrigation -->
 
                 <!-- stripe intrigation -->
@@ -347,17 +377,7 @@ onBeforeMount(() => {
                 v-if="currentHash === 'all' || currentHash === 'payments'"
                 />
                 <!-- stripe intrigation -->
-
-                <!-- Mailchimp intrigation -->
-                <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :mail_data="Integration.mailchimp" 
-                @update-integrations="UpdateIntegration" 
-                :ispopup="mailpopup"
-                @popup-open-control="ismailchimpPopupOpen"
-                @popup-close-control="ismailchimpPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'all'"
-                />
-                <!-- Mailchimp intrigation -->
+ 
 
                 <!-- paypal intrigation -->
                 <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
@@ -369,6 +389,74 @@ onBeforeMount(() => {
                 v-if="currentHash === 'all' || currentHash === 'payments'"
                 />
                 <!-- paypal intrigation -->
+
+               <!-- CF7 -->
+               <CF7Integrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :cf7_data="Integration.cf7" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'forms'"
+                />
+                <!-- CF7 -->
+
+                <!-- Fluent -->
+                <FluentFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :fluent_data="Integration.fluent" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'forms'"
+                />
+                <!-- CF7 -->
+
+                <!-- Forminator -->
+                <ForminatorIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :forminator_data="Integration.forminator" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'forms'"
+                />
+                <!-- CF7 -->
+
+                <!-- gravity -->
+                <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :gravity_data="Integration.gravity" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'forms'"
+                />
+                <!-- gravity -->
+
+                <!-- webhook -->
+                <WebhookIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :webhook_data="Integration.webhook" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'others'"
+                />
+                <!-- webhook -->
+          
+                <!-- Mailchimp intrigation -->
+                <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :mail_data="Integration.mailchimp" 
+                @update-integrations="UpdateIntegration" 
+                :ispopup="mailpopup"
+                @popup-open-control="ismailchimpPopupOpen"
+                @popup-close-control="ismailchimpPopupClose" 
+                v-if="currentHash === 'all' || currentHash === 'all'"
+                />
+                <!-- Mailchimp intrigation -->
+
+                <!-- Fluent CRM -->
+                <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :fluent_crm_data="Integration.fluent_crm" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'others'"
+                />
+                <!-- Fluent CRM -->
+                
+                <!-- Zoho CRM -->
+                <ZohoCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                :zoho_crm_data="Integration.zoho_crm" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'others'"
+                />
+                <!-- Zoho CRM -->
+                
                 
 
             </div> 

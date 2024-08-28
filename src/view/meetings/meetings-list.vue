@@ -1,9 +1,11 @@
 <script setup>
 import { ref, reactive, onBeforeMount } from 'vue';
+import { useRouter, RouterView } from 'vue-router' 
+const router = useRouter();
 import { toast } from "vue3-toastify"; 
 import Icon from '@/components/icon/LucideIcon.vue'
-import HbDateTime from '@/components/form-fields/HbDateTime.vue';
-import CreateMeetingPopup from '@/components/meetings/CreateMeetingPopup.vue';
+import HbDateTime from '@/components/form-fields/HbDateTime.vue'; 
+import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import { Host } from '@/store/hosts'
 import { Meeting } from '@/store/meetings'
@@ -12,8 +14,21 @@ const FilterPreview = ref(false);
 const FilterHostPreview = ref(false);
 const FilterCatgoryPreview = ref(false);
 const isModalOpened = ref(false);
-const sharePopup = ref(false)
 
+const deletePopup = ref(false)
+const deleteItem = reactive({
+    id: 0,
+    post_id: 0
+});
+const deleteItemData = (id, post_id) => {
+    deleteItem.id = id;
+    deleteItem.post_id = post_id;
+    deletePopup.value = true;
+}
+const deleteItemConfirm = () => {
+    Meeting.deleteMeeting(deleteItem.id, deleteItem.post_id);
+    deletePopup.value = false;
+}
 const openModal = () => {
   isModalOpened.value = true;
 };
@@ -47,12 +62,11 @@ const shareData = reactive({
     embed: ''
 })
 
-const ShareTabs = (tab) => {
-    shareData.share_type = tab;
-}
+const sharePopup = reactive({
+    value: false
+})
 
-const sharePopupData = (data) => {
-
+const sharePopupData = (data) => { 
     shareData.share_type = 'link'
     shareData.title = data.title
     shareData.time = data.duration
@@ -62,24 +76,17 @@ const sharePopupData = (data) => {
     shareData.embed = '<iframe src="'+ tfhb_core_apps.admin_url +'/?hydra-booking=meeting&meeting-id='+data.id+'&type=iframe" title="description"  height="600" width="100%" ></iframe>'
 
     // Popup open
-    sharePopup.value = true;
+    sharePopup.value = true; 
 }
 
-const copyMeeting = (link) => {
-    //  copy to clipboard without navigator 
-    const textarea = document.createElement('textarea');
-    textarea.value = link;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'absolute';
-    textarea.style.left = '-9999px';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    
-    // Show a toast notification or perform any other action
-    toast.success(link + ' is Copied');
+
+
+const meeting = reactive({});
+const TfhbMeetingType = (type, router) => {
+    meeting.meeting_type = type;
+    Meeting.CreatePopupMeeting(meeting, router);
 }
+
 
 </script>
 <template>
@@ -101,9 +108,77 @@ const copyMeeting = (link) => {
         </div> 
     </div>
 
-    <CreateMeetingPopup v-if="isModalOpened" @modal-close="closeModal" @meetings-create="Meeting.CreatePopupMeeting"  />
+ 
+    <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="400px" name="first-modal">
+        <template #header> 
+            <!-- {{ google_calendar }} -->
+            <h2>{{ $tfhb_trans['Create New Meeting Type'] }}</h2>
+            
+        </template>
 
-    <div class="tfhb-filter-box-content tfhb-mt-32" v-show="FilterPreview">
+        <template #content>  
+            <div class="tfhb-meeting-person-type">
+                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-one', router)">
+                    <div class="tfhb-meeting-type-content">
+                        <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
+                            <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
+                                <Icon name="UserRound" size="20" /> 
+                                <Icon name="ArrowRight" size="20" /> 
+                                <Icon name="UserRound" size="20" /> 
+                            </div>
+                            <h3>{{ $tfhb_trans['One to One'] }}</h3>
+                        </div>
+                        <p>{{ $tfhb_trans['One host with one invitee. Good for: 1:1 interview, coffee chats'] }}</p>
+                    </div>
+                    <div class="tfhb-meeting-type-icon">
+                        <Icon name="ArrowRight" width="20"/>
+                    </div>
+                </div>
+            </div>
+            <div class="tfhb-meeting-person-type">
+                
+                <span class="tfhb-badge tfhb-badge-pro">{{ $tfhb_trans['Pro'] }}</span>
+                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24">
+                    <div class="tfhb-meeting-type-content">
+                        <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
+                            <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
+                                <Icon name="UserRound" size="20" /> 
+                                <Icon name="ArrowRight" size="20" /> 
+                                <Icon name="UsersRound" size="20" /> 
+                            </div>
+                            <h3>{{ $tfhb_trans['One to Group'] }}</h3>
+                        </div>
+                        <p>{{ $tfhb_trans['One host with group of invitee. Good for: webinars, online clasess'] }}</p>
+                    </div>
+                    <div class="tfhb-meeting-type-icon">
+                        <!-- <Icon name="ArrowRight" width="20"/> -->
+                    </div>
+                </div>
+            </div>
+        </template> 
+    </HbPopup>
+
+    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
+       
+
+        <template #content>  
+            <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+                <div class="tfhb-close-icon">
+                    <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+                </div>
+                <div class="tfhb-close-content">
+                    <h3>{{ $tfhb_trans['Are you absolutely sure??'] }}  </h3>  
+                    <p>{{ $tfhb_trans['Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.'] }}</p>
+                </div>
+                <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ $tfhb_trans['Cancel'] }}</button>
+                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ $tfhb_trans['Delete'] }}</button>
+                </div>
+            </div> 
+        </template> 
+    </HbPopup>
+
+    <div class="tfhb-filter-box-content" v-show="FilterPreview">
         <div class="tfhb-filter-form">
             <div class="tfhb-filter-category">
                 <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterHostPreview=!FilterHostPreview">
@@ -220,14 +295,18 @@ const copyMeeting = (link) => {
                                         </div>
                                     </div>
                                 </li>
-                                <li v-if="smeeting.meeting_price">
+                                <li >
                                     <div class="tfhb-flexbox">
                                         <div class="user-info-icon">
                                             <Icon name="Banknote" size="16" /> 
                                         </div>
-                                        <div class="user-info-title">
+                                        <div v-if="smeeting.meeting_price" class="user-info-title">
                                             {{ smeeting.meeting_price }}
                                         </div>
+                                        <div v-else class="user-info-title">
+                                            Free
+                                        </div>
+                                        
                                     </div>
                                 </li>
                                 <li v-if="smeeting.host_first_name">
@@ -259,7 +338,8 @@ const copyMeeting = (link) => {
                             <!-- route link -->
                             <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans['Edit'] }}</router-link>
                             
-                            <span class="tfhb-dropdown-single" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span>
+                            <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span> -->
+                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span>
                         </div>
                     </div>
                 </div>
@@ -275,83 +355,9 @@ const copyMeeting = (link) => {
                 </div>
             </div>
 
-
-            <HbPopup :isOpen="sharePopup" @modal-close="sharePopup = false" max_width="600px" name="first-modal">
-                <template #header> 
-                    <h3>{{ shareData.title }}</h3>
-                </template>
-
-                <template #content>  
-                    <div class="tfhb-meeting-durationinfo tfhb-flexbox tfhb-gap-32 tfhb-full-width">
-                        <ul class="tfhb-locationtype tfhb-flexbox tfhb-justify-normal tfhb-full-width tfhb-gap-32">
-                            <li v-if="shareData.time">
-                                <div class="tfhb-flexbox tfhb-gap-8">
-                                    <div class="user-info-icon">
-                                        <Icon name="Clock" size="16" /> 
-                                    </div>
-                                    <div class="user-info-title">
-                                        {{ shareData.time }} {{ $tfhb_trans['minutes'] }}
-                                    </div>
-                                </div>
-                            </li>
-                            <li v-if="shareData.meeting_type">
-                                <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-one'==shareData.meeting_type">
-                                    <div class="user-info-icon">
-                                        <Icon name="UserRound" size="16" /> 
-                                        <Icon name="ArrowRight" size="16" /> 
-                                        <Icon name="UserRound" size="16" /> 
-                                    </div>
-                                    <div class="user-info-title">
-                                        {{ $tfhb_trans['One to One'] }}
-                                    </div>
-                                </div>
-                                <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==shareData.meeting_type">
-                                    <div class="user-info-icon">
-                                        <Icon name="UserRound" size="16" /> 
-                                        <Icon name="ArrowRight" size="16" /> 
-                                        <Icon name="UsersRound" size="16" /> 
-                                    </div>
-                                    <div class="user-info-title">
-                                        {{ $tfhb_trans['One to Group'] }}
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <div class="tfhb-share-type tfhb-full-width">
-                            <ul class="tfhb-flexbox tfhb-gap-8">
-                                <li :class="'link'==shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans['Share link'] }}</li>
-                                <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans['Short code'] }}</li>
-                                <li :class="'embed'==shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">Embed code</li>
-                            </ul>
-                        </div>
-
-                        <div class="tfhb-shareing-data tfhb-full-width">
-                            <div class="share-link" v-if="'link'==shareData.share_type">
-                                <input type="text" :value="shareData.link" readonly>
-
-                                <div class="tfhb-copy-btn tfhb-mt-32">
-                                    <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.link)">{{ $tfhb_trans['Copy link'] }}</button>
-                                </div>
-                            </div>
-                            <div class="share-link" v-if="'short'==shareData.share_type">
-                                <input type="text" :value="shareData.shortcode" readonly>
-
-                                <div class="tfhb-copy-btn tfhb-mt-32">
-                                    <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.shortcode)">{{ $tfhb_trans['Copy Code'] }}</button>
-                                </div>
-                            </div>
-                            <div class="share-link" v-if="'embed'==shareData.share_type">
-                                <input type="text" :value="shareData.embed" readonly>
-
-                                <div class="tfhb-copy-btn tfhb-mt-32">
-                                    <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.embed)">{{ $tfhb_trans['Copy Code'] }}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </template> 
-            </HbPopup>
+            <!-- Share Meeting -->
+            <ShareMeeting :shareData="shareData" :sharePopup="sharePopup"  />
+             
             
         </div>
     </div>

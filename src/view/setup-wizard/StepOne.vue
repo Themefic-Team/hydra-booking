@@ -5,6 +5,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import { setupWizard } from '@/store/setupWizard';
 
 // Toast
@@ -41,8 +42,8 @@ const StepOne = () => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>Simplify Your Work with Hydrabooking</h2>
-            <p>Our intuitive setup process makes Hydrabooking a breeze to use, even for non-technical users.</p>
+            <h2>{{ $tfhb_trans['Simplify Your Work with Hydrabooking'] }}</h2>
+            <p>{{ $tfhb_trans['Our intuitive setup process makes Hydrabooking a breeze to use, even for non-technical users.'] }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
@@ -50,8 +51,8 @@ const StepOne = () => {
              <HbDropdown 
                     
                     v-model="props.setupWizard.data.business_type"  
-                    required= "true"  
-                    :label="'Your business type?'"   
+                    required= "true"   
+                    :label="$tfhb_trans['Your business type?']"  
                     selected = "1"
                     placeholder="Select Your Business Type"  
                     :option = "[
@@ -62,10 +63,24 @@ const StepOne = () => {
                     
                 />
         </div>
-        <div class="tfhb-submission-btn tfhb-flexbox">
-            <button @click="props.setupWizard.currentStep = 'getting-start'" class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" > <Icon name="ChevronLeft" size="20" /> Back </button>
-
-            <button @click="StepOne" class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" >Next<Icon name="ChevronRight" size="20" />  </button>
+        <div class="tfhb-submission-btn tfhb-flexbox"> 
+            <HbButton 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                @click="props.setupWizard.currentStep = 'getting-start'" 
+                :buttonText="$tfhb_trans['Back']"
+                icon="ChevronLeft" 
+                hover_icon="ArrowLeft" 
+                :hover_animation="true"
+                icon_position="left"
+            /> 
+            <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                @click="StepOne" 
+                :buttonText="$tfhb_trans['Next']"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />   
         </div>
      </div>
      <!-- Step One -->

@@ -188,7 +188,7 @@ onBeforeMount(() => {
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans['Integrations'] }}</h1> 
+                <h1 >{{ $tfhb_trans['Notifications'] }}</h1> 
                 <p>{{ $tfhb_trans['One-liner description'] }}</p>
             </div>
             <div class="thb-admin-btn right"> 
