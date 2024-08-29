@@ -243,17 +243,18 @@ const fetchDefaultAvailabilitySingle = async (setting) => {
 }
 
 // Date & Time Format
-function formatTimeSlots(timeSlots) {
-    return timeSlots.map(slot => {
-    return `${this.formatTime(slot.start)} - ${this.formatTime(slot.end)}`
-    }).join(', ');
-}
-
-function formatTime(time) {
+// Date & Time Format
+const formatTime = (time) =>  {
     const [hour, minute] = time.split(':');
     const formattedHour = (parseInt(hour) % 12 || 12);
     const period = parseInt(hour) < 12 ? 'AM' : 'PM';
     return `${formattedHour}:${minute} ${period}`;
+}
+ 
+const formatTimeSlots = (timeSlots) =>  {
+    return timeSlots.map(slot => {
+    return `${formatTime(slot.start)} - ${formatTime(slot.end)}`
+    }).join(', ');
 }
 
 </script>

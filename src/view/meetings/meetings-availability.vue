@@ -230,18 +230,19 @@ const editAvailabilityDate = (key) => {
 }
 
 // Date & Time Format
-function formatTimeSlots(timeSlots) {
-    return timeSlots.map(slot => {
-    return `${this.formatTime(slot.start)} - ${this.formatTime(slot.end)}`
-    }).join(', ');
-}
-
-function formatTime(time) {
+const formatTime = (time) =>  {
     const [hour, minute] = time.split(':');
     const formattedHour = (parseInt(hour) % 12 || 12);
     const period = parseInt(hour) < 12 ? 'AM' : 'PM';
     return `${formattedHour}:${minute} ${period}`;
 }
+ 
+const formatTimeSlots = (timeSlots) =>  {
+    return timeSlots.map(slot => {
+    return `${formatTime(slot.start)} - ${formatTime(slot.end)}`
+    }).join(', ');
+}
+
 
 const getLatestEndTime = (day) => {
     let latestEndTime = day.times[0].end;
@@ -480,7 +481,7 @@ const isobjectempty = (data) => {
                     <div class="tfhb-flexbox tfhb-full-width">
                         <div class="tfhb-overrides-date">
                             <h4>{{ date_slot.date }}</h4>
-                            <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
+                            <p class="tfhb-m-0">{{ date_slot.available!=1 ? date_slot.times : 'Unavailable' }}</p>
                         </div>
                     </div>
                 </div>
