@@ -17,22 +17,22 @@ const hover_icon_status = ref(false)
 </script>
 
 <template>
-    <button :class="classValue" @mouseover="hover_icon_status = !hover_icon_status"  @mouseleave="hover_icon_status = !hover_icon_status">
-        <span v-if="icon_position == 'left'">
-            <transition v-if="props.hover_animation == true" name="icon-fade" mode="out-in">
+    <button :class="classValue" @mouseover="hover_icon_status = true"  @mouseleave="hover_icon_status = false">
+        <span  v-if="icon_position == 'left'">
+            <!-- <transition v-if="props.hover_animation == true" name="icon-fade" mode="out-in"> -->
                 <Icon v-if="hover_icon !='' && hover_icon_status == true" :name="hover_icon" size="20" />
                 <Icon v-else :name="icon"  size="20" />
-            </transition> 
+            <!-- </transition>  -->
             <Icon v-else :name="icon"  size="20" /> 
         </span>
-        <span>{{ buttonText }} </span>
+        <span >{{ buttonText }} </span>
          
          <!-- {{ hover_icon_status }} -->
-         <span v-if="icon_position != 'left'">
-            <transition v-if="props.hover_animation == true" name="icon-fade" mode="out-in">
+         <span v-if="icon_position != 'left'" >
+            <!-- <transition v-if="props.hover_animation == true" name="icon-fade" mode="out-in"> -->
                 <Icon v-if="hover_icon !='' && hover_icon_status == true" :name="hover_icon" size="20" />
                 <Icon v-else :name="icon"  size="20" />
-            </transition> 
+            <!-- </transition>  -->
             <Icon v-else :name="icon"  size="20" /> 
         </span>
            
