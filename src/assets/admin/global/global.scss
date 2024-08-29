@@ -609,7 +609,7 @@
             outline: none;
             box-shadow: none; 
             border-color: $ui900;
-            color: $primaryi950;
+            color : $primaryi950 !important;
         }
         }
         span {
@@ -778,7 +778,7 @@
                 &:focus, &:active {
                     outline: none;
                     box-shadow: none; 
-                    color: $primaryi950;
+                    color : $primaryi950 !important;
                 }
             }
             .tfhb-availability-schedule-clone-single{

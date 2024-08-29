@@ -12,7 +12,7 @@
             &:focus, &:active {
                 outline: none;
                 box-shadow: none; 
-                color: $primaryi950;
+                color : $primaryi950 !important;
             }
         }
         button{
