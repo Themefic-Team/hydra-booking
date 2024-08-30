@@ -66,7 +66,7 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 			if ( is_array( $questions ) && ! empty( $questions ) ) {
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
-				foreach ( $questions as $key => $question ) :  
+				foreach ( $questions as $key => $question ) :
 					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']';
 					// $value = !empty($booking_data) ? $booking_data->data[$question['label']] : '';
 
@@ -108,7 +108,7 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
                                         </label>';
 
 					} else {
-						echo $question['type'];
+
 						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr($question['placeholder']) . '">';
 					}
 							echo '</div>';
