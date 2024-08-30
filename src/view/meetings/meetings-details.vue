@@ -143,9 +143,19 @@ const tfhbValidateInput = (fieldName) => {
                         required= "true"  
                         :label="$tfhb_trans['Address']"  
                         selected = "1"
-                        :placeholder="'Type Location Address'" 
+                        :placeholder="$tfhb_trans['Type Location Address']" 
                         :width= "50"
-                        v-if="'In Person (Organizer Address)'==slocation.location || 'Organizer Phone Number'==slocation.location || 'Online Meeting'==slocation.location"
+                        v-if="'In Person (Organizer Address)'==slocation.location  || 'Online Meeting'==slocation.location"
+                    /> 
+                    <HbText  
+                        v-model="slocation.address" 
+                        type="number"
+                        required= "true"  
+                        :label="$tfhb_trans['Phone Number']"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans['Type Location Phone Number']" 
+                        :width= "50"
+                        v-if="'Organizer Phone Number'==slocation.location"
                     /> 
                 </div>
                 <div class="tfhb-meeting-location-removed" v-if="meeting.meeting_locations.length>1" @click="emit('remove-meeting-location', index)">

@@ -402,7 +402,7 @@ const isobjectempty = (data) => {
             @click="() => tfhbValidateInput('availability_custom.title')"
             :errors="errors.availability_custom___title"
         /> 
-        <!-- Time Zone -->
+        <!-- Time Zone --> 
         <HbDropdown 
             
             v-model="meeting.availability_custom.time_zone"  

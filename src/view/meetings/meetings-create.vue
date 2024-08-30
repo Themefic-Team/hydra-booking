@@ -374,7 +374,7 @@ const meetingId = route.params.id;
              
                 
             } 
-            meetingData.availability_custom.time_zone = Availability.GeneralSettings.time_zone ? Availability.GeneralSettings.time_zone : '';
+            // meetingData.availability_custom.time_zone = Availability.GeneralSettings.time_zone ? Availability.GeneralSettings.time_zone : '';
 
             meetingData.availability_custom.time_slots = Availability.GeneralSettings.week_start_from ?  Availability.RearraingeWeekStart(Availability.GeneralSettings.week_start_from, meetingData.availability_custom.time_slots) : meetingData.availability_custom.time_slots;
             
