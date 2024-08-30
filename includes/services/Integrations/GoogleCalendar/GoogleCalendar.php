@@ -79,8 +79,7 @@ class GoogleCalendar {
 
 				$host_id = $_GET['state'];
 
-				$data  = $this->GetAccessToken( $_GET['code'] );
-				$data  = json_decode( $data, true );
+				$data  = $this->GetAccessToken( $_GET['code'] ); 
 				$email = $this->getEmailByIdToken( $data['id_token'] );
 
 				// Get all calendar in the account
@@ -111,10 +110,10 @@ class GoogleCalendar {
 				// save to user metadata
 				update_user_meta( $host_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings, true );
 
-				$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $host_id . '/integrations';
+				$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $host_id . '/calendars';
 
 				wp_redirect( $redirect_url );
-				wp_die();
+				// wp_die();
 
 			} catch ( Exception $e ) {
 				echo esc_html($e->getMessage());
