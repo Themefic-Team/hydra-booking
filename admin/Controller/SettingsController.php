@@ -460,25 +460,6 @@ class SettingsController {
 				'message' => 'Google Calendar Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
-		} elseif ( $key == 'outlook_calendar' ) {
-			$_tfhb_integration_settings['outlook_calendar']['type']              = sanitize_text_field( $data['type'] );
-			$_tfhb_integration_settings['outlook_calendar']['status']            = sanitize_text_field( $data['status'] );
-			$_tfhb_integration_settings['outlook_calendar']['client_id']         = sanitize_text_field( $data['client_id'] );
-			$_tfhb_integration_settings['outlook_calendar']['secret_key']        = sanitize_text_field( $data['secret_key'] );
-			$_tfhb_integration_settings['outlook_calendar']['redirect_url']      = sanitize_text_field( $data['redirect_url'] );
-			$_tfhb_integration_settings['outlook_calendar']['connection_status'] = isset( $data['secret_key'] ) && ! empty( $data['secret_key'] ) ? 1 : sanitize_text_field( $data['connection_status'] );
-
-			// update option
-			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
-			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
-
-			// woocommerce payment
-			$data = array(
-				'status'  => true,
-				'option'  => $option,
-				'message' => 'Outlook Calendar Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
 		} elseif ( $key == 'apple_calendar' ) {
 			$_tfhb_integration_settings['apple_calendar']['type']              = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['apple_calendar']['connection_status'] = sanitize_text_field( $data['connection_status'] );
@@ -491,22 +472,6 @@ class SettingsController {
 				'status'  => true,
 				'option'  => $option,
 				'message' => 'Apple Calendar Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
-		} elseif ( $key == 'stripe' ) {
-			$_tfhb_integration_settings['stripe']['type']       = sanitize_text_field( $data['type'] );
-			$_tfhb_integration_settings['stripe']['status']     = sanitize_text_field( $data['status'] );
-			$_tfhb_integration_settings['stripe']['public_key'] = sanitize_text_field( $data['public_key'] );
-			$_tfhb_integration_settings['stripe']['secret_key'] = sanitize_text_field( $data['secret_key'] );
-
-			// update option
-			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
-			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
-
-			$data = array(
-				'status'  => true,
-				'option'  => $option,
-				'message' => 'Stripe Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'mailchimp' ) {
@@ -541,7 +506,7 @@ class SettingsController {
 				'message' => 'Paypal Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
-		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity' || $key == 'webhook' ) { 
+		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity') { 
 
 			$_tfhb_integration_settings[$key]['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings[$key]['status']      = sanitize_text_field( $data['status'] ); 
@@ -558,14 +523,20 @@ class SettingsController {
 			return rest_ensure_response( $data );
 		}else{ 
 
-		 	apply_filters( 'tfhb_update_integration_settings', $key, $data ); 
+		 	$data =  apply_filters( 'tfhb_update_integration_settings', // Hook for update integration settings
+				array(
+					'status'  => true, 
+					'message' => 'Integration Settings Updated Successfully',
+				), 
+				$_tfhb_integration_settings,
+				$key, 
+				$data 
+			); 
+			
 			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
 
-			$data = array(
-				'status'  => true,
-				'options'  => $option,
-				'message' => 'Integration Settings Updated Successfully',
-			);
+			$data['option'] = $option;
+			return rest_ensure_response( $data );
 
 		}
 	}

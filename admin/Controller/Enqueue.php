@@ -16,7 +16,7 @@ class Enqueue {
 		add_filter( 'script_loader_tag', array( $this, 'thb_loadScriptAsModule' ), 10, 3 );
 	}
 	public function thb_loadScriptAsModule( $tag, $handle, $src ) {
-		if ( 'tfhb-vue-core' !== $handle ) {
+		if ( 'tfhb-admin-core' !== $handle ) {
 			return $tag;
 		}
 		$tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
@@ -35,15 +35,15 @@ class Enqueue {
 
 		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
 		// wp_enqueue_script('thb-app-script', THB_URL . 'assets/admin/js/main.js', array('jquery'), null, true);
-		// wp_enqueue_script( 'tfhb-vue-core', 'http://localhost:5173/src/main.js', array(), time(), true );
+		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		 // Build the core script
-		 wp_enqueue_script('tfhb-vue-core', THB_URL . 'dist/assets/tfhb-admin-app-script.js', [], time(), true); 
-		 wp_enqueue_style('tfhb-style', THB_URL . 'dist/assets/tfhb-admin-app.css', [], time(), 'all');
+		 wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'dist/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		 wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'dist/assets/tfhb-admin-app.css'), [], time(), 'all');
  
  
 		wp_localize_script(
-			'tfhb-vue-core',
+			'tfhb-admin-core',
 			'tfhb_core_apps',
 			array(
 				// 'url' => THB_URL,
