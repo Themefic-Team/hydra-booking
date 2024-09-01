@@ -4,7 +4,9 @@ import HbSwitch from '../form-fields/HbSwitch.vue';
 import HbSelect from '../form-fields/HbSelect.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import Icon from '@/components/icon/LucideIcon.vue';
-
+import { toast } from "vue3-toastify"; 
+import useValidators from '@/store/validator';
+const { errors, isEmpty } = useValidators();
 const emit = defineEmits(['update:modelValue', 'question-add', 'question-cancel'])
 
 const props = defineProps({
@@ -20,6 +22,48 @@ const AddNewOptions = () => {
 
 const DeleteOptions = (index) => {
     props.questions_data.options.splice(index, 1);
+}
+const UpdateQuestionsData = async (validator_field) => {
+     
+   // Clear the errors object
+   Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+        
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!props.questions_data[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!props.questions_data[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+
+     // Errors Checked
+     const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){
+         
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        }); 
+        return
+    }else{
+        emit('question-add');
+    }
+
+
 }
  
 </script>
@@ -42,7 +86,11 @@ const DeleteOptions = (index) => {
             {name: 'Select', value: 'select'},  
             {name: 'Checkbox', value: 'checkbox'}, 
             {name: 'Date', value: 'date'}
-        ]" 
+        ]"
+        name="type"
+        @keyup="() => tfhbValidateInput('type')"
+        @click="() => tfhbValidateInput('type')"
+        :errors="errors.type"
     />
 
     <HbText  
@@ -50,12 +98,19 @@ const DeleteOptions = (index) => {
         required= "true"  
         :label="$tfhb_trans['Level']"  
         :placeholder="$tfhb_trans['Type level here']" 
+        name="type"
+        @keyup="() => tfhbValidateInput('label')"
+        @click="() => tfhbValidateInput('label')"
+        :errors="errors.label"
     /> 
     <HbText  
         v-model="questions_data.placeholder"
         required= "true"  
         :label="$tfhb_trans['Placeholder']"  
         :placeholder="$tfhb_trans['Type Placeholder here']" 
+        @keyup="() => tfhbValidateInput('placeholder')"
+        @click="() => tfhbValidateInput('placeholder')"
+        :errors="errors.placeholder"
     /> 
 
     <!-- Options -->
@@ -94,8 +149,8 @@ const DeleteOptions = (index) => {
     /> 
 
     <div class="tfhb-action-btn tfhb-full-width tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
-        <button class="tfhb-btn secondary-btn" @click="emit('question-cancel')">Cancel</button>
-        <button class="tfhb-btn boxed-btn" @click="emit('question-add')">Save</button>
+        <button class="tfhb-btn secondary-btn" @click="emit('question-cancel')">Cancel</button> 
+        <button class="tfhb-btn boxed-btn" @click="UpdateQuestionsData(['type', 'label', 'placeholder'])">Save</button>
     </div>
 </template>
 
