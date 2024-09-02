@@ -302,6 +302,8 @@ class TransStrings {
 			'Google Calendar/Meet'                             => __( 'Google Calendar/Meet', 'hydra-booking' ),
 			'Get Access Token'                            => __( 'Get Access Token', 'hydra-booking' ),
 			'Settings'                                    => __( 'Settings', 'hydra-booking' ),
+			'Go To Settings'                                    => __( 'Go To Settings', 'hydra-booking' ),
+			'Not Configured'                                    => __( 'Not Configured', 'hydra-booking' ),
 			'Enable the calendars you want to check for conflicts to prevent double bookings.' => __( 'Enable the calendars you want to check for conflicts to prevent double bookings.', 'hydra-booking' ),
 			'Add Google Calendar'                         => __( 'Add Google Calendar', 'hydra-booking' ),
 			'Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar' => __( 'Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar', 'hydra-booking' ),

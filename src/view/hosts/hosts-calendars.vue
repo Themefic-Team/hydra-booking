@@ -142,6 +142,7 @@ const fetchIntegration = async () => {
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
             Integration.stripe = response.data.stripe  ? response.data.stripe  : Integration.stripe ;  
+            console.log(response.data);
             
 
             skeleton.value = false;
@@ -193,10 +194,10 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="tfhb-admin-card-box tfhb-m-0">    
+    <div class="tfhb-admin-card-box tfhb-m-0">     
         <!-- Host Integration -->
-        <GoogleCalendarIntegrations v-if="Integration.google_calendar.status == '1'" display="list" class="tfhb-flexbox tfhb-host-integrations" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
-        <OutlookCalendarIntegrations v-if="Integration.outlook_calendar.status == '1'" display="list" class="tfhb-flexbox tfhb-host-integrations" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
+        <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
+        <OutlookCalendarIntegrations  display="list" class="tfhb-flexbox tfhb-host-integrations" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
         <!-- <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" /> -->
  
 

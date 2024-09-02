@@ -13,7 +13,8 @@ const props = defineProps([
     'display', 
     'zoho_data', 
     'ispopup',
-    'host_id'
+    'host_id',
+    'from'
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
@@ -25,7 +26,7 @@ const closePopup = () => {
 
 <template>
       <!-- Zoho Integrations  -->
-      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
+      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box "> 
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/Zoho.svg'" alt="">
@@ -37,12 +38,14 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-                
-            <a v-if="zoho_data.client_id && !zoho_data.access_token" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Get Access Token'] }}</a>
+            <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
+            <!-- <span v-if="props.from == 'host' && zoho_data.status == 0" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
+            <a v-else-if="zoho_data.client_id && !zoho_data.access_token" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Get Access Token'] }}</a>
+
 
             <button v-else-if="zoho_data.client_id && zoho_data.access_token" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size="18" /></button>
 
-            <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Connect<Icon name="ChevronRight" size="18" /></button>
+            <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Connect<Icon name="ChevronRight" size="18" /></button> -->
 
             <!-- Checkbox swicher -->
 

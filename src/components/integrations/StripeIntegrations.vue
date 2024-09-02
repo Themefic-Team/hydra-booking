@@ -12,7 +12,9 @@ const props = defineProps([
     'class', 
     'display', 
     'stripe_data', 
-    'ispopup'
+    'ispopup',
+    'from'
+
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
@@ -25,7 +27,7 @@ const closePopup = () => {
 <template>
       <!-- Stripe Integrations  -->
       <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box tfhb-pro">
-        <span class="tfhb-badge tfhb-badge-pro">{{ $tfhb_trans['Pro'] }}</span>
+        <span v-if="props.from !='host'" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/stripe.png'" alt="">
@@ -37,8 +39,10 @@ const closePopup = () => {
                 <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox"> 
+            <span   v-if=" props.from == 'host' && stripe_data.connection_status != '1'" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
+           
+            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
  
         </div>
 

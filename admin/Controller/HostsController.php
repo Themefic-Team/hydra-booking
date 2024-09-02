@@ -581,7 +581,8 @@ class HostsController {
 		// Google Calendar API
 		$google_calendar = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 
-		if ( $_tfhb_integration_settings['google_calendar']['status'] == true ) {
+
+		if ( $_tfhb_integration_settings['google_calendar']['status']  ) {
 
 			$google_calendar['type']              = 'google_calendar';
 			$GoogleCalendar                       = new GoogleCalendar();
@@ -589,6 +590,10 @@ class HostsController {
 			$google_calendar['status']            = $_tfhb_integration_settings['google_calendar']['status'];
 			$google_calendar['connection_status'] = $_tfhb_integration_settings['google_calendar']['connection_status'];
 
+		}else{
+			$google_calendar['type']              = 'google_calendar';
+			$google_calendar['status']            = $_tfhb_integration_settings['google_calendar']['status'];
+			$google_calendar['connection_status'] = $_tfhb_integration_settings['google_calendar']['connection_status'];
 		}
 
 		// Outlook Calendar API
@@ -639,6 +644,9 @@ class HostsController {
 			$paypal['secret_key']        = $_tfhb_host_integration_settings['paypal']['secret_key'];
 			$paypal['environment']       = $_tfhb_host_integration_settings['paypal']['environment'];
 
+		}else{
+			$paypal['type']              = 'paypal';
+			$paypal['status']            = 0; 
 		}
 
 		// Mailchimp API
@@ -650,11 +658,15 @@ class HostsController {
 			$mailchimp['connection_status'] = $_tfhb_integration_settings['mailchimp']['status'];
 			$mailchimp['key']               = $_tfhb_host_integration_settings['mailchimp']['key'];
 
+		}else{
+			$mailchimp['type']              = 'mailchimp';
+			$mailchimp['status']            = 0; 
+			$mailchimp['connection_status']            = 0; 
 		}
 
 		// Zoho
 		$zoho = isset( $_tfhb_host_integration_settings['zoho'] ) ? $_tfhb_host_integration_settings['zoho'] : array();
-		if ( $_tfhb_integration_settings['zoho']['client_id'] ) {
+		if ( $_tfhb_integration_settings['zoho']['status'] ) {
 
 			$zoho['type']          = 'zoho';
 			$zoho['status']        = $_tfhb_host_integration_settings['zoho']['status'];
@@ -665,6 +677,10 @@ class HostsController {
 			$zoho['modules']       = json_decode( $_tfhb_host_integration_settings['zoho']['modules'] );
 			$zoho['refresh_token'] = json_decode( $_tfhb_host_integration_settings['zoho']['refresh_token'] );
 
+		}else{
+			$zoho['type']              = 'zoho';
+			$zoho['status']            = 0; 
+			$zoho['connection_status'] = 0;
 		}
 
 		// Checked if woo

@@ -12,7 +12,9 @@ const props = defineProps([
     'class', 
     'display', 
     'paypal_data', 
-    'ispopup'
+    'ispopup',
+    'from'
+
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
@@ -24,7 +26,7 @@ const closePopup = () => {
 
 <template> 
       <!-- paypal Integrations  -->
-      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
+      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">  
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/paypal.svg'" alt="">
@@ -36,7 +38,9 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ paypal_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
+            <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
+            
+            <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ paypal_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
                 <!-- Checkbox swicher -->
 
                 <HbSwitch 

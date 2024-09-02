@@ -43,7 +43,7 @@ const storedOptionData = (data) => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['Google Calendar'] }}</h3> 
+                <h3>{{ $tfhb_trans['Google Calendar/Meet'] }}</h3> 
                 <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
 
             </div>
@@ -53,7 +53,8 @@ const storedOptionData = (data) => {
             <!-- <button @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ google_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button> -->
              <!-- a tag for get access token  -->
             <!-- <a   :href="'https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar&redirect_uri='+google_calendar.redirect_url+'&response_type=code&client_id='+google_calendar.client_id+'&access_type=online'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">Get Access Token</a> -->
-            <button   v-if="google_calendar.connection_status == 1 && google_calendar.tfhb_google_calendar !== undefined "  @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Settings'] }}  <Icon name="ChevronRight" size="18" /></button>
+            <span  v-if="google_calendar.status != '1'" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
+            <button  v-else-if="google_calendar.connection_status == 1 && google_calendar.tfhb_google_calendar !== undefined "  @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Settings'] }}  <Icon name="ChevronRight" size="18" /></button>
              
             <a v-else :href="google_calendar.access_url" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Get Access Token'] }}</a>
 

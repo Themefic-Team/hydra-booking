@@ -951,7 +951,7 @@ class MeetingController {
 		// Get Current User
 		$current_user = wp_get_current_user();
 		// get user id
-		$current_user_id = $current_user->ID;
+		$current_user_id = $current_user->ID; 
 
 		// Update Meeting
 		$data = array(

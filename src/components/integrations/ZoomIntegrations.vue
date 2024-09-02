@@ -20,7 +20,8 @@ const props = defineProps([
     'display', 
     'zoom_meeting', 
     'Integration', 
-    'ispopup'
+    'ispopup',
+    'from'
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
@@ -44,10 +45,11 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ zoom_meeting.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
-                <!-- Checkbox swicher -->
-
-                <HbSwitch v-if="zoom_meeting.connection_status" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
+            <span  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
+            
+            <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ zoom_meeting.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
+            <!-- Checkbox swicher --> 
+            <HbSwitch v-if="zoom_meeting.connection_status" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->

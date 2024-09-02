@@ -12,7 +12,8 @@ const props = defineProps([
     'class', 
     'display', 
     'mail_data', 
-    'ispopup'
+    'ispopup',
+    'from'
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
@@ -24,7 +25,7 @@ const closePopup = () => {
 
 <template>
       <!-- Mailchimp Integrations  -->
-      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
+      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box "> 
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/Mailchimp.svg'" alt="">
@@ -36,7 +37,9 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ mail_data.key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
+            <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
+            
+            <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ mail_data.key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
                 <!-- Checkbox swicher -->
 
                 <HbSwitch

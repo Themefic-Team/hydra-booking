@@ -5,6 +5,7 @@ namespace HydraBooking\App\Shortcode;
 use HydraBooking\DB\Meeting;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Host;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 
@@ -80,7 +81,7 @@ class HydraBookingShortcode {
 
 		$meta_data        = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
-
+	
 		// Reschedule Booking
 		$booking_data = array();
 
@@ -101,9 +102,12 @@ class HydraBookingShortcode {
 		}
  
 		// GetHost meta Data
-		$host_id   = isset( $meta_data['user_id'] ) ? $meta_data['user_id'] : 0;
+		$host_id   = isset( $meta_data['host_id'] ) ? $meta_data['host_id'] : 0;
 
-		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
+	
+		$hostData =  new Host();
+		$host_meta = (array) $hostData->get( $host_id ); 
+		 
 		// tfhb_print_r($host_meta);
 		// Time Zone
 		$DateTimeZone = new DateTimeController( 'UTC' );
@@ -520,6 +524,7 @@ class HydraBookingShortcode {
 			);
 			// Get Post Meta
 			$booking_meta = get_post_meta( $get_booking->post_id, '_tfhb_booking_opt', true );
+			
 
 			if ( isset( $general_settings['allowed_reschedule_before_meeting_start'] ) && ! empty( $general_settings['allowed_reschedule_before_meeting_start'] ) ) {
 				$allowed_reschedule_before_meeting_start = $general_settings['allowed_reschedule_before_meeting_start']; // 100 minutes

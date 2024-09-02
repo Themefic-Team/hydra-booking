@@ -128,17 +128,26 @@
     // Tooltip
 
     // Button
-    .tfhb-badge{
+    .tfhb-badge{ 
+        // box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+        border-radius: 4px;
+        padding: 4px 8px; 
+        color: #F62881 !important;
+        background-color: $primaryi50;
+        font-weight: 00 !important;
+        font-size: 13px;
+        line-height: 20px;
         &.tfhb-badge-pro {
+            color: #21A159 !important;
+            background-color: #D0F5E1;
             position: absolute;
             right: 8px;
-            top: 8px;
-            box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
-            border-radius: 4px;
-            padding: 4px 8px;
-            color: #F62881 !important;
-            background-color: $primaryi50;
-            font-weight: 600 !important;
+            top: 8px; 
+          }
+          &.not-absolute{
+            position: relative;
+            right: auto;
+            top: auto;
           }
     }
     .tfhb-mb-32{
