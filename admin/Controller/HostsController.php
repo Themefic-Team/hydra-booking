@@ -35,7 +35,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getHostsData' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -44,7 +44,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateHosts' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -53,7 +53,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteHosts' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -62,7 +62,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateHostsStatus' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Get Single Host based on id
@@ -72,7 +72,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getTheHostData' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -81,7 +81,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateHostInformation' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -103,7 +103,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'GetAvailabilitySettings' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -113,7 +113,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'GetSingleAvailabilitySettings' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -123,7 +123,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteAvailabilitySettings' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
