@@ -17,7 +17,8 @@ const importExport = reactive({
         try {  
             const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/import-export', {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
     

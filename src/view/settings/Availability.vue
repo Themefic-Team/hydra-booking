@@ -123,7 +123,12 @@ const closeModal = () => {
 const fetchAvailabilitySettings = async () => {
 
   try { 
-      const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability'); 
+      const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability', {
+        headers: {
+            'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+            'capability': 'tfhb_manage_options'
+        } 
+      }); 
       if (response.data.status) { 
           timeZone.value = response.data.time_zone;     
           AvailabilityGet.data = response.data.availability; 
@@ -151,7 +156,10 @@ const deleteAvailabilitySettings = async (key, id ) => {
   try { 
       // const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/'+key); 
       const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/delete', deleteAvailability, {
-             
+        headers: {
+            'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+            'capability': 'tfhb_manage_options'
+        }
       } );
       if (response.data.status) { 
         AvailabilityGet.data = response.data.availability;

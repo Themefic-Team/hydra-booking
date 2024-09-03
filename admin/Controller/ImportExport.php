@@ -1,7 +1,9 @@
 <?php
 namespace HydraBooking\Admin\Controller;
-
-// Use DB
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+// Use DB 
+use HydraBooking\Admin\Controller\RouteController;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
@@ -26,7 +28,7 @@ class ImportExport {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetImportExportData' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -35,7 +37,7 @@ class ImportExport {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ExportMeeting' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -45,7 +47,7 @@ class ImportExport {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportMeeting' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Import Booking
@@ -55,7 +57,7 @@ class ImportExport {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportBooking' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}

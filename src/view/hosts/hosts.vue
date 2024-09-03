@@ -27,7 +27,12 @@ const usersData = reactive({});
 const fetchHosts = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/lists');
+        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/lists',{
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
         if (response.data.status) { 
             usersData.data = response.data.users; 
             hosts.data = response.data.hosts; 
@@ -45,7 +50,8 @@ const CreateHosts = async () => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/create', host, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
             } 
         } );
 
@@ -78,9 +84,12 @@ const deleteHost = async ($id, $user_id) => {
         user_id: $user_id
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/delete', deleteHost, {
-               
-        } );
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/delete', deleteHost, { 
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            }
+        }  );
         if (response.data.status) { 
             hosts.data = response.data.hosts;  
             toast.success(response.data.message, {
@@ -101,8 +110,11 @@ const updateHostStatus = async ($id, $user_id, $status) => {
         status: $status
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/update-status', HostData, {
-               
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/update-status', HostData, { 
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            }
         } );
         if (response.data.status) { 
             hosts.data = response.data.hosts;  
@@ -134,6 +146,10 @@ const Tfhb_Host_Filter = async (e) =>{
             params: {
                 filterData
             },
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_integrations'
+            }
         });
         
         if (response.data.status) { 

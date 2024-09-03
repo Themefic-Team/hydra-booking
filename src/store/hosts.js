@@ -7,7 +7,11 @@ const Host = reactive({
         const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/lists';
         try {
             const response = await fetch(apiUrl, {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -29,7 +33,11 @@ const Host = reactive({
         const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/' + HostId;
         try {
             const response = await fetch(apiUrl, {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');

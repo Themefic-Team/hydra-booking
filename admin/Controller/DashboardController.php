@@ -1,5 +1,7 @@
 <?php
 namespace HydraBooking\Admin\Controller;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Namespace
 use HydraBooking\Admin\Controller\RouteController;
@@ -27,7 +29,7 @@ class DashboardController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getDashboardsData' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -37,7 +39,7 @@ class DashboardController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getDashboardsStatisticsData' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
  

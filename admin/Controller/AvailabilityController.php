@@ -1,12 +1,12 @@
 <?php
 namespace HydraBooking\Admin\Controller;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use DB
 use HydraBooking\DB\Availability;
+use HydraBooking\Admin\Controller\RouteController;
 
-// exit
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
 
 class AvailabilityController {
 
@@ -30,7 +30,7 @@ class AvailabilityController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'get_all' ),
-				'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -39,7 +39,7 @@ class AvailabilityController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'get_items' ),
-				'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -48,7 +48,7 @@ class AvailabilityController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'create' ),
-				'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -57,7 +57,7 @@ class AvailabilityController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'update' ),
-				'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -66,14 +66,11 @@ class AvailabilityController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'delete' ),
-				'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
-	}
-	// permission_callback
-	public function permission_callback() {
-		return current_user_can( 'tfhb_manage_options' );
-	}
+	} 
+
 	public function create() {
 		$data = json_decode( file_get_contents( 'php://input' ), true );
 

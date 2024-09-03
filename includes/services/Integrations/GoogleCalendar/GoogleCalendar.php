@@ -1,7 +1,10 @@
 <?php
 
 namespace HydraBooking\Services\Integrations\GoogleCalendar;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+use HydraBooking\Admin\Controller\RouteController;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\Meeting;
@@ -66,6 +69,7 @@ class GoogleCalendar {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAccessData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}

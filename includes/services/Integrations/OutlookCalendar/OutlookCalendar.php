@@ -1,6 +1,11 @@
 <?php
-
 namespace HydraBooking\Services\Integrations\OutlookCalendar;
+
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+// Use Namespace
+use HydraBooking\Admin\Controller\RouteController;
 
 use HydraBooking\DB\Booking;
 class OutlookCalendar {
@@ -59,6 +64,7 @@ class OutlookCalendar {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAccessData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}

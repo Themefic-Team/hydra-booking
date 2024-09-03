@@ -48,7 +48,12 @@ const dataFields = ref('');
 const updateIntegrations = async () => {
     // Api Submission
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/integration/update', integrationsData);
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/integration/update', integrationsData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
         if (response.data.status == true) { 
             toast.success(response.data.message); 
             props.meeting.integrations = response.data.integrations ? JSON.parse(response.data.integrations) : '';
@@ -71,7 +76,10 @@ const deleteIntegrations = async (key) => {
 
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/integration/delete', data, {
-               
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
         } );
         if (response.data.status) { 
             toast.success(response.data.message, {
@@ -185,7 +193,8 @@ const moduleFields = async (e) => {
         try { 
             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/integration/fields', data, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
             if (response.data.status) { 

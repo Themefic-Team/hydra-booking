@@ -11,7 +11,8 @@ const Meeting = reactive({
 
         const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/lists', {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
             } 
         } );
 
@@ -37,7 +38,8 @@ const Meeting = reactive({
         try { 
             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/delete', deleteMeeting, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
             if (response.data.status) { 
@@ -58,9 +60,10 @@ const Meeting = reactive({
         try { 
              // axisos sent dataHeader Nonce Data
              const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/create', TypeData, {
-                 headers: {
-                     'X-WP-Nonce': tfhb_core_apps.rest_nonce
-                 } 
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
              } );
      
              if (response.data.status) {  
@@ -88,6 +91,10 @@ const Meeting = reactive({
                 params: {
                     filterData
                 },
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
             });
             
             if (response.data.status) { 
@@ -105,6 +112,10 @@ const Meeting = reactive({
                 params: {
                     filterData
                 },
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
             });
             
             if (response.data.status) { 

@@ -1,5 +1,10 @@
 <?php
 namespace HydraBooking\Services\Integrations\Zoho;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+// Use Namespace
+use HydraBooking\Admin\Controller\RouteController;
 
 use HydraBooking\DB\Meeting;
 class Zoho {
@@ -17,6 +22,7 @@ class Zoho {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAccessData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}

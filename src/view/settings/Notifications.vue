@@ -135,7 +135,12 @@ const changeTab = (e) => {
 const fetchNotification = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/notification');
+        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/notification', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
         if (response.data.status) { 
             // console.log(response.data.integration_settings);
             Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
@@ -153,7 +158,8 @@ const UpdateNotification = async () => {
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/notification/update', Notification, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
             } 
         } );
 

@@ -19,10 +19,7 @@ class HostsController {
 
 
 	// constaract
-	public function __construct() {
-		// add_action('admin_init', array($this, 'init'));
-
-		// add_action('rest_api_init', array($this, 'create_endpoint'));
+	public function __construct() { 
 	}
 
 	public function init() {
@@ -35,7 +32,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getHostsData' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -44,7 +41,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateHosts' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -53,7 +50,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteHosts' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -62,7 +59,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateHostsStatus' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Get Single Host based on id
@@ -72,7 +69,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getTheHostData' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -81,7 +78,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateHostInformation' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -123,7 +120,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteAvailabilitySettings' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -155,7 +152,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'FetchIntegrationSettings' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -173,7 +170,8 @@ class HostsController {
 			)
 		);
 	}
-	// permission_callback
+	
+ 
 	public function getHostsData() {
 		// Get all wp users list with
 		$users    = get_users( array( 'role__in' => array( 'administrator', 'editor', 'tfhb_host' ) ) );

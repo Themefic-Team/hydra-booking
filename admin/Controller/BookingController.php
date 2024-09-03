@@ -1,5 +1,7 @@
 <?php
 namespace HydraBooking\Admin\Controller;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Namespace
 use HydraBooking\Admin\Controller\RouteController;
@@ -10,8 +12,7 @@ use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+ 
 
 class BookingController {
 
@@ -30,6 +31,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getBookingsData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -38,6 +40,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateBooking' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -46,6 +49,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteBooking' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Get Single Booking based on id
@@ -55,6 +59,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getBookingData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -63,6 +68,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateBooking' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -71,6 +77,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateBulkStatus' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -81,6 +88,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getPreBookingsData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -89,6 +97,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getpreMeetingData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -97,6 +106,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getAvailableTimeData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -107,6 +117,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'exportBookingDataCSV' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}
@@ -241,7 +252,7 @@ class BookingController {
 		$data = get_post_meta( $MeetingsData->post_id, '__tfhb_meeting_opt', true );
 
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
-			$_tfhb_availability_settings = get_user_meta( $host_id, '_tfhb_host', true );
+			$_tfhb_availability_settings = get_user_meta( $MeetingsData->host_id, '_tfhb_host', true );
 			if ( in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
 				$availability_data = $_tfhb_availability_settings['availability'][ $data['availability_id'] ];
 			} else {

@@ -1,8 +1,12 @@
 <?php
 namespace HydraBooking\Admin\Controller;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Namespace
+
 // Use DB
+use HydraBooking\admin\Controller\RouteController;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\Meeting;
 use HydraBooking\Admin\Controller\DateTimeController;
@@ -16,7 +20,7 @@ class SetupWizard {
 	// constaract
 	public function __construct() {
 
-		add_action( 'rest_api_init', array( $this, 'create_endpoint' ) );
+		// add_action( 'rest_api_init', array( $this, 'create_endpoint' ) );
 	}
 
 
@@ -27,7 +31,7 @@ class SetupWizard {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'fetchSetupWizard' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -37,7 +41,7 @@ class SetupWizard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportMeetingDemo' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}

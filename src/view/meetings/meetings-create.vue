@@ -329,7 +329,12 @@ const meetingId = route.params.id;
 
  const fetchMeeting = async () => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/'+meetingId);
+        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/'+meetingId, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
         if (response.data.status == true) { 
             // Time Zone = 
             timeZone.value = response.data.time_zone;   
@@ -489,7 +494,12 @@ const UpdateMeetingData = async (validator_field) => {
 
     // Api Submission
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/details/update', meetingData);
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/details/update', meetingData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
         if (response.data.status == true) { 
             meetingData.slug = response.data.meeting.slug;
             toast.success(response.data.message); 

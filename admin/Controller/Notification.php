@@ -1,11 +1,12 @@
 <?php
 namespace HydraBooking\Admin\Controller;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+
 // Use Namespace
 use HydraBooking\DB\Meta;
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
-
+use HydraBooking\Admin\Controller\RouteController;
 class Notification {
 
 	public function __construct() {
@@ -19,6 +20,7 @@ class Notification {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getNotification' ),
+                'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}

@@ -8,7 +8,11 @@ const Availability = reactive({
         const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability';
         try {
             const response = await fetch(apiUrl, {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');

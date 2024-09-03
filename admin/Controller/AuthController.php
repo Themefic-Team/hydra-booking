@@ -1,6 +1,10 @@
 <?php
 namespace HydraBooking\Admin\Controller;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+// Use Namespace
+use HydraBooking\Admin\Controller\RouteController;
 class AuthController {
 
 	// constaract
@@ -14,6 +18,7 @@ class AuthController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getUserAuth' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}

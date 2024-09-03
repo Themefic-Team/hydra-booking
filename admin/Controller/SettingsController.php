@@ -20,8 +20,7 @@ class SettingsController {
 
 	// constaract
 	public function __construct() {
-
-		add_action( 'rest_api_init', array( $this, 'create_endpoint' ) );
+ 
 	}
 
 	public function init() {
@@ -34,7 +33,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetGeneralSettings' ),
-				'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -43,7 +42,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateGeneralSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Availability Routes
@@ -53,7 +52,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAvailabilitySettings' ),
-			// 'permission_callback' =>  array($this, 'permission_callback'),
+			// 	'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -62,7 +61,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateAvailabilitySettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -72,7 +71,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteAvailabilitySettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -83,6 +82,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetSingleAvailabilitySettings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Intrigation
@@ -93,7 +93,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetIntegrationSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -103,7 +103,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateIntegrationSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -114,7 +114,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetNotificationSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -123,7 +123,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateNotificationSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -134,7 +134,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetHostsSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -143,7 +143,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateGetHostsSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -154,7 +154,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAppearanceSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -163,14 +163,10 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateAppearanceSettings' ),
-			'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
-	}
-	// permission_callback
-	public function permission_callback() {
-		return current_user_can( 'tfhb_manage_options' );
-	}
+	} 
 	// permission_callback
 	public function GetGeneralSettings() {
 		$DateTimeZone           = new DateTimeController( 'UTC' );

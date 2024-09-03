@@ -40,7 +40,8 @@ const ExportBookingAsCSV = async () => {
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/export-csv', exportData, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_integrations'
             } 
         } );
 
@@ -100,8 +101,9 @@ const UpdateMeetingStatus = async (id, host, status) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/update', meeting_status, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
-            } 
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            }  
         } );
 
         if (response.data.status) {  
@@ -155,7 +157,12 @@ const deleteBooking = async ($id, $host) => {
         host: $host
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/delete', deleteBooking);
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/delete', deleteBooking,{
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
 
         if (response.data.status) { 
             Booking.bookings = response.data.bookings; 
@@ -181,7 +188,8 @@ const Bulk_Status_Callback = async (e) => {
             // axisos sent dataHeader Nonce Data
             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/bulk-update', bookings, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
 

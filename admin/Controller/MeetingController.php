@@ -31,6 +31,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getMeetingsData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -39,6 +40,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -47,6 +49,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Get Single Meeting based on id
@@ -56,6 +59,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getMeetingData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -64,6 +68,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -73,6 +78,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateMeetingWebhook' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -81,6 +87,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'deleteMeetingWebhook' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -90,6 +97,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateMeetingIntegration' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -98,6 +106,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'deleteMeetingIntegration' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -106,6 +115,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getZohoModulsFields' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -130,6 +140,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getMeetingsCategories' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -138,6 +149,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'createupdateMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -146,6 +158,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteCategory' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -156,7 +169,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getTheHostAvailabilityData' ),
-			// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -166,6 +179,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getQuestionFormsList' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}
@@ -1344,7 +1358,7 @@ class MeetingController {
 			$_tfhb_host_integration_settings['zoho']['access_token'] = $response_data['access_token'];
 
 			// save to user metadata
-			update_user_meta( $host_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+			update_user_meta( $host, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
 
 			return $response_data['access_token'];
 		}

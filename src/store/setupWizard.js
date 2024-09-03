@@ -100,7 +100,8 @@ const setupWizard = reactive({
         try {  
             const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/setup-wizard/fetch', {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
     
@@ -123,7 +124,8 @@ const setupWizard = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/setup-wizard/import-meeting', this.data, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
     

@@ -55,7 +55,14 @@ const skeleton = ref(true);
 const fetchGeneralSettings = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/general');
+        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/general', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
+        
+    
         if (response.data.status) { 
             timeZone.value = response.data.time_zone; 
             countryList.value = response.data.country_list;  
@@ -113,7 +120,10 @@ const UpdateGeneralSettings = async () => {
 
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/general/update', generalSettings, {
-             
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
         } );
       
         if (response.data.status) {    

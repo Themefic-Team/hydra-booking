@@ -53,7 +53,12 @@ const webhookData = reactive({
 const updateWebHook = async () => {
     // Api Submission
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/webhook/update', webhookData);
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/webhook/update', webhookData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
         if (response.data.status == true) { 
             toast.success(response.data.message); 
             props.meeting.webhook = response.data.webhook ? JSON.parse(response.data.webhook) : '';
@@ -76,7 +81,10 @@ const deleteWebHook = async (key) => {
 
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/webhook/delete', data, {
-               
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
         } );
         if (response.data.status) { 
             toast.success(response.data.message, {
