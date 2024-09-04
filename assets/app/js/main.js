@@ -295,7 +295,9 @@
 
 		function tfhb_from_submission($this, preloader, InformationData, calenderData){
 			
+			// Interval to show the preloader
 			$this.find('.tfhb-notice').hide();
+			$this.find('.tfhb-notice').html('');
 			$this.find('.tfhb-meeting-card').append(preloader);
 
 		   var meeting_id = $this.find("#meeting_id").val();
@@ -347,6 +349,15 @@
 		}; 
 		// Push object information data to data
 		data = Object.assign(InformationData, data); 
+			if(payment_status == 1 && ""==payment_type){
+				//   5 seconds
+				setTimeout(function(){
+					$this.find('.tfhb-preloader').remove();
+					$this.find('.tfhb-notice').append('Payment Method Required');
+					$this.find('.tfhb-notice').show();
+				},  2000); // 2000 milliseconds = 2 seconds
+				
+			}
 
 		   if(payment_status != 1 || ( payment_status == 1 && "woo_payment"==payment_type)){
 			  

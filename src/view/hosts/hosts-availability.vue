@@ -9,6 +9,8 @@ import { toast } from "vue3-toastify";
 import { Host } from '@/store/hosts';
 import { Availability } from '@/store/availability';
 
+import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+
 const emit = defineEmits(["availability-tabs", "save-host-info"]); 
 const props = defineProps({
     hostId: {
@@ -269,7 +271,7 @@ const formatTimeSlots = (timeSlots) =>  {
         </ul>
     </div>
 
-    <HbSelect 
+    <!-- <HbSelect 
         v-model="host.availability_id"
         required= "true" 
         :label="$tfhb_trans['Choose Schedule']"  
@@ -278,7 +280,20 @@ const formatTimeSlots = (timeSlots) =>  {
         :option = "Availability.availabilities" 
         v-if="'settings'==host.availability_type"
         @tfhb-onchange="Settings_Avalibility_Callback"
+    /> --> 
+    <!-- Duration -->
+    <HbDropdown 
+        v-model="host.availability_id" 
+        required= "true" 
+        :label="$tfhb_trans['Choose Schedule']"  
+        :selected = "1"
+        name="duration"
+        :placeholder="$tfhb_trans['Choose Schedule']"   
+        :option = "Availability.availabilities" 
+        v-if="'settings'==host.availability_type"
+        @tfhb-onchange="Settings_Avalibility_Callback"
     />
+    <!-- Duration -->
 
     <!-- Settings Data -->
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24 tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==host.availability_type">  

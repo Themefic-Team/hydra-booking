@@ -105,18 +105,20 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 			</li>
 			<?php
 			if ( ! empty( $meeting['meeting_locations'] ) ) {
-				foreach ( $meeting['meeting_locations'] as $key => $location ) {
+				foreach ( $meeting['meeting_locations'] as $key => $location ) { 
+					 if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
+						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.png').'" alt="Phone">';
+					 }elseif($location['location'] == 'zoom'){
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
+					 }elseif($location['location'] == 'meet'){
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">';
+					 }else{
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/location.png').'" alt="Location">';
+					 }
 					echo '<li class="tfhb-flexbox tfhb-gap-8">
                                 <input type="hidden" id="meeting_locations[' . esc_attr($key) . '][location]" name="meeting_locations[' . esc_attr($key) . '][location]" value="' . esc_attr( $location['location'] ) . '">
                                 <input type="hidden" id="meeting_locations[' . esc_attr($key) . '][address]" name="meeting_locations[' . esc_attr($key) . '][address]" value="' . esc_attr( $location['address'] ) . '">
-                                <div class="tfhb-icon">
-                                    
-                                    
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.3327 6.66665C13.3327 10.6666 7.99935 14.6666 7.99935 14.6666C7.99935 14.6666 2.66602 10.6666 2.66602 6.66665C2.66602 5.25216 3.22792 3.8956 4.22811 2.89541C5.22831 1.89522 6.58486 1.33331 7.99935 1.33331C9.41384 1.33331 10.7704 1.89522 11.7706 2.89541C12.7708 3.8956 13.3327 5.25216 13.3327 6.66665Z" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M8 8.66669C9.10457 8.66669 10 7.77126 10 6.66669C10 5.56212 9.10457 4.66669 8 4.66669C6.89543 4.66669 6 5.56212 6 6.66669C6 7.77126 6.89543 8.66669 8 8.66669Z" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div> 
+                                <div class="tfhb-icon">'.$icon.'</div> 
                                 ' . esc_html( $location['location'] ) . '
                             </li>';
 				}
