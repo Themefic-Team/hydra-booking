@@ -49,6 +49,7 @@ class RouteController {
 	public function permission_callback( \WP_REST_Request $request ) {
 		// get header data form request "capability'
 		$capability = $request->get_header( 'capability' );
+		 
 		// check current user have capability
 		return current_user_can( $capability );
 	}
