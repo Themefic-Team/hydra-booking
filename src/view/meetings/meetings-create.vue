@@ -516,14 +516,18 @@ const UpdateMeetingData = async (validator_field) => {
                 router.push({ name: 'MeetingsCreateNotifications' });
             }
             if("MeetingsCreateNotifications"==route.name){
-                router.push({ name: 'MeetingsCreatePayment' });
+                router.push({ name: 'MeetingsCreateIntegrations' });
             }
-            if("MeetingsCreatePayment"==route.name){
+            if("MeetingsCreateIntegrations"==route.name){
                 router.push({ name: 'MeetingsCreateWebhook' });
             }
             if("MeetingsCreateWebhook"==route.name){
-                router.push({ name: 'MeetingsLists' });
+                router.push({ name: 'MeetingsCreatePayment' });
             }
+            
+            // if("MeetingsCreateIntegrations"==route.name){
+            //     router.push({ name: 'MeetingsCreatePayment' });
+            // }
         }else{
             toast.error(response.data.message); 
         }
@@ -612,11 +616,11 @@ const sharePopupData = (data) => {
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/availability'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/availability' }">{{ $tfhb_trans['Availability'] }}</router-link></li>  
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/limits'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/limits' }">{{ $tfhb_trans['Limits'] }}</router-link></li>  
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/questions'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/questions' }"> {{ $tfhb_trans['Questions'] }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/notifications'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/notifications' }"> {{ $tfhb_trans['Notifications'] }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/payment'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/payment' }">{{ $tfhb_trans['Payment'] }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/notifications'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/notifications' }"> {{ $tfhb_trans['Notifications'] }}</router-link></li>   
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/integrations' }">{{ $tfhb_trans['Integrations'] }}</router-link></li> 
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/webhook'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/webhook' }">{{ $tfhb_trans['Webhook'] }}</router-link></li>  
 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/integrations' }">{{ $tfhb_trans['Integrations'] }}</router-link></li> 
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/payment'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/payment' }">{{ $tfhb_trans['Payment'] }}</router-link></li> 
 
             </ul>  
         </nav>

@@ -8,7 +8,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
-
+const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
     meetingId: {
         type: Number,
@@ -398,6 +398,9 @@ const moduleFields = async (e) => {
         <div class="tfhb-submission-btn">
             <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateIntegrations">{{ $tfhb_trans['Save Webhook'] }} </button>
         </div>
+    </div>
+    <div class="tfhb-submission-btn">
+        <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans['Save & Continue'] }} </button>
     </div>
 </div>
 </template>

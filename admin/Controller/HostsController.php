@@ -100,7 +100,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'GetAvailabilitySettings' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 
@@ -110,7 +110,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'GetSingleAvailabilitySettings' ),
-			'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 

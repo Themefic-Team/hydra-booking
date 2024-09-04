@@ -4,6 +4,7 @@ import HbCounter from '@/components/meetings/HbCounter.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbText from '@/components/form-fields/HbText.vue';
+import Icon from '@/components/icon/LucideIcon.vue'
 const emit = defineEmits(["update-meeting", "limits-frequency-add"]); 
 
 const props = defineProps({
@@ -124,40 +125,15 @@ const removeExtraFrequency = (key) => {
         
         </div>  
 
-        <div class="tfhb-admin-title tfhb-full-width tfhb-m-0">
+        <div class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro">
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                 Recurring Event
-                <HbSwitch 
-                    v-model="meeting.recurring_status"
-                />
+                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
             </h2> 
             <p>Set up a repeating schedule</p>
+            <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
         </div>
-        <div class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="meeting.recurring_status">  
-
-            <!-- Meeting interval -->
-
-            <HbCounter
-                :label="$tfhb_trans['Repeats every']"
-                width="50"
-                :repater="false"
-                :counter_value="meeting.recurring_repeat"
-                limit="1"
-            />
-            
-            <!-- For a maximum of --> 
-            <HbText  
-                    v-model="meeting.recurring_maximum"   
-                    type="number"
-                    :label="$tfhb_trans['Maximum number of bookings']"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans['Use meeting length (default)']" 
-                    width="50"  
-                    limit="1"
-                /> 
-
-
-        </div>  
+     
 
         <div class="tfhb-meeting-schedule tfhb-full-width tfhb-flexbox tfhb-gap-16">
             <HbCheckbox 
