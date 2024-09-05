@@ -199,27 +199,33 @@ const deleteBodyField = (key) => {
 
 <!-- {{ webhookData  }} -->
 <div class="meeting-create-details tfhb-gap-24">
-    <div class="tfhb-webhook-title  tfhb-pro"> 
-       <div class="tfhb-admin-title tfhb-full-width tfhb-m-0 ">
+    <div class="tfhb-webhook-title  tfhb-full-width"
+        :class="{
+            'tfhb-pro': !$tfhb_is_pro,
+            'tfhb-flexbox': $tfhb_is_pro == true,
+        }"
+    > 
+       <div class="tfhb-admin-title  tfhb-m-0 "  >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                 {{ $tfhb_trans['Availability Range for this Booking'] }}
-                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
+                <span v-if="tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
             </h2> 
             <p>{{ $tfhb_trans['How many days can the invitee schedule?'] }}
                 <br>
             </p> 
-            <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
+            <a  v-if="tfhb_is_pro == false" href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
            
+            
         </div>
- 
-        <!-- <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookList" @click="addNewWebHook">
+        <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookList && $tfhb_is_pro == true" @click="addNewWebHook">
             <Icon name="PlusCircle" :width="20"/>
-            {{ $tfhb_trans['Add New Webhook'] }}
-        </button>
-        <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookcreate" @click="backtoWebHookList">
+                {{ $tfhb_trans['Add New Webhook'] }}
+            </button>
+        <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookcreate && $tfhb_is_pro == true" @click="backtoWebHookList">
             <Icon name="ArrowLeft" :width="20"/>
             {{ $tfhb_trans['Back'] }}
-        </button> -->
+        </button>
+        
     </div>
 
     <div class="tfhb-webhook-content tfhb-full-width" v-if="meeting.webhook && webhookList">

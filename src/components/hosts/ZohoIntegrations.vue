@@ -26,7 +26,12 @@ const closePopup = () => {
 
 <template>
       <!-- Zoho Integrations  -->
-      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box "> 
+      <div  class="tfhb-integrations-single-block tfhb-admin-card-box "
+        :class="props.class,{
+            'tfhb-pro': !$tfhb_is_pro,
+        }"
+      >
+        
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/Zoho.svg'" alt="">
@@ -38,25 +43,24 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
-            <!-- <span v-if="props.from == 'host' && zoho_data.status == 0" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
-            <a v-else-if="zoho_data.client_id && !zoho_data.access_token" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Get Access Token'] }}</a>
+            <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
+           
+            <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Get Access Token'] }}</a>
 
+            <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size="18" /></button>
 
-            <button v-else-if="zoho_data.client_id && zoho_data.access_token" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size="18" /></button>
-
-            <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Connect<Icon name="ChevronRight" size="18" /></button> -->
+            <button v-else-if="$tfhb_is_pro == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Connect<Icon name="ChevronRight" size="18" /></button>
 
             <!-- Checkbox swicher -->
 
-            <HbSwitch 
+            <HbSwitch v-else
                 v-if="zoho_data.access_token != '' &&  zoho_data.access_token  != null " 
                 @change="emit('update-integrations', 'zoho', zoho_data)" v-model="zoho_data.status"  
               />
             <!-- Swicher --> 
         </div>
 
-        <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
+        <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
                 <h2>{{ $tfhb_trans['Connect Your Zoho Account'] }}</h2>
                 

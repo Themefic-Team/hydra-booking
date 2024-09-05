@@ -42,6 +42,7 @@ onBeforeMount(() => {
     Meeting.fetchMeetingCategory()
 });
 
+
 // Filtering
 const filterData = reactive({
     title: '',
@@ -82,7 +83,14 @@ const sharePopupData = (data) => {
 
 
 const meeting = reactive({});
-const TfhbMeetingType = (type, router) => {
+const TfhbMeetingType = (type, router) => { 
+    if(type == 'one-to-group' && typeof tfhb_core_apps_pro === 'undefined') { 
+        toast.error('This feature is only available in pro version', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return;
+    }
     meeting.meeting_type = type;
     Meeting.CreatePopupMeeting(meeting, router);
 }
@@ -112,7 +120,7 @@ const TfhbMeetingType = (type, router) => {
     <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="400px" name="first-modal">
         <template #header> 
             <!-- {{ google_calendar }} -->
-            <h2>{{ $tfhb_trans['Create New Meeting Type'] }}</h2>
+            <h2>{{ $tfhb_trans['Create New Meeting Type'] }} </h2>
             
         </template>
 
@@ -135,10 +143,15 @@ const TfhbMeetingType = (type, router) => {
                     </div>
                 </div>
             </div>
-            <div class="tfhb-meeting-person-type">
-                
-                <span class="tfhb-badge tfhb-badge-pro">{{ $tfhb_trans['Pro'] }}</span>
-                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24">
+            <div class="tfhb-meeting-person-type" 
+                    :class="
+                    {
+                        'tfhb-pro': !$tfhb_is_pro, 
+                    }
+                    "
+                > 
+                <span class="tfhb-badge tfhb-badge-pro" v-if="$tfhb_is_pro == false">{{ $tfhb_trans['Pro'] }}</span>
+                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
                             <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">

@@ -35,11 +35,11 @@ class Enqueue {
 
 		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
 		// wp_enqueue_script('thb-app-script', THB_URL . 'assets/admin/js/main.js', array('jquery'), null, true);
-		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
+		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		//  // Build the core script
-		 wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'dist/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		 wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'dist/assets/tfhb-admin-app.css'), [], time(), 'all');
+		//  wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'dist/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		//  wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'dist/assets/tfhb-admin-app.css'), [], time(), 'all');
  
  
 		wp_localize_script(
@@ -48,6 +48,7 @@ class Enqueue {
 			array(
 				// 'url' => THB_URL,
 				'rest_nonce'           => wp_create_nonce( 'wp_rest' ),
+				'tfhb_is_pro'           => wp_create_nonce( 'wp_rest' ),
 				'admin_url'            => site_url(),
 				'ajax_url'             => admin_url( 'admin-ajax.php' ),
 				'tfhb_url'             => THB_URL,

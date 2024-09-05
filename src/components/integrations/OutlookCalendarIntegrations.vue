@@ -23,9 +23,14 @@ const closePopup = () => {
  
 <template>
       <!-- Zoom Integrations  -->
-      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box tfhb-pro ">
-        <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
-         <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
+      <div  class="tfhb-integrations-single-block tfhb-admin-card-box "
+      :class="props.class,{
+        'tfhb-pro': !$tfhb_is_pro,
+      }"
+      >
+        <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
+         
+        <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/outlook-calendar.png'" alt="" >
             </span> 
@@ -36,11 +41,56 @@ const closePopup = () => {
 
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
+        <div v-if="$tfhb_is_pro == false" class="tfhb-integrations-single-block-btn tfhb-flexbox">
+            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
  
         </div>
+        <div v-lese class="tfhb-integrations-single-block-btn tfhb-flexbox">
+            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
+                <!-- Checkbox swicher -->
+
+                <HbSwitch v-if="outlook_calendar.connection_status" @change="emit('update-integrations', 'outlook_calendar', outlook_calendar)" v-model="outlook_calendar.status"    />
+            <!-- Swicher --> 
  
+        </div>
+
+
+        <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
+            <template #header> 
+                <!-- {{ outlook_calendar }} -->
+                <h2>{{ $tfhb_trans['Add Outlook Calendar'] }}</h2>
+                
+            </template>
+
+            <template #content>  
+                <p>
+                    {{ $tfhb_trans['Please read the documentation here for step by step guide to know how you can get api credentials from Outlook Calendar'] }}
+                    
+                </p>
+                <HbText  
+                    v-model="outlook_calendar.client_id"  
+                    required= "true"  
+                    :label="$tfhb_trans['Client ID']"  
+                    selected = "1"
+                    :placeholder="$tfhb_trans['Enter Client ID']"  
+                /> 
+                <HbText  
+                    v-model="outlook_calendar.secret_key"  
+                    required= "true"  
+                    :label="$tfhb_trans['Secret Key']"  
+                    selected = "1"
+                    :placeholder="$tfhb_trans['Enter Secret Key']"  
+                /> 
+                <HbText  
+                    v-model="outlook_calendar.redirect_url"  
+                    required= "true"  
+                    :label="$tfhb_trans['Redirect Url']"  
+                    selected = "1" 
+                    :placeholder="$tfhb_trans['Enter Redirect Url']"  
+                /> 
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar)">{{ $tfhb_trans['Save & Validate'] }}</button>
+            </template> 
+        </HbPopup>
 
     </div>  
     <!-- Single Integrations  -->

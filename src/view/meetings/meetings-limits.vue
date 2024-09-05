@@ -125,7 +125,7 @@ const removeExtraFrequency = (key) => {
         
         </div>  
 
-        <div class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro">
+        <div v-if="$tfhb_is_pro == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                 Recurring Event
                 <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans['Pro'] }}</span>
@@ -133,6 +133,40 @@ const removeExtraFrequency = (key) => {
             <p>Set up a repeating schedule</p>
             <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size="18" /></a>
         </div>
+        <div v-else class="tfhb-admin-title tfhb-full-width tfhb-m-0">
+            <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
+                Recurring Event
+                <HbSwitch 
+                    v-model="meeting.recurring_status"
+                />
+            </h2> 
+            <p>Set up a repeating schedule</p>
+        </div>
+        <div class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="meeting.recurring_status">  
+
+            <!-- Meeting interval -->
+
+            <HbCounter
+                :label="$tfhb_trans['Repeats every']"
+                width="50"
+                :repater="false"
+                :counter_value="meeting.recurring_repeat"
+                limit="1"
+            />
+            
+            <!-- For a maximum of --> 
+            <HbText  
+                    v-model="meeting.recurring_maximum"   
+                    type="number"
+                    :label="$tfhb_trans['Maximum number of bookings']"  
+                    selected = "1"
+                    :placeholder="$tfhb_trans['Use meeting length (default)']" 
+                    width="50"  
+                    limit="1"
+                /> 
+
+
+        </div>  
      
 
         <div class="tfhb-meeting-schedule tfhb-full-width tfhb-flexbox tfhb-gap-16">
