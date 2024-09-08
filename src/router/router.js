@@ -213,6 +213,21 @@ const routes = [
                 ]
             },
             {
+                path: 'import-export',
+                name: 'ImportExport',
+                meta: { Capabilities: 'tfhb_manage_settings' },
+                component: () => import('../view/settings/ImportExport.vue'),
+                redirect: { name: 'ImportExportBooking' },
+                children: [ 
+                    {
+                        path: 'booking',
+                        name: 'ImportExportBooking',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/BookingImportExport.vue')
+                    }, 
+                ]
+            },
+            {
                 path: 'availability',
                 name: 'SettingsAvailability',
                 meta: { Capabilities: 'tfhb_manage_settings' },

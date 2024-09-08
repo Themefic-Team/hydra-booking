@@ -37,8 +37,7 @@ class RouteController {
 		$this->create( new OutlookCalendar(), 'create_endpoint' );
 		$this->create( new DashboardController(), 'create_endpoint' );
 		$this->create( new Zoho(), 'create_endpoint' );
-		$this->create( new SetupWizard(), 'create_endpoint' );
-		$this->create( new ImportExport(), 'create_endpoint' );
+		$this->create( new SetupWizard(), 'create_endpoint' ); 
 		$this->create( new Notification(), 'create_endpoint' );
 	}
 

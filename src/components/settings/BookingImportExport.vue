@@ -25,10 +25,13 @@ const readImportDdata = (event) => {
    props.importExport.readBookingImportData(event);
    
 }
+
  
 </script>
 
 <template>  
+
+
     <div class="tfhb-admin-card-box"  >   
         <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-mb-16">
             <div class="tfhb-admin-title "> 
@@ -42,7 +45,8 @@ const readImportDdata = (event) => {
         </div>
 
         <div class="tfhb-content-wrap "> 
-            {{ props.importExport.booking.import_data }}
+            <!-- {{ props.importExport.booking.import_data }} -->
+            {{props.importExport.booking.column}}
            <div class="tfhb-upload-csv tfhb-flexbox tfhb-gap-16">
                 <div class="tfhb-hydra-content-wrap">      
                     <HbText  
