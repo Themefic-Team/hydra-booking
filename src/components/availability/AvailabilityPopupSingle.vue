@@ -27,8 +27,11 @@ const emit = defineEmits(["update:availabilityData", "modal-close", "update-avai
 
 
 // Update Availability Settings
-const UpdateAvailabilitySettings = async (validator_field) => {  
-    
+const UpdateAvailabilitySettings = async (validator_field) => {   
+    // Clear the errors object
+    Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
     // Errors Added
     if(validator_field){
         validator_field.forEach(field => {
@@ -77,7 +80,8 @@ const UpdateAvailabilitySettings = async (validator_field) => {
         }else{
             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/update', props.availabilityDataSingle, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
             if (response.data.status) {    
@@ -93,6 +97,7 @@ const UpdateAvailabilitySettings = async (validator_field) => {
         }
         
     } catch (error) {
+      
         toast.error(error.message, {
             position: 'bottom-right', // Set the desired position
         });
