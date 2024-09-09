@@ -292,17 +292,14 @@ class Booking {
 		$data       = $wpdb->get_results( $sql );
 		$columns    = array();
 
-		// make array like that [
-                    //     {'name': '12 Hours', 'value': '12'}, 
-                    //     {'name': '24 Hours', 'value': '24'}
-                    // ]
+	 
 		foreach ( $data as $key => $value ) {
 			if ( $value->Field == 'id' ) {
 				continue;
-			} 
+			}  
 			$columns[] = array(
 				'name'  => $value->Field,
-				'value' => $value->Type,
+				'value' => $value->Field,
 			);
 		}
 		return $columns;

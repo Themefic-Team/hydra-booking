@@ -66,22 +66,21 @@ const readImportDdata = (event) => {
            </div>
            <!-- Export Column -->
             <div v-if="props.importExport.booking.import_column.length > 0"  class="tfhb-import-column-data tfhb-admin-card-box">
+                {{props.importExport.booking.rearrange_column}}
                 <div class="tfhb-admin-title "> 
                     <h3 >{{ $tfhb_trans['Map CSV fields to Booking'] }}</h3> 
                     <p>{{ $tfhb_trans['Select fields from your CSV file to map against booking fields, or to ignore during import.'] }}</p>
                 </div> 
                 <!-- Time format -->
                 <div class="tfhb-import-export-column-wrap tfhb-flexbox tfhb-gap-8" v-for="(item, index) in props.importExport.booking.import_column">
-                   
-                    <HbDropdown 
-                   
-                    v-model="props.importExport.booking.rearrange_column[item]"   
-                    :label="item"
-                    width="100"
-                    :selected = "item"
-                    placeholder="Select Time Format"   
-                    :option = "props.importExport.booking.column"  
-                />
+                
+                   <HbDropdown  
+                        v-model="props.importExport.booking.rearrange_column[item]"   
+                        :label="item"
+                        width="100" 
+                        placeholder="Select Time Format"   
+                        :option = "props.importExport.booking.column"  
+                    />
                  
                    
                 </div>
