@@ -34,8 +34,8 @@ const props = defineProps({
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{$tfhb_trans['Experience Hydrabooking in Action (Instantly!)']}}</h2>
-            <p>{{$tfhb_trans['Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.']}}</p>
+            <h2>{{$tfhb_trans('Experience Hydrabooking in Action (Instantly!)')}}</h2>
+            <p>{{$tfhb_trans('Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.')}}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
@@ -51,7 +51,7 @@ const props = defineProps({
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
-                :buttonText="$tfhb_trans['Back']"
+                :buttonText="$tfhb_trans('Back')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true" 

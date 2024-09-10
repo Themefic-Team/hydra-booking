@@ -59,8 +59,8 @@ const StepTwo = () => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{$tfhb_trans['Take control of your schedule']}}</h2>
-            <p>{{$tfhb_trans['You can streamline your appointment booking process by using your availability.']}}</p> 
+            <h2>{{$tfhb_trans('Take control of your schedule')}}</h2>
+            <p>{{$tfhb_trans('You can streamline your appointment booking process by using your availability.')}}</p> 
         </div>
         <div class="tfhb-content-wrap tfhb-s-w-availability-wrap tfhb-flexbox tfhb-gap-tb-24">
 
@@ -72,7 +72,7 @@ const StepTwo = () => {
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'step-one'" 
-                :buttonText="$tfhb_trans['Back']"
+                :buttonText="$tfhb_trans('Back')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
@@ -81,7 +81,7 @@ const StepTwo = () => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="StepTwo" 
-                :buttonText="$tfhb_trans['Next']"
+                :buttonText="$tfhb_trans('Next')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

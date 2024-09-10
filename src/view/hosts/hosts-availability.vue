@@ -266,17 +266,17 @@ const formatTimeSlots = (timeSlots) =>  {
  
     <div class="tfhb-availaility-tabs tfhb-mb-24">
         <ul class="tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
-            <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'settings')"><Icon name="Heart" :width="20" /> {{ $tfhb_trans['Use existing availability'] }}</li>
-            <li v-if="true == $user.caps.tfhb_manage_custom_availability" class="tfhb-flexbox tfhb-gap-8" :class="'custom'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'custom')"><Icon name="PencilLine" :width="20" />  {{ $tfhb_trans['Custom availability'] }}</li>
+            <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'settings')"><Icon name="Heart" :width="20" /> {{ $tfhb_trans('Use existing availability') }}</li>
+            <li v-if="true == $user.caps.tfhb_manage_custom_availability" class="tfhb-flexbox tfhb-gap-8" :class="'custom'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'custom')"><Icon name="PencilLine" :width="20" />  {{ $tfhb_trans('Custom availability') }}</li>
         </ul>
     </div>
 
     <!-- <HbSelect 
         v-model="host.availability_id"
         required= "true" 
-        :label="$tfhb_trans['Choose Schedule']"  
+        :label="$tfhb_trans('Choose Schedule')"  
         :selected = "1"
-        :placeholder="$tfhb_trans['Choose Schedule']"   
+        :placeholder="$tfhb_trans('Choose Schedule')"   
         :option = "Availability.availabilities" 
         v-if="'settings'==host.availability_type"
         @tfhb-onchange="Settings_Avalibility_Callback"
@@ -285,10 +285,10 @@ const formatTimeSlots = (timeSlots) =>  {
     <HbDropdown 
         v-model="host.availability_id" 
         required= "true" 
-        :label="$tfhb_trans['Choose Schedule']"  
+        :label="$tfhb_trans('Choose Schedule')"  
         :selected = "1"
         name="duration"
-        :placeholder="$tfhb_trans['Choose Schedule']"   
+        :placeholder="$tfhb_trans('Choose Schedule')"   
         :option = "Availability.availabilities" 
         v-if="'settings'==host.availability_type"
         @tfhb-onchange="Settings_Avalibility_Callback"
@@ -299,7 +299,7 @@ const formatTimeSlots = (timeSlots) =>  {
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24 tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==host.availability_type">  
         <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-full-width">
             <div class="tfhb-admin-title"> 
-                <h3> {{ $tfhb_trans['Weekly hours'] }} </h3>  
+                <h3> {{ $tfhb_trans('Weekly hours') }} </h3>  
             </div>
             <div class="thb-admin-btn right"> 
                 <span>{{ Settings_avalibility.availability.time_zone }}</span> 
@@ -344,8 +344,8 @@ const formatTimeSlots = (timeSlots) =>  {
         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility.availability.date_slots">  
             <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
                 <div class="tfhb-admin-title tfhb-m-0"> 
-                    <h3>{{ $tfhb_trans['Add date overrides'] }} </h3>  
-                    <p>{{ $tfhb_trans['Add dates when your availability changes from your daily hours'] }}</p>
+                    <h3>{{ $tfhb_trans('Add date overrides') }} </h3>  
+                    <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
                 </div> 
             </div>
 
@@ -365,11 +365,11 @@ const formatTimeSlots = (timeSlots) =>  {
 
     <div class="tfhb-dashboard-heading" v-if="'custom'==host.availability_type && true == $user.caps.tfhb_manage_custom_availability">
         <div class="tfhb-admin-title"> 
-            <h3 >{{ $tfhb_trans['Availability'] }}</h3> 
-            <p>{{ $tfhb_trans['Set up booking times when you are available'] }}</p>
+            <h3 >{{ $tfhb_trans('Availability') }}</h3> 
+            <p>{{ $tfhb_trans('Set up booking times when you are available') }}</p>
         </div>
         <div class="thb-admin-btn right"> 
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="15" /> {{ $tfhb_trans[' Add New Availability'] }}</button> 
+            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="15" /> {{ $tfhb_trans(' Add New Availability') }}</button> 
         </div> 
     </div>
 
@@ -379,7 +379,7 @@ const formatTimeSlots = (timeSlots) =>  {
         <AvailabilityPopupSingle v-if="isModalOpened" :timeZone="timeZone.value" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />
     </div>
     <div class="tfhb-submission-btn tfhb-mt-24">
-        <button class="tfhb-btn boxed-btn" @click="emit('save-host-info')">{{ $tfhb_trans['Save'] }}</button>
+        <button class="tfhb-btn boxed-btn" @click="emit('save-host-info')">{{ $tfhb_trans('Save') }}</button>
     </div>
 </div>
 </template>

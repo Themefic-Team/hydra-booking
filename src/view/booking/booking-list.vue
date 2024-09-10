@@ -297,9 +297,9 @@ const toggleSelectAll = (e) => {
         />  
         <button @click="ExportAsCSV = true" class="tfhb-btn boxed-secondary-btn flex-btn">
             <!-- <Icon name="PlusCircle " size="20" />   -->
-            {{ $tfhb_trans['Export as CSV'] }}
+            {{ $tfhb_trans('Export as CSV') }}
         </button>
-        <router-link :to="{ name: 'BookingCreate' }" class="tfhb-btn boxed-btn flex-btn"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans['Add New Booking'] }}</router-link>
+        <router-link :to="{ name: 'BookingCreate' }" class="tfhb-btn boxed-btn flex-btn"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans('Add New Booking') }}</router-link>
     </div> 
 </div>
 
@@ -315,7 +315,7 @@ const toggleSelectAll = (e) => {
             required= "true"
             v-model="exportData.date_range"
             name="request_header"
-            :label="$tfhb_trans['Date Range']"
+            :label="$tfhb_trans('Date Range')"
             :groups="true" 
             :options="[
                 {'label': 'Today', 'value': 'days'},  
@@ -327,13 +327,13 @@ const toggleSelectAll = (e) => {
             ]" 
         />
       <div v-if="exportData.date_range == 'custom'" class="custom-date-range" >
-        <label for="">{{ $tfhb_trans['Select Date Range'] }}</label>
+        <label for="">{{ $tfhb_trans('Select Date Range') }}</label>
         <div class="tfhb-filter-dates tfhb-flexbox">
             
             <div class="tfhb-filter-start-date">
                 <HbDateTime 
                     v-model="exportData.start_date"
-                    :label="$tfhb_trans['start Date']"
+                    :label="$tfhb_trans('start Date')"
                     width="45"
                     enableTime='true'
                     placeholder="From"   
@@ -356,7 +356,7 @@ const toggleSelectAll = (e) => {
       </div>
 
       <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
-        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size="20" /> {{ $tfhb_trans['Export Meeting'] }}</button> 
+        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size="20" /> {{ $tfhb_trans('Export Meeting') }}</button> 
       </div>
     </template> 
 </HbPopup>
@@ -372,26 +372,26 @@ const toggleSelectAll = (e) => {
     <template #content> 
 
         <div class="tfhb-attendee-info tfhb-full-width tfhb-flexbox tfhb-gap-16">
-            <h3 class="tfhb-m-0 tfhb-full-width">{{ $tfhb_trans['Attendee'] }}</h3>
+            <h3 class="tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Attendee') }}</h3>
             <div class="tfhb-attendee-box tfhb-p-24 tfhb-pt-0 tfhb-flexbox tfhb-align-baseline tfhb-full-width">
                 <div class="tfhb-attendee-name" v-if="singleBookingData.attendee_name">
-                    <h4>{{ $tfhb_trans['Name'] }}</h4>
+                    <h4>{{ $tfhb_trans('Name') }}</h4>
                     <p>{{ singleBookingData.attendee_name }}</p>
                 </div>
                 <div class="tfhb-attendee-name" v-if="singleBookingData.attendee_email">
-                    <h4>{{ $tfhb_trans['E-mail'] }}</h4>
+                    <h4>{{ $tfhb_trans('E-mail') }}</h4>
                     <p>{{ singleBookingData.attendee_email }}</p>
                 </div>
                 <div class="tfhb-attendee-name" v-if="singleBookingData.attendee_phone">
-                    <h4>{{ $tfhb_trans['Phone'] }}</h4>
+                    <h4>{{ $tfhb_trans('Phone') }}</h4>
                     <p>{{ singleBookingData.attendee_phone }}</p>
                 </div>
                 <div class="tfhb-attendee-name" v-if="singleBookingData.address">
-                    <h4>{{ $tfhb_trans['Address'] }}</h4>
+                    <h4>{{ $tfhb_trans('Address') }}</h4>
                     <p>{{ singleBookingData.address }}</p>
                 </div>
                 <div class="tfhb-attendee-name" style="width: calc(66% - 4px);" v-if="singleBookingData.message">
-                    <h4>{{ $tfhb_trans['Notes'] }}</h4>
+                    <h4>{{ $tfhb_trans('Notes') }}</h4>
                     <p>{{ singleBookingData.message }}</p>
                 </div>
             </div>
@@ -401,33 +401,33 @@ const toggleSelectAll = (e) => {
             <h3 class="tfhb-m-0 tfhb-full-width">Host</h3>
             <div class="tfhb-attendee-box tfhb-p-24 tfhb-pt-0 tfhb-flexbox tfhb-align-baseline tfhb-full-width">
                 <div class="tfhb-attendee-name" v-if="singleBookingData.host_first_name">
-                    <h4>{{ $tfhb_trans['Name'] }}</h4>
+                    <h4>{{ $tfhb_trans('Name') }}</h4>
                     <p>{{ singleBookingData.host_first_name }} {{ singleBookingData.host_last_name }}</p>
                 </div>
                 <div class="tfhb-attendee-name" v-if="singleBookingData.host_email">
-                    <h4>{{ $tfhb_trans['E-mail'] }}</h4>
+                    <h4>{{ $tfhb_trans('E-mail') }}</h4>
                     <p>{{ singleBookingData.host_email }}</p>
                 </div>
                 <div class="tfhb-attendee-name" v-if="singleBookingData.host_time_zone">
-                    <h4>{{ $tfhb_trans['Time zone'] }}</h4>
+                    <h4>{{ $tfhb_trans('Time zone') }}</h4>
                     <p>{{ singleBookingData.host_time_zone }}</p>
                 </div>
             </div>
         </div>
 
         <div class="tfhb-attendee-info tfhb-full-width tfhb-flexbox tfhb-gap-16 tfhb-border-none">
-            <h3 class="tfhb-m-0 tfhb-full-width">{{ $tfhb_trans['Meeting'] }}</h3>
+            <h3 class="tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Meeting') }}</h3>
             <div class="tfhb-attendee-box tfhb-p-24 tfhb-pt-0 tfhb-pb-0 tfhb-flexbox tfhb-align-baseline tfhb-full-width">
                 <div class="tfhb-attendee-name">
-                    <h4>{{ $tfhb_trans['Time'] }}</h4>
+                    <h4>{{ $tfhb_trans('Time') }}</h4>
                     <p>{{singleBookingData.start_time}} - {{singleBookingData.end_time}}</p>
                 </div>
                 <div class="tfhb-attendee-name">
-                    <h4>{{ $tfhb_trans['Date'] }}</h4>
+                    <h4>{{ $tfhb_trans('Date') }}</h4>
                     <p>{{ Tfhb_Date(singleBookingData.meeting_dates) }}</p>
                 </div>
                 <div class="tfhb-attendee-name">
-                    <h4>{{ $tfhb_trans['Location'] }}</h4>
+                    <h4>{{ $tfhb_trans('Location') }}</h4>
                     <p>{{ TfhbFormatMeetingLocation(singleBookingData.meeting_locations) }}</p>
                 </div>
             </div>
@@ -462,7 +462,7 @@ const toggleSelectAll = (e) => {
 
         <HbDropdown  
             v-model="singleCalendarBookingData.status"
-            :label="$tfhb_trans['Status']" 
+            :label="$tfhb_trans('Status')" 
             :selected = "1"
             placeholder="Select Booking status"   
             :option = "[
@@ -494,9 +494,9 @@ const toggleSelectAll = (e) => {
         </div>
 
         <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width">
-            <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size="20" /> {{ $tfhb_trans['Join Meet'] }}</a>
+            <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size="20" /> {{ $tfhb_trans('Join Meet') }}</a>
 
-            <button class="tfhb-btn boxed-btn flex-btn tfhb-warning" @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)">{{ $tfhb_trans['Delete'] }}</button>
+            <button class="tfhb-btn boxed-btn flex-btn tfhb-warning" @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)">{{ $tfhb_trans('Delete') }}</button>
         </div>
     </template> 
 </HbPopup>
@@ -515,13 +515,13 @@ const toggleSelectAll = (e) => {
                         </label>
                     </div>
                 </th>
-                <th>{{ $tfhb_trans['Date & Time'] }}</th>
-                <th>{{ $tfhb_trans['Title'] }}</th>
-                <th>{{ $tfhb_trans['Host'] }}</th>
-                <th>{{ $tfhb_trans['Attendee'] }}</th>
-                <th>{{ $tfhb_trans['Duration'] }}</th>
-                <th>{{ $tfhb_trans['Status'] }}</th>
-                <th>{{ $tfhb_trans['Action'] }}</th>
+                <th>{{ $tfhb_trans('Date & Time') }}</th>
+                <th>{{ $tfhb_trans('Title') }}</th>
+                <th>{{ $tfhb_trans('Host') }}</th>
+                <th>{{ $tfhb_trans('Attendee') }}</th>
+                <th>{{ $tfhb_trans('Duration') }}</th>
+                <th>{{ $tfhb_trans('Status') }}</th>
+                <th>{{ $tfhb_trans('Action') }}</th>
             </tr>
         </thead>
 
@@ -551,7 +551,7 @@ const toggleSelectAll = (e) => {
                     <span>{{ book.attendee_email }}</span>
                 </td>
                 <td>
-                    {{ book.duration }} {{ $tfhb_trans['minutes'] }}
+                    {{ book.duration }} {{ $tfhb_trans('minutes') }}
                 </td>
                 <td>
                     <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
@@ -564,10 +564,10 @@ const toggleSelectAll = (e) => {
                             </svg>
                             <div class="tfhb-status-popup">
                                 <ul class="tfhb-flexbox tfhb-gap-2">
-                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'approved')">{{ $tfhb_trans['Approved'] }}</li>
-                                    <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans['Pending'] }}</li>
-                                    <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ $tfhb_trans['Re-schedule'] }}</li>
-                                    <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans['Canceled'] }}</li>
+                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'approved')">{{ $tfhb_trans('Approved') }}</li>
+                                    <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li>
+                                    <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ $tfhb_trans('Re-schedule') }}</li>
+                                    <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
                                 </ul>
                             </div>
                         </div>

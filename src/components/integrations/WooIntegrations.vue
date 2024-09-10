@@ -29,8 +29,8 @@ const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooC
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['Woo Payment'] }}</h3>
-                <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
+                <h3>{{ $tfhb_trans('Woo Payment') }}</h3>
+                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
             </div>
         </div>
        
@@ -38,8 +38,8 @@ const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooC
 <!-- Aadmin -->
 
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans['Connected'] }} <Icon name="ChevronRight" size="18" /></button>
-            <a v-else :href="plugin_url" target="__blank"  class="tfhb-btn tfhb-install-plugins tfhb-flexbox tfhb-gap-8" :data-connection-status="woo_payment.connection_status" @click="installPlugins">{{ $tfhb_trans['Click to Install & Active'] }} <Icon name="ChevronRight" size="18" /></a>
+            <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connected') }} <Icon name="ChevronRight" size="18" /></button>
+            <a v-else :href="plugin_url" target="__blank"  class="tfhb-btn tfhb-install-plugins tfhb-flexbox tfhb-gap-8" :data-connection-status="woo_payment.connection_status" @click="installPlugins">{{ $tfhb_trans('Click to Install & Active') }} <Icon name="ChevronRight" size="18" /></a>
                 <!-- Checkbox swicher -->
 
                 <HbSwitch v-if="woo_payment.connection_status" @change="emit('update-integrations', 'woo_payment', woo_payment)"  v-model="woo_payment.status"    />

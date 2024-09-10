@@ -1,7 +1,7 @@
 <?php
 namespace HydraBooking\Admin\Controller;
 
-use HydraBooking\Admin\Controller\TransStrings;
+// use HydraBooking\Admin\Controller\TransStrings;
 use HydraBooking\Admin\Controller\AuthController;
 
 	// exit
@@ -35,11 +35,11 @@ class Enqueue {
 
 		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
 		// wp_enqueue_script('thb-app-script', THB_URL . 'assets/admin/js/main.js', array('jquery'), null, true);
-		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
+		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		//  // Build the core script
-		 wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'dist/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		 wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'dist/assets/tfhb-admin-app.css'), [], time(), 'all');
+		//  wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'dist/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		//  wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'dist/assets/tfhb-admin-app.css'), [], time(), 'all');
  
  
 		wp_localize_script(
@@ -54,7 +54,8 @@ class Enqueue {
 				'tfhb_url'             => THB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),
 				'user'                 => $user_auth,
-				'trans'                => TransStrings::getTransStrings(),
+				// 'trans'                => TransStrings::getTransStrings(),
+				'trans'                => array(),
 			)
 		);
 

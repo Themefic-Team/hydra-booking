@@ -32,8 +32,8 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['Google Calendar/Meet'] }}</h3> 
-                <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
+                <h3>{{ $tfhb_trans('Google Calendar/Meet') }}</h3> 
+                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
 
             </div>
         </div>
@@ -48,37 +48,37 @@ const closePopup = () => {
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
                 <!-- {{ google_calendar }} -->
-                <h2>{{ $tfhb_trans['Add Google Calendar'] }}</h2>
+                <h2>{{ $tfhb_trans('Add Google Calendar') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ $tfhb_trans['Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar'] }}
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar') }}
                     
                 </p>
                 <HbText  
                     v-model="props.google_calendar.client_id"  
                     required= "true"  
-                    :label="$tfhb_trans['Client ID']"  
+                    :label="$tfhb_trans('Client ID')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans['Enter Client ID']"  
+                    :placeholder="$tfhb_trans('Enter Client ID')"  
                 /> 
                 <HbText  
                     v-model="props.google_calendar.secret_key"  
                     required= "true"  
-                    :label="$tfhb_trans['Secret Key']"  
+                    :label="$tfhb_trans('Secret Key')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans['Enter Secret Key']"  
+                    :placeholder="$tfhb_trans('Enter Secret Key')"  
                 /> 
                 <HbText  
                     v-model="props.google_calendar.redirect_url"  
                     required= "true"   
-                    :label="$tfhb_trans['Redirect Url']"   
+                    :label="$tfhb_trans('Redirect Url')"   
                     selected = "1" 
-                    :placeholder="$tfhb_trans['Enter Redirect Url']"  
+                    :placeholder="$tfhb_trans('Enter Redirect Url')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar)">{{ $tfhb_trans['Save & Validate'] }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar)">{{ $tfhb_trans('Save & Validate') }}</button>
             </template> 
         </HbPopup>
 

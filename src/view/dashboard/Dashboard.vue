@@ -58,24 +58,24 @@ const  ChangeStatisticData = (day) => {
     <Header title="Dashboard" :notifications="Notification.Data" /> 
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox">
         <div class="thb-admin-title">
-            <h2>{{ $tfhb_trans['Data'] }}</h2>
-            <p>{{ $tfhb_trans['One-liner description'] }}</p> 
+            <h2>{{ $tfhb_trans('Data') }}</h2>
+            <p>{{ $tfhb_trans('One-liner description') }}</p> 
         </div>  
         <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-no-hover">
-            <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans['Today'] }}</span>  <Icon name="ChevronDown" size="20" /> </span>
+            <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans('Today') }}</span>  <Icon name="ChevronDown" size="20" /> </span>
             <div 
                 :class="{ 'active': datachart_box_dropdown }"
                 class="tfhb-dropdown-wrap"
             > 
                 <!-- route link -->
-                <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ $tfhb_trans['Today'] }}</span>
-                <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ $tfhb_trans['Last 7 week'] }}</span> 
-                <span  @click="updateDashboardDay(30)" data-name="Last 30 Days" class="tfhb-dropdown-single">{{ $tfhb_trans['Last 30 Days'] }}</span> 
-                <span  @click="updateDashboardDay(60)" data-name="Last 3 months" class="tfhb-dropdown-single">{{ $tfhb_trans['Last 3 months'] }}</span> 
+                <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ $tfhb_trans('Today') }}</span>
+                <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 7 week') }}</span> 
+                <span  @click="updateDashboardDay(30)" data-name="Last 30 Days" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 30 Days') }}</span> 
+                <span  @click="updateDashboardDay(60)" data-name="Last 3 months" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 3 months') }}</span> 
                 <div class="tfhb-dropdown-single">
                     <div class="tfhb-filter-dates tfhb-flexbox tfhb-gap-8">
                         <div class="tfhb-filter-start-date">
-                            <!-- <span>{{ $tfhb_trans['From'] }}</span> -->
+                            <!-- <span>{{ $tfhb_trans('From') }}</span> -->
                             <HbDateTime 
                                 v-model="Dashboard.data_request.from_date"
                                 selected = "1" 
@@ -89,7 +89,7 @@ const  ChangeStatisticData = (day) => {
                             <Icon name="MoveRight" size="15" /> 
                         </div>
                         <div class="tfhb-filter-end-date">
-                            <!-- <span>{{ $tfhb_trans['To'] }}</span> -->
+                            <!-- <span>{{ $tfhb_trans('To') }}</span> -->
                             <HbDateTime 
                                 v-model="Dashboard.data_request.to_date"
                                 selected = "1" 
@@ -100,7 +100,7 @@ const  ChangeStatisticData = (day) => {
                         </div>
                     </div>
 
-                    <button class="tfhb-btn tfhb-btn-primary boxed-btn tfhb-mt-16 tfhb-full-width" @click="updateDashboardDateRange">{{ $tfhb_trans['Apply'] }}</button>
+                    <button class="tfhb-btn tfhb-btn-primary boxed-btn tfhb-mt-16 tfhb-full-width" @click="updateDashboardDateRange">{{ $tfhb_trans('Apply') }}</button>
                 </div> 
             </div>
         </div>
@@ -116,7 +116,7 @@ const  ChangeStatisticData = (day) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-1.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ $tfhb_trans['Total Booking'] }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans('Total Booking') }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_bookings.total}}</span>
@@ -139,8 +139,8 @@ const  ChangeStatisticData = (day) => {
                             <Icon v-else name="ArrowDown" :size="15"/>
                             <span> {{Dashboard.data.total_bookings.percentage}}%</span>
                         </span>
-                        <span> {{ $tfhb_trans['VS'] }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} {{Dashboard.data_request.days}} {{ $tfhb_trans['days'] }}</span>
+                        <span> {{ $tfhb_trans('VS') }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
                     </div>
                 </div>
             </div>
@@ -152,7 +152,7 @@ const  ChangeStatisticData = (day) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-2.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ $tfhb_trans['Total Earnings'] }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans('Total Earnings') }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">0</span>
@@ -169,8 +169,8 @@ const  ChangeStatisticData = (day) => {
                             <Icon name="ArrowUp" :size="15"/>
                             <span> 80%</span>
                         </span>
-                        <span> {{ $tfhb_trans['VS'] }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} 30 {{ $tfhb_trans['days'] }}</span>
+                        <span> {{ $tfhb_trans('VS') }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} 30 {{ $tfhb_trans('days') }}</span>
                     </div>
                 </div>
             </div>
@@ -183,7 +183,7 @@ const  ChangeStatisticData = (day) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-3.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ $tfhb_trans['Completed Bookings'] }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans('Completed Bookings') }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_completed_bookings.total}}</span>
@@ -206,8 +206,8 @@ const  ChangeStatisticData = (day) => {
                             <Icon v-else name="ArrowDown" :size="15"/>
                             <span> {{Dashboard.data.total_completed_bookings.percentage}}%</span>
                         </span>
-                        <span> {{ $tfhb_trans['VS'] }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} {{Dashboard.data_request.days}} {{ $tfhb_trans['days'] }}</span>
+                        <span> {{ $tfhb_trans('VS') }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
                     </div>
                 </div>
             </div>
@@ -219,7 +219,7 @@ const  ChangeStatisticData = (day) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-4.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ $tfhb_trans['Canceled Bookings'] }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans('Canceled Bookings') }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_cancelled_bookings.total}}</span>
@@ -242,8 +242,8 @@ const  ChangeStatisticData = (day) => {
                             <Icon v-else name="ArrowDown" :size="15"/>
                             <span> {{Dashboard.data.total_cancelled_bookings.percentage}}%</span>
                         </span>
-                        <span> {{ $tfhb_trans['VS'] }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} {{Dashboard.data_request.days}} {{ $tfhb_trans['days'] }}</span>
+                        <span> {{ $tfhb_trans('VS') }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
                     </div>
                 </div>
             </div>
@@ -259,7 +259,7 @@ const  ChangeStatisticData = (day) => {
             <div class="tfhb-dashboard-notice-box-inner">
                 <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
 
-                    <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ $tfhb_trans['Recent Bookings'] }}</h3>
+                    <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Recent Bookings') }}</h3>
                     <!-- Single Notice Box -->
                     <div class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16 tfhb-full-width">
                         <div
@@ -292,7 +292,7 @@ const  ChangeStatisticData = (day) => {
 
             <div class="tfhb-dashboard-notice-box-inner">
                 <div class="tfhb-dashboard-notice-box-wrap ">
-                    <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24 tfhb-full-width">{{ $tfhb_trans['Upcoming Meetings'] }}</h3>
+                    <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24 tfhb-full-width">{{ $tfhb_trans('Upcoming Meetings') }}</h3>
 
                     <div class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16" >
                         <!-- Single Notice Box -->
@@ -327,20 +327,20 @@ const  ChangeStatisticData = (day) => {
             <div class="tfhb-dashboard-notice-box-wrap" >
                 <div  class="tfhb-dashboard-heading tfhb-flexbox">
                     <div class="tfhb-admin-title"> 
-                        <h3 >{{ $tfhb_trans['Statistics'] }}</h3>  
+                        <h3 >{{ $tfhb_trans('Statistics') }}</h3>  
                     </div>
                     <div class="thb-admin-btn right"> 
                         <div class="tfhb-dropdown  tfhb-no-hover">
-                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" > <span> {{ $tfhb_trans['Last 7 Days'] }}</span>  <Icon name="ChevronDown" size="20" /> </a>
+                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" > <span> {{ $tfhb_trans('Last 7 Days') }}</span>  <Icon name="ChevronDown" size="20" /> </a>
                             <div  
                                 :class="{ 'active': datachart_dropdown }"
                                 class="tfhb-dropdown-wrap"
                             > 
                                 <!-- route link --> 
-                                <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans['Last 7 Days'] }}</span> 
-                                <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ $tfhb_trans['This month'] }}</span> 
-                                <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ $tfhb_trans['Last 3 months'] }}</span> 
-                                <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ $tfhb_trans['This Year'] }}</span> 
+                                <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans('Last 7 Days') }}</span> 
+                                <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ $tfhb_trans('This month') }}</span> 
+                                <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ $tfhb_trans('Last 3 months') }}</span> 
+                                <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ $tfhb_trans('This Year') }}</span> 
                                 
                             </div>
                         </div> 

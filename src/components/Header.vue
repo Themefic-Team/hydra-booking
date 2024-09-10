@@ -59,8 +59,8 @@ const timeAgo = (date) => {
            
             <div class="tfhb-dropdown-wrap ">   <!-- active class-->
                 <div class="tfhb-flexbox">
-                    <h3>{{ $tfhb_trans['Notifications'] }}</h3>
-                    <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans['Mark as read'] }}</a> -->
+                    <h3>{{ $tfhb_trans('Notifications') }}</h3>
+                    <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</a> -->
                     <!-- {{ notifications }} -->
                 </div>
 

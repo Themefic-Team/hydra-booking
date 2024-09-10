@@ -187,11 +187,11 @@ onBeforeMount(() => {
      <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard ">
     <div  class="tfhb-dashboard-heading">
         <div class="tfhb-admin-title tfhb-m-0"> 
-            <h1 >{{ $tfhb_trans['Availability'] }}</h1> 
-            <p>{{ $tfhb_trans['Set up booking times when you are available'] }}</p>
+            <h1 >{{ $tfhb_trans('Availability') }}</h1> 
+            <p>{{ $tfhb_trans('Set up booking times when you are available') }}</p>
         </div>
         <div class="thb-admin-btn right"> 
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans[' Add New Availability'] }}</button> 
+            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans(' Add New Availability') }}</button> 
         </div> 
     </div>
     <div class="tfhb-content-wrap tfhb-flexbox tfhb-gap-tb-24">

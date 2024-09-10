@@ -72,8 +72,8 @@ const attendeeBookingReminderPopUp = ref(false);
 
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">
-                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs boxed-secondary-btn flex-btn"  :class="host ? 'active' : ''" ><Icon name="UserRound" size="15" /> {{ $tfhb_trans['To Host'] }}</button>
-                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs boxed-secondary-btn flex-btn" :class="attendee ? 'active' : ''"><Icon name="UsersRound" size="15" /> {{ $tfhb_trans['To Attendee'] }} </button>
+                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs boxed-secondary-btn flex-btn"  :class="host ? 'active' : ''" ><Icon name="UserRound" size="15" /> {{ $tfhb_trans('To Host') }}</button>
+                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs boxed-secondary-btn flex-btn" :class="attendee ? 'active' : ''"><Icon name="UsersRound" size="15" /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
  
             <div v-if="host" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width"> 
@@ -81,7 +81,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
-                    :label="$tfhb_trans['Booking Confirmation']" 
+                    :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_confirmation"  
                     :ispopup="hostBookingConfirmPopUp"
@@ -94,7 +94,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
-                    :label="$tfhb_trans['Booking Cancel']" 
+                    :label="$tfhb_trans('Booking Cancel')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_cancel"  
                     :ispopup="hostBookingCencelPopUp"
@@ -106,7 +106,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
-                    :label="$tfhb_trans['Booking Reschedule']" 
+                    :label="$tfhb_trans('Booking Reschedule')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_reschedule" 
                     :ispopup="hostBookingReschedulePopUp"
@@ -118,7 +118,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
-                    :label="$tfhb_trans['Booking Reminder']"
+                    :label="$tfhb_trans('Booking Reminder')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_reminder"  
                     :ispopup="hostBookingReminderPopUp"
@@ -134,7 +134,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Confirmation']"
+                    :label="$tfhb_trans('Booking Confirmation')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_confirmation"  
                     :ispopup="attendeeBookingConfirmPopUp"
@@ -147,7 +147,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Cancel']"
+                    :label="$tfhb_trans('Booking Cancel')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_cancel"  
                     :ispopup="attendeeBookingCancelPopUp"
@@ -159,7 +159,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Reschedule']"
+                    :label="$tfhb_trans('Booking Reschedule')"
                     :data="meeting.notification.attendee.booking_reschedule"  
                     :ispopup="attendeeBookingReschedulePopUp"
                     @popup-open-control="attendeeBookingReschedulePopUp = true"
@@ -170,7 +170,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Reminder']"
+                    :label="$tfhb_trans('Booking Reminder')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_reminder"  
                     :ispopup="attendeeBookingReminderPopUp"
@@ -185,7 +185,7 @@ const attendeeBookingReminderPopUp = ref(false);
         </div> 
 
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans['Save & Continue'] }} </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Continue') }} </button>
         </div>
         <!--Bookings -->
     </div>

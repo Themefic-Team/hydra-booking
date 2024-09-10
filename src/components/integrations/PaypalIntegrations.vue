@@ -33,12 +33,12 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['PayPal'] }}</h3>
-                <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
+                <h3>{{ $tfhb_trans('PayPal') }}</h3>
+                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
+            <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span>
             
             <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ paypal_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
                 <!-- Checkbox swicher -->
@@ -51,18 +51,18 @@ const closePopup = () => {
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ $tfhb_trans['Connect Your Paypal Account'] }}</h2>
+                <h2>{{ $tfhb_trans('Connect Your Paypal Account') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ $tfhb_trans['Please read the documentation here for step by step guide to know how you can get api credentials from Paypal Account'] }}
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Paypal Account') }}
                 </p>
                 <HbDropdown 
                     v-model="paypal_data.environment"
                     required= "true"  
-                    :label="$tfhb_trans['Environment']"   
+                    :label="$tfhb_trans('Environment')"   
                     selected = "1"
                     placeholder="Select Environment"  
                     :option = "[
@@ -73,18 +73,18 @@ const closePopup = () => {
                 <HbText  
                     v-model="paypal_data.client_id"  
                     required= "true"  
-                    :label="$tfhb_trans['Paypal Client ID']"  
+                    :label="$tfhb_trans('Paypal Client ID')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans['Enter Your Client ID']"  
+                    :placeholder="$tfhb_trans('Enter Your Client ID')"  
                 /> 
                 <HbText  
                     v-model="paypal_data.secret_key"  
                     required= "true"  
-                    :label="$tfhb_trans['Paypal Secret Key']"  
+                    :label="$tfhb_trans('Paypal Secret Key')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans['Enter Your Paypal Secret']"  
+                    :placeholder="$tfhb_trans('Enter Your Paypal Secret')"  
                 />
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'paypal', paypal_data)">{{ $tfhb_trans['Save & Validate'] }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'paypal', paypal_data)">{{ $tfhb_trans('Save & Validate') }}</button>
             </template> 
         </HbPopup>
 

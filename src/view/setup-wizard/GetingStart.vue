@@ -36,33 +36,33 @@ const GettingStart = () => {
     <div class="tfhb-setup-wizard-content-wrap tfhb-s-w-geting-start tfhb-flexbox">
         <div class="tfhb-s-w-icon-text">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
-            <h2>{{ $tfhb_trans['Welcome to Hydrabooking!'] }}</h2>
-            <p>{{ $tfhb_trans['Thank you for choosing Hydrabooking, the ultimate solution for seamless appointment and meeting bookings.'] }}</p>
+            <h2>{{ $tfhb_trans('Welcome to Hydrabooking!') }}</h2>
+            <p>{{ $tfhb_trans('Thank you for choosing Hydrabooking, the ultimate solution for seamless appointment and meeting bookings.') }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
              <!-- Custom Duration -->
              <HbText  
                 v-model="props.setupWizard.data.email"  
-                :label="$tfhb_trans['Email']"  
+                :label="$tfhb_trans('Email')"  
                 name="title"
                 type="email"
                 selected = "1"
-                :placeholder="$tfhb_trans['Enter your email']"  
+                :placeholder="$tfhb_trans('Enter your email')"  
             /> 
              <!-- Custom Duration -->
             <HbCheckbox 
                 v-model="props.setupWizard.data.enable_recevie_updates"  
                 type="checkbox" 
                 required= "true"  
-                :label="$tfhb_trans['Receive updates and promotions']"  
+                :label="$tfhb_trans('Receive updates and promotions')"  
             />
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="GettingStart" 
-                :buttonText="$tfhb_trans['Get Started in a Minute']"
+                :buttonText="$tfhb_trans('Get Started in a Minute')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

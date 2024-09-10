@@ -20,11 +20,11 @@ const updateHosts = async () => {
     <div :class="{ 'tfhb-skeleton': hostsSettings.skeleton }" class="thb-host-dashboard "> 
         <div  class="tfhb-dashboard-heading tfhb-mb-16">
             <div class="tfhb-admin-title "> 
-                <h1 >{{ $tfhb_trans['Host Settings'] }}</h1> 
-                <p>{{ $tfhb_trans['One-liner description'] }}</p>
+                <h1 >{{ $tfhb_trans('Host Settings') }}</h1> 
+                <p>{{ $tfhb_trans('One-liner description') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn"> {{ $tfhb_trans['View Documentation'] }}<Icon name="ArrowUpRight" size="15" /></a>
+                <a href="#" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size="15" /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
@@ -32,8 +32,8 @@ const updateHosts = async () => {
              <nav class="tfhb-booking-tabs"> 
                 <ul>
                     <!-- to route example like hosts/profile/13/information -->
-                    <li><router-link to="/settings/hosts-settings/information-builder" exact :class="{ 'active': $route.path === '/settings/hosts-settings/information-builder' }"> <Icon name="UserRound" /> {{ $tfhb_trans['Information Builder'] }}</router-link></li> 
-                    <li><router-link to="/settings/hosts-settings/permission" exact :class="{ 'active': $route.path === '/settings/hosts-settings/permission' }"> <Icon name="KeyRound" /> {{ $tfhb_trans['Permission'] }}</router-link></li> 
+                    <li><router-link to="/settings/hosts-settings/information-builder" exact :class="{ 'active': $route.path === '/settings/hosts-settings/information-builder' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Information Builder') }}</router-link></li> 
+                    <li><router-link to="/settings/hosts-settings/permission" exact :class="{ 'active': $route.path === '/settings/hosts-settings/permission' }"> <Icon name="KeyRound" /> {{ $tfhb_trans('Permission') }}</router-link></li> 
                     
                 </ul>  
             </nav>
@@ -45,7 +45,7 @@ const updateHosts = async () => {
                     <HbButton 
                         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                         @click="updateHosts" 
-                        :buttonText="$tfhb_trans['Update Host Settings']"
+                        :buttonText="$tfhb_trans('Update Host Settings')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true"

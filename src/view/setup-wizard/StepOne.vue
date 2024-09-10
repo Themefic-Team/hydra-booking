@@ -42,8 +42,8 @@ const StepOne = () => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{ $tfhb_trans['Simplify Your Work with Hydrabooking'] }}</h2>
-            <p>{{ $tfhb_trans['Our intuitive setup process makes Hydrabooking a breeze to use, even for non-technical users.'] }}</p>
+            <h2>{{ $tfhb_trans('Simplify Your Work with Hydrabooking') }}</h2>
+            <p>{{ $tfhb_trans('Our intuitive setup process makes Hydrabooking a breeze to use, even for non-technical users.') }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
@@ -52,7 +52,7 @@ const StepOne = () => {
                     
                     v-model="props.setupWizard.data.business_type"  
                     required= "true"   
-                    :label="$tfhb_trans['Your business type?']"  
+                    :label="$tfhb_trans('Your business type?')"  
                     selected = "1"
                     placeholder="Select Your Business Type"  
                     :option = "[
@@ -67,7 +67,7 @@ const StepOne = () => {
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'getting-start'" 
-                :buttonText="$tfhb_trans['Back']"
+                :buttonText="$tfhb_trans('Back')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
@@ -76,7 +76,7 @@ const StepOne = () => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="StepOne" 
-                :buttonText="$tfhb_trans['Next']"
+                :buttonText="$tfhb_trans('Next')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

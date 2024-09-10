@@ -80,19 +80,19 @@ onBeforeMount(() => {
 
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans['Appearance'] }}</h1> 
-                <p>{{ $tfhb_trans['One-liner description'] }}</p>
+                <h1 >{{ $tfhb_trans('Appearance') }}</h1> 
+                <p>{{ $tfhb_trans('One-liner description') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans['View Documentation'] }}<Icon name="ArrowUpRight" size="15" /></a>
+                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size="15" /></a>
             </div> 
         </div>
         
         <div class="thb-content-wrap">
             
             <div class="tfhb-admin-title" >
-                <h2>{{ $tfhb_trans['Theme'] }}</h2> 
-                <p>{{ $tfhb_trans['This only applies to your attendee booking pages'] }}</p>
+                <h2>{{ $tfhb_trans('Theme') }}</h2> 
+                <p>{{ $tfhb_trans('This only applies to your attendee booking pages') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
@@ -113,37 +113,37 @@ onBeforeMount(() => {
             </div>
 
             <div class="tfhb-admin-title" >
-                <h2>{{ $tfhb_trans['Custom brand colors'] }}</h2> 
-                <p>{{ $tfhb_trans['Customize your own brand color into your booking page'] }}</p>
+                <h2>{{ $tfhb_trans('Custom brand colors') }}</h2> 
+                <p>{{ $tfhb_trans('Customize your own brand color into your booking page') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
                 <div class="tfhb-colorbox tfhb-full-width">
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16">
                         <label>
-                            {{ $tfhb_trans['Primary Color'] }}
+                            {{ $tfhb_trans('Primary Color') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.primary_color" v-model="appearanceSettings.primary_color" :withoutInput="true"/>
-                            <span>{{ $tfhb_trans['Select Color'] }}</span>
+                            <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16">
                         <label>
-                            {{ $tfhb_trans['Secondary Color'] }}
+                            {{ $tfhb_trans('Secondary Color') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.secondary_color" v-model="appearanceSettings.secondary_color" :withoutInput="true"/>
-                            <span>{{ $tfhb_trans['Select Color'] }}</span>
+                            <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
                     <div class="tfhb-single-colorbox tfhb-flexbox">
                         <label>
-                            {{ $tfhb_trans['Paragraph Color'] }}
+                            {{ $tfhb_trans('Paragraph Color') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.paragraph_color" v-model="appearanceSettings.paragraph_color" :withoutInput="true"/>
-                            <span>{{ $tfhb_trans['Select Color'] }}</span>
+                            <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
                 </div>
@@ -151,15 +151,15 @@ onBeforeMount(() => {
             </div>
 
             <div class="tfhb-admin-title" >
-                <h2>{{ $tfhb_trans['Typography'] }}</h2> 
-                <p>{{ $tfhb_trans['Set your own typography for your brand'] }}</p>
+                <h2>{{ $tfhb_trans('Typography') }}</h2> 
+                <p>{{ $tfhb_trans('Set your own typography for your brand') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">  
                 <HbDropdown 
                     v-model="appearanceSettings.titleTypo"
                     required= "true"  
-                    :label="$tfhb_trans['For title']"   
+                    :label="$tfhb_trans('For title')"   
                     width="50"
                     selected = "1"
                     placeholder="For title"  
@@ -173,7 +173,7 @@ onBeforeMount(() => {
                 <HbDropdown 
                     v-model="appearanceSettings.desTypo"
                     required= "true"  
-                    :label="$tfhb_trans['For paragraph']"   
+                    :label="$tfhb_trans('For paragraph')"   
                     width="50"
                     selected = "1"
                     placeholder="For paragraph"  
@@ -187,7 +187,7 @@ onBeforeMount(() => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="UpdateAppearanceSettings" 
-                :buttonText="$tfhb_trans['Save']"
+                :buttonText="$tfhb_trans('Save')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

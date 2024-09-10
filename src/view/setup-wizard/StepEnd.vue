@@ -298,8 +298,8 @@ onBeforeMount(() => {
     <div  class="tfhb-setup-wizard-content-wrap tfhb-hydra-dasboard-content tfhb-s-w-step-end tfhb-flexbox">
         <div class="tfhb-s-w-icon-text">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
-            <h2>{{$tfhb_trans['Congratulations! You are All Set Up!']}}</h2>
-            <p>{{$tfhb_trans['You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.']}}</p> 
+            <h2>{{$tfhb_trans('Congratulations! You are All Set Up!')}}</h2>
+            <p>{{$tfhb_trans('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.')}}</p> 
        
         </div>
         <div class="tfhb-s-w-step-end tfhb-flexbox">

@@ -32,8 +32,8 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['Contact Form 7'] }}</h3>
-                <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
+                <h3>{{ $tfhb_trans('Contact Form 7') }}</h3>
+                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

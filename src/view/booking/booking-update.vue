@@ -232,30 +232,30 @@ onBeforeMount(() => {
                 <div class="prev-navigator tfhb-cursor-pointer" @click="TfhbPrevNavigator()">
                     <Icon name="ArrowLeft" size="20" /> 
                 </div>
-                <h3>{{ $tfhb_trans['Back to Booking'] }}</h3>
+                <h3>{{ $tfhb_trans('Back to Booking') }}</h3>
             </div>
             
             <HbText  
                 v-model="booking.name"
                 required= "true"  
-                :label="$tfhb_trans['Customer name']"  
+                :label="$tfhb_trans('Customer name')"  
                 name="name"
                 selected = "1"
-                :placeholder="$tfhb_trans['Jhon Deo']" 
+                :placeholder="$tfhb_trans('Jhon Deo')" 
             /> 
             <HbText  
                 v-model="booking.email"
                 required= "true"  
-                :label="$tfhb_trans['Customer email']"  
+                :label="$tfhb_trans('Customer email')"  
                 name="email"
                 selected = "1"
-                :placeholder="$tfhb_trans['name@yourmail.com']" 
+                :placeholder="$tfhb_trans('name@yourmail.com')" 
             /> 
 
             <HbDropdown
                 v-model="booking.time_zone"
                 required= "true"  
-                :label="$tfhb_trans['Client Time zone']" 
+                :label="$tfhb_trans('Client Time zone')" 
                 :filter="true"
                 selected = "1"
                 placeholder="Select Time Zone"  
@@ -265,7 +265,7 @@ onBeforeMount(() => {
             <HbDropdown
                 v-model="booking.meeting"
                 required= "true"  
-                :label="$tfhb_trans['Select Meeting']" 
+                :label="$tfhb_trans('Select Meeting')" 
                 :filter="true"
                 selected = "1"
                 placeholder="Select Your Meeting"  
@@ -277,7 +277,7 @@ onBeforeMount(() => {
                 v-if="booking.meeting"
                 v-model="booking.host"
                 required= "true"  
-                :label="$tfhb_trans['Select Team Member']" 
+                :label="$tfhb_trans('Select Team Member')" 
                 :filter="true"
                 selected = "1"
                 :option = "meeting_hosts.value" 
@@ -287,7 +287,7 @@ onBeforeMount(() => {
                 v-if="booking.meeting"
                 v-model="booking.location"
                 required= "true"  
-                :label="$tfhb_trans['Select Location']" 
+                :label="$tfhb_trans('Select Location')" 
                 :filter="true"
                 selected = "1"
                 :option = "meeting_locations.value" 
@@ -296,7 +296,7 @@ onBeforeMount(() => {
             <HbDateTime   
                 v-if="booking.meeting"
                 v-model="booking.date"
-                :label="$tfhb_trans['Select Date']" 
+                :label="$tfhb_trans('Select Date')" 
                 selected = "1" 
                 :config="flatpickr_date"
                 placeholder="Type your schedule title"   
@@ -304,12 +304,12 @@ onBeforeMount(() => {
                 @dateChange="bookingSlot"
             />
 
-            <h4 v-if="previousBookedTime.value">{{ $tfhb_trans['Your Previous Booking Time:'] }} {{ previousBookedTime.value.start }} - {{ previousBookedTime.value.end }}</h4>
+            <h4 v-if="previousBookedTime.value">{{ $tfhb_trans('Your Previous Booking Time:') }} {{ previousBookedTime.value.start }} - {{ previousBookedTime.value.end }}</h4>
 
             <HbDropdown  
                 v-if="booking.date"
                 v-model="booking.time"
-                :label="$tfhb_trans['Select Time']" 
+                :label="$tfhb_trans('Select Time')" 
                 required= "true" 
                 :selected = "1"
                 placeholder="Select Booking Time"   
@@ -318,7 +318,7 @@ onBeforeMount(() => {
             />   
             <HbDropdown  
                 v-model="booking.status"
-                :label="$tfhb_trans['Status']" 
+                :label="$tfhb_trans('Status')" 
                 required= "true" 
                 :selected = "1"
                 placeholder="Select Booking status"   
@@ -330,7 +330,7 @@ onBeforeMount(() => {
             />  
 
             <div class="tfhb-submission-btn">
-                <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="createBooking">{{ $tfhb_trans['Create Booking'] }} </button>
+                <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="createBooking">{{ $tfhb_trans('Create Booking') }} </button>
             </div>
         </div>
     </div>

@@ -73,9 +73,9 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbDropdown 
         v-model="questions_data.type"
         required= "true" 
-        :label="$tfhb_trans['Field type']"  
+        :label="$tfhb_trans('Field type')"  
         :selected = "1"  
-        :placeholder="$tfhb_trans['Field type']" 
+        :placeholder="$tfhb_trans('Field type')" 
         :option = "[
             {name: 'Text', value: 'text'}, 
             {name: 'Email', value: 'email'}, 
@@ -96,8 +96,8 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbText  
         v-model="questions_data.label"
         required= "true"  
-        :label="$tfhb_trans['Level']"  
-        :placeholder="$tfhb_trans['Type level here']" 
+        :label="$tfhb_trans('Level')"  
+        :placeholder="$tfhb_trans('Type level here')" 
         name="type"
         @keyup="() => tfhbValidateInput('label')"
         @click="() => tfhbValidateInput('label')"
@@ -106,8 +106,8 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbText  
         v-model="questions_data.placeholder"
         required= "true"  
-        :label="$tfhb_trans['Placeholder']"  
-        :placeholder="$tfhb_trans['Type Placeholder here']" 
+        :label="$tfhb_trans('Placeholder')"  
+        :placeholder="$tfhb_trans('Type Placeholder here')" 
         @keyup="() => tfhbValidateInput('placeholder')"
         @click="() => tfhbValidateInput('placeholder')"
         :errors="errors.placeholder"
@@ -124,7 +124,7 @@ const UpdateQuestionsData = async (validator_field) => {
         class="tfhb-single-form-field"   :style="{ 'width': '100%' }" 
     > 
         <div class="tfhb-single-form-field-wrap tfhb-field-options"> 
-            <label   for="name">{{ $tfhb_trans['Options'] }} <span  > *</span> </label>
+            <label   for="name">{{ $tfhb_trans('Options') }} <span  > *</span> </label>
             <div  class="tfhb-options-fields tfhb-flexbox tfhb-gap-16" v-for="(option, index) in questions_data.options" :key="index"> 
                 <input 
                     v-model="questions_data.options[index]"
@@ -137,7 +137,7 @@ const UpdateQuestionsData = async (validator_field) => {
             </div>
             <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" @click="AddNewOptions" >
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans['Add New Option'] }}
+                {{ $tfhb_trans('Add New Option') }}
             </button>
         </div> 
     </div>
@@ -145,7 +145,7 @@ const UpdateQuestionsData = async (validator_field) => {
 
     <HbSwitch  
         v-model="questions_data.required"
-        :label="$tfhb_trans['Required']"  
+        :label="$tfhb_trans('Required')"  
     /> 
 
     <div class="tfhb-action-btn tfhb-full-width tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">

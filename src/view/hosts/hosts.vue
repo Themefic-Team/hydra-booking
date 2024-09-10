@@ -175,13 +175,13 @@ const Tfhb_Host_Filter = async (e) =>{
                 <span><Icon name="Search" size="20" /></span>
            </div>
             <div class="thb-admin-btn right">
-               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans['Add New Host'] }}</button> 
+               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans('Add New Host') }}</button> 
             </div> 
         </div>
         <div class="tfhb-hosts-content">  
             <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
                 <template #header> 
-                    <h2>{{$tfhb_trans['Add New Host']}}</h2>   
+                    <h2>{{$tfhb_trans('Add New Host')}}</h2>   
                 </template>
 
                 <template #content>  
@@ -189,9 +189,9 @@ const Tfhb_Host_Filter = async (e) =>{
                     <HbDropdown    
                         v-model="host.id"  
                         required= "true"  
-                        :label="$tfhb_trans['Select User']"  
+                        :label="$tfhb_trans('Select User')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Select User']" 
+                        :placeholder="$tfhb_trans('Select User')" 
                         :option = "usersData.data" 
                     /> 
                     <!-- Select User --> 
@@ -200,9 +200,9 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-if="host.id == 0"
                         v-model="host.username"  
                         required= "true"  
-                        :label="$tfhb_trans['Username']"  
+                        :label="$tfhb_trans('Username')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type Username']"  
+                        :placeholder="$tfhb_trans('Type Username')"  
                     /> 
                     <!-- UsernName -->
                     <!-- Email -->
@@ -211,9 +211,9 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.email"  
                         required= "true"  
                         type= "email"  
-                        :label="$tfhb_trans['Email']"  
+                        :label="$tfhb_trans('Email')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type User Email']"  
+                        :placeholder="$tfhb_trans('Type User Email')"  
                     /> 
                     <!-- Email -->
 
@@ -224,15 +224,15 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.password"  
                         required= "true"  
                         type= "password"  
-                        :label="$tfhb_trans['Password']"  
+                        :label="$tfhb_trans('Password')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type User Password']"  
+                        :placeholder="$tfhb_trans('Type User Password')"  
                     /> 
                     <!-- Password -->
                     
 
                     <!-- Create Or Update Availability -->
-                    <button class="tfhb-btn boxed-btn" @click="CreateHosts">{{ $tfhb_trans['Create Hosts'] }}</button>
+                    <button class="tfhb-btn boxed-btn" @click="CreateHosts">{{ $tfhb_trans('Create Hosts') }}</button>
                 </template> 
             </HbPopup>
              <router-view :host_list="hosts.data" @update-host-status="updateHostStatus" @delete-host="deleteHost" :host_skeleton="skeleton" /> 

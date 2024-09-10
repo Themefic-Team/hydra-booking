@@ -113,12 +113,12 @@ const GetFormsData = async (e) => {
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title   tfhb-full-width">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{ $tfhb_trans['Meeting Questions for Attendee'] }}
+                    {{ $tfhb_trans('Meeting Questions for Attendee') }}
                     <!-- <HbSwitch 
                         v-model="meeting.questions_type" 
                     /> -->
                 </h2> 
-                <p>{{ $tfhb_trans['Create your own booking page questions'] }}</p>
+                <p>{{ $tfhb_trans('Create your own booking page questions') }}</p>
             </div>
 
             <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal">
@@ -129,8 +129,8 @@ const GetFormsData = async (e) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ $tfhb_trans['Create custom form'] }}</h4> 
-                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans['Meeting will be go for indefinitely into the future'] }}</p> -->
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Create custom form') }}</h4> 
+                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be go for indefinitely into the future') }}</p> -->
                         </div>
                     </label>
                 </div>
@@ -141,8 +141,8 @@ const GetFormsData = async (e) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ $tfhb_trans['Use existing form'] }}</h4> 
-                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans['Meeting will be only available on specific dates'] }}</p> -->
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Use existing form') }}</h4> 
+                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be only available on specific dates') }}</p> -->
                         </div>
                     </label> 
                 </div>
@@ -161,12 +161,12 @@ const GetFormsData = async (e) => {
 
             <div class="tfhb-add-new-question tfhb-flexbox tfhb-gap-8"  @click="QuestionPopupAdd()" >
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans['Add more questions'] }}
+                {{ $tfhb_trans('Add more questions') }}
             </div>
 
             <HbPopup :isOpen="QuestionPopup" @modal-close="QuestionPopup = false" max_width="400px" name="first-modal">
                 <template #header> 
-                    <h3>{{ $tfhb_trans['Add Question for Attendee'] }}</h3>
+                    <h3>{{ $tfhb_trans('Add Question for Attendee') }}</h3>
                 </template>
 
                 <template #content>  
@@ -187,7 +187,7 @@ const GetFormsData = async (e) => {
                     
                     v-model="meeting.questions_form_type"  
                     required= "true" 
-                    :label="$tfhb_trans['Select Form Types']"  
+                    :label="$tfhb_trans('Select Form Types')"  
                     width="50"
                     :selected = "1"
                     placeholder="Select Form Types"   
@@ -206,7 +206,7 @@ const GetFormsData = async (e) => {
                     v-if = "meeting.questions_form_type != ''"
                     v-model="meeting.questions_form"  
                     required= "true" 
-                    :label="$tfhb_trans['Select Form Types']"  
+                    :label="$tfhb_trans('Select Form Types')"  
                     width="50" 
                     placeholder="Select Form Types"   
                     :option = "formsList" 
@@ -216,7 +216,7 @@ const GetFormsData = async (e) => {
         </div>
 
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans['Save & Continue'] }} </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Continue') }} </button>
         </div>
         <!--Bookings -->
     </div>

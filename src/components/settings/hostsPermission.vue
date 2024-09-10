@@ -26,32 +26,32 @@ const questions_data =  reactive({});
 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_dashboard"
-                :label="$tfhb_trans['Host Can Manage Dashboard']"
+                :label="$tfhb_trans('Host Can Manage Dashboard')"
                 name="tfhb_manage_dashboard"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_meetings"
-                :label="$tfhb_trans['Host Can Manage Meetings']"
+                :label="$tfhb_trans('Host Can Manage Meetings')"
                 name="tfhb_manage_meetings"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_booking"
-                :label="$tfhb_trans['Host Can Manage Booking']"
+                :label="$tfhb_trans('Host Can Manage Booking')"
                 name="tfhb_manage_booking"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_settings"
-                :label="$tfhb_trans['Host Can Manage Settings']"
+                :label="$tfhb_trans('Host Can Manage Settings')"
                 name="tfhb_manage_settings"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_custom_availability"
-                :label="$tfhb_trans['Host Can Manage Custom Availability']"
+                :label="$tfhb_trans('Host Can Manage Custom Availability')"
                 name="tfhb_manage_custom_availability"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_integrations"
-                :label="$tfhb_trans['Host Can Manage Integrations']"
+                :label="$tfhb_trans('Host Can Manage Integrations')"
                 name="tfhb_manage_integrations"
             /> 
         </div>

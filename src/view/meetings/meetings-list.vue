@@ -104,7 +104,7 @@ const TfhbMeetingType = (type, router) => {
         <div class="tfhb-filter-box tfhb-flexbox">
             <div class="tfhb-filter-btn tfhb-flexbox" @click="FilterPreview=!FilterPreview" :class="FilterPreview ? 'active' : ''">
                 <Icon name="Filter" size="20" /> 
-                {{ $tfhb_trans['Filter'] }}
+                {{ $tfhb_trans('Filter') }}
             </div>
             <div class="tfhb-header-filters">
                 <input type="text" v-model="filterData.title" @keyup="Meeting.Tfhb_Meeting_Filter(filterData)" placeholder="Search by meeting title" /> 
@@ -112,7 +112,7 @@ const TfhbMeetingType = (type, router) => {
             </div>
         </div>
         <div class="thb-admin-btn right">
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans['Create New Meeting'] }}</button>
+            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans('Create New Meeting') }}</button>
         </div> 
     </div>
 
@@ -120,7 +120,7 @@ const TfhbMeetingType = (type, router) => {
     <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="400px" name="first-modal">
         <template #header> 
             <!-- {{ google_calendar }} -->
-            <h2>{{ $tfhb_trans['Create New Meeting Type'] }} </h2>
+            <h2>{{ $tfhb_trans('Create New Meeting Type') }} </h2>
             
         </template>
 
@@ -134,9 +134,9 @@ const TfhbMeetingType = (type, router) => {
                                 <Icon name="ArrowRight" size="20" /> 
                                 <Icon name="UserRound" size="20" /> 
                             </div>
-                            <h3>{{ $tfhb_trans['One to One'] }}</h3>
+                            <h3>{{ $tfhb_trans('One to One') }}</h3>
                         </div>
-                        <p>{{ $tfhb_trans['One host with one invitee. Good for: 1:1 interview, coffee chats'] }}</p>
+                        <p>{{ $tfhb_trans('One host with one invitee. Good for: 1:1 interview, coffee chats') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
                         <Icon name="ArrowRight" width="20"/>
@@ -150,7 +150,7 @@ const TfhbMeetingType = (type, router) => {
                     }
                     "
                 > 
-                <span class="tfhb-badge tfhb-badge-pro" v-if="$tfhb_is_pro == false">{{ $tfhb_trans['Pro'] }}</span>
+                <span class="tfhb-badge tfhb-badge-pro" v-if="$tfhb_is_pro == false">{{ $tfhb_trans('Pro') }}</span>
                 <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
@@ -159,9 +159,9 @@ const TfhbMeetingType = (type, router) => {
                                 <Icon name="ArrowRight" size="20" /> 
                                 <Icon name="UsersRound" size="20" /> 
                             </div>
-                            <h3>{{ $tfhb_trans['One to Group'] }}</h3>
+                            <h3>{{ $tfhb_trans('One to Group') }}</h3>
                         </div>
-                        <p>{{ $tfhb_trans['One host with group of invitee. Good for: webinars, online clasess'] }}</p>
+                        <p>{{ $tfhb_trans('One host with group of invitee. Good for: webinars, online clasess') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
                         <!-- <Icon name="ArrowRight" width="20"/> -->
@@ -180,12 +180,12 @@ const TfhbMeetingType = (type, router) => {
                     <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
                 </div>
                 <div class="tfhb-close-content">
-                    <h3>{{ $tfhb_trans['Are you absolutely sure??'] }}  </h3>  
-                    <p>{{ $tfhb_trans['Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.'] }}</p>
+                    <h3>{{ $tfhb_trans('Are you absolutely sure??') }}  </h3>  
+                    <p>{{ $tfhb_trans('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.') }}</p>
                 </div>
                 <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
-                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ $tfhb_trans['Cancel'] }}</button>
-                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ $tfhb_trans['Delete'] }}</button>
+                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ $tfhb_trans('Cancel') }}</button>
+                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ $tfhb_trans('Delete') }}</button>
                 </div>
             </div> 
         </template> 
@@ -195,7 +195,7 @@ const TfhbMeetingType = (type, router) => {
         <div class="tfhb-filter-form">
             <div class="tfhb-filter-category">
                 <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterHostPreview=!FilterHostPreview">
-                    {{ $tfhb_trans['All Host'] }} <Icon name="ChevronUp" size="20" v-if="FilterHostPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterHostPreview"/>
+                    {{ $tfhb_trans('All Host') }} <Icon name="ChevronUp" size="20" v-if="FilterHostPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterHostPreview"/>
                 </div>
                 <div class="tfhb-filter-category-box" v-show="FilterHostPreview">
                     <ul class="tfhb-flexbox">
@@ -215,7 +215,7 @@ const TfhbMeetingType = (type, router) => {
 
             <div class="tfhb-filter-category">
                 <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
-                    {{ $tfhb_trans['All Category'] }} <Icon name="ChevronUp" size="20" v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterCatgoryPreview"/>
+                    {{ $tfhb_trans('All Category') }} <Icon name="ChevronUp" size="20" v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterCatgoryPreview"/>
                 </div>
                 <div class="tfhb-filter-category-box" v-show="FilterCatgoryPreview">
                     <ul class="tfhb-flexbox">
@@ -261,7 +261,7 @@ const TfhbMeetingType = (type, router) => {
         <div class="tfhb-reset-btn" v-if="filterData.fcategory.length > 0 || filterData.fhosts.length > 0 || filterData.title">
             <a href="#" class="tfhb-flexbox">
                 <Icon name="RefreshCw" size="20" /> 
-                 {{ $tfhb_trans['Reset Filter'] }}
+                 {{ $tfhb_trans('Reset Filter') }}
             </a>
         </div>
     </div>
@@ -282,7 +282,7 @@ const TfhbMeetingType = (type, router) => {
                                             <Icon name="Clock" size="16" /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ smeeting.duration }} {{ $tfhb_trans['minutes'] }}
+                                            {{ smeeting.duration }} {{ $tfhb_trans('minutes') }}
                                         </div>
                                     </div>
                                 </li>
@@ -294,7 +294,7 @@ const TfhbMeetingType = (type, router) => {
                                             <Icon name="UserRound" size="16" /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ $tfhb_trans['One to One'] }}
+                                            {{ $tfhb_trans('One to One') }}
                                         </div>
                                     </div>
                                     <div class="tfhb-flexbox" v-if="'one-to-group'==smeeting.meeting_type">
@@ -304,7 +304,7 @@ const TfhbMeetingType = (type, router) => {
                                             <Icon name="UsersRound" size="16" /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ $tfhb_trans['One to Group'] }}
+                                            {{ $tfhb_trans('One to Group') }}
                                         </div>
                                     </div>
                                 </li>
@@ -349,21 +349,21 @@ const TfhbMeetingType = (type, router) => {
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                         <div class="tfhb-dropdown-wrap"> 
                             <!-- route link -->
-                            <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans['Edit'] }}</router-link>
+                            <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('Edit') }}</router-link>
                             
-                            <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span> -->
-                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ $tfhb_trans['Delete'] }}</span>
+                            <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span> -->
+                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span>
                         </div>
                     </div>
                 </div>
                 <div class="single-meeting-action-btn tfhb-flexbox">
                     <a :href="'/' + smeeting.slug" class="tfhb-flexbox" target="_blank">
                         <Icon name="Eye" size="20" /> 
-                        {{ $tfhb_trans['Preview'] }}
+                        {{ $tfhb_trans('Preview') }}
                     </a>
                     <a href="#" class="tfhb-flexbox" @click.prevent="sharePopupData(smeeting)">
                         <Icon name="Share2" size="20" /> 
-                        {{ $tfhb_trans['Share'] }}
+                        {{ $tfhb_trans('Share') }}
                     </a>
                 </div>
             </div>

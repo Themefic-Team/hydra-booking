@@ -214,24 +214,24 @@ const moduleFields = async (e) => {
 <div class="meeting-create-details tfhb-gap-24">
     <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
         <div class="tfhb-admin-title tfhb-m-0">
-            <h2>{{ $tfhb_trans['Availability Range for this Booking'] }}</h2> 
-            <p>{{ $tfhb_trans['How many days can the invitee schedule?'] }}</p>
+            <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
+            <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
         </div>
         <div class="tfhb-integration-box">
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="integrationsList" @click="integrationsListopen=!integrationsListopen">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans['Add New Integrations'] }}
+                {{ $tfhb_trans('Add New Integrations') }}
             </button>
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="integrationscreate" @click="backtointegrationsList">
                 <Icon name="ArrowLeft" :width="20"/>
-                {{ $tfhb_trans['Back'] }}
+                {{ $tfhb_trans('Back') }}
             </button>
 
             <div class="tfhb-integrations-lists" v-if="integrationsListopen">
                 <ul>
-                    <li @click="addNewIntegrations('Mailchimp')" v-if="meeting.mailchimp.status">{{ $tfhb_trans['Mailchimp'] }}</li>
-                    <li @click="addNewIntegrations('FluentCRM')" v-if="meeting.fluentcrm.status">{{ $tfhb_trans['FluentCRM'] }}</li>
-                    <li @click="addNewIntegrations('ZohoCRM')" v-if="meeting.zohocrm.status">{{ $tfhb_trans['ZohoCRM'] }}</li>
+                    <li @click="addNewIntegrations('Mailchimp')" v-if="meeting.mailchimp.status">{{ $tfhb_trans('Mailchimp') }}</li>
+                    <li @click="addNewIntegrations('FluentCRM')" v-if="meeting.fluentcrm.status">{{ $tfhb_trans('FluentCRM') }}</li>
+                    <li @click="addNewIntegrations('ZohoCRM')" v-if="meeting.zohocrm.status">{{ $tfhb_trans('ZohoCRM') }}</li>
                 </ul>
             </div>
         </div>
@@ -269,9 +269,9 @@ const moduleFields = async (e) => {
         <HbText  
             v-model="integrationsData.title"
             required= "true"  
-            :label="$tfhb_trans['Integrations Title']"  
+            :label="$tfhb_trans('Integrations Title')"  
             selected = "1"
-            :placeholder="$tfhb_trans['Type your Integrations Title']" 
+            :placeholder="$tfhb_trans('Type your Integrations Title')" 
             width="50"
         /> 
 
@@ -279,7 +279,7 @@ const moduleFields = async (e) => {
             v-if="integrationsData.webhook=='Mailchimp'"
             v-model="integrationsData.audience"
             required= "true"  
-            :label="$tfhb_trans['Select Audience']"   
+            :label="$tfhb_trans('Select Audience')"   
             width="50"
             selected = "1"
             placeholder="Select Audience"  
@@ -291,10 +291,10 @@ const moduleFields = async (e) => {
             v-if="integrationsData.webhook=='FluentCRM'"
             v-model="integrationsData.lists"
             required= "true"  
-            :label="$tfhb_trans['FluentCRM Lists']"   
+            :label="$tfhb_trans('FluentCRM Lists')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans['Select FluentCRM List']"  
+            :placeholder="$tfhb_trans('Select FluentCRM List')"  
             :option = "meeting.fluentcrm.lists"
             @tfhb-onchange="moduleFields"
         />
@@ -303,10 +303,10 @@ const moduleFields = async (e) => {
             v-if="integrationsData.webhook=='FluentCRM'"
             v-model="integrationsData.tags"
             required= "true"  
-            :label="$tfhb_trans['Contact Tags']"   
+            :label="$tfhb_trans('Contact Tags')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans['Select Contact Tag']" 
+            :placeholder="$tfhb_trans('Select Contact Tag')" 
             :option = "meeting.fluentcrm.tags"
         />
 
@@ -314,10 +314,10 @@ const moduleFields = async (e) => {
             v-if="integrationsData.webhook=='ZohoCRM'"
             v-model="integrationsData.modules"
             required= "true"  
-            :label="$tfhb_trans['Modules']"   
+            :label="$tfhb_trans('Modules')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans['Select Modules']" 
+            :placeholder="$tfhb_trans('Select Modules')" 
             :option = "meeting.zohocrm.modules"
             @tfhb-onchange="moduleFields"
         />
@@ -326,13 +326,13 @@ const moduleFields = async (e) => {
             required= "true"
             v-model="integrationsData.events"
             name="webhook_events"
-            :label="$tfhb_trans['Event Triggers']"
+            :label="$tfhb_trans('Event Triggers')"
             :groups="true"
             :options="['Booking Confirmed', 'Booking Canceled', 'Booking Completed']" 
         />
 
         <div class="tfhb-headers tfhb-full-width">
-            <p>{{ $tfhb_trans['Other Fields'] }}</p>
+            <p>{{ $tfhb_trans('Other Fields') }}</p>
             <div class="tfhb-flexbox" v-for="(body, key) in integrationsData.bodys">
                 <div class="tfhb-request-header-fields tfhb-flexbox">
                     <HbDropdown  
@@ -349,7 +349,7 @@ const moduleFields = async (e) => {
                         required= "true"  
                         width="50"
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Value']" 
+                        :placeholder="$tfhb_trans('Enter Value')" 
                         :option = "[
                             {'name': '{{attendee.full_name}}', 'value': '{{attendee.full_name}}'}, 
                             {'name': '{{attendee.email}}', 'value': '{{attendee.email}}'},
@@ -374,7 +374,7 @@ const moduleFields = async (e) => {
                         v-model="body.value"
                         required= "true"   
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Value']" 
+                        :placeholder="$tfhb_trans('Enter Value')" 
                         width="50"
                     /> 
                 </div>
@@ -391,16 +391,16 @@ const moduleFields = async (e) => {
 
         <HbCheckbox 
             v-model="integrationsData.status"
-            :label="$tfhb_trans['Enable this Webhook']"
+            :label="$tfhb_trans('Enable this Webhook')"
             name="enable_webhook"
         />
 
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateIntegrations">{{ $tfhb_trans['Save Webhook'] }} </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateIntegrations">{{ $tfhb_trans('Save Webhook') }} </button>
         </div>
     </div>
     <div class="tfhb-submission-btn">
-        <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans['Save & Continue'] }} </button>
+        <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Continue') }} </button>
     </div>
 </div>
 </template>

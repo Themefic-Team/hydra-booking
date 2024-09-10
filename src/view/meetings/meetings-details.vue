@@ -58,10 +58,10 @@ const tfhbValidateInput = (fieldName) => {
         <HbText  
             v-model="meeting.title" 
             required= "true"  
-            :label="$tfhb_trans['Meeting title']"  
+            :label="$tfhb_trans('Meeting title')"  
             name="title"
             selected = "1"
-            :placeholder="$tfhb_trans['Type meeting title']" 
+            :placeholder="$tfhb_trans('Type meeting title')" 
             @keyup="() => tfhbValidateInput('title')"
             @click="() => tfhbValidateInput('title')"
             :errors="errors.title"
@@ -70,8 +70,8 @@ const tfhbValidateInput = (fieldName) => {
             v-model="meeting.description" 
             required= "true"  
             name="description"
-            :label="$tfhb_trans['Description']"  
-            :placeholder="$tfhb_trans['Describe about meeting']"
+            :label="$tfhb_trans('Description')"  
+            :placeholder="$tfhb_trans('Describe about meeting')"
             @keyup="() => tfhbValidateInput('description')"
             @click="() => tfhbValidateInput('description')"
             :errors="errors.description"
@@ -82,7 +82,7 @@ const tfhbValidateInput = (fieldName) => {
             <HbDropdown 
                 v-model="meeting.duration" 
                 required= "true" 
-                :label="$tfhb_trans['Duration']"  
+                :label="$tfhb_trans('Duration')"  
                 :selected = "1"
                 name="duration"
                 placeholder="Select Meetings Duration"  
@@ -101,18 +101,18 @@ const tfhbValidateInput = (fieldName) => {
             <!-- Custom Duration -->
             <HbText  
                 v-model="meeting.custom_duration"  
-                :label="$tfhb_trans['Custom Duration']"  
+                :label="$tfhb_trans('Custom Duration')"  
                 name="title"
                 type="number"
                 selected = "1"
-                :placeholder="$tfhb_trans['Type Custom Duration']"  
+                :placeholder="$tfhb_trans('Type Custom Duration')"  
                 v-if="'custom'==meeting.duration"
             /> 
              <!-- Custom Duration -->
             <!-- <HbSwitch 
                 type="checkbox" 
                 required= "true" 
-                :label="$tfhb_trans['Allow attendee to select duration']" 
+                :label="$tfhb_trans('Allow attendee to select duration')" 
             /> -->
         </div>
 
@@ -123,9 +123,9 @@ const tfhbValidateInput = (fieldName) => {
                     <HbDropdown 
                         v-model="slocation.location" 
                         required= "true" 
-                        :label="$tfhb_trans['Location']"  
+                        :label="$tfhb_trans('Location')"  
                         :selected = "1"
-                        :placeholder="$tfhb_trans['Location']" 
+                        :placeholder="$tfhb_trans('Location')" 
                         :option = "[
                             {name: 'Zoom', value: 'zoom', disable:  integrations.zoom_meeting_status}, 
                             {name: 'Google Meet', value: 'meet', disable: integrations.google_calendar_status}, 
@@ -141,9 +141,9 @@ const tfhbValidateInput = (fieldName) => {
                     <HbText  
                         v-model="slocation.address" 
                         required= "true"  
-                        :label="$tfhb_trans['Address']"  
+                        :label="$tfhb_trans('Address')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type Location Address']" 
+                        :placeholder="$tfhb_trans('Type Location Address')" 
                         :width= "50"
                         v-if="'In Person (Organizer Address)'==slocation.location  || 'Online Meeting'==slocation.location"
                     /> 
@@ -151,9 +151,9 @@ const tfhbValidateInput = (fieldName) => {
                         v-model="slocation.address" 
                         type="number"
                         required= "true"  
-                        :label="$tfhb_trans['Phone Number']"  
+                        :label="$tfhb_trans('Phone Number')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type Location Phone Number']" 
+                        :placeholder="$tfhb_trans('Type Location Phone Number')" 
                         :width= "50"
                         v-if="'Organizer Phone Number'==slocation.location"
                     /> 
@@ -165,7 +165,7 @@ const tfhbValidateInput = (fieldName) => {
             <div class="tfhb-add-new-question">
                 <div class="new-location tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" @click="emit('add-more-location')">
                     <Icon name="PlusCircle" :width="20"/>
-                    {{ $tfhb_trans['Add Another Location'] }}
+                    {{ $tfhb_trans('Add Another Location') }}
                 </div>
             </div>
         </div>
@@ -175,7 +175,7 @@ const tfhbValidateInput = (fieldName) => {
                 <HbText  
                         v-model="meeting.max_book_per_slot"  
                         type= "number"
-                        :label="$tfhb_trans['Max invitees in a spot']"   
+                        :label="$tfhb_trans('Max invitees in a spot')"   
                         :placeholder="'Max invitees in a spot'" 
                         :width= "100"
                        
@@ -185,7 +185,7 @@ const tfhbValidateInput = (fieldName) => {
                         v-model="meeting.is_display_max_book_slot" 
                         type="checkbox" 
                         required= "true" 
-                        :label="$tfhb_trans['Display remaining spots on booking page']" 
+                        :label="$tfhb_trans('Display remaining spots on booking page')" 
                     />
             </div>  
         </div>
@@ -195,19 +195,19 @@ const tfhbValidateInput = (fieldName) => {
         <HbDropdown 
             v-model="meeting.meeting_category" 
             required= "true" 
-            :label="$tfhb_trans['Select Category']"  
+            :label="$tfhb_trans('Select Category')"  
             :selected = "meeting.meeting_category"
-            :placeholder="$tfhb_trans['Select Category']" 
+            :placeholder="$tfhb_trans('Select Category')" 
             :option = "meetingCategory" 
         />
         <div class="tfhb-add-moreinfo tfhb-full-width" >
             <router-link :to="'/settings/category'" exact :class="'tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto'">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans['Create Category'] }}
+                {{ $tfhb_trans('Create Category') }}
             </router-link>
         </div>
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting', ['title', 'description', 'duration'])">{{ $tfhb_trans['Save & Continue'] }} </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting', ['title', 'description', 'duration'])">{{ $tfhb_trans('Save & Continue') }} </button>
         </div>
         <!--Bookings -->
     </div>

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hydra Booking\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-31 08:59+0000\n"
+"POT-Creation-Date: 2024-09-10 05:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -13,49 +13,90 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.6; wp-6.4.3\n"
+"X-Loco-Version: 2.6.11; wp-6.6.1\n"
 "X-Domain: hydra-booking"
 
-#: hydra-booking.php:1049
-msgid " Default: 30"
-msgstr ""
-
-#: hydra-booking.php:90
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:69
 #, php-format
-msgid ""
-"%s requires %s to be installed and active. You can install and activate it "
-"from %s"
+msgid "%s Attributes"
 msgstr ""
 
-#: hydra-booking.php:1617
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:61
 #, php-format
-msgid ""
-"%sHydra Booking Form is inactive.%s This plugin requires WooCommerce 2.5 or "
-"newer. Please %supdate WooCommerce to version 2.5 or newer%s"
+msgid "%s Image"
 msgstr ""
 
-#: hydra-booking.php:1127
-msgid "( WooCommerce need to active )"
+#. %s: post type name
+#. %s: taxonomy name
+#: includes/post-type/Post_Type.php:75 includes/post-type/Post_Type.php:144
+#, php-format
+msgid "%s list"
 msgstr ""
 
-#: hydra-booking.php:1609
-msgid "Activate"
+#. %s: post type singular name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:73 includes/post-type/Post_Type.php:142
+#, php-format
+msgid "%s list navigation"
 msgstr ""
 
-#: hydra-booking.php:913 hydra-booking.php:915 hydra-booking.php:1066
-msgid "Allowed Dates"
+#: app/Content/Template/meeting-times.php:31
+msgid "12h"
 msgstr ""
 
-#: hydra-booking.php:1064
-msgid "Allowed Time"
+#: app/Content/Template/meeting-times.php:36
+msgid "24h"
 msgstr ""
 
-#: hydra-booking.php:916 hydra-booking.php:1067
-msgid "Always"
+#: includes/post-type/Post_Type.php:39
+msgid "Add New"
 msgstr ""
 
-#: hydra-booking.php:897
-msgid "Calendar Theme"
+#. %s: post type singular name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:41 includes/post-type/Post_Type.php:120
+#, php-format
+msgid "Add New %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:134
+#, php-format
+msgid "Add or remove %s"
+msgstr ""
+
+#. %s: post type name
+#. %s: taxonomy name
+#: includes/post-type/Post_Type.php:47 includes/post-type/Post_Type.php:112
+#, php-format
+msgid "All %s"
+msgstr ""
+
+#: includes/services/Integrations/Woocommerce/WooBooking.php:36
+msgid "Appointment "
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:146
+#, php-format
+msgid "Back to %s"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:57
+#: app/Content/Template/meeting-confirmation.php:31
+msgid "Booking"
+msgstr ""
+
+#: app/Content/Template/meeting-form.php:140
+msgid "Booking Confirmation"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:136
+#, php-format
+msgid "Choose from the most used %s"
 msgstr ""
 
 #. Description of the plugin
@@ -65,104 +106,33 @@ msgid ""
 "WooCommerce."
 msgstr ""
 
-#: hydra-booking.php:1136
-msgid "Custom Product"
+#: admin/Controller/HostsController.php:180
+msgid "Create new user"
 msgstr ""
 
-#: hydra-booking.php:886
-msgid "Date Configuration"
+#: admin/Controller/AdminMenu.php:42 admin/Controller/AdminMenu.php:43
+msgid "Dashboard"
 msgstr ""
 
-#: hydra-booking.php:891
-msgid "Date Selection Mode"
+#: app/Content/Template/meeting-form.php:39
+msgid "Details"
 msgstr ""
 
-#: hydra-booking.php:889
-msgid "Date Settings for Frontend"
-msgstr ""
-
-#: hydra-booking.php:1068
-msgid "Day"
-msgstr ""
-
-#: hydra-booking.php:1057
-msgid "Default: Blank"
-msgstr ""
-
-#: hydra-booking.php:1002
+#. %s: post type singular name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:43 includes/post-type/Post_Type.php:114
 #, php-format
-msgid ""
-"Default: g:ia . For 24 hours format use H:i . You can find more format <a "
-"href=\"%s\" target=\"_blank\">here</a>."
+msgid "Edit %s"
 msgstr ""
 
-#: hydra-booking.php:981
-msgid "Disable Specific Dates"
+#. %s: post type name
+#: includes/post-type/Post_Type.php:71
+#, php-format
+msgid "Filter %s list"
 msgstr ""
 
-#: hydra-booking.php:1027
-msgid "Disable Time Range"
-msgstr ""
-
-#: hydra-booking.php:950
-msgid "Disabled Dates"
-msgstr ""
-
-#: hydra-booking.php:809
-msgid "Enable Booking Form"
-msgstr ""
-
-#: hydra-booking.php:817
-msgid "Enable Calendar Event"
-msgstr ""
-
-#: hydra-booking.php:1124
-msgid "Enable WooCommerce"
-msgstr ""
-
-#: hydra-booking.php:807
-msgid "Enable/Disable Booking Form"
-msgstr ""
-
-#: hydra-booking.php:815
-msgid "Enable/Disable Calendar Event"
-msgstr ""
-
-#: hydra-booking.php:1122
-msgid "Enable/Disable WooCommerce Integration"
-msgstr ""
-
-#: hydra-booking.php:853
-msgid "Event Date"
-msgstr ""
-
-#: hydra-booking.php:826
-msgid "Event Email"
-msgstr ""
-
-#: hydra-booking.php:839
-msgid "Event Summary"
-msgstr ""
-
-#: hydra-booking.php:867
-msgid "Event Time"
-msgstr ""
-
-#: hydra-booking.php:1135
-msgid "Existing Product"
-msgstr ""
-
-#: hydra-booking.php:646 hydra-booking.php:649 hydra-booking.php:689
-#: hydra-booking.php:692
-msgid "Field Type"
-msgstr ""
-
-#: hydra-booking.php:957 hydra-booking.php:1077
-msgid "Friday"
-msgstr ""
-
-#: hydra-booking.php:1030
-msgid "From"
+#: admin/Controller/AdminMenu.php:62
+msgid "Hosts"
 msgstr ""
 
 #. Author URI of the plugin
@@ -174,193 +144,139 @@ msgid "https://themefic.com/hydra-booking"
 msgstr ""
 
 #. Name of the plugin
+#: admin/Controller/AdminMenu.php:30 admin/Controller/AdminMenu.php:31
 msgid "Hydra Booking"
 msgstr ""
 
-#: hydra-booking.php:627
-msgid "Hydra Booking Date"
+#: admin/Controller/AdminMenu.php:52
+msgid "Meetings"
 msgstr ""
 
-#: hydra-booking.php:1608
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:45
 #, php-format
-msgid "Hydra Booking Form requires %1$s WooCommerce %2$s to be activated."
+msgid "New %s"
 msgstr ""
 
-#: hydra-booking.php:723 hydra-booking.php:801
-msgid "Hydra Booking Option"
-msgstr ""
-
-#: hydra-booking.php:628
-msgid "Hydra Booking Time"
-msgstr ""
-
-#: hydra-booking.php:668 hydra-booking.php:710
-msgid "Insert Tag"
-msgstr ""
-
-#: hydra-booking.php:1600
-msgid "Install Now"
-msgstr ""
-
-#: hydra-booking.php:1020 hydra-booking.php:1102
-msgid "Max"
-msgstr ""
-
-#: hydra-booking.php:1013 hydra-booking.php:1095
-msgid "Min"
-msgstr ""
-
-#: hydra-booking.php:953 hydra-booking.php:1073
-msgid "Monday"
-msgstr ""
-
-#: hydra-booking.php:655 hydra-booking.php:698
-msgid "Name"
-msgstr ""
-
-#: hydra-booking.php:1143
-msgid "Only one product id is allowed"
-msgstr ""
-
-#: hydra-booking.php:1139
-msgid "Product ID"
-msgstr ""
-
-#: hydra-booking.php:1148
-msgid "Product Name"
-msgstr ""
-
-#: hydra-booking.php:1156
-msgid "Product Price"
-msgstr ""
-
-#: hydra-booking.php:893
-msgid "Range of date"
-msgstr ""
-
-#: hydra-booking.php:917
-msgid "Ranges"
-msgstr ""
-
-#: hydra-booking.php:650 hydra-booking.php:693
-msgid "Required Field"
-msgstr ""
-
-#: hydra-booking.php:958 hydra-booking.php:1078
-msgid "Saturday"
-msgstr ""
-
-#: hydra-booking.php:963
-msgid "Select a date range to disable"
-msgstr ""
-
-#: hydra-booking.php:1072
-msgid "Select day"
-msgstr ""
-
-#: hydra-booking.php:952
-msgid "Select day to disable"
-msgstr ""
-
-#: hydra-booking.php:922
-msgid "Select Minimum & Maximum Date"
-msgstr ""
-
-#: hydra-booking.php:1134
-msgid "Select Product"
-msgstr ""
-
-#: hydra-booking.php:1010 hydra-booking.php:1091
-msgid "Select start & end time limit"
-msgstr ""
-
-#: hydra-booking.php:898
-msgid "Select Theme"
-msgstr ""
-
-#: hydra-booking.php:892
-msgid "Single date"
-msgstr ""
-
-#: hydra-booking.php:918 hydra-booking.php:1069
-msgid "Specific"
-msgstr ""
-
-#: hydra-booking.php:940
-msgid "Specific Date"
-msgstr ""
-
-#: hydra-booking.php:1083
-msgid "Specific Dates"
-msgstr ""
-
-#: hydra-booking.php:959 hydra-booking.php:1079
-msgid "Sunday"
-msgstr ""
-
-#: hydra-booking.php:1599
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:122
 #, php-format
-msgid ""
-"thb Addon - Booking / Appointment Form requires %1$s WooCommerce %2$s to be "
-"activated."
+msgid "New %s name"
 msgstr ""
 
-#: hydra-booking.php:611
-msgid "The time format is incorrect."
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:140
+#, php-format
+msgid "No %s"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:55
+#, php-format
+msgid "No %s found"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:57
+#, php-format
+msgid "No %s found in Trash"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:138
+#, php-format
+msgid "No %s found."
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:124
+#, php-format
+msgid "Parent %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:126
+#, php-format
+msgid "Parent : %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:130
+#, php-format
+msgid "Popular %s"
+msgstr ""
+
+#: app/Content/Template/meeting-form.php:127
+#: app/Content/Template/meeting-cencel.php:103
+msgid "Reason for Reschedule"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:65
+#, php-format
+msgid "Remove %s Image"
+msgstr ""
+
+#. %s: post type name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:53 includes/post-type/Post_Type.php:128
+#, php-format
+msgid "Search %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:132
+#, php-format
+msgid "Separate %s with commas"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:63
+#, php-format
+msgid "Set %s Image"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:67
+msgid "Settings"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:72
+msgid "Setup Wizard"
 msgstr ""
 
 #. Author of the plugin
 msgid "Themefic"
 msgstr ""
 
-#: hydra-booking.php:956 hydra-booking.php:1076
-msgid "Thursday"
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:118
+#, php-format
+msgid "Update %s name"
 msgstr ""
 
-#: hydra-booking.php:1055
-msgid "Time Break"
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:67
+#, php-format
+msgid "Use as %s Image"
 msgstr ""
 
-#: hydra-booking.php:990
-msgid "Time Configuration"
+#. %s: post type singular name
+#. %s: post type name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:49 includes/post-type/Post_Type.php:51
+#: includes/post-type/Post_Type.php:116
+#, php-format
+msgid "View %s"
 msgstr ""
 
-#: hydra-booking.php:1047
-msgid "Time Duration"
+#: app/Shortcode/HydraBookingShortcode.php:131
+msgid "You are rescheduling the booking:"
 msgstr ""
 
-#: hydra-booking.php:995
-msgid "Time Format for Frontend"
+#: admin/Controller/AdminMenu.php:101
+msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: hydra-booking.php:610
-msgid "Time format that the sender entered is invalid"
-msgstr ""
-
-#: hydra-booking.php:1044
-msgid "Time Interval"
-msgstr ""
-
-#: hydra-booking.php:993
-msgid "Time Settings"
-msgstr ""
-
-#: hydra-booking.php:545
-msgid "Timezone: "
-msgstr ""
-
-#: hydra-booking.php:1037
-msgid "To"
-msgstr ""
-
-#: hydra-booking.php:954 hydra-booking.php:1074
-msgid "Tuesday"
-msgstr ""
-
-#: hydra-booking.php:955 hydra-booking.php:1075
-msgid "Wednesday"
-msgstr ""
-
-#: hydra-booking.php:1110
-msgid "WooCommerce Configuration"
+#: app/Content/Template/meeting-cencel.php:30
+msgid "Your meeting has been "
 msgstr ""

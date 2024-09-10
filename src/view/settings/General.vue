@@ -151,19 +151,19 @@ onBeforeMount(() => {
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans['General Settings'] }}</h1> 
-                <p>{{ $tfhb_trans['Manage your time zone settings and bookings'] }}</p>
+                <h1 >{{ $tfhb_trans('General Settings') }}</h1> 
+                <p>{{ $tfhb_trans('Manage your time zone settings and bookings') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans['View Documentation'] }}  <Icon name="ArrowUpRight" size="20" /></a>
+                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}  <Icon name="ArrowUpRight" size="20" /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
           
             <!-- Date And Time --> 
             <div class="tfhb-admin-title" >
-                <h2>{{ $tfhb_trans['Date and Time'] }}</h2> 
-                <p>{{ $tfhb_trans['Date and Time Settings'] }}</p>
+                <h2>{{ $tfhb_trans('Date and Time') }}</h2> 
+                <p>{{ $tfhb_trans('Date and Time Settings') }}</p>
             </div>
             <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24">  
 
@@ -171,9 +171,9 @@ onBeforeMount(() => {
                 <HbText  
                     v-model="generalSettings.admin_email"  
                     required= "true"  
-                    :label="$tfhb_trans['Admin Email']"  
+                    :label="$tfhb_trans('Admin Email')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans['Type your Admin Email']" 
+                    :placeholder="$tfhb_trans('Type your Admin Email')" 
                     width="50"
                     @keyup="() => tfhbValidateInput('admin_email')"
                     @click="() => tfhbValidateInput('admin_email')"
@@ -185,7 +185,7 @@ onBeforeMount(() => {
                     
                     v-model="generalSettings.time_zone"  
                     required= "true"  
-                    :label="$tfhb_trans['Time zone']" 
+                    :label="$tfhb_trans('Time zone')" 
                     width="50" 
                     :filter="true"
                     selected = "1"
@@ -202,7 +202,7 @@ onBeforeMount(() => {
                     
                     v-model="generalSettings.time_format"  
                     required= "true" 
-                    :label="$tfhb_trans['Time format']"  
+                    :label="$tfhb_trans('Time format')"  
                     width="50"
                     :selected = "1"
                     placeholder="Select Time Format"   
@@ -221,7 +221,7 @@ onBeforeMount(() => {
                     
                     v-model="generalSettings.week_start_from"  
                     required= "true"  
-                    :label="$tfhb_trans['Week start from']"   
+                    :label="$tfhb_trans('Week start from')"   
                     width="50"
                     selected = "1"
                     placeholder="Select Time Format"  
@@ -246,7 +246,7 @@ onBeforeMount(() => {
                     
                     v-model="generalSettings.date_format"  
                     required= "true" 
-                    :label="$tfhb_trans['Date format']"   
+                    :label="$tfhb_trans('Date format')"   
                     width="50"
                     selected = "1"
                     placeholder="Select Date Format"   
@@ -266,7 +266,7 @@ onBeforeMount(() => {
                     required= "true"
                     width="50"
                     :filter="true" 
-                    :label="$tfhb_trans['Select country for phone code']"   
+                    :label="$tfhb_trans('Select country for phone code')"   
                     selected = "1"
                     placeholder="Select Country"  
                     :option = "countryList.value"
@@ -280,8 +280,8 @@ onBeforeMount(() => {
 
              <!--Bookings --> 
              <div  class="tfhb-admin-title">
-                <h2>{{ $tfhb_trans['Bookings'] }}</h2> 
-                <p>{{ $tfhb_trans['Manage your bookings and reservations'] }}</p>
+                <h2>{{ $tfhb_trans('Bookings') }}</h2> 
+                <p>{{ $tfhb_trans('Manage your bookings and reservations') }}</p>
             </div>
             <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24">  
                 <!-- Bookings will be completed automatically after -->
@@ -289,7 +289,7 @@ onBeforeMount(() => {
                     
                     v-model="generalSettings.after_booking_completed"  
                     required= "true" 
-                    :label="$tfhb_trans['Bookings will be completed automatically after']"    
+                    :label="$tfhb_trans('Bookings will be completed automatically after')"    
                     width="50"
                     selected = "1"
                     placeholder="Select Time"  
@@ -312,7 +312,7 @@ onBeforeMount(() => {
                     
                     v-model="generalSettings.allowed_reschedule_before_meeting_start"  
                     required= "true" 
-                    :label="$tfhb_trans['Minimum time required before Booking/Cancel/Reschedule']"  
+                    :label="$tfhb_trans('Minimum time required before Booking/Cancel/Reschedule')"  
                     selected = "1"
                     width="50"
                     placeholder="Select Time"  
@@ -333,7 +333,7 @@ onBeforeMount(() => {
                 <HbSwitch 
                     v-model="generalSettings.booking_status"
                     width="100"
-                    :label="$tfhb_trans['Confirmed bookings by default.']"  
+                    :label="$tfhb_trans('Confirmed bookings by default.')"  
                 />
                
                 <!-- Default status of bookings --> 
@@ -351,7 +351,7 @@ onBeforeMount(() => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="UpdateGeneralSettings" 
-                :buttonText="$tfhb_trans['Update General Settings']"
+                :buttonText="$tfhb_trans('Update General Settings')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

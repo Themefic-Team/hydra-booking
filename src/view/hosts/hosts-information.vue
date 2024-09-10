@@ -72,25 +72,25 @@ const tfhbValidateInput = (fieldName) => {
             <div class="tfhb-field-image" > 
                 <img v-if="host.avatar != ''"  class='avatar_display'  :src="host.avatar">
                 <img v-else  class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >
-                <button class="tfhb-image-btn tfhb-btn" @click="UploadImage">{{ $tfhb_trans['Change'] }}</button> 
+                <button class="tfhb-image-btn tfhb-btn" @click="UploadImage">{{ $tfhb_trans('Change') }}</button> 
                 <input  type="text"  :v-model="host.avatar"   />  
             </div>
             <div class="tfhb-image-box-content">  
-            <h4 v-if="label !=''" :for="name">{{ $tfhb_trans['Profile image'] }} <span  v-if="required == 'true'"> *</span> </h4>
-            <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans['Recommended Image Size: 400x400px'] }}</p>
+            <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Profile image') }} <span  v-if="required == 'true'"> *</span> </h4>
+            <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Recommended Image Size: 400x400px') }}</p>
             </div>
         </div> 
     </div>
     <div class="tfhb-admin-title" >
-        <h2>{{ $tfhb_trans['General Information'] }}    </h2>  
+        <h2>{{ $tfhb_trans('General Information') }}    </h2>  
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
         <HbText  
             v-model="host.first_name"  
             required= "true"  
-            :label="$tfhb_trans['First name']"  
+            :label="$tfhb_trans('First name')"  
             selected = "1"
-            :placeholder="$tfhb_trans['Type your first name']" 
+            :placeholder="$tfhb_trans('Type your first name')" 
             width="50"
             @keyup="() => tfhbValidateInput('first_name')"
             @click="() => tfhbValidateInput('first_name')"
@@ -99,9 +99,9 @@ const tfhbValidateInput = (fieldName) => {
         <HbText  
             v-model="host.last_name"  
             required= "true"  
-            :label="$tfhb_trans['Last name']"  
+            :label="$tfhb_trans('Last name')"  
             selected = "1"
-            :placeholder="$tfhb_trans['Type your last name']" 
+            :placeholder="$tfhb_trans('Type your last name')" 
             width="50"
             @keyup="() => tfhbValidateInput('last_name')"
             @click="() => tfhbValidateInput('last_name')"
@@ -110,9 +110,9 @@ const tfhbValidateInput = (fieldName) => {
         <HbText  
             v-model="host.email"  
             required= "true"  
-            :label="$tfhb_trans['Email']"  
+            :label="$tfhb_trans('Email')"  
             selected = "1"
-             :placeholder="$tfhb_trans['Type your email']" 
+             :placeholder="$tfhb_trans('Type your email')" 
             width="50"
             disabled="true"
         /> 
@@ -120,7 +120,7 @@ const tfhbValidateInput = (fieldName) => {
         <HbDropdown 
             v-model="host.time_zone"  
             required= "true"  
-            :label="$tfhb_trans['Time zone']"  
+            :label="$tfhb_trans('Time zone')"  
             selected = "1"
             :filter="true"
             placeholder="Select Time Zone"  
@@ -133,9 +133,9 @@ const tfhbValidateInput = (fieldName) => {
         <HbText  
             v-model="host.phone_number"  
             required= "true"  
-            :label="$tfhb_trans['Mobile']"  
+            :label="$tfhb_trans('Mobile')"  
             selected = "1"
-            :placeholder="$tfhb_trans['Type your mobile no']" 
+            :placeholder="$tfhb_trans('Type your mobile no')" 
             width="50" 
             @keyup="() => tfhbValidateInput('phone_number')"
             @click="() => tfhbValidateInput('phone_number')"
@@ -145,7 +145,7 @@ const tfhbValidateInput = (fieldName) => {
     <!-- Time Zone -->
     </div>   
     <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true"  class="tfhb-admin-title" >
-        <h2>{{ $tfhb_trans['Others Information'] }}    </h2>  
+        <h2>{{ $tfhb_trans('Others Information') }}    </h2>  
     </div>
     <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true && hosts_settings.others_information.fields" class="tfhb-admin-card-box tfhb-flexbox">  
        <div class="tfhb-host-single-information" v-for="(field, index) in hosts_settings.others_information.fields" :key="index">  
@@ -212,7 +212,7 @@ const tfhbValidateInput = (fieldName) => {
 
 
     <!--  Update Hosts Information -->
-    <button class="tfhb-btn boxed-btn" @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone', 'phone_number'])">{{ $tfhb_trans['Save'] }}</button>
+    <button class="tfhb-btn boxed-btn" @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone', 'phone_number'])">{{ $tfhb_trans('Save') }}</button>
 </template>
 
 

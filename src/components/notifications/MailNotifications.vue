@@ -68,7 +68,7 @@ const closePopup = () => {
 
         </div>
 
-        <button class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size="15" /> {{ $tfhb_trans['Edit'] }} </button>
+        <button class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size="15" /> {{ $tfhb_trans('Edit') }} </button>
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="700px" name="first-modal">
             <template #header> 
@@ -80,7 +80,7 @@ const closePopup = () => {
 
                 <HbSelect  
                     v-model="data.template"   
-                    :label="$tfhb_trans['Select Template']"  
+                    :label="$tfhb_trans('Select Template')"  
                     selected = "1"
                     placeholder="Select Template"  
                     :option = "{
@@ -92,28 +92,28 @@ const closePopup = () => {
                 <HbText  
                     v-model="props.data.form"   
                     type="email"   
-                    :label="$tfhb_trans['From']"  
+                    :label="$tfhb_trans('From')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans['Enter From Email']"  
+                    :placeholder="$tfhb_trans('Enter From Email')"  
                 /> 
 
                 <HbText  
                     v-model="props.data.subject"  
                     required= "true"  
-                    :label="$tfhb_trans['Subject']"  
+                    :label="$tfhb_trans('Subject')"  
                     selected = "1"
                     type = "text"
-                    :placeholder="$tfhb_trans['Enter Mail Subject']"  
+                    :placeholder="$tfhb_trans('Enter Mail Subject')"  
                 /> 
  
                 
                 <div class="tfhb-single-form-field" style="width: 100%;"  >
                     <div class="tfhb-single-form-field-wrap tfhb-field-input">
                         <!--if has label show label with tag else remove tags  --> 
-                        <label for="">{{$tfhb_trans['Mail Body']}}</label>  
+                        <label for="">{{$tfhb_trans('Mail Body')}}</label>  
                         <Editor 
                             v-model="props.data.body"  
-                            :placeholder="$tfhb_trans['Mail Body']"    
+                            :placeholder="$tfhb_trans('Mail Body')"    
                             editorStyle="height: 250px" 
                         />
                     </div> 
@@ -122,7 +122,7 @@ const closePopup = () => {
                     <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
 
                 </div>
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-notification')">{{ $tfhb_trans['Update'] }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-notification')">{{ $tfhb_trans('Update') }}</button>
             </template> 
         </HbPopup>
     </div>

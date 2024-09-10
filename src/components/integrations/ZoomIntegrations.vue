@@ -40,12 +40,12 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['Zoom'] }}</h3>
-                <p>{{ $tfhb_trans['Streamlined virtual meetings'] }}</p>
+                <h3>{{ $tfhb_trans('Zoom') }}</h3>
+                <p>{{ $tfhb_trans('Streamlined virtual meetings') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <span  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans['Not Configured'] }}  </span>
+            <span  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span>
             
             <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ zoom_meeting.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
             <!-- Checkbox swicher --> 
@@ -55,37 +55,37 @@ const closePopup = () => {
         <!-- <Transition name="zoom-in"> -->
             <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
                 <template #header> 
-                    <h2>{{ $tfhb_trans['Add New Zoom User Account'] }}</h2>
+                    <h2>{{ $tfhb_trans('Add New Zoom User Account') }}</h2>
                     
                 </template>
 
                 <template #content>  
                     <p>
-                        {{ $tfhb_trans['Please read the documentation here for step by step guide to know how you can get api credentials from Zoom Account'] }}
+                        {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Zoom Account') }}
                     </p>
                     <HbText  
                         v-model="zoom_meeting.account_id"  
                         required= "true"  
-                        :label="$tfhb_trans['Zoom Account ID']"  
+                        :label="$tfhb_trans('Zoom Account ID')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Your Account ID']"  
+                        :placeholder="$tfhb_trans('Enter Your Account ID')"  
                     /> 
                     <HbText  
                         v-model="zoom_meeting.app_client_id"  
                         required= "true"  
-                        :label="$tfhb_trans['Zoom App Client ID']"  
+                        :label="$tfhb_trans('Zoom App Client ID')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Your App Client ID']"  
+                        :placeholder="$tfhb_trans('Enter Your App Client ID')"  
                     /> 
                     <HbText  
                         v-model="zoom_meeting.app_secret_key"  
                         required= "true"  
-                        :label="$tfhb_trans['Zoom App Secret Key']"  
+                        :label="$tfhb_trans('Zoom App Secret Key')"  
                         selected = "1"
                         type = "password"
-                        :placeholder="$tfhb_trans['Enter Your App Secret Key']"  
+                        :placeholder="$tfhb_trans('Enter Your App Secret Key')"  
                     /> 
-                    <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'zoom_meeting', zoom_meeting)">{{ $tfhb_trans['Save & Validate'] }}</button>
+                    <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'zoom_meeting', zoom_meeting)">{{ $tfhb_trans('Save & Validate') }}</button>
                 </template> 
             </HbPopup>
         <!-- </Transition > -->

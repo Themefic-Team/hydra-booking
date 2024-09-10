@@ -274,7 +274,7 @@ const tfhbValidateInput = (fieldName) => {
 <template> 
 <HbPopup :isOpen="props.isOpen" :max_width="max_width" :enableAvailabilityClass="true" @modal-close="emit('modal-close')"  name="first-modal">
         <template #header> 
-            <h2> {{ $tfhb_trans['Add New Availability'] }} </h2>   
+            <h2> {{ $tfhb_trans('Add New Availability') }} </h2>   
         </template>
 
         <template #content>   
@@ -284,7 +284,7 @@ const tfhbValidateInput = (fieldName) => {
                     <HbText  
                         v-model="props.availabilityDataSingle.title"  
                         required= "true"  
-                        :label="$tfhb_trans['Title']"  
+                        :label="$tfhb_trans('Title')"  
                         selected = "1"
                         placeholder="Type your schedule title"   
                         @keyup="() => tfhbValidateInput('title')"
@@ -297,7 +297,7 @@ const tfhbValidateInput = (fieldName) => {
                             
                         v-model="props.availabilityDataSingle.time_zone"  
                         required= "true"  
-                        :label="$tfhb_trans['Time zone']"  
+                        :label="$tfhb_trans('Time zone')"  
                         selected = "1"
                         :filter="true"
                         placeholder="Select Time Zone"  
@@ -313,7 +313,7 @@ const tfhbValidateInput = (fieldName) => {
                     <div class="tfhb-admin-card-box ">  
                         <div  class="tfhb-dashboard-heading ">
                             <div class="tfhb-admin-title"> 
-                                <h3> {{ $tfhb_trans['Weekly hours'] }} </h3>  
+                                <h3> {{ $tfhb_trans('Weekly hours') }} </h3>  
                             </div>
                             <div class="thb-admin-btn right"> 
                                 <span>{{props.availabilityDataSingle.time_zone}}</span> 
@@ -376,8 +376,8 @@ const tfhbValidateInput = (fieldName) => {
 
                             <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
                                 <div class="tfhb-admin-title"> 
-                                    <h3>{{ $tfhb_trans['Add date overrides'] }}</h3>  
-                                    <p>{{ $tfhb_trans['Add dates when your availability changes from your daily hours'] }}</p>
+                                    <h3>{{ $tfhb_trans('Add date overrides') }}</h3>  
+                                    <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
                                 </div> 
                             </div>
 
@@ -418,7 +418,7 @@ const tfhbValidateInput = (fieldName) => {
                                         /> 
                                     </div>
                                     <div class="tfhb-override-times">
-                                        <h3>{{ $tfhb_trans['Which hours are you free?'] }}</h3>
+                                        <h3>{{ $tfhb_trans('Which hours are you free?') }}</h3>
 
                                         <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
                                             <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-16">
@@ -454,7 +454,7 @@ const tfhbValidateInput = (fieldName) => {
                                         <div class="tfhb-mark-unavailable tfhb-full-width tfhb-mt-16">
                                             <HbCheckbox 
                                                 v-model="OverridesDates.available"
-                                                :label="$tfhb_trans['Mark unavailable (All day)']"
+                                                :label="$tfhb_trans('Mark unavailable (All day)')"
                                                 :name="'mark_unavailable'+key"
                                             />
                                         </div>
@@ -463,15 +463,15 @@ const tfhbValidateInput = (fieldName) => {
                                 </div>
 
                                 <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                                    <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ $tfhb_trans['Cancel'] }}</button>
-                                    <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ $tfhb_trans['Add override'] }}</button>
+                                    <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ $tfhb_trans('Cancel') }}</button>
+                                    <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ $tfhb_trans('Add override') }}</button>
                                 </div>
                             </div>
 
 
                             <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
                                 <Icon name="PlusCircle" :width="20"/>
-                                {{ $tfhb_trans['Add an override'] }}
+                                {{ $tfhb_trans('Add an override') }}
                             </button>
                             
                         </div>  
@@ -486,12 +486,12 @@ const tfhbValidateInput = (fieldName) => {
                     <HbButton 
                             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                             @click="UpdateAvailabilitySettings(['title', 'time_zone'])" 
-                            :buttonText="is_host ? $tfhb_trans['Save Availability'] : $tfhb_trans['Update Availability']"
+                            :buttonText="is_host ? $tfhb_trans('Save Availability') : $tfhb_trans('Update Availability')"
                             icon="ChevronRight" 
                             hover_icon="ArrowRight" 
                             :hover_animation="true"
                         />  
-                    <!-- <button class="tfhb-btn boxed-btn" @click="UpdateAvailabilitySettings(['title', 'time_zone'])">{{ is_host ? $tfhb_trans['Save Availability'] : $tfhb_trans['Update Availability'] }}</button> -->
+                    <!-- <button class="tfhb-btn boxed-btn" @click="UpdateAvailabilitySettings(['title', 'time_zone'])">{{ is_host ? $tfhb_trans('Save Availability') : $tfhb_trans('Update Availability') }}</button> -->
                 </div>
             </div>
         </template> 

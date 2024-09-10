@@ -42,7 +42,7 @@ const ShareTabs = (tab) => {
                                 <Icon name="Clock" size="16" />  
                             </div>
                             <div class="user-info-title">
-                                {{ props.shareData.time }} {{ $tfhb_trans['minutes'] }}
+                                {{ props.shareData.time }} {{ $tfhb_trans('minutes') }}
                             </div>
                         </div>
                     </li>
@@ -54,7 +54,7 @@ const ShareTabs = (tab) => {
                                 <Icon name="UserRound" size="16" /> 
                             </div>
                             <div class="user-info-title">
-                                {{ $tfhb_trans['One to One'] }}
+                                {{ $tfhb_trans('One to One') }}
                             </div>
                         </div>
                         <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==props.shareData.meeting_type">
@@ -64,7 +64,7 @@ const ShareTabs = (tab) => {
                                 <Icon name="UsersRound" size="16" /> 
                             </div>
                             <div class="user-info-title">
-                                {{ $tfhb_trans['One to Group'] }}
+                                {{ $tfhb_trans('One to Group') }}
                             </div>
                         </div>
                     </li>
@@ -72,8 +72,8 @@ const ShareTabs = (tab) => {
 
                 <div class="tfhb-share-type tfhb-full-width">
                     <ul class="tfhb-flexbox tfhb-gap-8">
-                        <li :class="'link'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans['Share link'] }}</li>
-                        <li :class="'short'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans['Short code'] }}</li>
+                        <li :class="'link'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
+                        <li :class="'short'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Short code') }}</li>
                         <li :class="'embed'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">Embed code</li>
                     </ul>
                 </div>
@@ -83,21 +83,21 @@ const ShareTabs = (tab) => {
                         <input type="text" :value="props.shareData.link" readonly>
 
                         <div class="tfhb-copy-btn ">
-                            <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(props.shareData.link)">{{ $tfhb_trans['Copy link'] }}</button>
+                            <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(props.shareData.link)">{{ $tfhb_trans('Copy link') }}</button>
                         </div>
                     </div>
                     <div class="share-link" v-if="'short'==props.shareData.share_type">
                         <input type="text" :value="props.shareData.shortcode" readonly>
 
                         <div class="tfhb-copy-btn">
-                            <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(props.shareData.shortcode)">{{ $tfhb_trans['Copy Code'] }}</button>
+                            <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(props.shareData.shortcode)">{{ $tfhb_trans('Copy Code') }}</button>
                         </div>
                     </div>
                     <div class="share-link" v-if="'embed'==props.shareData.share_type">
                         <input type="text" :value="props.shareData.embed" readonly>
 
                         <div class="tfhb-copy-btn">
-                            <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(props.shareData.embed)">{{ $tfhb_trans['Copy Code'] }}</button>
+                            <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(props.shareData.embed)">{{ $tfhb_trans('Copy Code') }}</button>
                         </div>
                     </div>
                 </div>
