@@ -305,46 +305,70 @@ class Booking {
 		return $columns;
 	}
 
-	public function importBooking( $data ) {
+	public function importBooking( $data ){
 		global $wpdb;
+		
 		$table_name = $wpdb->prefix . $this->table;
-		$columns    = $this->getColumns();
-		$columns    = array_column( $columns, 'name' );
-		$columns    = implode( ',', $columns );
-		$sql        = "INSERT INTO $table_name ($columns) VALUES ";
-		$i          = 0;
-		// remove the first row and get the columns
-		unset( $data[0] );
-		// also remove the first item of the
-		foreach ( $data as $key => $value ) {
-			if ( $value[0] == '' ) {
-				continue;
-			}
-			if ( $i == 0 ) {
-				$sql .= '(' . implode(
-					',',
-					array_map(
-						function ( $v ) {
-							return "'" . $v . "'";
-						},
-						$value
-					)
-				) . ')';
-			} else {
-				$sql .= ',(' . implode(
-					',',
-					array_map(
-						function ( $v ) {
-							return "'" . $v . "'";
-						},
-						$value
-					)
-				) . ')';
-			}
-			++$i;
+		// Define column names (ensure these match your database table structure)
+		 
+		$columns = array_keys($data[0]);
+		unset($columns['id']); 
+		// Build the SQL query
+		$values = [];
+		foreach ($data as $row) {
+			$escaped_values = array_map([$wpdb, 'prepare'], array_values($row));
+			$values[] = '(' . implode(',', $escaped_values) . ')';
 		}
-		// echo $sql;
-		// exit;
-		$wpdb->query( $sql );
+
+		$sql = "
+			INSERT INTO $table_name (" . implode(',', $columns) . ")
+			VALUES " . implode(', ', $values);
+
+		 
+		// Execute the query
+		$wpdb->query($sql);
 	}
+
+	// public function importBooking( $data ) {
+	// 	global $wpdb;
+	// 	$table_name = $wpdb->prefix . $this->table;
+	// 	$columns    = $this->getColumns();
+	// 	$columns    = array_column( $columns, 'name' );
+	// 	$columns    = implode( ',', $columns );
+	// 	$sql        = "INSERT INTO $table_name ($columns) VALUES ";
+	// 	$i          = 0;
+	// 	// remove the first row and get the columns
+	// 	unset( $data[0] );
+	// 	// also remove the first item of the
+	// 	foreach ( $data as $key => $value ) {
+	// 		if ( $value[0] == '' ) {
+	// 			continue;
+	// 		}
+	// 		if ( $i == 0 ) {
+	// 			$sql .= '(' . implode(
+	// 				',',
+	// 				array_map(
+	// 					function ( $v ) {
+	// 						return "'" . $v . "'";
+	// 					},
+	// 					$value
+	// 				)
+	// 			) . ')';
+	// 		} else {
+	// 			$sql .= ',(' . implode(
+	// 				',',
+	// 				array_map(
+	// 					function ( $v ) {
+	// 						return "'" . $v . "'";
+	// 					},
+	// 					$value
+	// 				)
+	// 			) . ')';
+	// 		}
+	// 		++$i;
+	// 	}
+	// 	// echo $sql;
+	// 	// exit;
+	// 	$wpdb->query( $sql );
+	// }
 }

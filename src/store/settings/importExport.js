@@ -88,11 +88,15 @@ const importExport = reactive({
                 // get first row as column
                 if (results.data.length > 0) {
                     importExport.booking.import_column = results.data[0];
-                }
-                 // make loop for column get value 
+                } 
+                
+
                 for (let i = 0; i < importExport.booking.import_column.length; i++) { 
+
+                   
                     let element = importExport.booking.import_column[i];
                     importExport.booking.rearrange_column[element] = importExport.booking.import_column[i];
+                    
                 } 
                  
             }
@@ -106,7 +110,8 @@ const importExport = reactive({
                 column: this.booking.rearrange_column
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
                 } 
             } );
     
