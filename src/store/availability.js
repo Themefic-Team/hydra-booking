@@ -20,14 +20,16 @@ const Availability = reactive({
             const availabilityData = await response.json();
 
             // with index
-            availabilityData.availability.forEach((available, index) => {
-                this.availabilities.push(
-                    {
-                        name: available.title,
-                        value: available.id,
-                    }
-                );
-            } );
+            if(this.availabilities.length == 0) {
+                availabilityData.availability.forEach((available, index) => {
+                    this.availabilities.push(
+                        {
+                            name: available.title,
+                            value: available.id,
+                        }
+                    );
+                } );
+            }
  
             // this.availabilities = availabilityData.availability.reduce((acc, available) => {
             //     acc[available.id] = available.title;

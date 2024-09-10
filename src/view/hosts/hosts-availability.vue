@@ -139,21 +139,28 @@ const closeModal = () => {
 const Settings_avalibility = ref();
 const fetchAvailabilitySingle = async (setting) => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/'+setting); 
+        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/'+setting, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_hosts'
+            } 
+        } );
         if (response.data.status) { 
             Settings_avalibility.value = response.data;
             console.log(response.data);
             Settings_avalibility.value.availability.time_slots = Availability.GeneralSettings.week_start_from ?  Availability.RearraingeWeekStart(Availability.GeneralSettings.week_start_from, Settings_avalibility.value.availability.time_slots) : Settings_avalibility.value.availability.time_slots;
             
+
         }
     } catch (error) {
         console.log(error);
     } 
 }
 
-const Settings_Avalibility_Callback = (e) => {
-    if(e.target.value){
-        fetchAvailabilitySingle(e.target.value);
+const Settings_Avalibility_Callback = (value) => {
+    // console.log(e);
+    if(value){
+        fetchAvailabilitySingle(value);
     }
 }
 
@@ -165,7 +172,8 @@ const fetchAvailabilitySettings = async () => {
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/availability', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_hosts'
             } 
         } );
         
@@ -263,7 +271,7 @@ const formatTimeSlots = (timeSlots) =>  {
 
 <template>
 <div class="tfhb-host-availability">
- 
+    <!-- {{host}} -->
     <div class="tfhb-availaility-tabs tfhb-mb-24">
         <ul class="tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
             <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'settings')"><Icon name="Heart" :width="20" /> {{ $tfhb_trans('Use existing availability') }}</li>

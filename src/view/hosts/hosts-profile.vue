@@ -85,6 +85,9 @@ const UpdateHostsInformation = async (validator_field) => {
                 router.push({ name: 'HostsAvailability' });
             }
             if("HostsAvailability"==route.name){
+                router.push({ name: 'HostsProfileCalendars' });
+            }
+            if("HostsProfileCalendars"==route.name){
                 router.push({ name: 'HostsProfileIntegrations' });
             }
         }else{

@@ -69,9 +69,15 @@ class GoogleCalendar {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAccessData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array($this, 'permission_callback'),
 			)
 		);
+	}
+	public function permission_callback() {
+		// get header data form request "capability' 
+		 
+		// check current user have capability
+		return current_user_can( 'tfhb_manage_hosts' );
 	}
 
 	public function GetAccessData() {

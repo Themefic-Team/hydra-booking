@@ -82,7 +82,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetSingleAvailabilitySettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Intrigation
