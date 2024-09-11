@@ -112,8 +112,8 @@ const Dashboard = reactive({
                     data: this.data.statistics.total_booked,
                     fill: true,
                     tension: 0.4,
-                    borderColor: '#F62881', 
-                    pointBackgroundColor: '#F62881', 
+                    borderColor: '$primary-default', 
+                    pointBackgroundColor: '$primary-default', 
                     backgroundColor: '#D9568F15'
                 },
                 {

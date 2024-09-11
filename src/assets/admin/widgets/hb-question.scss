@@ -8,16 +8,16 @@
             margin-top: 4px;
             border-radius: 4px;
             height: 40px;
-            border: 1px solid $ui50;
+            border: 1px solid $surface-border;
             &:focus, &:active {
                 outline: none;
                 box-shadow: none; 
-                color : $primaryi950 !important;
+                color : $primary-color !important;
             }
         }
         button{
             border-radius: 4px;
-            border: 1px solid $ui50;
+            border: 1px solid $surface-border;
             background: #fff;
             height: 24px;
             width: 24px;

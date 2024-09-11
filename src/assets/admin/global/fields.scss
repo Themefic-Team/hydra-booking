@@ -14,12 +14,12 @@
                 margin-top: 4px;
                 border-radius: 4px;
                 height: 40px;
-                border: 1px solid $ui50;
+                border: 1px solid $surface-border;
                 font-family: "Inter", sans-serif;
                 &:focus, &:active {
                     outline: none;
                     box-shadow: none; 
-                    color : $primaryi950 !important;
+                    color : $primary-color !important;
                 }
             }
         }
@@ -29,7 +29,7 @@
                 color: #8F707D !important;
             }
             .p-dropdown { 
-                border: 1px solid $ui50 !important; 
+                border: 1px solid $surface-border !important; 
                 box-shadow: none !important;
                 &.tfhb-required{
                     border: 1px solid red !important;
@@ -43,7 +43,7 @@
                 // }
             } 
             .p-dropdown:not(.p-disabled):hover,  .p-dropdown:not(.p-disabled).p-focus {
-                border-color: $ui900 !important;
+                border-color: $surface-border-hover !important;
             }
             span{
             margin: 0 !important;
@@ -56,19 +56,19 @@
                 min-width: 100%;
                 margin-top: 4px;
                 border-radius: 4px;
-                border: 1px solid $ui50;
+                border: 1px solid $surface-border;
                 background-color: transparent;
                 line-height: 20px;
                 height: 40px;
                 margin: 0;
                 box-shadow: none;
-                color: $ui500 !important;
+                color: $text-input !important;
                 font-family: "Inter", sans-serif;
                 &:focus, &:active {
                     outline: none;
                     box-shadow: none; 
-                    border-color: $ui900;
-                    color : $primaryi950 !important;
+                    border-color: $surface-border-hover;
+                    color : $primary-color !important;
                 }
             }
         }
@@ -95,8 +95,8 @@
             textarea{
                 height: 96px;
                 border-radius: 4px;
-                border: 1px solid $ui50;
-                color: $ui500;
+                border: 1px solid $surface-border;
+                color: $text-input;
                 font-size: 15px;
                 font-style: normal;
                 font-weight: 400;
@@ -116,9 +116,9 @@
                 left: 0px;
                 height: 20px;
                 width: 20px;
-                background-color: $ui50;
+                background-color: $surface-border;
                 border-radius: 3px;
-                border: 1px solid $ui50;
+                border: 1px solid $surface-border;
                 margin: 0 !important;
                 &:after {
                     content: "";
@@ -127,7 +127,7 @@
                     top: 2px;
                     width: 4px;
                     height: 8px;
-                    border: solid $ui50;
+                    border: solid $surface-border;
                     border-width: 0 3px 3px 0;
                     -webkit-transform: rotate(45deg);
                     -ms-transform: rotate(45deg);
@@ -137,7 +137,7 @@
             }
             
             label{
-                color: $ui800 !important;
+                color: $text-paragraph !important;
                 font-size: 15px !important;
                 font-style: normal;
                 font-weight: 400;
@@ -147,8 +147,8 @@
                 padding-left: 28px;
                 margin-right: 16px !important;
                 input:checked~.checkmark {
-                    background-color: $primaryi;
-                    border: 1px solid $primaryi;
+                    background-color: $primary-default;
+                    border: 1px solid $primary-default;
                 }
                 input:checked~.checkmark:after {
                     display: block;
@@ -166,7 +166,7 @@
             gap: 8px !important;
             justify-content: normal !important;
             label{
-                color: $ui800;
+                color: $text-paragraph;
                 font-size: 15px !important;
                 font-style: normal;
                 font-weight: 400;
@@ -255,7 +255,7 @@
             }
 
             :checked + label .image-box {
-                border-bottom: 4px solid #F62881; 
+                border-bottom: 4px solid $primary-default; 
             }
         }
     }

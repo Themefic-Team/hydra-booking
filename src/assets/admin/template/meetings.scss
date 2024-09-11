@@ -19,10 +19,10 @@
         gap: 16px !important;
         .tfhb-filter-btn{
             border-radius: 8px;
-            border: 1px solid $ui50;
+            border: 1px solid $surface-border;
             background: #fff;
             padding: 8px 24px;
-            color: $ui600;
+            color: $secondary-default;
             font-size: 15px;
             font-style: normal;
             font-weight: 400;
@@ -32,15 +32,15 @@
             cursor: pointer;
             height: 40px;
             &.active, &:hover{
-                border: 1px solid $ui50;
-                background: $primaryi50;
-                color: $primaryi;
+                border: 1px solid $surface-border;
+                background: $secondary-hover;
+                color: $primary-default;
             }
         } 
     }
     .tfhb-filter-box-content{
         border-radius: 8px;
-        border: 1px solid $ui50;
+        border: 1px solid $surface-border;
         background: #fff;
         box-shadow: 0px 8px 30px 0px rgba(40, 16, 26, 0.10);
         width: 350px;
@@ -48,11 +48,11 @@
         z-index: 99;
         .tfhb-filter-form{
             .tfhb-filter-category{
-                border-bottom: 1px solid $ui50; 
+                border-bottom: 1px solid $surface-border; 
                 padding-bottom: 24px;
                 .tfhb-host-filter-box{
                     border-radius: 8px;
-                    border: 1px solid $ui50;
+                    border: 1px solid $surface-border;
                     padding: 8px 8px 8px 12px;
                     height: 40px;
                     margin: 24px 24px 0 24px;
@@ -69,7 +69,7 @@
                         li{
                             width: 100% !important;
                             label{
-                                color: $ui600 !important;
+                                color: $secondary-default !important;
                                 font-size: 15px !important;
                                 font-style: normal;
                                 font-weight: 400 !important;
@@ -83,9 +83,9 @@
                                     left: 0px;
                                     height: 20px;
                                     width: 20px;
-                                    background-color: $ui50;
+                                    background-color: $surface-border;
                                     border-radius: 5px;
-                                    border: 1px solid $ui50;
+                                    border: 1px solid $surface-border;
                                     margin: 0 !important;
                                     &:after {
                                         content: "";
@@ -94,7 +94,7 @@
                                         top: 2px;
                                         width: 5px;
                                         height: 10px;
-                                        border: solid $ui50;
+                                        border: solid $surface-border;
                                         border-width: 0 3px 3px 0;
                                         -webkit-transform: rotate(45deg);
                                         -ms-transform: rotate(45deg);
@@ -103,8 +103,8 @@
                                     }
                                 }
                                 input:checked~.checkmark {
-                                    background-color: $primaryi;
-                                    border: 1px solid $primaryi;
+                                    background-color: $primary-default;
+                                    border: 1px solid $primary-default;
                                 }
                                 input:checked~.checkmark:after {
                                     display: block;
@@ -116,9 +116,9 @@
 
                             .tfhb-category-items{
                                 border-radius: 16px;
-                                background: $ui25;
+                                background: $surface-primary;
                                 padding: 4px 8px;
-                                color: $ui600;
+                                color: $secondary-default;
                                 text-align: center;
                                 font-size: 11px;
                                 font-style: normal;
@@ -135,12 +135,12 @@
             margin: 24px;
             a{
                 border-radius: 8px;
-                border: 1px solid $ui50;
+                border: 1px solid $surface-border;
                 background: #fff;
                 padding: 8px 24px;
                 justify-content: center !important;
                 gap: 8px !important;
-                color: $ui600;
+                color: $secondary-default;
                 font-size: 15px;
                 font-style: normal;
                 font-weight: 400;
@@ -156,7 +156,7 @@
         .tfhb-single-meeting{
             width: calc(33.333% - 16px);
             border-radius: 8px;
-            border: 1px solid $ui50;
+            border: 1px solid $surface-border;
             background: #fff;
             padding: 16px;
             box-sizing: border-box;
@@ -169,7 +169,7 @@
             .single-meeting-content-box{
                 flex-wrap: nowrap !important;
                 align-items: baseline !important;
-                border-bottom: 0.5px solid $ui50;
+                border-bottom: 0.5px solid $surface-border;
                 padding-bottom: 24px;
                 .single-meeting-content{
                     width: calc(100% - 20px);
@@ -196,7 +196,7 @@
                                         }
                                     }
                                     .user-info-title{
-                                        color: $ui600;
+                                        color: $secondary-default;
                                         font-size: 13px;
                                         font-style: normal;
                                         font-weight: 400;
@@ -207,17 +207,17 @@
                                     width: 100%;
                                     .booked-items{
                                         border-radius: 16px;
-                                        background: $primaryi50;
+                                        background: $secondary-hover;
                                         padding: 4px 8px;
                                         box-sizing: border-box;
                                         width: 114px;
                                         .user-info-icon{
                                             svg{
-                                                color: $primaryi;
+                                                color: $primary-default;
                                             }
                                         }
                                         .user-info-title{
-                                            color: $primaryi;
+                                            color: $primary-default;
                                             font-size: 11px;
                                             font-style: normal;
                                             font-weight: 400;
@@ -237,11 +237,11 @@
                 margin-top: 24px;
                 a{
                     border-radius: 8px;
-                    border: 1px solid $ui50;
+                    border: 1px solid $surface-border;
                     background: #fff;
                     padding: 6px 12px;
                     display: inline-block;
-                    color: $ui600;
+                    color: $secondary-default;
                     font-size: 13px;
                     font-style: normal;
                     font-weight: 400;
@@ -249,8 +249,8 @@
                     gap: 8px !important;
                     transition: .3s all ease;
                     &:hover{
-                        background:$primaryi;
-                        color: #ffffff;
+                        background:$primary-default;
+                        color: $primary-text;
                     }
                 }
             }
@@ -282,7 +282,7 @@
                     }
                     &:hover{
                         svg{
-                            color: $primaryi;
+                            color: $primary-default;
                         }
                     }
                 }
@@ -294,7 +294,7 @@
                 }
             }
             .tfhb-meeting-subtitle{
-                color: $ui600;
+                color: $secondary-default;
                 font-size: 13px;
                 font-style: normal;
                 font-weight: 400;
@@ -329,7 +329,7 @@
                      }
                 }
                 .tfhb-add-new-question{
-                    color: $primaryi;
+                    color: $primary-default;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -361,25 +361,25 @@
 
     .tfhb-meeting-type-card{
         border-radius: 8px;
-        border: 1px solid $ui50;
+        border: 1px solid $surface-border;
         background: #fff;
         transition: .3s all ease;
         cursor: pointer;
         &:hover{
-            border: 1px solid $primaryi;
-            background: $ui25;
+            border: 1px solid $primary-default;
+            background: $surface-primary;
         }
         .tfhb-meeting-type-content{
             width: calc(100% - 52px);
             h3{
-                color: $ui600 !important;
+                color: $secondary-default !important;
                 font-size: 17px;
                 font-style: normal;
                 line-height: 150%; /* 25.5px */ 
                 margin: 0 !important;
             }
             p{
-                color: $ui600;
+                color: $secondary-default;
                 font-size: 13px;
                 font-style: normal;
                 font-weight: 400;
@@ -397,7 +397,7 @@
         cursor: pointer;
         transition: 0.4s;
         &:hover{
-            color: $primaryi;
+            color: $primary-default;
         }
     }
     .tfhb-meeting-currency{
@@ -416,12 +416,12 @@
             margin-top: 0;
             border-radius: 0 4px 4px 0 !important;
             height: 40px;
-            border: 1px solid $ui50;
+            border: 1px solid $surface-border;
             border-left: 0px solid;
             &:focus, &:active {
                 outline: none;
                 box-shadow: none; 
-                color : $primaryi950 !important;
+                color : $primary-color !important;
             }
         }
     }
@@ -449,9 +449,9 @@
                     position: absolute;
                     height: 20px;
                     width: 20px;
-                    background-color: $ui50;
+                    background-color: $surface-border;
                     border-radius: 50%;
-                    border: 1px solid $ui50;
+                    border: 1px solid $surface-border;
                     margin: 0 !important;
                     &:after {
                         content: "";
@@ -460,7 +460,7 @@
                         top: 2px;
                         width: 4px;
                         height: 8px;
-                        border: solid $ui50;
+                        border: solid $surface-border;
                         border-width: 0 3px 3px 0;
                         -webkit-transform: rotate(45deg);
                         -ms-transform: rotate(45deg);
@@ -469,8 +469,8 @@
                     }
                 }
                 input:checked~.checkmark {
-                    background-color: $primaryi;
-                    border: 1px solid $primaryi;
+                    background-color: $primary-default;
+                    border: 1px solid $primary-default;
                 }
                 input:checked~.checkmark:after {
                     display: block;
@@ -519,7 +519,7 @@
                     padding: 8px 12px;
                     cursor: pointer;
                     &.active{
-                        color: #F62881;
+                        color: $primary-default;
                         font-size: 15px;
                         font-style: normal;
                         font-weight: 400;
@@ -574,7 +574,7 @@
                 padding: 3px 8px;
                 border-radius: 6px;
                 background-color: #FEE6F0;
-                color: #F62881;
+                color: $primary-default;
             }
         }
     }
