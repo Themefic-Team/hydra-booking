@@ -90,49 +90,7 @@ const timeAgo = (date) => {
 
 <style scoped>
 /* Your component styles go here */
-    .thb-admin-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 24px;
-        height: 60px;
-        background-color: #fff;
-        border-bottom: 1px solid #eaeaea;
-        border-radius: 8px;
-        box-shadow: 0 1px 1px rgba(0,0,0,.04);
-        /* margin-right: 16px; */
-        margin-bottom: 24px;
-    }
-    .thb-admin-header .header-navigation ul { 
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-    .thb-admin-header .header-navigation ul li {
-        display: inline-block; 
-
-    }
-    .thb-admin-header .header-navigation ul li a,
-    .thb-admin-header .header-navigation ul li a:focus { 
-        padding: 8px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        color: #301C25;
-        text-decoration: none;
-        outline: none;
-        box-shadow: none;
-        margin-left: 5px;
-    }
-    .tfhb-admin-header-title{
-        font-size: 24px;
-    }
-    .thb-admin-header .header-navigation ul li a:hover,
-    .thb-admin-header .header-navigation ul li a.active{
-        background-color:   #fee9f2;
-        color: #F62681;
-        border-radius: 4px;
-
-    }
+    
 </style>
 
 <style scoped>

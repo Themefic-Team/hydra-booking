@@ -10,7 +10,7 @@
                 input{
                     padding: 8px 8px 8px 12px;
                     min-width: 100%;
-                    border-radius: 4px;
+                    border-radius: $border-radius-small;
                     border: 1px solid $surface-border;
                     background-color: transparent;
                     line-height: 20px;
@@ -27,7 +27,7 @@
         }
     }
     .tfhb-booking-view{
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
         border: 1px solid #F6EEF2;
         background: #FFF;
         padding: 4px;
@@ -42,7 +42,7 @@
                     justify-content: center;
                     cursor: pointer;
                     &.active{
-                        border-radius: 4px;
+                        border-radius: $border-radius-small;
                         background: #FEE6F0;
                         svg{
                             color: $primary-default;
@@ -53,8 +53,8 @@
         }
     }
     .tfhb-booking-create{
-        border-radius: 16px;
-        background: #fff;
+        border-radius: $border-radius-large;
+        background: $surface-secondary;
         padding: 32px;
         width: 980px;
         margin: 0 auto;
@@ -86,7 +86,7 @@
                         button{
                             height: 24px;
                             width: 24px;
-                            border-radius: 8px;
+                            border-radius: $border-radius-medium;
                             border: 0.2px solid #E3CFD7;
                             background: #FFF;
                             padding: 0;
@@ -104,7 +104,7 @@
                                 &::before{
                                     color: $primary-default;
                                     border-color: $surface-background;
-                                    border-radius: 8px;
+                                    border-radius: $border-radius-medium;
                                     font-size: 20px;
                                 }
                             }
@@ -112,7 +112,7 @@
                         h2{
                             color: $text-title !important;
                             font-size: 22px;
-                            font-style: normal;
+                            
                             font-weight: 400 !important;
                             line-height: 112%;
                             margin: 0 !important;
@@ -126,7 +126,7 @@
                     margin-left: -117px;
                     top: -62px;
                     .fc-button-group{
-                        border-radius: 24px;
+                        border-radius: $border-radius-xlarge;
                         border: 1px solid #F6EEF2;
                         background: #FFF;
                         padding: 4px;
@@ -136,12 +136,12 @@
                             background: #FFF;
                             color: #8F707D;
                             font-size: 15px;
-                            font-style: normal;
+                            
                             font-weight: 400;
                             line-height: 24px; /* 160% */
                             border: 0px solid;
                             padding: 8px 12px;
-                            border-radius: 24px;
+                            border-radius: $border-radius-xlarge;
                             text-transform: capitalize;
                             &:focus{
                                 box-shadow: none;
@@ -159,7 +159,7 @@
                                     height: 7px;
                                     width: 7px;
                                     background: $primary-default;
-                                    border-radius: 50%;
+                                    border-radius: $border-radius-full; 
                                     top: 50%;
                                     margin-top: -3.5px;
                                 }
@@ -188,7 +188,7 @@
                                 a{
                                     color: #765664;
                                     font-size: 15px;
-                                    font-style: normal;
+                                    
                                     font-weight: 400;
                                     line-height: 24px; /* 160% */
                                     padding: 8px;
@@ -214,7 +214,7 @@
                                 a{
                                     color: #211319;
                                     font-size: 15px;
-                                    font-style: normal;
+                                    
                                     font-weight: 600;
                                     line-height: 24px; /* 160% */
                                 }
@@ -230,7 +230,7 @@
                                         overflow: hidden;
                                         text-overflow: ellipsis;
                                         font-size: 13px;
-                                        font-style: normal;
+                                        
                                         font-weight: 600;
                                         line-height: 20px; /* 153.846% */
                                         padding: 0;
@@ -241,7 +241,7 @@
                                             width: 100%;
                                             border-left: 1px solid #002AB3;
                                             background: #EBEFFF;
-                                            border-radius: 8px;
+                                            border-radius: $border-radius-medium;
                                             display: block;
                                             line-height: 15px;
                                             cursor: pointer;
@@ -260,14 +260,14 @@
                             }
                             .fc-daygrid-day-bottom{
                                 a.fc-more-link{
-                                    border-radius: 16px;
+                                    border-radius: $border-radius-large;
                                     border: 1px solid $primary-default;
                                     background: #FAF5F7;
                                     overflow: hidden;
                                     color: $primary-default;
                                     text-overflow: ellipsis;
                                     font-size: 13px;
-                                    font-style: normal;
+                                    
                                     font-weight: 600;
                                     line-height: 20px; /* 153.846% */
                                     padding: 6px 8px;
@@ -302,7 +302,7 @@
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
                                                 font-size: 13px;
-                                                font-style: normal;
+                                                
                                                 font-weight: 600;
                                                 line-height: 20px; /* 153.846% */
                                                 padding: 0;
@@ -313,7 +313,7 @@
                                                     width: 100%;
                                                     border-left: 1px solid #002AB3;
                                                     background: #EBEFFF;
-                                                    border-radius: 8px;
+                                                    border-radius: $border-radius-medium;
                                                     display: block;
                                                     line-height: 15px;
                                                     cursor: pointer;
@@ -348,7 +348,7 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         font-size: 13px;
-                        font-style: normal;
+                        
                         font-weight: 600;
                         line-height: 20px; /* 153.846% */
                         padding: 0;
@@ -359,7 +359,7 @@
                             width: 100%;
                             border-left: 1px solid #002AB3;
                             background: #EBEFFF;
-                            border-radius: 8px;
+                            border-radius: $border-radius-medium;
                             display: block;
                             line-height: 15px;
                             cursor: pointer;
@@ -398,7 +398,7 @@
             }
             .tfhb-single-form-field-wrap{
                 .tfhb-time-date-view{
-                    border-radius: 4px;
+                    border-radius: $border-radius-small;
                     border: 1px solid #F6EEF2;
                     background-color: transparent;
                     padding: 8px 8px 8px 12px;
@@ -419,12 +419,12 @@
                     padding-left: 16px;
                     padding-right: 16px;
                     &.tfhb-warning{
-                        border-radius: 8px;
+                        border-radius: $border-radius-medium;
                         border: 1px solid #AC0C22;
                         background: #FEECEE;
                         color: #AC0C22;
                         font-size: 15px;
-                        font-style: normal;
+                        
                         font-weight: 600;
                         line-height: 24px; /* 160% */
 
@@ -439,7 +439,7 @@
    
     table{
         width: 100%;
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
         background: $surface-border;
         thead{
             border-bottom: 1px solid $surface-border;
@@ -447,7 +447,7 @@
                 padding: 12px 16px;
                 color: $text-paragraph;
                 font-size: 15px;
-                font-style: normal;
+                
                 font-weight: 400;
                 line-height: 24px; /* 160% */
                 text-align: left;
@@ -495,12 +495,12 @@
         }
         tbody{
             tr{
-                background-color: #fff;
+                background-color: $surface-secondary;
                 td{
                     padding: 16px;
                     color: $text-paragraph;
                     font-size: 15px;
-                    font-style: normal;
+                    
                     font-weight: 400;
                     line-height: 24px;
                     border: 0px solid;
@@ -562,13 +562,13 @@
                     }
                     .tfhb-details-status{
                         .status{
-                            border-radius: 16px;
+                            border-radius: $border-radius-large;
                             background: $warning-background-secondary;
                             padding: 2px 8px;
                             color: $alert-text;
                             text-align: center;
                             font-size: 11px;
-                            font-style: normal;
+                            
                             font-weight: 400;
                             line-height: 16px; /* 145.455% */
                             text-transform: capitalize;
@@ -606,11 +606,11 @@
                                     
                                     li{
                                         padding: 8px 12px; 
-                                        border-radius: 4px; 
+                                        border-radius: $border-radius-small; 
                                         background: $success-background; 
                                         color: $success-text;
                                         font-size: 15px;
-                                        font-style: normal;
+                                        
                                         font-weight: 400;
                                         line-height: 24px; /* 160% */
                                         width: 100%;
@@ -651,7 +651,7 @@
             h4{
                 color: $text-paragraph !important;
                 font-size: 13px;
-                font-style: normal;
+                
                 font-weight: 400 !important;
                 line-height: 20px; /* 153.846% */
                 margin: 0 0 12px 0 !important;
@@ -659,7 +659,7 @@
             p{
                 color: $secondary-default !important;
                 font-size: 15px !important;
-                font-style: normal;
+                
                 font-weight: 400;
                 line-height: 24px; /* 160% */
                 margin: 0 !important;

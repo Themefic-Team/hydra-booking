@@ -8,7 +8,7 @@
     border: none ;
     &.boxed-btn {
         padding: 8px 24px; 
-        border-radius: 8px; 
+        border-radius: $border-radius-medium; 
         background-color: $primary-default;
        
         color: $primary-text;
@@ -22,18 +22,18 @@
             color: $primary-text !important;
         }
     }
-    &.boxed-secondary-btn {
+    &.tab-btn {
         padding: 8px 12px; 
-        border-radius: 4px;
-        background: #fff;
-        box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+        border-radius: $border-radius-small;
+        background: $surface-secondary;
+        box-shadow: $btn-box-shadow;
         border: 0px solid;
         cursor: pointer;
         color: $secondary-default;
         &:hover, &:focus, &.active {
             background: $secondary-hover;
             color: $primary-default;
-            box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+            box-shadow: $btn-box-shadow;
         }
         span{
             color: $secondary-default !important;
@@ -41,11 +41,11 @@
     }
     &.secondary-btn{
         padding: 8px 24px; 
-        border-radius: 8px; 
+        border-radius: $border-radius-medium; 
         border: 1px solid $surface-border;
-        background: #fff;
+        background: $surface-secondary;
         color: $secondary-default;
-        font-style: normal;
+        
         font-weight: 400;
     }
     &.flex-btn{
@@ -61,11 +61,11 @@
     }
     &.tfhb-icon-hover-animation{
         &:hover svg{
-            transition: 0.4s !important;
+            transition:$transition !important;
             // transform: translateX(8px);
         }
         svg {
-            transition: 0.4s !important;
+            transition:$transition !important;
         }
     }
    
@@ -78,7 +78,7 @@
         font-size: 15px !important;
         font-weight: 400;
         line-height: 24px;
-        transition: 0.4s !important;
+        transition:$transition !important;
         margin: 0 !important;
         display: inline-flex;
     }
@@ -96,7 +96,7 @@
             height: 20px;
             border: 2px solid $primary-default;
             border-top-color: transparent;
-            border-radius: 50%;
+            border-radius: $border-radius-full; 
             animation: spin 1s linear infinite;
         }
         @keyframes spin {

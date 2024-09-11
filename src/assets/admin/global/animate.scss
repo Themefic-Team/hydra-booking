@@ -30,7 +30,7 @@
 .tfhb-popup-open {
     visibility: visible !important;
     opacity: 1 !important; 
-    transition: 0.4s;
+    transition:$transition;
 } 
 
 

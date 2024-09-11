@@ -18,13 +18,13 @@
     .tfhb-filter-box{
         gap: 16px !important;
         .tfhb-filter-btn{
-            border-radius: 8px;
+            border-radius: $border-radius-medium;
             border: 1px solid $surface-border;
-            background: #fff;
+            background: $surface-secondary;
             padding: 8px 24px;
             color: $secondary-default;
             font-size: 15px;
-            font-style: normal;
+            
             font-weight: 400;
             line-height: 24px;
             justify-content: normal !important;
@@ -39,10 +39,10 @@
         } 
     }
     .tfhb-filter-box-content{
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
         border: 1px solid $surface-border;
-        background: #fff;
-        box-shadow: 0px 8px 30px 0px rgba(40, 16, 26, 0.10);
+        background: $surface-secondary;
+        box-shadow: $filter-box-shadow ;
         width: 350px;
         position: absolute;
         z-index: 99;
@@ -51,7 +51,7 @@
                 border-bottom: 1px solid $surface-border; 
                 padding-bottom: 24px;
                 .tfhb-host-filter-box{
-                    border-radius: 8px;
+                    border-radius: $border-radius-medium;
                     border: 1px solid $surface-border;
                     padding: 8px 8px 8px 12px;
                     height: 40px;
@@ -59,9 +59,9 @@
                     cursor: pointer;
                 }
                 .tfhb-filter-category-box{
-                    border-radius: 8px;
-                    background: #fff;
-                    box-shadow: 0px 15px 30px 0px rgba(40, 16, 26, 0.10);
+                    border-radius: $border-radius-medium;
+                    background: $surface-secondary;
+                    box-shadow: $filter-box-shadow;
                     padding: 16px;
                     margin: 2px 24px 0 24px;
                     ul{
@@ -71,7 +71,7 @@
                             label{
                                 color: $secondary-default !important;
                                 font-size: 15px !important;
-                                font-style: normal;
+                                
                                 font-weight: 400 !important;
                                 line-height: 24px !important;
                                 margin: 0 !important;
@@ -115,13 +115,13 @@
                             }
 
                             .tfhb-category-items{
-                                border-radius: 16px;
+                                border-radius: $border-radius-large;
                                 background: $surface-primary;
                                 padding: 4px 8px;
                                 color: $secondary-default;
                                 text-align: center;
                                 font-size: 11px;
-                                font-style: normal;
+                                
                                 font-weight: 400;
                                 line-height: 16px; /* 145.455% */
                             }
@@ -134,15 +134,15 @@
         .tfhb-reset-btn{
             margin: 24px;
             a{
-                border-radius: 8px;
+                border-radius: $border-radius-medium;
                 border: 1px solid $surface-border;
-                background: #fff;
+                background: $surface-secondary;
                 padding: 8px 24px;
                 justify-content: center !important;
                 gap: 8px !important;
                 color: $secondary-default;
                 font-size: 15px;
-                font-style: normal;
+                
                 font-weight: 400;
                 line-height: 24px; /* 160% */
             }
@@ -155,9 +155,9 @@
         justify-content: normal;
         .tfhb-single-meeting{
             width: calc(33.333% - 16px);
-            border-radius: 8px;
+            border-radius: $border-radius-medium;
             border: 1px solid $surface-border;
-            background: #fff;
+            background: $surface-secondary;
             padding: 16px;
             box-sizing: border-box;
             @media #{$max1240}{
@@ -175,7 +175,7 @@
                     width: calc(100% - 20px);
                     h3{
                         font-size: 15px;
-                        font-style: normal;
+                        
                         font-weight: 400 !important;
                         line-height: 24px;
                         margin: 0 !important;
@@ -198,7 +198,7 @@
                                     .user-info-title{
                                         color: $secondary-default;
                                         font-size: 13px;
-                                        font-style: normal;
+                                        
                                         font-weight: 400;
                                         line-height: 20px;
                                     }
@@ -206,7 +206,7 @@
                                 &.tfhb-booked-items{
                                     width: 100%;
                                     .booked-items{
-                                        border-radius: 16px;
+                                        border-radius: $border-radius-large;
                                         background: $secondary-hover;
                                         padding: 4px 8px;
                                         box-sizing: border-box;
@@ -219,7 +219,7 @@
                                         .user-info-title{
                                             color: $primary-default;
                                             font-size: 11px;
-                                            font-style: normal;
+                                            
                                             font-weight: 400;
                                             line-height: 16px; /* 145.455% */
                                         }
@@ -236,14 +236,14 @@
             .single-meeting-action-btn{
                 margin-top: 24px;
                 a{
-                    border-radius: 8px;
+                    border-radius: $border-radius-medium;
                     border: 1px solid $surface-border;
-                    background: #fff;
+                    background: $surface-secondary;
                     padding: 6px 12px;
                     display: inline-block;
                     color: $secondary-default;
                     font-size: 13px;
-                    font-style: normal;
+                    
                     font-weight: 400;
                     line-height: 20px; /* 153.846% */
                     gap: 8px !important;
@@ -260,8 +260,8 @@
 
     // Meeting Create
     .tfhb-meeting-create{
-        border-radius: 16px;
-        background: #fff;
+        border-radius: $border-radius-large;
+        background: $surface-secondary;
         padding: 24px; 
         width: 980px;
         margin: 0 auto;
@@ -288,7 +288,7 @@
                 }
                 h3{
                     font-size: 17px;
-                    font-style: normal;
+                    
                     line-height: 150%; /* 25.5px */
                     margin: 0px !important;
                 }
@@ -296,7 +296,7 @@
             .tfhb-meeting-subtitle{
                 color: $secondary-default;
                 font-size: 13px;
-                font-style: normal;
+                
                 font-weight: 400;
                 line-height: 20px; /* 153.846% */
                 padding-left: 22px;
@@ -331,7 +331,7 @@
                 .tfhb-add-new-question{
                     color: $primary-default;
                     font-size: 15px;
-                    font-style: normal;
+                    
                     font-weight: 400;
                     line-height: 24px; /* 160% */
                     cursor: pointer;
@@ -341,9 +341,9 @@
         }
     }
     .tfhb-question-popup{
-        border-radius: 8px;
-        background: #fff;
-        box-shadow: 0px 8px 30px 0px rgba(40, 16, 26, 0.10);
+        border-radius: $border-radius-medium;
+        background: $surface-secondary;
+        box-shadow: $filter-box-shadow ;
         width: 400px;
         box-sizing: border-box;
         position: fixed;
@@ -360,9 +360,9 @@
     }
 
     .tfhb-meeting-type-card{
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
         border: 1px solid $surface-border;
-        background: #fff;
+        background: $surface-secondary;
         transition: .3s all ease;
         cursor: pointer;
         &:hover{
@@ -374,14 +374,14 @@
             h3{
                 color: $secondary-default !important;
                 font-size: 17px;
-                font-style: normal;
+                
                 line-height: 150%; /* 25.5px */ 
                 margin: 0 !important;
             }
             p{
                 color: $secondary-default;
                 font-size: 13px;
-                font-style: normal;
+                
                 font-weight: 400;
                 line-height: 20px; /* 153.846% */
                 margin: 10px 0 0 0 !important;
@@ -395,7 +395,7 @@
     .tfhb-meeting-location-removed{
         margin-top: 24px;
         cursor: pointer;
-        transition: 0.4s;
+        transition:$transition;
         &:hover{
             color: $primary-default;
         }
@@ -450,7 +450,7 @@
                     height: 20px;
                     width: 20px;
                     background-color: $surface-border;
-                    border-radius: 50%;
+                    border-radius: $border-radius-full; 
                     border: 1px solid $surface-border;
                     margin: 0 !important;
                     &:after {
@@ -479,12 +479,12 @@
             label{
                 h4{
                     font-size: 15px !important;
-                    font-style: normal;
+                    
                     font-weight: 400 !important;
                     line-height: 24px; /* 160% */
                 }
                 p{
-                    font-style: normal;
+                    
                 }
             }
             .tfhb-availability-schedule-time{
@@ -505,7 +505,7 @@
             display: flex;
             justify-content: center;
             ul{
-                border-radius: 8px;
+                border-radius: $border-radius-medium;
                 border: 1px solid#F6EEF2;
                 background: #FAF5F7;
                 padding: 6px !important;
@@ -513,7 +513,7 @@
                 li{
                     color: #8F707D;
                     font-size: 15px;
-                    font-style: normal;
+                    
                     font-weight: 400;
                     line-height: 24px; /* 160% */
                     padding: 8px 12px;
@@ -521,24 +521,24 @@
                     &.active{
                         color: $primary-default;
                         font-size: 15px;
-                        font-style: normal;
+                        
                         font-weight: 400;
                         line-height: 24px; /* 160% */
-                        border-radius: 4px;
+                        border-radius: $border-radius-small;
                         background: #FEE6F0;
-                        box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+                        box-shadow: $btn-box-shadow;
                     }
                 }
             }
         }
         .tfhb-shareing-data{
             input{
-                border-radius: 4px;
+                border-radius: $border-radius-small;
                 border: 1px solid #F6EEF2;  
                 padding: 8px 8px 8px 12px; 
                 color: #3F2731;
                 font-size: 15px;
-                font-style: normal;
+                
                 font-weight: 400;
                 line-height: 24px; /* 160% */
                 width: 100%;
@@ -611,7 +611,7 @@
                     display: block;
                     padding: 8px 12px 8px 12px;
                     border-radius: 4px 0px 0px 0px;
-                    background-color: #fff;
+                    background-color: $surface-secondary;
                     margin: 0 !important;
                     cursor: pointer;
                     &:hover{

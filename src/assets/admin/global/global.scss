@@ -15,7 +15,8 @@
     span,
     label {
         font-family: 'Inter', sans-serif;
-        margin: 0;
+        margin: 0; 
+        font-style: normal;
     }
     .lucide {
         stroke-width: 1.5;
@@ -93,7 +94,7 @@
             padding: 5px 10px;
             border-radius: 6px;
             min-width: 150px;
-            border-radius: 8px;
+            border-radius: $border-radius-medium;
             /* Position the tooltip */
             position: absolute;
             z-index: 1;
@@ -129,8 +130,8 @@
 
     // Button
     .tfhb-badge{ 
-        // box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
-        border-radius: 4px;
+        // box-shadow: $btn-box-shadow;
+        border-radius: $border-radius-small;
         padding: 4px 8px; 
         color: $primary-default !important;
         background-color: $secondary-hover;
@@ -244,7 +245,7 @@
     .tfhb-mail-shortcode-badge {
         background-color: $surface-primary;
         padding: 4px 8px 4px 8px;
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
         cursor: pointer;
     }
     .tfhb-mail-shortcode-badge:hover {
@@ -291,14 +292,14 @@
     }
 	.tfhb-admin-card-box {
         padding: 24px;
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
         border: 1px solid $surface-border;
         margin-bottom: 32px;
     }
     .tfhb-booking-tabs {
         background: $surface-primary;
         border: 1px solid $surface-border;
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
         padding: 6px;
         margin-bottom: 24px;
         ul {
@@ -313,7 +314,7 @@
               font-size: 15px;
               align-items: center;
               gap: 8px;
-              border-radius: 4px;
+              border-radius: $border-radius-small;
               color: $text-input;
               font-weight: 400;
               &.active {
@@ -344,8 +345,8 @@
             }
             .tfhb-mega-dropdown-heading {
                 padding: 8px 24px 8px 24px;
-                background-color: #fff;
-                border-radius: 8px;
+                background-color: $surface-secondary;
+                border-radius: $border-radius-medium;
                 border: 1px solid $surface-border;
                 font-size: 15px !important;
               }
@@ -359,7 +360,7 @@
             top: 100%;
             right:  0;
             width: 120px;
-            box-shadow: 0px 15px 30px 0px #28101A1A;
+            box-shadow: $dropdown-box-shadow ;
             background-color: $surface-primary;
             padding: 2px;
             border-radius: 6px;
@@ -379,7 +380,7 @@
                 display: block; 
                 padding: 8px 12px 8px 12px;
                 border-radius: 4px 0px 0px 0px; 
-                background-color: #fff;
+                background-color: $surface-secondary;
                 margin: 0 !important;
                 color: $text-paragraph;
                 &.tfhb-dropdown-error{
@@ -445,7 +446,7 @@
                     background-color: $primary-text;
                     -webkit-transition: .4s;
                     transition: .4s;
-                    border-radius: 50%;
+                    border-radius: $border-radius-full; 
                 }
                 
             }
@@ -471,7 +472,7 @@
         
         
         .slider.round:before {
-            border-radius: 50%;
+            border-radius: $border-radius-full; 
         }
         .tfhb-schedule-swicher{
             margin-left: 10px !important; 
@@ -479,9 +480,60 @@
         }
     }
 
+    // Header Section 
+
+    .thb-admin-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        height: 60px;
+        background-color: $surface-secondary; 
+        border-bottom: 1px solid #eaeaea;
+        border-radius: $border-radius-medium; 
+        box-shadow: 0 1px 1px rgba(0,0,0,.04);
+        /* margin-right: 16px; */
+        margin-bottom: 24px;
+
+        .tfhb-admin-header-title{
+            font-size: 24px;
+        }
+
+        .header-navigation ul { 
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            li {
+                display: inline-block; 
+ 
+                a{
+                    &:focus { 
+                        padding: 8px 16px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: #301C25;
+                        text-decoration: none;
+                        outline: none;
+                        box-shadow: none;
+                        margin-left: 5px;
+                    }
+                    .active, &:hover{
+                        background-color:   #fee9f2;
+                        color: #F62681;
+                        border-radius: $border-radius-small;
+                
+                    }
+                }
+
+            }
+        }
+    }
+  
+    // Header Section 
+
     .tfhb-dashboard-heading {  
         // height: 60px;  
-        border-radius: 4px; 
+        border-radius: $border-radius-small; 
         margin-left: 16px;
         h2 {
             font-size: 17px;
@@ -499,7 +551,7 @@
                 .tfhb-single-form-field-wrap{
                     select{
                         margin: 0px !important;
-                        border-radius: 8px;
+                        border-radius: $border-radius-medium;
                         border: 1px solid $surface-border;
                     }
                 }
@@ -566,11 +618,11 @@
 			max-width: 800px;
 			padding: 24px;
 			background-color: $primary-text;
-			box-shadow: 0px 8px 30px 0px rgba(40, 16, 26, 0.1019607843); 
+			box-shadow: $popup-box-shadow ; 
 			overflow: auto;
 			// margin: 50px auto; 
 			max-height: 90%;  
-			border-radius: 8px;
+			border-radius: $border-radius-medium;
             
             .tfhb-dashboard-heading {
                 .tfhb-admin-title{
@@ -583,7 +635,7 @@
                 border: none;
                 background-color: transparent; 
                 height: 35px;
-                border-radius: 50%;
+                border-radius: $border-radius-full; 
                 width: 35px;
                 text-align: center;
                 display: flex;
@@ -591,7 +643,7 @@
                 justify-content: center;
                 /*! padding-top: 5px; */
                 border-radius: 50% !important;
-                transition: 0.4s;
+                transition:$transition;
 
                 &:hover {
                     background-color: $surface-primary !important;
@@ -610,7 +662,7 @@
           padding: 8px 32px 8px 12px;
           border: 1px solid $surface-border;
           background-color: $primary-text;
-          border-radius: 8px;
+          border-radius: $border-radius-medium;
           width: 100%;
           height: 40px;
           box-sizing: border-box;
@@ -636,7 +688,7 @@
         border-bottom: 1px solid $surface-border; 
         .tfhb-filter-start-date,
         .tfhb-filter-end-date{
-            border-radius: 8px;
+            border-radius: $border-radius-medium;
             border: 1px solid $surface-border;
             padding: 8px 8px 8px 12px; 
             width: 132px;
@@ -685,7 +737,7 @@
         .tfhb-dropdown-wrap {
             padding: 24px !important;
             border-radius: 8px !important;
-            background-color: #fff !important;
+            background-color: $surface-secondary !important;
             .tfhb-notification-wrap {
                 margin-top: 16px;
 
@@ -705,7 +757,7 @@
                         width: 32px;
                         height: 32px;
                         img {
-                            border-radius: 50%;
+                            border-radius: $border-radius-full; 
                             height: 100%;
                             width: 100%;
                         }
@@ -732,7 +784,7 @@
 .tfhb-availability-schedule-btn {
     border: none;
     background-color: transparent; 
-    transition: 0.4s;
+    transition:$transition;
     &:hover{
         color: $primary-default;
     }
@@ -767,7 +819,7 @@
                 .tfhb-inc,
                 .tfhb-dec{
                     cursor: pointer;
-                    transition: 0.4s;
+                    transition:$transition;
                     &:hover{
                         color: $primary-default;
                     }
@@ -832,14 +884,14 @@
     ul{
         li{
             padding: 8px 12px;
-            border-radius: 4px;
-            background: #fff;
-            box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+            border-radius: $border-radius-small;
+            background: $surface-secondary;
+            box-shadow: $btn-box-shadow;
             cursor: pointer;
             &.active{
                 background: $secondary-hover;
                 /* Button/Active */
-                box-shadow: 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+                box-shadow: $btn-box-shadow;
                 color: $primary-default;
             }
         }
@@ -857,9 +909,9 @@
 }
 .tfhb-overrides-action{
     button{
-        border-radius: 4px;
+        border-radius: $border-radius-small;
         border: 1px solid #F6EEF2;
-        background: #fff;
+        background: $surface-secondary;
         height: 32px;
         width: 32px;
         padding: 4px;
@@ -895,7 +947,7 @@
             color: #3F2731 !important;
             text-align: center;
             font-size: 15px !important;
-            font-style: normal;
+            
             font-weight: 400 !important;
             height: 48px;
             width: calc(100% / 7);
@@ -907,7 +959,7 @@
             &::after{
                 position: absolute;
                 content: "";
-                border-radius: 8px;
+                border-radius: $border-radius-medium;
                 height: 90%;
                 width: 90%;
                 left: 50%;
@@ -937,7 +989,7 @@
                 content: "";
                 height: 2px;
                 width: 16px;
-                border-radius: 16px;
+                border-radius: $border-radius-large;
                 background: #FFF;
                 bottom: 9px;
                 left: 50%;
@@ -976,7 +1028,7 @@
                     width: 8px;
                     height: 8px; 
                     background-color: #765664;
-                    border-radius: 50%;
+                    border-radius: $border-radius-full; 
                     left: -24px;
                 }
             }
@@ -1110,7 +1162,7 @@
         }
     .p-dropdown-items {
         .p-dropdown-item{
-            border-radius: 4px;
+            border-radius: $border-radius-small;
             background: $surface-secondary;
             margin: 2px;
 
@@ -1142,7 +1194,7 @@
 // Tostify
 .Toastify__toast--error {
     border: none !important;
-    border-radius: 8px;
+    border-radius: $border-radius-medium;
     border: 0.5px solid $error-text;
     background: $warning-background !important;
     .Toastify__progress-bar--error {
@@ -1157,7 +1209,7 @@
  
   .Toastify__toast--success {
     border: none !important;
-    border-radius: 8px;
+    border-radius: $border-radius-medium;
     border: 0.5px solid $success-text;
     background: $success-background !important;
     .Toastify__progress-bar--success {
@@ -1175,14 +1227,14 @@
 // Pagination
 .tfhb-booking-details-pagination{
     .tfhb-prev-next-button{
-        border-radius: 8px;
-        border: 1px solid #fff;
-        background: #fff;
+        border-radius: $border-radius-medium;
+        border: 1px solid $surface-secondary;
+        background: $surface-secondary;
         padding: 8px 14px;
         a{
             color: $secondary-default;
             font-size: 15px;
-            font-style: normal;
+            
             font-weight: 400;
             line-height: 24px; /* 160% */
             text-decoration: none;
@@ -1196,11 +1248,11 @@
                 padding: 12px;
                 color: $secondary-default;
                 font-size: 15px;
-                font-style: normal;
+                
                 font-weight: 400;
                 line-height: 24px; /* 160% */
                 box-sizing: border-box;
-                border-radius: 50%;
+                border-radius: $border-radius-full; 
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1209,7 +1261,7 @@
                     color: $secondary-default;
                 }
                 &.active{
-                    background-color: #fff;
+                    background-color: $surface-secondary;
                     color: $text-paragraph;
                 }
             }
@@ -1218,9 +1270,9 @@
 }
 
 button.question-edit-btn{
-    border-radius: 4px;
+    border-radius: $border-radius-small;
     border: 1px solid #F6EEF2;
-    background: #fff;
+    background: $surface-secondary;
     height: 24px;
     width: 24px;
     padding: 4px;

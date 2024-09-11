@@ -70,7 +70,7 @@ if(tfhb_setup_wizard){
 </template> 
 <style scoped>  
   #toplevel_page_hydra-booking .wp-submenu-wrap li.current a{
-    color: #fff;
+    color: $surface-secondary;
     font-weight: 600;
   }
 </style>
