@@ -19,20 +19,20 @@
         gap: 16px !important;
         .tfhb-filter-btn{
             border-radius: $border-radius-medium;
-            border: 1px solid $surface-border;
+            border: $border-reguler $border-type $surface-border;
             background: $surface-secondary;
             padding: 8px 24px;
             color: $secondary-default;
-            font-size: 15px;
+            font-size: $heading-font-size-small;
             
-            font-weight: 400;
+            font-weight: $font-weight-reguler;
             line-height: 24px;
             justify-content: normal !important;
             gap: 8px !important;
             cursor: pointer;
             height: 40px;
             &.active, &:hover{
-                border: 1px solid $surface-border;
+                border: $border-reguler $border-type $surface-border;
                 background: $secondary-hover;
                 color: $primary-default;
             }
@@ -40,7 +40,7 @@
     }
     .tfhb-filter-box-content{
         border-radius: $border-radius-medium;
-        border: 1px solid $surface-border;
+        border: $border-reguler $border-type $surface-border;
         background: $surface-secondary;
         box-shadow: $filter-box-shadow ;
         width: 350px;
@@ -48,11 +48,11 @@
         z-index: 99;
         .tfhb-filter-form{
             .tfhb-filter-category{
-                border-bottom: 1px solid $surface-border; 
+                border-bottom: 1px $border-type $surface-border; 
                 padding-bottom: 24px;
                 .tfhb-host-filter-box{
                     border-radius: $border-radius-medium;
-                    border: 1px solid $surface-border;
+                    border: $border-reguler $border-type $surface-border;
                     padding: 8px 8px 8px 12px;
                     height: 40px;
                     margin: 24px 24px 0 24px;
@@ -70,9 +70,9 @@
                             width: 100% !important;
                             label{
                                 color: $secondary-default !important;
-                                font-size: 15px !important;
+                                font-size: $heading-font-size-small !important;
                                 
-                                font-weight: 400 !important;
+                                font-weight: $font-weight-reguler !important;
                                 line-height: 24px !important;
                                 margin: 0 !important;
                                 position: relative;
@@ -85,7 +85,7 @@
                                     width: 20px;
                                     background-color: $surface-border;
                                     border-radius: 5px;
-                                    border: 1px solid $surface-border;
+                                    border: $border-reguler $border-type $surface-border;
                                     margin: 0 !important;
                                     &:after {
                                         content: "";
@@ -94,7 +94,7 @@
                                         top: 2px;
                                         width: 5px;
                                         height: 10px;
-                                        border: solid $surface-border;
+                                        border: $border-type $surface-border;
                                         border-width: 0 3px 3px 0;
                                         -webkit-transform: rotate(45deg);
                                         -ms-transform: rotate(45deg);
@@ -104,7 +104,7 @@
                                 }
                                 input:checked~.checkmark {
                                     background-color: $primary-default;
-                                    border: 1px solid $primary-default;
+                                    border: $border-reguler $border-type $primary-default;
                                 }
                                 input:checked~.checkmark:after {
                                     display: block;
@@ -120,9 +120,9 @@
                                 padding: 4px 8px;
                                 color: $secondary-default;
                                 text-align: center;
-                                font-size: 11px;
+                                font-size: $text-font-size-small;
                                 
-                                font-weight: 400;
+                                font-weight: $font-weight-reguler;
                                 line-height: 16px; /* 145.455% */
                             }
                         }
@@ -135,15 +135,15 @@
             margin: 24px;
             a{
                 border-radius: $border-radius-medium;
-                border: 1px solid $surface-border;
+                border: $border-reguler $border-type $surface-border;
                 background: $surface-secondary;
                 padding: 8px 24px;
                 justify-content: center !important;
                 gap: 8px !important;
                 color: $secondary-default;
-                font-size: 15px;
+                font-size: $heading-font-size-small;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 24px; /* 160% */
             }
         }
@@ -151,12 +151,18 @@
 
     .tfhb-meetings-list-content{
         margin-left: 16px;
+        padding: 24px;
+        margin-top: 24px;
+        border-radius: $border-radius-large;
+        border: $border-reguler $surface-border;
+        background: #FFF;
+        margin-right: 16px;
      .tfhb-meetings-list-wrap{
         justify-content: normal;
         .tfhb-single-meeting{
             width: calc(33.333% - 16px);
             border-radius: $border-radius-medium;
-            border: 1px solid $surface-border;
+            border: $border-reguler $border-type $surface-border;
             background: $surface-secondary;
             padding: 16px;
             box-sizing: border-box;
@@ -169,14 +175,14 @@
             .single-meeting-content-box{
                 flex-wrap: nowrap !important;
                 align-items: baseline !important;
-                border-bottom: 0.5px solid $surface-border;
+                border-bottom: 0.5px $border-type $surface-border;
                 padding-bottom: 24px;
                 .single-meeting-content{
                     width: calc(100% - 20px);
                     h3{
-                        font-size: 15px;
+                        font-size: $heading-font-size-small;
                         
-                        font-weight: 400 !important;
+                        font-weight: $font-weight-reguler !important;
                         line-height: 24px;
                         margin: 0 !important;
                         width: calc(100% - 20px) !important;
@@ -197,9 +203,9 @@
                                     }
                                     .user-info-title{
                                         color: $secondary-default;
-                                        font-size: 13px;
+                                        font-size: $text-font-size;
                                         
-                                        font-weight: 400;
+                                        font-weight: $font-weight-reguler;
                                         line-height: 20px;
                                     }
                                 }
@@ -218,9 +224,9 @@
                                         }
                                         .user-info-title{
                                             color: $primary-default;
-                                            font-size: 11px;
+                                            font-size: $text-font-size-small;
                                             
-                                            font-weight: 400;
+                                            font-weight: $font-weight-reguler;
                                             line-height: 16px; /* 145.455% */
                                         }
                                     }
@@ -237,14 +243,14 @@
                 margin-top: 24px;
                 a{
                     border-radius: $border-radius-medium;
-                    border: 1px solid $surface-border;
+                    border: $border-reguler $border-type $surface-border;
                     background: $surface-secondary;
                     padding: 6px 12px;
                     display: inline-block;
                     color: $secondary-default;
-                    font-size: 13px;
+                    font-size: $text-font-size;
                     
-                    font-weight: 400;
+                    font-weight: $font-weight-reguler;
                     line-height: 20px; /* 153.846% */
                     gap: 8px !important;
                     transition: .3s all ease;
@@ -287,7 +293,7 @@
                     }
                 }
                 h3{
-                    font-size: 17px;
+                    font-size: $heading-font-size-medium;
                     
                     line-height: 150%; /* 25.5px */
                     margin: 0px !important;
@@ -295,9 +301,9 @@
             }
             .tfhb-meeting-subtitle{
                 color: $secondary-default;
-                font-size: 13px;
+                font-size: $text-font-size;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 20px; /* 153.846% */
                 padding-left: 22px;
             }
@@ -324,15 +330,15 @@
                 .tfhb-availability-schedule-single{
                      .thb-admin-btn{
                         span{
-                            font-weight: 400;
+                            font-weight: $font-weight-reguler;
                         }
                      }
                 }
                 .tfhb-add-new-question{
                     color: $primary-default;
-                    font-size: 15px;
+                    font-size: $heading-font-size-small;
                     
-                    font-weight: 400;
+                    font-weight: $font-weight-reguler;
                     line-height: 24px; /* 160% */
                     cursor: pointer;
                 }
@@ -361,28 +367,28 @@
 
     .tfhb-meeting-type-card{
         border-radius: $border-radius-medium;
-        border: 1px solid $surface-border;
+        border: $border-reguler $border-type $surface-border;
         background: $surface-secondary;
         transition: .3s all ease;
         cursor: pointer;
         &:hover{
-            border: 1px solid $primary-default;
+            border: $border-reguler $border-type $primary-default;
             background: $surface-primary;
         }
         .tfhb-meeting-type-content{
             width: calc(100% - 52px);
             h3{
                 color: $secondary-default !important;
-                font-size: 17px;
+                font-size: $heading-font-size-medium;
                 
                 line-height: 150%; /* 25.5px */ 
                 margin: 0 !important;
             }
             p{
                 color: $secondary-default;
-                font-size: 13px;
+                font-size: $text-font-size;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 20px; /* 153.846% */
                 margin: 10px 0 0 0 !important;
             }
@@ -416,8 +422,8 @@
             margin-top: 0;
             border-radius: 0 4px 4px 0 !important;
             height: 40px;
-            border: 1px solid $surface-border;
-            border-left: 0px solid;
+            border: $border-reguler $border-type $surface-border;
+            border-left: 0px $border-type;
             &:focus, &:active {
                 outline: none;
                 box-shadow: none; 
@@ -451,7 +457,7 @@
                     width: 20px;
                     background-color: $surface-border;
                     border-radius: $border-radius-full; 
-                    border: 1px solid $surface-border;
+                    border: $border-reguler $border-type $surface-border;
                     margin: 0 !important;
                     &:after {
                         content: "";
@@ -460,7 +466,7 @@
                         top: 2px;
                         width: 4px;
                         height: 8px;
-                        border: solid $surface-border;
+                        border: $border-type $surface-border;
                         border-width: 0 3px 3px 0;
                         -webkit-transform: rotate(45deg);
                         -ms-transform: rotate(45deg);
@@ -470,7 +476,7 @@
                 }
                 input:checked~.checkmark {
                     background-color: $primary-default;
-                    border: 1px solid $primary-default;
+                    border: $border-reguler $border-type $primary-default;
                 }
                 input:checked~.checkmark:after {
                     display: block;
@@ -478,9 +484,9 @@
             }
             label{
                 h4{
-                    font-size: 15px !important;
+                    font-size: $heading-font-size-small !important;
                     
-                    font-weight: 400 !important;
+                    font-weight: $font-weight-reguler !important;
                     line-height: 24px; /* 160% */
                 }
                 p{
@@ -506,26 +512,26 @@
             justify-content: center;
             ul{
                 border-radius: $border-radius-medium;
-                border: 1px solid#F6EEF2;
-                background: #FAF5F7;
+                border: $border-reguler $border-type $surface-border;
+                background: $surface-primary;
                 padding: 6px !important;
                 width: fit-content;
                 li{
-                    color: #8F707D;
-                    font-size: 15px;
+                    color: $text-input;
+                    font-size: $heading-font-size-small;
                     
-                    font-weight: 400;
+                    font-weight: $font-weight-reguler;
                     line-height: 24px; /* 160% */
                     padding: 8px 12px;
                     cursor: pointer;
                     &.active{
                         color: $primary-default;
-                        font-size: 15px;
+                        font-size: $heading-font-size-small;
                         
-                        font-weight: 400;
+                        font-weight: $font-weight-reguler;
                         line-height: 24px; /* 160% */
                         border-radius: $border-radius-small;
-                        background: #FEE6F0;
+                        background: $secondary-hover;
                         box-shadow: $btn-box-shadow;
                     }
                 }
@@ -534,12 +540,12 @@
         .tfhb-shareing-data{
             input{
                 border-radius: $border-radius-small;
-                border: 1px solid #F6EEF2;  
+                border: $border-reguler $border-type $surface-border;  
                 padding: 8px 8px 8px 12px; 
-                color: #3F2731;
-                font-size: 15px;
+                color: $text-paragraph;
+                font-size: $heading-font-size-small;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 24px; /* 160% */
                 width: 100%;
                 padding-right: 80px;
@@ -573,7 +579,7 @@
                 display: inline-block;
                 padding: 3px 8px;
                 border-radius: 6px;
-                background-color: #FEE6F0;
+                background-color: $secondary-hover;
                 color: $primary-default;
             }
         }
@@ -597,7 +603,7 @@
             right: 0;
             width: 180px;
             box-shadow: 0px 15px 30px 0px rgba(40, 16, 26, 0.1019607843);
-            background-color: #FAF5F7;
+            background-color: $surface-primary;
             padding: 2px;
             border-radius: 6px;
             z-index: 99;
@@ -615,7 +621,7 @@
                     margin: 0 !important;
                     cursor: pointer;
                     &:hover{
-                        background-color: #FAF5F7;
+                        background-color: $surface-primary;
                     }
                 }
             }

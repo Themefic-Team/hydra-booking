@@ -2,19 +2,21 @@
 
     
     .tfhb-single-form-field-wrap{
+
+        width: 100%;
+        
         > label{
             justify-content: start !important;
         }
-        width: 100%;
         // Select Field
         &.tfhb-field-select{ 
             select { 
                 padding: 0px 8px 0px 12px;
                 min-width: 100%;
                 margin-top: 4px;
-                border-radius: 4px;
+                border-radius: $border-radius-small;
                 height: 40px;
-                border: 1px solid $surface-border;
+                border: $fields-border $border-type $surface-border;
                 font-family: "Inter", sans-serif;
                 &:focus, &:active {
                     outline: none;
@@ -26,13 +28,13 @@
         // Dropdown Field
         &.tfhb-field-dropdown{ 
             .p-dropdown .p-dropdown-trigger {
-                color: #8F707D !important;
+                color: $text-input !important;
             }
             .p-dropdown { 
-                border: 1px solid $surface-border !important; 
+                border: $fields-border $border-type $surface-border !important; 
                 box-shadow: none !important;
                 &.tfhb-required{
-                    border: 1px solid red !important;
+                    border: $fields-border $border-type red !important;
                 }
 
                  
@@ -55,8 +57,8 @@
                 padding: 8px 8px 8px 12px;
                 min-width: 100%;
                 margin-top: 4px;
-                border-radius: 4px;
-                border: 1px solid $surface-border;
+                border-radius: $border-radius-small;
+                border: $fields-border $border-type $surface-border;
                 background-color: transparent;
                 line-height: 20px;
                 height: 40px;
@@ -94,12 +96,12 @@
         &.tfhb-field-textarea{
             textarea{
                 height: 96px;
-                border-radius: 4px;
-                border: 1px solid $surface-border;
+                border-radius: $border-radius-small;
+                border: $fields-border $border-type $surface-border;
                 color: $text-input;
-                font-size: 15px;
+                font-size: $heading-font-size-small;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 24px; /* 160% */
                 padding: 8px 8px 8px 12px;
                 width: 100%;
@@ -118,7 +120,7 @@
                 width: 20px;
                 background-color: $surface-border;
                 border-radius: 3px;
-                border: 1px solid $surface-border;
+                border: $fields-border $border-type $surface-border;
                 margin: 0 !important;
                 &:after {
                     content: "";
@@ -127,7 +129,7 @@
                     top: 2px;
                     width: 4px;
                     height: 8px;
-                    border: solid $surface-border;
+                    border: $border-type $surface-border;
                     border-width: 0 3px 3px 0;
                     -webkit-transform: rotate(45deg);
                     -ms-transform: rotate(45deg);
@@ -138,9 +140,9 @@
             
             label{
                 color: $text-paragraph !important;
-                font-size: 15px !important;
+                font-size: $heading-font-size-small !important;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 // line-height: 24px !important;
                 margin: 0 !important;
                 position: relative;
@@ -148,7 +150,7 @@
                 margin-right: 16px !important;
                 input:checked~.checkmark {
                     background-color: $primary-default;
-                    border: 1px solid $primary-default;
+                    border: $fields-border $border-type $primary-default;
                 }
                 input:checked~.checkmark:after {
                     display: block;
@@ -167,9 +169,9 @@
             justify-content: normal !important;
             label{
                 color: $text-paragraph;
-                font-size: 15px !important;
+                font-size: $heading-font-size-small !important;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 24px; /* 160% */
             }
         }
@@ -184,7 +186,7 @@
         height: 72px;
         width: 72px;
         overflow: hidden;
-        border: 1px solid #ddd !important;
+        border: $fields-border $border-type #ddd !important;
         &:hover{
             .tfhb-image-btn{
                 opacity: 1;
@@ -210,7 +212,7 @@
             padding: 8px;
             cursor: pointer;
             color: $surface-secondary;
-            font-weight: 400;
+            font-weight: $font-weight-reguler;
             opacity: 0;
             transition: all 0.3s;
             visibility: hidden;
@@ -241,13 +243,13 @@
                 .image-box{
                     height: 150px;
                     border-radius: 8px;
-                    background: #765664;
+                    background: $secondary-default;
                 }
                 h3{
-                    color: #3F2731 !important;
-                    font-size: 13px;
+                    color: $text-paragraph !important;
+                    font-size: $text-font-size;
                     
-                    font-weight: 400 !important;
+                    font-weight: $font-weight-reguler !important;
                     line-height: 20px; /* 153.846% */
                     margin: 8px 0 0 0 !important;
                     text-align: center;
@@ -255,7 +257,7 @@
             }
 
             :checked + label .image-box {
-                border-bottom: 4px solid $primary-default; 
+                border-bottom: 4px $border-type $primary-default; 
             }
         }
     }
@@ -263,13 +265,13 @@
 
 .tfhb-single-colorbox{
     border-radius: 6px;
-    background: #FAF5F7;
+    background: $surface-primary;
     padding: 12px 16px; 
     label{
-        color: #765664 !important;
-        font-size: 15px !important;
+        color: $secondary-default !important;
+        font-size: $heading-font-size-small !important;
         
-        font-weight: 400 !important;
+        font-weight: $font-weight-reguler !important;
         line-height: 24px !important; /* 160% */
         margin: 0 !important;
     }
@@ -283,10 +285,10 @@
             display: block;
         }
         span{
-            color: #765664;
-            font-size: 13px;
+            color: $secondary-default;
+            font-size: $text-font-size;
             
-            font-weight: 400;
+            font-weight: $font-weight-reguler;
             line-height: 20px; /* 153.846% */
             padding: 6px 8px;
         }
@@ -298,8 +300,8 @@
         padding: 8px 8px 8px 12px;
         min-width: 100%;
         margin-top: 4px;
-        border-radius: 4px;
-        border: 1px solid #F6EEF2;
+        border-radius: $border-radius-small;
+        border: $fields-border $border-type $surface-border;
         background-color: transparent;
         line-height: 20px;
         height: 40px;
@@ -309,8 +311,8 @@
         display: flex;
         cursor: pointer;
         input{
-            border: 0px solid !important;
-            color: #8F707D !important;
+            border: 0px $border-type !important;
+            color: $text-input !important;
             padding: 0;
             min-height: auto;
             background-color: transparent !important;
@@ -327,7 +329,7 @@
     ul{
         li{
             border-radius: 8px;
-            color: #8F707D;
+            color: $text-input;
             font-weight: 500;
             display: block;
             text-align: center;

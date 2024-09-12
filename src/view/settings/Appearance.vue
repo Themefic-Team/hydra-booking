@@ -14,7 +14,7 @@ const router = useRouter();
 const appearanceSettings = reactive({
   themes: 'System default',
   primary_color: '$primary-default',
-  secondary_color: '#3F2731',
+  secondary_color: '$text-paragraph',
   paragraph_color: '#765664',
   titleTypo: '',
   desTypo: '',
@@ -36,7 +36,7 @@ try {
         // Set Appearance Settings
         appearanceSettings.themes = response.data.appearance_settings.themes ? response.data.appearance_settings.themes : 'System default';
         appearanceSettings.primary_color = response.data.appearance_settings.primary_color ? response.data.appearance_settings.primary_color : '$primary-default';
-        appearanceSettings.secondary_color = response.data.appearance_settings.secondary_color ? response.data.appearance_settings.secondary_color : '#3F2731';
+        appearanceSettings.secondary_color = response.data.appearance_settings.secondary_color ? response.data.appearance_settings.secondary_color : '$text-paragraph';
         appearanceSettings.paragraph_color = response.data.appearance_settings.paragraph_color ? response.data.appearance_settings.paragraph_color : '#765664';
         appearanceSettings.titleTypo = response.data.appearance_settings.titleTypo ? response.data.appearance_settings.titleTypo : '';
         appearanceSettings.desTypo = response.data.appearance_settings.desTypo ? response.data.appearance_settings.desTypo : '';
@@ -105,8 +105,8 @@ onBeforeMount(() => {
                         selected = "1"
                         :option = "[
                             {'name': 'System default', 'value': '#765664'}, 
-                            {'name': 'Light', 'value': '#8F707D'},
-                            {'name': 'Dark', 'value': '#3F2731'},
+                            {'name': 'Light', 'value': '$text-input'},
+                            {'name': 'Dark', 'value': '$text-paragraph'},
                         ]"
                     />
                 </div>

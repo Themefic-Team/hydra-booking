@@ -11,14 +11,14 @@
                     padding: 8px 8px 8px 12px;
                     min-width: 100%;
                     border-radius: $border-radius-small;
-                    border: 1px solid $surface-border;
+                    border: $border-reguler $border-type $surface-border;
                     background-color: transparent;
                     line-height: 20px;
                     height: 40px;
                     margin: 0;
                     box-shadow: none;
                     color: $text-input !important;
-                    font-size: 14px;
+                    font-size: $heading-font-size-small;
                     &::placeholder{
                         color: $text-input !important; 
                     }
@@ -28,7 +28,7 @@
     }
     .tfhb-booking-view{
         border-radius: $border-radius-medium;
-        border: 1px solid #F6EEF2;
+        border: $border-reguler $border-type $surface-border;
         background: #FFF;
         padding: 4px;
         .tfhb-list-calendar{
@@ -43,7 +43,7 @@
                     cursor: pointer;
                     &.active{
                         border-radius: $border-radius-small;
-                        background: #FEE6F0;
+                        background: $secondary-hover;
                         svg{
                             color: $primary-default;
                         }
@@ -87,7 +87,7 @@
                             height: 24px;
                             width: 24px;
                             border-radius: $border-radius-medium;
-                            border: 0.2px solid #E3CFD7;
+                            border: 0.2px $border-type $surface-background;
                             background: #FFF;
                             padding: 0;
                             &:focus{
@@ -113,7 +113,7 @@
                             color: $text-title !important;
                             font-size: 22px;
                             
-                            font-weight: 400 !important;
+                            font-weight: $font-weight-reguler !important;
                             line-height: 112%;
                             margin: 0 !important;
                         }
@@ -127,19 +127,19 @@
                     top: -62px;
                     .fc-button-group{
                         border-radius: $border-radius-xlarge;
-                        border: 1px solid #F6EEF2;
+                        border: $border-reguler $border-type $surface-border;
                         background: #FFF;
                         padding: 4px;
                         display: flex;
                         gap: 8px;
                         button{
                             background: #FFF;
-                            color: #8F707D;
-                            font-size: 15px;
+                            color: $text-input;
+                            font-size: $heading-font-size-small;
                             
-                            font-weight: 400;
+                            font-weight: $font-weight-reguler;
                             line-height: 24px; /* 160% */
-                            border: 0px solid;
+                            border: 0px $border-type;
                             padding: 8px 12px;
                             border-radius: $border-radius-xlarge;
                             text-transform: capitalize;
@@ -148,7 +148,7 @@
                                 outline: none;
                             }
                             &.fc-button-active{
-                                background: #F6EEF2;
+                                background: $surface-border;
                                 color: $primary-default;
                                 position: relative;
                                 padding-left: 27px;
@@ -172,7 +172,7 @@
         }
 
         table{
-            border: 0px solid;
+            border: 0px $border-type;
             .fc-scrollgrid-section-header{
                 .fc-scroller-harness{
                     .fc-scroller{
@@ -180,16 +180,16 @@
                     }
                 }
                 th{
-                    border: 0px solid;
+                    border: 0px $border-type;
                     .fc-col-header{
                         tr{
                             th{
-                                border: 0px solid;
+                                border: 0px $border-type;
                                 a{
-                                    color: #765664;
-                                    font-size: 15px;
+                                    color: $secondary-default;
+                                    font-size: $heading-font-size-small;
                                     
-                                    font-weight: 400;
+                                    font-weight: $font-weight-reguler;
                                     line-height: 24px; /* 160% */
                                     padding: 8px;
                                 }
@@ -201,21 +201,21 @@
             }
             .fc-scrollgrid-section-body{
                 > td{
-                    border: 0px solid;
+                    border: 0px $border-type;
                 }
                 table{
                     tr{
                         td{
-                            border: 1px solid #F6EEF2;
+                            border: $border-reguler $border-type $surface-border;
                             padding: 8px;
                             // height: 150px;
                             background-color: transparent;
                             .fc-daygrid-day-top{
                                 a{
-                                    color: #211319;
-                                    font-size: 15px;
+                                    color: $surface-border-hover;
+                                    font-size: $heading-font-size-small;
                                     
-                                    font-weight: 600;
+                                    font-weight: $font-weight-medium;
                                     line-height: 24px; /* 160% */
                                 }
                             }
@@ -226,30 +226,30 @@
                                         margin-bottom: 0px;
                                     }
                                     a{
-                                        border: 0px solid;
+                                        border: 0px $border-type;
                                         overflow: hidden;
                                         text-overflow: ellipsis;
-                                        font-size: 13px;
+                                        font-size: $text-font-size;
                                         
-                                        font-weight: 600;
+                                        font-weight: $font-weight-medium;
                                         line-height: 20px; /* 153.846% */
                                         padding: 0;
                                         background: transparent;
                                         b{
                                             padding: 6px 8px;
-                                            color: #002AB3;
+                                            color: $info-text;
                                             width: 100%;
-                                            border-left: 1px solid #002AB3;
-                                            background: #EBEFFF;
+                                            border-left: 1px $border-type $info-text;
+                                            background: $info-background;
                                             border-radius: $border-radius-medium;
                                             display: block;
                                             line-height: 15px;
                                             cursor: pointer;
                                         }
                                         b.confirmed{
-                                            color: #17723F;
-                                            border-left: 1px solid #17723F;
-                                            background: #E6FAEE;
+                                            color: $success-text;
+                                            border-left: 1px $border-type $success-text;
+                                            background: $success-background;
                                         }
                                     }
                 
@@ -261,14 +261,14 @@
                             .fc-daygrid-day-bottom{
                                 a.fc-more-link{
                                     border-radius: $border-radius-large;
-                                    border: 1px solid $primary-default;
-                                    background: #FAF5F7;
+                                    border: $border-reguler $border-type $primary-default;
+                                    background: $surface-primary;
                                     overflow: hidden;
                                     color: $primary-default;
                                     text-overflow: ellipsis;
-                                    font-size: 13px;
+                                    font-size: $text-font-size;
                                     
-                                    font-weight: 600;
+                                    font-weight: $font-weight-medium;
                                     line-height: 20px; /* 153.846% */
                                     padding: 6px 8px;
                                 }
@@ -278,7 +278,7 @@
                             .fc-daygrid-day-top{
                                 opacity: 1;
                                 a{
-                                    color: #E3CFD7;
+                                    color: $surface-background;
                                 }
                             }
                         }
@@ -298,30 +298,30 @@
                                                 margin-bottom: 0px;
                                             }
                                             a{
-                                                border: 0px solid;
+                                                border: 0px $border-type;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
-                                                font-size: 13px;
+                                                font-size: $text-font-size;
                                                 
-                                                font-weight: 600;
+                                                font-weight: $font-weight-medium;
                                                 line-height: 20px; /* 153.846% */
                                                 padding: 0;
                                                 background: transparent;
                                                 b{
                                                     padding: 6px 8px;
-                                                    color: #002AB3;
+                                                    color: $info-text;
                                                     width: 100%;
-                                                    border-left: 1px solid #002AB3;
-                                                    background: #EBEFFF;
+                                                    border-left: 1px $border-type $info-text;
+                                                    background: $info-background;
                                                     border-radius: $border-radius-medium;
                                                     display: block;
                                                     line-height: 15px;
                                                     cursor: pointer;
                                                 }
                                                 b.confirmed{
-                                                    color: #17723F;
-                                                    border-left: 1px solid #17723F;
-                                                    background: #E6FAEE;
+                                                    color: $success-text;
+                                                    border-left: 1px $border-type $success-text;
+                                                    background: $success-background;
                                                 }
                                             }
                                         }
@@ -344,30 +344,30 @@
                         margin-bottom: 0px;
                     }
                     a{
-                        border: 0px solid;
+                        border: 0px $border-type;
                         overflow: hidden;
                         text-overflow: ellipsis;
-                        font-size: 13px;
+                        font-size: $text-font-size;
                         
-                        font-weight: 600;
+                        font-weight: $font-weight-medium;
                         line-height: 20px; /* 153.846% */
                         padding: 0;
                         background: transparent;
                         b{
                             padding: 6px 8px;
-                            color: #002AB3;
+                            color: $info-text;
                             width: 100%;
-                            border-left: 1px solid #002AB3;
-                            background: #EBEFFF;
+                            border-left: 1px $border-type $info-text;
+                            background: $info-background;
                             border-radius: $border-radius-medium;
                             display: block;
                             line-height: 15px;
                             cursor: pointer;
                         }
                         b.confirmed{
-                            color: #17723F;
-                            border-left: 1px solid #17723F;
-                            background: #E6FAEE;
+                            color: $success-text;
+                            border-left: 1px $border-type $success-text;
+                            background: $success-background;
                         }
                     }
                 }
@@ -399,7 +399,7 @@
             .tfhb-single-form-field-wrap{
                 .tfhb-time-date-view{
                     border-radius: $border-radius-small;
-                    border: 1px solid #F6EEF2;
+                    border: $border-reguler $border-type $surface-border;
                     background-color: transparent;
                     padding: 8px 8px 8px 12px;
                     flex-wrap: nowrap !important;
@@ -420,12 +420,12 @@
                     padding-right: 16px;
                     &.tfhb-warning{
                         border-radius: $border-radius-medium;
-                        border: 1px solid #AC0C22;
-                        background: #FEECEE;
-                        color: #AC0C22;
-                        font-size: 15px;
+                        border: $border-reguler $border-type $error-text;
+                        background: $warning-background;
+                        color: $error-text;
+                        font-size: $heading-font-size-small;
                         
-                        font-weight: 600;
+                        font-weight: $font-weight-medium;
                         line-height: 24px; /* 160% */
 
                     }
@@ -442,13 +442,13 @@
         border-radius: $border-radius-medium;
         background: $surface-border;
         thead{
-            border-bottom: 1px solid $surface-border;
+            border-bottom: 1px $border-type $surface-border;
             th{
                 padding: 12px 16px;
                 color: $text-paragraph;
-                font-size: 15px;
+                font-size: $heading-font-size-small;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 24px; /* 160% */
                 text-align: left;
                 .select-checkbox-lists{
@@ -459,9 +459,9 @@
                             left: 0px;
                             height: 20px;
                             width: 20px;
-                            background-color: #E3CFD7;
+                            background-color: $surface-background;
                             border-radius: 3px;
-                            border: 1px solid #E3CFD7;
+                            border: $border-reguler $border-type $surface-background;
                             margin: 0 !important;
                             display: block;
                             &:after {
@@ -471,7 +471,7 @@
                                 top: 2px;
                                 width: 5px;
                                 height: 10px;
-                                border: solid $surface-border;
+                                border: $border-type $surface-border;
                                 border-width: 0 3px 3px 0;
                                 -webkit-transform: rotate(45deg);
                                 -ms-transform: rotate(45deg);
@@ -481,7 +481,7 @@
                         }
                         input:checked~.checkmark {
                             background-color: $primary-default;
-                            border: 1px solid $primary-default;
+                            border: $border-reguler $border-type $primary-default;
                         }
                         input:checked~.checkmark:after {
                             display: block;
@@ -499,12 +499,12 @@
                 td{
                     padding: 16px;
                     color: $text-paragraph;
-                    font-size: 15px;
+                    font-size: $heading-font-size-small;
                     
-                    font-weight: 400;
+                    font-weight: $font-weight-reguler;
                     line-height: 24px;
-                    border: 0px solid;
-                    border-bottom: 1px solid $surface-border;
+                    border: 0px $border-type;
+                    border-bottom: 1px $border-type $surface-border;
                     .checkbox-lists{
                         label{
                             
@@ -516,7 +516,7 @@
                                 width: 20px;
                                 background-color: $surface-border;
                                 border-radius: 3px;
-                                border: 1px solid $surface-border;
+                                border: $border-reguler $border-type $surface-border;
                                 margin: 0 !important;
                                 &:after {
                                     content: "";
@@ -525,7 +525,7 @@
                                     top: 2px;
                                     width: 5px;
                                     height: 10px;
-                                    border: solid $surface-border;
+                                    border: $border-type $surface-border;
                                     border-width: 0 3px 3px 0;
                                     -webkit-transform: rotate(45deg);
                                     -ms-transform: rotate(45deg);
@@ -535,7 +535,7 @@
                             }
                             input:checked~.checkmark {
                                 background-color: $primary-default;
-                                border: 1px solid $primary-default;
+                                border: $border-reguler $border-type $primary-default;
                             }
                             input:checked~.checkmark:after {
                                 display: block;
@@ -546,7 +546,7 @@
                         }
                     }
                     span{
-                        font-size: 13px; 
+                        font-size: $text-font-size; 
                         display: block;
                         margin: 0 !important;
                     }
@@ -567,9 +567,9 @@
                             padding: 2px 8px;
                             color: $alert-text;
                             text-align: center;
-                            font-size: 11px;
+                            font-size: $text-font-size-small;
                             
-                            font-weight: 400;
+                            font-weight: $font-weight-reguler;
                             line-height: 16px; /* 145.455% */
                             text-transform: capitalize;
                             &.approved{
@@ -609,9 +609,9 @@
                                         border-radius: $border-radius-small; 
                                         background: $success-background; 
                                         color: $success-text;
-                                        font-size: 15px;
+                                        font-size: $heading-font-size-small;
                                         
-                                        font-weight: 400;
+                                        font-weight: $font-weight-reguler;
                                         line-height: 24px; /* 160% */
                                         width: 100%;
                                         &.pending{
@@ -644,23 +644,23 @@
 
 // Booking Details Quick View Design
 .tfhb-attendee-info{
-    border-bottom: 1px solid $surface-border; 
+    border-bottom: 1px $border-type $surface-border; 
     .tfhb-attendee-box{
         .tfhb-attendee-name{
             width: calc(33.333% - 16px);
             h4{
                 color: $text-paragraph !important;
-                font-size: 13px;
+                font-size: $text-font-size;
                 
-                font-weight: 400 !important;
+                font-weight: $font-weight-reguler !important;
                 line-height: 20px; /* 153.846% */
                 margin: 0 0 12px 0 !important;
             }
             p{
                 color: $secondary-default !important;
-                font-size: 15px !important;
+                font-size: $heading-font-size-small !important;
                 
-                font-weight: 400;
+                font-weight: $font-weight-reguler;
                 line-height: 24px; /* 160% */
                 margin: 0 !important;
                 word-wrap: break-word;

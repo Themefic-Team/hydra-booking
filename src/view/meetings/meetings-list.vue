@@ -377,12 +377,5 @@ const TfhbMeetingType = (type, router) => {
 </template>
 
 <style scoped>
-.tfhb-meetings-list-content {
-    padding: 24px;
-    margin-top: 24px;
-    border-radius: $border-radius-large;
-    border: 1px #F6EEF2;
-    background: #FFF;
-    margin-right: 16px;
-}
+ 
 </style>

@@ -29,18 +29,18 @@
         border-radius: $border-radius-medium;
         background-color: $surface-secondary;
         padding: 24px;
-        border: 1px solid $surface-border;
+        border: $border-reguler $border-type $surface-border;
         position: relative;
         hr {
           margin: 16px 0;
-          border-top: 0.5px solid $surface-border;
+          border-top: 0.5px $border-type $surface-border;
         }
         .tfhb-hosts-info {
           justify-content: normal !important;
           gap: 8px !important;
           h3{
-            font-size: 15px;
-            font-weight: 400 !important;
+            font-size: $heading-font-size-small;
+            font-weight: $font-weight-reguler !important;
             line-height: 24px;
           }
           .hosts-avatar{
@@ -57,7 +57,7 @@
             display: inline-block;
             width: 100%;
             justify-content: normal !important;
-            font-size: 15px !important;
+            font-size: $heading-font-size-small !important;
             gap: 16px !important;
             margin: 0 !important;
           }
@@ -71,8 +71,8 @@
           border-radius: $border-radius-large;
           background-color: $success-background;
           color: $success-text !important;
-          font-weight: 600 !important;
-          font-size: 11px !important;
+          font-weight: $font-weight-medium !important;
+          font-size: $text-font-size-small !important;
           &.tfhb-hosts-status-warning {
             background-color: $warning-background;
             color: $warning-text !important;
@@ -118,7 +118,7 @@
         position: relative !important;
         .tfhb-badge.tfhb-badge-pro {
             margin: 0 !important; 
-            font-size: 11px !important; 
+            font-size: $text-font-size-small !important; 
             line-height: 1.1 !important;
         }
       }

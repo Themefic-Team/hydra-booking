@@ -59,11 +59,11 @@
 
         .tfhb-s-w-cta {
             a {
-                font-weight: 700;
+                font-weight: $font-weight-bold;
                 color: $primary-default;
-                font-size: 15px;
+                font-size: $heading-font-size-small;
                 
-                font-weight: 600;
+                font-weight: $font-weight-medium;
                 line-height: 24px;
             }
 
@@ -80,7 +80,7 @@
 
 
         border-radius: $border-radius-large;
-        border: 2px solid $surface-border;
+        border: 2px $border-type $surface-border;
         background: #FFF;
         box-shadow: $setup-wizard-box-shadow ;
         // width: 60%;
@@ -124,7 +124,7 @@
             h2 {
                 color: $surface-border-hover;
                 font-size: 26px;
-                font-weight: 600;
+                font-weight: $font-weight-medium;
                 line-height: 33px;
                 /* 33.8px */
                 margin-top: 32px !important;
@@ -132,8 +132,8 @@
 
             p {
                 color: $secondary-default;
-                font-size: 15px;
-                font-weight: 400;
+                font-size: $heading-font-size-small;
+                font-weight: $font-weight-reguler;
                 line-height: 24px;
                 /* 160% */
             }
@@ -157,15 +157,15 @@
         .tfhb-s-w-availability-wrap {
 
             .tfhb-popup.tfhb-availability-popup {
+                position: relative !important;
+                background-color: transparent !important;
+
                 .tfhb-popup-wrap {
 
                     max-width: 100% !important;
                     width: 100% !important;
 
-                }
-
-                position: relative !important;
-                background-color: transparent !important;
+                } 
 
                 .tfhb-dashboard-heading {
                     display: none;
@@ -206,8 +206,8 @@
 
             .tfhb-integrations-list {
                 color: var(--Text-Paragraph, #765664);
-                font-size: 15px;
-                font-weight: 600;
+                font-size: $heading-font-size-small;
+                font-weight: $font-weight-medium;
                 line-height: 24px;
                 position: relative;
             }
@@ -220,7 +220,7 @@
                     padding: 8px 44px 8px 12px;
                     align-self: stretch;
                     border-radius: $border-radius-small;
-                    border: 1px solid var(--Border, #F6EEF2);
+                    border: $border-reguler $border-type var(--Border, #F6EEF2);
                     background: #FFF;
                     &:focus, &:active {
                         outline: none;
@@ -245,7 +245,7 @@
             position: relative !important;
             .tfhb-badge.tfhb-badge-pro {
                 margin: 0 !important; 
-                font-size: 11px !important; 
+                font-size: $text-font-size-small !important; 
                 line-height: 1.1 !important;
             }
             
@@ -255,7 +255,7 @@
             padding: 8px;
 
              > span{
-                font-weight: 600 !important;
+                font-weight: $font-weight-medium !important;
             }
             .tfhb-dropdown-wrap {
                 background-color: $surface-secondary !important;

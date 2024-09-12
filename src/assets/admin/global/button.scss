@@ -12,7 +12,7 @@
         background-color: $primary-default;
        
         color: $primary-text;
-        border: 1px solid $primary-default;
+        border: $button-border $border-type $primary-default;
         cursor: pointer;
         &:hover, &:focus, &:active {
             background-color: $primary-hover;
@@ -27,7 +27,7 @@
         border-radius: $border-radius-small;
         background: $surface-secondary;
         box-shadow: $btn-box-shadow;
-        border: 0px solid;
+        border: 0px $border-type;
         cursor: pointer;
         color: $secondary-default;
         &:hover, &:focus, &.active {
@@ -42,11 +42,11 @@
     &.secondary-btn{
         padding: 8px 24px; 
         border-radius: $border-radius-medium; 
-        border: 1px solid $surface-border;
+        border: $button-border $border-type $surface-border;
         background: $surface-secondary;
         color: $secondary-default;
         
-        font-weight: 400;
+        font-weight: $font-weight-reguler;
     }
     &.flex-btn{
         display: flex;
@@ -56,7 +56,7 @@
     &.tfhb-edit{
         background-color: transparent;
         color: $secondary-default;
-        border: 0px solid;
+        border: 0px $border-type;
         cursor: pointer;
     }
     &.tfhb-icon-hover-animation{
@@ -75,8 +75,8 @@
     span{
 
         color: $primary-default;
-        font-size: 15px !important;
-        font-weight: 400;
+        font-size: $heading-font-size-small !important;
+        font-weight: $font-weight-reguler;
         line-height: 24px;
         transition:$transition !important;
         margin: 0 !important;
@@ -94,7 +94,7 @@
             transform: translate(-50%, -50%);
             width: 20px;
             height: 20px;
-            border: 2px solid $primary-default;
+            border: 2px $border-type $primary-default;
             border-top-color: transparent;
             border-radius: $border-radius-full; 
             animation: spin 1s linear infinite;
