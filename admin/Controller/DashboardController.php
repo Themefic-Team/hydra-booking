@@ -10,6 +10,7 @@ use HydraBooking\DB\Host;
 use HydraBooking\DB\Availability;
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Transactions;
 
 // exit
 if ( ! defined( 'ABSPATH' ) ) {
@@ -163,6 +164,10 @@ class DashboardController {
 		// make only 2 decimal after dots exp 10.00
 		$completed['percentage'] = number_format( $completed['percentage'], 2 );
 		$completed['growth']     = $completed['percentage'] < 0 ? 'decrease' : 'increase';
+
+		// Total Earning	
+		
+
 
 		$data = array(
 			'status'                   => true,

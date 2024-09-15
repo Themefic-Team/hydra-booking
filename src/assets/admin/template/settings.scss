@@ -188,6 +188,9 @@
 						background-color: $secondary-hover;
 						color: $primary-default !important;
 					}
+					&:hover {
+						background-color: $surface-primary !important; 
+					}
 					&:focus {
 						outline: none;
 						box-shadow: none;

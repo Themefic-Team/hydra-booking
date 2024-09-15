@@ -19,7 +19,7 @@ class App {
 		new HydraBookingShortcode();
 
 		// display booking_id  into checkout page
-		add_action( 'woocommerce_get_item_data', array( new WooBooking(), 'tfhb_woocommerce_get_item_data' ), 10, 2 );
+		add_filter( 'woocommerce_get_item_data', array( new WooBooking(), 'tfhb_woocommerce_get_item_data' ), 10, 2 );
 
 		// Show custom data in order details.
 		add_action( 'woocommerce_checkout_create_order_line_item', array( new WooBooking(), 'tfhb_apartment_custom_order_data' ), 10, 4 );

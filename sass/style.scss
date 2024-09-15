@@ -6,9 +6,9 @@
     
     .tfhb-meeting-card{
         border-radius: 16px;
-        border: 0.5px solid $ui150;
-        background: $ui0;
-        box-shadow: 0px 0px 8px 2px rgba(255, 221, 236, 0.30) inset, 0px 0px 0px 16px $primary150;
+        border: 0.5px solid $surface-switcher;
+        background: $surface-secondary;
+        box-shadow: 0px 0px 8px 2px rgba(208, 225, 211, 0.30) inset, 0px 0px 0px 16px #F5FEF7;
         display: flex;
         gap: 24px;
         width: fit-content;
@@ -31,7 +31,7 @@
                 position: absolute;
                 left: 0; 
                 content: '';
-                background-color: $ui1000 !important;
+                background-color: $primary-color !important;
                 height: 100%; 
                 width: 100%;
                 opacity: 0.1;
@@ -44,8 +44,8 @@
                width: 100%;
                border-radius: 16px 16px 0 0;
             }
-            border-right: 0.5px solid $ui150;
-            background: $ui0;
+            border-right: 0.5px solid $surface-background;
+            background: $surface-secondary;
             border-radius: 16px 0 0 16px;
             box-shadow: 0 0px 30px 0px rgba(40, 16, 26, 0.20);
             .tfhb-host-info{
@@ -62,7 +62,7 @@
                     }
                     .tfhb-host-name{
                         h3{
-                            color: $ui0;
+                            color: $surface-secondary;
                             font-size: 15px;
                             font-style: normal;
                             font-weight: 600;
@@ -70,7 +70,7 @@
                             margin: 0;
                         }
                         p{
-                            color: $ui0;
+                            color: $surface-secondary;
                             font-size: 13px;
                             font-style: normal;
                             font-weight: 400;
@@ -84,7 +84,7 @@
             .tfhb-meeting-details{
                 padding: 8px 16px 16px 16px;
                 h2{
-                    color: $ui800;
+                    color: $secondary-default;
                     font-size: 22px;
                     font-style: normal;
                     font-weight: 600;
@@ -93,14 +93,14 @@
                 }
                 .tfhb-short-description,
                 .tfhb-full-description{
-                    color:$ui600;
+                    color:$secondary-default;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
                     line-height: 24px; /* 160% */ 
                     margin: 0 0 16px 0;
                     span{
-                        color: $ui800;
+                        color: $secondary-default;
                         cursor: pointer;
                     }
                 }
@@ -108,14 +108,14 @@
                     display: none;
                 }
                 p{
-                    color:$ui600;
+                    color:$secondary-default;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
                     line-height: 24px; /* 160% */ 
                     margin: 0;
                     span{
-                        color: $ui800;
+                        color: $secondary-default;
                         cursor: pointer;
                     }
                 }
@@ -125,7 +125,7 @@
                     list-style: none;
                     margin-bottom: 40px;
                     li{
-                        color: $ui600;
+                        color: $secondary-default;
                         font-size: 15px;
                         font-style: normal;
                         font-weight: 600;
@@ -136,14 +136,14 @@
                         }
                         span{
                             border-radius: 6px;
-                            border: 1px solid $ui50;     
+                            border: 1px solid $surface-border;     
                             padding: 0 16px;
                             margin: 0 8px;  
                         }
                         .tfhb-icon{
                             border-radius: 6px;
                             border: 0.2px solid rgba(227, 207, 215, 0.2);
-                            background: $ui0;
+                            background: $surface-secondary;
                             width: 24px;
                             height: 24px; 
                             display: flex;
@@ -151,7 +151,7 @@
                             justify-content: center;
                             svg{
                                 path{
-                                    stroke: $ui600;
+                                    stroke: $secondary-default;
                                 }
                             }
                         }
@@ -159,7 +159,7 @@
                 }
                 .tfhb-timezone{
                     border-radius: 8px;
-                    background: $ui0;
+                    background: $surface-secondary;
                     padding: 8px 12px;
                     justify-content: space-between; 
                     padding: 0 !important;
@@ -179,7 +179,7 @@
                         background-size: 0 !important;
                     }
                     .tfhb-timezone-title{
-                        color: $ui800;
+                        color: $secondary-default;
                         font-size: 15px;
                         font-style: normal;
                         font-weight: 600;
@@ -197,7 +197,7 @@
                         padding-bottom: 8px;
                         border: none;
                         .select2-selection__rendered{
-                            color: $ui800;
+                            color: $secondary-default;
                             padding: 0px !important;
                             line-height: normal;
                         }
@@ -206,7 +206,7 @@
                             width: 1.7em;
                             transform: translateY(-50%);
                             b{
-                                border-color: $primaryi transparent transparent transparent;
+                                border-color: $primary-default transparent transparent transparent;
                                 display: block;
                             }
                         }
@@ -223,7 +223,7 @@
                         justify-content: center;
                         svg{
                             path{
-                                stroke: $ui600;
+                                stroke: $secondary-default;
                             }
                         }
                     }
@@ -264,13 +264,13 @@
                 align-items: center;
                 padding: 0px 0px 16px 0;
                 justify-content: space-between;
-                border-bottom: 0.5px solid rgba(227, 207, 215, 0.20);
+                border-bottom: 0.5px solid $icon-gradient;
 
                 .tfhb-calendar-navigation {
                     display: flex;
                     border-radius: 8px;
-                    background: $ui0;
-                    box-shadow: 0px 8px 16px 0px rgba(40, 16, 26, 0.04);
+                    background: $surface-secondary;
+                    box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
                     width: 94px;
                     justify-content: space-between;
                     position: relative;
@@ -292,7 +292,7 @@
                         position: absolute;
                         top: 0px; left: 0px; right: 0px; bottom: 0px;
                         border-radius: 8px;
-                        background: $ui0;
+                        background: $surface-secondary;
                         z-index: -1;
                     }
                     span {
@@ -306,12 +306,12 @@
                         transition: .3s all ease;
                         svg{
                             path{
-                                stroke: $primaryi;
+                                stroke: $primary-default;
                                 transition: .3s all ease;
                             }
                         }
                         &:hover{
-                            background-color: $primaryi;
+                            background-color: $primary-default;
                             border-radius: 5px;
                             svg{
                                 path{
@@ -327,7 +327,7 @@
                             content: "";
                             width: 8px;
                             height: 8px;
-                            background-color: $ui600;
+                            background-color: $secondary-default;
                             border-radius: 50%;
                             left: -24px;
                         }
@@ -336,7 +336,7 @@
             }
 
             .tfhb-calendar-current-date {
-                color: $ui800;
+                color: $secondary-default;
                 font-size: 22px;
                 font-style: normal;
                 font-weight: 600;
@@ -352,7 +352,7 @@
                 margin: 12px 0 16px 0;
                 padding: 0;
                 li{
-                    color: $ui800;
+                    color: $secondary-default;
                     text-align: center;
                     font-size: 15px;
                     font-style: normal;
@@ -372,7 +372,7 @@
                 li {
                     border: 0.5px solid rgba(227, 207, 215, 0.00);
                     width: calc(100% / 7);
-                    color: $ui800;
+                    color: $secondary-default;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -380,7 +380,7 @@
                     padding: 16px 0;
                     box-sizing: border-box;
                     &.inactive{
-                        color: $ui600;
+                        color: $secondary-default;
                         cursor: not-allowed !important;
                         background-color: transparent !important;
                         &::after{
@@ -400,7 +400,7 @@
                             content: "";
                             border-radius: 8px;
                             border: 0.5px solid rgba(227, 207, 215, 0.00);
-                            background: #FAF5F7;
+                            background: #EEF6F0;
                             height: 90%;
                             width: 90%;
                             left: 50%;
@@ -412,22 +412,23 @@
                         }
                         &:hover{
                             &::after{
+                               
                                 border: 0.5px solid rgba(227, 207, 215, 0.00);
-                                background: #FEE6F0;
-                                box-shadow: 0px 3px 0px 0px rgba(36, 16, 25, 0.12);
+                                background: $secondary-hover; 
+                                box-shadow: 0px 3px 0px 0px rgba(16, 36, 19, 0.04);
                             }
                         }
                     }
                     &.current.active{
-                        color: $ui0 !important;
+                        color: $surface-secondary !important;
                         position: relative;
                         &::after{
                             position: absolute;
                             content: "";
                             border-radius: 8px;
                             border: 0.5px solid rgba(227, 207, 215, 0.00);
-                            box-shadow: 0px 8px 30px 0px rgba(229, 0, 99, 0.3);
-                            background: $primaryi !important;
+                            box-shadow: $icon-box-shadow;
+                            background: $primary-default !important;
                             height: 90%;
                             width: 90%;
                             left: 50%;
@@ -443,7 +444,7 @@
                             height: 2px;
                             width: 16px;
                             border-radius: 16px;
-                            background: $ui0;
+                            background: $surface-secondary;
                             bottom: 9px;
                             left: 50%;
                             margin-left: -8px;
@@ -478,7 +479,7 @@
                 height: 36px;
                 position: relative;
                 z-index: 0;
-                background: $ui0;
+                background: $surface-secondary;
                 display: flex;
                 box-sizing: border-box;
                 &::before {
@@ -495,7 +496,7 @@
                     position: absolute;
                     top: 0px; left: 0px; right: 0px; bottom: 0px;
                     border-radius: 8px;
-                    background: $ui0;
+                    background: $surface-secondary;
                     z-index: -1;
                 }
                 ul{
@@ -514,7 +515,7 @@
                         justify-content: center;
                         box-sizing: border-box;
                         label{
-                            color: $ui500;
+                            color: $text-input;
                             font-size: 11px;
                             font-style: normal;
                             font-weight: 600;
@@ -527,16 +528,16 @@
                         }
                         &.active{
                             border-radius: 4px;
-                            background: $ui50;
+                            background: $surface-border;
                             label{
-                                color: $ui800;
+                                color: $secondary-default;
                             }
                         }
                     }
                 }
             }
             h3{
-                color: $ui800;
+                color: $secondary-default;
                 font-size: 17px;
                 font-style: normal;
                 font-weight: 600;
@@ -558,10 +559,10 @@
                         width: 100%;
                         span{
                             border-radius: 8px;
-                            border: 0.5px solid $primaryi;
-                            background: $ui0;
+                            border: 0.5px solid $primary-default;
+                            background: $surface-secondary;
                             padding: 16px 10px;
-                            color: $primaryi;
+                            color: $primary-default;
                             text-align: center;
                             font-size: 15px;
                             font-style: normal;
@@ -575,23 +576,23 @@
                                 padding: 16px 1px;
                             }
                             &:hover{
-                                border: 0.5px solid #F62881;
-                                background: #FAF5F7;
+                                border: 0.5px solid $primary-default;
+                                background: $surface-border;
                             }
                             &.time.active{
-                                border: 0.5px solid #F62881;
-                                background: #FAF5F7;
+                                border: 0.5px solid $primary-default;
+                                background: $surface-border;
                             }
                         }
                         span.next{
                             border-radius: 8px;
-                            background: $primaryi;
-                            color: $ui0;
+                            background: $primary-default;
+                            color: $surface-secondary;
                             align-items: center;
                             justify-content: center;
                             transition: .3s all ease;
                             &:hover{
-                                background-color: #C40859;
+                                background-color: $primary-hover ;
                             }
                         }
                     }
@@ -611,11 +612,11 @@
                 cursor: pointer;
                 svg{
                     path{
-                        stroke: $primaryi;
+                        stroke: $primary-default;
                     }
                 }
                 h3{
-                    color: $ui800;
+                    color: $secondary-default;
                     font-size: 17px;
                     font-style: normal;
                     font-weight: 600;
@@ -633,7 +634,7 @@
                         width: 100%;
                         margin-bottom: 16px;
                         label{
-                            color: $ui800;
+                            color: $secondary-default;
                             font-size: 13px;
                             font-style: normal;
                             font-weight: 400;
@@ -644,8 +645,8 @@
                         input[type="email"],
                         textarea{
                             border-radius: 8px;
-                            border: 0.5px solid $ui150;
-                            background: $ui0;
+                            border: 0.5px solid $surface-background;
+                            background: $surface-secondary;
                             height: 40px;
                             width: 100%;
                             padding: 8px 12px;
@@ -667,7 +668,7 @@
                         width: 100%;
                         align-items: center;
                         .swicher-label{
-                            color: $ui800;
+                            color: $secondary-default;
                             font-size: 15px;
                             font-style: normal;
                             font-weight: 400;
@@ -685,9 +686,9 @@
                     justify-content: end;
                     button{
                         border-radius: 8px;
-                        background: $primaryi;
+                        background: $primary-default;
                         padding: 16px;
-                        color: $ui0;
+                        color: $surface-secondary;
                         justify-content: center;
                         font-size: 15px;
                         font-style: normal;
@@ -698,7 +699,7 @@
                         border: 0px solid;
                         transition: .3s all ease;
                         &:hover{
-                            background-color: #C40859;
+                            background-color: $primary-hover;
                         }
                     }
                 }
@@ -717,7 +718,7 @@
                     margin-bottom: 24px;
                 }
                 h3{
-                    color: $ui800;
+                    color: $secondary-default;
                     font-size: 22px;
                     font-style: normal;
                     font-weight: 600;
@@ -725,7 +726,7 @@
                     margin: 0 0 16px 0;
                 }
                 p{
-                    color: $ui600;
+                    color: $secondary-default;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -735,10 +736,10 @@
             }
             .tfhb-meeting-hostinfo{
                 border-radius: 8px;
-                background: $ui25;
+                background: $surface-border;
                 padding: 24px;
                 h4{
-                    color: $ui800;
+                    color: $secondary-default;
                     font-size: 17px;
                     font-style: normal;
                     font-weight: 600;
@@ -750,7 +751,7 @@
                     padding: 0;
                     list-style: none;
                     li{
-                        color: $ui600;
+                        color: $secondary-default;
                         font-size: 15px;
                         font-style: normal;
                         font-weight: 400;
@@ -764,7 +765,7 @@
                         }
                         span{
                             border-radius: 16px;
-                            background: $info50;
+                            background: $info-background;
                             padding: 4px 8px;
                             color: $info-text;
                             font-size: 11px;
@@ -775,7 +776,7 @@
                         .tfhb-icon{
                             border-radius: 6px;
                             border: 0.2px solid rgba(227, 207, 215, 0.2);
-                            background: $ui0;
+                            background: $surface-secondary;
                             width: 24px;
                             height: 24px; 
                             display: flex;
@@ -789,7 +790,7 @@
             .tfhb-meeting-confirmation-calender{
                 margin: 32px 0 0 0;
                 h3{
-                    color:$ui800;
+                    color:$secondary-default;
                     text-align: center;
                     font-size: 15px;
                     font-style: normal;
@@ -818,11 +819,11 @@
                 margin-top: 24px;
                 button, a{
                     border-radius: 8px;
-                    border: 1px solid $ui50;
-                    background: $ui0;
+                    border: 1px solid $surface-border;
+                    background: $surface-secondary;
                     padding: 8px 24px;
                     width: 158px;
-                    color: $ui600;
+                    color: $secondary-default;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -832,8 +833,8 @@
                     transition: .3s all ease;
                     text-align: center;
                     &:hover{
-                        background-color: #C40859;
-                        border-color: #C40859;
+                        background-color: $primary-hover;
+                        border-color: $primary-hover;
                         color: #fff;
                     }
                 }

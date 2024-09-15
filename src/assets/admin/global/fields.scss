@@ -16,7 +16,7 @@
                 margin-top: 4px;
                 border-radius: $border-radius-small;
                 height: 40px;
-                border: $fields-border $border-type $surface-border;
+                border: $fields-border $border-type $surface-input-field;
                 font-family: "Inter", sans-serif;
                 &:focus, &:active {
                     outline: none;
@@ -31,7 +31,7 @@
                 color: $text-input !important;
             }
             .p-dropdown { 
-                border: $fields-border $border-type $surface-border !important; 
+                border: $fields-border $border-type $surface-input-field !important; 
                 box-shadow: none !important;
                 &.tfhb-required{
                     border: $fields-border $border-type red !important;
@@ -58,7 +58,7 @@
                 min-width: 100%;
                 margin-top: 4px;
                 border-radius: $border-radius-small;
-                border: $fields-border $border-type $surface-border;
+                border: $fields-border $border-type $surface-input-field;
                 background-color: transparent;
                 line-height: 20px;
                 height: 40px;
@@ -97,7 +97,7 @@
             textarea{
                 height: 96px;
                 border-radius: $border-radius-small;
-                border: $fields-border $border-type $surface-border;
+                border: $fields-border $border-type $surface-input-field;
                 color: $text-input;
                 font-size: $heading-font-size-small;
                 

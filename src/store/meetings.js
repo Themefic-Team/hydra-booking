@@ -43,8 +43,11 @@ const Meeting = reactive({
                 } 
             } );
             if (response.data.status) { 
-                this.meetings = response.data.meetings;   
-                toast.success(response.data.message); 
+                this.meetings = response.data.meetings;    
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
             }
         } catch (error) {
             console.log(error);

@@ -6,6 +6,9 @@ defined( 'ABSPATH' ) || exit;
 
 
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Transactions;
+use HydraBooking\DB\Meeting;
+
 /**
  *
  *
@@ -18,7 +21,7 @@ class WooBooking {
 	public function __construct() {
 	}
 
-	public function add_to_cart( $product_id, $data ) {
+	public function add_to_cart( $product_id, $data ) { 
 		$product                                      = wc_get_product( $product_id );
 		$order_meta                                   = array();
 		$order_meta['tfhb_order_meta']['booking_id']  = $data['booking_id'];
@@ -30,7 +33,7 @@ class WooBooking {
 	}
 
 	// display booking_id  into checkout page
-	public function tfhb_woocommerce_get_item_data( $item_data, $cart_item ) {
+	public function tfhb_woocommerce_get_item_data( $item_data, $cart_item ) { 
 		if ( ! empty( $cart_item['tfhb_order_meta']['booking_id'] ) ) {
 			$item_data[] = array(
 				'key'   => esc_html( __( 'Appointment ', 'hydra-booking' ) ),
@@ -48,7 +51,7 @@ class WooBooking {
 		$appointment = ! empty( $values['tfhb_order_meta']['Appointment'] ) ? $values['tfhb_order_meta']['Appointment'] : '';
 
 		if ( $booking_id ) {
-			$item->update_meta_data( 'tfhb_booking_id', $booking_id, true );
+			$item->update_meta_data( '_tfhb_booking_id', $booking_id, true );
 		}
 
 		if ( $appointment ) {
@@ -59,12 +62,18 @@ class WooBooking {
 	// Add order id to the hotel room meta field
 	public function tfhb_add_apartment_data_checkout_order_processed( $order_id, $posted_data, $order ) {
 
+		
 		$order = wc_get_order( $order_id );
-		$items = $order->get_items();
-		foreach ( $items as $item_id => $item ) {
-			if ( ! empty( $item->get_meta( 'tfhb_order_meta' ) ) ) {
-				$booking_id  = $item->get_meta( 'tfhb_order_meta' )['booking_id'];
-				$appointment = $item->get_meta( 'tfhb_order_meta' )['Appointment'];
+		$items = $order->get_items(); 
+		// tfhb_print_r($order->get_meta( 'tfhb_order_meta' ));
+		foreach ( $items as $item_id => $item ) { 
+			if ( ! empty( $item->get_meta( '_tfhb_booking_id' ) ) ) {
+				// Item Sales Price
+				$items_price = $item->get_total();
+
+				
+				$booking_id  = $item->get_meta( '_tfhb_booking_id' );
+				$appointment = $item->get_meta( 'tfhb_appointment' );
 				$order->update_meta_data(
 					'tfhb_order_meta',
 					array(
@@ -72,6 +81,49 @@ class WooBooking {
 						'Appointment' => $appointment,
 					)
 				);
+
+				// tfhb_print_r( $item->get_meta( '_tfhb_booking_id' ) );
+				// Update Transaction ID Data 
+				$booking = new Booking();
+				$get_booking = $booking->get( 
+					array(
+						'id' => $booking_id,
+					),
+					false,
+					true
+				);
+				// Get_meetingData
+				$meeting = new Meeting();
+				$meetingData = $meeting->get( 
+					array(
+						'id' => $get_booking->meeting_id,
+					),
+					false,
+					true
+				);
+
+				// tfhb_print_r($price);
+				$transactions = new Transactions();
+				$transation_history = array(
+					'wc_order_id' => $order_id, 
+					'item_id' => $item_id, 
+				);
+				// add transaction
+				$transactionData = array(
+					'booking_id' 	   => $booking_id,
+					'meeting_id' 	   => $get_booking->meeting_id,
+					'customer_id' 	   => $get_booking->attendee_id,
+					'user_id' 	   => $meetingData->host_id,
+					'payment_method' 	   => $get_booking->payment_method,
+					'total' 	   => $items_price,
+					'status' 	   => $order->get_status(),
+					'transation_history' => json_encode($transation_history, true),
+				); 
+
+				// add transaction
+				$transactions->add( $transactionData ); 
+
+
 			}
 		}
 	}
@@ -87,9 +139,9 @@ class WooBooking {
 		$items = $order->get_items();
 		foreach ( $items as $item_id => $item ) {
 
-			if ( ! empty( $item->get_meta( 'tfhb_booking_id' ) ) ) {
+			if ( ! empty( $item->get_meta( '_tfhb_booking_id' ) ) ) { 
 
-				$booking_id = $item->get_meta( 'tfhb_booking_id' );
+				$booking_id = $item->get_meta( '_tfhb_booking_id' );
 				$booking    = new Booking();
 				$updateData = array(
 					'id'             => $booking_id,

@@ -41,7 +41,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: $ui150;
+            background-color: $surface-background;
             -webkit-transition: .4s;
             transition: .4s;
             border-radius: 10px;
@@ -53,7 +53,7 @@
                 width: 14px;
                 left: 4px;
                 bottom: 3px;
-                background-color: $ui0;
+                background-color: $surface-secondary;
                 -webkit-transition: .4s;
                 transition: .4s;
                 border-radius: 50%;
@@ -61,7 +61,7 @@
             
         }
         input:checked + .slider {
-            background-color: $primaryi;
+            background-color: $primary-default;
         }
         input:focus + .slider {
             box-shadow: none;
@@ -94,9 +94,9 @@
         left: 0px;
         height: 20px;
         width: 20px;
-        background-color: $ui50;
+        background-color: $surface-border;
         border-radius: 5px;
-        border: 1px solid $ui50;
+        border: 1px solid $surface-border;
         margin: 0;
         &:after {
             content: "";
@@ -105,7 +105,7 @@
             top: 2px;
             width: 6px;
             height: 11px;
-            border: solid $ui50;
+            border: solid $surface-border;
             border-width: 0 3px 3px 0;
             -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
@@ -114,7 +114,7 @@
         }
     }
     label{
-        color: $ui800;
+        color: $secondary-default;
         font-size: 15px;
         font-style: normal;
         font-weight: 400;
@@ -123,8 +123,8 @@
         position: relative;
         padding-left: 40px;
         input:checked~.checkmark {
-            background-color: $primaryi;
-            border: 1px solid $primaryi;
+            background-color: $primary-default;
+            border: 1px solid $primary-default;
         }
         input:checked~.checkmark:after {
             display: block;

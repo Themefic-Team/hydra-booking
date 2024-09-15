@@ -22,8 +22,12 @@ class Transactions {
 			$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT,
                 booking_id INT(11) NOT NULL,
+                meeting_id INT(11) NOT NULL,
                 customer_id VARCHAR(100) NULL,
+                payment_method VARCHAR(100) NULL,
+                total VARCHAR(100) NULL,
                 transation_history LONGTEXT NULL, 
+                status LONGTEXT NULL, 
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)

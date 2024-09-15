@@ -679,7 +679,7 @@ class HydraBookingShortcode {
 		update_post_meta( $meeting_post_id, '_tfhb_booking_opt', $data );
 
 		$data['post_id'] = $meeting_post_id;
-		$result          = $booking->add( $data );
+		$result          = $booking->add( $data ); 
 
 		if ( $result === false ) {
 			wp_send_json_error( array( 'message' => 'Booking Failed' ) );
@@ -688,6 +688,7 @@ class HydraBookingShortcode {
 		if ( true == $meta_data['payment_status'] && 'woo_payment' == $meta_data['payment_method'] ) {
 			// Add to cart
 			$product_id = $meta_data['payment_meta']['product_id'];
+			$data['booking_id'] = $result['insert_id'];
 
 			$woo_booking = new WooBooking();
 			$woo_booking->add_to_cart( $product_id, $data );
