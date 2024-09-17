@@ -5,6 +5,11 @@ import axios from 'axios'
 const Meeting = reactive({
     meetings: [],
     meetingCategory: [],
+    meetingPaymentIntegration: {
+        woo_payment: true,
+        paypal: true, 
+        stripe: true,
+    },
 
     // Meeting List
     async fetchMeetings() {
@@ -18,6 +23,22 @@ const Meeting = reactive({
 
         if (response.data.status) { 
             this.meetings = response.data.meetings;
+        }
+
+    },
+
+     // Meeting List
+     async fetchMeetingsPaymentIntegration() {
+
+        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/payment/payment-method', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+
+        if (response.data.status) {  
+            this.meetingPaymentIntegration = response.data.integrations;
         }
 
     },

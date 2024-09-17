@@ -112,8 +112,8 @@ class WooBooking {
 				$transactionData = array(
 					'booking_id' 	   => $booking_id,
 					'meeting_id' 	   => $get_booking->meeting_id,
+					'host_id' 	   => $meetingData->host_id,
 					'customer_id' 	   => $get_booking->attendee_id,
-					'user_id' 	   => $meetingData->host_id,
 					'payment_method' 	   => $get_booking->payment_method,
 					'total' 	   => $items_price,
 					'status' 	   => $order->get_status(),
@@ -122,6 +122,8 @@ class WooBooking {
 
 				// add transaction
 				$transactions->add( $transactionData ); 
+				echo "hello";
+				exit;
 
 
 			}

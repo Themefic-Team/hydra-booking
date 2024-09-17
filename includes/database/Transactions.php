@@ -23,6 +23,7 @@ class Transactions {
                 id INT(11) NOT NULL AUTO_INCREMENT,
                 booking_id INT(11) NOT NULL,
                 meeting_id INT(11) NOT NULL,
+				host_id INT(11) NOT NULL,
                 customer_id VARCHAR(100) NULL,
                 payment_method VARCHAR(100) NULL,
                 total VARCHAR(100) NULL,
@@ -115,6 +116,23 @@ class Transactions {
 		// Get all data
 
 		return $data;
+	}
+
+	public function totalEarning($previous_date, $current_date, $user_id = false) {
+		// where "created_at BETWEEN '$previous_date' AND '$current_date'",  
+		global $wpdb;
+		$host_table = $wpdb->prefix . 'tfhb_hosts';
+		$table_name = $wpdb->prefix . $this->table;
+		// Join the tables transactions and meetings
+		$sql = "SELECT  SUM($table_name.total) AS total_sum FROM $table_name
+		LEFT JOIN $host_table ON $table_name.host_id = $host_table.id
+		WHERE $table_name.created_at BETWEEN '$previous_date' AND '$current_date'";
+		if ($user_id) {
+			$sql .= " AND $host_table.id = '$user_id'";
+		} 
+		$data = $wpdb->get_var($sql);
+		return $data;
+
 	}
 
 	// delete

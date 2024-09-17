@@ -293,7 +293,7 @@
   right: -1px;
   bottom: -1px;
   border-radius: 8px; /* Same as the main element */
-  background: linear-gradient(to bottom right, rgba(227, 207, 215, 0), rgb(227, 207, 215), rgba(227, 207, 215, 0));
+  background: linear-gradient(to bottom right, rgba(207, 227, 210, 0), rgb(207, 227, 210), rgba(207, 227, 210, 0));
   z-index: -1;
   pointer-events: none; /* Prevents the pseudo-element from interfering with user interactions */
 }

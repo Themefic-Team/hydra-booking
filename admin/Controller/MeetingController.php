@@ -182,6 +182,17 @@ class MeetingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+
+		register_rest_route(
+			'hydra-booking/v1',
+			'/meetings/payment/payment-method',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'fetchMeetingsPaymentIntegration' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 	}
 	public function getMeetingList() {
 		$current_user = wp_get_current_user();
@@ -1376,6 +1387,26 @@ class MeetingController {
 			'message'       => 'Question Forms Data',
 		);
 		return rest_ensure_response( $data );
+	}
+
+	// Fetch Meeting integrations Settings
+	public function fetchMeetingsPaymentIntegration(){
+		// Gett intrigations settings
+		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$integrations = array();
+		$integrations['woo_payment'] = isset( $_tfhb_integration_settings['woo_payment']['status'] ) && $_tfhb_integration_settings['woo_payment']['status'] == true ? false : true;
+		$integrations['paypal'] = isset( $_tfhb_integration_settings['paypal']['status'] ) && !empty($_tfhb_integration_settings['paypal']['client_id'] ) && $_tfhb_integration_settings['paypal']['status'] == true ? false : true;
+		$integrations['stripe'] = isset( $_tfhb_integration_settings['stripe']['status'] ) && !empty($_tfhb_integration_settings['stripe']['public_key'] ) && $_tfhb_integration_settings['stripe']['status'] == true ? false : true;
+		
+
+		$data = array(
+			'status'        => true,
+			'integrations' => $integrations, 
+			'_tfhb_integration_settings' => $_tfhb_integration_settings, 
+		);
+		return rest_ensure_response( $data );
+
+
 	}
 	// Fetch Forms list based on form Types
 	public function getQuestionFormsData( $form_type ) {

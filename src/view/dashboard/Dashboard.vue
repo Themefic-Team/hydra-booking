@@ -155,7 +155,7 @@ const  ChangeStatisticData = (day) => {
                     <span class="cartbox-title">{{ $tfhb_trans('Total Earnings') }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
                         <div class="tfhb-single-chartbox-content">
-                            <span class="cartbox-value ">0</span>
+                            <span class="cartbox-value ">{{Dashboard.data.total_earning.total}}</span>
                             
                         </div>
                         <div class="tfhb-chartbox-icon">
@@ -165,12 +165,18 @@ const  ChangeStatisticData = (day) => {
                     </div>
                     
                     <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge badge-down tfhb-flexbox tfhb-gap-8">
-                            <Icon name="ArrowUp" :size="15"/>
-                            <span> 80%</span>
+                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-8"
+                            :class = "{
+                                'badge-down': Dashboard.data.total_earning.growth == 'decrease',
+                                'badge-up': Dashboard.data.total_earning.growth == 'increase',
+                            }"
+                        >
+                            <Icon v-if="Dashboard.data.total_earning.growth == 'increase'" name="ArrowUp" :size="15"/>
+                            <Icon v-else name="ArrowDown" :size="15"/>
+                            <span> {{Dashboard.data.total_earning.percentage}}%</span>
                         </span>
                         <span> {{ $tfhb_trans('VS') }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} 30 {{ $tfhb_trans('days') }}</span>
+                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
                     </div>
                 </div>
             </div>

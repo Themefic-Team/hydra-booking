@@ -260,9 +260,9 @@ const UpdateIntegration = async (key, value) => {
             outlookpopup.value = false;
         }
     } catch (error) {
-        toast.error('Action successful', {
-            position: 'bottom-right', // Set the desired position
-        });
+        // toast.error('Action successful', {
+        //     position: 'bottom-right', // Set the desired position
+        // });
     }
 }
 onBeforeMount(() => {  

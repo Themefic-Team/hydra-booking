@@ -166,8 +166,17 @@ class DashboardController {
 		$completed['growth']     = $completed['percentage'] < 0 ? 'decrease' : 'increase';
 
 		// Total Earning	
-		
+		$transactions = new Transactions();
+		$earning      = $transactions->totalEarning($previous_date,  $current_date, ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false); 
 
+		$previous_earning = $transactions->totalEarning($previous_date_before,  $previous_date, ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false);
+		// tfhb_print_r($earning);
+		$total_earning['total']      = $earning;
+		$total_earning_previous      = $previous_earning;
+		$total_earning['percentage'] = $total_earning_previous != 0 ? 100 * ( $total_earning['total'] - $total_earning_previous ) / $total_earning_previous : 100;
+		// make only 2 decimal after dots exp 10.00
+		$total_earning['percentage'] = number_format( $total_earning['percentage'], 2 );
+		$total_earning['growth']     = $total_earning['percentage'] < 0 ? 'decrease' : 'increase';
 
 		$data = array(
 			'status'                   => true,
@@ -176,6 +185,7 @@ class DashboardController {
 			'total_completed_bookings' => $completed,
 			'upcoming_booking'         => $upcoming_booking,
 			'recent_booking'           => $recent_booking,
+			'total_earning'            => $total_earning,
 			'days'                     => $days,
 		);
 

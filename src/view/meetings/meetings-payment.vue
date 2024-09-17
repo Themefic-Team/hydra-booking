@@ -1,9 +1,11 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, onBeforeMount} from 'vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'
 
 // component
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import { Meeting } from '@/store/meetings'
+
 
 const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
@@ -26,6 +28,10 @@ const props = defineProps({
 const host = ref(true);
 const attendee = ref(false);
 
+onBeforeMount(() => {
+    Meeting.fetchMeetingsPaymentIntegration();
+})
+
 </script>
 
 <template>
@@ -43,7 +49,7 @@ const attendee = ref(false);
                 <p>{{ $tfhb_trans('You can enable or disable payment for this meeting by toggle switch') }}</p>
             </div> 
             <div v-if="meeting.payment_status == 1"  class="tfhb-content-wrap tfhb-full-width"> 
-                <div class="tfhb-integrations-wrap tfhb-flexbox">
+                <div class="tfhb-integrations-wrap tfhb-flexbox"> 
 
                     <HbDropdown 
                         v-model="meeting.payment_method" 
@@ -53,9 +59,9 @@ const attendee = ref(false);
                         name="payment_method"
                         placeholder="Select Payment Method"  
                         :option = "[
-                            {name: 'Woocommerce', value: 'woo_payment'},  
-                            {name: 'Paypal', value: 'paypal_payment'}, 
-                            {name: 'Stripe Pay', value: 'stripe_payment', disable: true}, 
+                            {name: 'Woocommerce', value: 'woo_payment', disable: Meeting.meetingPaymentIntegration.woo_payment},  
+                            {name: 'Paypal', value: 'paypal_payment', disable: Meeting.meetingPaymentIntegration.paypal}, 
+                            {name: 'Stripe Pay', value: 'stripe_payment', disable: Meeting.meetingPaymentIntegration.stripe}, 
                         ]"   
                     /> 
                     <!-- Woo Integrations  -->
