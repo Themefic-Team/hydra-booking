@@ -719,7 +719,7 @@ class HydraBookingShortcode {
 
 		$single_booking_meta = $booking->get(
 			array( 'id' => $result['insert_id'] ),
-			false,
+			true,
 		);
 		// After Booking Hooks
 		do_action( 'hydra_booking/after_booking_confirmation', $single_booking_meta );
@@ -734,10 +734,12 @@ class HydraBookingShortcode {
 		$meeting_location_data = json_decode( $single_booking_meta->meeting_locations, true );
 
 		// Meeting Location Check
-		$meeting_locations = json_decode( $single_booking_meta->meeting_location );
-
+		$meeting_locations = $meta_data['meeting_locations'];
+		
+		
 		$zoom_exists = false;
 		if ( is_array( $meeting_locations ) ) {
+			
 			// if in array location value is meet then set google meet using array filter
 			$meeting_location = array_filter(
 				$meeting_locations,
@@ -748,7 +750,8 @@ class HydraBookingShortcode {
 
 			$zoom_exists = count( $meeting_location ) > 0 ? true : false;
 		}
-
+	
+		
 		// Global Integration
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 
@@ -780,10 +783,7 @@ class HydraBookingShortcode {
 				sanitize_text_field( $app_secret_key )
 			);
 			$meeting_creation = $zoom->create_zoom_meeting( $single_booking_meta );
-			// echo "<pre>";
-			// print_r($meeting_creation);
-			// echo "<br>";
-			// exit;
+		 
 
 			$meeting_location_data['zoom']['address'] = $meeting_creation;
 

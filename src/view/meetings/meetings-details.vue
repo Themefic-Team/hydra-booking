@@ -48,8 +48,7 @@ const tfhbValidateInput = (fieldName) => {
     }
 };
 
-// const google_calendar_status =  integrations.google_calendar_status == 1 ? 0 : 1;
-// const zoom_meeting_status = integrations.zoom_meeting_status == 1 ? 0 : 1;
+ 
 
 </script>
 
@@ -119,7 +118,7 @@ const tfhbValidateInput = (fieldName) => {
         <div class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width"> 
             <div class="tfhb-flexbox tfhb-gap-16 tfhb-mb-24" v-for="(slocation, index) in meeting.meeting_locations" :key="index">
                 <div class="tfhb-meeting-location tfhb-flexbox tfhb-gap-16" :style="meeting.meeting_locations.length<2 ?'width:100%' : '' ">
-                    <!-- Location -->
+                    <!-- Location --> 
                     <HbDropdown 
                         v-model="slocation.location" 
                         required= "true" 
@@ -127,8 +126,8 @@ const tfhbValidateInput = (fieldName) => {
                         :selected = "1"
                         :placeholder="$tfhb_trans('Location')" 
                         :option = "[
-                            {name: 'Zoom', value: 'zoom', disable:  integrations.zoom_meeting_status}, 
-                            {name: 'Google Meet', value: 'meet', disable: integrations.google_calendar_status}, 
+                            {name: 'Zoom', value: 'zoom', disable:  props.integrations.zoom_meeting_status}, 
+                            {name: 'Google Meet', value: 'meet', disable: props.integrations.google_calendar_status}, 
                             {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
                             {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                             {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},

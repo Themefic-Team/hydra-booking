@@ -166,7 +166,7 @@ class ZoomServices {
 		$access_response = $this->generateAccessToken();
 
 		$time_in_24_hour_format = gmdate( 'H:i:s', strtotime( $meeting_data->start_time ) );
-
+		tfhb_print_r($meeting_data);
 		$data = array(
 			'topic'      => ! empty( $meeting_data->meeting_title ) ? $meeting_data->meeting_title : '',
 			'type'       => 2, // Scheduled Meeting

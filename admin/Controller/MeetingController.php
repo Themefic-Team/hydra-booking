@@ -788,7 +788,7 @@ class MeetingController {
 		$woo_commerce = new WooBooking();
 		$wc_product   = $woo_commerce->getAllProductList();
 
-		// google  Meeting
+		// google  Meeting 
 		if ( $_tfhb_integration_settings['google_calendar'] ) {
 			$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
 		}

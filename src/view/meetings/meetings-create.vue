@@ -338,6 +338,7 @@ const meetingId = route.params.id;
         if (response.data.status == true) { 
             // Time Zone = 
             timeZone.value = response.data.time_zone;   
+            console.log(response.data.integrations);
             integrations.google_calendar_status = response.data.integrations.google_calendar_status && response.data.integrations.google_calendar_status == 1 ? false : true;  
             integrations.zoom_meeting_status = response.data.integrations.zoom_meeting_status && response.data.integrations.zoom_meeting_status == 1  ? false : true;  
             integrations.cf7_status = response.data.integrations.cf7_status && response.data.integrations.cf7_status == 1  ? false : true;  

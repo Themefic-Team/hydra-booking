@@ -27,11 +27,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 99;
             &::after {
                 position: absolute;
                 left: 0; 
                 content: '';
-                background-color: $primary-color !important;
+                background-color: $primary-default !important;
                 height: 100%; 
                 width: 100%;
                 opacity: 0.1;

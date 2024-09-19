@@ -121,9 +121,7 @@ class WooBooking {
 				); 
 
 				// add transaction
-				$transactions->add( $transactionData ); 
-				echo "hello";
-				exit;
+				$transactions->add( $transactionData );  
 
 
 			}
