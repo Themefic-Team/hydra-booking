@@ -420,11 +420,7 @@ class SettingsController {
 
 		if ( $key == 'zoom_meeting' ) {
 
-			$zoom = new ZoomServices(
-				sanitize_text_field( $data['account_id'] ),
-				sanitize_text_field( $data['app_client_id'] ),
-				sanitize_text_field( $data['app_secret_key'] )
-			);
+			$zoom = new ZoomServices();
 			return rest_ensure_response( $zoom->updateZoomSettings( $data ) );
 
 		} elseif ( $key == 'woo_payment' ) {

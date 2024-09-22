@@ -34,14 +34,17 @@ class MailHooks {
 	// If booking Status is Complted
 	public function pushBookingToCompleted( $booking ) {
 
+		
+
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $booking->host_id );
-
+		
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
 			// Host Confirmation Email, If Settings Enable for Host Confirmation
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['status'] ) ) {
+				
 				// From Email
 				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['form'] : get_option( 'admin_email' );
 

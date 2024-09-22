@@ -711,11 +711,7 @@ class HostsController {
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 		if ( $key == 'zoom_meeting' ) {
 
-			$zoom = new ZoomServices(
-				sanitize_text_field( $data['account_id'] ),
-				sanitize_text_field( $data['app_client_id'] ),
-				sanitize_text_field( $data['app_secret_key'] )
-			);
+			$zoom = new ZoomServices();
 			return rest_ensure_response( $zoom->updateHostsZoomSettings( $data, $user_id ) );
 
 		} elseif ( $key == 'woo_payment' ) {

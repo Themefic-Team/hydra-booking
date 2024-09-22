@@ -17,13 +17,14 @@ class ZoomServices {
 
 
 
-	public function __construct( $account_id, $client_id, $client_secret ) {
+	public function __construct( ) {
+ 
+	}
 
+	public function setApiDetails( $account_id, $client_id, $client_secret ) {
 		$this->account_id = $account_id;
-
+		$this->client_id  = $client_id;
 		$this->client_secret = $client_secret;
-
-		$this->client_id = $client_id;
 	}
 
 	// Generate Access Token.
@@ -67,6 +68,11 @@ class ZoomServices {
 			);
 		}
 
+		$account_id = sanitize_text_field( $data['account_id'] );
+		$app_client_id = sanitize_text_field( $data['app_client_id'] );
+		$app_secret_key = sanitize_text_field( $data['app_secret_key'] );
+		$this->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+	
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 		// return error message if data is not set
 		if ( ! isset( $data['account_id'] ) || ! isset( $data['app_client_id'] ) || ! isset( $data['app_secret_key'] ) ) {
@@ -120,6 +126,11 @@ class ZoomServices {
 			);
 		}
 
+		$account_id = sanitize_text_field( $data['account_id'] );
+		$app_client_id = sanitize_text_field( $data['app_client_id'] );
+		$app_secret_key = sanitize_text_field( $data['app_secret_key'] );
+		$this->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+
 		$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings' );
 
 		// return error message if data is not set
@@ -162,24 +173,12 @@ class ZoomServices {
 		}
 	}
 
-	public function create_zoom_meeting( $meeting_data ) {
+	public function create_zoom_meeting( $booking_meta, $meeting_meta, $host_meta  ) {
+	 
+	 
 		$access_response = $this->generateAccessToken();
-
-		$time_in_24_hour_format = gmdate( 'H:i:s', strtotime( $meeting_data->start_time ) );
-		tfhb_print_r($meeting_data);
-		$data = array(
-			'topic'      => ! empty( $meeting_data->meeting_title ) ? $meeting_data->meeting_title : '',
-			'type'       => 2, // Scheduled Meeting
-			'start_time' => $meeting_data->meeting_dates . 'T' . $time_in_24_hour_format . 'Z',
-			'timezone'   => ! empty( $meeting_data->attendee_time_zone ) ? $meeting_data->attendee_time_zone : '',
-			'duration'   => intval( $meeting_data->meeting_duration ) + intval( $meeting_data->buffer_time_before ) + intval( $meeting_data->buffer_time_after ),
-			'password'   => '123456',
-			'settings'   => array(
-				'join_before_host' => true,
-				'mute_upon_entry'  => true,
-				'waiting_room'     => false,
-			),
-		);
+		$data = $this->zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta );
+	 
 
 		$response = wp_remote_post(
 			'https://api.zoom.us/v2/users/me/meetings',
@@ -202,24 +201,10 @@ class ZoomServices {
 		return json_decode( $response_body, true );
 	}
 
-	public function update_zoom_meeting( $meeting_schedule_id, $meeting_data ) {
+	public function update_zoom_meeting( $meeting_schedule_id, $booking_meta, $meeting_meta, $host_meta ) {
 		$access_response = $this->generateAccessToken();
 
-		$time_in_24_hour_format = gmdate( 'H:i:s', strtotime( $meeting_data->start_time ) );
-
-		$data = array(
-			'topic'      => ! empty( $meeting_data->meeting_title ) ? $meeting_data->meeting_title : '',
-			'type'       => 2, // Scheduled Meeting
-			'start_time' => $meeting_data->meeting_dates . 'T' . $time_in_24_hour_format . 'Z',
-			'timezone'   => ! empty( $meeting_data->attendee_time_zone ) ? $meeting_data->attendee_time_zone : '',
-			'duration'   => intval( $meeting_data->meeting_duration ) + intval( $meeting_data->buffer_time_before ) + intval( $meeting_data->buffer_time_after ),
-			'password'   => '123456',
-			'settings'   => array(
-				'join_before_host' => true,
-				'mute_upon_entry'  => true,
-				'waiting_room'     => false,
-			),
-		);
+		$data = $this->zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta );
 
 		$response = wp_remote_request(
 			'https://api.zoom.us/v2/meetings/' . $meeting_schedule_id,
@@ -241,5 +226,33 @@ class ZoomServices {
 		$response_body = wp_remote_retrieve_body( $response );
 
 		return json_decode( $response_body, true );
+	}
+
+	public function zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta ) {
+		$time_in_24_hour_format = gmdate( 'H:i:s', strtotime( $booking_meta->start_time ) );
+		$attendee_data = array(
+			array(
+				'email' => $booking_meta->email,
+				'name'  => $booking_meta->attendee_name,
+			),
+		);
+
+		$data = array(
+			'topic'      => ! empty( $meeting_meta['title'] ) ? $meeting_meta['title'] : '',
+			'type'       => 2, // Scheduled Meeting
+			'start_time' => $booking_meta->meeting_dates . 'T' . $time_in_24_hour_format . 'Z',
+			'timezone'   => ! empty( $booking_meta->attendee_time_zone ) ? $booking_meta->attendee_time_zone : '',
+			'duration'   => $meeting_meta['duration'],
+			'password'   => '123456',
+			'settings'   => array(
+				'join_before_host' => true,
+				'mute_upon_entry'  => true,
+				'waiting_room'     => false,
+			),
+			'contact_email' => $host_meta['email'],
+			'contact_name'  => $host_meta['email'],
+		);
+
+		return $data;
 	}
 }

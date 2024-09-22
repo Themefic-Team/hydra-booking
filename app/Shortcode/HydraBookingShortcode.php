@@ -34,7 +34,7 @@ class HydraBookingShortcode {
 		add_action( 'wp_ajax_nopriv_tfhb_meeting_form_cencel', array( $this, 'tfhb_meeting_form_cencel_callback' ) );
 		add_action( 'wp_ajax_tfhb_meeting_form_cencel', array( $this, 'tfhb_meeting_form_cencel_callback' ) );
 
-				add_action( 'hydra_booking/after_booking_completed', array( $this, 'insert_calender_after_booking_completed' ) );
+		add_action( 'hydra_booking/after_booking_completed', array( $this, 'insert_calender_after_booking_completed' ) );
 
 		// $this->tfhdb_wp_mail_sent();
 	}
@@ -516,156 +516,139 @@ class HydraBookingShortcode {
 		if ( isset( $_POST['action_type'] ) && 'reschedule' == $_POST['action_type'] ) {
 
 			// if general_settings['allowed_reschedule_before_meeting_start'] is available exp 100 then check the time before reschedule
-
-			$get_booking = $booking->get(
-				array( 'hash' => $meeting_hash ),
-				false,
-				true
-			);
-			// Get Post Meta
-			$booking_meta = get_post_meta( $get_booking->post_id, '_tfhb_booking_opt', true );
-			
-
-			if ( isset( $general_settings['allowed_reschedule_before_meeting_start'] ) && ! empty( $general_settings['allowed_reschedule_before_meeting_start'] ) ) {
-				$allowed_reschedule_before_meeting_start = $general_settings['allowed_reschedule_before_meeting_start']; // 100 minutes
-				if ( isset( $general_settings['allowed_reschedule_before_meeting_start'] ) && ! empty( $general_settings['allowed_reschedule_before_meeting_start'] ) ) {
-					$allowed_reschedule_before_meeting_start = $general_settings['allowed_reschedule_before_meeting_start']; // 100 minutes
-					$DateTime                                = new DateTimeController( $booking_meta['attendee_time_zone'] );
-					// Time format if has AM and PM into start time
-					$time_format  = strpos( $booking_meta['start_time'], 'AM' ) || strpos( $booking_meta['start_time'], 'PM' ) ? '12' : '24';
-					$current_time = strtotime( $DateTime->convert_time_based_on_timezone( gmdate( 'Y-m-d H:i:s' ), 'UTC', $booking_meta['attendee_time_zone'], $time_format ) );
-					$meeting_time = strtotime( $booking_meta['meeting_dates'] . ' ' . $booking_meta['start_time'] );
-					$time_diff    = $meeting_time - $current_time;
-					$time_diff    = $time_diff / 60; // convert to minutes
-
-					if ( $time_diff < $allowed_reschedule_before_meeting_start ) {
-						wp_send_json_error( array( 'message' => 'You can not reschedule the meeting before ' . $allowed_reschedule_before_meeting_start . ' minutes' ) );
-					}
-				}
-			}
-
-			$reschedule_data = array(
-				'id'                 => $get_booking->id,
-				'attendee_time_zone' => isset( $_POST['attendee_time_zone'] ) ? sanitize_text_field( $_POST['attendee_time_zone'] ) : '',
-				'meeting_dates'      => sanitize_text_field( $_POST['meeting_dates'] ),
-				'start_time'         => sanitize_text_field( $_POST['meeting_time_start'] ),
-				'end_time'           => sanitize_text_field( $_POST['meeting_time_end'] ),
-				'reason'             => isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '',
-				'status'             => isset( $general_settings['reschedule_status'] ) && $general_settings['reschedule_status'] == 1 ? 'rescheduled' : 'pending',
-			);
-
-			$booking_meta = array_merge( $booking_meta, $reschedule_data );
-
-			// Update Post Meta
-			update_post_meta( $get_booking->post_id, '_tfhb_booking_opt', $booking_meta );
-
-			$booking->update( $reschedule_data );
-			$confirmation_template = $this->tfhb_booking_confirmation( $booking_meta, $MeetingData, $host_meta );
-
-			// Single Booking & Mail Notification
-			$single_booking_meta = $booking->get( $get_booking->id );
-			do_action( 'hydra_booking/after_booking_schedule', $single_booking_meta );
-
-			// Host Meta by Booking Id
-			$_tfhb_host_integration_settings = get_user_meta( $single_booking_meta->host_id, '_tfhb_host_integration_settings', true );
-
-			// Booking Table Meeting Location Data
-			$meeting_location_data = json_decode( $single_booking_meta->meeting_locations, true );
-
-			// Meeting Location Check
-			$meeting_locations = json_decode( $single_booking_meta->meeting_location );
-			$zoom_exists       = false;
-			if ( is_array( $meeting_locations ) ) {
-				foreach ( $meeting_locations as $location ) {
-					if ( isset( $location->location ) && $location->location === 'zoom' ) {
-						$zoom_exists = true;
-						break;
-					}
-				}
-			}
-
-			$meeting_schedule_id = ! empty( $meeting_location_data['zoom']['address']['id'] ) ? $meeting_location_data['zoom']['address']['id'] : '';
-			// Global Integration
-			$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
-			if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
-				$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
-				$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
-				$app_secret_key = $_tfhb_integration_settings['zoom_meeting']['app_secret_key'];
-			}
-
-			// Host Integration
-			if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
-				$account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
-				$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
-				$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
-			}
-
-			if ( $zoom_exists && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) {
-				$zoom                                     = new ZoomServices(
-					sanitize_text_field( $account_id ),
-					sanitize_text_field( $app_client_id ),
-					sanitize_text_field( $app_secret_key )
-				);
-				$meeting_creation                         = $zoom->update_zoom_meeting( $meeting_schedule_id, $single_booking_meta );
-				$meeting_location_data['zoom']['address'] = $meeting_creation;
-
-				// Get Post Meta
-				$meeting_address_data = array(
-					'id'                => $single_booking_meta->id,
-					'meeting_locations' => wp_json_encode( $meeting_location_data ),
-				);
-				$booking->update( $meeting_address_data );
-
-			}
-
-			$response['message']               = 'Rescheduled Successfully';
-			$response['action']                = 'rescheduled';
-			$response['confirmation_template'] = $confirmation_template;
-			// $booking_meta, $MeetingData, $host_meta
-			wp_send_json_success( $response );
-
+			$this->tfhb_reschedule_booking( $meeting_hash, $meta_data,  $general_settings, $MeetingData, $host_meta ); 
 		}
+		$this->tfhb_create_new_booking($data, $meta_data, $MeetingData, $host_meta);
+
+
+
+	}
+
+	/**
+	 * Create New Booking
+	 * @param $data
+	 * @return void
+	 */
+	public function tfhb_create_new_booking( $data, $meta_data, $MeetingData, $host_meta  ) {
+		// Get Booking Data
+		$booking = new Booking();
+
 		// Booking Frequency
 		$current_user_booking = $booking->get( array( 'meeting_id' => $data['meeting_id'] ) );
 		if ( $current_user_booking ) {
-			$last_items_of_booking = end( $current_user_booking );
+			$this->tfhb_checked_booking_frequency_limit( $current_user_booking, $meta_data,);
+		}
 
-			$booking_frequency = isset( $meta_data['booking_frequency'] ) ? $meta_data['booking_frequency'] : array();
+		// Create a New Booking Into Post Type
+		$meeting_post_id = $this->tfhb_create_custom_post_booking($data);
 
-			if ( $booking_frequency ) {
-				$created_date = $last_items_of_booking->created_at; // 2024-07-02 14:26:29
-				$current_date = gmdate( 'Y-m-d H:i:s' );
 
-				$last_created_date = gmdate( 'Y-m-d', strtotime( $created_date ) );
-				foreach ( $booking_frequency as $key => $value ) {
-					$days  = isset( $value['times'] ) ? $value['times'] : 1;
-					$limit = isset( $value['limit'] ) ? $value['limit'] : 1;
 
-					$booking_frequency_date = gmdate( 'Y-m-d', strtotime( $last_created_date . ' + ' . $days . ' days' ) );
-					$total_booking          = count(
-						array_filter(
-							$current_user_booking,
-							function ( $booking ) use ( $booking_frequency_date, $last_created_date ) {
-								$created_date = gmdate( 'Y-m-d', strtotime( $booking->created_at ) );
-								// Check if the created date is between last_created_date and booking_frequency_date
-								return strtotime( $last_created_date ) >= strtotime( $created_date ) || strtotime( $created_date ) <= strtotime( $booking_frequency_date );
-							}
-						)
-					);
+		$data['post_id'] = $meeting_post_id; // set post id into booking data
+		$result          = $booking->add( $data );  // add booking data into booking table
 
-					// if currentdate is greater than booking_frequency_date then you can book the meeting
-					if ( strtotime( $current_date ) > strtotime( $booking_frequency_date ) ) {
-						continue;
-					}
-					if ( $total_booking >= $limit ) {
-						wp_send_json_error( array( 'message' => ' Meeting Frequency Limit Reached' ) );
+		if ( $result === false ) {
+			wp_send_json_error( array( 'message' => 'Booking Failed' ) );
+		}
 
-					}
+		
+
+
+		// Woocommerce Payment Method
+		if ( true == $meta_data['payment_status'] && 'woo_payment' == $meta_data['payment_method'] ) {
+			// Add to cart
+			$product_id = $meta_data['payment_meta']['product_id'];
+			$data['booking_id'] = $result['insert_id'];
+
+			$woo_booking = new WooBooking();
+			$woo_booking->add_to_cart( $product_id, $data );
+			$response['redirect'] = wc_get_checkout_url();
+		}
+		
+		// payment methood check and process the payment
+		$this->tfhb_booking_payment_method( $meta_data, $MeetingData, $result );
+
+
+
+		$single_booking_meta = $booking->get(
+			array( 'id' => $result['insert_id'] ),
+			false,
+			true
+		);
+
+		// Zoom Meeting
+		$this->tfhb_create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta);
+
+
+		// After Booking Hooks
+		do_action( 'hydra_booking/after_booking_confirmation', $single_booking_meta );
+
+
+		// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
+		do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
+  
+		// Load Meeting Confirmation Template
+		$confirmation_template = $this->tfhb_booking_confirmation( $data, $MeetingData, $host_meta );
+
+		$response['message']               = 'Booking Successful';
+		$response['action']                = 'create';
+		$response['confirmation_template'] = $confirmation_template;
+
+		wp_send_json_success( $response );
+		wp_die();
+	}
+
+	/* Checked Booking frequency limit
+	 * @param $current_user_booking
+	 * @param $meta_data
+	 * @return void
+	 */
+	public function tfhb_checked_booking_frequency_limit($current_user_booking, $meta_data){
+		$last_items_of_booking = end( $current_user_booking );
+
+		$booking_frequency = isset( $meta_data['booking_frequency'] ) ? $meta_data['booking_frequency'] : array();
+
+		if ( $booking_frequency ) {
+			$created_date = $last_items_of_booking->created_at; // 2024-07-02 14:26:29
+			$current_date = gmdate( 'Y-m-d H:i:s' );
+
+			$last_created_date = gmdate( 'Y-m-d', strtotime( $created_date ) );
+			foreach ( $booking_frequency as $key => $value ) {
+				$days  = isset( $value['times'] ) ? $value['times'] : 1;
+				$limit = isset( $value['limit'] ) ? $value['limit'] : 1;
+
+				$booking_frequency_date = gmdate( 'Y-m-d', strtotime( $last_created_date . ' + ' . $days . ' days' ) );
+				$total_booking          = count(
+					array_filter(
+						$current_user_booking,
+						function ( $booking ) use ( $booking_frequency_date, $last_created_date ) {
+							$created_date = gmdate( 'Y-m-d', strtotime( $booking->created_at ) );
+							// Check if the created date is between last_created_date and booking_frequency_date
+							return strtotime( $last_created_date ) >= strtotime( $created_date ) || strtotime( $created_date ) <= strtotime( $booking_frequency_date );
+						}
+					)
+				);
+
+				// if currentdate is greater than booking_frequency_date then you can book the meeting
+				if ( strtotime( $current_date ) > strtotime( $booking_frequency_date ) ) {
+					continue;
+				}
+				if ( $total_booking >= $limit ) {
+					wp_send_json_error( array( 'message' => ' Meeting Frequency Limit Reached' ) );
+
 				}
 			}
 		}
+	}
+
+	/* Create Custom Post Booking
+	 * @param $data
+	 * @return $id
+	 */
+	public function tfhb_create_custom_post_booking($data) {
+
 		// Create a new booking
-		$title = 'New booking Booking ';
+		$title = 'New booking Booking '; // default title
 
 		// Create an array to store the post data for meeting the current row
 		$meeting_post_data = array(
@@ -678,22 +661,16 @@ class HydraBookingShortcode {
 		$meeting_post_id = wp_insert_post( $meeting_post_data );
 		update_post_meta( $meeting_post_id, '_tfhb_booking_opt', $data );
 
-		$data['post_id'] = $meeting_post_id;
-		$result          = $booking->add( $data ); 
+		return $meeting_post_id;
+	}
 
-		if ( $result === false ) {
-			wp_send_json_error( array( 'message' => 'Booking Failed' ) );
-		}
-
-		if ( true == $meta_data['payment_status'] && 'woo_payment' == $meta_data['payment_method'] ) {
-			// Add to cart
-			$product_id = $meta_data['payment_meta']['product_id'];
-			$data['booking_id'] = $result['insert_id'];
-
-			$woo_booking = new WooBooking();
-			$woo_booking->add_to_cart( $product_id, $data );
-			$response['redirect'] = wc_get_checkout_url();
-		}
+	/* payment methood check and process the payment
+	 * @param $meta_data
+	 * @param $MeetingData
+	 * @param $result
+	 * @return void
+	 */
+	public function tfhb_booking_payment_method( $meta_data, $MeetingData, $result ) {
 
 		if ( true == $meta_data['payment_status'] && 'stripe_payment' == $meta_data['payment_method'] ) {
 			$data['tokenId']  = ! empty( $_POST['tokenId'] ) ? $_POST['tokenId'] : '';
@@ -713,20 +690,17 @@ class HydraBookingShortcode {
 				do_action( 'hydra_booking/paypal_payment_method', $data, $result['insert_id'] );
 			}
 		}
+	}
 
-		// Load Meeting Confirmation Template
-		$confirmation_template = $this->tfhb_booking_confirmation( $data, $MeetingData, $host_meta );
+	/* Create Zoom Meeting
+	 * @param $single_booking_meta
+	 * @param $meta_data
+	 * @param $host_meta
+	 * @return void
+	 */
+	public function tfhb_create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta) {
 
-		$single_booking_meta = $booking->get(
-			array( 'id' => $result['insert_id'] ),
-			true,
-		);
-		// After Booking Hooks
-		do_action( 'hydra_booking/after_booking_confirmation', $single_booking_meta );
-
-		// Single Booking & Mail Notification, Google Calendar
-		do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
-
+		$booking = new Booking();
 		// Host Meta by Booking Id
 		$_tfhb_host_integration_settings = get_user_meta( $single_booking_meta->host_id, '_tfhb_host_integration_settings', true );
 
@@ -749,9 +723,8 @@ class HydraBookingShortcode {
 			);
 
 			$zoom_exists = count( $meeting_location ) > 0 ? true : false;
-		}
-	
-		
+		} 
+
 		// Global Integration
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 
@@ -768,22 +741,13 @@ class HydraBookingShortcode {
 			$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
 		}
 
-		if ( $zoom_exists == true && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) {
-			// echo "<pre>";
-			// print_r($account_id);
-			// echo "<br>";
-			// print_r($app_client_id);
-			// echo "<br>";
-			// print_r($app_secret_key);
-			// echo "</pre>";
-			// exit;
-			$zoom             = new ZoomServices(
-				sanitize_text_field( $account_id ),
-				sanitize_text_field( $app_client_id ),
-				sanitize_text_field( $app_secret_key )
-			);
-			$meeting_creation = $zoom->create_zoom_meeting( $single_booking_meta );
-		 
+		if ( $zoom_exists == true && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) { 
+			
+
+			$zoom             = new ZoomServices( );
+			$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+			$meeting_creation = $zoom->create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta );
+			
 
 			$meeting_location_data['zoom']['address'] = $meeting_creation;
 
@@ -795,14 +759,124 @@ class HydraBookingShortcode {
 			$booking->update( $meeting_address_data );
 
 		}
+	}
 
-		$response['message']               = 'Booking Successful';
-		$response['action']                = 'create';
+
+	/* Reschedule Booking
+	 * @param $data
+	 * @return void
+	 */
+	public function tfhb_reschedule_booking( $meeting_hash, $meta_data,  $general_settings, $MeetingData, $host_meta ) {
+
+		// Booking Class
+		$booking = new Booking();
+
+		$get_booking = $booking->get(
+			array( 'hash' => $meeting_hash ),
+			false,
+			true
+		);
+		// Get Post Meta
+		$booking_meta = get_post_meta( $get_booking->post_id, '_tfhb_booking_opt', true );
+		
+
+		if ( isset( $general_settings['allowed_reschedule_before_meeting_start'] ) && ! empty( $general_settings['allowed_reschedule_before_meeting_start'] ) ) {
+			$allowed_reschedule_before_meeting_start = $general_settings['allowed_reschedule_before_meeting_start']; // 100 minutes
+			if ( isset( $general_settings['allowed_reschedule_before_meeting_start'] ) && ! empty( $general_settings['allowed_reschedule_before_meeting_start'] ) ) {
+				$allowed_reschedule_before_meeting_start = $general_settings['allowed_reschedule_before_meeting_start']; // 100 minutes
+				$DateTime                                = new DateTimeController( $booking_meta['attendee_time_zone'] );
+				// Time format if has AM and PM into start time
+				$time_format  = strpos( $booking_meta['start_time'], 'AM' ) || strpos( $booking_meta['start_time'], 'PM' ) ? '12' : '24';
+				$current_time = strtotime( $DateTime->convert_time_based_on_timezone( gmdate( 'Y-m-d H:i:s' ), 'UTC', $booking_meta['attendee_time_zone'], $time_format ) );
+				$meeting_time = strtotime( $booking_meta['meeting_dates'] . ' ' . $booking_meta['start_time'] );
+				$time_diff    = $meeting_time - $current_time;
+				$time_diff    = $time_diff / 60; // convert to minutes
+
+				if ( $time_diff < $allowed_reschedule_before_meeting_start ) {
+					wp_send_json_error( array( 'message' => 'You can not reschedule the meeting before ' . $allowed_reschedule_before_meeting_start . ' minutes' ) );
+				}
+			}
+		}
+
+		$reschedule_data = array(
+			'id'                 => $get_booking->id,
+			'attendee_time_zone' => isset( $_POST['attendee_time_zone'] ) ? sanitize_text_field( $_POST['attendee_time_zone'] ) : '',
+			'meeting_dates'      => sanitize_text_field( $_POST['meeting_dates'] ),
+			'start_time'         => sanitize_text_field( $_POST['meeting_time_start'] ),
+			'end_time'           => sanitize_text_field( $_POST['meeting_time_end'] ),
+			'reason'             => isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '',
+			'status'             => isset( $general_settings['reschedule_status'] ) && $general_settings['reschedule_status'] == 1 ? 'rescheduled' : 'pending',
+		);
+
+		$booking_meta = array_merge( $booking_meta, $reschedule_data );
+
+		// Update Post Meta
+		update_post_meta( $get_booking->post_id, '_tfhb_booking_opt', $booking_meta );
+
+		$booking->update( $reschedule_data );
+		$confirmation_template = $this->tfhb_booking_confirmation( $booking_meta, $MeetingData, $host_meta );
+
+		// Single Booking & Mail Notification
+		$single_booking_meta = $booking->get( $get_booking->id );
+		do_action( 'hydra_booking/after_booking_schedule', $single_booking_meta );
+
+		// Host Meta by Booking Id
+		$_tfhb_host_integration_settings = get_user_meta( $single_booking_meta->host_id, '_tfhb_host_integration_settings', true );
+
+		// Booking Table Meeting Location Data
+		$meeting_location_data = json_decode( $single_booking_meta->meeting_locations, true );
+
+		// Meeting Location Check
+		$meeting_locations = json_decode( $single_booking_meta->meeting_location );
+		$zoom_exists       = false;
+		if ( is_array( $meeting_locations ) ) {
+			foreach ( $meeting_locations as $location ) {
+				if ( isset( $location->location ) && $location->location === 'zoom' ) {
+					$zoom_exists = true;
+					break;
+				}
+			}
+		}
+
+		$meeting_schedule_id = ! empty( $meeting_location_data['zoom']['address']['id'] ) ? $meeting_location_data['zoom']['address']['id'] : '';
+		// Global Integration
+		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
+			$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
+			$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
+			$app_secret_key = $_tfhb_integration_settings['zoom_meeting']['app_secret_key'];
+		}
+
+		// Host Integration
+		if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
+			$account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
+			$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
+			$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
+		}
+
+		if ( $zoom_exists && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) {
+			$zoom                                     = new ZoomServices( );
+			$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+			$meeting_creation                         = $zoom->update_zoom_meeting( $meeting_schedule_id, $single_booking_meta, $meta_data, $host_meta );
+			$meeting_location_data['zoom']['address'] = $meeting_creation;
+
+			// Get Post Meta
+			$meeting_address_data = array(
+				'id'                => $single_booking_meta->id,
+				'meeting_locations' => wp_json_encode( $meeting_location_data ),
+			);
+			$booking->update( $meeting_address_data );
+
+		}
+
+		$response['message']               = 'Rescheduled Successfully';
+		$response['action']                = 'rescheduled';
 		$response['confirmation_template'] = $confirmation_template;
-
+		// $booking_meta, $MeetingData, $host_meta
 		wp_send_json_success( $response );
 		wp_die();
 	}
+
 
 	public function tfhb_booking_confirmation( $data, $meta_data, $host_meta ) {
 
