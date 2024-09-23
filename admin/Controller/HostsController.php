@@ -597,7 +597,7 @@ class HostsController {
 		// Outlook Calendar API
 		$outlook_calendar = isset( $_tfhb_host_integration_settings['outlook_calendar'] ) ? $_tfhb_host_integration_settings['outlook_calendar'] : array();
 
-		if ( $_tfhb_integration_settings['outlook_calendar']['status'] == true ) {
+		if ( isset($_tfhb_integration_settings['outlook_calendar']['status']) &&  $_tfhb_integration_settings['outlook_calendar']['status'] == true ) {
 
 			$outlook_calendar['type']              = 'outlook_calendar';
 			$OutlookCalendar                       = new OutlookCalendar();
@@ -610,7 +610,7 @@ class HostsController {
 		// Apple Calendar
 		$apple_calendar = isset( $_tfhb_host_integration_settings['apple_calendar'] ) ? $_tfhb_host_integration_settings['apple_calendar'] : array();
 
-		if ( $_tfhb_integration_settings['apple_calendar']['connection_status'] == true ) {
+		if ( isset($_tfhb_integration_settings['apple_calendar']['connection_status']) && $_tfhb_integration_settings['apple_calendar']['connection_status'] == true ) {
 
 			$apple_calendar['type']              = 'calendar';
 			$apple_calendar['status']            = $_tfhb_integration_settings['apple_calendar']['status'];
@@ -621,7 +621,7 @@ class HostsController {
 
 		// Stripe API
 		$stripe = isset( $_tfhb_host_integration_settings['stripe'] ) ? $_tfhb_host_integration_settings['stripe'] : array();
-		if ( $_tfhb_integration_settings['stripe']['status'] == true ) {
+		if ( isset($_tfhb_integration_settings['stripe']['status']) && $_tfhb_integration_settings['stripe']['status'] == true ) {
 
 			$stripe['type']              = 'stripe';
 			$stripe['status']            = $_tfhb_host_integration_settings['stripe']['status'];
@@ -633,7 +633,7 @@ class HostsController {
 
 		// Paypal API
 		$paypal = isset( $_tfhb_host_integration_settings['paypal'] ) ? $_tfhb_host_integration_settings['paypal'] : array();
-		if ( $_tfhb_integration_settings['paypal']['status'] == true ) {
+		if ( isset($_tfhb_integration_settings['paypal']['status']) && $_tfhb_integration_settings['paypal']['status'] == true ) {
 
 			$paypal['type']              = 'paypal';
 			$paypal['status']            = $_tfhb_host_integration_settings['paypal']['status'];
@@ -649,7 +649,7 @@ class HostsController {
 
 		// Mailchimp API
 		$mailchimp = isset( $_tfhb_host_integration_settings['mailchimp'] ) ? $_tfhb_host_integration_settings['mailchimp'] : array();
-		if ( $_tfhb_integration_settings['mailchimp']['status'] == true ) {
+		if (isset($_tfhb_integration_settings['mailchimp']['status']) && $_tfhb_integration_settings['mailchimp']['status'] == true ) {
 
 			$mailchimp['type']              = 'mailchimp';
 			$mailchimp['status']            = $_tfhb_host_integration_settings['mailchimp']['status'];
@@ -664,7 +664,7 @@ class HostsController {
 
 		// Zoho
 		$zoho = isset( $_tfhb_host_integration_settings['zoho'] ) ? $_tfhb_host_integration_settings['zoho'] : array();
-		if ( $_tfhb_integration_settings['zoho']['status'] ) {
+		if (isset($_tfhb_integration_settings['zoho']['status']) && $_tfhb_integration_settings['zoho']['status'] ) {
 
 			$zoho['type']          = 'zoho';
 			$zoho['status']        = $_tfhb_host_integration_settings['zoho']['status'];
@@ -851,12 +851,12 @@ class HostsController {
 		$time_zone    = $DateTimeZone->TimeZone();
 
 		// Get Host Data
-		$_tfhb_host_availability_settings = get_user_meta( $request['id'], '_tfhb_host', true );
+		$_tfhb_host_availability_settings = !empty( get_user_meta( $request['id'], '_tfhb_host', true ) ) ? get_user_meta( $request['id'], '_tfhb_host', true ) : array();
 		// var_dump($_tfhb_host_availability_settings); exit();
 		$data = array(
 			'status'       => true,
 			'time_zone'    => $time_zone,
-			'availability' => $_tfhb_host_availability_settings['availability'],
+			'availability' =>  isset($_tfhb_host_availability_settings['availability']) ? $_tfhb_host_availability_settings['availability'] : array(),
 		);
 		return rest_ensure_response( $data );
 	}

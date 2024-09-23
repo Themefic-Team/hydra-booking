@@ -67,8 +67,11 @@ const UpdateHostsInformation = async (validator_field) => {
 
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
-    if(!isEmpty){
-        toast.error('Fill Up The Required Fields'); 
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
         return
     }
 
@@ -79,8 +82,11 @@ const UpdateHostsInformation = async (validator_field) => {
                 'capability': 'tfhb_manage_integrations'
             } 
         });
-        if (response.data.status == true) { 
-            toast.success(response.data.message); 
+        if (response.data.status == true) {  
+            toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
             if("HostsProfileInformation"==route.name){
                 router.push({ name: 'HostsAvailability' });
             }
@@ -90,8 +96,11 @@ const UpdateHostsInformation = async (validator_field) => {
             if("HostsProfileCalendars"==route.name){
                 router.push({ name: 'HostsProfileIntegrations' });
             }
-        }else{
-            toast.error(response.data.message); 
+        }else{ 
+            toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
         }
     } catch (error) {
         console.log(error);

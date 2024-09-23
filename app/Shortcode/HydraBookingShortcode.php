@@ -606,9 +606,9 @@ class HydraBookingShortcode {
 	public function tfhb_checked_booking_frequency_limit($current_user_booking, $meta_data){
 		$last_items_of_booking = end( $current_user_booking );
 
-		$booking_frequency = isset( $meta_data['booking_frequency'] ) ? $meta_data['booking_frequency'] : array();
-
-		if ( $booking_frequency ) {
+		$booking_frequency = isset( $meta_data['booking_frequency'] ) ? $meta_data['booking_frequency'] : array(); 
+		if ( $booking_frequency != NULL ) {
+			$booking_frequency = !is_array( $booking_frequency ) ? json_decode( $booking_frequency, true ) : $booking_frequency;
 			$created_date = $last_items_of_booking->created_at; // 2024-07-02 14:26:29
 			$current_date = gmdate( 'Y-m-d H:i:s' );
 

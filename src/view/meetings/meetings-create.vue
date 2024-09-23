@@ -505,8 +505,11 @@ const UpdateMeetingData = async (validator_field) => {
             } 
         });
         if (response.data.status == true) { 
-            meetingData.slug = response.data.meeting.slug;
-            toast.success(response.data.message); 
+            meetingData.slug = response.data.meeting.slug; 
+            toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
             if("MeetingsCreateDetails"==route.name){
                 router.push({ name: 'MeetingsCreateAvailability' });
             }
@@ -532,8 +535,11 @@ const UpdateMeetingData = async (validator_field) => {
             // if("MeetingsCreateIntegrations"==route.name){
             //     router.push({ name: 'MeetingsCreatePayment' });
             // }
-        }else{
-            toast.error(response.data.message); 
+        }else{ 
+            toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
         }
     } catch (error) {
         console.log(error);

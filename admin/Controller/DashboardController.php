@@ -288,8 +288,7 @@ class DashboardController {
 
 		$data = array(
 			'status'     => true,
-			'statistics' => $statistics,
-			'data'       => $days_in_month,
+			'statistics' => $statistics, 
 		);
 
 		return rest_ensure_response( $data );

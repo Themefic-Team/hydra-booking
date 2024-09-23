@@ -789,34 +789,18 @@ class MeetingController {
 		$wc_product   = $woo_commerce->getAllProductList();
 
 		// google  Meeting 
-		if ( $_tfhb_integration_settings['google_calendar'] ) {
-			$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
-		}
+		$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
+		
 		// Zoom Meeting
-		if ( $_tfhb_integration_settings['zoom_meeting'] ) {
-			$integrations['zoom_meeting_status'] = isset( $_tfhb_integration_settings['zoom_meeting']['status'] ) ? $_tfhb_integration_settings['zoom_meeting']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['cf7'] ) {
-			$integrations['cf7_status'] = isset( $_tfhb_integration_settings['cf7']['status'] ) ? $_tfhb_integration_settings['cf7']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['fluent'] ) {
-			$integrations['fluent_status'] = isset( $_tfhb_integration_settings['fluent']['status'] ) ? $_tfhb_integration_settings['fluent']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['forminator'] ) {
-			$integrations['forminator_status'] = isset( $_tfhb_integration_settings['forminator']['status'] ) ? $_tfhb_integration_settings['forminator']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['gravity'] ) {
-			$integrations['gravity_status'] = isset( $_tfhb_integration_settings['gravity']['status'] ) ? $_tfhb_integration_settings['gravity']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['webhook'] ) {
-			$integrations['webhook_status'] = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['fluent_crm'] ) {
-			$integrations['fluent_crm_status'] = isset( $_tfhb_integration_settings['fluent_crm']['status'] ) ? $_tfhb_integration_settings['fluent_crm']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['zoho_crm'] ) {
-			$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
-		}
+		$integrations['zoom_meeting_status'] = isset( $_tfhb_integration_settings['zoom_meeting']['status'] ) ? $_tfhb_integration_settings['zoom_meeting']['status'] : 0;
+		$integrations['cf7_status'] = isset( $_tfhb_integration_settings['cf7']['status'] ) ? $_tfhb_integration_settings['cf7']['status'] : 0;
+		$integrations['fluent_status'] = isset( $_tfhb_integration_settings['fluent']['status'] ) ? $_tfhb_integration_settings['fluent']['status'] : 0;
+		$integrations['forminator_status'] = isset( $_tfhb_integration_settings['forminator']['status'] ) ? $_tfhb_integration_settings['forminator']['status'] : 0;
+		$integrations['gravity_status'] = isset( $_tfhb_integration_settings['gravity']['status'] ) ? $_tfhb_integration_settings['gravity']['status'] : 0;
+		$integrations['webhook_status'] = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
+		$integrations['fluent_crm_status'] = isset( $_tfhb_integration_settings['fluent_crm']['status'] ) ? $_tfhb_integration_settings['fluent_crm']['status'] : 0;
+		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
+		 
 
 		// Meeting Category
 		$terms = get_terms(

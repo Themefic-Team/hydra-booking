@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 use HydraBooking\Admin\Controller\RouteController;
 class AuthController {
 
-	// constaract
+	// constaract.
 	public function __construct() {
 	}
 
@@ -23,13 +23,13 @@ class AuthController {
 		);
 	}
 
-	// Get Current user auth
+	// Get Current user auth.
 	public function getUserAuth() {
 		$user_id   = $this->userID();
 		$user_role = $this->userRole();
 		$user_caps = $this->userAllCaps();
 
-		// Return response
+		// Return response.
 		$data = array(
 			'status' => true,
 			'user'   => array(
@@ -40,7 +40,7 @@ class AuthController {
 		);
 		return rest_ensure_response( $data );
 	}
-	// Get Current user auth
+	// Get Current user auth.
 	public function userRole() {
 		$user  = wp_get_current_user();
 		$roles = (array) $user->roles;

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  */
 
 $meeting      = isset( $args['meeting'] ) ? $args['meeting'] : array();
-$host         = isset( $args['host'] ) ? $args['host'] : array();
+$host         = isset( $args['host'] ) ? $args['host'] : array(); 
 $time_zone    = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
 $booking_data = isset( $args['booking_data'] ) ? $args['booking_data'] : array(); 
 // Stripe Public api Key
@@ -22,7 +22,7 @@ $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 $stripePublicKey            = ! empty( $_tfhb_integration_settings['stripe']['public_key'] ) ? $_tfhb_integration_settings['stripe']['public_key'] : '';
 $paypalPublicKey            = ! empty( $_tfhb_integration_settings['paypal']['client_id'] ) ? $_tfhb_integration_settings['paypal']['client_id'] : '';
 
-$_tfhb_host_integration_settings = get_user_meta( $host['host_id'], '_tfhb_host_integration_settings' );
+$_tfhb_host_integration_settings = get_user_meta( $host['user_id'], '_tfhb_host_integration_settings' );
 $stripePublicKey                 = ! empty( $_tfhb_host_integration_settings['stripe']['public_key'] ) ? $_tfhb_host_integration_settings['stripe']['public_key'] : $stripePublicKey;
 $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['paypal']['client_id'] ) ? $_tfhb_host_integration_settings['paypal']['client_id'] : $paypalPublicKey;
 
@@ -34,7 +34,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 <div class="tfhb-meeting-info">
 	<div class="hidden-field">
 		<input type="hidden" id="meeting_id" name="meeting_id" value="<?php echo esc_attr($meeting['id']); ?>">
-		<input type="hidden" id="host_id" name="host_id" value="<?php echo esc_attr($host['host_id']); ?>"> 
+		<input type="hidden" id="host_id" name="host_id" value="<?php echo esc_attr($host['id']); ?>"> 
 		<input type="hidden" id="meeting_duration" name="meeting_dates" value="<?php echo esc_attr($meeting['duration']); ?>">
 		<input type="hidden" id="meeting_dates" name="meeting_dates" value="">
 		<input type="hidden" id="meeting_time_start" name="meeting_time_start" value="">

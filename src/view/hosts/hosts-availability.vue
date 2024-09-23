@@ -165,7 +165,7 @@ const Settings_Avalibility_Callback = (value) => {
 }
 
 // Fetch  Use Custom availability
-const fetchAvailabilitySettings = async () => {
+const fetchAvailabilitySettings = async () => { 
     let data = {
         id: Host.hostInfo
     };  
