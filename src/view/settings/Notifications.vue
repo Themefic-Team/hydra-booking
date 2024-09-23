@@ -28,7 +28,7 @@ const Notification = reactive(  {
         booking_confirmation: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -36,7 +36,7 @@ const Notification = reactive(  {
         booking_cancel: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -44,7 +44,7 @@ const Notification = reactive(  {
         booking_reschedule: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -52,7 +52,7 @@ const Notification = reactive(  {
         booking_reminder: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -63,7 +63,7 @@ const Notification = reactive(  {
         booking_confirmation: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -71,7 +71,7 @@ const Notification = reactive(  {
         booking_cancel: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -79,7 +79,7 @@ const Notification = reactive(  {
         booking_reschedule: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -87,7 +87,7 @@ const Notification = reactive(  {
         booking_reminder: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 

@@ -6,6 +6,7 @@ use HydraBooking\Admin\Controller\RouteController;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\Admin\Controller\CountryController;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
+use HydraBooking\Admin\Controller\Helper;
 
 // Use DB
 use HydraBooking\DB\Meeting;
@@ -755,6 +756,11 @@ class MeetingController {
 		// Notification
 		if ( empty( $MeetingData->notification ) ) {
 			$_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+
+			if(empty($_tfhb_notification_settings)){
+				$default_notification =  new Helper();
+				$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
+			}
 			$MeetingData->notification   = $_tfhb_notification_settings;
 		}
 

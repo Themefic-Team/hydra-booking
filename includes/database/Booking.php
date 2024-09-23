@@ -77,7 +77,7 @@ class Booking {
 
 		// json encode meeting locations
 		$request['others_info']       = wp_json_encode( $request['others_info'] );
-		$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] );
+		$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] ); 
 
 		// insert Booking
 		$result = $wpdb->insert(

@@ -9,6 +9,7 @@ use HydraBooking\Admin\Controller\AuthController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Admin\Controller\ScheduleController;
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
+use HydraBooking\Admin\Controller\Helper;
 // Use DB
 use HydraBooking\DB\Availability;
 // exit
@@ -572,6 +573,12 @@ class SettingsController {
 	// Get Notification Settings
 	public function GetNotificationSettings() {
 		$_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+		
+		if(empty($_tfhb_notification_settings)){
+			$default_notification =  new Helper();
+			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
+		}
+
 		$data                        = array(
 			'status'                => true,
 			'notification_settings' => $_tfhb_notification_settings,
@@ -589,7 +596,7 @@ class SettingsController {
 			foreach ( $request['host'] as $key => $value ) {
 				$data['host'][ $key ]['status']   = sanitize_text_field( $value['status'] );
 				$data['host'][ $key ]['template'] = sanitize_text_field( $value['template'] );
-				$data['host'][ $key ]['form']     = sanitize_text_field( $value['form'] );
+				$data['host'][ $key ]['from']     = sanitize_text_field( $value['form'] );
 				$data['host'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['host'][ $key ]['body']     = wp_kses_post( $value['body'] );
 			}
@@ -600,7 +607,7 @@ class SettingsController {
 			foreach ( $request['attendee'] as $key => $value ) {
 				$data['attendee'][ $key ]['status']   = sanitize_text_field( $value['status'] );
 				$data['attendee'][ $key ]['template'] = sanitize_text_field( $value['template'] );
-				$data['attendee'][ $key ]['form']     = sanitize_text_field( $value['form'] );
+				$data['attendee'][ $key ]['from']     = sanitize_text_field( $value['form'] );
 				$data['attendee'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['attendee'][ $key ]['body']     = wp_kses_post( $value['body'] );
 			}

@@ -9,9 +9,7 @@ use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
-
+ 
 class ImportExport {
 
 

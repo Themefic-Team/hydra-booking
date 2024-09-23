@@ -242,15 +242,19 @@
     .tfhb-admin-title {
         margin-bottom: 16px; 
     }
-    .tfhb-mail-shortcode-badge {
-        background-color: $surface-primary;
-        padding: 4px 8px 4px 8px;
-        border-radius: $border-radius-medium;
-        cursor: pointer;
+    .tfhb-mail-shortcode{
+        justify-content: start !important;
+        .tfhb-mail-shortcode-badge {
+            background-color: $surface-primary;
+            padding: 4px 8px 4px 8px;
+            border-radius: $border-radius-medium;
+            cursor: pointer;
+            &:hover {
+                background-color: $secondary-hover;
+            }
+        } 
     }
-    .tfhb-mail-shortcode-badge:hover {
-        background-color: $secondary-hover;
-    }
+    
 
     .tfhb-border-none{
         border: 0px $border-type;

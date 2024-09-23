@@ -146,6 +146,19 @@ class Host {
 		return $data;
 	}
 
+	// Get Host By ID
+	public function getHostById( $id ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $id )
+		);
+
+		return $data;
+	}
+
 	// delete
 	public function delete( $id ) {
 		global $wpdb;

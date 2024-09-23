@@ -37,6 +37,15 @@ const meetingShortcode = ref([
     '{{host.email}}',  
     '{{attendee.name}}', 
     '{{attendee.email}}', 
+    '{{attendee.additional_data}}',
+    '{{wp.admin_email}}',
+    "{{booking.cancel_reason}}",
+    "{{booking.full_start_end_host_timezone}}",
+    "{{booking.start_date_time_for_host}}",
+    "{{booking.start_date_time_for_attendee}}",
+    "{{booking.full_start_end_attendee_timezone}}",
+    "{{booking.rescheduled_reason}}",
+    "{{booking.location_details_html}}",
 ])
 const copyShortcode = (value) => { 
     //  copy to clipboard without navigator 
@@ -90,7 +99,7 @@ const closePopup = () => {
                 /> 
 
                 <HbText  
-                    v-model="props.data.form"   
+                    v-model="props.data.from"   
                     type="email"   
                     :label="$tfhb_trans('From')"  
                     selected = "1"

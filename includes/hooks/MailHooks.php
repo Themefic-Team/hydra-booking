@@ -4,6 +4,7 @@ namespace HydraBooking\Hooks;
 // Use
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Host;
+use HydraBooking\Admin\Controller\DateTimeController;
 
 
 class MailHooks {
@@ -27,7 +28,7 @@ class MailHooks {
 	// Get Host Data
 	public function getHostData( $host_id ) {
 		$host      = new Host();
-		$host_data = $host->get( $host_id );
+		$host_data = $host->getHostById(  $host_id );
 		return $host_data;
 	}
 
@@ -38,13 +39,14 @@ class MailHooks {
 
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
-		$hostData                    = $this->getHostData( $booking->host_id );
-		
+		$hostData                    = $this->getHostData( $booking->host_id );  
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
 			// Host Confirmation Email, If Settings Enable for Host Confirmation
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['status'] ) ) {
 				
+
+
 				// From Email
 				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['form'] : get_option( 'admin_email' );
 
@@ -261,6 +263,7 @@ class MailHooks {
 		$sql          = "
             SELECT $tfhb_booking_table.attendee_name, 
             $tfhb_booking_table.email AS attendee_email,
+            $tfhb_booking_table.attendee_time_zone AS attendee_time_zone,
             $tfhb_booking_table.meeting_dates,
             $tfhb_booking_table.start_time,
             $tfhb_booking_table.end_time,
@@ -268,6 +271,7 @@ class MailHooks {
             $host_table.email AS host_email,
             $host_table.first_name AS host_first_name,
             $host_table.last_name AS host_last_name,
+            $host_table.time_zone AS host_time_zone,
             $meeting_table.title AS meeting_title,
             $meeting_table.meeting_locations AS meeting_location
             FROM $tfhb_booking_table
@@ -287,6 +291,7 @@ class MailHooks {
 				}
 			}
 		}
+		// 
 
 		$replacements = array(
 			'{{meeting.title}}'    => ! empty( $booking_data->meeting_title ) ? $booking_data->meeting_title : '',
@@ -297,8 +302,37 @@ class MailHooks {
 			'{{host.name}}'        => $booking_data->host_first_name . ' ' . $booking_data->host_last_name,
 			'{{host.email}}'       => ! empty( $booking_data->host_email ) ? $booking_data->host_email : '',
 			'{{attendee.name}}'    => ! empty( $booking_data->attendee_name ) ? $booking_data->attendee_name : '',
-			'{{attendee.email}}'   => ! empty( $booking_data->attendee_email ) ? $booking_data->attendee_email : '',
+			'{{attendee.email}}'   => ! empty( $booking_data->attendee_email ) ? $booking_data->attendee_email : '', 
+
 		);
+
+		// Additional Data
+		if( !empty($booking_data->others_info) && $booking_data->others_info != NULL ){
+			$additional_data = json_decode($booking_data->additional_data);
+			$others_info_html = '<ul>';
+			foreach ($additional_data as $key => $value) {
+				$others_info_html .= '<li>'.$key.' : '.$value.'</li>'; 
+			}
+			$others_info_html .= '</ul>';
+			$replacements['{{attendee.additional_data}}'] = $others_info_html;
+		}
+		// reason
+		if( !empty($booking_data->reason) && $booking_data->reason != NULL ){
+			$replacements['{{booking.cancel_reason}}'] = $booking_data->reason;
+			$replacements['{{booking.rescheduled_reason}}'] = $booking_data->reason;
+		}
+		// Full start end time with timezone for attendee 
+		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $booking_data->start_time.' - '.$booking_data->end_time.' ('.$booking_data->attendee_time_zone.')';
+		
+		// Full start end time with timezone for host
+		// $dateTime = new DateTimeController( 'UTC' );
+		// $host_start_time = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone, '12', $booking_data->meeting_dates );
+		// tfhb_print_r($host_start_time);
+
+		
+		 
+
+
 
 		$tags   = array_keys( $replacements );
 		$values = array_values( $replacements );

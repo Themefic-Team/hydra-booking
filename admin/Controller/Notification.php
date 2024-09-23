@@ -25,7 +25,7 @@ class Notification {
 		);
 	}
 
- 
+
 	public function getNotification(){
         $current_user = wp_get_current_user();
 		// get user role

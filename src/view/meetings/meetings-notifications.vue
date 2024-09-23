@@ -82,7 +82,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 <MailNotifications 
                     title="Send Email to Host" 
                     :label="$tfhb_trans('Booking Confirmation')" 
-                    @update-notification="UpdateNotification"
+                    @update-notification="hostBookingConfirmPopUp = false"
                     :data="meeting.notification.host.booking_confirmation"  
                     :ispopup="hostBookingConfirmPopUp"
                     @popup-open-control="hostBookingConfirmPopUp = true"
