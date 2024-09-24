@@ -46,13 +46,16 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['status'] ) ) {
 				
 
-
+				
 				// From Email
 				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['form'] : get_option( 'admin_email' );
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['subject'] : 'Booking Confirmation';
 
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+				
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['body'] : '';
 
@@ -79,6 +82,10 @@ class MailHooks {
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] : 'Booking Confirmation';
+
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] : '';
@@ -120,6 +127,9 @@ class MailHooks {
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['host']['booking_cancel']['subject'] : 'Booking Canceled';
 
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_cancel']['body'] ) ? $_tfhb_notification_settings['host']['booking_cancel']['body'] : '';
 
@@ -145,6 +155,9 @@ class MailHooks {
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] : 'Booking Canceled';
+
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['body'] : '';
@@ -180,9 +193,13 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['status'] ) ) {
 				// From Email
 				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['form'] : get_option( 'admin_email' );
-
+ 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['subject'] : 'Booking ReSchedule';
+				
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['body'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['body'] : '';
@@ -210,6 +227,9 @@ class MailHooks {
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] : 'Booking ReSchedule';
+
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] : '';
@@ -264,7 +284,9 @@ class MailHooks {
             SELECT $tfhb_booking_table.attendee_name, 
             $tfhb_booking_table.email AS attendee_email,
             $tfhb_booking_table.attendee_time_zone AS attendee_time_zone,
+            $tfhb_booking_table.meeting_locations AS booking_locations,
             $tfhb_booking_table.meeting_dates,
+            $tfhb_booking_table.others_info,
             $tfhb_booking_table.start_time,
             $tfhb_booking_table.end_time,
             $tfhb_booking_table.duration AS meeting_duration,
@@ -308,7 +330,7 @@ class MailHooks {
 
 		// Additional Data
 		if( !empty($booking_data->others_info) && $booking_data->others_info != NULL ){
-			$additional_data = json_decode($booking_data->additional_data);
+			$additional_data = json_decode($booking_data->others_info);
 			$others_info_html = '<ul>';
 			foreach ($additional_data as $key => $value) {
 				$others_info_html .= '<li>'.$key.' : '.$value.'</li>'; 
@@ -323,19 +345,44 @@ class MailHooks {
 		}
 		// Full start end time with timezone for attendee 
 		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $booking_data->start_time.' - '.$booking_data->end_time.' ('.$booking_data->attendee_time_zone.')';
+		$replacements['{{booking.start_date_time_for_attendee}}'] = $booking_data->start_time. ' ('.$booking_data->attendee_time_zone.')';
 		
+	
 		// Full start end time with timezone for host
-		// $dateTime = new DateTimeController( 'UTC' );
-		// $host_start_time = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone, '12', $booking_data->meeting_dates );
-		// tfhb_print_r($host_start_time);
+		$dateTime = new DateTimeController( 'UTC' );
+		if($booking_data->host_time_zone != ''){
+			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone,  $booking_data->meeting_dates, 'full' );  
+			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
 
-		
-		 
+			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone,  $booking_data->meeting_dates, 'start' );
+			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
+		}else{
+			$replacements['{{booking.full_start_end_host_timezone}}'] = $booking_data->start_time.' - '.$booking_data->end_time.' ('.$booking_data->attendee_time_zone.')';
 
+			$replacements['{{booking.start_date_time_for_host}}'] = $booking_data->start_time. ' ('.$booking_data->attendee_time_zone.')';
+		}
 
+		if( !empty($booking_data->booking_locations) && $booking_data->booking_locations != NULL  ){
+			$booking_locations = json_decode($booking_data->booking_locations);
+			
+
+			$booking_locations_html = '<ul>';
+			foreach ($booking_locations as $key => $value) { 
+				if($key == 'zoom'){
+					$link = $value->address->join_url;
+					$password = $value->address->password; 
+					$booking_locations_html .= '<li> <b>'.$key.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'</li>';
+				}else{
+
+					$booking_locations_html .= '<li> <b>'.$key.' :</b> '.$value.'</li>'; 
+				}
+			}
+			$booking_locations_html .= '</ul>';
+			$replacements['{{booking.location_details_html}}'] = $booking_locations_html;
+		} 
 
 		$tags   = array_keys( $replacements );
-		$values = array_values( $replacements );
+		$values = array_values( $replacements ); 
 
 		return str_replace( $tags, $values, $template );
 	}

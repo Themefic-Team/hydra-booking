@@ -37,34 +37,36 @@ class DateTimeController extends \DateTimeZone {
 			return $time->format( 'H:i' );
 		}
 	}
-	public function convert_full_start_end_host_timezone_with_date( $start_time, $end_time, $time_zone, $selected_time_zone,  $selected_date ) {
+	public function convert_full_start_end_host_timezone_with_date( $start_time, $end_time, $time_zone, $selected_time_zone,  $selected_date, $type ) {
+	
+
 
 		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
 		$time_format 		 = isset( $_tfhb_general_settings['time_format'] ) ? $_tfhb_general_settings['time_format'] : '12';
 		$start_time = new \DateTime( $selected_date . ' ' . $start_time, new \DateTimeZone( $time_zone ) );
 		$end_time   = new \DateTime( $selected_date . ' ' . $end_time, new \DateTimeZone( $time_zone ) );
-		
+		 
 		$start_time->setTimezone( new \DateTimeZone( $selected_time_zone ) );
 		
 		$end_time->setTimezone( new \DateTimeZone( $selected_time_zone ) );
-		// tfhb_print_r(
-		// 	array(
-		// 		'start_time' => $start_time,
-		// 		'end_time'   => $end_time,
-		// 	)
-		// ); 
 
+		// Prepare formatted output
 		if ( $time_format == '12' ) {
-			return array(
-				'start' => $start_time->format( 'h:i A' ),
-				'end'   => $end_time->format( 'h:i A' ),
-			);
-
+			// Return in this format: 2024-09-24 11:30 AM - 12:00 PM (America/New_York)
+			$start_format = $start_time->format('Y-m-d g:i A');
+			$end_format = $end_time->format('g:i A');
 		} else {
-			return array(
-				'start' => $start_time->format( 'H:i' ),
-				'end'   => $end_time->format( 'H:i' ),
-			);
+			// Return in this format: 2024-09-24 11:30 - 12:00 (America/New_York)
+			$start_format = $start_time->format('Y-m-d H:i');
+			$end_format = $end_time->format('H:i');
+		}
+	
+		if($type == 'start'){
+			return $start_format . ' (' . $selected_time_zone . ')';
+		}elseif($type == 'full'){
+
+			// Return formatted time range with the time zone name ex: 2024-09-24  | 11:30 AM - 12:00 PM (America/New_York)
+			return $start_format . ' - ' . $end_format . ' (' . $selected_time_zone . ')';
 		}
 	}
 	public function getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format ) {
