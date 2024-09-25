@@ -15,8 +15,7 @@ const props = defineProps([
     'tooltipText'
 ])
 const emit = defineEmits(['update:modelValue'])
-const changeEditor = (value) => {
-  alert(1);
+const changeEditor = (value) => { 
     emit('update:modelValue', value)
 }
 </script>

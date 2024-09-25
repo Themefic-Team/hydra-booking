@@ -94,8 +94,7 @@ const Meeting = reactive({
                  toast.success(response.data.message, {
                      position: 'bottom-right', // Set the desired position
                      "autoClose": 1500,
-                 });  
-                //  alert(router);
+                 });   
                 routes.push({ name: 'MeetingsCreate', params: { id: response.data.id} });
              }else{
                  toast.error(response.data.message, {

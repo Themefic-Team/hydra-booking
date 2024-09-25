@@ -28,7 +28,7 @@
     height: 100% !important;
     width: 100% !important;
     overflow: auto;
-    
+ 
 
     .tfhb-s-w-preloader{
         height: 20px;
@@ -82,29 +82,32 @@
         border-radius: $border-radius-large;
         border: 2px $border-type $surface-border;
         background: #FFF;
-        box-shadow: $setup-wizard-box-shadow ;
-        // width: 60%;
-        // // height: 669px;
+        box-shadow: $setup-wizard-box-shadow ; 
         padding: 64px 120px;
-        flex-direction: column;
-        // gap: 56px !important;
+        width: 1024px;
+        max-width: 80%;
+        min-width: 60%;
+        flex-direction: column; 
         justify-content: center !important;
+        gap : 56px !important;
+        
         &.tfhb-s-w-step-end {
-            width: 90%;
-            padding: 64px 30px;
+            // width: 90%;
+            // padding: 64px 30px;
             .cartbox-text {
-                max-width: 230px !important;
+                max-width: 180px !important;
             }
         }
 
         &.tfhb-s-w-step-two {
-            width: 80%;
-            padding: 64px 50px;
+            // width: 80%;
+            // padding: 64px 50px;
             .tfhb-popup-open {
                 .tfhb-popup-wrap {
                     animation: none !important;
                 }
             }
+           
             .tfhb-dashboard-heading {
                 display: none !important;
               }
@@ -125,9 +128,10 @@
                 color: $surface-border-hover;
                 font-size: 26px;
                 font-weight: $font-weight-medium;
-                line-height: 33px;
+                line-height: 34px;
                 /* 33.8px */
                 margin-top: 32px !important;
+                font-weight: 600;
             }
 
             p {
@@ -136,6 +140,8 @@
                 font-weight: $font-weight-reguler;
                 line-height: 24px;
                 /* 160% */
+                max-width: 470px;
+                font-weight: 400;
             }
         }
         .tfhb-step-wizard-steper{
@@ -155,6 +161,7 @@
 
 
         .tfhb-s-w-availability-wrap {
+            width: 100% !important;
 
             .tfhb-popup.tfhb-availability-popup {
                 position: relative !important;
@@ -162,8 +169,14 @@
 
                 .tfhb-popup-wrap {
 
-                    max-width: 100% !important;
-                    width: 100% !important;
+                    // max-width: 100% !important;
+                    // width: 100% !important;
+                    width: 100% !important; 
+                    border-radius: 8px;
+                    border: 1px solid $surface-border;
+                    background: $surface-secondary;
+                    box-shadow: none !important;
+                    
 
                 } 
 
@@ -174,21 +187,26 @@
                 .tfhb-btn.boxed-btn {
                     display: none;
                 }
+               
             }
+            
         }
-
+       
         .tfhb-submission-btn {
             justify-content: center !important;
-
-            button {
-                // margin: 0 auto;
-            }
+ 
         }
     }
 
     .tfhb-meetings-list-content {
+        padding: 32px !important;
+        border-radius: 16px;
+        border: 1px solid $surface-border !important;
+        background: $surface-secondary !important;
         .tfhb-single-meeting {
+            padding: 24px !important;
             width: 100% !important;
+            box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
         }
     }
 
@@ -202,10 +220,10 @@
             padding: 8px 16px;
             align-self: stretch;
             border-radius: $border-radius-medium;
-            background: var(--Surface-Primary, #FAF5F7);
+            background: $surface-primary;
 
             .tfhb-integrations-list {
-                color: var(--Text-Paragraph, #765664);
+                color: $text-paragraph;
                 font-size: $heading-font-size-small;
                 font-weight: $font-weight-medium;
                 line-height: 24px;
@@ -220,7 +238,7 @@
                     padding: 8px 44px 8px 12px;
                     align-self: stretch;
                     border-radius: $border-radius-small;
-                    border: $border-reguler $border-type var(--Border, #F6EEF2);
+                    border: $border-reguler $border-type $surface-border;
                     background: #FFF;
                     &:focus, &:active {
                         outline: none;
@@ -241,13 +259,34 @@
         .tfhb-host-integrations.tfhb-integrations-single-block.tfhb-admin-card-box {
             width: calc(50% - 12px) !important;
             margin-bottom: 0 !important;
+            padding: 16px !important;
+            gap: 16px !important;
             
             position: relative !important;
-            .tfhb-badge.tfhb-badge-pro {
-                margin: 0 !important; 
-                font-size: $text-font-size-small !important; 
-                line-height: 1.1 !important;
+            .tfhb-admin-cartbox-cotent{
+                gap : 16px !important;
+                
             }
+            .tfhb-integrations-single-block-btn{
+                .tfhb-btn{
+                    padding: 0 !important;
+                }
+
+            }
+            &.tfhb-pro{
+                flex-direction: row-reverse;
+                .tfhb-badge.tfhb-badge-pro {
+                    margin: 0 !important; 
+                    font-size: $text-font-size-small !important; 
+                    line-height: 1.1 !important;
+                    position: relative !important;
+                }
+                .tfhb-integrations-single-block-btn{
+                    display: none !important;
+                    visibility: hidden;
+                }
+            }
+           
             
         }
 

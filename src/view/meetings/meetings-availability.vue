@@ -152,8 +152,7 @@ onBeforeMount(() => {
     Host.fetchHosts().then(() => {
         if('tfhb_host' == user_role && props.meeting.host_id == ''){
            
-            props.meeting.host_id = user_id
-            alert(props.meeting.host_id);
+            props.meeting.host_id = user_id 
         }
         if(props.meeting.host_id!=0){
             fetchHostAvailability(props.meeting.host_id);

@@ -136,8 +136,7 @@ const removeOverridesTime = (key, tkey = null) => {
     OverridesDates.times.splice(tkey, 1);
 }
 
-const openOverridesCalendarDate = () => {
-    alert(1);
+const openOverridesCalendarDate = () => { 
     if(props.availabilityDataSingle.date_slots){
         props.availabilityDataSingle.date_slots.push({
             date: '',
@@ -421,7 +420,7 @@ const tfhbValidateInput = (fieldName) => {
                                         <h3>{{ $tfhb_trans('Which hours are you free?') }}</h3>
 
                                         <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
-                                            <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-16">
+                                            <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8">
                                                 
                                                 <HbDropdown 
                                                     v-model="time.start"  
