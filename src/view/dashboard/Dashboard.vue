@@ -59,7 +59,7 @@ const  ChangeStatisticData = (day) => {
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox">
         <div class="thb-admin-title">
             <h2>{{ $tfhb_trans('Data') }}</h2>
-            <p>{{ $tfhb_trans('One-liner description') }}</p> 
+            <p>{{ $tfhb_trans('Overview of bookings') }}</p> 
         </div>  
         <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-no-hover">
             <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans('Today') }}</span>  <Icon name="ChevronDown" size="20" /> </span>
@@ -267,7 +267,7 @@ const  ChangeStatisticData = (day) => {
 
                     <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Recent Bookings') }}</h3>
                     <!-- Single Notice Box -->
-                    <div class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16 tfhb-full-width">
+                    <div v-if="Dashboard.data.recent_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16 tfhb-full-width">
                         <div
                             v-for="(data, index) in Dashboard.data.recent_booking"
                                 :key="index" 
@@ -289,23 +289,29 @@ const  ChangeStatisticData = (day) => {
                                     <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" :size="15"/> {{data.host_first_name}} {{ data.host_last_name}} </span>
                                 </div>
                             </div> 
-                        </div>
+                        </div> 
                     </div>
+                    <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+                        <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
+                        <p>{{ $tfhb_trans('No Upcoming Meetings') }}</p> 
+                    </div>
+                    
                     <!-- Single Notice Box -->
                     
                 </div>
             </div>
 
             <div class="tfhb-dashboard-notice-box-inner">
-                <div class="tfhb-dashboard-notice-box-wrap ">
-                    <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24 tfhb-full-width">{{ $tfhb_trans('Upcoming Meetings') }}</h3>
+                <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
+                    <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Upcoming Meetings') }}</h3>
 
-                    <div class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16" >
+                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16 tfhb-full-width" >
                         <!-- Single Notice Box -->
                         <div 
                             v-for="(data, index) in Dashboard.data.upcoming_booking"
                             :key="index" 
-                            class="tfhb-dashboard-notice-single-box tfhb-flexbox tfhb-gap-8 tfhb-full-width" >
+                            class="tfhb-dashboard-notice-single-box tfhb-flexbox tfhb-gap-8 tfhb-full-width"
+                         >
                             <span > {{ data.start_time}} </span>
                             <div class="tfhb-admin-card-box">
                                 <p>{{data.attendee_name}} ({{data.attendee_email}})  </p>
@@ -320,6 +326,10 @@ const  ChangeStatisticData = (day) => {
                             </div> 
                         </div> 
                     </div> 
+                    <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+                        <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
+                        <p>{{ $tfhb_trans('No Recent Bookings') }}</p> 
+                    </div>
 
                 </div>
             </div>

@@ -266,8 +266,8 @@ const TfhbMeetingType = (type, router) => {
         </div>
     </div>
 
-    <div class="tfhb-meetings-list-content" v-if="Meeting.meetings.length > 0">
-        <div class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
+    <div class="tfhb-meetings-list-content">
+        <div  v-if="Meeting.meetings.length > 0" class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
 
             <!-- Single Meeting -->
             <div class="tfhb-single-meeting" v-for="(smeeting, key) in Meeting.meetings"> 
@@ -373,7 +373,12 @@ const TfhbMeetingType = (type, router) => {
              
             
         </div>
+        <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+            <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
+            <p>{{ $tfhb_trans('No Meeting Created') }}</p> 
+        </div>
     </div>
+    
 </template>
 
 <style scoped>

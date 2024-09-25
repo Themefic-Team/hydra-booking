@@ -50,7 +50,7 @@ const removeExtraFrequency = (key) => {
                 v-model="meeting.buffer_time_before"
                 required= "true" 
                 :label="$tfhb_trans('Buffer time before meeting')"  
-                width="50"
+                width="32.5"
                 :selected = "1"
                 placeholder="No buffer time"  
                 :option = "[
@@ -71,7 +71,7 @@ const removeExtraFrequency = (key) => {
                 v-model="meeting.buffer_time_after"
                 required= "true"  
                 :label="$tfhb_trans('Buffer time after meeting')"   
-                width="50"
+                width="32.5"
                 selected = "1"
                 placeholder="No buffer time"  
                 :option = "[
@@ -87,27 +87,12 @@ const removeExtraFrequency = (key) => {
                 ]" 
             />
             <!-- Buffer time after meeting -->
-
-            <!-- Booking Frequency -->
-           
-            <HbCounter
-                :label="$tfhb_trans('Booking frequency')"
-                width="50"
-                :description="$tfhb_trans('Limit how many times this meeting can be booked')"
-                :repater="true" 
-                counterLabel="Bookings"
-                :counter_value="meeting.booking_frequency"
-                @limits-frequency-add="addExtraFrequency"
-                @limits-frequency-remove="removeExtraFrequency"
-                limit="1"
-            />
-
             <!-- Meeting interval -->
             <HbDropdown 
                 v-model="meeting.meeting_interval"
                 required= "true"  
                 :label="$tfhb_trans('Meeting interval')"   
-                width="50"
+                width="32.5"
                 selected = "1"
                 :placeholder="$tfhb_trans('Use meeting length (default)')"
                 :option = "[
@@ -123,6 +108,21 @@ const removeExtraFrequency = (key) => {
                 ]"
             />
         
+            <!-- Booking Frequency -->
+           
+            <HbCounter
+                :label="$tfhb_trans('Booking frequency')"
+                width="100"
+                :description="$tfhb_trans('Limit how many times this meeting can be booked')"
+                :repater="true" 
+                counterLabel="Bookings"
+                :counter_value="meeting.booking_frequency"
+                @limits-frequency-add="addExtraFrequency"
+                @limits-frequency-remove="removeExtraFrequency"
+                limit="1"
+            />
+
+           
         </div>  
 
         <div v-if="$tfhb_is_pro == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
@@ -148,7 +148,8 @@ const removeExtraFrequency = (key) => {
 
             <HbCounter
                 :label="$tfhb_trans('Repeats every')"
-                width="50"
+                width="60"
+                class="tfhb-pro"
                 :repater="false"
                 :counter_value="meeting.recurring_repeat"
                 limit="1"
@@ -159,9 +160,10 @@ const removeExtraFrequency = (key) => {
                     v-model="meeting.recurring_maximum"   
                     type="number"
                     :label="$tfhb_trans('Maximum number of bookings')"  
+                    class="tfhb-pro"
                     selected = "1"
                     :placeholder="$tfhb_trans('Use meeting length (default)')" 
-                    width="50"  
+                    width="40"  
                     limit="1"
                 /> 
 

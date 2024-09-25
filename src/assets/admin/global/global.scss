@@ -124,6 +124,21 @@
         }
     }
    
+    // Empty message
+    .tfhb-empty-notice-box-wrap { 
+        align-items: center !important;
+        justify-content: center !important;
+        vertical-align: middle;
+        max-height: 600px;
+        min-height: 280px;
+        flex-direction: column;
+        p {
+            font-size: 15px !important; 
+            font-weight: 600;
+            line-height: 24px;
+
+          }
+    }
     
    
     // Tooltip
@@ -808,6 +823,10 @@
     .tfhb-single-form-field{
         .tfhb-counter-wrap{
             margin-top: 4px;
+            .p-dropdown{
+                border-radius: 0px 4px 4px 0px !important;
+                height: 40px;
+            }
             .tfhb-counter{
                 border-radius: 4px 0px 0px 4px;
                 border-top: 1px $border-type $surface-border;
@@ -829,6 +848,7 @@
                         color: $primary-default;
                     }
                 }
+            
             }
             select { 
                 padding: 0px 8px 0px 12px !important;

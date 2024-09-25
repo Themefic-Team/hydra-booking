@@ -117,7 +117,7 @@ class DashboardController {
 		$total_bookings_previous      = count( $previous_date_bookings );
 		$total_bookings['percentage'] = $total_bookings_previous != 0 ? 100 * ( $total_bookings['total'] - $total_bookings_previous ) / $total_bookings_previous : 100;
 		// make only 2 decimal after dots exp 10.00
-		$total_bookings['percentage'] = number_format( $total_bookings['percentage'], 2 );
+		$total_bookings['percentage'] = number_format( $total_bookings['percentage'], 0 );
 		$total_bookings['percentage'] = $total_bookings['percentage'] == 100 ? 0 : $total_bookings['percentage'];
 		$total_bookings['growth']     = $total_bookings['percentage'] < 0 ? 'decrease' : 'increase';
 
@@ -140,7 +140,7 @@ class DashboardController {
 		);
 		$cancelled['percentage'] = $cancelled_previous != 0 ? 100 * ( $cancelled['total'] - $cancelled_previous ) / $cancelled_previous : 100;
 		// make only 2 decimal after dots exp 10.00
-		$cancelled['percentage'] = number_format( $cancelled['percentage'], 2 );
+		$cancelled['percentage'] = number_format( $cancelled['percentage'], 0 );
 		$cancelled['growth']     = $cancelled['percentage'] < 0 ? 'decrease' : 'increase';
 
 		// count wich status is completed for Bookings array
@@ -162,7 +162,7 @@ class DashboardController {
 		);
 		$completed['percentage'] = $completed_previous != 0 ? 100 * ( $completed['total'] - $completed_previous ) / $completed_previous : 100;
 		// make only 2 decimal after dots exp 10.00
-		$completed['percentage'] = number_format( $completed['percentage'], 2 );
+		$completed['percentage'] = number_format( $completed['percentage'], 0 );
 		$completed['growth']     = $completed['percentage'] < 0 ? 'decrease' : 'increase';
 
 		// Total Earning	
@@ -171,11 +171,11 @@ class DashboardController {
 
 		$previous_earning = $transactions->totalEarning($previous_date_before,  $previous_date, ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false);
 		// tfhb_print_r($earning);
-		$total_earning['total']      = $earning;
+		$total_earning['total']      = !empty($earning) ? $earning : 0;
 		$total_earning_previous      = $previous_earning;
 		$total_earning['percentage'] = $total_earning_previous != 0 ? 100 * ( $total_earning['total'] - $total_earning_previous ) / $total_earning_previous : 100;
 		// make only 2 decimal after dots exp 10.00
-		$total_earning['percentage'] = number_format( $total_earning['percentage'], 2 );
+		$total_earning['percentage'] = number_format( $total_earning['percentage'], 0 );
 		$total_earning['growth']     = $total_earning['percentage'] < 0 ? 'decrease' : 'increase';
 
 		$data = array(

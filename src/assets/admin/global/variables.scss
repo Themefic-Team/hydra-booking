@@ -14,16 +14,16 @@ $secondary-hover : #E1F2E4;
 // Text Color
 $text-title : #141915;
 $text-paragraph : #273F2B;
-$text-input : #708F75;
+$text-input : #273F2B;
 
 // Background
 $surface-primary : #F3F6F4; 
 $surface-secondary : #FFFFFF;
 
-$surface-border : #EEF6F0;
+$surface-border : #C0D8C4;
 $surface-border-hover : #211319;
 $surface-background : #C0D8C4;
-$surface-input-field : #C0D8C4; 
+$surface-input-field : #56765B; 
 
 // Error    
 $error-text : #AC0C22;
@@ -65,6 +65,8 @@ $filter-box-shadow : 0px 8px 30px 0px rgba(40, 16, 26, 0.10);
 $dropdown-box-shadow : 0px 15px 30px 0px #28101A1A;
 $flatpickr-box-shadow : 0px 8px 30px 0px rgba(229, 0, 99, 0.30);
 $setup-wizard-box-shadow : 0px 8px 16px 0px rgba(40, 16, 26, 0.04); 
+$input-field-box-shadow : 0px 1px 3px 0px rgba(16, 40, 20, 0.10), 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
+
 
 // transition
 $transition : 0.4s;

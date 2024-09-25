@@ -611,7 +611,7 @@ const isobjectempty = (data) => {
                             <h3>{{ $tfhb_trans('Which hours are you free?') }}</h3>
 
                             <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
-                                <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-16"> 
+                                <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8"> 
                                     <HbDropdown 
                                         v-model="time.start"  
                                         required= "true" 

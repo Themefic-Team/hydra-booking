@@ -269,7 +269,7 @@
         border-radius: $border-radius-large;
         background: $surface-secondary;
         padding: 24px; 
-        width: 980px;
+        width: 750px;
         margin: 0 auto;
         @media #{$max1240}{
             width: calc(100% - 32px) !important;
@@ -457,7 +457,7 @@
                     width: 20px;
                     background-color: $surface-border;
                     border-radius: $border-radius-full; 
-                    border: $border-reguler $border-type $surface-border;
+                    border: $border-reguler $border-type $primary-default;
                     margin: 0 !important;
                     &:after {
                         content: "";
