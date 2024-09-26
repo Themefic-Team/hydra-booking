@@ -266,10 +266,10 @@
 
     // Meeting Create
     .tfhb-meeting-create{
-        border-radius: $border-radius-large;
+        border-radius: $border-radius-medium;
         background: $surface-secondary;
         padding: 24px; 
-        width: 750px;
+        width: 710px;
         margin: 0 auto;
         @media #{$max1240}{
             width: calc(100% - 32px) !important;
@@ -444,6 +444,9 @@
             @media #{$max767}{
                 width: 100% !important;
             }
+            .tfhb-range-title{ 
+                width: calc(100% - 36px); 
+            }
             .tfhb-range-checkbox{
                 position: relative;
                 width: 20px;
@@ -494,7 +497,8 @@
                 }
             }
             .tfhb-availability-schedule-time{
-                margin: 19px 0px 0px 35px;
+                // margin: 19px 0px 0px 35px;
+                margin-top: 16px;
             }
         }
     }

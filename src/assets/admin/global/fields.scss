@@ -7,6 +7,9 @@
         
         > label{
             justify-content: start !important;
+            > span{
+                margin: 0 !important;
+            }
         }
         // Select Field
         &.tfhb-field-select{ 
@@ -18,11 +21,12 @@
                 height: 40px;
                 border: $fields-border $border-type $surface-input-field;
                 font-family: "Inter", sans-serif;
-                &:focus, &:active {
+                &:focus, &:active, &:hover {
                     outline: none;
                     box-shadow: none; 
                     color : $primary-color !important;
                     box-shadow: $input-field-box-shadow;
+                    background-color: $surface-primary;
                 }
             }
         }
@@ -32,8 +36,20 @@
                 color: $text-input !important;
             }
             .p-dropdown { 
-                border: $fields-border $border-type $surface-input-field !important; 
+                border: $fields-border $border-type $surface-input-field ; 
                 box-shadow: none !important;
+                height: 40px;
+                &:focus, &:active , &:hover{
+                    outline: none;
+                    box-shadow: none; 
+                    border-color: $surface-border-hover;
+                    color : $primary-color !important;
+                    box-shadow: $input-field-box-shadow;
+                    background-color: $surface-primary;
+                }
+                .p-dropdown-label{
+                    line-height: 24px !important;
+                }
                 &.tfhb-required{
                     border: $fields-border $border-type red !important;
                 }
@@ -67,12 +83,13 @@
                 box-shadow: none;
                 color: $text-input !important;
                 font-family: "Inter", sans-serif;
-                &:focus, &:active {
+                &:focus, &:active, &:hover {
                     outline: none;
                     box-shadow: none; 
                     border-color: $surface-border-hover;
                     color : $primary-color !important;
                     box-shadow: $input-field-box-shadow;
+                    background-color: $surface-primary;
                 }
             }
         }
@@ -108,18 +125,22 @@
                 padding: 8px 8px 8px 12px;
                 width: 100%;
                 font-family: "Inter", sans-serif;
-                &:focus, &:active {
+                &:focus, &:active , &:hover{
                     outline: none;
                     box-shadow: none; 
                     border-color: $surface-border-hover;
                     color : $primary-color !important;
                     box-shadow: $input-field-box-shadow;
+                    background-color: $surface-primary;
                 }
             }
         } 
         &.tfhb-field-checkbox, &.tfhb-field-radio{
             input[type="checkbox"], input[type="radio"] {
                 display: none;
+            }
+            .tfhb-checkbox-label{
+                justify-content: start !important;
             }
             .checkmark {
                 position: absolute;

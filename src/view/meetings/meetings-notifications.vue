@@ -2,6 +2,7 @@
 import {ref} from 'vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import MailNotifications from '@/components/notifications/MailNotifications.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
 
 const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
@@ -184,8 +185,15 @@ const attendeeBookingReminderPopUp = ref(false);
 
         </div> 
 
-        <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Continue') }} </button>
+        <div class="tfhb-submission-btn"> 
+            <HbButton  
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="emit('update-meeting')"
+                :buttonText="$tfhb_trans('Save & Continue')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />  
         </div>
         <!--Bookings -->
     </div>

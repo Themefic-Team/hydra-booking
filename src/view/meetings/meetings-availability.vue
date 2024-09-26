@@ -6,6 +6,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import HbText from '@/components/form-fields/HbText.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbButton from '@/components/form-fields/HbButton.vue';
 import useValidators from '@/store/validator'
 import { Availability } from '@/store/availability';
 import AvailabilityTime from '@/store/times'
@@ -666,9 +667,25 @@ const isobjectempty = (data) => {
             </div>  
         
         </div>  
-        <div class="tfhb-submission-btn">
-            <button v-if="'settings'==meeting.availability_type" class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting', ['host_id', 'availability_id'])">{{ $tfhb_trans('Save & Continue') }} </button>
-            <button v-if="'custom'==meeting.availability_type" class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting', ['host_id', 'availability_custom___title', 'availability_custom___time_zone'])">{{ $tfhb_trans('Save & Continue') }} </button>
+        <div class="tfhb-submission-btn"> 
+            <HbButton 
+                v-if="'settings'==meeting.availability_type"
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="emit('update-meeting', ['host_id', 'availability_id'])"
+                :buttonText="$tfhb_trans('Save & Continue')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />  
+            <HbButton 
+                v-if="'custom'==meeting.availability_type"
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="emit('update-meeting', ['host_id', 'availability_custom___title', 'availability_custom___time_zone'])"
+                :buttonText="$tfhb_trans('Save & Continue')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />   
         </div>
         <!--Bookings -->
     </div>

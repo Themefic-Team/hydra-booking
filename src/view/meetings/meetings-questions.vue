@@ -4,6 +4,7 @@ import HbQuestion from '@/components/widgets/HbQuestion.vue'
 import HbQuestionForm from '@/components/widgets/HbQuestionForm.vue'
 import Icon from '@/components/icon/LucideIcon.vue' 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import axios from 'axios';
 
@@ -34,7 +35,7 @@ const questions_data = reactive({});
 const removeExtraQuestion = (key) => {
     props.meeting.questions.splice(key, 1);
 }
-function EditExtraQuestion(key){
+function EditExtraQuestion(key){f
     
     props.meeting.questions.forEach((question, qkey) => {
         if (qkey === key) {
@@ -215,8 +216,15 @@ const GetFormsData = async (e) => {
 
         </div>
 
-        <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Continue') }} </button>
+        <div class="tfhb-submission-btn"> 
+            <HbButton  
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="emit('update-meeting')"
+                :buttonText="$tfhb_trans('Save & Continue')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />  
         </div>
         <!--Bookings -->
     </div>

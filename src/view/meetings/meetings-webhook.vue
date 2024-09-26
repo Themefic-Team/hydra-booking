@@ -8,6 +8,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import HbButton from '@/components/form-fields/HbRadio.vue';
 import HbRadio from '@/components/form-fields/HbRadio.vue';
 const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
@@ -217,7 +218,7 @@ const deleteBodyField = (key) => {
            
             
         </div>
-        <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookList && $tfhb_is_pro == true" @click="addNewWebHook">
+        <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookList  " @click="addNewWebHook">
             <Icon name="PlusCircle" :width="20"/>
                 {{ $tfhb_trans('Add New Webhook') }}
             </button>
@@ -396,8 +397,15 @@ const deleteBodyField = (key) => {
         </div>
     </div>
 
-    <div class="tfhb-submission-btn">
-        <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Continue') }} </button>
+    <div class="tfhb-submission-btn"> 
+        <HbButton  
+            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+            @click="emit('update-meeting')"
+            :buttonText="$tfhb_trans('Save & Continue')"
+            icon="ChevronRight" 
+            hover_icon="ArrowRight" 
+            :hover_animation="true"
+        />  
     </div>
 </div>
 </template>

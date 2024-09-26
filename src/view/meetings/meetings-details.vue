@@ -3,6 +3,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
@@ -132,7 +133,7 @@ const tfhbValidateInput = (fieldName) => {
                             {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                             {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},
                             {name: 'Organizer Phone Number', value: 'Organizer Phone Number'},
-                            {name: 'Online Meeting', value: 'Online Meeting'}
+                            {name: 'Add Custom', value: 'Add Custom'}
                         ]" 
                         :width= "50"
                     />
@@ -142,9 +143,18 @@ const tfhbValidateInput = (fieldName) => {
                         required= "true"  
                         :label="$tfhb_trans('Address')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Type Location Address')" 
+                        :placeholder="$tfhb_trans('Enter Address')" 
                         :width= "50"
-                        v-if="'In Person (Organizer Address)'==slocation.location  || 'Online Meeting'==slocation.location"
+                        v-if="'In Person (Organizer Address)'== slocation.location "
+                    /> 
+                    <HbText  
+                        v-model="slocation.address" 
+                        required= "true"  
+                        :label="$tfhb_trans('Add Custom Location')"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans('Enter Address')" 
+                        :width= "50"
+                        v-if="'Add Custom'==slocation.location"
                     /> 
                     <HbText  
                         v-model="slocation.address" 
@@ -152,7 +162,7 @@ const tfhbValidateInput = (fieldName) => {
                         required= "true"  
                         :label="$tfhb_trans('Phone Number')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Type Location Phone Number')" 
+                        :placeholder="$tfhb_trans('Enter Phone Number')" 
                         :width= "50"
                         v-if="'Organizer Phone Number'==slocation.location"
                     /> 
@@ -206,7 +216,15 @@ const tfhbValidateInput = (fieldName) => {
             </router-link>
         </div>
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting', ['title', 'description', 'duration'])">{{ $tfhb_trans('Save & Continue') }} </button>
+            
+            <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="emit('update-meeting', ['title', 'description', 'duration'])"
+                :buttonText="$tfhb_trans('Save & Continue')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />  
         </div>
         <!--Bookings -->
     </div>

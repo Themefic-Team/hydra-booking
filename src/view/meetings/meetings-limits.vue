@@ -4,6 +4,7 @@ import HbCounter from '@/components/meetings/HbCounter.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbText from '@/components/form-fields/HbText.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 const emit = defineEmits(["update-meeting", "limits-frequency-add"]); 
 
@@ -94,7 +95,7 @@ const removeExtraFrequency = (key) => {
                 :label="$tfhb_trans('Meeting interval')"   
                 width="32.5"
                 selected = "1"
-                :placeholder="$tfhb_trans('Use meeting length (default)')"
+                :placeholder="$tfhb_trans('default meeting length')"
                 :option = "[
                     {name: '5 Minutes', value: '5'},  
                     {name: '10 Minutes', value: '10'},  
@@ -111,8 +112,7 @@ const removeExtraFrequency = (key) => {
             <!-- Booking Frequency -->
            
             <HbCounter
-                :label="$tfhb_trans('Booking frequency')"
-                width="100"
+                :label="$tfhb_trans('Booking frequency')" 
                 :description="$tfhb_trans('Limit how many times this meeting can be booked')"
                 :repater="true" 
                 counterLabel="Bookings"
@@ -130,8 +130,7 @@ const removeExtraFrequency = (key) => {
                 Recurring Event
                 <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans('Pro') }}</span>
             </h2> 
-            <p>Set up a repeating schedule</p>
-            <a href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size="18" /></a>
+            <p>Set up a repeating schedule</p> 
         </div>
         <div v-else class="tfhb-admin-title tfhb-full-width tfhb-m-0">
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
@@ -148,7 +147,7 @@ const removeExtraFrequency = (key) => {
 
             <HbCounter
                 :label="$tfhb_trans('Repeats every')"
-                width="60"
+                width="100"
                 class="tfhb-pro"
                 :repater="false"
                 :counter_value="meeting.recurring_repeat"
@@ -163,7 +162,7 @@ const removeExtraFrequency = (key) => {
                     class="tfhb-pro"
                     selected = "1"
                     :placeholder="$tfhb_trans('Use meeting length (default)')" 
-                    width="40"  
+                    width="50"  
                     limit="1"
                 /> 
 
@@ -184,8 +183,15 @@ const removeExtraFrequency = (key) => {
             />
         </div>
         
-        <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Continue') }} </button>
+        <div class="tfhb-submission-btn"> 
+            <HbButton  
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="emit('update-meeting')"
+                :buttonText="$tfhb_trans('Save & Continue')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+            />   
         </div>
         <!--Bookings -->
     </div>

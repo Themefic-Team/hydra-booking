@@ -154,11 +154,19 @@
         font-size: $text-font-size;
         line-height: 20px;
         &.tfhb-badge-pro {
-            color: #21A159 !important;
-            background-color: #D0F5E1;
+            color: $success-text !important;
+            background-color: $success-background;
             position: absolute;
             right: 8px;
             top: 8px; 
+            text-transform: uppercase;
+            font-weight: 600;
+            gap: 4px !important;
+            svg{
+                path{
+                    fill:  $primary-default !important;
+                }
+            }
           }
           &.not-absolute{
             position: relative;
@@ -826,12 +834,13 @@
             .p-dropdown{
                 border-radius: 0px 4px 4px 0px !important;
                 height: 40px;
+                // border-left: 0 !important;
             }
             .tfhb-counter{
                 border-radius: 4px 0px 0px 4px;
-                border-top: 1px $border-type $surface-border;
-                border-bottom: 1px $border-type $surface-border;
-                border-left: 1px $border-type $surface-border;
+                border-top: 1px $border-type $surface-input-field;
+                border-bottom: 1px $border-type $surface-input-field;
+                border-left: 1px $border-type $surface-input-field;
                 background: $surface-primary;
                 height: 40px;
                 width: calc(100% - 174px);
