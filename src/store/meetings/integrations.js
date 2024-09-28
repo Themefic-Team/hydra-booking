@@ -116,8 +116,7 @@ const IntegrationsValue = reactive({
     },
 
     // Popup Meeting Creation
-    async addNewIntegrations (integration){   
-        alert(1)
+    async addNewIntegrations (integration){    
         this.integrationsList = false;
         this.integrationscreate = true;
         this.integrationsListopen = false;
@@ -193,7 +192,7 @@ const IntegrationsValue = reactive({
         });
     },
 
-    async deleteBodyField (){
+    async deleteBodyField (key){
         this.integrationsData.bodys.splice(key, 1)
     },
 
