@@ -62,15 +62,19 @@ if(tfhb_setup_wizard){
 }else{
   document.body.classList.remove('tfhb-setup-wizard-body');
 }
-
+// .tfhb-pro:after on click add alert this is pro version
+const tfhb_pro = document.querySelector('.tfhb-pro');
+if(tfhb_pro){
+  tfhb_pro.addEventListener('click', () => {
+    alert('This is Pro Version');
+  });
+}
+ 
 </script>
 
 <template>    
   <router-view /> 
 </template> 
 <style scoped>  
-  #toplevel_page_hydra-booking .wp-submenu-wrap li.current a{
-    color: $surface-secondary;
-    font-weight: $font-weight-medium;
-  }
+ 
 </style>
