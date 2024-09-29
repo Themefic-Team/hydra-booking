@@ -1414,7 +1414,7 @@ class MeetingController {
 					'value' => $form->ID,
 				);
 			}
-		} elseif ( $form_type == 'fluent-forms' ) {
+		} elseif ( $form_type == 'forminator-forms' ) {
 			$args  = array(
 				'post_type'      => 'forminator_forms',
 				'posts_per_page' => -1,

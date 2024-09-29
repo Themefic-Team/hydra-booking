@@ -87,8 +87,8 @@ function QuestionPopupClose(){
 }
 // Get Forms Data
  
-const GetFormsData = async (e) => {
-    let form_type =  e.value; 
+const GetFormsData = async (value) => {
+    let form_type =  value;  
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/question/forms-list', {
             form_type: form_type
@@ -100,8 +100,8 @@ const GetFormsData = async (e) => {
                 } 
         }
         );
-        if (response.data.status) { 
-            props.formsList.value = response.data.questionForms;
+        if (response.data.status) {  
+            props.formsList.value = response.data.questionForms; 
         }
     } catch (error) {
         console.log(error);
@@ -117,7 +117,7 @@ const GetFormsData = async (e) => {
                     {{ $tfhb_trans('Meeting Questions for Attendee') }}
                     <!-- <HbSwitch 
                         v-model="meeting.questions_type" 
-                    /> -->
+                    /> --> 
                 </h2> 
                 <p>{{ $tfhb_trans('Create your own booking page questions') }}</p>
             </div>
@@ -195,7 +195,7 @@ const GetFormsData = async (e) => {
                     :option = "[
                         {'name': 'Contact Form 7', 'value': 'wpcf7', disable:  integrations.cf7_status},  
                         {'name': 'Fluent Forms', 'value': 'fluent-forms', disable:  integrations.fluent_status},  
-                        {'name': 'Forminator Forms', 'value': 'forminator', disable:  integrations.forminator_status},  
+                        // {'name': 'Forminator Forms', 'value': 'forminator', disable:  integrations.forminator_status},  
                         {'name': 'Gravity Forms', 'value': 'gravityforms', disable:  integrations.gravity_status},  
                     ]"
                     @tfhb-onchange="GetFormsData" 
@@ -210,7 +210,7 @@ const GetFormsData = async (e) => {
                     :label="$tfhb_trans('Select Form Types')"  
                     width="50" 
                     placeholder="Select Form Types"   
-                    :option = "formsList" 
+                    :option = "props.formsList.value" 
                    
                 />
 
