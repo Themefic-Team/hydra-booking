@@ -271,13 +271,13 @@ const tfhbValidateInput = (fieldName) => {
  
 
 <template> 
-<HbPopup :isOpen="props.isOpen" :max_width="max_width" :enableAvailabilityClass="true" @modal-close="emit('modal-close')"  name="first-modal">
+<HbPopup :isOpen="props.isOpen"   :max_width="max_width" :enableAvailabilityClass="true" @modal-close="emit('modal-close')"  name="first-modal">
         <template #header> 
             <h2> {{ $tfhb_trans('Add New Availability') }} </h2>   
         </template>
 
         <template #content>   
-            <div class="tfhb-popup-wrap tfhb-availability-popup-wrap">
+            <div class=" tfhb-availability-popup-wrap">
                 <div class="tfhb-content-wrap tfhb-flexbox"> 
                     <!-- Title -->
                     <HbText  
@@ -373,7 +373,7 @@ const tfhbValidateInput = (fieldName) => {
                         <!-- Date Overrides -->
                         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox">  
 
-                            <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
+                            <div  class="tfhb-dashboard-heading tfhb-overrides-heading tfhb-full-width" :style="{margin: '0 !important'}">
                                 <div class="tfhb-admin-title"> 
                                     <h3>{{ $tfhb_trans('Add date overrides') }}</h3>  
                                     <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>

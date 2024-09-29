@@ -6,8 +6,10 @@
     .tfhb-popup-wrap {
       max-width: 500px !important;
     }
-    .tfhb-popup-wrap.tfhb-availability-popup-wrap{
-      max-width: 980px !important;
+    .tfhb-popup-wrap{
+      .tfhb-availability-popup-wrap{
+        width: 100% !important;
+      }
     }
   }
 

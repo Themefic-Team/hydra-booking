@@ -107,10 +107,19 @@
                     animation: none !important;
                 }
             }
+            // .tfhb-availability-content-wrap{
+            //     > .tfhb-admin-card-box{
+            //         border: none !important;
+            //         padding: 0 !important;
+            //     }
+            // }
            
             .tfhb-dashboard-heading {
                 display: none !important;
               }
+            .tfhb-overrides-heading{
+                display: block !important;
+            }
             .tfhb-popup-wrap {
                 max-width: 800px !important;
                 .tfhb-popup-wrap {

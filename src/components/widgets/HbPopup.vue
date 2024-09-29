@@ -28,6 +28,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  class: {
+    type: String,
+    default: ''
+  }
 });
 const emit = defineEmits([ "modal-close" ]); 
 const showData = ref(false);
@@ -53,7 +57,7 @@ const showData = ref(false);
  
 
 
-    <div  v-show="props.isOpen"  class="tfhb-popup" :class="{'tfhb-popup-open': props.isOpen, 'tfhb-popup-close': !props.isOpen, 'tfhb-availability-popup': enableAvailabilityClass}" > 
+    <div  v-show="props.isOpen"  class="tfhb-popup " :class="props.class, {'tfhb-popup-open': props.isOpen, 'tfhb-popup-close': !props.isOpen, 'tfhb-availability-popup': enableAvailabilityClass}" > 
         <div class="tfhb-popup-wrap" :style="{ 'max-width': max_width }">
           <div v-if="props.isOpen" >
             <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-m-0">

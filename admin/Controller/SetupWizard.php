@@ -170,6 +170,9 @@ class SetupWizard {
 			'post_status' => 'publish',
 			'post_author' => $request['user_id'],
 		);
+
+		// Create Meeting Category as per Business Type
+		$this->create_meeting_category( esc_html($request['business_type']), '' );
 		$meeting_post_id   = wp_insert_post( $meeting_post_data );
 		$meeting_slug      = get_post_field( 'post_name', $meeting_post_id );
 		$data              = array(
@@ -230,5 +233,28 @@ class SetupWizard {
 		$meeting = $meeting->get( $meetings_id );
 
 		return $meeting;
+	}
+
+	/**
+	 * Create Meeting category
+	 *
+	 * @return object
+	 */
+	public function create_meeting_category($title, $description = '') {
+
+		// if the term doesn't exist, then create it
+		if ( term_exists( $title, 'meeting_category' ) ) {
+			return;
+		}
+		// Insert the term
+		$term = wp_insert_term(
+			$title,   // The term
+			'meeting_category', // The taxonomy
+			array(
+				'description' => $description,
+				'slug'        => sanitize_title( $title ),
+			)
+		);
+
 	}
 }
