@@ -15,9 +15,14 @@
             }
         }
     }
+    .tfhb-filter-content-wrap{
+        position: relative;
+      
+    }
     .tfhb-filter-box{
         gap: 16px !important;
         .tfhb-filter-btn{
+            position: relative;
             border-radius: $border-radius-medium;
             border: $border-reguler $border-type $surface-border;
             background: $surface-secondary;
@@ -46,6 +51,9 @@
         width: 350px;
         position: absolute;
         z-index: 99;
+        top: 100%;
+        left: 0;
+        margin-top: 10px;
         .tfhb-filter-form{
             .tfhb-filter-category{
                 border-bottom: 1px $border-type $surface-border; 
@@ -133,7 +141,7 @@
         }
         .tfhb-reset-btn{
             margin: 24px;
-            a{
+            button{
                 border-radius: $border-radius-medium;
                 border: $border-reguler $border-type $surface-border;
                 background: $surface-secondary;
@@ -142,7 +150,7 @@
                 gap: 8px !important;
                 color: $secondary-default;
                 font-size: $heading-font-size-small;
-                
+                width: 100%;
                 font-weight: $font-weight-reguler;
                 line-height: 24px; /* 160% */
             }
@@ -158,6 +166,8 @@
         background: #FFF;
         margin-right: 16px;
      .tfhb-meetings-list-wrap{
+        
+        align-items: normal !important;
         justify-content: normal;
         .tfhb-single-meeting{
             width: calc(33.333% - 16px);

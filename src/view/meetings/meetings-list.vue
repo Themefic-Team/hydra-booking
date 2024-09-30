@@ -95,6 +95,19 @@ const TfhbMeetingType = (type, router) => {
     Meeting.CreatePopupMeeting(meeting, router);
 }
 
+const resetFilter = () => {
+    filterData.title = '';
+    filterData.fhosts = [];
+    filterData.fcategory = [];
+    Meeting.fetchMeetings();
+}
+
+// outside click
+window.addEventListener('click', function(e) {
+    if (!document.querySelector('.tfhb-filter-content-wrap').contains(e.target)) {
+        FilterPreview.value = false;
+    }
+});
 
 </script>
 <template>
@@ -102,9 +115,62 @@ const TfhbMeetingType = (type, router) => {
 
     <div class="tfhb-dashboard-heading tfhb-flexbox">
         <div class="tfhb-filter-box tfhb-flexbox">
-            <div class="tfhb-filter-btn tfhb-flexbox" @click="FilterPreview=!FilterPreview" :class="FilterPreview ? 'active' : ''">
-                <Icon name="Filter" size="20" /> 
-                {{ $tfhb_trans('Filter') }}
+            <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
+                <div class="tfhb-filter-icon tfhb-filter-btn tfhb-flexbox"  @click="FilterPreview=!FilterPreview"><Icon name="Filter" size="20" /> 
+                {{ $tfhb_trans('Filter') }}</div>
+                <transition name="tfhb-dropdown-transition">
+                    <div class="tfhb-filter-box-content" v-show="FilterPreview">
+                        <div class="tfhb-filter-form">
+                            <div class="tfhb-filter-category">
+                                <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterHostPreview=!FilterHostPreview">
+                                    {{ $tfhb_trans('All Host') }} <Icon name="ChevronUp" size="20" v-if="FilterHostPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterHostPreview"/>
+                                </div>
+                                <div class="tfhb-filter-category-box" v-show="FilterHostPreview">
+                                    <ul class="tfhb-flexbox">
+                                        <li class="tfhb-flexbox" v-for="(shost, key) in Host.hosts" :key="key">
+                                            <label>
+                                                <input type="checkbox" :value="shost.value" v-model="filterData.fhosts" @change="Meeting.Tfhb_Meeting_Select_Filter(filterData)">
+                                                <span class="checkmark"></span>
+                                                {{ shost.name }}
+                                            </label>
+                                            <!-- <div class="tfhb-category-items">
+                                                25
+                                            </div> -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="tfhb-filter-category">
+                                <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
+                                    {{ $tfhb_trans('All Category') }} <Icon name="ChevronUp" size="20" v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterCatgoryPreview"/>
+                                </div>
+                                <div class="tfhb-filter-category-box" v-show="FilterCatgoryPreview">
+                                    <ul class="tfhb-flexbox">
+                                        <li class="tfhb-flexbox" v-for="(mcategory, key) in Meeting.meetingCategory" :key="key">
+                                            <label>
+                                                <input type="checkbox" :value="mcategory.id" v-model="filterData.fcategory" @change="Meeting.Tfhb_Meeting_Select_Filter(filterData)">
+                                                <span class="checkmark"></span>
+                                                {{ mcategory.name }}
+                                            </label>
+                                            <!-- <div class="tfhb-category-items">
+                                                25
+                                            </div> -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                
+
+                        </div>
+                        <div class="tfhb-reset-btn" v-if="filterData.fcategory.length > 0 || filterData.fhosts.length > 0 || filterData.title">
+                            <button @click="resetFilter" class="tfhb-flexbox">
+                                <Icon name="RefreshCw" size="20" /> 
+                                {{ $tfhb_trans('Reset Filter') }}
+                            </button>
+                        </div>
+                    </div>
+                </transition>
             </div>
             <div class="tfhb-header-filters">
                 <input type="text" v-model="filterData.title" @keyup="Meeting.Tfhb_Meeting_Filter(filterData)" placeholder="Search by meeting title" /> 
@@ -191,80 +257,7 @@ const TfhbMeetingType = (type, router) => {
         </template> 
     </HbPopup>
 
-    <div class="tfhb-filter-box-content" v-show="FilterPreview">
-        <div class="tfhb-filter-form">
-            <div class="tfhb-filter-category">
-                <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterHostPreview=!FilterHostPreview">
-                    {{ $tfhb_trans('All Host') }} <Icon name="ChevronUp" size="20" v-if="FilterHostPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterHostPreview"/>
-                </div>
-                <div class="tfhb-filter-category-box" v-show="FilterHostPreview">
-                    <ul class="tfhb-flexbox">
-                        <li class="tfhb-flexbox" v-for="(shost, key) in Host.hosts" :key="key">
-                            <label>
-                                <input type="checkbox" :value="shost.value" v-model="filterData.fhosts" @change="Meeting.Tfhb_Meeting_Select_Filter(filterData)">
-                                <span class="checkmark"></span>
-                                {{ shost.name }}
-                            </label>
-                            <!-- <div class="tfhb-category-items">
-                                25
-                            </div> -->
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="tfhb-filter-category">
-                <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
-                    {{ $tfhb_trans('All Category') }} <Icon name="ChevronUp" size="20" v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterCatgoryPreview"/>
-                </div>
-                <div class="tfhb-filter-category-box" v-show="FilterCatgoryPreview">
-                    <ul class="tfhb-flexbox">
-                        <li class="tfhb-flexbox" v-for="(mcategory, key) in Meeting.meetingCategory" :key="key">
-                            <label>
-                                <input type="checkbox" :value="mcategory.id" v-model="filterData.fcategory" @change="Meeting.Tfhb_Meeting_Select_Filter(filterData)">
-                                <span class="checkmark"></span>
-                                {{ mcategory.name }}
-                            </label>
-                            <!-- <div class="tfhb-category-items">
-                                25
-                            </div> -->
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="tfhb-filter-dates tfhb-flexbox">
-                <div class="tfhb-filter-start-date">
-                    <HbDateTime 
-                        v-model="filterData.startDate"
-                        width="45"
-                        enableTime='true'
-                        placeholder="From"   
-                    /> 
-                    <Icon name="CalendarDays" size="20" /> 
-                </div>
-                <div class="tfhb-calender-move-icon">
-                    <Icon name="MoveRight" size="20px" /> 
-                </div>
-                <div class="tfhb-filter-end-date">
-                    <HbDateTime 
-                        v-model="filterData.endDate"
-                        width="45"
-                        enableTime='true'
-                        placeholder="To"   
-                    /> 
-                    <Icon name="CalendarDays" size="20" /> 
-                </div>
-            </div>
-
-        </div>
-        <div class="tfhb-reset-btn" v-if="filterData.fcategory.length > 0 || filterData.fhosts.length > 0 || filterData.title">
-            <a href="#" class="tfhb-flexbox">
-                <Icon name="RefreshCw" size="20" /> 
-                 {{ $tfhb_trans('Reset Filter') }}
-            </a>
-        </div>
-    </div>
+    
 
     <div class="tfhb-meetings-list-content">
         <div  v-if="Meeting.meetings.length > 0" class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
@@ -338,7 +331,7 @@ const TfhbMeetingType = (type, router) => {
                                             <Icon name="CalendarCheck" size="16" /> 
                                         </div>
                                         <div class="user-info-title">
-                                            10/20 Booked
+                                            {{smeeting.total_booking}} Booked
                                         </div>
                                     </div>
                                 </li>

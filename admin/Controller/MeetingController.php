@@ -206,7 +206,7 @@ class MeetingController {
 
 		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
 			$MeetingsList = $meeting->get();
-		}
+		} 
 
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$MeetingsList = $meeting->get( null, null, $current_user_id );

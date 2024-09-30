@@ -643,7 +643,7 @@ const sharePopupData = (data) => {
             :timeZone="timeZone.value" 
             :wcProduct="wcProduct.value" 
             :formsList="formsList" 
-            :meetingCategory="meetingCategory.value" 
+            :meetingCategory="meetingCategory" 
             @add-more-location="addMoreLocations" 
             @remove-meeting-location="removeLocations" 
             @update-meeting="UpdateMeetingData" 

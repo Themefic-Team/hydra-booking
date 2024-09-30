@@ -163,7 +163,7 @@ const copyMeeting = (link) => {
                                                 <Icon name="CalendarCheck" size="16" /> 
                                             </div>
                                             <div class="user-info-title">
-                                                10/20 Booked
+                                                {{ setupWizard.data.meeting.total_booking }} Booked
                                             </div>
                                         </div>
                                     </li>

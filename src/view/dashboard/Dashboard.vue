@@ -75,10 +75,7 @@ window.addEventListener('click', function(e) {
             <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans('Today') }}</span>  <Icon name="ChevronDown" size="20" /> </span>
             
             <transition name="tfhb-dropdown-transition">
-                <div  
-                    v-show="datachart_box_dropdown"
-                    class="tfhb-dropdown-wrap active"
-                > 
+                <div v-show="datachart_box_dropdown" class="tfhb-dropdown-wrap active"  > 
                     <!-- route link -->
                     <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ $tfhb_trans('Today') }}</span>
                     <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 7 week') }}</span> 
@@ -110,9 +107,7 @@ window.addEventListener('click', function(e) {
                                     icon="CalendarDays"   
                                 />  
                             </div>
-                        </div>
-
-                    
+                        </div> 
                     </div> 
                     <div class="tfhb-dropdown-single">
                         <button class="tfhb-btn tfhb-btn-primary boxed-btn   tfhb-full-width" @click="updateDashboardDateRange">{{ $tfhb_trans('Apply') }}</button>

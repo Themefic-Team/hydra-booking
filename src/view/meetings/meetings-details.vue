@@ -1,11 +1,15 @@
 <script setup>
+import { defineProps, defineEmits, ref } from 'vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
-import useValidators from '@/store/validator'
+import HbPopup from '@/components/widgets/HbPopup.vue';
+import useValidators from '@/store/validator';
+import { toast } from "vue3-toastify"; 
+import axios from 'axios' 
 const { errors, isEmpty } = useValidators();
 
 const emit = defineEmits(["add-more-location", "remove-meeting-location", "update-meeting"]); 
@@ -32,6 +36,7 @@ const props = defineProps({
     },
 
 });
+const createMeetingPopup = ref(false);
 
 const tfhbValidateInput = (fieldName) => {
     
@@ -48,7 +53,52 @@ const tfhbValidateInput = (fieldName) => {
         isEmpty(fieldParts[0]+'___'+[fieldParts[1]], props.meeting[fieldParts[0]][fieldParts[1]]);
     }
 };
+const CategoryData = {
+    id: '',
+    title: '',
+    description: '',
+};
+// Create and Update Category
+const UpdateCategory = async () => { 
+    console.log(CategoryData);
+    try { 
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/categories/create-update', CategoryData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+      
+        if (response.data.status) {  
+   
+            let category = response.data.category;
+            let categoryList = [];
+            category.forEach(element => {
+                categoryList.push({name: element.name, value: element.id});
+            });
+            props.meetingCategory.value = categoryList; 
 
+            // Set Default
+            CategoryData.id = '';
+            CategoryData.title = '';
+            CategoryData.description = '';
+            createMeetingPopup.value = false;
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            }); 
+        }
+    } catch (error) {
+        toast.error('Action successful', {
+            position: 'bottom-right', // Set the desired position
+        });
+    }
+}
+
+// close popup
+const closePopup = () => {
+    createMeetingPopup.value = false;
+}
  
 
 </script>
@@ -200,20 +250,22 @@ const tfhbValidateInput = (fieldName) => {
         </div>
 
 
-        <!-- Category -->
+        <!-- Category --> 
         <HbDropdown 
             v-model="meeting.meeting_category" 
             required= "true" 
             :label="$tfhb_trans('Select Category')"  
             :selected = "meeting.meeting_category"
             :placeholder="$tfhb_trans('Select Category')" 
-            :option = "meetingCategory" 
+            :option = "props.meetingCategory.value" 
         />
         <div class="tfhb-add-moreinfo tfhb-full-width" >
-            <router-link :to="'/settings/category'" exact :class="'tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto'">
+            
+
+            <button @click="createMeetingPopup = !createMeetingPopup" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                 <Icon name="PlusCircle" :width="20"/>
                 {{ $tfhb_trans('Create Category') }}
-            </router-link>
+            </button> 
         </div>
         <div class="tfhb-submission-btn">
             
@@ -227,5 +279,28 @@ const tfhbValidateInput = (fieldName) => {
             />  
         </div>
         <!--Bookings -->
+
+        <HbPopup :isOpen="createMeetingPopup" @modal-close="closePopup" max_width="600px" name="first-modal">
+            <template #header> 
+                <h2>{{ $tfhb_trans('Create Meeting Category') }}</h2>
+                
+            </template>
+
+            <template #content>   
+                <HbText  
+                    v-model="CategoryData.title"
+                    required= "true"  
+                    :label="$tfhb_trans('Category Title')"  
+                    name="ctg-title"
+                /> 
+                <HbTextarea  
+                    v-model="CategoryData.description"
+                    required= "true"  
+                    name="ctg-description"
+                    :label="$tfhb_trans('Description')"  
+                /> 
+                <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{  $tfhb_trans('Save Category') }}</button> 
+            </template> 
+        </HbPopup>
     </div>
 </template>

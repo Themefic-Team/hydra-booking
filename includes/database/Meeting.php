@@ -167,73 +167,50 @@ class Meeting {
 
 		$table_name = $wpdb->prefix . $this->table;
 		$host_table = $wpdb->prefix . 'tfhb_hosts';
-
+		$booking_table = $wpdb->prefix . 'tfhb_bookings';
 		if ( $id ) {
 			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_meetings WHERE id = %s", $id )
+				$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking FROM $table_name
+				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id
+				WHERE $table_name.id = %s GROUP BY $table_name.id", $id )
 			);
 		} elseif ( ! empty( $filterData['title'] ) || ! empty( $filterData['fhosts'] ) || ! empty( $filterData['fcategory'] ) || ( ! empty( $filterData['startDate'] ) && ! empty( $filterData['endDate'] ) ) ) {
-			$sql = "SELECT * FROM $table_name WHERE";
+			$sql = "SELECT $table_name.*, COUNT($booking_table.id) as total_booking FROM $table_name LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id WHERE";
 
 			if ( ! empty( $filterData['title'] ) ) {
 				$title = '%' . $filterData['title'] . '%'; // Wrap title with % for LIKE comparison
-				$sql  .= $wpdb->prepare( ' title LIKE %s', $title );
+				// $sql  .= $wpdb->prepare( $table_name.'.title LIKE %s', $title );
+				$sql  .= " $table_name.title LIKE '$title'";
 			}
 
 			if ( isset( $filterData['fhosts'] ) ) {
 				$host_ids = implode( ',', array_map( 'intval', $filterData['fhosts'] ) );
 				$sql     .= ! empty( $filterData['title'] ) ? ' AND' : '';
-				$sql     .= " host_id IN ($host_ids)";
+				$sql     .= " $table_name.host_id IN ($host_ids)";
 			}
 
 			if ( isset( $filterData['fcategory'] ) ) {
 				$category_ids = implode( ',', array_map( 'intval', $filterData['fcategory'] ) );
 				$sql         .= ( ! empty( $filterData['title'] ) || isset( $filterData['fhosts'] ) ) ? ' AND' : '';
-				$sql         .= " meeting_category IN ($category_ids)";
+				$sql         .= " '$table_name.meeting_category IN ($category_ids)";
 			}
 
+			$sql .= " GROUP BY $table_name.id" ; 
 			$data = $wpdb->get_results( $sql );
 
-			if ( ! empty( $filterData['startDate'] ) && ! empty( $filterData['endDate'] ) ) {
-
-				$startDate = gmdate( 'Y-m-d', strtotime( $filterData['startDate'] ) );
-				$endDate   = gmdate( 'Y-m-d', strtotime( $filterData['endDate'] ) );
-
-				$filteredData = array_filter(
-					$data,
-					function ( $row ) use ( $startDate, $endDate ) {
-						$customAvailableData = json_decode( $row->availability_custom, true );
-						if ( json_last_error() !== JSON_ERROR_NONE ) {
-							// Handle JSON decoding error if any
-							return false;
-						}
-
-						if ( ! isset( $customAvailableData['date_slots'] ) ) {
-							return false;
-						}
-						foreach ( $customAvailableData['date_slots'] as $dateSlot ) {
-							// Split the dates if they are comma-separated
-							$dates = explode( ', ', $dateSlot['date'] );
-
-							foreach ( $dates as $date ) {
-								if ( $date >= $startDate && $date <= $endDate ) {
-									return true;
-								}
-							}
-						}
-						return false;
-					}
-				);
-
-			}
+		 
 		} elseif ( ! empty( $user_id ) ) {
 			$data = $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_meetings WHERE user_id = %s", $user_id )
+				$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking FROM $table_name
+				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id WHERE $table_name.user_id = %s GROUP BY $table_name.id", $user_id )
 			);
 		} else {
 
 			$data = $wpdb->get_results(
-				"SELECT * FROM {$wpdb->prefix}tfhb_meetings"
+				"SELECT $table_name.*, COUNT($booking_table.id) as total_booking FROM $table_name
+				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id
+				GROUP BY $table_name.id
+				"
 			);
 		}
 
@@ -243,6 +220,33 @@ class Meeting {
 
 		return $data;
 	}
+
+	/**
+	 * Get all  meeting Data. with total booking count also host id
+	 * 
+	 */
+	public function getWithBookingCount( $id = null, $filterData = null, $user_id = null ) {
+
+		global $wpdb;
+
+		
+		$table_name = $wpdb->prefix . $this->table;
+		$host_table = $wpdb->prefix . 'tfhb_hosts'; 
+		$booking_table = $wpdb->prefix . 'tfhb_bookings';
+
+		$sql = "SELECT $table_name.*, COUNT($booking_table.id) as total_booking
+				FROM $table_name  
+				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id";
+
+		if($user_id) {
+			$sql .= $wpdb->prepare( " WHERE $table_name.user_id = %s", $user_id );
+		}
+		$sql .= " GROUP BY $table_name.id" ;
+
+		$data = $wpdb->get_results( $wpdb->prepare( $sql )); 
+		return $data;
+	}
+
 
 	// delete
 	public function delete( $id ) {

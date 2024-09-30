@@ -229,25 +229,7 @@ onBeforeMount(() => {
         />
 
 
-        <StripeIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"   
-        :stripe_data="Integration.stripe" 
-        @update-integrations="UpdateIntegration"
-        from="host"
-        :ispopup="spopup"
-        @popup-open-control="isstripePopupOpen"
-        @popup-close-control="isstripePopupClose"
-        />
-
-        <!-- paypal intrigation -->
-        <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" 
-        :paypal_data="Integration.paypal" 
-        @update-integrations="UpdateIntegration" 
-        from="host"
-        :ispopup="paypalpopup"
-        @popup-open-control="ispaypalPopupOpen"
-        @popup-close-control="ispaypalPopupClose" 
-        />
-        <!-- paypal intrigation -->
+ 
 
         <!-- Mailchimp intrigation -->
         <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"  
