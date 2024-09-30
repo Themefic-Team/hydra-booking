@@ -980,13 +980,13 @@
 }
 
 .tfhb-override-calendar{
-    width: calc(55% - 12px);
+    width: calc(50% - 12px);
     @media #{$max991}{
         width: 100%;
     }
 }
 .tfhb-override-times{
-    width: calc(45% - 12px);
+    width: calc(50% - 12px);
     @media #{$max991}{
         width: 100%;
     }
@@ -1073,8 +1073,11 @@
                     border-radius: 6px;
                     background: $surface-primary;
                     svg{
-                    fill: transparent !important;
+                    fill: $surface-input-field !important;
                     }
+                }
+                svg{
+                    fill: $surface-input-field !important;
                 }
             }
             .flatpickr-next-month{
@@ -1085,7 +1088,7 @@
                     content: "";
                     width: 8px;
                     height: 8px; 
-                    background-color: $secondary-default;
+                    background-color: $surface-input-field;
                     border-radius: $border-radius-full; 
                     left: -24px;
                 }

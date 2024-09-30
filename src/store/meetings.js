@@ -154,7 +154,13 @@ const Meeting = reactive({
 
     async fetchMeetingCategory (){
         try { 
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/categories');
+            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/categories', {
+                    headers: {
+                        'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                        'capability': 'tfhb_manage_options'
+                    } 
+                 }
+            );
             if (response.data.status) { 
                 this.meetingCategory = response.data.category;  
             }

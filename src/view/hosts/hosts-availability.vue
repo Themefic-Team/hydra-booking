@@ -384,7 +384,7 @@ const formatTimeSlots = (timeSlots) =>  {
     <div class="tfhb-content-wrap tfhb-flexbox" v-if="'custom'==host.availability_type">
         <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key"  @edit-availability="EditAvailabilitySettings(key, availability.id, availability)" @delete-availability="deleteAvailabilitySettings(key, availability.id, host.user_id)" />
 
-        <AvailabilityPopupSingle v-if="isModalOpened" :timeZone="timeZone.value" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />
+        <AvailabilityPopupSingle v-if="isModalOpened" max_width="800px !important" :timeZone="timeZone.value" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />
     </div>
     <div class="tfhb-submission-btn tfhb-mt-24">
         <button class="tfhb-btn boxed-btn" @click="emit('save-host-info')">{{ $tfhb_trans('Save') }}</button>

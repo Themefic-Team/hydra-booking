@@ -37,6 +37,9 @@ const props = defineProps({
             <h2>{{$tfhb_trans('Experience Hydrabooking in Action (Instantly!)')}}</h2>
             <p>{{$tfhb_trans('Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.')}}</p>
         </div>
+        <div class="tfhb-s-w-import-data">
+            <img :src="$tfhb_url+'/assets/images/import.gif'" style="height: 180px;" alt="">
+        </div>
         <div class="tfhb-s-w-getting-email">
 
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="props.setupWizard.importDemoMeeting" >Import demo data

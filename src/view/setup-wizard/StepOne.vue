@@ -56,7 +56,7 @@ const StepOne = () => {
                     selected = "1"
                     placeholder="Select Your Business Type"  
                     :option = "[
-                        {'name': 'Consultent', 'value': 'consultent'}, 
+                        {'name': 'Consultant', 'value': 'Consultant'}, 
                         {'name': 'Doctor', 'value': 'doctor'}, 
                         {'name': 'Teacher', 'value': 'teacher'}
                     ]"
