@@ -8,6 +8,12 @@
 
     .tfhb-chart-statistic-wrap{
       width: 100% !important; 
+      min-height: 400px;
+      .tfhb-dropdown{
+        .tfhb-dropdown-wrap{
+          width: 150px !important;
+        }
+      }
     }
     .tfhb-dashboard-chartbox {
       .tfhb-single-chartbox {
@@ -178,6 +184,7 @@
 
       }
     }
+
 
   }
 

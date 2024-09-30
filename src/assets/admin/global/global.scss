@@ -133,7 +133,7 @@
         justify-content: center !important;
         vertical-align: middle;
         max-height: 600px;
-        min-height: 280px;
+        min-height: 355px;
         flex-direction: column;
         p {
             font-size: 15px !important; 
@@ -385,7 +385,7 @@
         }
         &.tfhb-mega-dropdown{
             .tfhb-dropdown-wrap{ 
-                width: 400px !important;
+                width: 300px !important;
             }
             .tfhb-mega-dropdown-heading {
                 padding: 8px 24px 8px 24px;
@@ -395,7 +395,7 @@
                 font-size: $heading-font-size-small !important;
               }
               .tfhb-calender-move-icon {
-                margin-top: 4px;
+                margin-top: 30px;
             }
         }
        
@@ -427,6 +427,7 @@
                 background-color: $surface-secondary;
                 margin: 0 !important;
                 color: $text-paragraph;
+                font-size: 15px;
                 &.tfhb-dropdown-error{
                     background-color: $error-background;
                     color: $error-text;
@@ -434,11 +435,16 @@
                 &:hover {
                     background-color: $surface-primary;
                 }
+                &.tfhb-no-hover{
+                    &:hover{
+                        background-color: #FFF !important;
+                    }
+                }
                 .tfhb-filter-dates{
 
                     justify-content: normal !important;
-                    .tfhb-filter-start-date, .tfhb-filter-end-date{
-                        width: 45% !important;
+                    .tfhb-filter-start-end-date, .tfhb-filter-end-date{
+                        width: calc(50% - 16px) !important;
                     }
                 }
             }
@@ -729,8 +735,7 @@
       }
       .tfhb-filter-dates{
         gap: 8px !important;
-        padding: 24px;
-        border-bottom: 1px $border-type $surface-border; 
+        // padding: 24px; 
         .tfhb-filter-start-date,
         .tfhb-filter-end-date{
             border-radius: $border-radius-medium;
@@ -783,6 +788,8 @@
             padding: 24px !important;
             border-radius: 8px !important;
             background-color: $surface-secondary !important;
+            max-height: 400px;
+            overflow: auto;
             .tfhb-notification-wrap {
                 margin-top: 16px;
 

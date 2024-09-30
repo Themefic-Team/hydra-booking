@@ -63,3 +63,27 @@
 .flip-in-x-leave-active {
   animation: flipInX 0.6s ease reverse both;
 }
+
+
+
+// Dropdown animation
+/* Transition styles */
+.tfhb-dropdown-transition-enter-active, .tfhb-dropdown-transition-leave-active {
+  transition: all 0.2s ease;
+}
+.tfhb-dropdown-transition-enter-from{
+  transform: translateY(-20px);
+  opacity: 0; 
+}
+.tfhb-dropdown-transition-leave-to {
+    transform: translateY(-10px); 
+    opacity: 0; 
+}
+.tfhb-dropdown-transition-enter-to { 
+  transform: translateY(0);
+  opacity: 1; 
+}
+.slide-leave-from { 
+  transform: translateY(10);
+  opacity: 1; 
+}

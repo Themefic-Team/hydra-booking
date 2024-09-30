@@ -48,7 +48,17 @@ const  ChangeStatisticData = (day) => {
     
     Dashboard.fetcDashboardStatistics(); 
 }
-
+// Click outside the dropdown
+window.addEventListener('click', function(e) {
+    if (!document.querySelector('.tfhb-datachart-box-dropdown').contains(e.target)) { 
+        datachart_box_dropdown.value = false;
+    }
+});
+window.addEventListener('click', function(e) {
+    if (!document.querySelector('.datachart-dropdown').contains(e.target)) { 
+        datachart_dropdown.value = false;
+    }
+});
 
 </script>
 <template>
@@ -61,48 +71,54 @@ const  ChangeStatisticData = (day) => {
             <h2>{{ $tfhb_trans('Data') }}</h2>
             <p>{{ $tfhb_trans('Overview of bookings') }}</p> 
         </div>  
-        <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-no-hover">
+        <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-datachart-box-dropdown tfhb-no-hover">
             <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans('Today') }}</span>  <Icon name="ChevronDown" size="20" /> </span>
-            <div 
-                :class="{ 'active': datachart_box_dropdown }"
-                class="tfhb-dropdown-wrap"
-            > 
-                <!-- route link -->
-                <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ $tfhb_trans('Today') }}</span>
-                <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 7 week') }}</span> 
-                <span  @click="updateDashboardDay(30)" data-name="Last 30 Days" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 30 Days') }}</span> 
-                <span  @click="updateDashboardDay(60)" data-name="Last 3 months" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 3 months') }}</span> 
-                <div class="tfhb-dropdown-single">
-                    <div class="tfhb-filter-dates tfhb-flexbox tfhb-gap-8">
-                        <div class="tfhb-filter-start-date">
-                            <!-- <span>{{ $tfhb_trans('From') }}</span> -->
-                            <HbDateTime 
-                                v-model="Dashboard.data_request.from_date"
-                                selected = "1" 
-                                label=""
-                                enableTime='true'
-                                placeholder="From"  
-                                icon="CalendarDays"   
-                            />  
+            
+            <transition name="tfhb-dropdown-transition">
+                <div  
+                    v-show="datachart_box_dropdown"
+                    class="tfhb-dropdown-wrap active"
+                > 
+                    <!-- route link -->
+                    <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ $tfhb_trans('Today') }}</span>
+                    <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 7 week') }}</span> 
+                    <span  @click="updateDashboardDay(30)" data-name="Last 30 Days" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 30 Days') }}</span> 
+                    <span  @click="updateDashboardDay(60)" data-name="Last 3 months" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 3 months') }}</span> 
+                    <div class="tfhb-dropdown-single tfhb-no-hover">
+                        <div class="tfhb-filter-dates  tfhb-flexbox tfhb-gap-8">
+                            <div class="tfhb-filter-start-end-date">
+                                <!-- <span>{{ $tfhb_trans('From') }}</span> -->
+                                <HbDateTime 
+                                    v-model="Dashboard.data_request.from_date"
+                                    selected = "1" 
+                                    label="From"
+                                    enableTime='true'
+                                    placeholder="From"  
+                                    icon="CalendarDays"   
+                                />  
+                            </div>
+                            <div class="tfhb-calender-move-icon">
+                                <Icon name="MoveRight" size="15" /> 
+                            </div>
+                            <div class="tfhb-filter-start-end-date"> 
+                                <HbDateTime 
+                                    v-model="Dashboard.data_request.to_date"
+                                    selected = "1" 
+                                    label="To"
+                                    enableTime='true'
+                                    placeholder="To"   
+                                    icon="CalendarDays"   
+                                />  
+                            </div>
                         </div>
-                        <div class="tfhb-calender-move-icon">
-                            <Icon name="MoveRight" size="15" /> 
-                        </div>
-                        <div class="tfhb-filter-end-date">
-                            <!-- <span>{{ $tfhb_trans('To') }}</span> -->
-                            <HbDateTime 
-                                v-model="Dashboard.data_request.to_date"
-                                selected = "1" 
-                                enableTime='true'
-                                placeholder="To"   
-                                icon="CalendarDays"   
-                            />  
-                        </div>
-                    </div>
 
-                    <button class="tfhb-btn tfhb-btn-primary boxed-btn tfhb-mt-16 tfhb-full-width" @click="updateDashboardDateRange">{{ $tfhb_trans('Apply') }}</button>
-                </div> 
-            </div>
+                    
+                    </div> 
+                    <div class="tfhb-dropdown-single">
+                        <button class="tfhb-btn tfhb-btn-primary boxed-btn   tfhb-full-width" @click="updateDashboardDateRange">{{ $tfhb_trans('Apply') }}</button>
+                    </div>   
+                </div>
+            </transition>
         </div>
     </div>
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-wrap">
@@ -346,19 +362,21 @@ const  ChangeStatisticData = (day) => {
                         <h3 >{{ $tfhb_trans('Statistics') }}</h3>  
                     </div>
                     <div class="thb-admin-btn right"> 
-                        <div class="tfhb-dropdown  tfhb-no-hover">
+                        <div class="tfhb-dropdown datachart-dropdown tfhb-no-hover">
                             <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" > <span> {{ $tfhb_trans('Last 7 Days') }}</span>  <Icon name="ChevronDown" size="20" /> </a>
-                            <div  
-                                :class="{ 'active': datachart_dropdown }"
-                                class="tfhb-dropdown-wrap"
-                            > 
-                                <!-- route link --> 
-                                <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans('Last 7 Days') }}</span> 
-                                <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ $tfhb_trans('This month') }}</span> 
-                                <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ $tfhb_trans('Last 3 months') }}</span> 
-                                <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ $tfhb_trans('This Year') }}</span> 
-                                
-                            </div>
+                            <transition name="tfhb-dropdown-transition">
+                                <div   
+                                v-show="datachart_dropdown"
+                                    class="tfhb-dropdown-wrap active"
+                                > 
+                                    <!-- route link --> 
+                                    <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans('Last 7 Days') }}</span> 
+                                    <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ $tfhb_trans('This month') }}</span> 
+                                    <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ $tfhb_trans('Last 3 months') }}</span> 
+                                    <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ $tfhb_trans('This Year') }}</span> 
+                                    
+                                </div>
+                            </transition>
                         </div> 
                     </div> 
                 </div>

@@ -1,10 +1,13 @@
 <script setup>
+import { ref } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'title',
     'notifications'
      
 ])
+
+const displayNotification = ref(false);
 
 // make a vue time 2024-08-20 16:15:39 to 6m example
 const timeAgo = (date) => {
@@ -32,6 +35,13 @@ const timeAgo = (date) => {
     return Math.floor(seconds) + " seconds";
 }
 
+// if click outside the dropdown
+window.addEventListener('click', function(e) {
+    if (!document.querySelector('.tfhb-header-notification').contains(e.target)) {
+        displayNotification.value = false;
+    }
+});
+
 </script>
 
 
@@ -56,34 +66,36 @@ const timeAgo = (date) => {
         </div>
         <div v-if="props.notifications" class="tfhb-header-notification">
             <div class="tfhb-dropdown tfhb-mega-dropdown">
-            <span> <Icon name="Bell" size="24" /> </span>
-           
-            <div class="tfhb-dropdown-wrap ">   <!-- active class-->
-                <div class="tfhb-flexbox">
-                    <h3>{{ $tfhb_trans('Notifications') }}</h3>
-                    <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</a> -->
-                    <!-- {{ notifications }} -->
-                </div>
+            <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size="24" /> </span>
 
-                <div class="tfhb-notification-wrap">
-                    
-                    <!-- Single Notifaction wrap -->
-                    <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16">
-                        <div class="tfhb-single-notification-img">
-                            <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Notification Image">
-                        </div> 
-                        <div class="tfhb-single-notification-content"> 
-                            <h4>{{notification.value.attendee_name}}</h4>
-                            <p> {{notification.value.message}}</p>
+            <transition name="tfhb-dropdown-transition">
+                <div v-show="displayNotification" class="tfhb-dropdown-wrap active">   <!-- active class-->
+                    <div class="tfhb-flexbox">
+                        <h3>{{ $tfhb_trans('Notifications') }}</h3>
+                        <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</a> -->
+                        <!-- {{ notifications }} -->
+                    </div>
 
-                        <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago</span>
-                        </div>
+                    <div class="tfhb-notification-wrap">
                         
+                        <!-- Single Notifaction wrap -->
+                        <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16">
+                            <div class="tfhb-single-notification-img">
+                                <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Notification Image">
+                            </div> 
+                            <div class="tfhb-single-notification-content"> 
+                                <h4>{{notification.value.attendee_name}}</h4>
+                                <p> {{notification.value.message}}</p>
+
+                            <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago</span>
+                            </div>
+                            
 
 
-                    </div> 
+                        </div> 
+                    </div>
                 </div>
-            </div>
+            </transition>
         </div>
         </div>
     </div>
@@ -95,6 +107,8 @@ const timeAgo = (date) => {
 </style>
 
 <style scoped>
-/* Your component styles go here */
+ 
+
+
 </style>
 
