@@ -167,11 +167,7 @@ class DateTimeController extends \DateTimeZone {
 			);
 
 		}
-		// echo "<pre>";
-		// print_r($disabled_times);
-		// echo "</pre>";
-		// die();
-
+	 
 		// Time Slot
 		$time_slots_data = array();
 		// get Selected Date day

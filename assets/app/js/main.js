@@ -54,7 +54,7 @@
 			// Get Calender Id
 			let $this = $(this),
 			 	calenderId = $this.attr('data-calendar'),
-				calenderData =  eval("tfhb_app_booking_" + calenderId),
+				calenderData =  eval("tfhb_app_booking_" + calenderId), 
 				preloader =  `<div class="tfhb-preloader"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="220" height="220" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-width="3" stroke="#2e6b38" fill="none" r="0" cy="50" cx="50">
 				<animate begin="0s" calcMode="spline" keySplines="0 0.2 0.8 1" keyTimes="0;1" values="0;40" dur="1.4285714285714284s" repeatCount="indefinite" attributeName="r"></animate>
 				<animate begin="0s" calcMode="spline" keySplines="0.2 0 0.8 1" keyTimes="0;1" values="1;0" dur="1.4285714285714284s" repeatCount="indefinite" attributeName="opacity"></animate>
@@ -127,35 +127,38 @@
 			// Select Date
 			$(document).on('click', '.tfhb-calendar-dates li', function (e) {
 				var $this_li = $(this);
+				if($this_li.hasClass('inactive')){
+					return false;
+				} 
 
-				$this.find('.tfhb-meeting-card').append(preloader);
+				// tfhb-meeting-times  with animation 
+				$this.find('.tfhb-meeting-times').show();
+				$this.find('.tfhb-available-times').html('');
+				$this.find('.tfhb-available-times').append(preloader);
 
 				setTimeout(function(){
-					if($this_li.hasClass('inactive')){
-						return false;
-					}
+					
 					$this.find('.tfhb-calendar-dates li').removeClass('active');  
 					$this_li.addClass('active');	
 					
 					// meeting ID
 					var meeting_id = $this.find("input[name='meeting_id']").val();
 					// Get the first day of the month
-					tfhb_times_manipulate( $this, meeting_id, $this_li );
-					
-					$this.find('.tfhb-preloader').remove();
+					tfhb_times_manipulate( $this, meeting_id, $this_li ); 
 				}, 1000); // 2000 milliseconds = 2 seconds
  
 			});
 
 			$this.find('input[name="tfhb_time_format"], .tfhb-time-zone-select').on('change', function (e) {  
 				var $this_li = $this.find('.tfhb-calendar-dates li.active');  
-				// Get the first day of the month
-				$this.find('.tfhb-meeting-card').append(preloader);
+				$this.find('.tfhb-meeting-times').show();
+				$this.find('.tfhb-available-times').html('');
+				$this.find('.tfhb-available-times').append(preloader);
+				// Get the first day of the month 
 				var meeting_id = $this.find("input[name='meeting_id']").val();
 				setTimeout(function(){
 					// Your code here 
-					tfhb_times_manipulate( $this, meeting_id, $this_li ); 
-					$this.find('.tfhb-preloader').remove();
+					tfhb_times_manipulate( $this, meeting_id, $this_li );  
 				}, 1000); // 2000 milliseconds = 2 seconds
 
 				
@@ -167,37 +170,29 @@
 			* @author Jahid
 			*/
 			// $this.find('input[name="tfhb_time_format"], .tfhb-time-zone-select').on('change', function (e) { 
-			$(document).on('click', '.tfhb-available-times li .time', function (e) {
-				$this.find('.tfhb-meeting-card').append(preloader);
+			$(document).on('click', '.tfhb-available-times li .time', function (e) { 
 				$this_time = $(this);
 				$('.tfhb-available-times li .time').removeClass('active');
-				setTimeout(function(){
-					// Your code here 
-					$('.tfhb-available-times li .next').remove(); 
-					var selected_time_start = $this_time.attr('data-time-start');  
-					var selected_time_end = $this_time.attr('data-time-end');
-					$this.find("input[name='meeting_time_start']").val(selected_time_start);
-					$this.find("input[name='meeting_time_end']").val(selected_time_end);
+
+				// Your code here 
+				$('.tfhb-available-times li .next').remove(); 
+				var selected_time_start = $this_time.attr('data-time-start');  
+				var selected_time_end = $this_time.attr('data-time-end');
+				$this.find("input[name='meeting_time_start']").val(selected_time_start);
+				$this.find("input[name='meeting_time_end']").val(selected_time_end);
+			
+				$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> Next<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
+				$this_time.addClass('active');
 				
-					$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> Next<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
-					$this_time.addClass('active');
-				
-					$this.find('.tfhb-preloader').remove();
-				}, 1000); // 2000 milliseconds = 2 seconds
 
 			});
  
- 			$(document).on('click', '.tfhb-available-times li .next', function (e) {
-				$this.find('.tfhb-meeting-card').append(preloader);
+ 			$(document).on('click', '.tfhb-available-times li .next', function (e) { 
 
-				setTimeout(function(){
-					// Your code here 
-					$this.find('.tfhb-timezone').hide();
-					$this.find('.tfhb-calander-times').hide();
-					$this.find('.tfhb-meeting-booking-form').show(); 
-
-					$this.find('.tfhb-preloader').remove();
-				}, 1000); // 2000 milliseconds = 2 seconds
+				// Your code here 
+				$this.find('.tfhb-timezone').hide();
+				$this.find('.tfhb-calander-times').hide();
+				$this.find('.tfhb-meeting-booking-form').show(); 
 
 				
 			});
@@ -214,16 +209,12 @@
 				$('.tfhb-short-description').slideDown();
 			});
 
-			$(document).on('click', '.tfhb-meeting-booking-form .tfhb-back-btn', function (e) {
-				$this.find('.tfhb-meeting-card').append(preloader);
+			$(document).on('click', '.tfhb-meeting-booking-form .tfhb-back-btn', function (e) { 
 
-				setTimeout(function(){
-					$this.find('.tfhb-timezone').show();
-					$this.find('.tfhb-calander-times').css('display', 'flex');
-					$this.find('.tfhb-meeting-booking-form').hide();
-
-					$this.find('.tfhb-preloader').remove();
-				}, 1000); // 2000 milliseconds = 2 seconds
+				
+				$this.find('.tfhb-timezone').show();
+				$this.find('.tfhb-calander-times').css('display', 'flex');
+				$this.find('.tfhb-meeting-booking-form').hide();
 
 				
 			}); 
@@ -301,8 +292,7 @@
 			
 			// Interval to show the preloader
 			$this.find('.tfhb-notice').hide();
-			$this.find('.tfhb-notice').html('');
-			$this.find('.tfhb-meeting-card').append(preloader);
+			$this.find('.tfhb-notice').html(''); 
 
 		   var meeting_id = $this.find("#meeting_id").val();
 		   var host_id = $this.find("#host_id").val();
@@ -355,8 +345,7 @@
 		data = Object.assign(InformationData, data); 
 			if(payment_status == 1 && ""==payment_type){
 				//   5 seconds
-				setTimeout(function(){
-					$this.find('.tfhb-preloader').remove();
+				setTimeout(function(){ 
 					$this.find('.tfhb-notice').append('Payment Method Required');
 					$this.find('.tfhb-notice').show();
 				},  2000); // 2000 milliseconds = 2 seconds
@@ -392,10 +381,8 @@
 								   )
 							   }
 
-						   }
-						   $this.find('.tfhb-preloader').remove();
-					   }else{
-						   $this.find('.tfhb-preloader').remove();
+						   } 
+					   }else{ 
 						   $this.find('.tfhb-notice').append(response.data.message);
 						   $this.find('.tfhb-notice').show();
 						   
@@ -437,10 +424,8 @@
 									   )
 								   }
 
-							   }
-							   $this.find('.tfhb-preloader').remove();
-						   }else{
-							   $this.find('.tfhb-preloader').remove();
+							   } 
+						   }else{ 
 							   $this.find('.tfhb-notice').append(response.data.message);
 							   $this.find('.tfhb-notice').show();
 							   
@@ -527,10 +512,8 @@
 											   )
 										   }
 	   
-									   }
-									   $this.find('.tfhb-preloader').remove();
-								   }else{
-									   $this.find('.tfhb-preloader').remove();
+									   } 
+								   }else{ 
 									   $this.find('.tfhb-notice').append(response.data.message);
 									   $this.find('.tfhb-notice').show();
 									   
@@ -541,8 +524,7 @@
 					   });
 				   }
 			   }, $this.find('.tfhb-confirmation-button').get(0)); // Ensure the element is correctly passed to PayPal
-			   
-			   $this.find('.tfhb-preloader').remove();
+			    
 
 		   }
 		}
@@ -649,7 +631,6 @@
 			 
  
 			var selected_date = $this_li.attr('data-date'); 
-		
 			var data_available = $this_li.attr('data-available'); 
 			//  input radio data name tfhb_time_format
 			var time_format = $this.find('input[name="tfhb_time_format"]:checked').val();  
@@ -670,12 +651,13 @@
 					time_zone: time_zone,
 				}, 
 				success: function (response) {  
-					if(response.success){  
+					if(response.success == true){  
 
 						// var already_booked_times = response.data;
 						// console.log(response.data);
 						let data = response.data;
-						$this.find('.tfhb-available-times ul').html('');
+						$this.find('.tfhb-available-times').html('');
+						$this.find('.tfhb-available-times').append('<ul></ul>');
 
 						for (var i = 0; i < data.length; i++) { 
  
@@ -684,9 +666,14 @@
 						
 						}
 
-						// tfhb-meeting-times  with animation 
-						$this.find('.tfhb-meeting-times').show();
+						
 
+					}
+					if(response.success == false){ 
+						$this.find('.tfhb-available-times').html('');
+						$this.find('.tfhb-available-times').append('<ul></ul>');
+						$this.find('.tfhb-available-times ul').append('<li > <p>'+response.data.message+'</p></li>');
+						$this.find('.tfhb-meeting-times').show();
 					}
 				},
 				error: function (error) {

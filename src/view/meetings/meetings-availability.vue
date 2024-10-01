@@ -64,9 +64,9 @@ const fetchAvailabilitySettings = async (availability_id) => {
         console.log(error);
     } 
 }
-const Settings_Avalibility_Callback = (e) => {
-    if(e.value){
-        fetchAvailabilitySettings(e.value);
+const Settings_Avalibility_Callback = (value) => {
+    if(value){
+        fetchAvailabilitySettings(value);
     }
 }
 
@@ -106,13 +106,15 @@ const fetchHostAvailability = async (host) => {
             Settings_avalibility.value = '';
             if(response.data.host.availability){
 
+                let HostAvailabilitiesData = [];
                 // use Each Loop
                 for (const key in response.data.host.availability) {
-                    HostAvailabilities.push({
+                    HostAvailabilitiesData.push({
                         name: response.data.host.availability[key].title,
                         value: key // Adjust 'someValue' as per your data structure
                     });
-                }
+                } 
+                HostAvailabilities.value = HostAvailabilitiesData;
             }
         }
     } catch (error) {
@@ -120,9 +122,10 @@ const fetchHostAvailability = async (host) => {
     } 
 }
 
-const Host_Avalibility_Callback = (e) => {
-    if(e.value){
-        fetchHostAvailability(e.value);
+const Host_Avalibility_Callback = (value) => {
+    
+    if(value){
+        fetchHostAvailability(value);
     }
 }
 
@@ -391,7 +394,7 @@ const isobjectempty = (data) => {
             :label="$tfhb_trans('Choose Schedule')"  
             :selected = "1"
             :placeholder="$tfhb_trans('Choose Schedule')"   
-            :option="HostAvailabilities"
+            :option="HostAvailabilities.value"
             v-if="'settings'==meeting.availability_type"
             @add-change="tfhbValidateInput('availability_id')" 
             @add-click="tfhbValidateInput('availability_id')" 
@@ -430,7 +433,7 @@ const isobjectempty = (data) => {
         <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
             <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox">
                 <div class="tfhb-admin-title"> 
-                    <h3> {{ $tfhb_trans('Weekly hours') }} </h3>  
+                    <h3> {{ $tfhb_trans('Schedule Preview') }} </h3>  
                 </div>
                 <div class="thb-admin-btn right"> 
                     <span>{{ Settings_avalibility.availability.time_zone }}</span> 
@@ -439,6 +442,11 @@ const isobjectempty = (data) => {
             
             <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline">
                 <div class="tfhb-swicher-wrap tfhb-gap-8  tfhb-flexbox">
+                    <!-- Checkbox swicher -->
+                    <label class="switch">
+                        <input id="swicher" disabled v-model="time_slot.status" true-value="1" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
                     <label class="tfhb-schedule-swicher" for="swicher"> {{time_slot.day}}</label>
                     <!-- Swicher -->
                 </div>

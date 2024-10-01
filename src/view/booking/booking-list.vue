@@ -80,10 +80,9 @@ const ExportBookingAsCSV = async () => {
         console.log(error);
     }   
 }
-
+const meeting_address = reactive({});
 const TfhbFormatMeetingLocation = (address) => {
-    const meeting_address = JSON.parse(address)
-    return meeting_address.map(loc => loc.location).join(', ');
+     meeting_address.value = JSON.parse(address) 
 }
 
 onBeforeMount(() => { 
@@ -130,6 +129,7 @@ const singleBookingData = ref('');
 const Tfhb_Booking_View = async (data) => {   
     singleBookingData.value = data;
     BookingDetailsPopup.value = true;
+    TfhbFormatMeetingLocation(data.meeting_locations);
 }
 
 
@@ -330,27 +330,26 @@ const toggleSelectAll = (e) => {
         <label for="">{{ $tfhb_trans('Select Date Range') }}</label>
         <div class="tfhb-filter-dates tfhb-flexbox">
             
-            <div class="tfhb-filter-start-date">
+            <div class="tfhb-filter-start-end-date">
                 <HbDateTime 
                     v-model="exportData.start_date"
-                    :label="$tfhb_trans('start Date')"
-                    width="45"
+                    :label="''" 
                     enableTime='true'
+                    icon="CalendarDays"
                     placeholder="From"   
-                /> 
-                <Icon name="CalendarDays" size="20" /> 
+                />  
             </div>
             <div class="tfhb-calender-move-icon">
                 <Icon name="MoveRight" size="20px" /> 
             </div>
-            <div class="tfhb-filter-end-date">
+            <div class="tfhb-filter-start-end-date">
                 <HbDateTime 
                     v-model="exportData.end_date"
-                    width="45"
+                    :label="''" 
+                    icon="CalendarDays"
                     enableTime='true'
                     placeholder="To"   
-                /> 
-                <Icon name="CalendarDays" size="20" /> 
+                />  
             </div>
         </div> 
       </div>
@@ -369,69 +368,79 @@ const toggleSelectAll = (e) => {
         <h3>{{ singleBookingData.title }}</h3>
     </template>
 
-    <template #content> 
+    <template #content>  
+        <div class="tfhb-booking-info tfhb-full-width  tfhb-flexbox tfhb-gap-16">
+            <!-- Host Info -->
+            <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
+                <h3>{{ $tfhb_trans('Host') }}  </h3>
+                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
+                    <div v-if="singleBookingData.host_first_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33% - 16px)">
+                        <Icon name="User" size="20" /> 
+                        {{ singleBookingData.host_first_name }}
+                    </div>  
+                    <div v-if="singleBookingData.host_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                        <Icon name="Mail" size="20" /> 
+                        {{ singleBookingData.host_email }}
+                    </div>  
+                    <div v-if="singleBookingData.host_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                        <Icon name="Globe" size="20" /> 
+                        {{singleBookingData.host_time_zone}}
+                    </div>  
+                </div>
+            </div>
 
-        <div class="tfhb-attendee-info tfhb-full-width tfhb-flexbox tfhb-gap-16">
-            <h3 class="tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Attendee') }}</h3>
-            <div class="tfhb-attendee-box tfhb-p-24 tfhb-pt-0 tfhb-flexbox tfhb-align-baseline tfhb-full-width">
-                <div class="tfhb-attendee-name" v-if="singleBookingData.attendee_name">
-                    <h4>{{ $tfhb_trans('Name') }}</h4>
-                    <p>{{ singleBookingData.attendee_name }}</p>
+            <!-- Attendee Info -->
+            <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
+                <h3>{{ $tfhb_trans('Attendee') }}  </h3>
+                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
+                    <div v-if="singleBookingData.attendee_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33% - 16px)">
+                        <Icon name="User" size="20" /> 
+                        {{ singleBookingData.attendee_name }}
+                    </div>  
+                    <div v-if="singleBookingData.attendee_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                        <Icon name="Mail" size="20" /> 
+                        {{ singleBookingData.attendee_email }}
+                    </div>  
+                    <div v-if="singleBookingData.attendee_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                        <Icon name="Globe" size="20" /> 
+                        {{singleBookingData.attendee_time_zone}}
+                    </div>  
+                    <div v-if="singleBookingData.address" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
+                        <Icon name="MapPin" size="20" /> 
+                        {{singleBookingData.address}}
+                    </div>   
                 </div>
-                <div class="tfhb-attendee-name" v-if="singleBookingData.attendee_email">
-                    <h4>{{ $tfhb_trans('E-mail') }}</h4>
-                    <p>{{ singleBookingData.attendee_email }}</p>
+            </div>
+
+            <!-- Meeting -->
+            <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
+                <h3>{{ $tfhb_trans('Meeting') }}  </h3>
+                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
+                    <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33% - 16px)">
+                        <Icon name="Clock" size="20" /> 
+                        {{singleBookingData.start_time }} - {{singleBookingData.end_time }}
+                    </div>  
+                    <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33% - 16px)">
+                        <Icon name="CalendarDays" size="20" /> 
+                        {{singleBookingData.meeting_dates }}
+                    </div>   
                 </div>
-                <div class="tfhb-attendee-name" v-if="singleBookingData.attendee_phone">
-                    <h4>{{ $tfhb_trans('Phone') }}</h4>
-                    <p>{{ singleBookingData.attendee_phone }}</p>
-                </div>
-                <div class="tfhb-attendee-name" v-if="singleBookingData.address">
-                    <h4>{{ $tfhb_trans('Address') }}</h4>
-                    <p>{{ singleBookingData.address }}</p>
-                </div>
-                <div class="tfhb-attendee-name" style="width: calc(66% - 4px);" v-if="singleBookingData.message">
-                    <h4>{{ $tfhb_trans('Notes') }}</h4>
-                    <p>{{ singleBookingData.message }}</p>
+            </div>
+
+            <!-- Location --> 
+            <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
+                <h3>{{ $tfhb_trans('Meeting Location') }}  </h3>
+                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">  
+                    <!-- [ { "location": "In Person (Organizer Address)", "address": "Address" }, { "location": "Organizer Phone Number", "address": "9098080" } ]  -->
+                    <div v-for=" (address, index) in meeting_address.value" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
+                        <Icon name="MapPin" size="20" /> 
+                        Location : {{address.location}} - {{address.address}}
+                    </div>    
                 </div>
             </div>
         </div>
-
-        <div class="tfhb-attendee-info tfhb-full-width tfhb-flexbox tfhb-gap-16">
-            <h3 class="tfhb-m-0 tfhb-full-width">Host</h3>
-            <div class="tfhb-attendee-box tfhb-p-24 tfhb-pt-0 tfhb-flexbox tfhb-align-baseline tfhb-full-width">
-                <div class="tfhb-attendee-name" v-if="singleBookingData.host_first_name">
-                    <h4>{{ $tfhb_trans('Name') }}</h4>
-                    <p>{{ singleBookingData.host_first_name }} {{ singleBookingData.host_last_name }}</p>
-                </div>
-                <div class="tfhb-attendee-name" v-if="singleBookingData.host_email">
-                    <h4>{{ $tfhb_trans('E-mail') }}</h4>
-                    <p>{{ singleBookingData.host_email }}</p>
-                </div>
-                <div class="tfhb-attendee-name" v-if="singleBookingData.host_time_zone">
-                    <h4>{{ $tfhb_trans('Time zone') }}</h4>
-                    <p>{{ singleBookingData.host_time_zone }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="tfhb-attendee-info tfhb-full-width tfhb-flexbox tfhb-gap-16 tfhb-border-none">
-            <h3 class="tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Meeting') }}</h3>
-            <div class="tfhb-attendee-box tfhb-p-24 tfhb-pt-0 tfhb-pb-0 tfhb-flexbox tfhb-align-baseline tfhb-full-width">
-                <div class="tfhb-attendee-name">
-                    <h4>{{ $tfhb_trans('Time') }}</h4>
-                    <p>{{singleBookingData.start_time}} - {{singleBookingData.end_time}}</p>
-                </div>
-                <div class="tfhb-attendee-name">
-                    <h4>{{ $tfhb_trans('Date') }}</h4>
-                    <p>{{ Tfhb_Date(singleBookingData.meeting_dates) }}</p>
-                </div>
-                <div class="tfhb-attendee-name">
-                    <h4>{{ $tfhb_trans('Location') }}</h4>
-                    <p>{{ TfhbFormatMeetingLocation(singleBookingData.meeting_locations) }}</p>
-                </div>
-            </div>
-        </div>
+ 
+  
 
     </template> 
 </HbPopup>
@@ -494,7 +503,7 @@ const toggleSelectAll = (e) => {
         </div>
 
         <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width">
-            <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size="20" /> {{ $tfhb_trans('Join Meet') }}</a>
+            <!-- <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size="20" /> {{ $tfhb_trans('Join Meet') }}</a> -->
 
             <button class="tfhb-btn boxed-btn flex-btn tfhb-warning" @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)">{{ $tfhb_trans('Delete') }}</button>
         </div>
@@ -579,7 +588,7 @@ const toggleSelectAll = (e) => {
                             <Icon name="Eye" width="20" />
                         </span>
                         <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
-                            <Icon name="Settings" width="20" />
+                            <Icon name="FilePenLine" width="20" />
                         </router-link>
                     </div>
                 </td>

@@ -18,26 +18,26 @@
             flex-wrap: wrap;
         }
 
-        .tfhb-preloader {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99;
-            &::after {
-                position: absolute;
-                left: 0; 
-                content: '';
-                background-color: $primary-default !important;
-                height: 100%; 
-                width: 100%;
-                opacity: 0.1;
-            }
-        } 
+        // .tfhb-preloader {
+        //     position: absolute;
+        //     left: 0;
+        //     top: 0;
+        //     height: 100%;
+        //     width: 100%;
+        //     display: flex;
+        //     align-items: center;
+        //     justify-content: center;
+        //     z-index: 99;
+        //     &::after {
+        //         position: absolute;
+        //         left: 0; 
+        //         content: '';
+        //         background-color: $primary-default !important;
+        //         height: 100%; 
+        //         width: 100%;
+        //         opacity: 0.1;
+        //     }
+        // } 
 
         .tfhb-meeting-info{
             width: 322px;
@@ -546,6 +546,7 @@
                 margin: 24px 0 16px 0;
             }
             .tfhb-available-times{
+                position: relative;
                 ul{
                     margin: 0;
                     padding: 0;

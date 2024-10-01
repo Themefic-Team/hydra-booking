@@ -435,8 +435,8 @@
     }
 }
 .tfhb-booking-details{
-    margin-right: 15px;
-   
+    margin-right: 16px;
+   margin-left: 16px;
     table{
         width: 100%;
         border-radius: $border-radius-medium;
@@ -643,28 +643,28 @@
 }
 
 // Booking Details Quick View Design
-.tfhb-attendee-info{
-    border-bottom: 1px $border-type $surface-border; 
-    .tfhb-attendee-box{
-        .tfhb-attendee-name{
-            width: calc(33.333% - 16px);
-            h4{
-                color: $text-paragraph !important;
-                font-size: $text-font-size;
-                
-                font-weight: $font-weight-reguler !important;
-                line-height: 20px; /* 153.846% */
-                margin: 0 0 12px 0 !important;
-            }
-            p{
-                color: $secondary-default !important;
-                font-size: $heading-font-size-small !important;
-                
-                font-weight: $font-weight-reguler;
-                line-height: 24px; /* 160% */
-                margin: 0 !important;
-                word-wrap: break-word;
+.tfhb-booking-info{
+    .tfhb-booking-info-wrap {
+        margin-bottom: 16px !important;
+        background-color: $surface-primary;
+        border: none !important;
+        h3{
+            margin-bottom: 12px !important;
+        }
+        .tfhb-booking-info-inner{
+            justify-content: normal !important;
+            align-items: normal !important;
+            .tfhb-single-booking-info{ 
+                justify-content: normal !important;
+                background-color: $surface-secondary;
+                min-height: 40px;
+                padding: 8px 12px 8px 12px;
+                border-radius: 4px;
+                font-size: 1.6;
+                font-weight: 400px;
+                line-height: 24px;
             }
         }
     }
+
 }

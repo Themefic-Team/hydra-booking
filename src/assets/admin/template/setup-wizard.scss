@@ -181,9 +181,7 @@
                 background-color: transparent !important;
 
                 .tfhb-popup-wrap {
-                    > div > .tfhb-dashboard-heading { 
-                        display: none !important;
-                    }
+                  
                     // max-width: 100% !important;
                     // width: 100% !important;
                     width: 100% !important; 
@@ -192,7 +190,9 @@
                     background: $surface-secondary;
                     box-shadow: none !important;
                     
-
+                    > div > .tfhb-dashboard-heading { 
+                        display: none !important;
+                    }
                 } 
 
               

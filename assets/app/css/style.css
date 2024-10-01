@@ -18,26 +18,6 @@
     flex-wrap: wrap;
   }
 }
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-preloader, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-preloader {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99;
-}
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-preloader::after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-preloader::after {
-  position: absolute;
-  left: 0;
-  content: "";
-  background-color: #2E6B38 !important;
-  height: 100%;
-  width: 100%;
-  opacity: 0.1;
-}
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info {
   width: 322px;
   border-right: 0.5px solid #C0D8C4;
@@ -557,6 +537,9 @@
   font-weight: 600;
   line-height: 150%; /* 25.5px */
   margin: 24px 0 16px 0;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times {
+  position: relative;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul {
   margin: 0;

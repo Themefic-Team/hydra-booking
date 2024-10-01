@@ -528,9 +528,12 @@ const UpdateMeetingData = async (validator_field) => {
             if("MeetingsCreateIntegrations"==route.name){
                 router.push({ name: 'MeetingsCreatePayment' });
             }
-            // if("MeetingsCreateWebhook"==route.name){
-            //     router.push({ name: 'MeetingsCreatePayment' });
-            // }
+            if("MeetingsCreatePayment"==route.name){ 
+                // sharePopupData();
+                window.open(tfhb_core_apps.admin_url + '/' + meetingData.slug, '_blank');
+
+
+            }
             
             // if("MeetingsCreateIntegrations"==route.name){
             //     router.push({ name: 'MeetingsCreatePayment' });
@@ -583,7 +586,7 @@ const shareData = reactive({
     shortcode: '',
     embed: ''
 })
-const sharePopupData = (data) => { 
+const sharePopupData = () => { 
     shareData.share_type = 'link'
     shareData.title = meetingData.title
     shareData.time = meetingData.duration
@@ -615,7 +618,7 @@ const sharePopupData = (data) => {
             </div>
            
             <div class="thb-admin-btn right"> 
-                <button  @click="sharePopupData(smeeting)" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size="20" /></button>
+                <button  @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size="20" /></button>
             </div> 
         </div>
         <nav class="tfhb-booking-tabs tfhb-meeting-tabs tfhb-mb-32"> 

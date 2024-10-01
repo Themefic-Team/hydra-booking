@@ -1010,6 +1010,9 @@ class HydraBookingShortcode {
 		$date_time = new DateTimeController( $selected_time_zone );
 		$data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format );
 
+		if ( empty( $data ) ) {
+			wp_send_json_error( array( 'message' => 'No time slots are currently available.' ) );
+		}
 		wp_send_json_success( $data );
 		wp_die();
 	}

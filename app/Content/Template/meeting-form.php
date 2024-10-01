@@ -129,18 +129,7 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 
 						<textarea name="reason" required id="reason"></textarea>
 					</div> 
-				</div>
-			<?php else : ?>
-				<div class="tfhb-confirmation-box tfhb-flexbox">
-					<div class="tfhb-swicher-wrap tfhb-flexbox tfhb-gap-8">
-						<label class="switch">
-							<input required name="tfhb_booking_checkbox" type="checkbox">
-							<div class="slider"></div>
-						</label>
-						<label class="swicher-label"><?php echo esc_html__( 'Booking Confirmation', 'hydra-booking' ); ?></label>
-					</div>
-	
-				</div>
+				</div> 
 			<?php endif ?> 
 			<div class="tfhb-confirmation-button">
 				<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
