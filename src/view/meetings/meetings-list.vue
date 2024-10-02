@@ -264,7 +264,7 @@ window.addEventListener('click', function(e) {
 
             <!-- Single Meeting -->
             <div class="tfhb-single-meeting tfhb-flexbox" v-for="(smeeting, key) in Meeting.meetings"> 
-                <div class="single-meeting-content-box tfhb-flexbox">
+                <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox">
                     <div class="single-meeting-content">
                         <h3> {{ smeeting.title ? smeeting.title : 'No Title' }} </h3>
                         <div class="meeting-user-info">

@@ -919,6 +919,10 @@
         margin: 0;
         width: calc(30% - 48px);
         display: flow-root !important;
+        transition: $transition;
+        &:hover{
+            background-color: $surface-primary;
+        }
         h3 {
             font-weight: $font-weight-medium;
             line-height: 1.5;
