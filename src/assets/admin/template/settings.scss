@@ -30,6 +30,10 @@
 				border-radius: $border-radius-medium;
 				border: $border-reguler $border-type $surface-border;
 				padding: 24px;
+				transition: $transition;
+				&:hover{
+					background-color: $surface-primary;
+				}
 				.tfhb-dashboard-heading {
 					margin-bottom: 16px;
 					border-bottom: .5px $border-type $surface-border;
@@ -81,12 +85,17 @@
 		.tfhb-integrations-wrap{
 			width: 100% !important; 
 			justify-content: normal !important;
+			align-items: normal !important;
 			@media #{$max1240}{
 				flex-wrap: wrap !important;
 			}
 			.tfhb-integrations-single-block{
 				margin: 0 !important;
 				width: calc(33% - 14px);
+				transition: $transition;
+				&:hover{
+					background-color: $surface-primary;
+				}
 				@media #{$max1240}{
                     width: calc(50% - 12px);
                 }

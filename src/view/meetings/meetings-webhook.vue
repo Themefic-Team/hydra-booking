@@ -209,12 +209,12 @@ const deleteBodyField = (key) => {
        <div class="tfhb-admin-title  tfhb-m-0 "  >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                 {{ $tfhb_trans('Availability Range for this Booking') }}
-                <span v-if="tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans('Pro') }}</span>
+                <span v-if="tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
             </h2> 
             <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}
                 <br>
             </p> 
-            <a  v-if="tfhb_is_pro == false" href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size="18" /></a>
+            <a  v-if="tfhb_is_pro == false" href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
            
             
         </div>
@@ -335,10 +335,10 @@ const deleteBodyField = (key) => {
                 </div>
                 <div class="request-actions">
                     <button class="tfhb-availability-schedule-btn" @click="addHeadersField" v-if="key == 0">
-                        <Icon name="Plus" size="20px" /> 
+                        <Icon name="Plus" size=20 /> 
                     </button> 
                     <button class="tfhb-availability-schedule-btn" @click="deleteHeadersField(key)" v-else>
-                        <Icon name="X" size="20px" /> 
+                        <Icon name="X" size=20 /> 
                     </button> 
                 </div>
             </div>
@@ -377,10 +377,10 @@ const deleteBodyField = (key) => {
                 </div>
                 <div class="request-actions">
                     <button class="tfhb-availability-schedule-btn" @click="addBodyField" v-if="key == 0">
-                        <Icon name="Plus" size="20px" /> 
+                        <Icon name="Plus" size=20 /> 
                     </button> 
                     <button class="tfhb-availability-schedule-btn" @click="deleteBodyField(key)" v-else>
-                        <Icon name="X" size="20px" /> 
+                        <Icon name="X" size=20 /> 
                     </button> 
                 </div>
             </div>

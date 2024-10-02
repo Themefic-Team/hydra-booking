@@ -87,7 +87,7 @@ const StepTwo = () => {
                 :hover_animation="true"
             /> 
             
-            <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size="20" />  </button> -->
+            <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size=20 />  </button> -->
         </div>
      </div>
      <!-- Step Two -->

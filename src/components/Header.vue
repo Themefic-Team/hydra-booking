@@ -66,7 +66,7 @@ window.addEventListener('click', function(e) {
         </div>
         <div v-if="props.notifications" class="tfhb-header-notification">
             <div class="tfhb-dropdown tfhb-mega-dropdown">
-            <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size="24" /> </span>
+            <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size=24 /> </span>
 
             <transition name="tfhb-dropdown-transition">
                 <div v-show="displayNotification" class="tfhb-dropdown-wrap active">   <!-- active class-->

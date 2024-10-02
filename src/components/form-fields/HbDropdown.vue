@@ -43,7 +43,7 @@ const handleChange = (e) => {
       <div class="tfhb-single-form-field-wrap tfhb-field-dropdown"> 
         <label class="tfhb-flexbox tfhb-gap-4" v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span>  
           <span v-if="tooltip" class="tfhb-tooltip">
-            <Icon name="Info" size="15" />
+            <Icon name="Info" size=15 />
             <span class="tfhb-tooltiptext"> 
               {{ tooltipText }}
             </span>
@@ -95,7 +95,7 @@ const handleChange = (e) => {
                 >
                 <template v-if="props.icon" #dropdownicon>
 
-                    <Icon :name="props.icon" size="16" />
+                    <Icon :name="props.icon" size=16 />
                 </template>
                 </Dropdown>
                 <Dropdown 
@@ -114,7 +114,7 @@ const handleChange = (e) => {
                 >
                 <template v-if="props.icon" #dropdownicon>
 
-                    <Icon :name="props.icon" size="16" />
+                    <Icon :name="props.icon" size=16 />
                 </template>
                 </Dropdown>
             </div>

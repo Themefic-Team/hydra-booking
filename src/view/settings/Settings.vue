@@ -15,7 +15,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
                     <li><router-link to="/settings/availability" :class="{ 'active': $route.path === '/settings/availability' }"> <Icon name="Clock" /> {{ $tfhb_trans('Availability') }}</router-link></li> 
                     <li><router-link to="/settings/notifications" :class="{ 'active': $route.path === '/settings/notifications' }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}</router-link></li>
                     <li  :class="{ 'expand': $route.path === '/settings/integrations' }" class="tfhb-integrations-settings-menu"><router-link to="/settings/integrations#all" class="integrations-submenu" data-filter="all" :class="{ 'active': $route.path === '/settings/integrations' }"> <Icon name="Unplug" /> {{ $tfhb_trans('Integrations') }}
-                       <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size="20" /> </span>
+                       <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size=20 /> </span>
                     </router-link>
                         <ul class="dropdown">
                             <li><router-link to="/settings/integrations#all" :class="{ 'active': $route.hash === '#all' }" class="integrations-submenu" data-filter="all"> <Icon name="GalleryVerticalEnd" /> {{ $tfhb_trans('All') }}</router-link></li>

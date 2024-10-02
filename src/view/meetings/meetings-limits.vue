@@ -128,7 +128,7 @@ const removeExtraFrequency = (key) => {
         <div v-if="$tfhb_is_pro == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                 Recurring Event
-                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans('Pro') }}</span>
+                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
             </h2> 
             <p>Set up a repeating schedule</p> 
         </div>

@@ -65,7 +65,7 @@ const showData = ref(false);
                     <slot name="header">  </slot>
                 </div>
                 <div class="thb-admin-btn"> 
-                    <span class="tfhb-popup-close tfhb-cursor-pointer" @click.stop="emit('modal-close')"><Icon name="X" size="20" /> </span> 
+                    <span class="tfhb-popup-close tfhb-cursor-pointer" @click.stop="emit('modal-close')"><Icon name="X" size=20 /> </span> 
                 </div> 
             </div>
             <div class="tfhb-content-wrap tfhb-flexbox" :style="{ 'gap': gap }">  

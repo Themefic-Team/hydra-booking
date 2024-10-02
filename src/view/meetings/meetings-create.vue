@@ -607,7 +607,7 @@ const sharePopupData = () => {
             <div class="tfhb-meeting-heading-wrap">
                 <div class="tfhb-meeting-heading tfhb-flexbox">
                     <div class="prev-navigator" @click="TfhbPrevNavigator()">
-                        <Icon name="ArrowLeft" size="20" /> 
+                        <Icon name="ArrowLeft" size=20 /> 
                     </div>
                     <h3 v-if="meetingData.title != ''">{{ meetingData.title }}</h3>
                     <h3 v-else >{{ $tfhb_trans('Create One-to-One booking type') }}</h3>
@@ -618,7 +618,7 @@ const sharePopupData = () => {
             </div>
            
             <div class="thb-admin-btn right"> 
-                <button  @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size="20" /></button>
+                <button  @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size=20 /></button>
             </div> 
         </div>
         <nav class="tfhb-booking-tabs tfhb-meeting-tabs tfhb-mb-32"> 

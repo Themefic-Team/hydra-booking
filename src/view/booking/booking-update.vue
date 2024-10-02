@@ -230,7 +230,7 @@ onBeforeMount(() => {
         <div class="tfhb-booking-box tfhb-flexbox">
             <div class="tfhb-meeting-heading tfhb-flexbox tfhb-gap-8">
                 <div class="prev-navigator tfhb-cursor-pointer" @click="TfhbPrevNavigator()">
-                    <Icon name="ArrowLeft" size="20" /> 
+                    <Icon name="ArrowLeft" size=20 /> 
                 </div>
                 <h3>{{ $tfhb_trans('Back to Booking') }}</h3>
             </div>

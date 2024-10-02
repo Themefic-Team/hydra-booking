@@ -327,18 +327,18 @@ const formatTimeSlots = (timeSlots) =>  {
                             <div class="tfhb-single-form-field-wrap tfhb-field-date">
                                 <input type="text" data-input="true" class="flatpickr-input" :value="time.start" readonly="readonly">
                                 <span class="tfhb-flat-icon">
-                                    <Icon name="Clock4" size="20px" />
+                                    <Icon name="Clock4" size=20 />
                                 </span>
                             </div>
                         </div>
 
-                        <Icon name="MoveRight" size="20px" /> 
+                        <Icon name="MoveRight" size=20 /> 
 
                         <div class="tfhb-single-form-field" style="width: calc(45% - 12px);" selected="1">
                             <div class="tfhb-single-form-field-wrap tfhb-field-date">
                                 <input type="text" data-input="true" class="flatpickr-input" :value="time.end" readonly="readonly">
                                 <span class="tfhb-flat-icon">
-                                    <Icon name="Clock4" size="20px" />
+                                    <Icon name="Clock4" size=20 />
                                 </span>
                             </div>
                         </div>
@@ -377,7 +377,7 @@ const formatTimeSlots = (timeSlots) =>  {
             <p>{{ $tfhb_trans('Set up booking times when you are available') }}</p>
         </div>
         <div class="thb-admin-btn right"> 
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="15" /> {{ $tfhb_trans(' Add New Availability') }}</button> 
+            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=15 /> {{ $tfhb_trans(' Add New Availability') }}</button> 
         </div> 
     </div>
 

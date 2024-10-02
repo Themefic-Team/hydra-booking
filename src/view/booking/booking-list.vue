@@ -271,17 +271,17 @@ const toggleSelectAll = (e) => {
             <div class="tfhb-list-calendar">
                 <ul class="tfhb-flexbox tfhb-gap-8">
                     <li :class="'list'==bookingView ? 'active' : ''" @click="bookingView='list'">
-                        <Icon name="List" size="20" />
+                        <Icon name="List" size=20 />
                     </li>
                     <li :class="'calendar'==bookingView ? 'active' : ''" @click="bookingView='calendar'">
-                        <Icon name="CalendarDays" size="20" />
+                        <Icon name="CalendarDays" size=20 />
                     </li>
                 </ul>
             </div>
         </div>
         <div class="tfhb-header-filters">
             <input type="text" placeholder="Host name or meeting title" /> 
-            <span><Icon name="Search" size="20" /></span>
+            <span><Icon name="Search" size=20 /></span>
         </div>
     </div>
     <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
@@ -296,10 +296,10 @@ const toggleSelectAll = (e) => {
             @tfhb-onchange="Bulk_Status_Callback" 
         />  
         <button @click="ExportAsCSV = true" class="tfhb-btn boxed-secondary-btn flex-btn">
-            <!-- <Icon name="PlusCircle " size="20" />   -->
+            <!-- <Icon name="PlusCircle " size=20 />   -->
             {{ $tfhb_trans('Export as CSV') }}
         </button>
-        <router-link :to="{ name: 'BookingCreate' }" class="tfhb-btn boxed-btn flex-btn"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans('Add New Booking') }}</router-link>
+        <router-link :to="{ name: 'BookingCreate' }" class="tfhb-btn boxed-btn flex-btn"><Icon name="PlusCircle" size=20 /> {{ $tfhb_trans('Add New Booking') }}</router-link>
     </div> 
 </div>
 
@@ -355,7 +355,7 @@ const toggleSelectAll = (e) => {
       </div>
 
       <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
-        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size="20" /> {{ $tfhb_trans('Export Meeting') }}</button> 
+        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ $tfhb_trans('Export Meeting') }}</button> 
       </div>
     </template> 
 </HbPopup>
@@ -375,15 +375,15 @@ const toggleSelectAll = (e) => {
                 <h3>{{ $tfhb_trans('Host') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
                     <div v-if="singleBookingData.host_first_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33% - 16px)">
-                        <Icon name="User" size="20" /> 
+                        <Icon name="User" size=20 /> 
                         {{ singleBookingData.host_first_name }}
                     </div>  
                     <div v-if="singleBookingData.host_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
-                        <Icon name="Mail" size="20" /> 
+                        <Icon name="Mail" size=20 /> 
                         {{ singleBookingData.host_email }}
                     </div>  
                     <div v-if="singleBookingData.host_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
-                        <Icon name="Globe" size="20" /> 
+                        <Icon name="Globe" size=20 /> 
                         {{singleBookingData.host_time_zone}}
                     </div>  
                 </div>
@@ -394,19 +394,19 @@ const toggleSelectAll = (e) => {
                 <h3>{{ $tfhb_trans('Attendee') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
                     <div v-if="singleBookingData.attendee_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33% - 16px)">
-                        <Icon name="User" size="20" /> 
+                        <Icon name="User" size=20 /> 
                         {{ singleBookingData.attendee_name }}
                     </div>  
                     <div v-if="singleBookingData.attendee_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
-                        <Icon name="Mail" size="20" /> 
+                        <Icon name="Mail" size=20 /> 
                         {{ singleBookingData.attendee_email }}
                     </div>  
                     <div v-if="singleBookingData.attendee_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
-                        <Icon name="Globe" size="20" /> 
+                        <Icon name="Globe" size=20 /> 
                         {{singleBookingData.attendee_time_zone}}
                     </div>  
                     <div v-if="singleBookingData.address" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
-                        <Icon name="MapPin" size="20" /> 
+                        <Icon name="MapPin" size=20 /> 
                         {{singleBookingData.address}}
                     </div>   
                 </div>
@@ -417,11 +417,11 @@ const toggleSelectAll = (e) => {
                 <h3>{{ $tfhb_trans('Meeting') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
                     <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33% - 16px)">
-                        <Icon name="Clock" size="20" /> 
+                        <Icon name="Clock" size=20 /> 
                         {{singleBookingData.start_time }} - {{singleBookingData.end_time }}
                     </div>  
                     <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33% - 16px)">
-                        <Icon name="CalendarDays" size="20" /> 
+                        <Icon name="CalendarDays" size=20 /> 
                         {{singleBookingData.meeting_dates }}
                     </div>   
                 </div>
@@ -433,7 +433,7 @@ const toggleSelectAll = (e) => {
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">  
                     <!-- [ { "location": "In Person (Organizer Address)", "address": "Address" }, { "location": "Organizer Phone Number", "address": "9098080" } ]  -->
                     <div v-for=" (address, index) in meeting_address.value" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
-                        <Icon name="MapPin" size="20" /> 
+                        <Icon name="MapPin" size=20 /> 
                         Location : {{address.location}} - {{address.address}}
                     </div>    
                 </div>
@@ -486,7 +486,7 @@ const toggleSelectAll = (e) => {
             <div class="tfhb-single-form-field-wrap tfhb-field-input">
                 <label>Date</label>
                 <div class="tfhb-time-date-view tfhb-flexbox">
-                    <Icon name="CalendarDays" size="20" />
+                    <Icon name="CalendarDays" size=20 />
                     <input type="text" readonly :value="singleCalendarBookingData.booking_date">
                 </div>
             </div>
@@ -496,14 +496,14 @@ const toggleSelectAll = (e) => {
             <div class="tfhb-single-form-field-wrap tfhb-field-input">
                 <label>Time</label>
                 <div class="tfhb-time-date-view tfhb-flexbox">
-                    <Icon name="Clock4" size="20" />
+                    <Icon name="Clock4" size=20 />
                     <input type="text" readonly :value="singleCalendarBookingData.booking_time">
                 </div>
             </div>
         </div>
 
         <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width">
-            <!-- <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size="20" /> {{ $tfhb_trans('Join Meet') }}</a> -->
+            <!-- <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size=20 /> {{ $tfhb_trans('Join Meet') }}</a> -->
 
             <button class="tfhb-btn boxed-btn flex-btn tfhb-warning" @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)">{{ $tfhb_trans('Delete') }}</button>
         </div>

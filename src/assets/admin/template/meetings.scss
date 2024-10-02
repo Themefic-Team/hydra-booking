@@ -176,6 +176,11 @@
             background: $surface-secondary;
             padding: 16px;
             box-sizing: border-box;
+            transition: $transition;
+            &:hover{
+                
+                background-color: $surface-primary !important;
+            }
             @media #{$max1240}{
                 width: calc(50% - 16px);
             }
@@ -185,14 +190,13 @@
             .single-meeting-content-box{
                 flex-wrap: nowrap !important;
                 align-items: baseline !important;
-                border-bottom: 0.5px $border-type $surface-border;
+                
                 padding-bottom: 24px;
                 .single-meeting-content{
                     width: calc(100% - 20px);
                     h3{
                         font-size: $heading-font-size-small;
-                        
-                        font-weight: $font-weight-reguler !important;
+                        font-weight: $font-weight-medium !important;
                         line-height: 24px;
                         margin: 0 !important;
                         width: calc(100% - 20px) !important;
@@ -250,7 +254,9 @@
                 }
             }
             .single-meeting-action-btn{
-                margin-top: 24px;
+                border-top: 0.5px $border-type $surface-border;
+                padding-top: 24px;
+                width: 100%;
                 a{
                     border-radius: $border-radius-medium;
                     border: $border-reguler $border-type $surface-border;

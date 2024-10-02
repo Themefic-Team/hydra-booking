@@ -40,7 +40,7 @@ const ShareTabs = (tab) => {
                     <li v-if="props.shareData.time">
                         <div class="tfhb-flexbox tfhb-gap-8">
                             <div class="user-info-icon">
-                                <Icon name="Clock" size="16" />  
+                                <Icon name="Clock" size=16 />  
                             </div>
                             <div class="user-info-title">
                                 {{ props.shareData.time }} {{ $tfhb_trans('minutes') }}
@@ -50,9 +50,9 @@ const ShareTabs = (tab) => {
                     <li v-if="props.shareData.meeting_type">
                         <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-one'==props.shareData.meeting_type">
                             <div class="user-info-icon">
-                                <Icon name="UserRound" size="16" /> 
-                                <Icon name="ArrowRight" size="16" /> 
-                                <Icon name="UserRound" size="16" /> 
+                                <Icon name="UserRound" size=16 /> 
+                                <Icon name="ArrowRight" size=16 /> 
+                                <Icon name="UserRound" size=16 /> 
                             </div>
                             <div class="user-info-title">
                                 {{ $tfhb_trans('One to One') }}
@@ -60,9 +60,9 @@ const ShareTabs = (tab) => {
                         </div>
                         <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==props.shareData.meeting_type">
                             <div class="user-info-icon">
-                                <Icon name="UserRound" size="16" /> 
-                                <Icon name="ArrowRight" size="16" /> 
-                                <Icon name="UsersRound" size="16" /> 
+                                <Icon name="UserRound" size=16 /> 
+                                <Icon name="ArrowRight" size=16 /> 
+                                <Icon name="UsersRound" size=16 /> 
                             </div>
                             <div class="user-info-title">
                                 {{ $tfhb_trans('One to Group') }}

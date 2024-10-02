@@ -342,7 +342,7 @@ const isobjectempty = (data) => {
                             width="41"
                             :placeholder="$tfhb_trans('Start')"
                         /> 
-                        <Icon name="MoveRight" size="20" /> 
+                        <Icon name="MoveRight" size=20 /> 
                         <HbDateTime  
                             v-model="meeting.availability_range.end"
                             icon="CalendarDays" 
@@ -458,18 +458,18 @@ const isobjectempty = (data) => {
                                 <div class="tfhb-single-form-field-wrap tfhb-field-date">
                                     <input type="text" data-input="true" class="flatpickr-input" :value="time.start" readonly="readonly">
                                     <span class="tfhb-flat-icon">
-                                        <Icon name="Clock4" size="20px" />
+                                        <Icon name="Clock4" size=20 />
                                     </span>
                                 </div>
                             </div>
 
-                            <Icon name="MoveRight" size="20px" /> 
+                            <Icon name="MoveRight" size=20 /> 
 
                             <div class="tfhb-single-form-field" style="width: calc(45% - 12px);" selected="1">
                                 <div class="tfhb-single-form-field-wrap tfhb-field-date">
                                     <input type="text" data-input="true" class="flatpickr-input" :value="time.end" readonly="readonly">
                                     <span class="tfhb-flat-icon">
-                                        <Icon name="Clock4" size="20px" />
+                                        <Icon name="Clock4" size=20 />
                                     </span>
                                 </div>
                             </div>
@@ -543,7 +543,7 @@ const isobjectempty = (data) => {
                                 :parent_key = "key"
                                 :single_key = "tkey"
                             />                
-                            <Icon name="MoveRight" size="20" /> 
+                            <Icon name="MoveRight" size=20 /> 
                             <HbDropdown 
                                 v-model="time.end"  
                                 required= "true" 
@@ -559,10 +559,10 @@ const isobjectempty = (data) => {
 
                         </div>
                         <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
-                            <button class="tfhb-availability-schedule-btn" @click="emit('availability-time',key)"><Icon name="Plus" size="20" /> </button> 
+                            <button class="tfhb-availability-schedule-btn" @click="emit('availability-time',key)"><Icon name="Plus" size=20 /> </button> 
                         </div>
                         <div v-else class="tfhb-availability-schedule-clone-single">
-                            <button class="tfhb-availability-schedule-btn" @click="emit('availability-time-del',key, tkey)"><Icon name="X" size="20" /> </button> 
+                            <button class="tfhb-availability-schedule-btn" @click="emit('availability-time-del',key, tkey)"><Icon name="X" size=20 /> </button> 
                         </div>
                     </div>
                     
@@ -629,7 +629,7 @@ const isobjectempty = (data) => {
                                         placeholder="Start"   
                                         :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
                                     />  
-                                    <Icon name="MoveRight" size="20" /> 
+                                    <Icon name="MoveRight" size=20 /> 
                                     <HbDropdown 
                                         v-model="time.end"  
                                         required= "true" 
@@ -642,10 +642,10 @@ const isobjectempty = (data) => {
                                 </div>
                                 
                                 <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
-                                    <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size="20px" /> </button> 
+                                    <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size=20 /> </button> 
                                 </div>
                                 <div v-else class="tfhb-availability-schedule-clone-single">
-                                    <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size="20px" /> </button> 
+                                    <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size=20 /> </button> 
                                 </div>
                             </div>
 

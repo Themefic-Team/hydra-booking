@@ -72,7 +72,7 @@ window.addEventListener('click', function(e) {
             <p>{{ $tfhb_trans('Overview of bookings') }}</p> 
         </div>  
         <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-datachart-box-dropdown tfhb-no-hover">
-            <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans('Today') }}</span>  <Icon name="ChevronDown" size="20" /> </span>
+            <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans('Today') }}</span>  <Icon name="ChevronDown" size=20 /> </span>
             
             <transition name="tfhb-dropdown-transition">
                 <div v-show="datachart_box_dropdown" class="tfhb-dropdown-wrap active"  > 
@@ -95,7 +95,7 @@ window.addEventListener('click', function(e) {
                                 />  
                             </div>
                             <div class="tfhb-calender-move-icon">
-                                <Icon name="MoveRight" size="15" /> 
+                                <Icon name="MoveRight" size=15 /> 
                             </div>
                             <div class="tfhb-filter-start-end-date"> 
                                 <HbDateTime 
@@ -146,8 +146,8 @@ window.addEventListener('click', function(e) {
                                 'badge-up': Dashboard.data.total_bookings.growth == 'increase',
                             }"
                         >
-                            <Icon v-if="Dashboard.data.total_bookings.growth == 'increase'" name="ArrowUp" :size="15"/>
-                            <Icon v-else name="ArrowDown" :size="15"/>
+                            <Icon v-if="Dashboard.data.total_bookings.growth == 'increase'" name="ArrowUp" size=15 />
+                            <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_bookings.percentage}}%</span>
                         </span>
                         <span> {{ $tfhb_trans('VS') }} </span>
@@ -182,8 +182,8 @@ window.addEventListener('click', function(e) {
                                 'badge-up': Dashboard.data.total_earning.growth == 'increase',
                             }"
                         >
-                            <Icon v-if="Dashboard.data.total_earning.growth == 'increase'" name="ArrowUp" :size="15"/>
-                            <Icon v-else name="ArrowDown" :size="15"/>
+                            <Icon v-if="Dashboard.data.total_earning.growth == 'increase'" name="ArrowUp" size=15 />
+                            <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_earning.percentage}}%</span>
                         </span>
                         <span> {{ $tfhb_trans('VS') }} </span>
@@ -219,8 +219,8 @@ window.addEventListener('click', function(e) {
                                 'badge-up': Dashboard.data.total_completed_bookings.growth == 'increase',
                             }"
                         >
-                            <Icon v-if="Dashboard.data.total_completed_bookings.growth == 'increase'" name="ArrowUp" :size="15"/>
-                            <Icon v-else name="ArrowDown" :size="15"/>
+                            <Icon v-if="Dashboard.data.total_completed_bookings.growth == 'increase'" name="ArrowUp" size=15 />
+                            <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_completed_bookings.percentage}}%</span>
                         </span>
                         <span> {{ $tfhb_trans('VS') }} </span>
@@ -255,8 +255,8 @@ window.addEventListener('click', function(e) {
                                 'badge-up': Dashboard.data.total_cancelled_bookings.growth == 'increase',
                             }"
                         >
-                            <Icon v-if="Dashboard.data.total_cancelled_bookings.growth == 'increase'" name="ArrowUp" :size="15"/>
-                            <Icon v-else name="ArrowDown" :size="15"/>
+                            <Icon v-if="Dashboard.data.total_cancelled_bookings.growth == 'increase'" name="ArrowUp" size=15 />
+                            <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_cancelled_bookings.percentage}}%</span>
                         </span>
                         <span> {{ $tfhb_trans('VS') }} </span>
@@ -288,16 +288,16 @@ window.addEventListener('click', function(e) {
                                 
                                 <p>{{data.title}}    </p>
                                 <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8"> 
-                                    <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" :size="15"/>{{ data.start_time}} </span>
+                                    <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
                                     <span  class="tfhb-flexbox tfhb-gap-8">
-                                        <Icon name="UserRound" :size="15"/> 
-                                        <Icon name="ArrowRight" :size="15"/> 
-                                        <Icon name="UserRound" :size="15"/> 
-                                        <Icon v-if="data.meeting_type != 'one-to-one'" name="UserRound" :size="15"/> 
+                                        <Icon name="UserRound" size=15 /> 
+                                        <Icon name="ArrowRight" size=15 /> 
+                                        <Icon name="UserRound" size=15 /> 
+                                        <Icon v-if="data.meeting_type != 'one-to-one'" name="UserRound" size=15 /> 
                                     </span>
 
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" :size="15"/> {{data.payment_status}} </span>
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" :size="15"/> {{data.host_first_name}} {{ data.host_last_name}} </span>
+                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.payment_status}} </span>
+                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}} </span>
                                 </div>
                             </div> 
                         </div> 
@@ -327,12 +327,12 @@ window.addEventListener('click', function(e) {
                             <div class="tfhb-admin-card-box">
                                 <p>{{data.attendee_name}} ({{data.attendee_email}})  </p>
                                 <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8"> 
-                                    <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" :size="15"/> 
+                                    <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
                                         <!-- convert 2024-05-29 to 25 Sep, 24 --> 
                                         {{data.meeting_dates}}
                                     </span> 
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" :size="15"/> {{ data.attendee_time_zone}}</span>
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" :size="15"/> {{data.host_first_name}} {{ data.host_last_name}}</span>
+                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.attendee_time_zone}}</span>
+                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}}</span>
                                 </div>
                             </div> 
                         </div> 
@@ -358,7 +358,7 @@ window.addEventListener('click', function(e) {
                     </div>
                     <div class="thb-admin-btn right"> 
                         <div class="tfhb-dropdown datachart-dropdown tfhb-no-hover">
-                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" > <span> {{ $tfhb_trans('Last 7 Days') }}</span>  <Icon name="ChevronDown" size="20" /> </a>
+                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" > <span> {{ $tfhb_trans('Last 7 Days') }}</span>  <Icon name="ChevronDown" size=20 /> </a>
                             <transition name="tfhb-dropdown-transition">
                                 <div   
                                 v-show="datachart_dropdown"

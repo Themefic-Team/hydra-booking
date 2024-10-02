@@ -116,14 +116,14 @@ window.addEventListener('click', function(e) {
     <div class="tfhb-dashboard-heading tfhb-flexbox">
         <div class="tfhb-filter-box tfhb-flexbox">
             <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
-                <div class="tfhb-filter-icon tfhb-filter-btn tfhb-flexbox"  @click="FilterPreview=!FilterPreview"><Icon name="Filter" size="20" /> 
+                <div class="tfhb-filter-icon tfhb-filter-btn tfhb-flexbox"  @click="FilterPreview=!FilterPreview"><Icon name="Filter" size=20 /> 
                 {{ $tfhb_trans('Filter') }}</div>
                 <transition name="tfhb-dropdown-transition">
                     <div class="tfhb-filter-box-content" v-show="FilterPreview">
                         <div class="tfhb-filter-form">
                             <div class="tfhb-filter-category">
                                 <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterHostPreview=!FilterHostPreview">
-                                    {{ $tfhb_trans('All Host') }} <Icon name="ChevronUp" size="20" v-if="FilterHostPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterHostPreview"/>
+                                    {{ $tfhb_trans('All Host') }} <Icon name="ChevronUp" size=20 v-if="FilterHostPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterHostPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterHostPreview">
                                     <ul class="tfhb-flexbox">
@@ -143,7 +143,7 @@ window.addEventListener('click', function(e) {
 
                             <div class="tfhb-filter-category">
                                 <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
-                                    {{ $tfhb_trans('All Category') }} <Icon name="ChevronUp" size="20" v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size="20" v-else="FilterCatgoryPreview"/>
+                                    {{ $tfhb_trans('All Category') }} <Icon name="ChevronUp" size=20 v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterCatgoryPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterCatgoryPreview">
                                     <ul class="tfhb-flexbox">
@@ -165,7 +165,7 @@ window.addEventListener('click', function(e) {
                         </div>
                         <div class="tfhb-reset-btn" v-if="filterData.fcategory.length > 0 || filterData.fhosts.length > 0 || filterData.title">
                             <button @click="resetFilter" class="tfhb-flexbox">
-                                <Icon name="RefreshCw" size="20" /> 
+                                <Icon name="RefreshCw" size=20 /> 
                                 {{ $tfhb_trans('Reset Filter') }}
                             </button>
                         </div>
@@ -174,11 +174,11 @@ window.addEventListener('click', function(e) {
             </div>
             <div class="tfhb-header-filters">
                 <input type="text" v-model="filterData.title" @keyup="Meeting.Tfhb_Meeting_Filter(filterData)" placeholder="Search by meeting title" /> 
-                <span><Icon name="Search" size="20" /></span>
+                <span><Icon name="Search" size=20 /></span>
             </div>
         </div>
         <div class="thb-admin-btn right">
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans('Create New Meeting') }}</button>
+            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ $tfhb_trans('Create New Meeting') }}</button>
         </div> 
     </div>
 
@@ -196,9 +196,9 @@ window.addEventListener('click', function(e) {
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
                             <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
-                                <Icon name="UserRound" size="20" /> 
-                                <Icon name="ArrowRight" size="20" /> 
-                                <Icon name="UserRound" size="20" /> 
+                                <Icon name="UserRound" size=20 /> 
+                                <Icon name="ArrowRight" size=20 /> 
+                                <Icon name="UserRound" size=20 /> 
                             </div>
                             <h3>{{ $tfhb_trans('One to One') }}</h3>
                         </div>
@@ -221,9 +221,9 @@ window.addEventListener('click', function(e) {
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
                             <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
-                                <Icon name="UserRound" size="20" /> 
-                                <Icon name="ArrowRight" size="20" /> 
-                                <Icon name="UsersRound" size="20" /> 
+                                <Icon name="UserRound" size=20 /> 
+                                <Icon name="ArrowRight" size=20 /> 
+                                <Icon name="UsersRound" size=20 /> 
                             </div>
                             <h3>{{ $tfhb_trans('One to Group') }}</h3>
                         </div>
@@ -263,7 +263,7 @@ window.addEventListener('click', function(e) {
         <div  v-if="Meeting.meetings.length > 0" class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
 
             <!-- Single Meeting -->
-            <div class="tfhb-single-meeting" v-for="(smeeting, key) in Meeting.meetings"> 
+            <div class="tfhb-single-meeting tfhb-flexbox" v-for="(smeeting, key) in Meeting.meetings"> 
                 <div class="single-meeting-content-box tfhb-flexbox">
                     <div class="single-meeting-content">
                         <h3> {{ smeeting.title ? smeeting.title : 'No Title' }} </h3>
@@ -272,7 +272,7 @@ window.addEventListener('click', function(e) {
                                 <li v-if="smeeting.duration">
                                     <div class="tfhb-flexbox">
                                         <div class="user-info-icon">
-                                            <Icon name="Clock" size="16" /> 
+                                            <Icon name="Clock" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{ smeeting.duration }} {{ $tfhb_trans('minutes') }}
@@ -282,9 +282,9 @@ window.addEventListener('click', function(e) {
                                 <li v-if="smeeting.meeting_type">
                                     <div class="tfhb-flexbox" v-if="'one-to-one'==smeeting.meeting_type">
                                         <div class="user-info-icon">
-                                            <Icon name="UserRound" size="16" /> 
-                                            <Icon name="ArrowRight" size="16" /> 
-                                            <Icon name="UserRound" size="16" /> 
+                                            <Icon name="UserRound" size=16 /> 
+                                            <Icon name="ArrowRight" size=16 /> 
+                                            <Icon name="UserRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{ $tfhb_trans('One to One') }}
@@ -292,9 +292,9 @@ window.addEventListener('click', function(e) {
                                     </div>
                                     <div class="tfhb-flexbox" v-if="'one-to-group'==smeeting.meeting_type">
                                         <div class="user-info-icon">
-                                            <Icon name="UserRound" size="16" /> 
-                                            <Icon name="ArrowRight" size="16" /> 
-                                            <Icon name="UsersRound" size="16" /> 
+                                            <Icon name="UserRound" size=16 /> 
+                                            <Icon name="ArrowRight" size=16 /> 
+                                            <Icon name="UsersRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{ $tfhb_trans('One to Group') }}
@@ -304,7 +304,7 @@ window.addEventListener('click', function(e) {
                                 <li >
                                     <div class="tfhb-flexbox">
                                         <div class="user-info-icon">
-                                            <Icon name="Banknote" size="16" /> 
+                                            <Icon name="Banknote" size=16 /> 
                                         </div>
                                         <div v-if="smeeting.meeting_price" class="user-info-title">
                                             {{ smeeting.meeting_price }}
@@ -318,7 +318,7 @@ window.addEventListener('click', function(e) {
                                 <li v-if="smeeting.host_first_name">
                                     <div class="tfhb-flexbox">
                                         <div class="user-info-icon">
-                                            <Icon name="User" size="16" /> 
+                                            <Icon name="User" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{ smeeting.host_first_name }} {{ smeeting.host_last_name }}
@@ -328,7 +328,7 @@ window.addEventListener('click', function(e) {
                                 <li class="tfhb-booked-items">
                                     <div class="tfhb-flexbox booked-items">
                                         <div class="user-info-icon">
-                                            <Icon name="CalendarCheck" size="16" /> 
+                                            <Icon name="CalendarCheck" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{smeeting.total_booking}} Booked
@@ -351,11 +351,11 @@ window.addEventListener('click', function(e) {
                 </div>
                 <div class="single-meeting-action-btn tfhb-flexbox">
                     <a :href="'/' + smeeting.slug" class="tfhb-flexbox" target="_blank">
-                        <Icon name="Eye" size="20" /> 
+                        <Icon name="Eye" size=20 /> 
                         {{ $tfhb_trans('Preview') }}
                     </a>
                     <a href="#" class="tfhb-flexbox" @click.prevent="sharePopupData(smeeting)">
-                        <Icon name="Share2" size="20" /> 
+                        <Icon name="Share2" size=20 /> 
                         {{ $tfhb_trans('Share') }}
                     </a>
                 </div>

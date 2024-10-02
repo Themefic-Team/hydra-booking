@@ -38,7 +38,7 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ props.google_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size="18" /></button>
+            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ props.google_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
                 <!-- Checkbox swicher -->
 
                 <HbSwitch v-if="props.google_calendar.connection_status" @change="emit('update-integrations', 'google_calendar', props.google_calendar)" v-model="props.google_calendar.status"    />

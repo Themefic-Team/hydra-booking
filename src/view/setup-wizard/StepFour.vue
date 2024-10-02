@@ -105,7 +105,7 @@ const copyMeeting = (link) => {
                                     <li v-if="setupWizard.data.meeting.duration">
                                         <div class="tfhb-flexbox">
                                             <div class="user-info-icon">
-                                                <Icon name="Clock" size="16" /> 
+                                                <Icon name="Clock" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
                                                 {{ setupWizard.data.meeting.duration }} {{ $tfhb_trans('minutes') }}
@@ -115,9 +115,9 @@ const copyMeeting = (link) => {
                                     <li v-if="setupWizard.data.meeting.meeting_type">
                                         <div class="tfhb-flexbox" v-if="'one-to-one'==setupWizard.data.meeting.meeting_type">
                                             <div class="user-info-icon">
-                                                <Icon name="UserRound" size="16" /> 
-                                                <Icon name="ArrowRight" size="16" /> 
-                                                <Icon name="UserRound" size="16" /> 
+                                                <Icon name="UserRound" size=16 /> 
+                                                <Icon name="ArrowRight" size=16 /> 
+                                                <Icon name="UserRound" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
                                                 {{ $tfhb_trans('One to One') }}
@@ -125,9 +125,9 @@ const copyMeeting = (link) => {
                                         </div>
                                         <div class="tfhb-flexbox" v-if="'one-to-group'==setupWizard.data.meeting.meeting_type">
                                             <div class="user-info-icon">
-                                                <Icon name="UserRound" size="16" /> 
-                                                <Icon name="ArrowRight" size="16" /> 
-                                                <Icon name="UsersRound" size="16" /> 
+                                                <Icon name="UserRound" size=16 /> 
+                                                <Icon name="ArrowRight" size=16 /> 
+                                                <Icon name="UsersRound" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
                                                 {{ $tfhb_trans('One to Group') }}
@@ -137,7 +137,7 @@ const copyMeeting = (link) => {
                                     <li >
                                         <div class="tfhb-flexbox">
                                             <div class="user-info-icon">
-                                                <Icon name="Banknote" size="16" /> 
+                                                <Icon name="Banknote" size=16 /> 
                                             </div>
                                             <div v-if="setupWizard.data.meeting.meeting_price" class="user-info-title">
                                                 {{ setupWizard.data.meeting.meeting_price }}
@@ -150,7 +150,7 @@ const copyMeeting = (link) => {
                                     <li v-if="setupWizard.data.meeting.host_first_name">
                                         <div class="tfhb-flexbox">
                                             <div class="user-info-icon">
-                                                <Icon name="User" size="16" /> 
+                                                <Icon name="User" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
                                                 {{ setupWizard.data.meeting.host_first_name }} {{ setupWizard.data.meeting.host_last_name }}
@@ -160,7 +160,7 @@ const copyMeeting = (link) => {
                                     <li class="tfhb-booked-items">
                                         <div class="tfhb-flexbox booked-items">
                                             <div class="user-info-icon">
-                                                <Icon name="CalendarCheck" size="16" /> 
+                                                <Icon name="CalendarCheck" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
                                                 {{ setupWizard.data.meeting.total_booking }} Booked
@@ -181,11 +181,11 @@ const copyMeeting = (link) => {
                     </div>
                     <div class="single-meeting-action-btn tfhb-flexbox">
                         <a :href="'/' + setupWizard.data.meeting.slug" class="tfhb-flexbox" target="_blank">
-                            <Icon name="Eye" size="20" /> 
+                            <Icon name="Eye" size=20 /> 
                             {{ $tfhb_trans('Preview') }}
                         </a>
                         <a href="#" class="tfhb-flexbox" @click.prevent="sharePopupData(setupWizard.data.meeting)">
-                            <Icon name="Share2" size="20" /> 
+                            <Icon name="Share2" size=20 /> 
                             {{ $tfhb_trans('Share') }}
                         </a>
                     </div>
@@ -203,7 +203,7 @@ const copyMeeting = (link) => {
                                 <li v-if="shareData.time">
                                     <div class="tfhb-flexbox tfhb-gap-8">
                                         <div class="user-info-icon">
-                                            <Icon name="Clock" size="16" /> 
+                                            <Icon name="Clock" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{ shareData.time }} {{ $tfhb_trans('minutes') }}
@@ -213,9 +213,9 @@ const copyMeeting = (link) => {
                                 <li v-if="shareData.meeting_type">
                                     <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-one'==shareData.meeting_type">
                                         <div class="user-info-icon">
-                                            <Icon name="UserRound" size="16" /> 
-                                            <Icon name="ArrowRight" size="16" /> 
-                                            <Icon name="UserRound" size="16" /> 
+                                            <Icon name="UserRound" size=16 /> 
+                                            <Icon name="ArrowRight" size=16 /> 
+                                            <Icon name="UserRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{ $tfhb_trans('One to One') }}
@@ -223,9 +223,9 @@ const copyMeeting = (link) => {
                                     </div>
                                     <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==shareData.meeting_type">
                                         <div class="user-info-icon">
-                                            <Icon name="UserRound" size="16" /> 
-                                            <Icon name="ArrowRight" size="16" /> 
-                                            <Icon name="UsersRound" size="16" /> 
+                                            <Icon name="UserRound" size=16 /> 
+                                            <Icon name="ArrowRight" size=16 /> 
+                                            <Icon name="UsersRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
                                             {{ $tfhb_trans('One to Group') }}
@@ -290,8 +290,8 @@ const copyMeeting = (link) => {
                 hover_icon="ArrowRight" 
                 :hover_animation="true"  
             /> 
-            <!-- <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="" > <Icon name="ChevronLeft" size="20" /> Back </button>
-            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size="20" />  </button> -->
+            <!-- <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="" > <Icon name="ChevronLeft" size=20 /> Back </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size=20 />  </button> -->
         </div>
      </div>
      <!-- Step Four -->

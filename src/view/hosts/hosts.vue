@@ -172,10 +172,10 @@ const Tfhb_Host_Filter = async (e) =>{
         <div class="tfhb-dashboard-heading tfhb-flexbox">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 
-                <span><Icon name="Search" size="20" /></span>
+                <span><Icon name="Search" size=20 /></span>
            </div>
             <div class="thb-admin-btn right">
-               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans('Add New Host') }}</button> 
+               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ $tfhb_trans('Add New Host') }}</button> 
             </div> 
         </div>
         <div class="tfhb-hosts-content">  

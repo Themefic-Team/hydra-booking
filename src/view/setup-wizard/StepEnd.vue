@@ -306,7 +306,7 @@ onBeforeMount(() => {
 
             <div class="tfhb-s-w-integrations-bar tfhb-flexbox">
                 <div class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
-                    <span>All Integrations </span>  <Icon name="ChevronDown" size="20" /> 
+                    <span>All Integrations </span>  <Icon name="ChevronDown" size=20 /> 
                     <div class="tfhb-dropdown-wrap"> 
                         <span @click="selectedFilterIntegrations" data-filter="all"> All Integrations</span>
                         <span @click="selectedFilterIntegrations"  data-filter="conference"> Conference</span>
@@ -317,7 +317,7 @@ onBeforeMount(() => {
                 </div>
                 <div class="tfhb-integrations-searchbar">
                     <input @keyup="FilterBySearch" type="text" placeholder="Search Integrations">
-                    <Icon name="Search" size="20" /> 
+                    <Icon name="Search" size=20 /> 
                 </div>
             </div>
 
@@ -464,7 +464,7 @@ onBeforeMount(() => {
             
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
-             <a @click="RedirectToDeshboard" :href="$tfhb_hydra_admin_url + ''"  class="tfhb-btn boxed-btn tfhb-flexbox tfhb-flexbox tfhb-gap-8" > Visit Dashboard <Icon name="ChevronRight" size="20" /> </a>
+             <a @click="RedirectToDeshboard" :href="$tfhb_hydra_admin_url + ''"  class="tfhb-btn boxed-btn tfhb-flexbox tfhb-flexbox tfhb-gap-8" > Visit Dashboard <Icon name="ChevronRight" size=20 /> </a>
             
         </div>
      </div>

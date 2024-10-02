@@ -33,6 +33,10 @@
         padding: 24px;
         border: $border-reguler $border-type $surface-border;
         position: relative;
+        transition: $transition;
+        &:hover {
+          background-color: $surface-primary;
+        }
         hr {
           margin: 16px 0;
           border-top: 0.5px $border-type $surface-border;

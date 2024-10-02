@@ -343,7 +343,7 @@ const tfhbValidateInput = (fieldName) => {
                                             :parent_key = "key"
                                             :single_key = "tkey"
                                         />                
-                                        <Icon name="MoveRight" size="20" /> 
+                                        <Icon name="MoveRight" size=20 /> 
                                         <HbDropdown 
                                             v-model="time.end"  
                                             required= "true" 
@@ -359,10 +359,10 @@ const tfhbValidateInput = (fieldName) => {
 
                                     </div>
                                     <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
-                                        <button class="tfhb-availability-schedule-btn" @click="addAvailabilityTime(key)"><Icon name="Plus" size="20px" /> </button> 
+                                        <button class="tfhb-availability-schedule-btn" @click="addAvailabilityTime(key)"><Icon name="Plus" size=20 /> </button> 
                                     </div>
                                     <div v-else class="tfhb-availability-schedule-clone-single">
-                                        <button class="tfhb-availability-schedule-btn" @click="removeAvailabilityTime(key, tkey)"><Icon name="X" size="20px" /> </button> 
+                                        <button class="tfhb-availability-schedule-btn" @click="removeAvailabilityTime(key, tkey)"><Icon name="X" size=20 /> </button> 
                                     </div>
                                 </div>
                                 
@@ -430,7 +430,7 @@ const tfhbValidateInput = (fieldName) => {
                                                     placeholder="Start"   
                                                     :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
                                                 />  
-                                                <Icon name="MoveRight" size="20" /> 
+                                                <Icon name="MoveRight" size=20 /> 
                                                 <HbDropdown 
                                                     v-model="time.end"  
                                                     required= "true" 
@@ -443,10 +443,10 @@ const tfhbValidateInput = (fieldName) => {
                                             </div>
                                             
                                             <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
-                                                <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size="20px" /> </button> 
+                                                <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size=20 /> </button> 
                                             </div>
                                             <div v-else class="tfhb-availability-schedule-clone-single">
-                                                <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size="20px" /> </button> 
+                                                <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size=20 /> </button> 
                                             </div>
                                         </div>
 

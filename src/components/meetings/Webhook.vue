@@ -183,10 +183,10 @@ const props = defineProps([
                 </div>
                 <div class="request-actions">
                     <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.addBodyField" v-if="key == 0">
-                        <Icon name="Plus" size="20px" /> 
+                        <Icon name="Plus" size=20 /> 
                     </button> 
                     <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.deleteBodyField(key)" v-else>
-                        <Icon name="X" size="20px" /> 
+                        <Icon name="X" size=20 /> 
                     </button> 
                 </div>
             </div>

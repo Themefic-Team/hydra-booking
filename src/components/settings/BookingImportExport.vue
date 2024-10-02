@@ -36,7 +36,7 @@ const readImportDdata = (event) => {
                 <p>{{ $tfhb_trans('This tool allows you to import or merge booking data to your store from a CSV file.') }}</p>
             </div> 
             <button @click="ExportAsCSV = true" class="tfhb-btn boxed-btn flex-btn">
-                <!-- <Icon name="PlusCircle " size="20" />   -->
+                <!-- <Icon name="PlusCircle " size=20 />   -->
                 {{ $tfhb_trans('Export as CSV') }}
             </button>
         </div>
@@ -82,7 +82,7 @@ const readImportDdata = (event) => {
                    
                 </div>
                 <br>
-                <button @click="props.importExport.importBooking" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size="20" /> {{ $tfhb_trans('Run The Import') }}</button> 
+                <button @click="props.importExport.importBooking" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ $tfhb_trans('Run The Import') }}</button> 
                 <!-- Time format --> 
             </div>
               

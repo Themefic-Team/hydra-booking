@@ -486,6 +486,10 @@
                 transition: .4s;
                 border-radius: 10px;
                 margin: 0 !important;
+                transition: $transition;
+                &:hover {
+                    background-color: $primary-hover;
+                }
                 &:before {
                     position: absolute;
                     content: "";

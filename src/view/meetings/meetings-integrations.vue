@@ -40,7 +40,7 @@ onBeforeMount(() => {
         <div class="tfhb-admin-title tfhb-m-0">
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                 {{ $tfhb_trans('Webhook Integration ') }}
-                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans('Pro') }}</span>
+                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
             </h2> 
             <h2></h2> 
             <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>

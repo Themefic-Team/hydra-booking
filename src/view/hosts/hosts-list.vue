@@ -74,10 +74,10 @@ const deleteItemConfirm = () => {
                     </div>
                     <hr>
                     <div class="tfhb-hosts-info tfhb-flexbox">  
-                         <span class="tfhb-info-icon-text tfhb-flexbox" v-if="host.email !=''"> <Icon name="Mail" size="20" />{{ host.email }}</span>
-                         <span class="tfhb-info-icon-text tfhb-flexbox" v-if="host.phone_number !=''"> <Icon name="Phone" size="20" />{{ host.phone_number }}</span>
+                         <span class="tfhb-info-icon-text tfhb-flexbox" v-if="host.email !=''"> <Icon name="Mail" size=20 />{{ host.email }}</span>
+                         <span class="tfhb-info-icon-text tfhb-flexbox" v-if="host.phone_number !=''"> <Icon name="Phone" size=20 />{{ host.phone_number }}</span>
                     </div>
-                    <!-- <button class="tfhb-single-hosts-action"><Icon name="ListCollapse" size="20" /></button> -->
+                    <!-- <button class="tfhb-single-hosts-action"><Icon name="ListCollapse" size=20 /></button> -->
                     <div class="tfhb-single-hosts-action tfhb-dropdown">
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                         <div class="tfhb-dropdown-wrap"> 
