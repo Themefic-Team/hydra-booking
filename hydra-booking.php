@@ -104,7 +104,12 @@ class THB_INIT {
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
 
 		$_tfhb_appearance_settings = get_option( '_tfhb_appearance_settings' );
-		// var_dump($_tfhb_appearance_settings);
+
+		// Integration Settings
+		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array();
+		 
+		
 		$tfhb_primary_color   = ! empty( $_tfhb_appearance_settings['primary_color'] ) ? $_tfhb_appearance_settings['primary_color'] : '#F62881';
 		$tfhb_secondary_color = ! empty( $_tfhb_appearance_settings['secondary_color'] ) ? $_tfhb_appearance_settings['secondary_color'] : '#3F2731';
 		$tfhb_paragraph_color = ! empty( $_tfhb_appearance_settings['paragraph_color'] ) ? $_tfhb_appearance_settings['paragraph_color'] : '#765664';
@@ -118,8 +123,12 @@ class THB_INIT {
 		wp_add_inline_style( 'tfhb-style', $tfhb_theme_css );
 
 		// register script
-		wp_enqueue_script( 'stripe', '//checkout.stripe.com/checkout.js', array( 'jquery' ), '1.0.0', true );
-		wp_enqueue_script( 'paypal', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_script( 'tfhb-stripe-script', '//checkout.stripe.com/checkout.js', array( 'jquery' ), '1.0.0', true );
+		if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1){
+			$sdk_url = 'https://www.sandbox.paypal.com/sdk/js?client-id='.$tfhb_paypal['client_id'].'';
+			wp_register_script( 'tfhb-paypal-sdk', esc_url($sdk_url), array(), null, true );
+		}
+		wp_register_script( 'tfhb-paypal-script', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
 		wp_register_script( 'tfhb-select2-script', THB_URL . 'assets/app/js/select2.min.js', array( 'jquery', 'tfhb-app-script' ), THB_VERSION, true );
 		wp_register_script( 'tfhb-app-script', THB_URL . 'assets/app/js/main.js', array( 'jquery' ), THB_VERSION, true );
 

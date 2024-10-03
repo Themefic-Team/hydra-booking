@@ -21,6 +21,9 @@ $questions_form_type = isset( $meeting['questions_form_type'] ) ? $meeting['ques
 $questions_form      = isset( $meeting['questions_form'] ) ? $meeting['questions_form'] : '';
 $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 
+// Integration Settings
+$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+$tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array(); 
 
 
 ?> 
@@ -130,18 +133,26 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 						<textarea name="reason" required id="reason"></textarea>
 					</div> 
 				</div> 
-			<?php endif ?> 
-			<div class="tfhb-confirmation-button">
-				<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
-				<?php echo ! empty( $booking_data ) ? 'Reschedule' : 'Confirm'; ?>  
-					<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
-				</button>
-			</div>
+			<?php endif;
+			
+		
+			?> 
+				<div class="tfhb-confirmation-button">
+					<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
+					<?php echo ! empty( $booking_data ) ? 'Reschedule' : 'Confirm'; ?>  
+						<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
+					</button>
+				</div>
 			<?php
+				if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 ):
+			?> 
+				<div class="tfhb-paypal-button-container"></div>
+			<?php
+				endif;
 			echo '</form>';
 		}
 		?>
-  
+ 
 	</div>
 
 	<?php

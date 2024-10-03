@@ -1019,6 +1019,9 @@
   background-color: #FEECEE;
   border-color: #E5102E;
   color: #E5102E;
+  p{
+    margin: 0;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */

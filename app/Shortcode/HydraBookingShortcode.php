@@ -245,15 +245,26 @@ class HydraBookingShortcode {
 
 		$payment_status = isset( $data['payment_status'] ) && ! empty( $data['payment_status'] ) ? $data['payment_status'] : 0;
 
+		// 
+		// Integration Settings
+		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array();
+	 
+
+		if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 &&  ! wp_script_is( 'tfhb-paypal-script', 'enqueued' )){ 
+			wp_enqueue_script( 'tfhb-paypal-sdk',  ); 
+		}
 		// Enqueue Scripts Register scripts
 		if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {
-			wp_enqueue_script( 'tfhb-app-script' );
+			wp_enqueue_script( 'tfhb-app-script',  );
 		}
 
 		// Enqueue Select2
 		if ( ! wp_script_is( 'tfhb-select2-script', 'enqueued' ) ) {
 			wp_enqueue_script( 'tfhb-select2-script' );
 		}
+	
+		
 
 		// Localize Script
 		wp_localize_script(
@@ -592,6 +603,15 @@ class HydraBookingShortcode {
 
 		$response['message']               = 'Booking Successful';
 		$response['action']                = 'create';
+		
+		if('paypal_payment' == $meta_data['payment_method']){
+			$response['data']                = array( 
+				'hash' 	  => $data['hash'],
+				'booking' => $data,
+				'meeting' => $MeetingData,
+			);
+		}
+		
 		$response['confirmation_template'] = $confirmation_template;
 
 		wp_send_json_success( $response );
