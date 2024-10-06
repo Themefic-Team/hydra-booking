@@ -528,8 +528,8 @@ const isobjectempty = (data) => {
                     <!-- Swicher -->
                 </div>
                 <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
-                    <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox">
-                        <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-no-wrap">
+                    <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-8">
+                        <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-no-wrap tfhb-gap-8">
 
                             <HbDropdown 
                                 v-model="time.start"  
