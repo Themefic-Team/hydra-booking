@@ -348,11 +348,11 @@
 		}
 
 		// render_paypal_payment
-		function tfhb_render_paypal_payment($this, response){
+		function tfhb_render_paypal_payment($this, responseData){
 			var paypal_button = $this.find('.tfhb-paypal-button-container');
+			var confirmation_template = responseData.confirmation_template;
 			// hide the form .tfhb-confirmation-button
-			$this.find('.tfhb-confirmation-button').hide();
-			console.log(response.data);
+			$this.find('.tfhb-confirmation-button').hide(); 
 			// Render PayPal button into the container
 			paypal.Buttons({
 				// Create an order
@@ -361,12 +361,12 @@
 					return actions.order.create({
 						
 						purchase_units: [{
-							reference_id : response.data.hash,
-							description: response.data.meeting.title + ' - ' + response.data.meeting.duration + ' Minutes | ' + response.data.booking.start_time + ' - ' + response.data.booking.end_time + ' | ' + response.data.booking.meeting_dates,
-							custom_id: response.data.booking.attendee_id,
+							reference_id : responseData.data.hash,
+							description: responseData.data.meeting.title + ' - ' + responseData.data.meeting.duration + ' Minutes | ' + responseData.data.booking.start_time + ' - ' + responseData.data.booking.end_time + ' | ' + responseData.data.booking.meeting_dates,
+							custom_id: responseData.data.booking.attendee_id,
 							amount: {
-								currency_code: response.data.meeting.payment_currency,
-								value: response.data.meeting.meeting_price,// Set the transaction amount
+								currency_code: responseData.data.meeting.payment_currency,
+								value: responseData.data.meeting.meeting_price,// Set the transaction amount
 							}
 						}]
 					});
@@ -375,24 +375,29 @@
 				// On successful payment
 				onApprove: function (data, actions) {
 					return actions.order.capture().then(function (details) {
- 
-						console.log(details); 
+  
 						$.ajax({
 							url: tfhb_app_booking.ajax_url, 
 							type: 'POST',
-							action: 'tfhb_meeting_paypal_payment_confirmation',
 							data: {
+								nonce: tfhb_app_booking.nonce, 
+								action: 'tfhb_meeting_paypal_payment_confirmation',
 								payment_details: details,
-								responseData: response,
+								responseData: responseData,
 							}, 
 							success: function (response) {
-								
+								if(response.success){
+									$this.find('.tfhb-meeting-card').html(''); 
+									$this.find('.tfhb-meeting-card').append(confirmation_template); 
+								}else{
+									$this.find('.tfhb-notice').html(response.data.message);
+									$this.find('.tfhb-notice').show();
+								}
 							},
 							error: function (error) {
 								console.log(error);
 							}
-						});
-						alert('Payment successful! Transaction ID: ' + details.id);
+						}); 
 						 
 					});
 				},

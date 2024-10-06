@@ -8,7 +8,7 @@ use HydraBooking\DB\Booking;
 use HydraBooking\DB\Host;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
-
+use HydraBooking\DB\Transactions;
 use HydraBooking\DB\BookingMeta;
 
 
@@ -35,6 +35,10 @@ class HydraBookingShortcode {
 		add_action( 'wp_ajax_tfhb_meeting_form_cencel', array( $this, 'tfhb_meeting_form_cencel_callback' ) );
 
 		add_action( 'hydra_booking/after_booking_completed', array( $this, 'insert_calender_after_booking_completed' ) );
+
+		// Paypal Payment Confirmation
+		add_action( 'wp_ajax_nopriv_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
+		add_action( 'wp_ajax_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
 
 		// $this->tfhdb_wp_mail_sent();
 	}
@@ -606,7 +610,8 @@ class HydraBookingShortcode {
 		
 		if('paypal_payment' == $meta_data['payment_method']){
 			$response['data']                = array( 
-				'hash' 	  => $data['hash'],
+				'hash' 	  => $data['hash'], 
+				'booking_id' => $result['insert_id'],
 				'booking' => $data,
 				'meeting' => $MeetingData,
 			);
@@ -1086,6 +1091,78 @@ class HydraBookingShortcode {
 		wp_send_json_success( $response );
 
 		wp_die();
+	}
+
+	/**
+	 * Get Booking Data
+	 * @param $booking_id
+	 * @return $booking
+	 */
+	public function tfhb_meeting_paypal_payment_confirmation_callback(){
+		// Checked Nonce validation.
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
+			wp_send_json_error( array( 'message' => 'Nonce verification failed' ) );
+		}
+
+		// Check if the request is POST.
+		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+			wp_send_json_error( array( 'message' => 'Invalid request method' ) );
+		}
+
+		// Check if the request is not empty.
+		if ( empty( $_POST ) ) {
+			wp_send_json_error( array( 'message' => 'Invalid request' ) );
+		}
+		$payment_details = isset( $_POST['payment_details'] ) ? $_POST['payment_details'] : array();
+		$responseData = isset( $_POST['responseData'] ) ? $_POST['responseData'] : array();
+
+		
+		$payment_id = isset( $payment_details['id'] ) ? sanitize_text_field( $payment_details['id'] ) : '';
+		$payer_id = isset( $payment_details['payer']['payer_id'] ) ? sanitize_text_field( $payment_details['payer']['payer_id'] ) : '';
+		$hash = isset( $responseData['data']['hash'] ) ? sanitize_text_field( $responseData['data']['hash'] ) : '';
+		$booking_id = isset( $responseData['data']['booking_id'] ) ? sanitize_text_field( $responseData['data']['booking_id'] ) : '';
+		$meeting_id = isset( $responseData['data']['booking']['meeting_id'] ) ? sanitize_text_field( $responseData['data']['booking']['meeting_id'] ) : '';	
+		$host_id = isset( $responseData['data']['booking']['host_id'] ) ? sanitize_text_field( $responseData['data']['booking']['host_id'] ) : '';	
+		$customer_id = isset( $responseData['data']['booking']['attendee_id'] ) ? sanitize_text_field( $responseData['data']['booking']['attendee_id'] ) : '';	
+		$payment_method = isset( $responseData['data']['booking']['payment_method'] ) ? sanitize_text_field( $responseData['data']['booking']['payment_method'] ) : '';	
+		$total =  isset($payment_details['purchase_units'][0]['amount']['value']) ? sanitize_text_field( $payment_details['purchase_units'][0]['amount']['value'] ) : '';
+		$booking     = new Booking();
+
+		$bookingdata = array(
+			'id'             => $booking_id,
+			'payment_status' => 'Completed',
+		);
+		
+		// Booking Update
+		$bookingUpdate = $booking->update( $bookingdata );
+
+		$charge = array(
+			'payment_id'    => ! empty( $payment_id ) ? $payment_id : '', 
+			'payer_id'      => ! empty( $payer_id  ) ? $payer_id  : '',
+			'hash'      => ! empty( $hash  ) ? $hash  : '', 
+		);
+		// Data for Transactions Table
+		$tdata        = array(
+			'booking_id'         => $booking_id,
+			'meeting_id'         => $meeting_id,
+			'host_id'         => $host_id,
+			'customer_id'         => $customer_id,
+			'payment_method'         => $payment_method, 
+			'total'         => $total,
+			'transation_history' => wp_json_encode( $charge ),
+			'status' => 'completed',
+		);
+ 
+		$Transactions = new Transactions();
+		$Transactions = $Transactions->add( $tdata );
+
+		// After Booking Hooks
+		do_action( 'hydra_booking/after_booking_payment_complete', $bookingdata );
+
+		// return success message
+		$response['message'] = 'Payment Completed Successfully';
+		wp_send_json_success( $response );
+		
 	}
 }
 

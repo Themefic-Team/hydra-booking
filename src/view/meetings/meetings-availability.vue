@@ -332,7 +332,7 @@ const isobjectempty = (data) => {
                             <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be only available on specific dates') }}</p>
                         </div>
                     </label>
-                    <div class="tfhb-availability-schedule-time tfhb-flexbox" v-if="meeting.availability_range_type == 'range'">
+                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8" v-if="meeting.availability_range_type == 'range'">
                         <HbDateTime   
                             v-model="meeting.availability_range.start"
                             icon="CalendarDays"
@@ -452,7 +452,7 @@ const isobjectempty = (data) => {
                 </div>
                 <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
                     <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox">
-                        <div class="tfhb-availability-schedule-time tfhb-flexbox">
+                        <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8">
                             
                             <div class="tfhb-single-form-field" style="width: calc(45% - 12px);" selected="1">
                                 <div class="tfhb-single-form-field-wrap tfhb-field-date">

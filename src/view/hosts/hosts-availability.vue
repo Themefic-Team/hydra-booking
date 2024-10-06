@@ -321,7 +321,7 @@ const formatTimeSlots = (timeSlots) =>  {
             </div>
             <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
                 <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox">
-                    <div class="tfhb-availability-schedule-time tfhb-flexbox">
+                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8">
                         
                         <div class="tfhb-single-form-field" style="width: calc(45% - 12px);" selected="1">
                             <div class="tfhb-single-form-field-wrap tfhb-field-date">
