@@ -48,6 +48,27 @@ const openModal = () => {
     time_zone: '',
     date_status: 0,
     time_slots: [
+
+        { 
+            day: 'Saturday', 
+            status: 1,
+            times: [
+                {
+                    start: '09:00',
+                    end: '17:00',
+                }
+            ]
+        },
+        { 
+            day: 'Sunday', 
+            status: 1,
+            times: [
+                {
+                    start: '09:00',
+                    end: '17:00',
+                }
+            ]
+        },
         { 
             day: 'Monday',
             status: 1,
@@ -98,26 +119,6 @@ const openModal = () => {
                 }
             ]
         },
-        { 
-            day: 'Saturday', 
-            status: 1,
-            times: [
-                {
-                    start: '09:00',
-                    end: '17:00',
-                }
-            ]
-        },
-        { 
-            day: 'Sunday', 
-            status: 1,
-            times: [
-                {
-                    start: '09:00',
-                    end: '17:00',
-                }
-            ]
-        }
     ],
     date_slots: [
     ],

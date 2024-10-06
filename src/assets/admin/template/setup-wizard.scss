@@ -155,6 +155,8 @@
                 /* 160% */
                 max-width: 470px;
                 font-weight: 400;
+                display: inline-block;
+                margin: 0 auto;
             }
         }
         .tfhb-step-wizard-steper{
@@ -214,7 +216,7 @@
     .tfhb-meetings-list-content {
         padding: 32px !important;
         border-radius: 16px;
-        border: 1px solid $surface-border !important;
+        // border: 1px solid $surface-border !important;
         background: $surface-secondary !important;
         .tfhb-single-meeting {
             padding: 24px !important;
@@ -226,6 +228,7 @@
     .tfhb-s-w-step-end { 
         .tfhb-s-w-integrations-wrap{
             width: 100% !important;
+            align-items: normal !important;
         }
 
         .tfhb-s-w-integrations-bar {

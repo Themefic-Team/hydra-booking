@@ -45,6 +45,7 @@ const Availability = reactive({
         return this.GeneralSettings;
     },
     RearraingeWeekStart(week_start_from, time_slots) {  
+        console.log(week_start_from);
    
         let week_start_from_index = time_slots.findIndex( x => x.day == week_start_from );
         let week_start_from_data = time_slots.splice(week_start_from_index, time_slots.length);

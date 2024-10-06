@@ -598,7 +598,7 @@ class MeetingController {
 
 	// Meeting Filter
 	public function filterMeetings( $request ) {
-		$filterData = $request->get_param( 'filterData' );
+		$filterData = $request->get_param( 'filterData' ); 
 		// Meeting Lists
 		$meeting      = new Meeting();
 		$MeetingsList = $meeting->get( '', $filterData );

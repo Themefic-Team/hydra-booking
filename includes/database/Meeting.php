@@ -192,10 +192,10 @@ class Meeting {
 			if ( isset( $filterData['fcategory'] ) ) {
 				$category_ids = implode( ',', array_map( 'intval', $filterData['fcategory'] ) );
 				$sql         .= ( ! empty( $filterData['title'] ) || isset( $filterData['fhosts'] ) ) ? ' AND' : '';
-				$sql         .= " '$table_name.meeting_category IN ($category_ids)";
+				$sql         .= " $table_name.meeting_category IN ($category_ids)";
 			}
 
-			$sql .= " GROUP BY $table_name.id" ; 
+			$sql .= " GROUP BY $table_name.id" ;  
 			$data = $wpdb->get_results( $sql );
 
 		 

@@ -39,6 +39,7 @@ const props = defineProps({
 // Fetch Single Availability while Schdeule on change 
 const Settings_avalibility = ref();
 const fetchAvailabilitySettings = async (availability_id) => {
+    
     if('tfhb_host' == user_role && props.meeting.host_id == ''){
         props.meeting.host_id = user_id
     }
@@ -100,7 +101,7 @@ const fetchHostAvailability = async (host) => {
         for (const key in HostAvailabilities) {
             delete HostAvailabilities[key];
         }
-        if("settings"==response.data.host_availble){
+        if("settings"==response.data.host_availble){ 
             Settings_avalibility.value = response.data.host;
         }else{
             Settings_avalibility.value = '';
@@ -157,7 +158,7 @@ onBeforeMount(() => {
         if('tfhb_host' == user_role && props.meeting.host_id == ''){
            
             props.meeting.host_id = user_id 
-        }
+        } 
         if(props.meeting.host_id!=0){
             fetchHostAvailability(props.meeting.host_id);
             fetchSingleAvailabilitySettings(props.meeting.host_id, props.meeting.availability_id);

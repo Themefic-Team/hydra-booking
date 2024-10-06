@@ -120,12 +120,16 @@ class THB_INIT {
             --tfhb-paragraph-color: $tfhb_paragraph_color;
           }
         ";
-		wp_add_inline_style( 'tfhb-style', $tfhb_theme_css );
-
+		wp_add_inline_style( 'tfhb-style', $tfhb_theme_css ); 
 		// register script
 		wp_register_script( 'tfhb-stripe-script', '//checkout.stripe.com/checkout.js', array( 'jquery' ), '1.0.0', true );
 		if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1){
-			$sdk_url = 'https://www.sandbox.paypal.com/sdk/js?client-id='.$tfhb_paypal['client_id'].'';
+			if($tfhb_paypal['environment'] == 'live'){
+				$sdk_url = 'https://www.paypal.com/sdk/js?client-id='.$tfhb_paypal['client_id'].'';
+			}else{ 
+				$sdk_url = 'https://www.sandbox.paypal.com/sdk/js?client-id='.$tfhb_paypal['client_id'].'';
+			}
+			// if
 			wp_register_script( 'tfhb-paypal-sdk', esc_url($sdk_url), array(), null, true );
 		}
 		wp_register_script( 'tfhb-paypal-script', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );

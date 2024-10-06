@@ -27,8 +27,7 @@ const emit = defineEmits(["update:availabilityData", "modal-close", "update-avai
 
 
 // Update Availability Settings
-const UpdateAvailabilitySettings = async (validator_field) => {   
-
+const UpdateAvailabilitySettings = async (validator_field) => {    
    
     // Clear the errors object
     Object.keys(errors).forEach(key => {
