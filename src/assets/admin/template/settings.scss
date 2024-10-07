@@ -138,6 +138,13 @@
 				}
 
 				.tfhb-availability-schedule-wrap{
+					width: 75% !important;
+					.tfhb-availability-schedule-time {
+						width: calc(100% - 59px) ;
+					}
+					.tfhb-availability-schedule-btn{
+						width: 35px;
+					}
 					@media #{$max570}{
 						width: 100%;
 					}

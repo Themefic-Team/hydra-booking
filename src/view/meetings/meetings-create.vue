@@ -135,8 +135,8 @@ const meetingData = reactive({
     buffer_time_after: '',
     booking_frequency: [
         {
-            limit: 1,
-            times:'Year'
+            limit: 5,
+            times:'days'
         }
     ],
     meeting_interval: '',

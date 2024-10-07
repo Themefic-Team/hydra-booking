@@ -60,6 +60,15 @@ window.addEventListener('click', function(e) {
     }
 });
 
+const FormatDate = (date) => {  
+    // convert 2024-05-29 to 25 Sep, 24
+    const d = new Date(date);
+    const ye = new Intl.DateTimeFormat('en', { year: '2-digit' }).format(d);
+    const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+    return `${da} ${mo}, ${ye}`;
+}
+
 </script>
 <template>
 
@@ -283,8 +292,8 @@ window.addEventListener('click', function(e) {
                             v-for="(data, index) in Dashboard.data.recent_booking"
                                 :key="index" 
                             class="tfhb-dashboard-notice-single-box tfhb-full-width" 
-                        >
-                            <div class="tfhb-admin-card-box">
+                        > 
+                            <div class="tfhb-admin-card-box tfhb-p-16">
                                 
                                 <p>{{data.title}}    </p>
                                 <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8"> 
@@ -324,12 +333,13 @@ window.addEventListener('click', function(e) {
                             class="tfhb-dashboard-notice-single-box tfhb-flexbox tfhb-gap-8 tfhb-full-width"
                          >
                             <span > {{ data.start_time}} </span>
-                            <div class="tfhb-admin-card-box">
+                            <div class="tfhb-admin-card-box tfhb-p-16">
                                 <p>{{data.attendee_name}} ({{data.attendee_email}})  </p>
                                 <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8"> 
                                     <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
-                                        <!-- convert 2024-05-29 to 25 Sep, 24 --> 
-                                        {{data.meeting_dates}}
+                                        <!-- convert 2024-05-29 to 25 Sep, 24 -->   
+
+                                        {{ FormatDate(data.meeting_dates) }}
                                     </span> 
                                     <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.attendee_time_zone}}</span>
                                     <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}}</span>

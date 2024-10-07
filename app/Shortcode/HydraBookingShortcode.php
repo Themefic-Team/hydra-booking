@@ -639,10 +639,10 @@ class HydraBookingShortcode {
 
 			$last_created_date = gmdate( 'Y-m-d', strtotime( $created_date ) );
 			foreach ( $booking_frequency as $key => $value ) {
-				$days  = isset( $value['times'] ) ? $value['times'] : 1;
-				$limit = isset( $value['limit'] ) ? $value['limit'] : 1;
+				$times  = isset( $value['times'] ) ? $value['times'] : 'days';
+				$limit = isset( $value['limit'] ) ? $value['limit'] : 5;
 
-				$booking_frequency_date = gmdate( 'Y-m-d', strtotime( $last_created_date . ' + ' . $days . ' days' ) );
+				$booking_frequency_date = gmdate( 'Y-m-d', strtotime( $last_created_date . ' + ' . $limit . ' '.$times ) );
 				$total_booking          = count(
 					array_filter(
 						$current_user_booking,

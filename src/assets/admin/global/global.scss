@@ -178,12 +178,14 @@
             top: auto;
           }
     }
+   
     .tfhb-mb-32{
         margin-bottom: 32px !important;
     }
     .tfhb-mt-32{
         margin-top: 32px !important;
     }
+    
     .tfhb-mt-72{
         margin-top: 72px !important;
     }
@@ -207,6 +209,9 @@
     //Padding
     .tfhb-p-24{
         padding: 24px !important;
+    }
+    .tfhb-p-16{
+        padding: 16px !important;
     }
     .tfhb-pt-0{
         padding-top: 0px !important;
@@ -1048,7 +1053,7 @@
             position: relative;
             &::after{
                 background: $primary-default !important;
-                box-shadow: 0px 8px 30px 0px rgba(229, 0, 99, 0.30);
+                box-shadow: 0px 8px 30px 0px rgba(2, 98, 18, 0.24);
             }
             &::before{
                 position: absolute;
@@ -1349,23 +1354,27 @@ button.question-edit-btn{
     align-items: center;
     justify-content: center;
 }
-.meeting-create-details{
-    .tfhb-availability-details-wrap{
-        .tfhb-availability-schedule-wrap {
-            width: auto !important;
-        }
-        .tfhb-availability-schedule-time {
-            width: auto !important;
-        }
-    }
+.meeting-create-details, .tfhb-s-w-availability-wrap{
+    
     .tfhb-availability-schedule-single{
         .tfhb-availability-schedule-wrap {
-             width: 60%; 
+             width: 75%; 
             .tfhb-availability-schedule-time {
-                width: 85%;
+                width: calc(100% - 59px) ;
+            }
+            .tfhb-availability-schedule-btn{
+                width: 35px;
             }
         }
         
+    }
+    .tfhb-availability-details-wrap{
+        .tfhb-availability-schedule-wrap {
+            width: 75% !important;
+        }
+        .tfhb-availability-schedule-time {
+            width: 100% !important;
+        }
     }
 }
 
@@ -1373,8 +1382,13 @@ button.question-edit-btn{
     .tfhb-availability-details-wrap{
         .tfhb-availability-schedule-single{
             .tfhb-availability-schedule-wrap { 
-                .tfhb-availability-schedule-time {
-                    width: 100% !important;
+                .tfhb-availability-details-wrap{
+                    .tfhb-availability-schedule-wrap {
+                        width: 75% !important;
+                    }
+                    .tfhb-availability-schedule-time {
+                        width: 100% !important;
+                    }
                 }
             }
         }

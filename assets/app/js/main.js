@@ -497,6 +497,10 @@
 				   action: 'tfhb_meeting_form_submit',
 				   data: data, 
 				   success: function (response) {
+					
+					$this.find('.tfhb-booking-submit .tfhb-submit-preloader').remove();  
+					//   Remove Disabled
+					$this.find('.tfhb-booking-submit').removeAttr('disabled');
 					   if(response.success){
 					   
 							$this.find('.tfhb-booking-submit').remove('.tfhb-submit-preloader'); 
@@ -504,7 +508,7 @@
 						   $this.find('.tfhb-booking-submit').removeAttr('disabled');
 						   
 						   // Render Paypal Payment System
-						   if("paypal_payment" == payment_type && response.data.data){
+						   if(payment_status == 1 && "paypal_payment" == payment_type && response.data.data){
 								tfhb_render_paypal_payment($this, response.data);
 								return
 							}

@@ -7,6 +7,13 @@
         margin-left: 16px !important;
       }
       .tfhb-availability-schedule-wrap{
+        width: 75% !important;
+        .tfhb-availability-schedule-time {
+            width: calc(100% - 59px) ;
+        }
+        .tfhb-availability-schedule-btn{
+            width: 35px;
+        }
         .tfhb-availability-schedule-inner{
             margin-bottom: 24px;
             // last child

@@ -38,7 +38,7 @@ const props = defineProps({
             <p>{{$tfhb_trans('Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.')}}</p>
         </div>
         <div class="tfhb-s-w-import-data">
-            <img :src="$tfhb_url+'/assets/images/import.gif'" style="height: 180px;" alt="">
+            <img :src="$tfhb_url+'/assets/images/import.gif'" style="height: 96px;" alt="">
         </div>
         <div class="tfhb-s-w-getting-email">
 
