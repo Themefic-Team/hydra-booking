@@ -81,7 +81,7 @@ onBeforeMount(() => {
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
                 <h1 >{{ $tfhb_trans('Appearance') }}</h1> 
-                <p>{{ $tfhb_trans('One-liner description') }}</p>
+                <p>{{ $tfhb_trans('Set up your appearance settings for bookings') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
                 <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
@@ -90,7 +90,7 @@ onBeforeMount(() => {
         
         <div class="thb-content-wrap">
             
-            <div class="tfhb-admin-title" >
+            <!-- <div class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('Theme') }}</h2> 
                 <p>{{ $tfhb_trans('This only applies to your attendee booking pages') }}</p>
             </div>
@@ -110,7 +110,7 @@ onBeforeMount(() => {
                         ]"
                     />
                 </div>
-            </div>
+            </div> -->
 
             <div class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('Custom brand colors') }}</h2> 

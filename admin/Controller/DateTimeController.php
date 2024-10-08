@@ -275,4 +275,10 @@ class DateTimeController extends \DateTimeZone {
 
 		return $dateTime->format( $format );
 	}
+
+	/* convert date time format */
+	public function convertDateTimeFormat( $date, $currentFormat, $newFormat ) {
+		$date = \DateTime::createFromFormat( $currentFormat, $date );
+		return $date->format( $newFormat );
+	}
 }

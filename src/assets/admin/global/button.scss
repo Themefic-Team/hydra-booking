@@ -4,8 +4,15 @@
     color: $primary-default;
     // height: 40px;
     box-sizing: border-box;
-    background-color: transparent;
+    background-color: transparent; 
     border: none ;
+    font-size: $text-font-size;
+    font-weight: $font-weight-medium;
+    line-height: 24px;
+   
+    &.tfhb-docs-btn{
+        font-weight: 600;
+    }
     &.boxed-btn {
         padding: 8px 24px; 
         border-radius: $border-radius-medium; 
@@ -37,6 +44,7 @@
         }
         span{
             color: $secondary-default !important;
+            font-size: $text-font-size;
         }
     }
     &.secondary-btn{
@@ -75,12 +83,15 @@
     span{
 
         color: $primary-default;
-        font-size: $heading-font-size-small !important;
-        font-weight: $font-weight-reguler;
+        font-size: $text-font-size;
+        font-weight: $font-weight-medium !important;
         line-height: 24px;
         transition:$transition !important;
         margin: 0 !important;
         display: inline-flex;
+    }
+    &.tfhb-btn-large{ 
+        font-size: $heading-font-size-small; 
     }
    
     &.tfhb-preloader {

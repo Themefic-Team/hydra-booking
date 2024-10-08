@@ -38,10 +38,11 @@
 					margin-bottom: 16px;
 					border-bottom: .5px $border-type $surface-border;
 					margin-right: 0 !important;
+					border-radius: 0 !important;
 					.tfhb-admin-title{
 						h3{
 							font-size: $heading-font-size-small !important;
-						font-weight: $font-weight-reguler !important;
+						font-weight: $font-weight-medium !important;
 						}
 					}
 				  }
@@ -93,6 +94,7 @@
 				margin: 0 !important;
 				width: calc(33% - 14px);
 				transition: $transition;
+				padding: 16px !important;
 				&:hover{
 					background-color: $surface-primary;
 				}
@@ -129,6 +131,11 @@
 
 	.tfhb-availability-popup{   
 		.tfhb-availability-content-wrap{
+			.tfhb-dashboard-heading{
+				span{
+					font-size: 15px !important;
+				}
+			}
 			margin-top: 32px;
 			.tfhb-availability-schedule-single  {
 				margin-bottom: 24px;
@@ -200,12 +207,17 @@
 					font-family: inter;
 					color: $secondary-default;
 					
-					&.active, &.active .setings-taps-dropdown-arrow, &:hover {
+					
+					&:hover {
+						background-color: $surface-primary; 
+					}
+					&.active, &.active .setings-taps-dropdown-arrow{
 						background-color: $secondary-hover;
 						color: $primary-default !important;
-					}
-					&:hover {
-						background-color: $surface-primary !important; 
+						&:hover {
+							background-color: $secondary-hover;
+							color: $primary-default !important;
+						}
 					}
 					&:focus {
 						outline: none;
@@ -226,6 +238,7 @@
 					width: 100%;
 					display: none !important;
 					visibility: hidden;
+					margin-top: 4px !important;
 					li{
 						
 						a {

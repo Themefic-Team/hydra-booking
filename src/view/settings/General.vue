@@ -18,11 +18,11 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 const generalSettings = reactive({
   admin_email: '{{wp.admin_email}}',
   time_zone: '',
-  time_format: '',
-  week_start_from: '',
+  time_format: '12',
+  week_start_from: 'Sunday',
   date_format: '',
   country: '',
-  after_booking_completed: '',
+  after_booking_completed: '10',
   booking_status: '',
   reschedule_status: '',
   allowed_reschedule_before_meeting_start: '', 
@@ -113,8 +113,11 @@ const UpdateGeneralSettings = async () => {
 
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
-    if(!isEmpty){
-        toast.error('Fill Up The Required Fields'); 
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        }); 
         return
     }
 
@@ -155,7 +158,7 @@ onBeforeMount(() => {
                 <p>{{ $tfhb_trans('Manage your time zone settings and bookings') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}  <Icon name="ArrowUpRight" size=20 /></a>
+                <a href="#" target="_blank" class="tfhb-btn tfhb-docs-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}  <Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">

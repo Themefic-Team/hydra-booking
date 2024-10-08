@@ -149,7 +149,7 @@ const FormatDate = (date) => {
                     </div>
                     
                     <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-8"
+                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
                             :class = "{
                                 'badge-down': Dashboard.data.total_bookings.growth == 'decrease',
                                 'badge-up': Dashboard.data.total_bookings.growth == 'increase',
@@ -185,7 +185,7 @@ const FormatDate = (date) => {
                     </div>
                     
                     <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-8"
+                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
                             :class = "{
                                 'badge-down': Dashboard.data.total_earning.growth == 'decrease',
                                 'badge-up': Dashboard.data.total_earning.growth == 'increase',
@@ -222,7 +222,7 @@ const FormatDate = (date) => {
                     </div>
                     
                     <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-8"
+                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
                             :class = "{
                                 'badge-down': Dashboard.data.total_completed_bookings.growth == 'decrease',
                                 'badge-up': Dashboard.data.total_completed_bookings.growth == 'increase',
@@ -258,7 +258,7 @@ const FormatDate = (date) => {
                     </div>
                     
                     <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-8"
+                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
                             :class = "{
                                 'badge-down': Dashboard.data.total_cancelled_bookings.growth == 'decrease',
                                 'badge-up': Dashboard.data.total_cancelled_bookings.growth == 'increase',
@@ -305,7 +305,8 @@ const FormatDate = (date) => {
                                         <Icon v-if="data.meeting_type != 'one-to-one'" name="UserRound" size=15 /> 
                                     </span>
 
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.payment_status}} </span>
+                                    <span v-if="data.meeting_payment_status == true"  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.meeting_price}} {{ data.payment_currency }} </span>
+                                    <span v-else  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> Free  </span>
                                     <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}} </span>
                                 </div>
                             </div> 

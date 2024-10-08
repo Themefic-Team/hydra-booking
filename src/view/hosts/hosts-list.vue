@@ -60,8 +60,8 @@ const deleteItemConfirm = () => {
             <!-- Single Hosts -->
             <div   v-for="(host, key) in host_list"  class="tfhb-single-hosts"> 
                 <div class="tfhb-single-hosts-wrap ">
-                    <span class="tfhb-hosts-status" v-if="host.status == 'activate'">{{ $tfhb_trans('Activate') }}</span> 
-                    <span class="tfhb-hosts-status tfhb-hosts-status-warning" v-else>{{ $tfhb_trans('Deactivate') }}</span>
+                    <span class="tfhb-hosts-status" v-if="host.status == 'activate'">{{ $tfhb_trans('Active') }}</span> 
+                    <span class="tfhb-hosts-status tfhb-hosts-status-warning" v-else>{{ $tfhb_trans('Disable') }}</span>
 
                     <div class="tfhb-hosts-info tfhb-flexbox">
                         <div class="hosts-avatar" >

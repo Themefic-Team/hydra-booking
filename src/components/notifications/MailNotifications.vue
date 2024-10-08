@@ -8,7 +8,7 @@ import { toast } from "vue3-toastify";
 
 
 // import Form Field 
-import HbSelect from '@/components/form-fields/HbSelect.vue'
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue';   
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
@@ -86,21 +86,25 @@ const closePopup = () => {
             </template>
 
             <template #content>
-
-                <HbSelect  
-                    v-model="data.template"   
+ 
+                <!-- Time format -->
+                <HbDropdown 
+                    
+                    v-model="data.template"  
+                    required= "true" 
                     :label="$tfhb_trans('Select Template')"  
-                    selected = "1"
-                    placeholder="Select Template"  
-                    :option = "{
-                        'default': 'Default',
-                        'default': 'Default',
-                    }"  
-                /> 
-
+                    width="50"
+                    :selected = "1"
+                    placeholder="Select Template"   
+                    :option = "[
+                        {'name': 'Default', 'value': 'default'},  
+                    ]"  
+                />
+                <!-- Time format --> 
                 <HbText  
                     v-model="props.data.from"   
-                    type="email"   
+                    type="email"
+                    width="50"
                     :label="$tfhb_trans('From')"  
                     selected = "1"
                     :placeholder="$tfhb_trans('Enter From Email')"  

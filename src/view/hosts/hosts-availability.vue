@@ -317,6 +317,11 @@ const formatTimeSlots = (timeSlots) =>  {
         
         <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-full-width">
             <div class="tfhb-swicher-wrap  tfhb-flexbox">
+                 <!-- Checkbox swicher -->
+                 <label class="switch">
+                        <input id="swicher" disabled v-model="time_slot.status" true-value="1" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
                 <label class="tfhb-schedule-swicher" for="swicher"> {{time_slot.day}}</label>
                 <!-- Swicher -->
             </div>
@@ -382,7 +387,7 @@ const formatTimeSlots = (timeSlots) =>  {
         </div> 
     </div>
 
-    <div class="tfhb-content-wrap tfhb-flexbox" v-if="'custom'==host.availability_type">
+    <div class="tfhb-content-wrap tfhb-host-availability-list-wrap tfhb-flexbox" v-if="'custom'==host.availability_type">
         <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key"  @edit-availability="EditAvailabilitySettings(key, availability.id, availability)" @delete-availability="deleteAvailabilitySettings(key, availability.id, host.user_id)" />
 
         <AvailabilityPopupSingle v-if="isModalOpened" max_width="800px !important" :timeZone="timeZone.value" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />

@@ -169,15 +169,15 @@ const Integration = reactive( {
         status: 0, 
     },
     webhook : {
-        type: 'others', 
+        type: 'marketing-tools', 
         status: 0, 
     },
     fluent_crm : {
-        type: 'others', 
+        type: 'marketing-tools', 
         status: 0, 
     },
     zoho_crm : {
-        type: 'others', 
+        type: 'marketing-tools', 
         status: 0, 
     }
 });
@@ -378,11 +378,11 @@ onBeforeMount(() => {
                 <!-- CF7 -->
 
                 <!-- Forminator -->
-                <ForminatorIntegrations 
+                <!-- <ForminatorIntegrations 
                 :forminator_data="Integration.forminator" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
-                />
+                /> -->
                 <!-- CF7 -->
 
                 <!-- gravity -->
@@ -397,7 +397,7 @@ onBeforeMount(() => {
                 <WebhookIntegrations 
                 :webhook_data="Integration.webhook" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- webhook -->
           
@@ -408,7 +408,7 @@ onBeforeMount(() => {
                 :ispopup="mailpopup"
                 @popup-open-control="ismailchimpPopupOpen"
                 @popup-close-control="ismailchimpPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Mailchimp intrigation -->
 
@@ -416,7 +416,7 @@ onBeforeMount(() => {
                 <FluentCRMIntegrations 
                 :fluent_crm_data="Integration.fluent_crm" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Fluent CRM -->
                 
@@ -424,7 +424,7 @@ onBeforeMount(() => {
                 <ZohoCRMIntegrations 
                 :zoho_crm_data="Integration.zoho_crm" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Zoho CRM -->
           

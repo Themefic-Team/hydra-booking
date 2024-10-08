@@ -41,6 +41,7 @@
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
+                    margin-bottom: 0 !important;
                     &.active{
                         border-radius: $border-radius-small;
                         background: $secondary-hover;
@@ -440,7 +441,7 @@
     table{
         width: 100%;
         border-radius: $border-radius-medium;
-        background: $surface-border;
+        background: $secondary-hover;
         thead{
             border-bottom: 1px $border-type $surface-border;
             th{

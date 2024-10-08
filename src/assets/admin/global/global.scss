@@ -160,8 +160,8 @@
             color: $success-text !important;
             background-color: $success-background;
             position: absolute;
-            right: 8px;
-            // top: 8px; 
+            right: 16px;
+            top: 16px; 
             text-transform: uppercase;
             font-weight: 600;
             gap: 4px !important;
@@ -226,6 +226,7 @@
         // opacity: 0.6 !important;
         position: relative;
         cursor: pointer;
+        z-index: 1;
         ::after {
             content: '';
             position: absolute;
@@ -236,6 +237,10 @@
             background: $surface-secondary;
             z-index: 1;
             opacity: 0.1;
+        }
+        .tfhb-integrations-single-block-btn{
+            position: relative;
+            z-index: 5 !important;
         }
     }
     
@@ -357,6 +362,7 @@
             display: inline-block;
             margin: 0;
             padding: 0;
+            padding: 0 2px;
             a {
               display: flex;
               padding: 8px 12px 8px 12px;
@@ -366,11 +372,20 @@
               border-radius: $border-radius-small;
               color: $text-input;
               font-weight: $font-weight-reguler;
+             
+              &:hover {
+                background-color: $surface-secondary;
+                transition: $transition;
+                box-shadow: 0px 1px 3px 0px rgba(16, 40, 20, 0.10), 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
+              }
               &.active {
                 background-color: $secondary-hover;
                 box-shadow: 0px 1px 2px 0px #28101a0f;
                 box-shadow: 0px 1px 3px 0px #28101a1a;
                 color: $primary-default;
+                &:hover {
+                  background-color: $secondary-hover;
+                }
               }
             }
           }
@@ -427,12 +442,13 @@
             }
             .tfhb-dropdown-single {
                 display: block; 
-                padding: 8px 12px 8px 12px;
-                border-radius: 4px 0px 0px 0px; 
+                padding: 8px 12px;
+                border-radius: 4px; 
                 background-color: $surface-secondary;
                 margin: 0 !important;
                 color: $text-paragraph;
                 font-size: 15px;
+                line-height: 24px;
                 &.tfhb-dropdown-error{
                     background-color: $error-background;
                     color: $error-text;
@@ -922,6 +938,7 @@
     .tfhb-integrations-single-block{
         position: relative;
         margin: 0;
+        padding: 16px;
         width: calc(30% - 48px);
         display: flow-root !important;
         transition: $transition;
@@ -1297,6 +1314,21 @@
   }
  
 // Tostify
+
+// Prime Vue Editor
+.p-editor-container{
+    .p-editor-toolbar{
+        span{
+            margin: 0 !important;
+        }
+    }
+    .p-editor-toolbar{
+        border: $fields-border $border-type $surface-input-field !important;
+    }
+    .p-editor-content{
+        border: $fields-border $border-type $surface-input-field !important;
+    }
+}
 
 // Pagination
 .tfhb-booking-details-pagination{

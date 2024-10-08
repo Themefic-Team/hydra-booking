@@ -168,10 +168,11 @@
         margin-left: 16px;
         padding: 24px;
         margin-top: 24px;
-        border-radius: $border-radius-large;
+        border-radius: $border-radius-xmedium;
         border: $border-reguler $surface-border;
         background: #FFF;
         margin-right: 16px;
+        min-height: 600px;
      .tfhb-meetings-list-wrap{
         
         align-items: normal !important;
@@ -198,7 +199,7 @@
                 flex-wrap: nowrap !important;
                 align-items: baseline !important;
                 
-                padding-bottom: 24px;
+                // padding-bottom: 24px;
                 .single-meeting-content{
                     width: calc(100% - 20px);
                     h3{

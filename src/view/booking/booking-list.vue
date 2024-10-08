@@ -167,8 +167,11 @@ const deleteBooking = async ($id, $host) => {
         if (response.data.status) { 
             Booking.bookings = response.data.bookings; 
             Booking.calendarbooking.events = response.data.booking_calendar;  
-            BookingEditPopup.value = false;
-            toast.success(response.data.message); 
+            BookingEditPopup.value = false; 
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            }); 
         }
     } catch (error) {
         console.log(error);

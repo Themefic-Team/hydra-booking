@@ -34,7 +34,7 @@ const editAvailability = () => {
                     <div class="tfhb-dropdown-wrap">
                         <span class="tfhb-dropdown-single" @click="editAvailability">{{ $tfhb_trans('Edit') }}</span>
                         <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
-                        <span class="tfhb-dropdown-single" @click="deleteAvailability">{{ $tfhb_trans('Delete') }}</span>
+                        <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ $tfhb_trans('Delete') }}</span>
                     </div>
                 </div>
             </div> 

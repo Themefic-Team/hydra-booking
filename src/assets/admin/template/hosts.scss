@@ -1,4 +1,6 @@
 .tfhb-admin-hosts {
+  background-color: $surface-primary;
+  min-height: 600px;
   >.tfhb-dashboard-heading {
     margin-right: 16px !important;
   }
@@ -10,6 +12,12 @@
       .tfhb-availability-popup-wrap{
         width: 100% !important;
       }
+    }
+  }
+  .tfhb-host-availability-list-wrap{
+    flex-direction: column !important;
+    .tfhb-availability-single-box{
+      width: 100% !important;
     }
   }
 
@@ -80,7 +88,7 @@
           font-weight: $font-weight-medium !important;
           font-size: $text-font-size-small !important;
           &.tfhb-hosts-status-warning {
-            background-color: $warning-background;
+            background-color: $warning-background-secondary;
             color: $warning-text !important;
           }
         }
@@ -93,11 +101,11 @@
     }
   }
   .tfhbb-host-profile-page {
-    padding: 16px;
+    padding: 16px 24px;
     background-color: $surface-secondary;
     border-radius: $border-radius-medium;
     margin: 0 auto;
-    width: 750px !important;
+    width: 710px !important;
     @media #{$max991}{
       width: calc(100% - 16px) !important;
       margin-right: 16px !important;

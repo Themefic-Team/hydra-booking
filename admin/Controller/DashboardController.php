@@ -11,6 +11,7 @@ use HydraBooking\DB\Availability;
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Transactions;
+use HydraBooking\Admin\Controller\DateTimeController;
 
 // exit
 if ( ! defined( 'ABSPATH' ) ) {
@@ -215,7 +216,7 @@ class DashboardController {
 		if ( $days == 7 ) {
 			// store label as date
 			for ( $i = 0; $i < 7; $i++ ) {
-				$statistics['label'][] = gmdate( 'Y-m-d', strtotime( '-' . $i . ' days' ) );
+				$statistics['label'][] = gmdate( 'd M, y', strtotime( '-' . $i . ' days' ) );
 			}
 			$statistics['label'] = array_reverse( $statistics['label'] );
 		}
@@ -228,7 +229,7 @@ class DashboardController {
 			// Get Current month
 
 			for ( $day = 1; $day <= $days_in_month; $day++ ) {
-				$statistics['label'][] = gmdate( 'Y-m-d', strtotime( "$currentYear-$currentMonth-$day" ) );
+				$statistics['label'][] = gmdate( 'd M, y', strtotime( "$currentYear-$currentMonth-$day" ) );
 			}
 		}
 		if ( $days == 3 ) {  // last 3 Months
@@ -246,7 +247,9 @@ class DashboardController {
 			// $statistics['label'] = array_reverse($statistics['label']);
 		}
 
-		foreach ( $statistics['label'] as $key => $value ) {
+		$dateTime = new DateTimeController('UTC');
+		foreach ( $statistics['label'] as $key => $value ) { 
+	 
 			// $date = $value;
 			// $next_date = $key != 0 ? $statistics['label'][$key - 1] : $current_date;
 			if ( $days == 12 || $days == 3 ) {
@@ -254,10 +257,11 @@ class DashboardController {
 				$next_date = gmdate( 'Y-m-d', strtotime( 'last day of ' . $value ) );
 			}
 			if ( $days == 30 || $days == 7 ) { // value is a date exp 2021-09-01
-				$date      = $value;
-				$next_date = $value;
-			}
 
+				$value = $dateTime->convertDateTimeFormat( $value, 'd M, y', 'Y-m-d' ); 
+				$date      =  $value;
+				$next_date =  $value;
+			} 
 			$bookings                           = $booking->get(
 				"created_at BETWEEN '$date 00:00:00' AND '$next_date 23:59:59'",
 				false,

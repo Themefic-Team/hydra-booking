@@ -118,9 +118,9 @@ const Dashboard = reactive({
                     data: this.data.statistics.total_booked,
                     fill: true,
                     tension: 0.4,
-                    borderColor: '$primary-default', 
-                    pointBackgroundColor: '$primary-default', 
-                    backgroundColor: '#D9568F15'
+                    borderColor: '#2E6B38', 
+                    pointBackgroundColor: '#2E6B38', 
+                    backgroundColor: '#2E6B3815'
                 },
                 {
                     label: 'Canceled',
@@ -128,18 +128,20 @@ const Dashboard = reactive({
                     fill: true,
                     // borderDash: [5, 5],
                     tension: 0.4,
-                    borderColor: '#C40859',
-                    pointBackgroundColor: '#C40859', 
-                    backgroundColor: '#C4085915'
+                    borderColor: '#AC0C22',
+                    pointBackgroundColor: '#AC0C22', 
+                    backgroundColor: '#AC0C2215'
                 },
                 {
                     label: 'Completed',
                     data: this.data.statistics.total_completed,
                     fill: true,
-                    borderColor: '#5E082D',
-                    pointBackgroundColor: '#5E082D', 
+                    borderColor: '#4C9959',
+                    pointBackgroundColor: '#4C9959', 
                     tension: 0.4,
-                    backgroundColor: '#5E082D15'
+                    backgroundColor: '#4C995915', 
+                    // Pointer height and width
+
                 }
             ]
         };

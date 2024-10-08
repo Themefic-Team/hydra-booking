@@ -26,7 +26,8 @@ import Icon from '@/components/icon/LucideIcon.vue'
 
                             <li><router-link to="/settings/integrations#payments" :class="{ 'active': $route.hash === '#payments' }" class="integrations-submenu" data-filter="payments"> <Icon name="HandCoins" /> {{ $tfhb_trans('Payments') }}</router-link></li> 
 
-                            <li><router-link to="/settings/integrations#others" :class="{ 'active': $route.hash === '#others' }" class="integrations-submenu" data-filter="others"> <Icon name="Unplug" /> {{ $tfhb_trans('Others') }}</router-link></li> 
+                            <li><router-link to="/settings/integrations#marketing-tools" :class="{ 'active': $route.hash === '#marketing-tools' }" class="integrations-submenu" data-filter="marketing-tools"> <Icon name="BadgePercent" /> {{ $tfhb_trans('Marketing Tools') }}</router-link></li> 
+                            <li><router-link to="/settings/integrations#forms" :class="{ 'active': $route.hash === '#forms' }" class="integrations-submenu" data-filter="forms"> <Icon name="BookText" /> {{ $tfhb_trans('Forms') }}</router-link></li> 
 
                         </ul>
                     </li>

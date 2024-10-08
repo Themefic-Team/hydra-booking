@@ -45,7 +45,7 @@ const closePopup = () => {
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
-        <div v-lese class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox">
             <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
                 <!-- Checkbox swicher -->
 
