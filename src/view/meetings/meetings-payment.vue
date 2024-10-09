@@ -4,6 +4,7 @@ import HbSwitch from '@/components/form-fields/HbSwitch.vue'
 
 // component
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import { Meeting } from '@/store/meetings'
 
 
@@ -106,7 +107,14 @@ onBeforeMount(() => {
 
         </div> 
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting')">{{ $tfhb_trans('Save & Preview') }} </button>
+            <HbButton  
+            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+            @click="emit('update-meeting')"
+            :buttonText="$tfhb_trans('Save & Preview')"
+            icon="ChevronRight" 
+            hover_icon="ArrowRight" 
+            :hover_animation="true"
+        />  
         </div>
         <!--Bookings -->
     </div>

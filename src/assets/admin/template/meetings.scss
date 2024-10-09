@@ -236,9 +236,9 @@
                                     .booked-items{
                                         border-radius: $border-radius-large;
                                         background: $secondary-hover;
-                                        padding: 4px 8px;
+                                        padding: 4px 12px;
                                         box-sizing: border-box;
-                                        width: 114px;
+                                        // width: 114px;
                                         .user-info-icon{
                                             svg{
                                                 color: $primary-default;
@@ -274,7 +274,7 @@
                     color: $secondary-default;
                     font-size: $text-font-size;
                     
-                    font-weight: $font-weight-reguler;
+                    font-weight: $font-weight-bold;
                     line-height: 20px; /* 153.846% */
                     gap: 8px !important;
                     transition: .3s all ease;
@@ -300,37 +300,43 @@
             margin-right: 16px !important;
             margin-left: 16px !important;
         }
-        .tfhb-meeting-create-notice{
-            .tfhb-meeting-heading{
-                justify-content: normal !important;
-                gap: 2px !important;
-                .prev-navigator{
-                    
-                    svg{
-                        transition: 0.2s;
-                        cursor: pointer;
-                    }
-                    &:hover{
+        .tfhb-meeting-create-notice{ 
+            .tfhb-meeting-heading-wrap{
+                width: calc(100% - 100px);
+                .tfhb-meeting-heading{
+                    justify-content: normal !important;
+                    gap: 2px !important;
+    
+                    width: calc(100% - 40px); 
+                    .prev-navigator{
+                        
                         svg{
-                            color: $primary-default;
+                            transition: 0.2s;
+                            cursor: pointer;
+                        }
+                        &:hover{
+                            svg{
+                                color: $primary-default;
+                            }
                         }
                     }
+                    h3{
+                        font-size: $heading-font-size-medium;
+                        
+                        line-height: 150%; /* 25.5px */
+                        margin: 0px !important;
+                    }
                 }
-                h3{
-                    font-size: $heading-font-size-medium;
+                .tfhb-meeting-subtitle{
+                    color: $secondary-default;
+                    font-size: $text-font-size;
                     
-                    line-height: 150%; /* 25.5px */
-                    margin: 0px !important;
+                    font-weight: $font-weight-reguler;
+                    line-height: 20px; /* 153.846% */
+                    padding-left: 22px;
                 }
             }
-            .tfhb-meeting-subtitle{
-                color: $secondary-default;
-                font-size: $text-font-size;
-                
-                font-weight: $font-weight-reguler;
-                line-height: 20px; /* 153.846% */
-                padding-left: 22px;
-            }
+            
         }
         .meeting-create-details{
             display: flex;

@@ -86,6 +86,9 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 						continue;
 					}
 
+					if($question['type'] == 'phone'){
+						$question['type'] ='tel';
+					}
 					$required_star = $question['required'] == 1 ? '*' : '';
 					$required      = $question['required'] == 1 ? 'required' : '';
 
@@ -95,7 +98,7 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 
 						echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>';
 						foreach ( $question['options'] as $option ) {
-							echo '<option value="' . esc_attr($option['value']) . '">' . esc_attr($option['label']) . '</option>';
+							echo '<option value="' . esc_attr($option) . '">' . esc_attr($option) . '</option>';
 						}
 						echo '</select>';
 

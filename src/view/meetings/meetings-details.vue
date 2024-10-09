@@ -118,13 +118,10 @@ const closePopup = () => {
         /> 
         <HbTextarea  
             v-model="meeting.description" 
-            required= "true"  
+            required= "false"  
             name="description"
             :label="$tfhb_trans('Description')"  
-            :placeholder="$tfhb_trans('Describe about meeting')"
-            @keyup="() => tfhbValidateInput('description')"
-            @click="() => tfhbValidateInput('description')"
-            :errors="errors.description"
+            :placeholder="$tfhb_trans('Describe about meeting')" 
         /> 
 
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-16 tfhb-m-0 tfhb-full-width"> 
@@ -222,10 +219,11 @@ const closePopup = () => {
                 </div>
             </div>
             <div class="tfhb-add-new-question">
-                <div class="new-location tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" @click="emit('add-more-location')">
+             
+                <button @click="emit('add-more-location')" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                     <Icon name="PlusCircle" :width="20"/>
                     {{ $tfhb_trans('Add Another Location') }}
-                </div>
+                </button> 
             </div>
         </div>
 
@@ -271,7 +269,7 @@ const closePopup = () => {
             
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                @click="emit('update-meeting', ['title', 'description', 'duration'])"
+                @click="emit('update-meeting', ['title',  'duration'])"
                 :buttonText="$tfhb_trans('Save & Continue')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 

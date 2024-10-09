@@ -131,15 +131,15 @@ const meetingData = reactive({
         date_slots: [
         ]
     },
-    buffer_time_before: '',
-    buffer_time_after: '',
+    buffer_time_before: '5',
+    buffer_time_after: '5',
     booking_frequency: [
         {
             limit: 5,
             times:'days'
         }
     ],
-    meeting_interval: '',
+    meeting_interval: '10',
     recurring_status: 1,
     recurring_repeat:[
         {
@@ -327,7 +327,7 @@ const AvailabilityTabs = (type) => {
 
 const meetingId = route.params.id;
 
- const fetchMeeting = async () => {
+const fetchMeeting = async () => {
     try { 
         const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/'+meetingId, {
             headers: {
@@ -604,13 +604,14 @@ const sharePopupData = () => {
 <template>
     <div class="tfhb-meeting-create" :class="{ 'tfhb-skeleton': skeleton }">
         <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
-            <div class="tfhb-meeting-heading-wrap">
-                <div class="tfhb-meeting-heading tfhb-flexbox">
-                    <div class="prev-navigator" @click="TfhbPrevNavigator()">
+            <div class="tfhb-meeting-heading-wrap tfhb-flexbox tfhb-gap-8">
+                <div class="prev-navigator" @click="TfhbPrevNavigator()">
                         <Icon name="ArrowLeft" size=20 /> 
-                    </div>
-                    <h3 v-if="meetingData.title != ''">{{ meetingData.title }}</h3>
-                    <h3 v-else >{{ $tfhb_trans('Create One-to-One booking type') }}</h3>
+                </div>
+                <div class="tfhb-meeting-heading tfhb-flexbox">
+                  
+                    <h3 v-if="meetingData.title != '' && meetingData.title != null">{{ meetingData.title }}</h3>
+                    <h3 v-else >{{ $tfhb_trans('Create One-to-One booking') }}</h3>
                 </div> 
                 <!-- <div  class="tfhb-meeting-subtitle">
                     {{ $tfhb_trans('Create and manage booking/appointment form') }}
@@ -638,7 +639,7 @@ const sharePopupData = () => {
             </ul>  
         </nav>
 
-        <div class="tfhb-hydra-dasboard-content">  
+        <div class="tfhb-hydra-dasboard-content">   
             <router-view 
             :meetingId ="meetingId" 
             :meeting="meetingData" 

@@ -51,10 +51,10 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		}
 		?>
 	</div>  
-	<div class="tfhb-host-info" style="background: linear-gradient(181deg, rgba(252, 169, 185, 0.00) 1.18%, rgba(89, 1, 39, 0.70) 98.83%), url(<?php echo esc_url(THB_URL . 'assets/app/images/meeting-cover.png'); ?>) lightgray 50% / cover no-repeat;">
+	<div class="tfhb-host-info" style="background: linear-gradient(181deg, rgba(19, 25, 20, 0.00) 1.18%, rgba(19, 25, 20, 0.50) 98.83%), url(<?php echo esc_url(THB_URL . 'assets/app/images/meeting-cover.png'); ?>) lightgray 50% / cover no-repeat; ?>) lightgray 50% / cover no-repeat;">
 		<div class="tfhb-host-profile tfhb-flexbox tfhb-gap-8">
-			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : ''; ?>
-				  
+			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : '<img src="' . THB_URL.'assets/images/avator.png' . '" alt="">'; ?>
+			
 			<div class="tfhb-host-name">
 				<?php echo ! empty( $host['first_name'] ) ? '<h3>' . esc_html( $host['first_name'] ) . '  ' . esc_html( $host['last_name'] ) . '</h3>' : ''; ?>
 				<?php echo ! empty( $host['about'] ) ? '<p>' . esc_html( $host['about'] ) . '</p>' : ''; ?>
@@ -107,7 +107,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 			if ( ! empty( $meeting['meeting_locations'] ) ) {
 				foreach ( $meeting['meeting_locations'] as $key => $location ) { 
 					 if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
-						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.png').'" alt="Phone">';
+						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';
 					 }elseif($location['location'] == 'zoom'){
 						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
 					 }elseif($location['location'] == 'meet'){

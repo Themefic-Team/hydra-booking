@@ -11,8 +11,8 @@ import { Host } from '@/store/hosts'
 import { Meeting } from '@/store/meetings'
 
 const FilterPreview = ref(false);
-const FilterHostPreview = ref(false);
-const FilterCatgoryPreview = ref(false);
+const FilterHostPreview = ref(true);
+const FilterCatgoryPreview = ref(true);
 const isModalOpened = ref(false);
 
 const deletePopup = ref(false)
@@ -326,12 +326,14 @@ window.addEventListener('click', function(e) {
                                     </div>
                                 </li>
                                 <li class="tfhb-booked-items">
-                                    <div class="tfhb-flexbox booked-items">
-                                        <div class="user-info-icon">
-                                            <Icon name="CalendarCheck" size=16 /> 
-                                        </div>
-                                        <div class="user-info-title">
-                                            {{smeeting.total_booking}} Booked
+                                    <div class="tfhb-flexbox ">
+                                        <div class="booked-items tfhb-flexbox "> 
+                                            <div class="user-info-icon">
+                                                <Icon name="CalendarCheck" size=16 /> 
+                                            </div>
+                                            <div class="user-info-title">
+                                                {{smeeting.total_booking}} Booked
+                                            </div>
                                         </div>
                                     </div>
                                 </li>

@@ -95,7 +95,7 @@ const removeExtraFrequency = (key) => {
                 :label="$tfhb_trans('Meeting interval')"   
                 width="32.5"
                 selected = "1"
-                :placeholder="$tfhb_trans('default meeting length')"
+                :placeholder="$tfhb_trans('Default interval')"
                 :option = "[
                     {name: '5 Minutes', value: '5'},  
                     {name: '10 Minutes', value: '10'},  
@@ -126,11 +126,14 @@ const removeExtraFrequency = (key) => {
         </div>  
 
         <div v-if="$tfhb_is_pro == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
-            <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
+            <div class=" tfhb-pro">
+                <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                 Recurring Event
-                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
-            </h2> 
-            <p>Set up a repeating schedule</p> 
+                    <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+                </h2> 
+                <!-- <p>Set up a repeating schedule</p>  -->
+            </div> 
+           
         </div>
         <div v-else class="tfhb-admin-title tfhb-full-width tfhb-m-0">
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">

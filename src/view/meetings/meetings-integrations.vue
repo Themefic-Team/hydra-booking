@@ -32,28 +32,34 @@ onBeforeMount(() => {
 <!-- {{ integrationsData.bodys  }} -->
 <div class="meeting-create-details tfhb-gap-24"> 
     <!-- Integrations  -->
-     <Integrations :IntegrationsValue="IntegrationsValue" :meeting="meeting" />
+    <div class="tfhb-meeting-integrations-wrap tfhb-full-width ">
 
+        <Integrations :IntegrationsValue="IntegrationsValue" :meeting="meeting" />
+
+    </div>
 
      <!-- WebHook -->
-     <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width tfhb-pro">
-        <div class="tfhb-admin-title tfhb-m-0">
-            <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                {{ $tfhb_trans('Webhook Integration ') }}
-                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
-            </h2> 
-            <h2></h2> 
-            <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
+     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro">
+        <div class="tfhb-webhook-title tfhb-flexbox">
+            <div class="tfhb-admin-title tfhb-m-0">
+                <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
+                    {{ $tfhb_trans('Webhook Integration ') }}
+                    <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+                </h2> 
+                <h2></h2> 
+                <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
+            </div>
         </div>
-    </div>
-    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width tfhb-pro">
-        <div class="tfhb-integration-box">
-            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8">
-                <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans('Add New Integrations') }}
-            </button>  
-        </div> 
-    </div>
+        <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width tfhb-pro">
+            <div class="tfhb-integration-box">
+                <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8">
+                    <Icon name="PlusCircle" :width="20"/>
+                    {{ $tfhb_trans('Add New Integrations') }}
+                </button>  
+            </div> 
+        </div>
+     </div>
+    
      <!-- WebHook -->
 
      <div class="tfhb-submission-btn"> 
