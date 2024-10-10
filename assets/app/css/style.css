@@ -235,6 +235,7 @@
   width: 536px;
   z-index: 99;
   background-color: #fff;
+  min-height: 100%;
 }
 @media only screen and (max-width: 1170px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar {
@@ -453,6 +454,7 @@
   left: -50%;
   opacity: 1;
   z-index: 8;
+  min-height: 100%;
 }
 @media only screen and (max-width: 1170px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times {
@@ -846,7 +848,7 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action button, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action a, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action button, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action a {
   border-radius: 8px;
-  border: 1px solid #EEF6F0;
+  border: 1px solid #C0D8C4;
   background: #FFFFFF;
   padding: 8px 24px;
   width: 158px;

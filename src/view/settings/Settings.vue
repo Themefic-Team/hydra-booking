@@ -1,12 +1,14 @@
 <script setup>
 import { RouterView } from 'vue-router' 
-import Icon from '@/components/icon/LucideIcon.vue'
-
+import Icon from '@/components/icon/LucideIcon.vue';
+import { Notification } from '@/store/notification';
+import Header from '@/components/Header.vue';
 </script>
 
 <template>
     <!-- {{ tfhbClass }} -->
     <div class="tfhb-hydra-dasboard">
+        <Header title="Meetings" :notifications="Notification.Data" />
         <div class="tfhb-hydra-wrap ">    
             <nav class="tfhb-hydra-admin-tabs tfhb-hydra-settings">  
                 <ul>

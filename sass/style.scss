@@ -253,6 +253,7 @@
             width: 536px;
             z-index: 99;
             background-color: #fff;
+            min-height: 100%;
             @media #{$max1170}{
                 padding: 0 16px 16px 0;
             }
@@ -471,6 +472,7 @@
             left: -50%;
             opacity: 1;
             z-index: 8;
+            min-height: 100%;
             @media #{$max1170}{
                 padding: 0 0 16px 0;
                 width: auto !important;
@@ -852,7 +854,7 @@
                 margin-top: 24px;
                 button, a{
                     border-radius: 8px;
-                    border: 1px solid $surface-border;
+                    border: 1px solid $surface-background;
                     background: $surface-secondary;
                     padding: 8px 24px;
                     width: 158px;

@@ -308,11 +308,11 @@ onBeforeMount(() => {
                 <div class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
                     <span>All Integrations </span>  <Icon name="ChevronDown" size=20 /> 
                     <div class="tfhb-dropdown-wrap"> 
-                        <span @click="selectedFilterIntegrations" data-filter="all"> All Integrations</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="conference"> Conference</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="calendars"> Calendars</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="payments"> Payments</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="forms"> Froms</span>
+                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> All Integrations</span>
+                        <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> Conference</span>
+                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> Calendars</span>
+                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="payments"> Payments</span>
+                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms"> Froms</span>
                     </div>
                 </div>
                 <div class="tfhb-integrations-searchbar">

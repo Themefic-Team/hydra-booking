@@ -95,7 +95,7 @@
             // width: 90%;
             // padding: 64px 30px;
             .cartbox-text {
-                max-width: 180px !important;
+                max-width: 179px !important;
             }
         }
 
@@ -187,8 +187,7 @@
                     // max-width: 100% !important;
                     // width: 100% !important;
                     width: 100% !important; 
-                    border-radius: 8px;
-                    border: 1px solid $surface-border;
+                    border-radius: 8px; 
                     background: $surface-secondary;
                     box-shadow: none !important;
                     
@@ -218,6 +217,8 @@
         border-radius: 16px;
         // border: 1px solid $surface-border !important;
         background: $surface-secondary !important;
+        min-height: auto !important;
+        width: 500px;
         .tfhb-single-meeting {
             padding: 24px !important;
             width: 100% !important;
@@ -313,16 +314,17 @@
                 font-weight: $font-weight-medium !important;
             }
             .tfhb-dropdown-wrap {
-                background-color: $surface-secondary !important;
+                width: 180px !important;
+                // background-color: $surface-secondary !important;
 
                 &.active {
                     left: 0;
                     top: 100%;
                 }
 
-                span {
-                    padding: 4px 8px;
-                }
+                // span {
+                //     padding: 4px 8px;
+                // }
             }
         }
     }

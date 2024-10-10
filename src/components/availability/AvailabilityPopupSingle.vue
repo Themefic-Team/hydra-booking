@@ -22,6 +22,7 @@ const props = defineProps({
   timeZone: {}, 
   is_host: Boolean,
   max_width: String,
+  display_overwrite: Boolean,
 });
 const emit = defineEmits(["update:availabilityData", "modal-close", "update-availability"]); 
 
@@ -279,34 +280,36 @@ const tfhbValidateInput = (fieldName) => {
 
         <template #content>   
             <div class=" tfhb-availability-popup-wrap">
-                <div class="tfhb-content-wrap tfhb-flexbox"> 
-                    <!-- Title -->
-                    <HbText  
-                        v-model="props.availabilityDataSingle.title"  
-                        required= "true"  
-                        :label="$tfhb_trans('Title')"  
-                        selected = "1"
-                        placeholder="Type your schedule title"   
-                        @keyup="() => tfhbValidateInput('title')"
-                        @click="() => tfhbValidateInput('title')"
-                        :errors="errors.title"
-                    /> 
-                    <!-- Title -->
-                    <!-- Time Zone -->
-                    <HbDropdown 
-                            
-                        v-model="props.availabilityDataSingle.time_zone"  
-                        required= "true"  
-                        :label="$tfhb_trans('Time zone')"  
-                        selected = "1"
-                        :filter="true"
-                        placeholder="Select Time Zone"  
-                        :option = "props.timeZone" 
-                        @add-change="tfhbValidateInput('time_zone')" 
-                        @add-click="tfhbValidateInput('time_zone')" 
-                        :errors="errors.time_zone"
-                    /> 
-                    <!-- Time Zone --> 
+                <div class="tfhb-content-wrap "> 
+                    <div class="tfhb-admin-card-box tfhb-flexbox">  
+                        <!-- Title -->
+                        <HbText  
+                            v-model="props.availabilityDataSingle.title"  
+                            required= "true"  
+                            :label="$tfhb_trans('Title')"  
+                            selected = "1"
+                            placeholder="Type your schedule title"   
+                            @keyup="() => tfhbValidateInput('title')"
+                            @click="() => tfhbValidateInput('title')"
+                            :errors="errors.title"
+                        /> 
+                        <!-- Title -->
+                        <!-- Time Zone -->
+                        <HbDropdown 
+                                
+                            v-model="props.availabilityDataSingle.time_zone"  
+                            required= "true"  
+                            :label="$tfhb_trans('Time zone')"  
+                            selected = "1"
+                            :filter="true"
+                            placeholder="Select Time Zone"  
+                            :option = "props.timeZone" 
+                            @add-change="tfhbValidateInput('time_zone')" 
+                            @add-click="tfhbValidateInput('time_zone')" 
+                            :errors="errors.time_zone"
+                        /> 
+                        <!-- Time Zone --> 
+                    </div>
                 </div>
                 <div class="tfhb-content-wrap tfhb-availability-content-wrap">  
 
@@ -372,7 +375,7 @@ const tfhbValidateInput = (fieldName) => {
                         
 
                         <!-- Date Overrides -->
-                        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox">  
+                        <div v-if="props.display_overwrite == true" class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox">  
 
                             <div  class="tfhb-dashboard-heading tfhb-overrides-heading tfhb-full-width" :style="{margin: '0 !important'}">
                                 <div class="tfhb-admin-title"> 

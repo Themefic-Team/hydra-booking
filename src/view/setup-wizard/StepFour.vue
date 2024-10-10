@@ -96,7 +96,7 @@ const copyMeeting = (link) => {
             <div class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
 
                 <!-- Single Meeting -->
-                <div class="tfhb-single-meeting"> 
+                <div class="tfhb-single-meeting  tfhb-flexbox"> 
                     <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox">
                         <div class="single-meeting-content">
                             <h3> {{ setupWizard.data.meeting ? setupWizard.data.meeting.title : 'No Title' }} </h3>
@@ -158,12 +158,14 @@ const copyMeeting = (link) => {
                                         </div>
                                     </li>
                                     <li class="tfhb-booked-items">
-                                        <div class="tfhb-flexbox booked-items">
-                                            <div class="user-info-icon">
-                                                <Icon name="CalendarCheck" size=16 /> 
-                                            </div>
-                                            <div class="user-info-title">
-                                                {{ setupWizard.data.meeting.total_booking }} Booked
+                                        <div class="tfhb-flexbox ">
+                                            <div class="booked-items tfhb-flexbox "> 
+                                                <div class="user-info-icon">
+                                                    <Icon name="CalendarCheck" size=16 /> 
+                                                </div>
+                                                <div class="user-info-title">
+                                                    {{setupWizard.data.meeting.total_booking}} Booked
+                                                </div>
                                             </div>
                                         </div>
                                     </li>

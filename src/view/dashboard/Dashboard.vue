@@ -287,7 +287,7 @@ const FormatDate = (date) => {
 
                     <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Recent Bookings') }}</h3>
                     <!-- Single Notice Box -->
-                    <div v-if="Dashboard.data.recent_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16 tfhb-full-width">
+                    <div v-if="Dashboard.data.recent_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-flexbox tfhb-gap-16 tfhb-full-width">
                         <div
                             v-for="(data, index) in Dashboard.data.recent_booking"
                                 :key="index" 

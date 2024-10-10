@@ -197,6 +197,55 @@
  
  			$(document).on('click', '.tfhb-available-times li .next', function (e) {  
 				
+				var time_zone = $this.find('#attendee_time_zone').val();
+				var meeting_dates = $this.find("#meeting_dates").val();
+				var meeting_time_start = $this.find("#meeting_time_start").val();
+				var meeting_time_end = $this.find("#meeting_time_end").val(); 
+
+				var thimeZone_html = `<li class="tfhb-flexbox tfhb_time_zone_info tfhb-gap-8">
+						<input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
+						<div class="tfhb-icon">  
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<g clip-path="url(#clip0_1840_26071)">
+									<path d="M8.00065 14.6667C11.6825 14.6667 14.6673 11.6819 14.6673 8.00001C14.6673 4.31811 11.6825 1.33334 8.00065 1.33334C4.31875 1.33334 1.33398 4.31811 1.33398 8.00001C1.33398 11.6819 4.31875 14.6667 8.00065 14.6667Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M8.00065 1.33334C6.28881 3.13078 5.33398 5.51784 5.33398 8.00001C5.33398 10.4822 6.28881 12.8692 8.00065 14.6667C9.71249 12.8692 10.6673 10.4822 10.6673 8.00001C10.6673 5.51784 9.71249 3.13078 8.00065 1.33334Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M1.33398 8H14.6673" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									</g>
+									<defs>
+									<clipPath id="clip0_1840_26071">
+									<rect width="16" height="16" fill="white"/>
+									</clipPath>
+									</defs>
+							</svg>
+						</div> 
+						<div>
+							`+time_zone+`(`+meeting_time_start+`)
+						</div>
+					</li>`;
+					// date time format like that  9:00pm, Saturday, April 25
+				var date_time = new Date(meeting_dates);
+				var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+				
+				var date_time_html = `<li class="tfhb-flexbox tfhb_date_time_info tfhb-gap-8">
+						<input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
+						<div class="tfhb-icon">  
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M5.33398 1.33334V4.00001" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M10.666 1.33334V4.00001" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M12.6667 2.66666H3.33333C2.59695 2.66666 2 3.26361 2 3.99999V13.3333C2 14.0697 2.59695 14.6667 3.33333 14.6667H12.6667C13.403 14.6667 14 14.0697 14 13.3333V3.99999C14 3.26361 13.403 2.66666 12.6667 2.66666Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M2 6.66666H14" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M6 10.6667L7.33333 12L10 9.33334" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</div> 
+						<div>
+							`
+							+date_time.toLocaleDateString('en-US', options)+
+							`
+						</div>
+					</li>`;
+
+					$this.find('.tfhb-meeting-details ul').append(thimeZone_html);
+					$this.find('.tfhb-meeting-details ul').append(date_time_html);
 
 				// Your code here 
 				$this.find('.tfhb-timezone').hide();
@@ -257,6 +306,9 @@
 					$this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", width: 224}, 400, 
 					function() {
 						$(this).css("opacity", "1");
+
+						$this.find('.tfhb-meeting-details ul .tfhb_time_zone_info').remove();
+						$this.find('.tfhb-meeting-details ul .tfhb_date_time_info').remove();
 					});
 					
 				});
@@ -779,6 +831,8 @@
 			 
  
 			var selected_date = $this_li.attr('data-date'); 
+			// Selectedate date format Saturday, 11 April 
+			selected_date = new Date(selected_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 			var data_available = $this_li.attr('data-available'); 
 			//  input radio data name tfhb_time_format
 			var time_format = $this.find('input[name="tfhb_time_format"]:checked').val();  

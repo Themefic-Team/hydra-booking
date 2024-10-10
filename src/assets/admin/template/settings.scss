@@ -19,10 +19,10 @@
 		&.tfhb-flexbox{
 			justify-content: normal;
 		}
-		
+		flex-direction: row;
 
 		.tfhb-availability-single-box{
-			width: calc(50% - 12px);
+			width: 100%;
 			@media #{$max991}{
 				width: 100% !important;
 			}
