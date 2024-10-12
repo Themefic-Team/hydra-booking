@@ -14,8 +14,30 @@ defined( 'ABSPATH' ) || exit;
  */
 
 $meeting          = isset( $args['meeting'] ) ? $args['meeting'] : array();
+$host 		   = isset( $args['host'] ) ? $args['host'] : array();
 $general_settings = isset( $args['general_settings'] ) ? $args['general_settings'] : array();
 $time_format      = isset( $general_settings['time_format'] ) && ! empty( $general_settings['time_format'] ) ? $general_settings['time_format'] : '12';
+use HydraBooking\Admin\Controller\DateTimeController;
+
+
+// Selecte suld be current date 
+$selected_date        = gmdate( 'Y-m-d' );
+$meeting_id           = isset($meeting['id']) ? $meeting['id'] : 0;
+
+$selected_timezone = $meeting['availability_custom']['time_zone'];
+if ( 'settings' === $meeting['availability_type'] ) {
+	$_tfhb_availability_settings = get_user_meta( $meeting['host_id'], '_tfhb_host', true );
+	if ( in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
+	}
+}
+$selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
+
+
+$date_time = new DateTimeController( $selected_timezone );
+$data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_timezone, $time_format );
+
+// tfhb_print_r($data);
 ?> 
 <div class="tfhb-meeting-times">
 
@@ -44,7 +66,19 @@ $time_format      = isset( $general_settings['time_format'] ) && ! empty( $gener
 
 	<div class="tfhb-available-times">
 		<ul>
-			<!-- <li class="tfhb-flexbox"> <span class="time">09:00 AM</span> </li> -->
+			<?php
+			if ( ! empty( $data ) ) {
+				foreach ( $data as $time ) {
+					?>
+					<li class="tfhb-flexbox"> <span class="time" data-time-start="<?php echo esc_attr($time['start']) ?>" data-time-end="<?php echo esc_attr($time['end']) ?>"><?php echo esc_attr($time['start']) ?></span> </li>
+					<?php
+				}
+			}else{
+				?>
+				<li class="tfhb-flexbox"><?php echo esc_html( __( 'No time slots are currently available.', 'hydra-booking' ) ); ?> </li>
+				<?php
+			}
+			?>
 			
 		</ul>
 	</div>

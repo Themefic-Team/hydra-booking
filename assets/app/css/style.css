@@ -557,6 +557,20 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times {
   position: relative;
 }
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times.inactive, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times.inactive {
+  position: relative !important;
+  z-index: 1;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times.inactive::before, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times.inactive::before {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  content: "";
+  background-color: #fff;
+  z-index: 3;
+  opacity: 0.3;
+  cursor: wait;
+}
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul {
   margin: 0;
   padding: 0;

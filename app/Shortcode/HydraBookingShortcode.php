@@ -165,6 +165,7 @@ class HydraBookingShortcode {
 								false,
 								array(
 									'meeting'          => $meta_data,
+									'host'         => $host_meta,
 									'general_settings' => $general_settings,
 								)
 							);
@@ -549,7 +550,7 @@ class HydraBookingShortcode {
 		$booking = new Booking();
 
 		// Booking Frequency
-		$current_user_booking = $booking->get( array( 'meeting_id' => $data['meeting_id'] ) );
+		$current_user_booking = $booking->get( array( 'meeting_id' => $data['meeting_id'], 'meeting_dates' => $data['meeting_dates'] ) );
 		if ( $current_user_booking ) {
 			$this->tfhb_checked_booking_frequency_limit( $current_user_booking, $meta_data,);
 		}

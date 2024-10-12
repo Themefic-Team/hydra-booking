@@ -80,8 +80,9 @@ class DateTimeController extends \DateTimeZone {
 		$selected_time_format = isset( $selected_time_format ) ? sanitize_text_field( $selected_time_format ) : '12';
 
 		$meeting      = new Meeting();
+		
 		$MeetingsData = $meeting->get( $meeting_id );
-
+		
 		// Meeting Information
 		$data = get_post_meta( $MeetingsData->post_id, '__tfhb_meeting_opt', true );
 
@@ -130,8 +131,10 @@ class DateTimeController extends \DateTimeZone {
 			array(
 				'meeting_id'    => $meeting_id,
 				'meeting_dates' => $selected_date,
-			)
+			),
+			true // Return as array,
 		);
+		
 
 		$disabled_times = array();
 		foreach ( $bookings as $booking ) {

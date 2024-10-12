@@ -561,6 +561,21 @@
             }
             .tfhb-available-times{
                 position: relative;
+
+                &.inactive {
+                    position: relative !important;
+                    z-index: 1;
+                    &::before {
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        content: '';
+                        background-color: #fff;
+                        z-index: 3;
+                        opacity: 0.3;
+                        cursor: wait;
+                    }
+                }
                 ul{
                     margin: 0;
                     padding: 0;

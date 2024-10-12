@@ -164,7 +164,7 @@ class Booking {
 				);
 			} else {
 				$data = $wpdb->get_results(
-					$wpdb->prepare( $sql )
+					$sql 
 				);
 			}
 
