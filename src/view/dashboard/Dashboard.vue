@@ -326,7 +326,7 @@ const FormatDate = (date) => {
                 <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
                     <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Upcoming Meetings') }}</h3>
 
-                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-flexbox tfhb-gap-16 tfhb-full-width" >
+                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-flexbox tfhb-gap-16 tfhb-full-width" >
                         <!-- Single Notice Box -->
                         <div 
                             v-for="(data, index) in Dashboard.data.upcoming_booking"

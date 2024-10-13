@@ -69,14 +69,14 @@ window.addEventListener('click', function(e) {
             <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size=24 /> </span>
 
             <transition name="tfhb-dropdown-transition">
-                <div v-show="displayNotification" class="tfhb-dropdown-wrap active">   <!-- active class-->
+                <div v-show="displayNotification" class="tfhb-dropdown-wrap  active">   <!-- active class-->
                     <div class="tfhb-flexbox">
                         <h3>{{ $tfhb_trans('Notifications') }}</h3>
                         <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</a> -->
                         <!-- {{ notifications }} -->
                     </div>
 
-                    <div class="tfhb-notification-wrap">
+                    <div class="tfhb-notification-wrap tfhb-scrollbar">
                         
                         <!-- Single Notifaction wrap -->
                         <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16">

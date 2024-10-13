@@ -1,3 +1,6 @@
+.tfhb-meeting-box input, .tfhb-booking-cencel input {
+  box-sizing: border-box;
+}
 .tfhb-meeting-box .tfhb-reschedule-box, .tfhb-booking-cencel .tfhb-reschedule-box {
   margin-bottom: 25px;
   text-align: center;
@@ -579,7 +582,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  overflow-y: auto;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li {
   gap: 12px;
@@ -893,6 +895,34 @@
 }
 .tfhb-booking-cencel .tfhb-meeting-card {
   margin: 0 auto;
+}
+
+.tfhb-scrollbar {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #273F2B #F3F6F4;
+  padding-right: 10px;
+  /* For Chrome, Edge, and Safari */
+  /* For Firefox */
+  /* Optional: To target specific elements */
+}
+.tfhb-scrollbar ::-webkit-scrollbar {
+  width: 4px;
+}
+.tfhb-scrollbar ::-webkit-scrollbar-track {
+  background: #F3F6F4;
+}
+.tfhb-scrollbar ::-webkit-scrollbar-thumb {
+  background-color: #273F2B;
+  border-radius: 10px;
+  border: 3px solid #F3F6F4;
+}
+.tfhb-scrollbar ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.tfhb-scrollbar html {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }
 
 .tfhb-flexbox {

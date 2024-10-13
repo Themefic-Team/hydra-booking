@@ -452,7 +452,7 @@ const toggleSelectAll = (e) => {
 
 <!-- Booking Calendar View -->
 <div class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
-    <FullCalendar class='demo-app-calendar tfhb-scrollbar' :options='Booking.calendarbooking'>
+    <FullCalendar class='demo-app-calendar ' :options='Booking.calendarbooking'>
         <template v-slot:eventContent='arg'>
             <!-- {{ arg.event.booking_date }}
             <b>{{ arg.timeText }}</b>

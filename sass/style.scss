@@ -1,4 +1,7 @@
 .tfhb-meeting-box, .tfhb-booking-cencel{
+    input{
+        box-sizing: border-box;
+    }
     .tfhb-reschedule-box {
         margin-bottom: 25px;
         text-align: center;
@@ -583,8 +586,7 @@
                     max-height: 338px;
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 12px;
-                    overflow-y: auto;
+                    gap: 12px; 
                     li{
                         gap: 12px;
                         width: 100%;

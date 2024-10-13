@@ -64,7 +64,7 @@ $data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $sel
 	</div>
 	<h3 class="tfhb-select-date"> </h3>
 
-	<div class="tfhb-available-times">
+	<div class="tfhb-available-times tfhb-scrollbar">
 		<ul>
 			<?php
 			if ( ! empty( $data ) ) {

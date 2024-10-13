@@ -3,7 +3,7 @@
         'name' => 'hydra-booking/hydra-booking',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'bc2c655fc12b5ef18562061bed61749afcd1e6ee',
+        'reference' => '55cb1272ecda938c374d93e9364f54b1083357d5',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'hydra-booking/hydra-booking' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'bc2c655fc12b5ef18562061bed61749afcd1e6ee',
+            'reference' => '55cb1272ecda938c374d93e9364f54b1083357d5',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
