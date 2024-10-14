@@ -312,7 +312,7 @@ onBeforeMount(() => {
                         <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> Conference</span>
                         <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> Calendars</span>
                         <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="payments"> Payments</span>
-                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms"> Froms</span>
+                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms"> Forms</span>
                     </div>
                 </div>
                 <div class="tfhb-integrations-searchbar">

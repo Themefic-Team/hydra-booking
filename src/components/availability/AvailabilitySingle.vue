@@ -13,6 +13,9 @@ const deleteAvailability = () => {
 const editAvailability = () => { 
     emit('edit-availability');
 }
+const markAsDefault = () => {
+    emit('mark-as-default');
+}
 
 </script>
 
@@ -20,9 +23,10 @@ const editAvailability = () => {
   <div class="tfhb-availability-single-box">
     <div class="tfhb-availability-single-box-wrap">
         <div  class="tfhb-dashboard-heading ">
-            <div class="tfhb-admin-title"> 
+            <div class="tfhb-admin-title tfhb-flexbox tfhb-gap-16"> 
                 <h3 >{{availability.title}}  </h3>   
                 <!-- {{ availability }} -->
+                <span class="tfhb-availability-default tfhb-flexbox tfhb-gap-4"><Icon name="Heart" size=15 /> {{ $tfhb_trans('Default') }}</span>
             </div>
             <div class="thb-admin-btn right"> 
                 <div class="tfhb-availability-action tfhb-dropdown">
@@ -33,6 +37,7 @@ const editAvailability = () => {
                     </svg>
                     <div class="tfhb-dropdown-wrap">
                         <span class="tfhb-dropdown-single" @click="editAvailability">{{ $tfhb_trans('Edit') }}</span>
+                        <span class="tfhb-dropdown-single" @click="markAsDefault">{{ $tfhb_trans('Default') }}</span>
                         <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
                         <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ $tfhb_trans('Delete') }}</span>
                     </div>

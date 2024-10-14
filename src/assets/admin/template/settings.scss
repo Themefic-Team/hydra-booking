@@ -44,6 +44,13 @@
 							font-size: $heading-font-size-small !important;
 						font-weight: $font-weight-medium !important;
 						}
+						span{
+							padding: 4px 8px; 
+							background-color: $info-background;
+							color: $info-text;
+							border-radius: 16px;
+							font-size: $text-font-size-small;
+						}
 					}
 				  }
 			  }

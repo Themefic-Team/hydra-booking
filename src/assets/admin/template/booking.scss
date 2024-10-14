@@ -76,7 +76,7 @@
                 &:nth-child(2){
                     position: absolute;
                     left: 50%;
-                    width: 300px;
+                    width: 320px;
                     margin-left: -150px;
                     text-align: center;
                     >div{
@@ -178,6 +178,11 @@
                 .fc-scroller-harness{
                     .fc-scroller{
                         overflow: hidden !important;
+                        thead{
+                            .fc-timegrid-axis{
+                                display: none;
+                            }
+                        }
                     }
                 }
                 th{

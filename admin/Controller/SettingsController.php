@@ -86,6 +86,16 @@ class SettingsController {
 				// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		// Mark as default
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/availability/mark-as-default',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'MarkAsDefault' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 		// Intrigation
 
 		register_rest_route(
@@ -368,6 +378,26 @@ class SettingsController {
 			'message'      => 'Availability Deleted Successfully',
 		);
 		return rest_ensure_response( $data );
+	}
+
+	// Mark as Default
+	public function MarkAsDefault(){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+		$key     = sanitize_text_field( $request['key'] );
+		$id      = sanitize_text_field( $request['id'] );
+		$availabilityData      =$request['availabilityData'];
+
+		update_option('_tfhb_availability_settings', $availabilityData);
+		
+		// update availability
+		$updated_current_availability = $availabilityData[$key];
+		// print_r($updated_current_availability);
+		// update into database
+		$AvailabilityInsert = new Availability();
+		 $AvailabilityInsert->update( $updated_current_availability );
+
+		$_tfhb_availability_settings = get_option( '_tfhb_availability_settings' );
+
 	}
 
 	// Get Integration Settings

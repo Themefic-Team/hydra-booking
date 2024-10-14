@@ -22,6 +22,7 @@ const openModal = () => {
     key: 0,
     id: 0,
     title: '',
+    default: false,
     time_zone: '',
     date_status: 0,
     time_slots: [
@@ -114,6 +115,36 @@ const EditAvailabilitySettings = async (key, id, availability ) => {
   isModalOpened.value = true;
 }
 
+const marAsDefault = async (key, id, availability ) => { 
+    console.log(key, id, availability);
+    // Remove default from all
+    AvailabilityGet.data.forEach((item) => {
+        item.default = false;
+    });
+    AvailabilityGet.data[key].default = true;
+    try { 
+        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/mark-as-default', {
+            key: key,
+            id: id,
+            availabilityData: AvailabilityGet.data
+        }, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            }
+        });
+        if (response.data.status) { 
+            AvailabilityGet.data = response.data.availability;
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            }); 
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const closeModal = () => { 
   isModalOpened.value = false;
 };
@@ -195,7 +226,8 @@ onBeforeMount(() => {
         </div> 
     </div>
     <div class="tfhb-content-wrap tfhb-flexbox tfhb-gap-tb-24">
-         <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key" @delete-availability="deleteAvailabilitySettings(key, availability.id)" @edit-availability="EditAvailabilitySettings(key, availability.id, availability)"  />
+        {{ AvailabilityGet }}
+         <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key" @delete-availability="deleteAvailabilitySettings(key, availability.id)" @edit-availability="EditAvailabilitySettings(key, availability.id, availability)"  @mark-as-default="marAsDefault(key, availability.id, availability)"  />
 
      
          <AvailabilityPopupSingle v-if="isModalOpened" max_width="800px !important" :timeZone="timeZone.value" :display_overwrite="true"  :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="false" @update-availability="fetchAvailabilitySettingsUpdate" />
