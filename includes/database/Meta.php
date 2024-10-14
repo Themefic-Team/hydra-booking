@@ -71,6 +71,30 @@ class Meta {
 	 * Update the database availability.
 	 */
 	public function update( $request ) {
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table; 
+		
+		$id = $request['id'];
+		unset( $request['id'] );
+
+		// Update availability
+
+		$result = $wpdb->update(
+			$table_name,
+			$request,
+			array( 'id' => $id )
+		);
+
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status'    => true,
+				'update_id' => $wpdb->insert_id,
+			);
+		}
 	}
 	/**
 	 * Get all  availability Data.

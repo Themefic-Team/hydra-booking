@@ -168,7 +168,7 @@ const Tfhb_Host_Filter = async (e) =>{
 
     <!-- {{ tfhbClass }} -->
     <div :class="{ 'tfhb-skeleton': skeleton }"  class="tfhb-admin-hosts">
-        <Header title="Hosts" :notifications="Notification.Data" />
+        <Header title="Hosts" :notifications="Notification.Data" :total_unread="Notification.total_unread" />
         <div class="tfhb-dashboard-heading tfhb-flexbox">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 

@@ -2,6 +2,7 @@ import { reactive } from 'vue';
 import axios from 'axios';
 const Notification = reactive({
     Data: {}, 
+    total_unread: 0, 
 
     async fetchNotifications() { 
 
@@ -15,6 +16,7 @@ const Notification = reactive({
     
             if (response.data.status) { 
                 this.Data = response.data.notifications;
+                this.total_unread = response.data.total_unread;
             }
         } catch (error) {
 
@@ -22,19 +24,27 @@ const Notification = reactive({
 
         } 
 
-        // try {
-        //     const response = await fetch(apiUrl, {
-        //         method: 'GET',
-        //         credentials: 'include', // Include cookies for authentication
-        //     });
-        //     if (!response.ok) {
-        //         throw new Error('Network response was not ok');
-        //     }
-        //     const data = await response.json(); 
-        //     this.Auth =  data;
-        // } catch (error) {
-        //     console.error('Error fetching Hosts:', error);
-        // }
+       
+    }, 
+
+    async MarkAsRead() {
+        alert(1);
+        try {  
+            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/notifaction/markasread', this.Data, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) { 
+                this.total_unread = 0;
+            }
+        } catch (error) {
+
+            console.log(error);
+
+        }
     }, 
 })
 

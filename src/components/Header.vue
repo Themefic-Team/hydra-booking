@@ -3,9 +3,11 @@ import { ref } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'title',
-    'notifications'
+    'notifications',
+    'total_unread'
      
 ])
+const emit = defineEmits([ "MarkAsRead" ]); 
 
 const displayNotification = ref(false);
 
@@ -41,7 +43,13 @@ window.addEventListener('click', function(e) {
         displayNotification.value = false;
     }
 });
-
+const MarkAsRead = () => {
+    //  remove the unread class
+    document.querySelectorAll('.tfhb-single-notification').forEach((el) => {
+        el.classList.remove('unread');
+    });
+    emit('MarkAsRead')
+}
 </script>
 
 
@@ -68,18 +76,24 @@ window.addEventListener('click', function(e) {
             <div class="tfhb-dropdown tfhb-mega-dropdown">
             <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size=24 /> </span>
 
+            <span v-if="props.total_unread && props.total_unread != 0" class="tfhb-header-notification-count">
+                {{props.total_unread}}
+            </span>
+
             <transition name="tfhb-dropdown-transition">
-                <div v-show="displayNotification" class="tfhb-dropdown-wrap  active">   <!-- active class-->
+                <div v-show="displayNotification" class="tfhb-dropdown-wrap  active" >   <!-- active class-->
                     <div class="tfhb-flexbox">
                         <h3>{{ $tfhb_trans('Notifications') }}</h3>
-                        <!-- <a href="#" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</a> -->
+                        <button @click="MarkAsRead" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</button>
                         <!-- {{ notifications }} -->
                     </div>
 
                     <div class="tfhb-notification-wrap tfhb-scrollbar">
                         
                         <!-- Single Notifaction wrap -->
-                        <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16">
+                        <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16"
+                            :class="{ 'unread': notification.value.status == 'unread' }"  
+                        > 
                             <div class="tfhb-single-notification-img">
                                 <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Notification Image">
                             </div> 
@@ -87,7 +101,7 @@ window.addEventListener('click', function(e) {
                                 <h4>{{notification.value.attendee_name}}</h4>
                                 <p> {{notification.value.message}}</p>
 
-                            <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago</span>
+                            <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago </span>
                             </div>
                             
 

@@ -1,5 +1,5 @@
 .tfhb-admin-dashboard {
-  background-color: $surface-primary;
+  background-color: $surface-secondary;
   .tfhb-dashboard-wrap {
     margin-right: 16px;
     margin-top: 16px;
@@ -127,7 +127,8 @@
       align-items: normal !important;
 
       .tfhb-dashboard-notice-box-wrap {
-        background-color: $primary-text;
+        background-color: $surface-primary;
+        border: $border-reguler $border-type $surface-border;
         border-radius: 12px;
         padding: 16px 24px;
         // margin-top: 8px;
@@ -161,14 +162,14 @@
             >.tfhb-admin-card-box {
               width: calc(100% - 76px);
               border: $border-reguler solid $surface-border !important;
-              background: $surface-primary;
+              background: $surface-secondary;
             }
           }
 
           .tfhb-admin-card-box {
             margin-bottom: 0px !important;
             border: $border-reguler solid $surface-border !important;
-            background: $surface-primary;
+            background: $surface-secondary;
           }
         }
       }

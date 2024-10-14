@@ -74,7 +74,7 @@ const FormatDate = (date) => {
 
 <!-- {{ tfhbClass }} -->
 <div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
-    <Header title="Dashboard" :notifications="Notification.Data" /> 
+    <Header title="Dashboard" :notifications="Notification.Data" :total_unread="Notification.total_unread" /> 
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox">
         <div class="thb-admin-title">
             <h2>{{ $tfhb_trans('Dashboard') }}</h2>

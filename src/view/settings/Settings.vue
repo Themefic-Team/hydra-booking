@@ -8,7 +8,7 @@ import Header from '@/components/Header.vue';
 <template>
     <!-- {{ tfhbClass }} -->
     <div class="tfhb-hydra-dasboard">
-        <Header title="Meetings" :notifications="Notification.Data" />
+        <Header title="Meetings" :notifications="Notification.Data" :total_unread="Notification.total_unread" />
         <div class="tfhb-hydra-wrap ">    
             <nav class="tfhb-hydra-admin-tabs tfhb-hydra-settings">  
                 <ul>

@@ -23,6 +23,16 @@ class Notification {
                 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+        register_rest_route(
+			'hydra-booking/v1',
+			'/notifaction/markasread',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'MarkAsRead' ),
+                'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 	}
 
 
@@ -45,14 +55,23 @@ class Notification {
             'value'    => "'notification'"
         );
         $meta = new Meta();
-        $notifications = $meta->get($data_Query, false, false, 5);
+        $notifications = $meta->get($data_Query, false, false, 10);
+        // count total unread notification
+        $total_unread = 0;
+
         foreach ($notifications as $key => $value) {
+       
             $notifications[$key]->value = json_decode($value->value);
+
+            if($value->value->status == 'unread'){
+                $total_unread++;
+            }
         }
 
 		$data = array(
 			'status'     => true, 
 			'notifications'     => $notifications, 
+			'total_unread'     => $total_unread, 
 		);
 
 		return rest_ensure_response( $data );
@@ -71,6 +90,7 @@ class Notification {
             'attendee_id' =>  $data->attendee_id,
             'attendee_name' =>  $data->attendee_name,
             'message' => 'Has booked a meeting', 
+            'status' => 'unread', 
         );
         $data = array(
             'object_id' => $data->host_id,
@@ -80,6 +100,28 @@ class Notification {
         ); 
 
         $meta->add($data);
+    }
+
+    // Mark as Read
+    public function MarkAsRead(){
+        $request = json_decode( file_get_contents( 'php://input' ), true );
+
+        if(is_array($request)){
+            $meta = new Meta();
+
+             foreach ($request as $key => $data) { 
+                 $data['value']['status'] = 'read';
+                 $data['value'] = json_encode($data['value']);
+
+                $meta->update($data);
+            }
+        }
+        $data = array(
+            'status'     => true, 
+            'message'     => 'Notification marked as read', 
+        );
+
+        return rest_ensure_response( $data );
     }
     
 }
