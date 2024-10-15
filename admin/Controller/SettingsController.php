@@ -228,6 +228,7 @@ class SettingsController {
 		$time_zone        = $DateTimeZone->TimeZone();
 		$availability     = get_option( '_tfhb_availability_settings' );
 		$general_settings = get_option( '_tfhb_general_settings' );
+		 
 		$data             = array(
 			'status'           => true,
 			'time_zone'        => $time_zone,
@@ -387,14 +388,46 @@ class SettingsController {
 		$id      = sanitize_text_field( $request['id'] );
 		$availabilityData      =$request['availabilityData'];
 
+
 		update_option('_tfhb_availability_settings', $availabilityData);
-		
+	 
 		// update availability
 		$updated_current_availability = $availabilityData[$key];
 		// print_r($updated_current_availability);
 		// update into database
 		$AvailabilityInsert = new Availability();
-		 $AvailabilityInsert->update( $updated_current_availability );
+ 
+		
+		// get all availability data
+		$getAvailability = $AvailabilityInsert->get(
+			array(
+				'default_status' => true,
+			)
+		);
+		if(count($getAvailability) > 0){ 
+			
+			foreach ($getAvailability as $key => $value) {  
+				if($id == $value->id){ 
+					continue;
+				}
+
+				$data = array(
+					'id' => $value->id,
+					'default_status' => 0,
+				);
+				  
+
+				// convert object to array
+				$value = (array) $value;
+				$AvailabilityInsert->update( $data );
+			}
+		}  
+		 $AvailabilityInsert->update( 
+			array(
+				'id' => $id,
+				'default_status' => 1,
+			)
+		  );
 
 		$_tfhb_availability_settings = get_option( '_tfhb_availability_settings' );
 

@@ -5,6 +5,7 @@ const Availability = reactive({
     GeneralSettings: {},
 
     async fetchAvailability() {
+       
         const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability';
         try {
             const response = await fetch(apiUrl, {
@@ -18,17 +19,9 @@ const Availability = reactive({
                 throw new Error('Network response was not ok');
             }
             const availabilityData = await response.json();
-
-            // with index
-            if(this.availabilities.length == 0) {
-                availabilityData.availability.forEach((available, index) => {
-                    this.availabilities.push(
-                        {
-                            name: available.title,
-                            value: available.id,
-                        }
-                    );
-                } );
+            
+            if(this.availabilities.length == 0){
+                this.availabilities = availabilityData.availability;
             }
  
             // this.availabilities = availabilityData.availability.reduce((acc, available) => {
@@ -40,6 +33,7 @@ const Availability = reactive({
             console.error('Error fetching Availability:', error);
         }
     },
+  
     getGeneralSettings() {  
         this.fetchAvailability(); 
         return this.GeneralSettings;

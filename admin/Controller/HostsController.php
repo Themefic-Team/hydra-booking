@@ -299,6 +299,23 @@ class HostsController {
 			'status'         => 'activate',
 		);
 
+		// get Default Availability
+		$Availability = new Availability();
+		
+		// get default availability
+		$getAvailability = $Availability->get(
+			array(
+				'default_status' => true,
+			),
+			false,
+			true,
+		);
+		if($getAvailability){
+			 $data['availability_type'] = 'settings';
+			 $data['availability_id'] = $getAvailability->id;
+		}  
+
+
 		// Insert Host
 		$hostInsert = $host->add( $data );
 		if ( ! $hostInsert['status'] ) {
@@ -313,6 +330,12 @@ class HostsController {
 		unset( $data['user_id'] );
 		$data['host_id'] = $hostInsert['insert_id'];
 
+
+		
+
+		$data['host_id'] = $hostInsert['insert_id'];
+
+	
 		// Update user Option
 		update_user_meta( $user_id, '_tfhb_host', $data );
 
@@ -415,11 +438,23 @@ class HostsController {
 		// Hosts Global Settings.
 		$_tfhb_hosts_settings = get_option( '_tfhb_hosts_settings' );
 
+		// host global availability
+		$availability     = get_option( '_tfhb_availability_settings' ); 
+		$count = 0;
+		$availabilityData = array();
+		foreach ( $availability as $key => $value ) {
+			$title = isset($value['default_status']) && $value['default_status'] == true ? $value['title'] . '( ' . 'Default' . ' )' : $value['title'];
+			$availabilityData[$count]['name'] = $title;
+			$availabilityData[ $count ]['value'] =  "" . $value['id'] . "";
+			$count++;
+		}
+
 		// Return response
 		$data = array(
 			'status'         => true,
 			'host'           => $HostData,
 			'time_zone'      => $time_zone,
+			'settingsAvailabilityData'      => $availabilityData,
 			'hosts_settings' => $_tfhb_hosts_settings,
 			'message'        => 'Host Data',
 		);

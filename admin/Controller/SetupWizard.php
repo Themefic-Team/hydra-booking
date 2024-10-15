@@ -10,6 +10,7 @@ use HydraBooking\admin\Controller\RouteController;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\Meeting;
 use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\DB\Availability;
 // exit
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
@@ -95,9 +96,52 @@ class SetupWizard {
 		$last_data                    = ! empty( $availability_settings ) ? end( $availability_settings ) : array();
 		$new_id                       = $last_data['id'] + 1;
 		$availabilityDataSingle       = $request['availabilityDataSingle'];
+
+
+		$Availability = new Availability();
+		
+		// get all availability data
+		$getAvailability = $Availability->get(
+			array(
+				'default_status' => true,
+			)
+		);
+		if(count($getAvailability) > 0){
+			$availabilityDataSingle['default_status'] = 0;
+		}  
+		foreach ( $availabilityDataSingle['time_slots'] as $key => $value ) {
+
+			$availabilityDataSingle['time_slots'][ $key ]['day']    = sanitize_text_field( $value['day'] );
+			$availabilityDataSingle['time_slots'][ $key ]['status'] = sanitize_text_field( $value['status'] );
+
+			foreach ( $value['times'] as $key2 => $value2 ) {
+				$availabilityDataSingle['time_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
+				$availabilityDataSingle['time_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+			}
+		}
+		// Date Slots
+		foreach ( $availabilityDataSingle['date_slots'] as $key => $value ) {
+
+			$availabilityDataSingle['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
+			$availabilityDataSingle['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
+
+			foreach ( $value['times'] as $key2 => $value2 ) {
+				$availabilityDataSingle['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
+				$availabilityDataSingle['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+			}
+		}
 		$availabilityDataSingle['id'] = $new_id;
 		$availability_settings[]      = $availabilityDataSingle;
+
+		// Insert into database
+
+		$insert = $Availability->add( $availabilityDataSingle );
+		if ( $insert['status'] === true ) {
+			$availabilityDataSingle['id'] = $insert['insert_id'];
+		}
 		update_option( '_tfhb_availability_settings', $availability_settings, true );
+
+		
 
 		// Checked if Host Already Exist
 

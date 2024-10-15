@@ -17,6 +17,10 @@ const props = defineProps({
         type: Number,
         required: true
     },
+    settingsAvailabilityData: {
+        type: Object,
+        required: true
+    },
     host: {
         type: Object,
         required: true
@@ -280,28 +284,18 @@ const formatTimeSlots = (timeSlots) =>  {
         </ul>
     </div>
 
-    <!-- <HbSelect 
-        v-model="host.availability_id"
-        required= "true" 
-        :label="$tfhb_trans('Choose Schedule')"  
-        :selected = "1"
-        :placeholder="$tfhb_trans('Choose Schedule')"   
-        :option = "Availability.availabilities" 
-        v-if="'settings'==host.availability_type"
-        @tfhb-onchange="Settings_Avalibility_Callback"
-    /> --> 
-    <!-- Duration -->
+ 
+    <!-- Duration -->    
     <HbDropdown 
-        v-model="host.availability_id" 
+        v-model="props.host.availability_id" 
         required= "true" 
-        :label="$tfhb_trans('Choose Schedule')"  
-        :selected = "1"
-        name="duration"
+        :label="$tfhb_trans('Choose Schedule')"    
         :placeholder="$tfhb_trans('Choose Schedule')"   
-        :option = "Availability.availabilities" 
+        :option = "settingsAvailabilityData" 
         v-if="'settings'==host.availability_type"
         @tfhb-onchange="Settings_Avalibility_Callback"
     />
+  
     <!-- Duration -->
 
     <!-- Settings Data -->

@@ -22,7 +22,7 @@ const openModal = () => {
     key: 0,
     id: 0,
     title: '',
-    default: false,
+    default_status: false,
     time_zone: '',
     date_status: 0,
     time_slots: [
@@ -118,10 +118,13 @@ const EditAvailabilitySettings = async (key, id, availability ) => {
 const marAsDefault = async (key, id, availability ) => { 
     console.log(key, id, availability);
     // Remove default from all
-    AvailabilityGet.data.forEach((item) => {
-        item.default = false;
-    });
-    AvailabilityGet.data[key].default = true;
+    if (AvailabilityGet.data.length > 1) {
+        AvailabilityGet.data.forEach((item) => {
+            item.default_status = false;
+        });
+    }
+ 
+    AvailabilityGet.data[key].default_status = true;
     try { 
         const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/mark-as-default', {
             key: key,
@@ -225,8 +228,7 @@ onBeforeMount(() => {
             <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ $tfhb_trans(' Add New Availability') }}</button> 
         </div> 
     </div>
-    <div class="tfhb-content-wrap tfhb-flexbox tfhb-gap-tb-24">
-        {{ AvailabilityGet }}
+    <div class="tfhb-content-wrap tfhb-flexbox tfhb-gap-tb-24"> 
          <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key" @delete-availability="deleteAvailabilitySettings(key, availability.id)" @edit-availability="EditAvailabilitySettings(key, availability.id, availability)"  @mark-as-default="marAsDefault(key, availability.id, availability)"  />
 
      

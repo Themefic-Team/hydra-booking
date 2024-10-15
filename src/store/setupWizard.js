@@ -18,6 +18,7 @@ const setupWizard = reactive({
             title: '',
             time_zone: '',
             date_status: 0,
+            default_status: true,
             time_slots: [
                 { 
                     day: 'Monday',
