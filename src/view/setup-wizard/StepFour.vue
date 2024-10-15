@@ -89,7 +89,7 @@ const copyMeeting = (link) => {
                 <span class="tfhb-step-bar step-1 active"></span>
             </div> 
             <h2>{{$tfhb_trans('Your Meeting is ready!')}}</h2>
-            <p>{{$tfhb_trans('All set! Your Hydrabooking meeting is good to go.   Click "Preview" to peek at your booking page or "Share" to send the link to your attendees')}}</p> 
+            <p>{{$tfhb_trans(`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`)}}</p> 
         </div>
 
         <div class="tfhb-meetings-list-content" >

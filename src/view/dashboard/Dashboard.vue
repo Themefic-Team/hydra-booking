@@ -77,8 +77,8 @@ const FormatDate = (date) => {
     <Header title="Dashboard" :notifications="Notification.Data" :total_unread="Notification.total_unread" /> 
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox">
         <div class="thb-admin-title">
-            <h2>{{ $tfhb_trans('Dashboard') }}</h2>
-            <p>{{ $tfhb_trans('Overview of bookings') }}</p> 
+            <h2>{{ $tfhb_trans('Booking Overview') }}</h2>
+            <p>{{ $tfhb_trans('A complete view of all your bookings at a glance.') }}</p> 
         </div>  
         <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-datachart-box-dropdown tfhb-no-hover">
             <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans('Today') }}</span>  <Icon name="ChevronDown" size=20 /> </span>
@@ -365,7 +365,7 @@ const FormatDate = (date) => {
             <div class="tfhb-dashboard-notice-box-wrap" >
                 <div  class="tfhb-dashboard-heading tfhb-flexbox">
                     <div class="tfhb-admin-title"> 
-                        <h3 >{{ $tfhb_trans('Statistics') }}</h3>  
+                        <h3 >{{ $tfhb_trans('Booking Statistics') }}</h3>  
                     </div>
                     <div class="thb-admin-btn right"> 
                         <div class="tfhb-dropdown datachart-dropdown tfhb-no-hover">

@@ -42,8 +42,8 @@ const StepOne = () => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{ $tfhb_trans('Simplify Your Work with Hydrabooking') }}</h2>
-            <p>{{ $tfhb_trans('Our intuitive setup process makes Hydrabooking a breeze to use, even for non-technical users.') }}</p>
+            <h2>{{ $tfhb_trans('Simplify Your Work with HydraBooking') }}</h2>
+            <p>{{ $tfhb_trans('Our intuitive setup process makes HydraBooking a breeze to use, even for non-technical users.') }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
@@ -57,8 +57,8 @@ const StepOne = () => {
                     placeholder="Select Your Business Type"  
                     :option = "[
                         {'name': 'Consultant', 'value': 'Consultant'}, 
-                        {'name': 'Doctor', 'value': 'doctor'}, 
-                        {'name': 'Teacher', 'value': 'teacher'}
+                        {'name': 'Doctor', 'value': 'Doctor'}, 
+                        {'name': 'Teacher', 'value': 'Teacher'}
                     ]"
                     
                 />

@@ -258,7 +258,7 @@ onBeforeMount(() => {
                 :label="$tfhb_trans('Select Date')" 
                 selected = "1" 
                 :config="flatpickr_date"
-                placeholder="Type your schedule title"   
+                placeholder="Enter schedule title"   
                 :change = true
                 @dateChange="bookingSlot"
             />
