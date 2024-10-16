@@ -29,6 +29,25 @@ const deleteItemConfirm = () => {
     deletePopup.value = false;
 }
 
+
+const activeItemDropdown = ref(0);
+// on click add class active
+const activeSingleHostDropdown = (id) => {
+    if(activeItemDropdown.value == id) {
+        activeItemDropdown.value = 0;
+        return;
+    }
+    activeItemDropdown.value = id; 
+
+}
+// outside click
+window.addEventListener('click', function(e) {
+    if (!document.querySelector('.tfhb-hosts-list-wrap').contains(e.target)) {
+        activeItemDropdown.value = 0;
+    }
+});
+
+
 </script>
 <template>
     <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
@@ -78,17 +97,19 @@ const deleteItemConfirm = () => {
                          <span class="tfhb-info-icon-text tfhb-flexbox" v-if="host.phone_number !=''"> <Icon name="Phone" size=20 />{{ host.phone_number }}</span>
                     </div>
                     <!-- <button class="tfhb-single-hosts-action"><Icon name="ListCollapse" size=20 /></button> -->
-                    <div class="tfhb-single-hosts-action tfhb-dropdown">
+                    <div @click="activeSingleHostDropdown(host.id)" class="tfhb-single-hosts-action tfhb-dropdown">
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
-                        <div class="tfhb-dropdown-wrap"> 
-                            <!-- route link -->
-                            <router-link :to="{ name: 'HostsProfile', params: { id: host.user_id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('View & Edit') }}</router-link>
-                            <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
-                            <span class="tfhb-dropdown-single" @click="emit('update-host-status',host.id, host.user_id, host.status)">{{host.status == 'activate' ? 'Deactivate' : 'Activate'}}</span>
-                       
-                            <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ $tfhb_trans('Delete') }}</span> -->
-                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(host.id, host.user_id)">{{ $tfhb_trans('Delete') }}</span>
-                         </div>
+                        <transition  name="tfhb-dropdown-transition">
+                            <div v-show="host.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
+                                <!-- route link -->
+                                <router-link :to="{ name: 'HostsProfile', params: { id: host.user_id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('View & Edit') }}</router-link>
+                                <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
+                                <span class="tfhb-dropdown-single" @click="emit('update-host-status',host.id, host.user_id, host.status)">{{host.status == 'activate' ? 'Deactivate' : 'Activate'}}</span>
+                        
+                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ $tfhb_trans('Delete') }}</span> -->
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(host.id, host.user_id)">{{ $tfhb_trans('Delete') }}</span>
+                            </div>
+                        </transition>
                     </div>
                 </div> 
             </div>

@@ -109,6 +109,22 @@ window.addEventListener('click', function(e) {
     }
 });
 
+const activeItemDropdown = ref(0);
+// on click add class active
+const activeSingleMeetingDropdown = (id) => {
+    if(activeItemDropdown.value == id) {
+        activeItemDropdown.value = 0;
+        return;
+    }
+    activeItemDropdown.value = id; 
+
+}
+// outside click
+window.addEventListener('click', function(e) {
+    if (!document.querySelector('.tfhb-meetings-list-wrap').contains(e.target)) {
+        activeItemDropdown.value = 0;
+    }
+});
 </script>
 <template>
 <!-- {{ filterData }} -->
@@ -340,15 +356,17 @@ window.addEventListener('click', function(e) {
                             </ul>
                         </div>
                     </div>
-                    <div class="tfhb-single-hosts-action tfhb-dropdown">
+                    <div @click="activeSingleMeetingDropdown(smeeting.id)" class="tfhb-single-hosts-action tfhb-dropdown">
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
-                        <div class="tfhb-dropdown-wrap"> 
-                            <!-- route link -->
-                            <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('Edit') }}</router-link>
-                            
-                            <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span> -->
-                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span>
-                        </div>
+                        <transition name="tfhb-dropdown-transition">
+                            <div v-show="smeeting.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
+                                <!-- route link -->
+                                <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('Edit') }}</router-link>
+                                
+                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span> -->
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span>
+                            </div>
+                        </transition>
                     </div>
                 </div>
                 <div class="single-meeting-action-btn tfhb-flexbox">

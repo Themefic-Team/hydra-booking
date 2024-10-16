@@ -220,7 +220,7 @@ class SetupWizard {
 		$meeting_post_id   = wp_insert_post( $meeting_post_data );
 		$meeting_slug      = get_post_field( 'post_name', $meeting_post_id );
 		$data              = array(
-			'slug'                     => esc_url( $meeting_slug ),
+			'slug'                     => esc_html( $meeting_slug ),
 			'host_id'                  => $request['host_id'],
 			'user_id'                  => $request['user_id'],
 			'post_id'                  => $meeting_post_id,
