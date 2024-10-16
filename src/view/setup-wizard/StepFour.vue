@@ -72,7 +72,22 @@ const copyMeeting = (link) => {
     toast.success(link + ' is Copied');
 }
 
+const activeItemDropdown = ref(0);
+// on click add class active
+const activeSingleMeetingDropdown = (id) => { 
+    if(activeItemDropdown.value == id) {
+        activeItemDropdown.value = 0;
+        return;
+    }
+    activeItemDropdown.value = id; 
 
+}
+// outside click
+window.addEventListener('click', function(e) {
+    if (!document.querySelector('.tfhb-meetings-list-wrap').contains(e.target)) {
+        activeItemDropdown.value = 0;
+    }
+});
 </script>
 
 <template>
@@ -89,7 +104,7 @@ const copyMeeting = (link) => {
                 <span class="tfhb-step-bar step-1 active"></span>
             </div> 
             <h2>{{$tfhb_trans('Your Meeting is ready!')}}</h2>
-            <p>{{$tfhb_trans('All set! Your Hydrabooking meeting is good to go.   Click "Preview" to peek at your booking page or "Share" to send the link to your attendees')}}</p> 
+            <p>{{$tfhb_trans(`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`)}}</p> 
         </div>
 
         <div class="tfhb-meetings-list-content" >
@@ -172,13 +187,15 @@ const copyMeeting = (link) => {
                                 </ul>
                             </div>
                         </div>
-                        <div class="tfhb-single-hosts-action tfhb-dropdown">
+                        <div @click="activeSingleMeetingDropdown(setupWizard.data.meeting.id)" class="tfhb-single-hosts-action tfhb-dropdown">
                             <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
-                            <div class="tfhb-dropdown-wrap"> 
-                                <!-- route link -->
-                                <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('Edit') }}</router-link>
-                                
-                            </div>
+                            <transition name="tfhb-dropdown-transition">
+                                <div v-show="setupWizard.data.meeting.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
+                                    <!-- route link -->
+                                    <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('Edit') }}</router-link>
+                                    
+                                </div>
+                            </transition>
                         </div>
                     </div>
                     <div class="single-meeting-action-btn tfhb-flexbox">

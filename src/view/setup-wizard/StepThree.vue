@@ -34,8 +34,8 @@ const props = defineProps({
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{$tfhb_trans('Experience Hydrabooking in Action (Instantly!)')}}</h2>
-            <p>{{$tfhb_trans('Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.')}}</p>
+            <h2>{{$tfhb_trans('Experience HydraBooking in Action (Instantly!)')}}</h2>
+            <p>{{$tfhb_trans('It helps you customize the booking process to fit your workflow and make things run more smoothly.')}}</p>
         </div>
         <div class="tfhb-s-w-import-data">
             <img :src="$tfhb_url+'/assets/images/import.gif'" style="height: 96px;" alt="">

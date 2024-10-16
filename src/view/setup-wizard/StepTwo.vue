@@ -60,7 +60,7 @@ const StepTwo = () => {
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
             <h2>{{$tfhb_trans('Take control of your schedule')}}</h2>
-            <p>{{$tfhb_trans('You can streamline your appointment booking process by using your availability.')}}</p> 
+            <p>{{$tfhb_trans('Make your appointment booking process even easier by simply setting your availability.')}}</p> 
         </div>
         <div class="tfhb-content-wrap tfhb-s-w-availability-wrap tfhb-flexbox tfhb-gap-tb-24">
 

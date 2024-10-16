@@ -264,6 +264,7 @@ const toggleSelectAll = (e) => {
     }
 }
 
+
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -515,7 +516,8 @@ const toggleSelectAll = (e) => {
 
 <!-- Booking Calendar Edit -->
 
-<div :class="{ 'tfhb-skeleton': Booking.skeleton }"  class="tfhb-booking-details tfhb-mt-32" v-if="bookingView=='list'">
+<div :class="{ 'tfhb-skeleton': Booking.skeleton }"  class="tfhb-booking-details tfhb-mt-32" v-if="bookingView=='list' && paginatedBooking.length > 0 ">
+    {{ paginatedBooking }}
     <table class="table" cellpadding="0" :cellspacing="0">
         <thead>
             <tr>
@@ -615,6 +617,10 @@ const toggleSelectAll = (e) => {
             <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === totalPages">Next<Icon name="ArrowRight" width="20" /></a>
         </div>
     </div>
+</div>
+<div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+    <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
+    <p>{{ $tfhb_trans('No Booking Created') }}</p> 
 </div>
 </template>
 

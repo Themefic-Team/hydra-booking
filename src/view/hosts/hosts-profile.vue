@@ -31,6 +31,7 @@ const hostData = reactive({
 });
 const time_zones = reactive({});
 const hosts_settings = reactive({});
+const settingsAvailabilityData = reactive({});
 const hostId = route.params.id;
 
 // availability type
@@ -137,6 +138,7 @@ const UpdateHostsInformation = async (validator_field) => {
             skeleton.value = false;
             time_zones.data = response.data.time_zone; 
             hosts_settings.data = response.data.hosts_settings; 
+            settingsAvailabilityData.data = response.data.settingsAvailabilityData; 
         }else{ 
             // return to redirect back route 
             router.push({ name: 'HostsLists' });
@@ -178,6 +180,7 @@ onBeforeMount(() => {
             :host="hostData" 
             :time_zone="time_zones.data" 
             :hosts_settings="hosts_settings.data" 
+            :settingsAvailabilityData="settingsAvailabilityData.data" 
             @availability-tabs="AvailabilityTabs"
             @save-host-info="UpdateHostsInformation"
             />
