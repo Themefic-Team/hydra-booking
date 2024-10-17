@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import {ref} from 'vue'
 import Icon from '@/components/icon/LucideIcon.vue'  
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
@@ -17,24 +18,24 @@ const props = defineProps([
 <template> 
     <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
         <div class="tfhb-admin-title tfhb-m-0">
-            <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
-            <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
+            <h2>{{ __('Availability Range for this Booking', 'hydra-booking') }}</h2> 
+            <p>{{ __('How many days can the invitee schedule?', 'hydra-booking') }}</p>
         </div>
         <div class="tfhb-integration-box">
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationsList" @click="props.IntegrationsValue.integrationsListopen=!props.IntegrationsValue.integrationsListopen">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans('Add New Integrations') }}
+                {{ __('Add New Integrations', 'hydra-booking') }}
             </button>
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationscreate" @click="props.IntegrationsValue.backtointegrationsList">
                 <Icon name="ArrowLeft" :width="20"/>
-                {{ $tfhb_trans('Back') }}
+                {{ __('Back', 'hydra-booking') }}
             </button>
 
             <div class="tfhb-integrations-lists" v-if="props.IntegrationsValue.integrationsListopen">
                 <ul>
-                    <li @click="props.IntegrationsValue.addNewIntegrations('Mailchimp')" v-if="props.meeting.mailchimp.status">{{ $tfhb_trans('Mailchimp') }}</li>
-                    <li @click="props.IntegrationsValue.addNewIntegrations('FluentCRM')" v-if="props.meeting.fluentcrm.status">{{ $tfhb_trans('FluentCRM') }}</li>
-                    <li @click="props.IntegrationsValue.addNewIntegrations('ZohoCRM')" v-if="props.meeting.zohocrm.status">{{ $tfhb_trans('ZohoCRM') }}</li>
+                    <li @click="props.IntegrationsValue.addNewIntegrations('Mailchimp')" v-if="props.meeting.mailchimp.status">{{ __('Mailchimp', 'hydra-booking') }}</li>
+                    <li @click="props.IntegrationsValue.addNewIntegrations('FluentCRM')" v-if="props.meeting.fluentcrm.status">{{ __('FluentCRM', 'hydra-booking') }}</li>
+                    <li @click="props.IntegrationsValue.addNewIntegrations('ZohoCRM')" v-if="props.meeting.zohocrm.status">{{ __('ZohoCRM', 'hydra-booking') }}</li>
                 </ul>
             </div>
         </div>
@@ -72,9 +73,9 @@ const props = defineProps([
         <HbText  
             v-model="props.IntegrationsValue.integrationsData.title"
             required= "true"  
-            :label="$tfhb_trans('Integrations Title')"  
+            :label="__('Integrations Title', 'hydra-booking')"  
             selected = "1"
-            :placeholder="$tfhb_trans('Type your Integrations Title')" 
+            :placeholder="__('Type your Integrations Title', 'hydra-booking')" 
             width="50"
         /> 
 
@@ -82,7 +83,7 @@ const props = defineProps([
             v-if="props.IntegrationsValue.integrationsData.webhook=='Mailchimp'"
             v-model="props.IntegrationsValue.integrationsData.audience"
             required= "true"  
-            :label="$tfhb_trans('Select Audience')"   
+            :label="__('Select Audience', 'hydra-booking')"   
             width="50"
             selected = "1"
             placeholder="Select Audience"  
@@ -94,10 +95,10 @@ const props = defineProps([
             v-if="props.IntegrationsValue.integrationsData.webhook=='FluentCRM'"
             v-model="props.IntegrationsValue.integrationsData.lists"
             required= "true"  
-            :label="$tfhb_trans('FluentCRM Lists')"   
+            :label="__('FluentCRM Lists', 'hydra-booking')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans('Select FluentCRM List')"  
+            :placeholder="__('Select FluentCRM List', 'hydra-booking')"  
             :option = "meeting.fluentcrm.lists"
             @tfhb-onchange="moduleFields"
         />
@@ -106,10 +107,10 @@ const props = defineProps([
             v-if="props.IntegrationsValue.integrationsData.webhook=='FluentCRM'"
             v-model="props.IntegrationsValue.integrationsData.tags"
             required= "true"  
-            :label="$tfhb_trans('Contact Tags')"   
+            :label="__('Contact Tags', 'hydra-booking')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans('Select Contact Tag')" 
+            :placeholder="__('Select Contact Tag', 'hydra-booking')" 
             :option = "meeting.fluentcrm.tags"
         />
 
@@ -117,10 +118,10 @@ const props = defineProps([
             v-if="props.IntegrationsValue.integrationsData.webhook=='ZohoCRM'"
             v-model="props.IntegrationsValue.integrationsData.modules"
             required= "true"  
-            :label="$tfhb_trans('Modules')"   
+            :label="__('Modules', 'hydra-booking')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans('Select Modules')" 
+            :placeholder="__('Select Modules', 'hydra-booking')" 
             :option = "meeting.zohocrm.modules"
             @tfhb-onchange="moduleFields"
         />
@@ -129,13 +130,13 @@ const props = defineProps([
             required= "true"
             v-model="props.IntegrationsValue.integrationsData.events"
             name="webhook_events"
-            :label="$tfhb_trans('Event Triggers')"
+            :label="__('Event Triggers', 'hydra-booking')"
             :groups="true"
             :options="['Booking Confirmed', 'Booking Canceled', 'Booking Completed']" 
         />
 
         <div class="tfhb-headers tfhb-full-width">
-            <p>{{ $tfhb_trans('Other Fields') }}</p>
+            <p>{{ __('Other Fields', 'hydra-booking') }}</p>
             <div class="tfhb-flexbox" v-for="(body, key) in props.IntegrationsValue.integrationsData.bodys">
                 <div class="tfhb-request-header-fields tfhb-flexbox">
                     <HbDropdown  
@@ -152,7 +153,7 @@ const props = defineProps([
                         required= "true"  
                         width="50"
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Value')" 
+                        :placeholder="__('Enter Value', 'hydra-booking')" 
                         :option = "[
                             {'name': '{{attendee.full_name}}', 'value': '{{attendee.full_name}}'}, 
                             {'name': '{{attendee.email}}', 'value': '{{attendee.email}}'},
@@ -177,7 +178,7 @@ const props = defineProps([
                         v-model="body.value"
                         required= "true"   
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Value')" 
+                        :placeholder="__('Enter Value', 'hydra-booking')" 
                         width="50"
                     /> 
                 </div>
@@ -194,19 +195,19 @@ const props = defineProps([
 
         <HbCheckbox 
             v-model="props.IntegrationsValue.integrationsData.status"
-            :label="$tfhb_trans('Enable this Webhook')"
+            :label="__('Enable this Webhook', 'hydra-booking')"
             name="enable_webhook"
         />
 
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="props.IntegrationsValue.updateIntegrations">{{ $tfhb_trans('Save Webhook') }} </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="props.IntegrationsValue.updateIntegrations">{{ __('Save Webhook', 'hydra-booking') }} </button>
         </div>
     </div>
     <div class="tfhb-submission-btn"> 
         <HbButton 
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
-            :buttonText="$tfhb_trans('Save & Continue')"
+            :buttonText="__('Save & Continue', 'hydra-booking')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

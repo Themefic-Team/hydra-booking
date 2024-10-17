@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { reactive, onBeforeMount, ref } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { useRouter, useRoute, RouterView } from 'vue-router' 
@@ -611,30 +612,30 @@ const sharePopupData = () => {
                 <div class="tfhb-meeting-heading tfhb-flexbox">
                   
                     <h3 v-if="meetingData.title != '' && meetingData.title != null">{{ meetingData.title }}</h3>
-                    <h3 v-else >{{ $tfhb_trans('Create One-to-One booking') }}</h3>
+                    <h3 v-else >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
                 </div> 
                 <!-- <div  class="tfhb-meeting-subtitle">
-                    {{ $tfhb_trans('Create and manage booking/appointment form') }}
+                    {{ __('Create and manage booking/appointment form', 'hydra-booking') }}
                 </div> -->
             </div>
            
             <div class="thb-admin-btn right"> 
-                <button  @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size=20 /></button>
+                <button  @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('Share', 'hydra-booking') }}  <Icon name="ArrowUpRight" size=20 /></button>
             </div> 
         </div>
         <nav class="tfhb-booking-tabs tfhb-meeting-tabs tfhb-mb-32"> 
             <ul>
                 <!-- to route example like meetings/create/13/details -->
                 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/details'" exact :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/details' }">{{ $tfhb_trans('Details') }}</router-link></li> 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/availability'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/availability' }">{{ $tfhb_trans('Availability') }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/limits'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/limits' }">{{ $tfhb_trans('Limits') }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/questions'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/questions' }"> {{ $tfhb_trans('Questions') }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/notifications'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/notifications' }"> {{ $tfhb_trans('Notifications') }}</router-link></li>   
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/integrations' }">{{ $tfhb_trans('Integrations') }}</router-link></li> 
-                <!-- <li><router-link :to="'/meetings/single/'+ $route.params.id +'/webhook'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/webhook' }">{{ $tfhb_trans('Webhook') }}</router-link></li>   -->
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/details'" exact :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/details' }">{{ __('Details', 'hydra-booking') }}</router-link></li> 
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/availability'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/availability' }">{{ __('Availability', 'hydra-booking') }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/limits'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/limits' }">{{ __('Limits', 'hydra-booking') }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/questions'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/questions' }"> {{ __('Questions', 'hydra-booking') }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/notifications'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/notifications' }"> {{ __('Notifications', 'hydra-booking') }}</router-link></li>   
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/integrations' }">{{ __('Integrations', 'hydra-booking') }}</router-link></li> 
+                <!-- <li><router-link :to="'/meetings/single/'+ $route.params.id +'/webhook'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/webhook' }">{{ __('Webhook', 'hydra-booking') }}</router-link></li>   -->
 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/payment'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/payment' }">{{ $tfhb_trans('Payment') }}</router-link></li> 
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/payment'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/payment' }">{{ __('Payment', 'hydra-booking') }}</router-link></li> 
 
             </ul>  
         </nav>

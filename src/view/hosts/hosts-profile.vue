@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { reactive, onBeforeMount, ref } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
@@ -160,17 +161,17 @@ onBeforeMount(() => {
     <div :class="{ 'tfhb-skeleton': skeleton }" class="tfhb-hydra-wrap tfhbb-host-profile-page ">    
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title"> 
-                <h3>{{hostData.first_name}} {{ hostData.last_name }} {{ $tfhb_trans('Profile') }}  </h3>   
+                <h3>{{hostData.first_name}} {{ hostData.last_name }} {{ __('Profile', 'hydra-booking') }}  </h3>   
             </div> 
         </div>
         <nav class="tfhb-booking-tabs"> 
             <ul>
                 <!-- to route example like hosts/profile/13/information -->
                 
-                <li><router-link :to="'/hosts/profile/'+ $route.params.id +'/information'" exact :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/information' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Information') }}</router-link></li> 
-                <li><router-link :to="'/hosts/profile/'+ $route.params.id +'/availability'" :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/availability' }"> <Icon name="Clock" /> {{ $tfhb_trans('Availability') }}</router-link></li>  
-                <li v-if="true == $user.caps.tfhb_manage_integrations"><router-link :to="'/hosts/profile/'+ $route.params.id +'/calendars'" :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/calendars' }"> <Icon name="CalendarDays" /> {{ $tfhb_trans('Calendars') }}</router-link></li>  
-                <li v-if="true == $user.caps.tfhb_manage_integrations"><router-link :to="'/hosts/profile/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/integrations' }"> <Icon name="Unplug" /> {{ $tfhb_trans('Integrations') }}</router-link></li>  
+                <li><router-link :to="'/hosts/profile/'+ $route.params.id +'/information'" exact :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/information' }"> <Icon name="UserRound" /> {{ __('Information', 'hydra-booking') }}</router-link></li> 
+                <li><router-link :to="'/hosts/profile/'+ $route.params.id +'/availability'" :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/availability' }"> <Icon name="Clock" /> {{ __('Availability', 'hydra-booking') }}</router-link></li>  
+                <li v-if="true == $user.caps.tfhb_manage_integrations"><router-link :to="'/hosts/profile/'+ $route.params.id +'/calendars'" :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/calendars' }"> <Icon name="CalendarDays" /> {{ __('Calendars', 'hydra-booking') }}</router-link></li>  
+                <li v-if="true == $user.caps.tfhb_manage_integrations"><router-link :to="'/hosts/profile/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/hosts/profile/'+ $route.params.id +'/integrations' }"> <Icon name="Unplug" /> {{ __('Integrations', 'hydra-booking') }}</router-link></li>  
 
             </ul>  
         </nav>

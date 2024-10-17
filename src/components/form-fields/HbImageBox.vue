@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 const props = defineProps([
     'name',
     'modelValue',
@@ -40,7 +41,7 @@ const imageChange = (attachment) => {
     <div class="tfhb-single-form-field-wrap tfhb-flexbox">
         <div class="tfhb-field-image" > 
             <img  :class="name+'_display'"  :src="props.modelValue">
-            <button class="tfhb-image-btn tfhb-btn" @click="UploadImage">{{ $tfhb_trans('Change') }}</button> 
+            <button class="tfhb-image-btn tfhb-btn" @click="UploadImage">{{ __('Change', 'hydra-booking') }}</button> 
             <input  
               :value="props.modelValue" 
               :required= "required"

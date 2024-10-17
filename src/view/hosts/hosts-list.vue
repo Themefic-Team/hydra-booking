@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { ref, reactive } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';
@@ -53,7 +54,7 @@ window.addEventListener('click', function(e) {
     <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
         <template #header> 
             <!-- {{ google_calendar }} -->
-            <h2>{{ $tfhb_trans('Confirmation') }}</h2>
+            <h2>{{ __('Confirmation', 'hydra-booking') }}</h2>
             
         </template>
 
@@ -63,12 +64,12 @@ window.addEventListener('click', function(e) {
                     <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
                 </div>
                 <div class="tfhb-close-content">
-                    <h3>{{ $tfhb_trans('Are you absolutely sure??') }}  </h3>  
-                    <p>{{ $tfhb_trans('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.') }}</p>
+                    <h3>{{ __('Are you absolutely sure??', 'hydra-booking') }}  </h3>  
+                    <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
                 </div>
                 <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
-                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ $tfhb_trans('Cancel') }}</button>
-                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ $tfhb_trans('Delete') }}</button>
+                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ __('Cancel', 'hydra-booking') }}</button>
+                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ __('Delete', 'hydra-booking') }}</button>
                 </div>
             </div> 
         </template> 
@@ -79,8 +80,8 @@ window.addEventListener('click', function(e) {
             <!-- Single Hosts -->
             <div   v-for="(host, key) in host_list"  class="tfhb-single-hosts"> 
                 <div class="tfhb-single-hosts-wrap ">
-                    <span class="tfhb-hosts-status" v-if="host.status == 'activate'">{{ $tfhb_trans('Active') }}</span> 
-                    <span class="tfhb-hosts-status tfhb-hosts-status-warning" v-else>{{ $tfhb_trans('Disable') }}</span>
+                    <span class="tfhb-hosts-status" v-if="host.status == 'activate'">{{ __('Active', 'hydra-booking') }}</span> 
+                    <span class="tfhb-hosts-status tfhb-hosts-status-warning" v-else>{{ __('Disable', 'hydra-booking') }}</span>
 
                     <div class="tfhb-hosts-info tfhb-flexbox">
                         <div class="hosts-avatar" >
@@ -102,12 +103,12 @@ window.addEventListener('click', function(e) {
                         <transition  name="tfhb-dropdown-transition">
                             <div v-show="host.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
                                 <!-- route link -->
-                                <router-link :to="{ name: 'HostsProfile', params: { id: host.user_id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('View & Edit') }}</router-link>
+                                <router-link :to="{ name: 'HostsProfile', params: { id: host.user_id } }" class="tfhb-dropdown-single">{{ __('View & Edit', 'hydra-booking') }}</router-link>
                                 <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
                                 <span class="tfhb-dropdown-single" @click="emit('update-host-status',host.id, host.user_id, host.status)">{{host.status == 'activate' ? 'Deactivate' : 'Activate'}}</span>
                         
-                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ $tfhb_trans('Delete') }}</span> -->
-                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(host.id, host.user_id)">{{ $tfhb_trans('Delete') }}</span>
+                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ __('Delete', 'hydra-booking') }}</span> -->
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(host.id, host.user_id)">{{ __('Delete', 'hydra-booking') }}</span>
                             </div>
                         </transition>
                     </div>

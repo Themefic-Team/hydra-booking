@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
@@ -42,8 +43,8 @@ const StepOne = () => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{ $tfhb_trans('Simplify Your Work with HydraBooking') }}</h2>
-            <p>{{ $tfhb_trans('Our intuitive setup process makes HydraBooking a breeze to use, even for non-technical users.') }}</p>
+            <h2>{{ __('Simplify Your Work with HydraBooking', 'hydra-booking') }}</h2>
+            <p>{{ __('Our intuitive setup process makes HydraBooking a breeze to use, even for non-technical users.', 'hydra-booking') }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
@@ -52,7 +53,7 @@ const StepOne = () => {
                     
                     v-model="props.setupWizard.data.business_type"  
                     required= "true"   
-                    :label="$tfhb_trans('Your business type?')"  
+                    :label="__('Your business type?', 'hydra-booking')"  
                     selected = "1"
                     placeholder="Select Your Business Type"  
                     :option = "[
@@ -67,7 +68,7 @@ const StepOne = () => {
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'getting-start'" 
-                :buttonText="$tfhb_trans('Back')"
+                :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
@@ -76,7 +77,7 @@ const StepOne = () => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="StepOne" 
-                :buttonText="$tfhb_trans('Next')"
+                :buttonText="__('Next', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

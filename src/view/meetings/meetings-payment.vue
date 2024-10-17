@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import {ref, onBeforeMount} from 'vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'
 
@@ -41,13 +42,13 @@ onBeforeMount(() => {
             <div class="tfhb-admin-title tfhb-m-0 tfhb-full-width">
 
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{ $tfhb_trans('Payment for this Meeting ') }}
+                    {{ __('Payment for this Meeting ', 'hydra-booking') }}
                      
                     <HbSwitch 
                         v-model="meeting.payment_status"
                     />
                 </h2> 
-                <p>{{ $tfhb_trans('You can enable or disable payment for this meeting by toggle switch') }}</p>
+                <p>{{ __('You can enable or disable payment for this meeting by toggle switch', 'hydra-booking') }}</p>
             </div> 
             <div v-if="meeting.payment_status == 1"  class="tfhb-content-wrap tfhb-full-width"> 
                 <div class="tfhb-integrations-wrap tfhb-flexbox"> 
@@ -55,7 +56,7 @@ onBeforeMount(() => {
                     <HbDropdown 
                         v-model="meeting.payment_method" 
                         required= "true" 
-                        :label="$tfhb_trans('Payment Method')"  
+                        :label="__('Payment Method', 'hydra-booking')"  
                         :selected = "1"
                         name="payment_method"
                         placeholder="Select Payment Method"  
@@ -73,7 +74,7 @@ onBeforeMount(() => {
                     v-model="meeting.payment_meta.product_id" 
                     required= "true" 
                     :filter="true"
-                    :label="$tfhb_trans('Selecte Product')"  
+                    :label="__('Selecte Product', 'hydra-booking')"  
                     :selected = "1"
                     name="payment_meta"
                     placeholder="Select Product"  
@@ -82,7 +83,7 @@ onBeforeMount(() => {
             </div>
             <div v-if="meeting.payment_status == 1 && meeting.payment_method=='stripe_payment' || meeting.payment_method=='paypal_payment'" class="tfhb-single-form-field" style="width: 100%;" selected="1">
                 <div class="tfhb-single-form-field-wrap tfhb-field-input">
-                    <label>{{ $tfhb_trans('Price') }} <span> *</span></label>
+                    <label>{{ __('Price', 'hydra-booking') }} <span> *</span></label>
                     <div class="tfhb-meeting-currency tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
                         <input v-model="meeting.meeting_price" required="" type="text" placeholder="00.000">
                         <!-- <select v-model="meeting.payment_currency" placeholder="USD">
@@ -110,7 +111,7 @@ onBeforeMount(() => {
             <HbButton  
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
-            :buttonText="$tfhb_trans('Save & Preview')"
+            :buttonText="__('Save & Preview', 'hydra-booking')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

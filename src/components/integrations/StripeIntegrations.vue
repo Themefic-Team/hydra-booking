@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -31,7 +31,7 @@ const closePopup = () => {
             'tfhb-pro': !$tfhb_is_pro,
         }"
       >
-        <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+        <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
          
         <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
@@ -40,14 +40,14 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Stripe') }}</h3>
-                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
+                <h3>{{ __('Stripe', 'hydra-booking') }}</h3>
+                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
             </div>
         </div>
         <div v-if="$tfhb_is_pro == false"  class="tfhb-integrations-single-block-btn tfhb-flexbox"> 
-            <span   v-if=" props.from == 'host' && stripe_data.connection_status != '1'" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+            <span   v-if=" props.from == 'host' && stripe_data.connection_status != '1'" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
            
-            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
 
@@ -64,29 +64,29 @@ const closePopup = () => {
 
         <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ $tfhb_trans('Connect Your Stripe Account') }}</h2>
+                <h2>{{ __('Connect Your Stripe Account', 'hydra-booking') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Stripe Account') }}
+                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Stripe Account', 'hydra-booking') }}
                 </p>
                 <HbText  
                     v-model="stripe_data.public_key"  
                     required= "true"  
-                    :label="$tfhb_trans('Stripe Public Key')"  
+                    :label="__('Stripe Public Key', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Your Public Key')"  
+                    :placeholder="__('Enter Your Public Key', 'hydra-booking')"  
                 /> 
                 <HbText  
                     v-model="stripe_data.secret_key"  
                     required= "true"  
-                    :label="$tfhb_trans('Stripe Secret Key')"  
+                    :label="__('Stripe Secret Key', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Your Stripe Secret')"  
+                    :placeholder="__('Enter Your Stripe Secret', 'hydra-booking')"  
                 />
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'stripe', stripe_data)">{{ $tfhb_trans('Save & Validate') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'stripe', stripe_data)">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 

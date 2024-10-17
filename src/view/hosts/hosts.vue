@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { reactive, onBeforeMount, ref } from 'vue';
 import { useRouter, RouterView } from 'vue-router' 
 import axios from 'axios'  
@@ -176,13 +177,13 @@ const Tfhb_Host_Filter = async (e) =>{
                 <span><Icon name="Search" size=20 /></span>
            </div>
             <div class="thb-admin-btn right">
-               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ $tfhb_trans('Add New Host') }}</button> 
+               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ __('Add New Host', 'hydra-booking') }}</button> 
             </div> 
         </div>
         <div class="tfhb-hosts-content">  
             <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
                 <template #header> 
-                    <h2>{{$tfhb_trans('Add New Host')}}</h2>   
+                    <h2>{{ __('Add New Host', 'hydra-booking') }}</h2>   
                 </template>
 
                 <template #content>  
@@ -190,9 +191,9 @@ const Tfhb_Host_Filter = async (e) =>{
                     <HbDropdown    
                         v-model="host.id"  
                         required= "true"  
-                        :label="$tfhb_trans('Select User')"  
+                        :label="__('Select User', 'hydra-booking')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Select User')" 
+                        :placeholder="__('Select User', 'hydra-booking')" 
                         :option = "usersData.data" 
                     /> 
                     <!-- Select User --> 
@@ -201,9 +202,9 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-if="host.id == 0"
                         v-model="host.username"  
                         required= "true"  
-                        :label="$tfhb_trans('Username')"  
+                        :label="__('Username', 'hydra-booking')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Type Username')"  
+                        :placeholder="__('Type Username', 'hydra-booking')"  
                     /> 
                     <!-- UsernName -->
                     <!-- Email -->
@@ -212,9 +213,9 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.email"  
                         required= "true"  
                         type= "email"  
-                        :label="$tfhb_trans('Email')"  
+                        :label="__('Email', 'hydra-booking')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Type User Email')"  
+                        :placeholder="__('Type User Email', 'hydra-booking')"  
                     /> 
                     <!-- Email -->
 
@@ -225,15 +226,15 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.password"  
                         required= "true"  
                         type= "password"  
-                        :label="$tfhb_trans('Password')"  
+                        :label="__('Password', 'hydra-booking')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Type User Password')"  
+                        :placeholder="__('Type User Password', 'hydra-booking')"  
                     /> 
                     <!-- Password -->
                     
 
                     <!-- Create Or Update Availability -->
-                    <button class="tfhb-btn boxed-btn" @click="CreateHosts">{{ $tfhb_trans('Create Hosts') }}</button>
+                    <button class="tfhb-btn boxed-btn" @click="CreateHosts">{{ __('Create Hosts', 'hydra-booking') }}</button>
                 </template> 
             </HbPopup>
              <router-view :host_list="hosts.data" @update-host-status="updateHostStatus" @delete-host="deleteHost" :host_skeleton="skeleton" /> 

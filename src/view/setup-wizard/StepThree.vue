@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
@@ -34,8 +35,8 @@ const props = defineProps({
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{$tfhb_trans('Experience HydraBooking in Action (Instantly!)')}}</h2>
-            <p>{{$tfhb_trans('It helps you customize the booking process to fit your workflow and make things run more smoothly.')}}</p>
+            <h2>{{ __('Experience HydraBooking in Action (Instantly!)', 'hydra-booking') }}</h2>
+            <p>{{ __('It helps you customize the booking process to fit your workflow and make things run more smoothly.', 'hydra-booking') }}</p>
         </div>
         <div class="tfhb-s-w-import-data">
             <img :src="$tfhb_url+'/assets/images/import.gif'" style="height: 96px;" alt="">
@@ -54,7 +55,7 @@ const props = defineProps({
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
-                :buttonText="$tfhb_trans('Back')"
+                :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true" 

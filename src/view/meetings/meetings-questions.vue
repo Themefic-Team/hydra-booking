@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import {reactive, ref} from 'vue'
 import HbQuestion from '@/components/widgets/HbQuestion.vue'
 import HbQuestionForm from '@/components/widgets/HbQuestionForm.vue'
@@ -114,12 +115,12 @@ const GetFormsData = async (value) => {
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title   tfhb-full-width">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{ $tfhb_trans('Meeting Questions for Attendee') }}
+                    {{ __('Meeting Questions for Attendee', 'hydra-booking') }}
                     <!-- <HbSwitch 
                         v-model="meeting.questions_type" 
                     /> --> 
                 </h2> 
-                <p>{{ $tfhb_trans('Create your own booking page questions') }}</p>
+                <p>{{ __('Create your own booking page questions', 'hydra-booking') }}</p>
             </div>
 
             <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal">
@@ -130,8 +131,8 @@ const GetFormsData = async (value) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Create custom form') }}</h4> 
-                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be go for indefinitely into the future') }}</p> -->
+                            <h4 class="tfhb-m-0">{{ __('Create custom form', 'hydra-booking') }}</h4> 
+                            <!-- <p class="tfhb-m-0">{{ __('Meeting will be go for indefinitely into the future', 'hydra-booking') }}</p> -->
                         </div>
                     </label>
                 </div>
@@ -142,8 +143,8 @@ const GetFormsData = async (value) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Use existing form') }}</h4> 
-                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be only available on specific dates') }}</p> -->
+                            <h4 class="tfhb-m-0">{{ __('Use existing form', 'hydra-booking') }}</h4> 
+                            <!-- <p class="tfhb-m-0">{{ __('Meeting will be only available on specific dates', 'hydra-booking') }}</p> -->
                         </div>
                     </label> 
                 </div>
@@ -162,12 +163,12 @@ const GetFormsData = async (value) => {
 
             <div class="tfhb-add-new-question tfhb-flexbox tfhb-gap-8"  @click="QuestionPopupAdd()" >
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans('Add more questions') }}
+                {{ __('Add more questions', 'hydra-booking') }}
             </div>
 
             <HbPopup :isOpen="QuestionPopup" @modal-close="QuestionPopup = false" max_width="400px" name="first-modal">
                 <template #header> 
-                    <h3>{{ $tfhb_trans('Add Question for Attendee') }}</h3>
+                    <h3>{{ __('Add Question for Attendee', 'hydra-booking') }}</h3>
                 </template>
 
                 <template #content>  
@@ -188,7 +189,7 @@ const GetFormsData = async (value) => {
                     
                     v-model="meeting.questions_form_type"  
                     required= "true" 
-                    :label="$tfhb_trans('Select Form Types')"  
+                    :label="__('Select Form Types', 'hydra-booking')"  
                     width="50"
                     :selected = "1"
                     placeholder="Select Form Types"   
@@ -207,7 +208,7 @@ const GetFormsData = async (value) => {
                     v-if = "meeting.questions_form_type != ''"
                     v-model="meeting.questions_form"  
                     required= "true" 
-                    :label="$tfhb_trans('Select Form Types')"  
+                    :label="__('Select Form Types', 'hydra-booking')"  
                     width="50" 
                     placeholder="Select Form Types"   
                     :option = "props.formsList.value" 
@@ -220,7 +221,7 @@ const GetFormsData = async (value) => {
             <HbButton  
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting')"
-                :buttonText="$tfhb_trans('Save & Continue')"
+                :buttonText="__('Save & Continue', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -29,8 +29,8 @@ const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooC
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Woo Payment') }}</h3>
-                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
+                <h3>{{ __('Woo Payment', 'hydra-booking') }}</h3>
+                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
             </div>
         </div>
        
@@ -38,8 +38,8 @@ const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooC
 <!-- Aadmin -->
 
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connected') }} <Icon name="ChevronRight" size=18 /></button>
-            <a v-else :href="plugin_url" target="__blank"  class="tfhb-btn tfhb-install-plugins tfhb-flexbox tfhb-gap-8" :data-connection-status="woo_payment.connection_status" @click="installPlugins">{{ $tfhb_trans('Connect') }} <Icon name="ChevronRight" size=18 /></a>
+            <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connected', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></button>
+            <a v-else :href="plugin_url" target="__blank"  class="tfhb-btn tfhb-install-plugins tfhb-flexbox tfhb-gap-8" :data-connection-status="woo_payment.connection_status" @click="installPlugins">{{ __('Connect', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></a>
                 <!-- Checkbox swicher -->
 
                 <HbSwitch v-if="woo_payment.connection_status" @change="emit('update-integrations', 'woo_payment', woo_payment)"  v-model="woo_payment.status"    />

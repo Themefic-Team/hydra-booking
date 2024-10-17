@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -32,8 +32,8 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Google Calendar/Meet') }}</h3> 
-                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
+                <h3>{{ __('Google Calendar/Meet', 'hydra-booking') }}</h3> 
+                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
 
             </div>
         </div>
@@ -48,37 +48,37 @@ const closePopup = () => {
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
                 <!-- {{ google_calendar }} -->
-                <h2>{{ $tfhb_trans('Add Google Calendar') }}</h2>
+                <h2>{{ __('Add Google Calendar', 'hydra-booking') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar') }}
+                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar', 'hydra-booking') }}
                     
                 </p>
                 <HbText  
                     v-model="props.google_calendar.client_id"  
                     required= "true"  
-                    :label="$tfhb_trans('Client ID')"  
+                    :label="__('Client ID', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Client ID')"  
+                    :placeholder="__('Enter Client ID', 'hydra-booking')"  
                 /> 
                 <HbText  
                     v-model="props.google_calendar.secret_key"  
                     required= "true"  
-                    :label="$tfhb_trans('Secret Key')"  
+                    :label="__('Secret Key', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Secret Key')"  
+                    :placeholder="__('Enter Secret Key', 'hydra-booking')"  
                 /> 
                 <HbText  
                     v-model="props.google_calendar.redirect_url"  
                     required= "true"   
-                    :label="$tfhb_trans('Redirect Url')"   
+                    :label="__('Redirect Url', 'hydra-booking')"   
                     selected = "1" 
-                    :placeholder="$tfhb_trans('Enter Redirect Url')"  
+                    :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar)">{{ $tfhb_trans('Save & Validate') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar)">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 

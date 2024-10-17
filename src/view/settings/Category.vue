@@ -1,4 +1,5 @@
 <script setup> 
+import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount, computed } from 'vue';
 import axios from 'axios' 
@@ -124,11 +125,11 @@ const prevPage = () => {
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans('Meeting Category') }}</h1> 
-                <p>{{ $tfhb_trans('Manage your time zone settings and bookings') }}</p>
+                <h1 >{{ __('Meeting Category', 'hydra-booking') }}</h1> 
+                <p>{{ __('Manage your time zone settings and bookings', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
+                <a href="#" target="_blank" class="tfhb-btn"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
@@ -138,24 +139,24 @@ const prevPage = () => {
                     <HbText  
                         v-model="CategoryData.title"
                         required= "true"  
-                        :label="$tfhb_trans('Category Title')"  
+                        :label="__('Category Title', 'hydra-booking')"  
                         name="title"
                     /> 
                     <HbTextarea  
                         v-model="CategoryData.description"
                         required= "true"  
                         name="description"
-                        :label="$tfhb_trans('Description')"  
+                        :label="__('Description', 'hydra-booking')"  
                     /> 
-                    <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ CategoryData.id ? $tfhb_trans('Update Category') : $tfhb_trans('Save Category') }}</button>
+                    <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ CategoryData.id ? __('Update Category', 'hydra-booking'): __('Save Category', 'hydra-booking')}}</button>
                 </div>  
                 <div class="tfhb-category-list">
                     <table class="table" cellpadding="0" :cellspacing="0">
                         <thead>
                             <tr>
-                                <th width="180">{{ $tfhb_trans('Name') }}</th>
-                                <th>{{ $tfhb_trans('Description') }}</th>
-                                <th width="120">{{ $tfhb_trans('Action') }}</th>
+                                <th width="180">{{ __('Name', 'hydra-booking') }}</th>
+                                <th>{{ __('Description', 'hydra-booking') }}</th>
+                                <th width="120">{{ __('Action', 'hydra-booking') }}</th>
                             </tr>
                         </thead>
                         <tbody v-if="paginatedCategories">
@@ -182,7 +183,7 @@ const prevPage = () => {
 
                     <div class="tfhb-booking-details-pagination tfhb-flexbox tfhb-mt-32" v-if="totalPages > 1">
                         <div class="tfhb-prev-next-button">
-                            <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === 1"><Icon name="ArrowLeft" width="20" />{{ $tfhb_trans('Previous') }}</a>
+                            <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === 1"><Icon name="ArrowLeft" width="20" />{{ __('Previous', 'hydra-booking') }}</a>
                         </div>
                         <div class="tfhb-pagination">
                             <ul class="tfhb-flexbox tfhb-gap-0 tfhb-justify-normal">
@@ -192,7 +193,7 @@ const prevPage = () => {
                             </ul>
                         </div>
                         <div class="tfhb-prev-next-button">
-                            <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === totalPages">{{ $tfhb_trans('Next') }}<Icon name="ArrowRight" width="20" /></a>
+                            <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === totalPages">{{ __('Next', 'hydra-booking') }}<Icon name="ArrowRight" width="20" /></a>
                         </div>
                     </div>
                     

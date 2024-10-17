@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import HbText from '../form-fields/HbText.vue';
 import HbSwitch from '../form-fields/HbSwitch.vue';
 import HbSelect from '../form-fields/HbSelect.vue';
@@ -73,9 +74,9 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbDropdown 
         v-model="questions_data.type"
         required= "true" 
-        :label="$tfhb_trans('Field type')"  
+        :label="__('Field type', 'hydra-booking')"  
         :selected = "1"  
-        :placeholder="$tfhb_trans('Field type')" 
+        :placeholder="__('Field type', 'hydra-booking')" 
         :option = "[
             {name: 'Text', value: 'text'}, 
             {name: 'Email', value: 'email'}, 
@@ -96,8 +97,8 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbText  
         v-model="questions_data.label"
         required= "true"  
-        :label="$tfhb_trans('Level')"  
-        :placeholder="$tfhb_trans('Type level here')" 
+        :label="__('Level', 'hydra-booking')"  
+        :placeholder="__('Enter field level', 'hydra-booking')" 
         name="type"
         @keyup="() => tfhbValidateInput('label')"
         @click="() => tfhbValidateInput('label')"
@@ -106,8 +107,8 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbText  
         v-model="questions_data.placeholder"
         required= "true"  
-        :label="$tfhb_trans('Placeholder')"  
-        :placeholder="$tfhb_trans('Type Placeholder here')" 
+        :label="__('Placeholder', 'hydra-booking')"  
+        :placeholder="__('Enter field placeholder ', 'hydra-booking')" 
         @keyup="() => tfhbValidateInput('placeholder')"
         @click="() => tfhbValidateInput('placeholder')"
         :errors="errors.placeholder"
@@ -124,7 +125,7 @@ const UpdateQuestionsData = async (validator_field) => {
         class="tfhb-single-form-field"   :style="{ 'width': '100%' }" 
     > 
         <div class="tfhb-single-form-field-wrap tfhb-field-options"> 
-            <label   for="name">{{ $tfhb_trans('Options') }} <span  > *</span> </label>
+            <label   for="name">{{ __('Options', 'hydra-booking') }} <span  > *</span> </label>
             <div  class="tfhb-options-fields tfhb-flexbox tfhb-gap-16" v-for="(option, index) in questions_data.options" :key="index"> 
                 <input 
                     v-model="questions_data.options[index]"
@@ -137,7 +138,7 @@ const UpdateQuestionsData = async (validator_field) => {
             </div>
             <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" @click="AddNewOptions" >
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans('Add New Option') }}
+                {{ __('Add New Option', 'hydra-booking') }}
             </button>
         </div> 
     </div>
@@ -145,7 +146,7 @@ const UpdateQuestionsData = async (validator_field) => {
 
     <HbSwitch  
         v-model="questions_data.required"
-        :label="$tfhb_trans('Required')"  
+        :label="__('Required', 'hydra-booking')"  
     /> 
 
     <div class="tfhb-action-btn tfhb-full-width tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">

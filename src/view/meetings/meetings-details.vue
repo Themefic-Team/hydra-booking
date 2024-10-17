@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { defineProps, defineEmits, ref } from 'vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
@@ -108,10 +109,10 @@ const closePopup = () => {
         <HbText  
             v-model="meeting.title" 
             required= "true"  
-            :label="$tfhb_trans('Meeting title')"  
+            :label="__('Meeting title', 'hydra-booking')"  
             name="title"
             selected = "1"
-            :placeholder="$tfhb_trans('Type meeting title')" 
+            :placeholder="__('Type meeting title', 'hydra-booking')" 
             @keyup="() => tfhbValidateInput('title')"
             @click="() => tfhbValidateInput('title')"
             :errors="errors.title"
@@ -120,8 +121,8 @@ const closePopup = () => {
             v-model="meeting.description" 
             required= "false"  
             name="description"
-            :label="$tfhb_trans('Description')"  
-            :placeholder="$tfhb_trans('Describe about meeting')" 
+            :label="__('Description', 'hydra-booking')"  
+            :placeholder="__('Describe about meeting', 'hydra-booking')" 
         /> 
 
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-16 tfhb-m-0 tfhb-full-width"> 
@@ -129,7 +130,7 @@ const closePopup = () => {
             <HbDropdown 
                 v-model="meeting.duration" 
                 required= "true" 
-                :label="$tfhb_trans('Duration')"  
+                :label="__('Duration', 'hydra-booking')"  
                 :selected = "1"
                 name="duration"
                 placeholder="Select Meetings Duration"  
@@ -148,18 +149,18 @@ const closePopup = () => {
             <!-- Custom Duration -->
             <HbText  
                 v-model="meeting.custom_duration"  
-                :label="$tfhb_trans('Custom Duration')"  
+                :label="__('Custom Duration', 'hydra-booking')"  
                 name="title"
                 type="number"
                 selected = "1"
-                :placeholder="$tfhb_trans('Type Custom Duration')"  
+                :placeholder="__('Type Custom Duration', 'hydra-booking')"  
                 v-if="'custom'==meeting.duration"
             /> 
              <!-- Custom Duration -->
             <!-- <HbSwitch 
                 type="checkbox" 
                 required= "true" 
-                :label="$tfhb_trans('Allow attendee to select duration')" 
+                :label="__('Allow attendee to select duration', 'hydra-booking')" 
             /> -->
         </div>
 
@@ -170,9 +171,9 @@ const closePopup = () => {
                     <HbDropdown 
                         v-model="slocation.location" 
                         required= "true" 
-                        :label="$tfhb_trans('Location')"  
+                        :label="__('Location', 'hydra-booking')"  
                         :selected = "1"
-                        :placeholder="$tfhb_trans('Location')" 
+                        :placeholder="__('Location', 'hydra-booking')" 
                         :option = "[
                             {name: 'Zoom', value: 'zoom', disable:  props.integrations.zoom_meeting_status, icon: 'Fullscreen'}, 
                             {name: 'Google Meet', value: 'meet', disable: props.integrations.google_calendar_status}, 
@@ -188,18 +189,18 @@ const closePopup = () => {
                     <HbText  
                         v-model="slocation.address" 
                         required= "true"  
-                        :label="$tfhb_trans('Address')"  
+                        :label="__('Address', 'hydra-booking')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Address')" 
+                        :placeholder="__('Enter Address', 'hydra-booking')" 
                         :width= "50"
                         v-if="'In Person (Organizer Address)'== slocation.location "
                     /> 
                     <HbText  
                         v-model="slocation.address" 
                         required= "true"  
-                        :label="$tfhb_trans('Add Custom Location')"  
+                        :label="__('Add Custom Location', 'hydra-booking')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Address')" 
+                        :placeholder="__('Enter Address', 'hydra-booking')" 
                         :width= "50"
                         v-if="'Add Custom'==slocation.location"
                     /> 
@@ -207,9 +208,9 @@ const closePopup = () => {
                         v-model="slocation.address" 
                         type="number"
                         required= "true"  
-                        :label="$tfhb_trans('Phone Number')"  
+                        :label="__('Phone Number', 'hydra-booking')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Phone Number')" 
+                        :placeholder="__('Enter Phone Number', 'hydra-booking')" 
                         :width= "50"
                         v-if="'Organizer Phone Number'==slocation.location"
                     /> 
@@ -222,7 +223,7 @@ const closePopup = () => {
              
                 <button @click="emit('add-more-location')" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                     <Icon name="PlusCircle" :width="20"/>
-                    {{ $tfhb_trans('Add Another Location') }}
+                    {{ __('Add Another Location', 'hydra-booking') }}
                 </button> 
             </div>
         </div>
@@ -232,7 +233,7 @@ const closePopup = () => {
                 <HbText  
                         v-model="meeting.max_book_per_slot"  
                         type= "number"
-                        :label="$tfhb_trans('Max invitees in a spot')"   
+                        :label="__('Max invitees in a spot', 'hydra-booking')"   
                         :placeholder="'Max invitees in a spot'" 
                         :width= "100"
                        
@@ -242,7 +243,7 @@ const closePopup = () => {
                         v-model="meeting.is_display_max_book_slot" 
                         type="checkbox" 
                         required= "true" 
-                        :label="$tfhb_trans('Display remaining spots on booking page')" 
+                        :label="__('Display remaining spots on booking page', 'hydra-booking')" 
                     />
             </div>  
         </div>
@@ -252,9 +253,9 @@ const closePopup = () => {
         <HbDropdown 
             v-model="meeting.meeting_category" 
             required= "true" 
-            :label="$tfhb_trans('Select Category')"  
+            :label="__('Select Category', 'hydra-booking')"  
             :selected = "meeting.meeting_category"
-            :placeholder="$tfhb_trans('Select Category')" 
+            :placeholder="__('Select Category', 'hydra-booking')" 
             :option = "props.meetingCategory.value" 
         />
         <div class="tfhb-add-moreinfo tfhb-full-width" >
@@ -262,7 +263,7 @@ const closePopup = () => {
 
             <button @click="createMeetingPopup = !createMeetingPopup" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans('Create Category') }}
+                {{ __('Create Category', 'hydra-booking') }}
             </button> 
         </div>
         <div class="tfhb-submission-btn">
@@ -270,7 +271,7 @@ const closePopup = () => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting', ['title',  'duration'])"
-                :buttonText="$tfhb_trans('Save & Continue')"
+                :buttonText="__('Save & Continue', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
@@ -280,7 +281,7 @@ const closePopup = () => {
 
         <HbPopup :isOpen="createMeetingPopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ $tfhb_trans('Create Meeting Category') }}</h2>
+                <h2>{{ __('Create Meeting Category', 'hydra-booking') }}</h2>
                 
             </template>
 
@@ -288,16 +289,16 @@ const closePopup = () => {
                 <HbText  
                     v-model="CategoryData.title"
                     required= "true"  
-                    :label="$tfhb_trans('Category Title')"  
+                    :label="__('Category Title', 'hydra-booking')"  
                     name="ctg-title"
                 /> 
                 <HbTextarea  
                     v-model="CategoryData.description"
                     required= "true"  
                     name="ctg-description"
-                    :label="$tfhb_trans('Description')"  
+                    :label="__('Description', 'hydra-booking')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{  $tfhb_trans('Save Category') }}</button> 
+                <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ __('Save Category', 'hydra-booking') }}</button> 
             </template> 
         </HbPopup>
     </div>

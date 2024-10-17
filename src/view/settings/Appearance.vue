@@ -1,4 +1,5 @@
 <script setup> 
+import { __ } from '@wordpress/i18n';
 import {ref, reactive, onBeforeMount} from 'vue'
 import { useRouter, RouterView,} from 'vue-router'  
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -80,19 +81,19 @@ onBeforeMount(() => {
 
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans('Appearance') }}</h1> 
-                <p>{{ $tfhb_trans('Set up your appearance settings for bookings') }}</p>
+                <h1 >{{ __('Appearance', 'hydra-booking') }}</h1> 
+                <p>{{ __('Set up your appearance settings for bookings', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
+                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
         
         <div class="thb-content-wrap">
             
             <!-- <div class="tfhb-admin-title" >
-                <h2>{{ $tfhb_trans('Theme') }}</h2> 
-                <p>{{ $tfhb_trans('This only applies to your attendee booking pages') }}</p>
+                <h2>{{ __('Theme', 'hydra-booking') }}</h2> 
+                <p>{{ __('This only applies to your attendee booking pages', 'hydra-booking') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
@@ -113,37 +114,37 @@ onBeforeMount(() => {
             </div> -->
 
             <div class="tfhb-admin-title" >
-                <h2>{{ $tfhb_trans('Custom brand colors') }}</h2> 
-                <p>{{ $tfhb_trans('Customize your own brand color into your booking page') }}</p>
+                <h2>{{ __('Custom brand colors', 'hydra-booking') }}</h2> 
+                <p>{{ __('Customize your own brand color into your booking page', 'hydra-booking') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
                 <div class="tfhb-colorbox tfhb-full-width">
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16">
                         <label>
-                            {{ $tfhb_trans('Primary Color') }}
+                            {{ __('Primary Color', 'hydra-booking') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.primary_color" v-model="appearanceSettings.primary_color" :withoutInput="true"/>
-                            <span>{{ $tfhb_trans('Select Color') }}</span>
+                            <span>{{ __('Select Color', 'hydra-booking') }}</span>
                         </div>
                     </div>
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16">
                         <label>
-                            {{ $tfhb_trans('Secondary Color') }}
+                            {{ __('Secondary Color', 'hydra-booking') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.secondary_color" v-model="appearanceSettings.secondary_color" :withoutInput="true"/>
-                            <span>{{ $tfhb_trans('Select Color') }}</span>
+                            <span>{{ __('Select Color', 'hydra-booking') }}</span>
                         </div>
                     </div>
                     <div class="tfhb-single-colorbox tfhb-flexbox">
                         <label>
-                            {{ $tfhb_trans('Paragraph Color') }}
+                            {{ __('Paragraph Color', 'hydra-booking') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.paragraph_color" v-model="appearanceSettings.paragraph_color" :withoutInput="true"/>
-                            <span>{{ $tfhb_trans('Select Color') }}</span>
+                            <span>{{ __('Select Color', 'hydra-booking') }}</span>
                         </div>
                     </div>
                 </div>
@@ -151,15 +152,15 @@ onBeforeMount(() => {
             </div>
 
             <div class="tfhb-admin-title" >
-                <h2>{{ $tfhb_trans('Typography') }}</h2> 
-                <p>{{ $tfhb_trans('Set your own typography for your brand') }}</p>
+                <h2>{{ __('Typography', 'hydra-booking') }}</h2> 
+                <p>{{ __('Set your own typography for your brand', 'hydra-booking') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">  
                 <HbDropdown 
                     v-model="appearanceSettings.titleTypo"
                     required= "true"  
-                    :label="$tfhb_trans('For title')"   
+                    :label="__('For title', 'hydra-booking')"   
                     width="50"
                     selected = "1"
                     placeholder="For title"  
@@ -173,7 +174,7 @@ onBeforeMount(() => {
                 <HbDropdown 
                     v-model="appearanceSettings.desTypo"
                     required= "true"  
-                    :label="$tfhb_trans('For paragraph')"   
+                    :label="__('For paragraph', 'hydra-booking')"   
                     width="50"
                     selected = "1"
                     placeholder="For paragraph"  
@@ -187,7 +188,7 @@ onBeforeMount(() => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="UpdateAppearanceSettings" 
-                :buttonText="$tfhb_trans('Save')"
+                :buttonText="__('Save', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

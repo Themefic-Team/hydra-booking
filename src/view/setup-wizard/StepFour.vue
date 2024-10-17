@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import { RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
@@ -103,7 +104,7 @@ window.addEventListener('click', function(e) {
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 active"></span>
             </div> 
-            <h2>{{$tfhb_trans('Your Meeting is ready!')}}</h2>
+            <h2>{{ __('Your Meeting is ready!', 'hydra-booking') }}</h2>
             <p>{{$tfhb_trans(`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`)}}</p> 
         </div>
 
@@ -123,7 +124,7 @@ window.addEventListener('click', function(e) {
                                                 <Icon name="Clock" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
-                                                {{ setupWizard.data.meeting.duration }} {{ $tfhb_trans('minutes') }}
+                                                {{ setupWizard.data.meeting.duration }} {{ __('minutes', 'hydra-booking') }}
                                             </div>
                                         </div>
                                     </li>
@@ -135,7 +136,7 @@ window.addEventListener('click', function(e) {
                                                 <Icon name="UserRound" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
-                                                {{ $tfhb_trans('One to One') }}
+                                                {{ __('One to One', 'hydra-booking') }}
                                             </div>
                                         </div>
                                         <div class="tfhb-flexbox" v-if="'one-to-group'==setupWizard.data.meeting.meeting_type">
@@ -145,7 +146,7 @@ window.addEventListener('click', function(e) {
                                                 <Icon name="UsersRound" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
-                                                {{ $tfhb_trans('One to Group') }}
+                                                {{ __('One to Group', 'hydra-booking') }}
                                             </div>
                                         </div>
                                     </li>
@@ -192,7 +193,7 @@ window.addEventListener('click', function(e) {
                             <transition name="tfhb-dropdown-transition">
                                 <div v-show="setupWizard.data.meeting.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
                                     <!-- route link -->
-                                    <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('Edit') }}</router-link>
+                                    <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single">{{ __('Edit', 'hydra-booking') }}</router-link>
                                     
                                 </div>
                             </transition>
@@ -201,11 +202,11 @@ window.addEventListener('click', function(e) {
                     <div class="single-meeting-action-btn tfhb-flexbox">
                         <a :href="'/' + setupWizard.data.meeting.slug" class="tfhb-flexbox" target="_blank">
                             <Icon name="Eye" size=20 /> 
-                            {{ $tfhb_trans('Preview') }}
+                            {{ __('Preview', 'hydra-booking') }}
                         </a>
                         <a href="#" class="tfhb-flexbox" @click.prevent="sharePopupData(setupWizard.data.meeting)">
                             <Icon name="Share2" size=20 /> 
-                            {{ $tfhb_trans('Share') }}
+                            {{ __('Share', 'hydra-booking') }}
                         </a>
                     </div>
                 </div>
@@ -225,7 +226,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="Clock" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ shareData.time }} {{ $tfhb_trans('minutes') }}
+                                            {{ shareData.time }} {{ __('minutes', 'hydra-booking') }}
                                         </div>
                                     </div>
                                 </li>
@@ -237,7 +238,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="UserRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ $tfhb_trans('One to One') }}
+                                            {{ __('One to One', 'hydra-booking') }}
                                         </div>
                                     </div>
                                     <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==shareData.meeting_type">
@@ -247,7 +248,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="UsersRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ $tfhb_trans('One to Group') }}
+                                            {{ __('One to Group', 'hydra-booking') }}
                                         </div>
                                     </div>
                                 </li>
@@ -255,8 +256,8 @@ window.addEventListener('click', function(e) {
 
                             <div class="tfhb-share-type tfhb-full-width">
                                 <ul class="tfhb-flexbox tfhb-gap-8">
-                                    <li :class="'link'==shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
-                                    <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Short code') }}</li>
+                                    <li :class="'link'==shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ __('Share link', 'hydra-booking') }}</li>
+                                    <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ __('Short code', 'hydra-booking') }}</li>
                                     <li :class="'embed'==shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">Embed code</li>
                                 </ul>
                             </div>
@@ -266,21 +267,21 @@ window.addEventListener('click', function(e) {
                                     <input type="text" :value="shareData.link" readonly>
 
                                     <div class="tfhb-copy-btn">
-                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.link)">{{ $tfhb_trans('Copy link') }}</button>
+                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.link)">{{ __('Copy link', 'hydra-booking') }}</button>
                                     </div>
                                 </div>
                                 <div class="share-link" v-if="'short'==shareData.share_type">
                                     <input type="text" :value="shareData.shortcode" readonly>
 
                                     <div class="tfhb-copy-btn">
-                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.shortcode)">{{ $tfhb_trans('Copy Code') }}</button>
+                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.shortcode)">{{ __('Copy Code', 'hydra-booking') }}</button>
                                     </div>
                                 </div>
                                 <div class="share-link" v-if="'embed'==shareData.share_type">
                                     <input type="text" :value="shareData.embed" readonly>
 
                                     <div class="tfhb-copy-btn">
-                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.embed)">{{ $tfhb_trans('Copy Code') }}</button>
+                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.embed)">{{ __('Copy Code', 'hydra-booking') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -295,7 +296,7 @@ window.addEventListener('click', function(e) {
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'step-three'" 
-                :buttonText="$tfhb_trans('Back')"
+                :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true" 
@@ -304,7 +305,7 @@ window.addEventListener('click', function(e) {
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="StepFour" 
-                :buttonText="$tfhb_trans('Complete setup')"
+                :buttonText="__('Complete setup', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"  

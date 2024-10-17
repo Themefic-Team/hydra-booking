@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import { useRouter, RouterView } from 'vue-router' 
 const router = useRouter();
@@ -133,13 +134,13 @@ window.addEventListener('click', function(e) {
         <div class="tfhb-filter-box tfhb-flexbox">
             <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
                 <div class="tfhb-filter-icon tfhb-filter-btn tfhb-flexbox"  @click="FilterPreview=!FilterPreview"><Icon name="Filter" size=20 /> 
-                {{ $tfhb_trans('Filter') }}</div>
+                {{ __('Filter', 'hydra-booking') }}</div>
                 <transition name="tfhb-dropdown-transition">
                     <div class="tfhb-filter-box-content" v-show="FilterPreview">
                         <div class="tfhb-filter-form">
                             <div class="tfhb-filter-category">
                                 <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterHostPreview=!FilterHostPreview">
-                                    {{ $tfhb_trans('All Host') }} <Icon name="ChevronUp" size=20 v-if="FilterHostPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterHostPreview"/>
+                                    {{ __('All Host', 'hydra-booking') }} <Icon name="ChevronUp" size=20 v-if="FilterHostPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterHostPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterHostPreview">
                                     <ul class="tfhb-flexbox">
@@ -159,7 +160,7 @@ window.addEventListener('click', function(e) {
 
                             <div class="tfhb-filter-category">
                                 <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
-                                    {{ $tfhb_trans('All Category') }} <Icon name="ChevronUp" size=20 v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterCatgoryPreview"/>
+                                    {{ __('All Category', 'hydra-booking') }} <Icon name="ChevronUp" size=20 v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterCatgoryPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterCatgoryPreview">
                                     <ul class="tfhb-flexbox">
@@ -182,7 +183,7 @@ window.addEventListener('click', function(e) {
                         <div class="tfhb-reset-btn" v-if="filterData.fcategory.length > 0 || filterData.fhosts.length > 0 || filterData.title">
                             <button @click="resetFilter" class="tfhb-flexbox">
                                 <Icon name="RefreshCw" size=20 /> 
-                                {{ $tfhb_trans('Reset Filter') }}
+                                {{ __('Reset Filter', 'hydra-booking') }}
                             </button>
                         </div>
                     </div>
@@ -194,7 +195,7 @@ window.addEventListener('click', function(e) {
             </div>
         </div>
         <div class="thb-admin-btn right">
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ $tfhb_trans('Create New Meeting') }}</button>
+            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ __('Create New Meeting', 'hydra-booking') }}</button>
         </div> 
     </div>
 
@@ -202,7 +203,7 @@ window.addEventListener('click', function(e) {
     <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="400px" name="first-modal">
         <template #header> 
             <!-- {{ google_calendar }} -->
-            <h2>{{ $tfhb_trans('Create New Meeting Type') }} </h2>
+            <h2>{{ __('Create New Meeting Type', 'hydra-booking') }} </h2>
             
         </template>
 
@@ -216,9 +217,9 @@ window.addEventListener('click', function(e) {
                                 <Icon name="ArrowRight" size=20 /> 
                                 <Icon name="UserRound" size=20 /> 
                             </div>
-                            <h3>{{ $tfhb_trans('One to One') }}</h3>
+                            <h3>{{ __('One to One', 'hydra-booking') }}</h3>
                         </div>
-                        <p>{{ $tfhb_trans('One host with one invitee. Good for: 1:1 interview, coffee chats') }}</p>
+                        <p>{{ __('One host with one invitee. Good for: 1:1 interview, coffee chats', 'hydra-booking') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
                         <Icon name="ArrowRight" width="20"/>
@@ -232,7 +233,7 @@ window.addEventListener('click', function(e) {
                     }
                     "
                 > 
-                <span class="tfhb-badge tfhb-badge-pro" v-if="$tfhb_is_pro == false">{{ $tfhb_trans('Pro') }}</span>
+                <span class="tfhb-badge tfhb-badge-pro" v-if="$tfhb_is_pro == false">{{ __('Pro', 'hydra-booking') }}</span>
                 <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
@@ -241,9 +242,9 @@ window.addEventListener('click', function(e) {
                                 <Icon name="ArrowRight" size=20 /> 
                                 <Icon name="UsersRound" size=20 /> 
                             </div>
-                            <h3>{{ $tfhb_trans('One to Group') }}</h3>
+                            <h3>{{ __('One to Group', 'hydra-booking') }}</h3>
                         </div>
-                        <p>{{ $tfhb_trans('One host with group of invitee. Good for: webinars, online clasess') }}</p>
+                        <p>{{ __('One host with group of invitee. Good for: webinars, online clasess', 'hydra-booking') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
                         <!-- <Icon name="ArrowRight" width="20"/> -->
@@ -262,12 +263,12 @@ window.addEventListener('click', function(e) {
                     <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
                 </div>
                 <div class="tfhb-close-content">
-                    <h3>{{ $tfhb_trans('Are you absolutely sure??') }}  </h3>  
-                    <p>{{ $tfhb_trans('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.') }}</p>
+                    <h3>{{ __('Are you absolutely sure??', 'hydra-booking') }}  </h3>  
+                    <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
                 </div>
                 <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
-                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ $tfhb_trans('Cancel') }}</button>
-                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ $tfhb_trans('Delete') }}</button>
+                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ __('Cancel', 'hydra-booking') }}</button>
+                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ __('Delete', 'hydra-booking') }}</button>
                 </div>
             </div> 
         </template> 
@@ -291,7 +292,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="Clock" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ smeeting.duration }} {{ $tfhb_trans('minutes') }}
+                                            {{ smeeting.duration }} {{ __('minutes', 'hydra-booking') }}
                                         </div>
                                     </div>
                                 </li>
@@ -303,7 +304,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="UserRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ $tfhb_trans('One to One') }}
+                                            {{ __('One to One', 'hydra-booking') }}
                                         </div>
                                     </div>
                                     <div class="tfhb-flexbox" v-if="'one-to-group'==smeeting.meeting_type">
@@ -313,7 +314,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="UsersRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ $tfhb_trans('One to Group') }}
+                                            {{ __('One to Group', 'hydra-booking') }}
                                         </div>
                                     </div>
                                 </li>
@@ -361,10 +362,10 @@ window.addEventListener('click', function(e) {
                         <transition name="tfhb-dropdown-transition">
                             <div v-show="smeeting.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
                                 <!-- route link -->
-                                <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ $tfhb_trans('Edit') }}</router-link>
+                                <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ __('Edit', 'hydra-booking') }}</router-link>
                                 
-                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span> -->
-                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ $tfhb_trans('Delete') }}</span>
+                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ __('Delete', 'hydra-booking') }}</span> -->
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ __('Delete', 'hydra-booking') }}</span>
                             </div>
                         </transition>
                     </div>
@@ -372,11 +373,11 @@ window.addEventListener('click', function(e) {
                 <div class="single-meeting-action-btn tfhb-flexbox">
                     <a :href="'/' + smeeting.slug" class="tfhb-flexbox" target="_blank">
                         <Icon name="Eye" size=20 /> 
-                        {{ $tfhb_trans('Preview') }}
+                        {{ __('Preview', 'hydra-booking') }}
                     </a>
                     <a href="#" class="tfhb-flexbox" @click.prevent="sharePopupData(smeeting)">
                         <Icon name="Share2" size=20 /> 
-                        {{ $tfhb_trans('Share') }}
+                        {{ __('Share', 'hydra-booking') }}
                     </a>
                 </div>
             </div>
@@ -388,7 +389,7 @@ window.addEventListener('click', function(e) {
         </div>
         <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
             <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-            <p>{{ $tfhb_trans('No Meeting Created') }}</p> 
+            <p>{{ __('No Meeting Created', 'hydra-booking') }}</p> 
         </div>
     </div>
     

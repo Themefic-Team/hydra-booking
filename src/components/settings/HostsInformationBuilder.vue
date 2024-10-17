@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import HbQuestion from '@/components/widgets/HbQuestion.vue';
@@ -78,12 +78,12 @@ const questions_data =  reactive({});
 
 <template>   
     <div class="tfhb-admin-title" >
-        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Information Builder') }}  
+        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ __('Information Builder', 'hydra-booking') }}  
             <HbSwitch 
                 v-model="hostsSettings.others_information.enable_others_information" 
             />
         </h2> 
-        <p>{{ $tfhb_trans('Date and Time Settings') }}</p>
+        <p>{{ __('Create and customize the information fields for your hosts', 'hydra-booking') }}</p>
     </div>
     <div v-if="hostsSettings.others_information.enable_others_information "  class="tfhb-admin-card-box  tfhb-gap-24 tfhb-m-0"  >   
         <div v-if="hostsSettings.others_information.fields !=''"  class="tfhb-host-info-builder-wrap  tfhb-mb-16" >
@@ -97,12 +97,12 @@ const questions_data =  reactive({});
         
         <button class="tfhb-btn tfhb-flexbox tfhb-gap-8"  @click="QuestionPopupOpen()" >
             <Icon name="PlusCircle" :width="20"/>
-            {{ $tfhb_trans('Add more Information') }}
+            {{ __('Add more Information', 'hydra-booking') }}
         </button>
 
         <HbPopup :isOpen="informationPopup" @modal-close="informationPopup = false" max_width="400px" name="first-modal">
             <template #header> 
-                <h3>{{ $tfhb_trans('Add Information for Hosts') }}</h3>
+                <h3>{{ __('Add Information for Hosts', 'hydra-booking') }}</h3>
             </template>
 
             <template #content>  

@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -29,7 +29,7 @@ const closePopup = () => {
             'tfhb-pro': !$tfhb_is_pro,
         }"
       >
-    <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+    <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
            
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
@@ -38,13 +38,13 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Zoho CRM') }}</h3>
-                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
+                <h3>{{ __('Zoho CRM', 'hydra-booking') }}</h3>
+                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
             <HbSwitch v-if="$tfhb_is_pro == true"  @change="emit('update-integrations', 'zoho_crm', zoho_crm_data)" v-model="zoho_crm_data.status"    />
-            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
 

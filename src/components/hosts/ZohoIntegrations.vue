@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -38,14 +38,14 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Zoho') }}</h3>
-                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
+                <h3>{{ __('Zoho', 'hydra-booking') }}</h3>
+                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+            <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
            
-            <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Get Access Token') }}</a>
+            <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Get Access Token', 'hydra-booking') }}</a>
 
             <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size=18 /></button>
 
@@ -62,36 +62,36 @@ const closePopup = () => {
 
         <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ $tfhb_trans('Connect Your Zoho Account') }}</h2>
+                <h2>{{ __('Connect Your Zoho Account', 'hydra-booking') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Zoho Account') }}
+                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Zoho Account', 'hydra-booking') }}
                 </p>
                 <HbText  
                     v-model="zoho_data.client_id"  
                     required= "true"  
-                    :label="$tfhb_trans('Zoho Client ID')"  
+                    :label="__('Zoho Client ID', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Your Client ID')"  
+                    :placeholder="__('Enter Your Client ID', 'hydra-booking')"  
                 /> 
                 <HbText  
                     v-model="zoho_data.client_secret"  
                     required= "true"  
-                    :label="$tfhb_trans('Zoho Client Secret')"  
+                    :label="__('Zoho Client Secret', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Your Client Secret')"  
+                    :placeholder="__('Enter Your Client Secret', 'hydra-booking')"  
                 />
                 <HbText  
                     v-model="zoho_data.redirect_url"  
                     required= "true"  
-                    :label="$tfhb_trans('Zoho Redirect URL')"  
+                    :label="__('Zoho Redirect URL', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Your Redirect URL')"  
+                    :placeholder="__('Enter Your Redirect URL', 'hydra-booking')"  
                 />
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'zoho', zoho_data)">{{ $tfhb_trans('Save & Validate') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'zoho', zoho_data)">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 

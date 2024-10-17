@@ -1,4 +1,5 @@
 <script setup> 
+import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount, } from 'vue';
 import { useRouter, RouterView,} from 'vue-router' 
@@ -77,7 +78,7 @@ const closePopup = () => {
 
         </div>
 
-        <button class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }} </button>
+        <button class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ __('Edit', 'hydra-booking') }} </button>
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="700px" name="first-modal">
             <template #header> 
@@ -92,7 +93,7 @@ const closePopup = () => {
                     
                     v-model="data.template"  
                     required= "true" 
-                    :label="$tfhb_trans('Select Template')"  
+                    :label="__('Select Template', 'hydra-booking')"  
                     width="50"
                     :selected = "1"
                     placeholder="Select Template"   
@@ -105,28 +106,28 @@ const closePopup = () => {
                     v-model="props.data.from"   
                     type="email"
                     width="50"
-                    :label="$tfhb_trans('From')"  
+                    :label="__('From', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter From Email')"  
+                    :placeholder="__('Enter From Email', 'hydra-booking')"  
                 /> 
 
                 <HbText  
                     v-model="props.data.subject"  
                     required= "true"  
-                    :label="$tfhb_trans('Subject')"  
+                    :label="__('Subject', 'hydra-booking')"  
                     selected = "1"
                     type = "text"
-                    :placeholder="$tfhb_trans('Enter Mail Subject')"  
+                    :placeholder="__('Enter Mail Subject', 'hydra-booking')"  
                 /> 
  
                 
                 <div class="tfhb-single-form-field" style="width: 100%;"  >
                     <div class="tfhb-single-form-field-wrap tfhb-field-input">
                         <!--if has label show label with tag else remove tags  --> 
-                        <label for="">{{$tfhb_trans('Mail Body')}}</label>  
+                        <label for="">{{ __('Mail Body', 'hydra-booking') }}</label>  
                         <Editor 
                             v-model="props.data.body"  
-                            :placeholder="$tfhb_trans('Mail Body')"    
+                            :placeholder="__('Mail Body', 'hydra-booking')"    
                             editorStyle="height: 250px" 
                         />
                     </div> 
@@ -135,7 +136,7 @@ const closePopup = () => {
                     <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
 
                 </div>
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-notification')">{{ $tfhb_trans('Update') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-notification')">{{ __('Update', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
     </div>

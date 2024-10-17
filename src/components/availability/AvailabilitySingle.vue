@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -26,7 +27,7 @@ const markAsDefault = () => {
             <div class="tfhb-admin-title tfhb-flexbox tfhb-gap-16"> 
                 <h3 >{{availability.title}}  </h3>   
                 <!-- {{ availability }} -->
-                <span  v-if="availability.default_status == true"  class="tfhb-availability-default tfhb-flexbox tfhb-gap-4"><Icon name="Heart" size=15 /> {{ $tfhb_trans('Default') }}</span>
+                <span  v-if="availability.default_status == true"  class="tfhb-availability-default tfhb-flexbox tfhb-gap-4"><Icon name="Heart" size=15 /> {{ __('Default', 'hydra-booking') }}</span>
             </div>
             <div class="thb-admin-btn right"> 
                 <div class="tfhb-availability-action tfhb-dropdown">
@@ -36,10 +37,10 @@ const markAsDefault = () => {
                         <path d="M10.0001 16.6667C10.4603 16.6667 10.8334 16.2936 10.8334 15.8333C10.8334 15.3731 10.4603 15 10.0001 15C9.53984 15 9.16675 15.3731 9.16675 15.8333C9.16675 16.2936 9.53984 16.6667 10.0001 16.6667Z" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <div class="tfhb-dropdown-wrap">
-                        <span class="tfhb-dropdown-single" @click="editAvailability">{{ $tfhb_trans('Edit') }}</span>
-                        <span  v-if="availability.default_status != true"  class="tfhb-dropdown-single" @click="markAsDefault">{{ $tfhb_trans('Default') }}</span>
+                        <span class="tfhb-dropdown-single" @click="editAvailability">{{ __('Edit', 'hydra-booking') }}</span>
+                        <span  v-if="availability.default_status != true"  class="tfhb-dropdown-single" @click="markAsDefault">{{ __('Default', 'hydra-booking') }}</span>
                         <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
-                        <span v-if="availability.default_status != true"  class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ $tfhb_trans('Delete') }}</span>
+                        <span v-if="availability.default_status != true"  class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ __('Delete', 'hydra-booking') }}</span>
                     </div>
                 </div>
             </div> 

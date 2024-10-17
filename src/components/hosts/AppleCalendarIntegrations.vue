@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -43,8 +43,8 @@ const storedOptionData = (data) => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Apple Calendar') }}</h3> 
-                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
+                <h3>{{ __('Apple Calendar', 'hydra-booking') }}</h3> 
+                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
 
             </div>
         </div> 
@@ -53,7 +53,7 @@ const storedOptionData = (data) => {
             <!-- <button @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button> -->
              <!-- a tag for get access token  -->
             <!-- <a   :href="'https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar&redirect_uri='+outlook_calendar.redirect_url+'&response_type=code&client_id='+outlook_calendar.client_id+'&access_type=online'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">Get Access Token</a> -->
-            <button v-if="apple_calendar.connection_status == 1 "  @click="outlookCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Settings') }}  <Icon name="ChevronRight" size=18 /></button>
+            <button v-if="apple_calendar.connection_status == 1 "  @click="outlookCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Settings', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></button>
              
       
 
@@ -62,30 +62,30 @@ const storedOptionData = (data) => {
         <HbPopup  :isOpen="outlookCalPopup" @modal-close="outlookCalPopup = false" max_width="800px" name="first-modal">
             <template #header> 
                 <!-- {{ outlook_calendar }} -->
-                <h3>{{ $tfhb_trans('Apple Calendar') }}</h3> 
+                <h3>{{ __('Apple Calendar', 'hydra-booking') }}</h3> 
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ $tfhb_trans('Enable the calendars you want to check for conflicts to prevent double bookings.') }}
+                    {{ __('Enable the calendars you want to check for conflicts to prevent double bookings.', 'hydra-booking') }}
                 </p> 
                 <HbText  
                     v-model="apple_calendar.apple_id"  
                     required= "true"  
-                    :label="$tfhb_trans('Apple ID (Email)')"  
+                    :label="__('Apple ID (Email)', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Apple ID (Email)')"  
+                    :placeholder="__('Enter Apple ID (Email)', 'hydra-booking')"  
                 /> 
                 <HbText  
                     v-model="apple_calendar.app_password"  
                     required= "true"  
-                    :label="$tfhb_trans('App Specific Password')"  
+                    :label="__('App Specific Password', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter App Specific Password')"  
+                    :placeholder="__('Enter App Specific Password', 'hydra-booking')"  
                 />
                 <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8">
-                    <button class="tfhb-btn boxed-btn tfhb-flexbox"   @click.stop="emit('update-integrations', 'apple_calendar', apple_calendar)">{{ $tfhb_trans('Update Host Settings') }} </button>
+                    <button class="tfhb-btn boxed-btn tfhb-flexbox"   @click.stop="emit('update-integrations', 'apple_calendar', apple_calendar)">{{ __('Update Host Settings', 'hydra-booking') }} </button>
                 </div> 
             </template> 
         </HbPopup>

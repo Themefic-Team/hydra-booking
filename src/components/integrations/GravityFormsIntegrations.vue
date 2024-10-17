@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -32,8 +32,8 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Gravity Forms') }}</h3>
-                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
+                <h3>{{ __('Gravity Forms', 'hydra-booking') }}</h3>
+                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

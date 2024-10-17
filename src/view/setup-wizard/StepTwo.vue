@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { ref } from 'vue';
 import { RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
@@ -59,8 +60,8 @@ const StepTwo = () => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{$tfhb_trans('Take control of your schedule')}}</h2>
-            <p>{{$tfhb_trans('Make your appointment booking process even easier by simply setting your availability.')}}</p> 
+            <h2>{{ __('Take control of your schedule', 'hydra-booking') }}</h2>
+            <p>{{ __('Make your appointment booking process even easier by simply setting your availability.', 'hydra-booking') }}</p> 
         </div>
         <div class="tfhb-content-wrap tfhb-s-w-availability-wrap tfhb-flexbox tfhb-gap-tb-24">
 
@@ -72,7 +73,7 @@ const StepTwo = () => {
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="props.setupWizard.currentStep = 'step-one'" 
-                :buttonText="$tfhb_trans('Back')"
+                :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
@@ -81,7 +82,7 @@ const StepTwo = () => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="StepTwo" 
-                :buttonText="$tfhb_trans('Next')"
+                :buttonText="__('Next', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

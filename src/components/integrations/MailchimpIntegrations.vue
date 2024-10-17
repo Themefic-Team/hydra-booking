@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -32,12 +32,12 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Mailchimp') }}</h3>
-                <p>{{ $tfhb_trans('Automated marketing, personalized communication') }}</p>
+                <h3>{{ __('Mailchimp', 'hydra-booking') }}</h3>
+                <p>{{ __('Automated marketing, personalized communication', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span>
+            <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span>
             
             <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ mail_data.key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
                 <!-- Checkbox swicher -->
@@ -51,22 +51,22 @@ const closePopup = () => {
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ $tfhb_trans('Connect Your Mailchimp API') }}</h2>
+                <h2>{{ __('Connect Your Mailchimp API', 'hydra-booking') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Mailchimp Account') }}
+                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Mailchimp Account', 'hydra-booking') }}
                 </p>
                 <HbText  
                     v-model="mail_data.key"  
                     required= "true"  
-                    :label="$tfhb_trans('Mailchimp API Key')"  
+                    :label="__('Mailchimp API Key', 'hydra-booking')"  
                     selected = "1"
-                    :placeholder="$tfhb_trans('Enter Your API Key')"  
+                    :placeholder="__('Enter Your API Key', 'hydra-booking')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'mailchimp', mail_data)">{{ $tfhb_trans('Save & Validate') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'mailchimp', mail_data)">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 
