@@ -265,6 +265,12 @@ const toggleSelectAll = (e) => {
     }
 }
 
+const truncateString = (str, num) => {
+    if (str.length <= num) {
+        return str
+    }
+    return str.slice(0, num) + '...'
+}
 
 </script>
 <template>
@@ -459,7 +465,7 @@ const toggleSelectAll = (e) => {
             <!-- {{ arg.event.booking_date }}
             <b>{{ arg.timeText }}</b>
             {{ arg.event.extendedProps.booking_time }} -->
-            <b class="tfhb-calendar-popup" :class="arg.event.extendedProps.status" @click="bookingCalendarPopup(arg.event)">{{ arg.event.title }}  ( {{  arg.event.extendedProps.booking_time }} )</b>
+            <b class="tfhb-calendar-popup" :class="arg.event.extendedProps.status" @click="bookingCalendarPopup(arg.event)">{{ truncateString(arg.event.title, 50) }}  ( {{  arg.event.extendedProps.booking_time }} )</b>
         </template>
     </FullCalendar>
 </div>
@@ -469,7 +475,7 @@ const toggleSelectAll = (e) => {
 
 <HbPopup :isOpen="BookingEditPopup" @modal-close="BookingEditPopup = false" max_width="300px" name="first-modal" gap="24px" class="tfhb-booking-calendar-popup">
     <template #header> 
-        <h3>{{ singleCalendarBookingData.title }}</h3>
+        <h3>{{ truncateString( singleCalendarBookingData.title , 50) }}</h3>
     </template>
 
     <template #content> 
@@ -554,7 +560,7 @@ const toggleSelectAll = (e) => {
                     <span>{{ book.start_time }} - {{ book.end_time }}</span>
                 </td>
                 <td>
-                    {{ book.title }}
+                    {{ truncateString(book.title, 50) }}
                 </td>
                 <td>
                     {{ book.host_first_name }} {{ book.host_last_name }}

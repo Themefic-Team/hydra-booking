@@ -126,7 +126,7 @@ const prevPage = () => {
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
                 <h1 >{{ __('Meeting Category', 'hydra-booking') }}</h1> 
-                <p>{{ __('Manage your time zone settings and bookings', 'hydra-booking') }}</p>
+                <p>{{ __('Create and edit Meeting Category to organize your meetings.', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
                 <a href="#" target="_blank" class="tfhb-btn"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=15 /></a>

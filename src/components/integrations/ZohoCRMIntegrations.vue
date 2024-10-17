@@ -39,7 +39,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Zoho CRM', 'hydra-booking') }}</h3>
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('Implement Zoho CRM for comprehensive sales and marketing automation.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

@@ -48,7 +48,7 @@ onBeforeMount(() => {
                     <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
                 </h2> 
                 <h2></h2> 
-                <p>{{ __('How many days can the invitee schedule?', 'hydra-booking') }}</p>
+                <p>{{ __('Webhook integration enables automated data transfer between apps, allowing real-time communication and custom API interactions.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width tfhb-pro">

@@ -69,6 +69,12 @@ const FormatDate = (date) => {
     return `${da} ${mo}, ${ye}`;
 }
 
+const truncateString = (str, num) => {
+    if (str.length <= num) {
+        return str
+    }
+    return str.slice(0, num) + '...'
+}
 </script>
 <template>
 
@@ -295,7 +301,7 @@ const FormatDate = (date) => {
                         > 
                             <div class="tfhb-admin-card-box tfhb-p-16">
                                 
-                                <p>{{data.title}}    </p>
+                                <p>{{truncateString(data.title, 70)}}    </p>
                                 <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8"> 
                                     <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
                                     <span  class="tfhb-flexbox tfhb-gap-8">

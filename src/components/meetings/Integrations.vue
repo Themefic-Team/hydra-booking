@@ -17,8 +17,8 @@ const props = defineProps([
 <template> 
     <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
         <div class="tfhb-admin-title tfhb-m-0">
-            <h2>{{ __('Mailchimp/FluentCRM/Zoho Integration ', 'hydra-booking') }}</h2> 
-            <p>{{ __('How many days can the invitee schedule?', 'hydra-booking') }}</p>
+            <h2>{{ __('Mailchimp, FluentCRM & Zoho Integration ', 'hydra-booking') }}</h2> 
+            <p>{{ __('Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.', 'hydra-booking') }}</p>
         </div>
     </div>
 

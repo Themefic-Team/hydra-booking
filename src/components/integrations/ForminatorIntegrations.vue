@@ -33,7 +33,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Forminator', 'hydra-booking') }}</h3>
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('Install and enable Forminator for meeting forms.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

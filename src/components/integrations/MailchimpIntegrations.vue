@@ -33,7 +33,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Mailchimp', 'hydra-booking') }}</h3>
-                <p>{{ __('Automated marketing, personalized communication', 'hydra-booking') }}</p>
+                <p>{{ __('Integrate Mailchimp API to collect attendee emails and info.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

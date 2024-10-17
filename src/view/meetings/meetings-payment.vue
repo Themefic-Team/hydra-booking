@@ -38,19 +38,20 @@ onBeforeMount(() => {
 
 <template>
     <div class="meeting-create-details tfhb-gap-24">
-        <div class="tfhb-notification-wrap tfhb-admin-card-box tfhb-m-0 tfhb-gap-32 tfhb-full-width">
-            <div class="tfhb-admin-title tfhb-m-0 tfhb-full-width">
+        <div class="tfhb-admin-title tfhb-m-0 tfhb-full-width">
 
-                <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{ __('Payment for this Meeting ', 'hydra-booking') }}
-                     
-                    <HbSwitch 
-                        v-model="meeting.payment_status"
-                    />
-                </h2> 
-                <p>{{ __('You can enable or disable payment for this meeting by toggle switch', 'hydra-booking') }}</p>
-            </div> 
-            <div v-if="meeting.payment_status == 1"  class="tfhb-content-wrap tfhb-full-width"> 
+            <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
+                {{ __('Payment for this Meeting ', 'hydra-booking') }}
+                
+                <HbSwitch 
+                    v-model="meeting.payment_status"
+                />
+            </h2> 
+            <p>{{ __('Securely process payment for this meeting using WooCommerce Payments, Stripe, or PayPal for a seamless transaction experience.', 'hydra-booking') }}</p>
+        </div> 
+        <div v-if="meeting.payment_status == 1"  class="tfhb-notification-wrap tfhb-admin-card-box tfhb-m-0 tfhb-gap-32 tfhb-full-width">
+            
+            <div  class="tfhb-content-wrap tfhb-full-width"> 
                 <div class="tfhb-integrations-wrap tfhb-flexbox"> 
 
                     <HbDropdown 

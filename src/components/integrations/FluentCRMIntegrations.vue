@@ -35,7 +35,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Fluent CRM', 'hydra-booking') }}</h3>
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('Integrate FluentCRM to manage and track customer data easily.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
