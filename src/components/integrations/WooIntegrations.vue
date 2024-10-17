@@ -30,7 +30,7 @@ const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooC
 
             <div class="cartbox-text">
                 <h3>{{ __('Woo Payment', 'hydra-booking') }}</h3>
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('Connect WooCommerce for manage booking payment.', 'hydra-booking') }}</p>
             </div>
         </div>
        
@@ -38,6 +38,7 @@ const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooC
 <!-- Aadmin -->
 
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+           
             <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connected', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></button>
             <a v-else :href="plugin_url" target="__blank"  class="tfhb-btn tfhb-install-plugins tfhb-flexbox tfhb-gap-8" :data-connection-status="woo_payment.connection_status" @click="installPlugins">{{ __('Connect', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></a>
                 <!-- Checkbox swicher -->

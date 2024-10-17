@@ -126,6 +126,14 @@ window.addEventListener('click', function(e) {
         activeItemDropdown.value = 0;
     }
 });
+
+// trunkate string 
+const truncateString = (str, num) => {
+    if (str.length <= num) {
+        return str
+    }
+    return str.slice(0, num) + '...'
+}
 </script>
 <template>
 <!-- {{ filterData }} -->
@@ -233,7 +241,7 @@ window.addEventListener('click', function(e) {
                     }
                     "
                 > 
-                <span class="tfhb-badge tfhb-badge-pro" v-if="$tfhb_is_pro == false">{{ __('Pro', 'hydra-booking') }}</span>
+                <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="$tfhb_is_pro == false"><Icon name="Crown" size=20 />  {{ __('Pro', 'hydra-booking') }}</span>
                 <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
@@ -283,7 +291,7 @@ window.addEventListener('click', function(e) {
             <div class="tfhb-single-meeting tfhb-flexbox" v-for="(smeeting, key) in Meeting.meetings"> 
                 <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox">
                     <div class="single-meeting-content">
-                        <h3> {{ smeeting.title ? smeeting.title : 'No Title' }} </h3>
+                        <h3> {{ smeeting.title ? truncateString(smeeting.title, 60) : 'No Title' }} </h3>
                         <div class="meeting-user-info">
                             <ul class="tfhb-flexbox">
                                 <li v-if="smeeting.duration">

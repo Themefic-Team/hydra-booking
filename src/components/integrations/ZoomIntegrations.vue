@@ -41,7 +41,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Zoom', 'hydra-booking') }}</h3>
-                <p>{{ __('Streamlined virtual meetings', 'hydra-booking') }}</p>
+                <p>{{ __('Connect Zoom API to configure virtual meetings.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

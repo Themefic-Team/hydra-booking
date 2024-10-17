@@ -53,7 +53,7 @@ const removeExtraFrequency = (key) => {
                     v-model="meeting.buffer_time_before"
                     required= "true" 
                     :label="__('Buffer time before meeting', 'hydra-booking')"  
-                    width="32.5"
+                    width="50"
                     :selected = "1"
                     placeholder="No buffer time"  
                     :option = "[
@@ -74,7 +74,7 @@ const removeExtraFrequency = (key) => {
                     v-model="meeting.buffer_time_after"
                     required= "true"  
                     :label="__('Buffer time after meeting', 'hydra-booking')"   
-                    width="32.5"
+                    width="50"
                     selected = "1"
                     placeholder="No buffer time"  
                     :option = "[
@@ -90,26 +90,7 @@ const removeExtraFrequency = (key) => {
                     ]" 
                 />
                 <!-- Buffer time after meeting -->
-                <!-- Meeting interval -->
-                <HbDropdown 
-                    v-model="meeting.meeting_interval"
-                    required= "true"  
-                    :label="__('Meeting interval', 'hydra-booking')"   
-                    width="32.5"
-                    selected = "1"
-                    :placeholder="__('Default interval', 'hydra-booking')"
-                    :option = "[
-                        {name: '5 Minutes', value: '5'},  
-                        {name: '10 Minutes', value: '10'},  
-                        {name: '15 Minutes', value: '15'},  
-                        {name: '20 Minutes', value: '20'},  
-                        {name: '30 Minutes', value: '30'},  
-                        {name: '45 Minutes', value: '45'},  
-                        {name: '60 Minutes', value: '60'},  
-                        {name: '90 Minutes', value: '90'},  
-                        {name: '120 Minutes', value: '120'},   
-                    ]"
-                />
+              
             
                 <!-- Booking Frequency -->
             
@@ -124,6 +105,25 @@ const removeExtraFrequency = (key) => {
                     limit="1"
                 />
 
+                  <!-- Meeting interval -->
+                  <HbDropdown 
+                    v-model="meeting.meeting_interval"
+                    required= "true"  
+                    :label="__('Meeting interval', 'hydra-booking')"  
+                    selected = "1"
+                    :placeholder="__('Default interval', 'hydra-booking')"
+                    :option = "[
+                        {name: '5 Minutes', value: '5'},  
+                        {name: '10 Minutes', value: '10'},  
+                        {name: '15 Minutes', value: '15'},  
+                        {name: '20 Minutes', value: '20'},  
+                        {name: '30 Minutes', value: '30'},  
+                        {name: '45 Minutes', value: '45'},  
+                        {name: '60 Minutes', value: '60'},  
+                        {name: '90 Minutes', value: '90'},  
+                        {name: '120 Minutes', value: '120'},   
+                    ]"
+                />
             
             </div>  
        </div>

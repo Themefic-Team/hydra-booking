@@ -97,6 +97,7 @@
             .cartbox-text {
                 max-width: 175px !important;
             }
+             
         }
 
         &.tfhb-s-w-step-two {
@@ -290,13 +291,12 @@
                 }
 
             }
-            &.tfhb-pro{
-                flex-direction: row-reverse;
+            &.tfhb-pro{ 
                 .tfhb-badge.tfhb-badge-pro {
                     margin: 0 !important; 
                     font-size: $text-font-size-small !important; 
                     line-height: 1.1 !important;
-                    position: relative !important;
+                    // position: relative !important;
                 }
                 .tfhb-integrations-single-block-btn{
                     display: none !important;

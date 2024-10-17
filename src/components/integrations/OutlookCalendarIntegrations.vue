@@ -37,7 +37,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Outlook Calendar', 'hydra-booking') }}</h3> 
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('Connect Outlook Calendar/Teams API for event creation.', 'hydra-booking') }}</p>
 
             </div>
         </div>

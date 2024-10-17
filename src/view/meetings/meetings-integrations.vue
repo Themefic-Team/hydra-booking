@@ -33,14 +33,14 @@ onBeforeMount(() => {
 <!-- {{ integrationsData.bodys  }} -->
 <div class="meeting-create-details tfhb-gap-24"> 
     <!-- Integrations  -->
-    <div class="tfhb-meeting-integrations-wrap tfhb-full-width ">
+    <div class="tfhb-meeting-integrations-wrap tfhb-full-width tfhb-flexbox tfhb-gap-16 ">
 
         <Integrations :IntegrationsValue="IntegrationsValue" :meeting="meeting" />
 
     </div>
 
      <!-- WebHook -->
-     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro">
+     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro tfhb-flexbox tfhb-gap-16">
         <div class="tfhb-webhook-title tfhb-flexbox">
             <div class="tfhb-admin-title tfhb-m-0">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">

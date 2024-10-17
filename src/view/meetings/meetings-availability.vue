@@ -360,7 +360,6 @@ const isobjectempty = (data) => {
             </div>
         </div>
         <!-- Select Host -->
-
         <HbDropdown 
             v-if="'tfhb_host' != user_role"
             v-model="meeting.host_id"

@@ -196,7 +196,7 @@ onBeforeMount(() => {
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
                 <h1 >{{ __('Notifications', 'hydra-booking') }}</h1> 
-                <p>{{ __('One-liner description', 'hydra-booking') }}</p>
+                <p>{{ __('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
                 <a href="#" target="_blank" class="tfhb-btn"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=15 /></a>

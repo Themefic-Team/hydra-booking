@@ -29,12 +29,12 @@ const closePopup = () => {
       <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">  
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
-                <img :src="$tfhb_url+'/assets/images/paypal.svg'" alt="">
+                <img :src="$tfhb_url+'/assets/images/paypal.png'" alt="">
             </span> 
 
             <div class="cartbox-text">
                 <h3>{{ __('PayPal', 'hydra-booking') }}</h3>
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('Connect PayPal API for easy online payment solutions.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">

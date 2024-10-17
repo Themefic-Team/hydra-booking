@@ -516,9 +516,8 @@ const toggleSelectAll = (e) => {
 </HbPopup>
 
 <!-- Booking Calendar Edit -->
-
 <div :class="{ 'tfhb-skeleton': Booking.skeleton }"  class="tfhb-booking-details tfhb-mt-32" v-if="bookingView=='list' && paginatedBooking.length > 0 ">
-    {{ paginatedBooking }}
+  
     <table class="table" cellpadding="0" :cellspacing="0">
         <thead>
             <tr>
@@ -619,7 +618,7 @@ const toggleSelectAll = (e) => {
         </div>
     </div>
 </div>
-<div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+<div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
     <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
     <p>{{ __('No Booking Created', 'hydra-booking') }}</p> 
 </div>

@@ -41,7 +41,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Stripe', 'hydra-booking') }}</h3>
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('ntegrate Stripe API for secure payment processing.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div v-if="$tfhb_is_pro == false"  class="tfhb-integrations-single-block-btn tfhb-flexbox"> 

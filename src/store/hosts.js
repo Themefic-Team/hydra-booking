@@ -21,7 +21,7 @@ const Host = reactive({
             this.hosts = hostsData.hosts.map(host => {
                 return {
                     name: host.first_name + ' ' + host.last_name,
-                    value: host.user_id.toString()
+                    value: host.id.toString()
                 };
             });
         } catch (error) {

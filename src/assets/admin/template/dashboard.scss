@@ -163,13 +163,18 @@
               width: calc(100% - 76px);
               border: $border-reguler solid $surface-border !important;
               background: $surface-secondary;
+               
             }
           }
 
           .tfhb-admin-card-box {
+            
             margin-bottom: 0px !important;
             border: $border-reguler solid $surface-border !important;
             background: $surface-secondary;
+            > p {
+              font-weight: $font-weight-medium !important;
+             }
           }
         }
       }
@@ -186,6 +191,7 @@
           flex-direction: row;
           justify-content: normal !important;
           overflow: auto; 
+          align-items: start !important;
         }
 
       }

@@ -69,14 +69,14 @@ const fetchGeneralSettings = async () => {
             countryList.value = response.data.country_list;  
             // Set General Settings
             generalSettings.time_zone = response.data.general_settings.time_zone;
-            generalSettings.time_format = response.data.general_settings.time_format;
-            generalSettings.week_start_from = response.data.general_settings.week_start_from;
+            generalSettings.time_format = response.data.general_settings.time_format != '' ? response.data.general_settings.time_format : '12';
+            generalSettings.week_start_from = response.data.general_settings.week_start_from != '' ? response.data.general_settings.week_start_from : 'Sunday';
             generalSettings.date_format = response.data.general_settings.date_format;
             generalSettings.country = response.data.general_settings.country;
-            generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed;
+            generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
             generalSettings.booking_status = response.data.general_settings.booking_status;
             generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
-            generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start;
+            generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
 
 
             skeleton.value = false;
@@ -155,7 +155,7 @@ onBeforeMount(() => {
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ __('General Settings', 'hydra-booking') }}</h1> 
+                <h1 >{{ __('General Settings', 'hydra-booking') }}</h1>  
                 <p>{{ __('Manage your time zone settings and bookings', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 

@@ -105,7 +105,7 @@ window.addEventListener('click', function(e) {
                 <span class="tfhb-step-bar step-1 active"></span>
             </div> 
             <h2>{{ __('Your Meeting is ready!', 'hydra-booking') }}</h2>
-            <p>{{$tfhb_trans(`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`)}}</p> 
+            <p>{{ __(`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`, 'hydra-booking') }}</p> 
         </div>
 
         <div class="tfhb-meetings-list-content" >

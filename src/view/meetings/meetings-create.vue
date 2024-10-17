@@ -600,6 +600,13 @@ const sharePopupData = () => {
     sharePopup.value = true; 
 }
 
+// trunkate string 
+const truncateString = (str, num) => {
+    if (str.length <= num) {
+        return str
+    }
+    return str.slice(0, num) + '...'
+}
 </script>
 
 <template>
@@ -611,7 +618,7 @@ const sharePopupData = () => {
                 </div>
                 <div class="tfhb-meeting-heading tfhb-flexbox">
                   
-                    <h3 v-if="meetingData.title != '' && meetingData.title != null">{{ meetingData.title }}</h3>
+                    <h3 v-if="meetingData.title != '' && meetingData.title != null">{{ truncateString(meetingData.title, 110) }}</h3>
                     <h3 v-else >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
                 </div> 
                 <!-- <div  class="tfhb-meeting-subtitle">

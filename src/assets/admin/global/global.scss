@@ -1,5 +1,6 @@
 .toplevel_page_hydra-booking #wpcontent {
 	padding: 0;
+    background-color: $surface-primary;
 }
 #tfhb-admin-app {
 
@@ -565,7 +566,6 @@
         height: 60px;
         background-color: $surface-secondary; 
         border-bottom: 1px $border-type #eaeaea;
-        border-radius: $border-radius-medium; 
         box-shadow: 0 1px 1px rgba(0,0,0,.04);
         /* margin-right: 16px; */
         margin-bottom: 24px;
@@ -902,6 +902,9 @@
     .tfhb-single-form-field{
         .tfhb-counter-wrap{
             margin-top: 4px;
+            span{
+                margin: 0 !important;
+            }
             .p-dropdown{
                 border-radius: 0px 4px 4px 0px !important;
                 height: 40px;

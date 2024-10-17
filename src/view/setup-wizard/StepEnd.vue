@@ -289,6 +289,12 @@ onBeforeMount(() => {
    
 });
 
+const activeDropdown = ref(false);
+
+const toggleDropdown = () => {
+    // alert('test');
+    activeDropdown.value = !activeDropdown.value;
+}
 
 </script>
 
@@ -306,15 +312,17 @@ onBeforeMount(() => {
         <div class="tfhb-s-w-step-end tfhb-flexbox">
 
             <div class="tfhb-s-w-integrations-bar tfhb-flexbox">
-                <div class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
+                <div  @click="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
                     <span>All Integrations </span>  <Icon name="ChevronDown" size=20 /> 
-                    <div class="tfhb-dropdown-wrap"> 
-                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> All Integrations</span>
-                        <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> Conference</span>
-                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> Calendars</span>
-                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="payments"> Payments</span>
-                        <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms"> Forms</span>
-                    </div>
+                    <transition name="tfhb-dropdown-transition">
+                        <div v-show="activeDropdown == true" class="tfhb-dropdown-wrap active"> 
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> All Integrations</span>
+                            <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> Conference</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> Calendars</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="payments"> Payments</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms"> Forms</span>
+                        </div>
+                    </transition>
                 </div>
                 <div class="tfhb-integrations-searchbar">
                     <input @keyup="FilterBySearch" type="text" placeholder="Search Integrations">
@@ -407,12 +415,7 @@ onBeforeMount(() => {
                 />
                 <!-- CF7 -->
 
-                <!-- Forminator -->
-                <ForminatorIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :forminator_data="Integration.forminator" 
-                @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'forms'"
-                />
+                
                 <!-- CF7 -->
 
                 <!-- gravity -->

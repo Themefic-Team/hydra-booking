@@ -1,4 +1,5 @@
 .tfhb-admin-meetings{
+    min-height: 600px;
     .tfhb-meeting-person-type{
         position: relative;
     }
@@ -186,6 +187,8 @@
             box-sizing: border-box;
             transition: $transition;
             box-shadow: $meeting-card-box-shadow;
+            // align-items: normal !important;
+            flex-direction: column;
             &:hover{
                 
                 background-color: $surface-primary !important;
