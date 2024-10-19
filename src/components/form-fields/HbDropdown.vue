@@ -61,6 +61,7 @@ const handleChange = (e) => {
                       :overlay="false"
                       :placeholder="placeholder" 
                       :style="{ 'width': '100%' }"  
+                      :class="errors ? 'tfhb-required' : ''"
                 
                 >
                   <template #value="slotProps">
@@ -92,6 +93,7 @@ const handleChange = (e) => {
                     :optionDisabled="disabled"
                     :style="{ 'width': '100%' }"  
                     :selected="selected"
+                    :class="errors ? 'tfhb-required' : ''"
                 >
                 <template v-if="props.icon" #dropdownicon>
 

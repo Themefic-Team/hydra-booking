@@ -181,6 +181,7 @@ const openOverridesCalendarDate = () => {
 // Remove date slot 
 const removeAvailabilityTDate = (key) => {
     props.availabilityDataSingle.date_slots.splice(key, 1);
+    OverridesOpen.value = false;
 }
 
 // Store to the reactive
@@ -291,7 +292,6 @@ const tfhbValidateInput = (fieldName) => {
                             selected = "1"
                             placeholder="Enter schedule title"   
                             @keyup="() => tfhbValidateInput('title')"
-                            @click="() => tfhbValidateInput('title')"
                             :errors="errors.title"
                         /> 
                         <!-- Title -->
@@ -467,13 +467,13 @@ const tfhbValidateInput = (fieldName) => {
                                 </div>
 
                                 <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                                    <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button>
+                                    <!-- <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button> -->
                                     <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ __('Add override', 'hydra-booking') }}</button>
                                 </div>
                             </div>
 
 
-                            <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
+                            <button v-if="!OverridesOpen" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
                                 <Icon name="PlusCircle" :width="20"/>
                                 {{ __('Add an override', 'hydra-booking') }}
                             </button>

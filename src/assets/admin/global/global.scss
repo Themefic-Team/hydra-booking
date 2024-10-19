@@ -450,12 +450,16 @@
                 color: $text-paragraph;
                 font-size: 15px;
                 line-height: 24px;
+               
+                &:hover {
+                    background-color: $surface-primary;
+                }
                 &.tfhb-dropdown-error{
                     background-color: $error-background;
                     color: $error-text;
-                }
-                &:hover {
-                    background-color: $surface-primary;
+                    &:hover {
+                        background-color: $error-background;
+                    }
                 }
                 &.tfhb-no-hover{
                     &:hover{

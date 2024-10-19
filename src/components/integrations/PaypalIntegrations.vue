@@ -1,7 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import Icon from '@/components/icon/LucideIcon.vue'
-
+import { RouterView } from 'vue-router' 
 // import Form Field 
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
@@ -38,8 +38,8 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span>
-            
+            <!-- <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span> -->
+            <router-link  v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
             <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ paypal_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
                 <!-- Checkbox swicher -->
 

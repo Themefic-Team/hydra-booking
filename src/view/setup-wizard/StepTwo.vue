@@ -9,10 +9,11 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
+import useValidators from '@/store/validator'
 import AvailabilityPopupSingle from '@/components/availability/AvailabilityPopupSingle.vue';
 // Toast
 import { toast } from "vue3-toastify"; 
-
+const { errors, isEmpty } = useValidators();
 
 const isModalOpened = ref(true);
 const timeZone = ref({});
@@ -30,17 +31,37 @@ const props = defineProps({
     }
 }); 
 
-const StepTwo = () => {
-    if(props.setupWizard.data.availabilityDataSingle.title == ''){ 
-        toast.error('Title is required');
-        return;
+const StepTwo = (validator_field) => {
+    // Clear the errors object
+    Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
 
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!props.setupWizard.data.availabilityDataSingle[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!props.setupWizard.data.availabilityDataSingle[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
     }
-    if(props.setupWizard.data.availabilityDataSingle.time_zone == ''){ 
-        toast.error('Timezone is required');
-        return;
 
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){
+        toast.error('Fill Up The Required Fields'); 
+        return
     }
+   
     
     props.setupWizard.currentStep = 'step-three';
 }
@@ -81,7 +102,7 @@ const StepTwo = () => {
             /> 
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
-                @click="StepTwo" 
+                @click="StepTwo(['title', 'time_zone'])" 
                 :buttonText="__('Next', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 

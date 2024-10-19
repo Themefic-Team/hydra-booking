@@ -26,7 +26,7 @@ const generalSettings = reactive({
   after_booking_completed: '10',
   booking_status: '',
   reschedule_status: '',
-  allowed_reschedule_before_meeting_start: '', 
+  allowed_reschedule_before_meeting_start: '10', 
 });
 
 // Field Validator
@@ -68,16 +68,19 @@ const fetchGeneralSettings = async () => {
             timeZone.value = response.data.time_zone; 
             countryList.value = response.data.country_list;  
             // Set General Settings
-            generalSettings.time_zone = response.data.general_settings.time_zone;
-            generalSettings.time_format = response.data.general_settings.time_format != '' ? response.data.general_settings.time_format : '12';
-            generalSettings.week_start_from = response.data.general_settings.week_start_from != '' ? response.data.general_settings.week_start_from : 'Sunday';
-            generalSettings.date_format = response.data.general_settings.date_format;
-            generalSettings.country = response.data.general_settings.country;
-            generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
-            generalSettings.booking_status = response.data.general_settings.booking_status;
-            generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
-            generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
+            if(response.data.general_settings != false){
+                generalSettings.time_zone = response.data.general_settings.time_zone;
+                generalSettings.time_format = response.data.general_settings.time_format != '' ? response.data.general_settings.time_format : '12';
+                generalSettings.week_start_from = response.data.general_settings.week_start_from != '' ? response.data.general_settings.week_start_from : 'Sunday';
+                generalSettings.date_format = response.data.general_settings.date_format;
+                generalSettings.country = response.data.general_settings.country;
+                generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
+                generalSettings.booking_status = response.data.general_settings.booking_status;
+                generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
+                generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
 
+            }
+           
 
             skeleton.value = false;
         }
