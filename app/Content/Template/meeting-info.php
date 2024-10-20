@@ -26,7 +26,7 @@ $_tfhb_host_integration_settings = get_user_meta( $host['user_id'], '_tfhb_host_
 $stripePublicKey                 = ! empty( $_tfhb_host_integration_settings['stripe']['public_key'] ) ? $_tfhb_host_integration_settings['stripe']['public_key'] : $stripePublicKey;
 $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['paypal']['client_id'] ) ? $_tfhb_host_integration_settings['paypal']['client_id'] : $paypalPublicKey;
 
-
+// display short 
 
 
 ?> 
@@ -64,7 +64,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 	</div>
 
 	<div class="tfhb-meeting-details">
-		<?php echo ! empty( $meeting['title'] ) ? '<h2>' . esc_html( $meeting['title'] ) . '</h2>' : ''; ?> 
+		<?php echo ! empty( $meeting['title'] ) ? '<h2>' . esc_html(  wp_strip_all_tags(tfhb_character_limit_callback($meeting['title'], 60)) ) . '</h2>' : ''; ?> 
 
 		<div class="tfhb-short-description">
             <?php 

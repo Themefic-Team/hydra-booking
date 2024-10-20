@@ -7,7 +7,7 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card, .tfhb-booking-cencel .tfhb-meeting-card {
   border-radius: 16px;
-  border: 0.5px solid #CFE3D2;
+  border: 0.5px solid #C0D8C4;
   background: #FFFFFF;
   box-shadow: 0px 0px 8px 2px rgba(208, 225, 211, 0.3) inset, 0px 0px 0px 16px #F5FEF7;
   display: flex;
@@ -128,7 +128,7 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul li span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul li span {
   border-radius: 6px;
-  border: 1px solid #EEF6F0;
+  border: 1px solid #C0D8C4;
   padding: 0 16px;
   margin: 0 8px;
 }
@@ -162,7 +162,8 @@
   right: -1px;
   bottom: -1px;
   border-radius: 8px; /* Same as the main element */
-  background: linear-gradient(to bottom right, rgba(227, 207, 215, 0), rgb(227, 207, 215), rgba(227, 207, 215, 0));
+  background: linear-gradient(to bottom right, rgba(207, 227, 210, 0), rgb(207, 227, 210), rgba(207, 227, 210, 0));
+  box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
   z-index: -1;
   pointer-events: none; /* Prevents the pseudo-element from interfering with user interactions */
 }
@@ -216,6 +217,19 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-icon svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-icon svg path {
   stroke: #273F2B;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown {
+  border: 1px solid #56765B;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown.select2-dropdown--above, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown.select2-dropdown--above {
+  border-bottom: 0;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown.select2-dropdown--below, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown.select2-dropdown--below {
+  border-top: 0;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .select2-search.select2-search--dropdown input, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .select2-search.select2-search--dropdown input {
+  padding: 8px 8px 8px 12px;
+  border: 1px solid #56765B !important;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-calander-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-calander-times {
   position: relative;
@@ -331,7 +345,7 @@
   content: "";
   width: 8px;
   height: 8px;
-  background-color: #273F2B;
+  background-color: #56765B;
   border-radius: 50%;
   left: -24px;
 }
@@ -441,12 +455,12 @@
   position: absolute;
   content: "";
   height: 2px;
-  width: 16px;
+  width: 24px;
   border-radius: 16px;
   background: #FFFFFF;
-  bottom: 9px;
+  bottom: 12px;
   left: 50%;
-  margin-left: -8px;
+  margin-left: -12px;
   box-sizing: inherit;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times {
@@ -498,7 +512,8 @@
   right: -1px;
   bottom: -1px;
   border-radius: 8px; /* Same as the main element */
-  background: linear-gradient(to bottom right, rgba(227, 207, 215, 0), rgb(227, 207, 215), rgba(227, 207, 215, 0));
+  background: linear-gradient(to bottom right, rgba(207, 227, 210, 0), rgb(207, 227, 210), rgba(207, 227, 210, 0));
+  box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
   z-index: -1;
   pointer-events: none; /* Prevents the pseudo-element from interfering with user interactions */
 }
@@ -531,7 +546,7 @@
   box-sizing: border-box;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li label {
-  color: #708F75;
+  color: #273F2B;
   font-size: 11px;
   font-style: normal;
   font-weight: 600;
@@ -544,7 +559,7 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active {
   border-radius: 4px;
-  background: #EEF6F0;
+  background: #C0D8C4;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label {
   color: #273F2B;
@@ -610,11 +625,11 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span:hover, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span:hover {
   border: 0.5px solid #2E6B38;
-  background: #EEF6F0;
+  background: #C0D8C4;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.time.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.time.active {
   border: 0.5px solid #2E6B38;
-  background: #EEF6F0;
+  background: #C0D8C4;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.next, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.next {
   border-radius: 8px;
@@ -697,7 +712,59 @@
   box-shadow: none;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form textarea, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form textarea {
-  height: 90px;
+  min-height: 90px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio {
+  position: relative;
+  color: #273F2B !important;
+  font-size: 15px !important;
+  margin-left: 40px;
+  font-weight: 400;
+  margin: 0 !important;
+  position: relative;
+  padding-left: 28px;
+  margin-right: 16px !important;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark {
+  background-color: #2E6B38;
+  border: 1px solid #2E6B38;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark:after, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark:after {
+  display: block;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input[type=checkbox], .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input[type=radio], .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input[type=checkbox], .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input[type=radio], .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input[type=checkbox], .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input[type=radio], .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input[type=checkbox], .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input[type=radio] {
+  display: none;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .tfhb-checkbox-label, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .tfhb-checkbox-label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .tfhb-checkbox-label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .tfhb-checkbox-label {
+  justify-content: start !important;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .checkmark, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 20px;
+  width: 20px;
+  background-color: #C0D8C4;
+  border-radius: 3px;
+  border: 1px solid #2E6B38;
+  margin: 0 !important;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .checkmark:after, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark:after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 6px;
+  height: 11px;
+  border: solid #FFFFFF;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  display: none;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark {
+  border-radius: 50%;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box {
   flex-wrap: wrap;
@@ -884,6 +951,31 @@
   color: #fff;
 }
 
+#select2-attendee_time_zone-results {
+  background-color: #C0D8C4;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 2px !important;
+  border: 1px;
+}
+#select2-attendee_time_zone-results li {
+  background-color: #FFFFFF;
+  width: 100% !important;
+  border-radius: 4px;
+  height: 40px !important;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #273F2B;
+}
+#select2-attendee_time_zone-results li:hover {
+  background-color: #F3F6F4;
+}
+
 .tfhb-single-meeting-section {
   padding: 60px 0px;
   width: 100%;
@@ -897,7 +989,7 @@
   margin: 0 auto;
 }
 
-.tfhb-scrollbar {
+.tfhb-scrollbar, #select2-attendee_time_zone-results {
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #273F2B #F3F6F4;
@@ -906,21 +998,21 @@
   /* For Firefox */
   /* Optional: To target specific elements */
 }
-.tfhb-scrollbar ::-webkit-scrollbar {
+.tfhb-scrollbar ::-webkit-scrollbar, #select2-attendee_time_zone-results ::-webkit-scrollbar {
   width: 4px;
 }
-.tfhb-scrollbar ::-webkit-scrollbar-track {
+.tfhb-scrollbar ::-webkit-scrollbar-track, #select2-attendee_time_zone-results ::-webkit-scrollbar-track {
   background: #F3F6F4;
 }
-.tfhb-scrollbar ::-webkit-scrollbar-thumb {
+.tfhb-scrollbar ::-webkit-scrollbar-thumb, #select2-attendee_time_zone-results ::-webkit-scrollbar-thumb {
   background-color: #273F2B;
   border-radius: 10px;
   border: 3px solid #F3F6F4;
 }
-.tfhb-scrollbar ::-webkit-scrollbar-thumb:hover {
+.tfhb-scrollbar ::-webkit-scrollbar-thumb:hover, #select2-attendee_time_zone-results ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-.tfhb-scrollbar html {
+.tfhb-scrollbar html, #select2-attendee_time_zone-results html {
   scrollbar-width: thin;
   scrollbar-color: #888 #f1f1f1;
 }
@@ -1017,9 +1109,9 @@
   left: 0px;
   height: 20px;
   width: 20px;
-  background-color: #EEF6F0;
+  background-color: #C0D8C4;
   border-radius: 5px;
-  border: 1px solid #EEF6F0;
+  border: 1px solid #C0D8C4;
   margin: 0;
 }
 .tfhb-checkbox-wrap .checkmark:after {
@@ -1029,7 +1121,7 @@
   top: 2px;
   width: 6px;
   height: 11px;
-  border: solid #EEF6F0;
+  border: solid #C0D8C4;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);

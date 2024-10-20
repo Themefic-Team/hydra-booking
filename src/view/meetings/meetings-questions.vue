@@ -36,7 +36,7 @@ const questions_data = reactive({});
 const removeExtraQuestion = (key) => {
     props.meeting.questions.splice(key, 1);
 }
-function EditExtraQuestion(key){f
+function EditExtraQuestion(key){
     
     props.meeting.questions.forEach((question, qkey) => {
         if (qkey === key) {

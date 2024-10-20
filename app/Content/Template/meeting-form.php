@@ -106,14 +106,29 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 
 						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>' . esc_html($value) . '</textarea>';
 
-					} elseif ( $question['type'] == 'checkbox' ) {
-
-						echo '<label for="' . esc_attr($name) . '">
-                                            <input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
-                                            <span class="checkmark"></span> ' . esc_attr($question['placeholder']) . '
+					} elseif ( $question['type'] == 'checkbox' ) { 
+						echo '<div class="tfhb-checkbox-group">';
+						foreach ( $question['options'] as $option ) { 
+							echo '<label class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($option) . '">
+                                            <input name="' . esc_attr($name) . '" value="'.esc_attr(text: $option).'"  id="' . esc_attr($option) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
+                                            <span class="checkmark"></span> ' . esc_attr($option) . '
                                         </label>';
+						}
+						echo '</div>';
+						
 
-					} else {
+					}elseif ( $question['type'] == 'radio' ) { 
+						echo '<div class="tfhb-radio-group">';
+						foreach ( $question['options'] as $option ) { 
+							echo '<label  class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($option) . '">
+										<input name="' . esc_attr($name) . '" value="'.esc_attr(text: $option).'"  id="' . esc_attr($option) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
+										<span class="checkmark"></span> ' . esc_attr($option) . '
+									</label>';
+						}
+						echo '</div>';
+						
+
+					}  else {
 
 						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr($question['placeholder']) . '">';
 					}

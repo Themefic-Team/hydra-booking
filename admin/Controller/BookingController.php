@@ -442,7 +442,7 @@ class BookingController {
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host         = new Host();
 			$HostData     = $host->get( $current_user_id );
-			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->user_id );
+			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->host_id );
 
 		}
 
@@ -591,6 +591,7 @@ class BookingController {
 		$bookingUpdate = $booking->update( $data );
 
 		$current_user = get_userdata( $booking_owner );
+		$booking = new Booking();
 		// get user role
 		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 		$current_user_id   = $current_user->ID;
@@ -601,10 +602,9 @@ class BookingController {
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host         = new Host();
 			$HostData     = $host->get( $current_user_id );
-			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->user_id );
+			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->host_id ); 
 
-		}
-
+		} 
 		$extractedBookings = array_map(
 			function ( $booking ) {
 				return array(
@@ -671,22 +671,32 @@ class BookingController {
 	public function updateBulkStatus() {
 		$request       = json_decode( file_get_contents( 'php://input' ), true );
 		$status    = $request['status'];
-		$items    = $request['items']['_value'];
+		$items    = $request['items'];
 		$booking_owner = !empty($request['host']) ? $request['host'] : '';
 
 
 		$booking = new Booking();
-		if(!empty($items)){
-			foreach($items as $item){
-				$data = array(
-					'id'     => $item,
-					'status' => isset( $status ) ? sanitize_text_field( $status ) : '',
-				);
+		if($status == 'delete'){
+			if(!empty($items)){
+				foreach($items as $item){
+					$bookingDelete = $booking->delete( $item );
+				}
+			}
 
-				// Booking Update
-				$bookingUpdate = $booking->update( $data );
+		}else{
+			if(!empty($items)){
+				foreach($items as $item){
+					$data = array(
+						'id'     => $item,
+						'status' => isset( $status ) ? sanitize_text_field( $status ) : '',
+					);
+	
+					// Booking Update
+					$bookingUpdate = $booking->update( $data );
+				}
 			}
 		}
+		
 
 		if(!empty($booking_owner)){
 			$current_user = get_userdata( $booking_owner );

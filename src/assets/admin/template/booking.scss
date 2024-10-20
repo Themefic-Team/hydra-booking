@@ -571,7 +571,7 @@
                             border-radius: $border-radius-large;
                             background: $warning-background-secondary;
                             padding: 2px 8px;
-                            color: $alert-text;
+                            color: $warning-text;
                             text-align: center;
                             font-size: $text-font-size-small;
                             
@@ -583,8 +583,8 @@
                                 color: $success-text; 
                             }
                             &.canceled{
-                                background: $warning-background; 
-                                color: $warning-text; 
+                                background: $error-background; 
+                                color: $error-text; 
                             }
                             &.schedule{
                                 background-color: $info-background;
@@ -620,8 +620,9 @@
                                         font-weight: $font-weight-reguler;
                                         line-height: 24px; /* 160% */
                                         width: 100%;
+                                        margin: 0 !important;
                                         &.pending{
-                                            background-color: $warning-background-secondary;
+                                            background-color: $warning-background;
                                             color: $alert-text;
                                         }
                                         &.schedule{
@@ -629,8 +630,8 @@
                                             color: $info-text;
                                         }
                                         &.canceled{
-                                            background-color: $warning-background;
-                                            color: $warning-text;
+                                            background-color: $error-background;
+                                            color: $error-text;
                                         }
                                     }
                                 }

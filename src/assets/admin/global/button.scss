@@ -29,6 +29,18 @@
             color: $primary-text !important;
         }
     }
+    &.boxed-btn-danger{
+        padding: 8px 24px; 
+        border-radius: $border-radius-medium; 
+        border: $button-border $border-type $error-text;
+        background-color: $error-background;
+        color: $error-text;
+        transition: $transition;
+        &:hover, &:focus, &:active {
+            background-color: $error-text;
+            color: $surface-secondary;
+        }
+    }
     &.tab-btn {
         padding: 8px 12px; 
         border-radius: $border-radius-small;

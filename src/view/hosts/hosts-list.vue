@@ -69,7 +69,7 @@ window.addEventListener('click', function(e) {
                 </div>
                 <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
                     <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ __('Cancel', 'hydra-booking') }}</button>
-                    <button class="tfhb-btn boxed-btn flex-btn" @click="deleteItemConfirm">{{ __('Delete', 'hydra-booking') }}</button>
+                    <button class="tfhb-btn boxed-btn-danger flex-btn" @click="deleteItemConfirm">{{ __('Delete', 'hydra-booking') }}</button>
                 </div>
             </div> 
         </template> 

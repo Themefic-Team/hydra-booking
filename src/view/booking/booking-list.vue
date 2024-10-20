@@ -182,12 +182,13 @@ const Booking_Status_Callback = (e) => {
     UpdateMeetingStatus(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id, e.value);
 }
 
-const Bulk_Status_Callback = async (e) => {
+const Bulk_Status_Callback = async (value) => { 
+
 
     let bookings = {
-        items: selected_items,
-        status: e.value
-    }
+        items: selected_items.value,
+        status: value
+    } 
     try { 
             // axisos sent dataHeader Nonce Data
             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/bulk-update', bookings, {
@@ -198,6 +199,7 @@ const Bulk_Status_Callback = async (e) => {
             } );
 
             if (response.data.status) {  
+              
                 Booking.bookings = response.data.booking; 
                 Booking.calendarbooking.events = response.data.booking_calendar;
                 BookingEditPopup.value = false;
@@ -272,6 +274,15 @@ const truncateString = (str, num) => {
     return str.slice(0, num) + '...'
 }
 
+const deletePopup = ref(false);
+
+const deleteItemConfirm = () => {
+    Bulk_Status_Callback('delete'); 
+    deletePopup.value = false;
+    // empty selected_items
+    selected_items.value = [];
+}
+
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -296,6 +307,7 @@ const truncateString = (str, num) => {
         </div>
     </div>
     <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
+       
         <HbDropdown   
             v-if="selected_items.length > 0"
             placeholder="Status"   
@@ -306,6 +318,10 @@ const truncateString = (str, num) => {
             ]"
             @tfhb-onchange="Bulk_Status_Callback" 
         />  
+        <button  v-if="selected_items.length > 0" @click="deletePopup = true" class="tfhb-btn  tfhb-flexbox boxed-btn-danger">
+            <!-- <Icon name="PlusCircle " size=20 />   -->
+            {{ __('Delete', 'hydra-booking') }}
+        </button>
         <button @click="ExportAsCSV = true" class="tfhb-btn boxed-secondary-btn flex-btn">
             <!-- <Icon name="PlusCircle " size=20 />   -->
             {{ __('Export as CSV', 'hydra-booking') }}
@@ -313,6 +329,24 @@ const truncateString = (str, num) => {
         <router-link :to="{ name: 'BookingCreate' }" class="tfhb-btn boxed-btn flex-btn"><Icon name="PlusCircle" size=20 /> {{ __('Add New Booking', 'hydra-booking') }}</router-link>
     </div> 
 </div>
+
+<HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal"> 
+    <template #content>  
+        <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+            <div class="tfhb-close-icon">
+                <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+            </div>
+            <div class="tfhb-close-content">
+                <h3>{{ __('Are you absolutely sure??', 'hydra-booking') }}  </h3>  
+                <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
+            </div>
+            <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ __('Cancel', 'hydra-booking') }}</button>
+                <button class="tfhb-btn boxed-btn-danger flex-btn" @click="deleteItemConfirm">{{ __('Delete', 'hydra-booking') }}</button>
+            </div>
+        </div> 
+    </template> 
+</HbPopup>
 
 <!-- Export CSV POPup -->
 <HbPopup  :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
@@ -366,7 +400,7 @@ const truncateString = (str, num) => {
       </div>
 
       <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
-        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ __('Export Meeting', 'hydra-booking') }}</button> 
+        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn-danger flex-btn"><Icon name="Download" size=20 /> {{ __('Export Meeting', 'hydra-booking') }}</button> 
       </div>
     </template> 
 </HbPopup>
