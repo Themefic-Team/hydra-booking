@@ -970,7 +970,7 @@
         margin: 0;
         padding: 16px;
         width: calc(30% - 48px);
-        display: flow-root !important;
+        display: flow-root ;
         transition: $transition;
         &:hover{
             background-color: $surface-primary;
