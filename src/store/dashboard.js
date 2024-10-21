@@ -53,7 +53,7 @@ const Dashboard = reactive({
     async fetcDashboard() { 
 
         try {  
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/dashboard', this.data_request,  {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/dashboard', this.data_request,  {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -82,7 +82,7 @@ const Dashboard = reactive({
     async fetcDashboardStatistics() { 
 
         try {  
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/dashboard/statistics', this.data_request,  {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/dashboard/statistics', this.data_request,  {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'

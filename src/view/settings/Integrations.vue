@@ -189,7 +189,7 @@ const Integration = reactive( {
 const fetchIntegration = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/integration', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -220,7 +220,7 @@ const UpdateIntegration = async (key, value) => {
         value: value
     }; 
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/integration/update', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration/update', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'

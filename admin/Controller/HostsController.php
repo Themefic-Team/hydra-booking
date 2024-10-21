@@ -517,7 +517,7 @@ class HostsController {
 		}
 		// Update user Option
 		$data['host_id']      = $host_id;
-		$data['availability'] = $request['availability'];
+		$data['availability'] = isset($request['availability']) ? $request['availability'] : array();
 		update_user_meta( $host_id, '_tfhb_host', $data );
 		// Hosts Lists
 		$HostsList = $host->get();
@@ -615,7 +615,7 @@ class HostsController {
 		$google_calendar = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 
 
-		if ( $_tfhb_integration_settings['google_calendar']['status']  ) {
+		if ( isset($_tfhb_integration_settings['google_calendar']['status']) && $_tfhb_integration_settings['google_calendar']['status']  ) {
 
 			$google_calendar['type']              = 'google_calendar';
 			$GoogleCalendar                       = new GoogleCalendar();

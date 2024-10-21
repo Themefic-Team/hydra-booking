@@ -145,7 +145,7 @@ const closeModal = () => {
 const Settings_avalibility = ref();
 const fetchAvailabilitySingle = async (setting) => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/'+setting, {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/'+setting, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_hosts'
@@ -176,7 +176,7 @@ const fetchAvailabilitySettings = async () => {
         id: Host.hostInfo
     };  
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/availability', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/availability', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_hosts'
@@ -229,7 +229,7 @@ const deleteAvailabilitySettings = async (key, id, user_id ) => {
     user_id: user_id
   }
   try { 
-      const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/availability/delete', deleteAvailability, {
+      const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/availability/delete', deleteAvailability, {
              
       } );
       if (response.data.status) { 
@@ -248,7 +248,7 @@ const deleteAvailabilitySettings = async (key, id, user_id ) => {
 // Default Availability
 const fetchDefaultAvailabilitySingle = async (setting) => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/'+setting); 
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/'+setting); 
         if (response.data.status) { 
             Settings_avalibility.value = response.data;
             Settings_avalibility.value.availability.time_slots = Availability.GeneralSettings.week_start_from ?  Availability.RearraingeWeekStart(Availability.GeneralSettings.week_start_from, Settings_avalibility.value.availability.time_slots) : Settings_avalibility.value.availability.time_slots;

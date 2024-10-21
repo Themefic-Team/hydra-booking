@@ -26,7 +26,7 @@ const skeleton = ref(true);
 const fetchAppearanceSettings = async () => {
 
 try { 
-    const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/appearance-settings', {
+    const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/appearance-settings', {
         headers: {
             'X-WP-Nonce': tfhb_core_apps.rest_nonce,
             'capability': 'tfhb_manage_options'
@@ -50,7 +50,7 @@ try {
 
 const UpdateAppearanceSettings = async () => { 
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/appearance-settings/update', appearanceSettings, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/appearance-settings/update', appearanceSettings, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'

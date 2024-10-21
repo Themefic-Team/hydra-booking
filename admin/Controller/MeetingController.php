@@ -91,6 +91,15 @@ class MeetingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/meetings/get-single-meeting-permalink',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'fetchSingleMeetingPermalink' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 
 		register_rest_route(
 			'hydra-booking/v1',
@@ -211,6 +220,15 @@ class MeetingController {
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$MeetingsList = $meeting->get( null, null, $current_user_id );
 		}
+
+		// add meeting permalink key into the meeting list using post id using array map
+		$MeetingsList = array_map(
+			function ( $meeting ) {
+				$meeting->permalink = get_permalink( $meeting->post_id );
+				return $meeting;
+			},
+			$MeetingsList
+		);
 		return $MeetingsList;
 	}
 	// Meeting List
@@ -448,6 +466,36 @@ class MeetingController {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Single Meeting Permalink
+	 *
+	 *  
+	 *
+	 *  
+	 */
+	public function fetchSingleMeetingPermalink(){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+	 
+		$post_id = isset($request['post_id']) ? $request['post_id'] : '';
+		if(empty($post_id)){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Post ID',
+				)
+			);
+		}
+		$permalink = get_permalink($post_id);
+
+		return rest_ensure_response(
+			array(
+				'status'  => true,
+				'permalink' => $permalink,
+				'message' => 'Permalink Successfully Retrieve!',
+			)
+		);
 	}
 
 	// Integrations
@@ -918,6 +966,12 @@ class MeetingController {
 		if ( $questions_form_type ) {
 			$formsList = $this->getQuestionFormsData( $questions_form_type );
 		}
+
+		// add permalink into getMeetingData 
+		$meetingData = (array) $MeetingData;
+		$meetingData['permalink'] = get_permalink($MeetingData->post_id);
+		// again array to object
+		$MeetingData = (object) $meetingData;
 
 		// Return response
 		$data = array(

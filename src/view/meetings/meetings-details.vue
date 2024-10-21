@@ -60,10 +60,9 @@ const CategoryData = {
     description: '',
 };
 // Create and Update Category
-const UpdateCategory = async () => { 
-    console.log(CategoryData);
+const UpdateCategory = async () => {  
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/categories/create-update', CategoryData, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories/create-update', CategoryData, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'

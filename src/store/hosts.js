@@ -4,7 +4,7 @@ const Host = reactive({
     hosts: [],
     hostInfo: "",
     async fetchHosts() {
-        const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/lists';
+        const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/lists';
         try {
             const response = await fetch(apiUrl, {
                 method: 'GET',
@@ -30,7 +30,7 @@ const Host = reactive({
     },
 
     async fetchHost(HostId){
-        const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/' + HostId;
+        const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/' + HostId;
         try {
             const response = await fetch(apiUrl, {
                 method: 'GET',

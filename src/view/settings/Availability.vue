@@ -127,7 +127,7 @@ const marAsDefault = async (key, id, availability ) => {
  
     AvailabilityGet.data[key].default_status = true;
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/mark-as-default', {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/mark-as-default', {
             key: key,
             id: id,
             availabilityData: AvailabilityGet.data
@@ -158,7 +158,7 @@ const closeModal = () => {
 const fetchAvailabilitySettings = async () => {
 
   try { 
-      const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability', {
+      const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability', {
         headers: {
             'X-WP-Nonce': tfhb_core_apps.rest_nonce,
             'capability': 'tfhb_manage_options'
@@ -189,8 +189,8 @@ const deleteAvailabilitySettings = async (key, id ) => {
     id: id
   }
   try { 
-      // const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/'+key); 
-      const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability/delete', deleteAvailability, {
+      // const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/'+key); 
+      const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/delete', deleteAvailability, {
         headers: {
             'X-WP-Nonce': tfhb_core_apps.rest_nonce,
             'capability': 'tfhb_manage_options'

@@ -42,7 +42,7 @@ const flatpickr_date= reactive({
 }); 
 const fetchPreBookingData = async () => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/pre',{
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/pre',{
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -68,7 +68,7 @@ const MeetingChangeCallback = async (e) => {
         meeting_id: e.value,
     };  
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/meeting', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/meeting', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -120,7 +120,7 @@ const bookingSlot = async (date) => {
     };  
 
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/availabletime', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/availabletime', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -147,7 +147,7 @@ const createBooking = async () => {
     // Api Submission
     try { 
 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/create', booking, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/create', booking, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -185,7 +185,7 @@ const MeetingGetEndTime = (e) => {
 const bookingId = route.params.id;
 const fetchSingleBooking = async () => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/'+bookingId, {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/'+bookingId, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'

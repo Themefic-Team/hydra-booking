@@ -91,7 +91,7 @@ function QuestionPopupClose(){
 const GetFormsData = async (value) => {
     let form_type =  value;  
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/question/forms-list', {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/question/forms-list', {
             form_type: form_type
         },
         {

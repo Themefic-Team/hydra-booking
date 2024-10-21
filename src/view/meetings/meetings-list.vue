@@ -74,7 +74,7 @@ const sharePopupData = (data) => {
     shareData.time = data.duration
     shareData.meeting_type = data.meeting_type
     shareData.shortcode = '[hydra_booking id="'+data.id+'"]'
-    shareData.link = tfhb_core_apps.admin_url + '/' + data.slug
+    shareData.link = data.permalink
     shareData.embed = '<iframe src="'+ tfhb_core_apps.admin_url +'/?hydra-booking=meeting&meeting-id='+data.id+'&type=iframe" title="description"  height="600" width="100%" ></iframe>'
 
     // Popup open
@@ -379,7 +379,7 @@ const truncateString = (str, num) => {
                     </div>
                 </div>
                 <div class="single-meeting-action-btn tfhb-flexbox">
-                    <a :href="'/' + smeeting.slug" class="tfhb-flexbox" target="_blank">
+                    <a :href="smeeting.permalink" class="tfhb-flexbox" target="_blank">
                         <Icon name="Eye" size=20 /> 
                         {{ __('Preview', 'hydra-booking') }}
                     </a>

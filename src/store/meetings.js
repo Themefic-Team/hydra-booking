@@ -14,7 +14,7 @@ const Meeting = reactive({
     // Meeting List
     async fetchMeetings() {
 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/lists', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/lists', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -30,7 +30,7 @@ const Meeting = reactive({
      // Meeting List
      async fetchMeetingsPaymentIntegration() {
 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/payment/payment-method', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/payment/payment-method', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -57,7 +57,7 @@ const Meeting = reactive({
             post_id: $post_id
         }
         try { 
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/delete', deleteMeeting, {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/delete', deleteMeeting, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -83,7 +83,7 @@ const Meeting = reactive({
         }
         try { 
              // axisos sent dataHeader Nonce Data
-             const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/create', TypeData, {
+             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/create', TypeData, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -110,7 +110,7 @@ const Meeting = reactive({
     // Filter By Meeting Title
     async Tfhb_Meeting_Filter (filterData){
         try {
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/filter', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/filter', {
                 params: {
                     filterData
                 },
@@ -131,7 +131,7 @@ const Meeting = reactive({
 
     async Tfhb_Meeting_Select_Filter (filterData){
         try {
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/filter', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/filter', {
                 params: {
                     filterData
                 },
@@ -154,7 +154,7 @@ const Meeting = reactive({
 
     async fetchMeetingCategory (){
         try { 
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/categories', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories', {
                     headers: {
                         'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                         'capability': 'tfhb_manage_options'

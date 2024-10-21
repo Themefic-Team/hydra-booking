@@ -251,6 +251,7 @@ const meetingData = reactive({
     meeting_price: '',
     payment_currency: '',
     payment_method: '',
+    permalink	: '',
     payment_meta: {
         product_id: '',
     },
@@ -330,7 +331,7 @@ const meetingId = route.params.id;
 
 const fetchMeeting = async () => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/'+meetingId, {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/'+meetingId, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -444,6 +445,7 @@ const fetchMeeting = async () => {
             meetingData.mailchimp = response.data.mailchimp ? response.data.mailchimp : '';
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
+            meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
 
             skeleton.value = false
         }else{ 
@@ -499,7 +501,7 @@ const UpdateMeetingData = async (validator_field) => {
 
     // Api Submission
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/details/update', meetingData, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/details/update', meetingData, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -531,7 +533,7 @@ const UpdateMeetingData = async (validator_field) => {
             }
             if("MeetingsCreatePayment"==route.name){ 
                 // sharePopupData();
-                window.open(tfhb_core_apps.admin_url + '/' + meetingData.slug, '_blank');
+                window.open(meetingData.permalink, '_blank');
 
 
             }
@@ -593,7 +595,7 @@ const sharePopupData = () => {
     shareData.time = meetingData.duration
     shareData.meeting_type = meetingData.meeting_type
     shareData.shortcode = '[hydra_booking id="'+meetingData.id+'"]'
-    shareData.link = tfhb_core_apps.admin_url + '/' + meetingData.slug
+    shareData.link = meetingData.permalink
     shareData.embed = '<iframe src="'+ tfhb_core_apps.admin_url +'/?hydra-booking=meeting&meeting-id='+meetingData.id+'&type=iframe" title="description"  height="600" width="100%" ></iframe>'
 
     // Popup open

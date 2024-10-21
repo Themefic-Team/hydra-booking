@@ -28,7 +28,7 @@ const usersData = reactive({});
 const fetchHosts = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/lists',{
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/lists',{
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -49,7 +49,7 @@ const CreateHosts = async () => {
    
     try { 
         // axisos sent dataHeader Nonce Data
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/create', host, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/create', host, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -85,7 +85,7 @@ const deleteHost = async ($id, $user_id) => {
         user_id: $user_id
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/delete', deleteHost, { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/delete', deleteHost, { 
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -111,7 +111,7 @@ const updateHostStatus = async ($id, $user_id, $status) => {
         status: $status
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/update-status', HostData, { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/update-status', HostData, { 
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -143,7 +143,7 @@ const Tfhb_Host_Filter = async (e) =>{
     filterData.name=e.target.value;
     skeleton.value = true;
     try {
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/filter', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/filter', {
             params: {
                 filterData
             },

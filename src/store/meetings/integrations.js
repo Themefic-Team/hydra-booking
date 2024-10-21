@@ -34,7 +34,7 @@ const IntegrationsValue = reactive({
 
         // Api Submission
         try { 
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/integration/update', this.integrationsData, {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/integration/update', this.integrationsData, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -64,7 +64,7 @@ const IntegrationsValue = reactive({
         };
     
         try { 
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/integration/delete', data, {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/integration/delete', data, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -97,7 +97,7 @@ const IntegrationsValue = reactive({
             post_id: $post_id
         }
         try { 
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/delete', deleteMeeting, {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/delete', deleteMeeting, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'

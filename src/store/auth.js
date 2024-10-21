@@ -6,7 +6,7 @@ const AuthData = reactive({
     async fetchAuth() { 
 
         try {  
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/user/auth', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/user/auth', {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'

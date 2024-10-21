@@ -50,6 +50,7 @@ class Enqueue {
 				'rest_nonce'           => wp_create_nonce( 'wp_rest' ),
 				'tfhb_is_pro'           => wp_create_nonce( 'wp_rest' ),
 				'admin_url'            => site_url(),
+				'rest_route'            => get_rest_url(),
 				'ajax_url'             => admin_url( 'admin-ajax.php' ),
 				'tfhb_url'             => THB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),

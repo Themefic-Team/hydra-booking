@@ -6,7 +6,7 @@ const Availability = reactive({
 
     async fetchAvailability() {
        
-        const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability';
+        const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability';
         try {
             const response = await fetch(apiUrl, {
                 method: 'GET',

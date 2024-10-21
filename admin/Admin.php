@@ -18,8 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Admin {
 
 	// constaract
-	public function __construct() {
-
+	public function __construct() { 
 		// run migrator
 		new Migrator();
 		// enqueue
