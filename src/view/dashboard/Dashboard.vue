@@ -1,5 +1,5 @@
 <script setup>
-import { __ } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n'; 
 import Chart from 'primevue/chart';
 import { ref, onMounted  } from 'vue';
 import Header from '@/components/Header.vue';

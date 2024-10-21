@@ -435,6 +435,7 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li.current.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li.current.active {
   color: #FFFFFF !important;
   position: relative;
+  font-weight: 600;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li.current.active::after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li.current.active::after {
   position: absolute;
@@ -959,7 +960,7 @@
   width: 100% !important;
   margin: 0 !important;
   padding: 2px !important;
-  border: 1px;
+  border: 1px solid #C0D8C4;
 }
 #select2-attendee_time_zone-results li {
   background-color: #FFFFFF;
@@ -1038,8 +1039,12 @@
   margin-bottom: 16px;
 }
 
+.tfhb-select2-dropdown {
+  border: 1px solid #C0D8C4 !important;
+  border-radius: 4px !important;
+}
 .tfhb-select2-dropdown.select2-dropdown--below {
-  top: 20px;
+  top: 40px;
 }
 
 .tfhb-swicher-wrap {

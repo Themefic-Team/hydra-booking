@@ -1,5 +1,5 @@
 <script setup> 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount, } from 'vue';
 import { useRouter, RouterView,} from 'vue-router' 

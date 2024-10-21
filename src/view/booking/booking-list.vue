@@ -1,8 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, onMounted, computed } from 'vue';
-import axios from 'axios'  
-import 'primevue/resources/themes/aura-light-green/theme.css'
+import axios from 'axios'   
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbSelect from '@/components/form-fields/HbSelect.vue';
 import HbRadio from '@/components/form-fields/HbRadio.vue';

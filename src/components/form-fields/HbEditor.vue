@@ -1,4 +1,5 @@
 <script setup>  
+
 import Editor from 'primevue/editor';
 const props = defineProps([
     'name',

@@ -110,7 +110,7 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 						echo '<div class="tfhb-checkbox-group">';
 						foreach ( $question['options'] as $option ) { 
 							echo '<label class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($option) . '">
-                                            <input name="' . esc_attr($name) . '" value="'.esc_attr(text: $option).'"  id="' . esc_attr($option) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
+                                            <input name="' . esc_attr($name) . '" value="'.esc_attr(text: $option).'"  id="' . esc_attr($option) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' >
                                             <span class="checkmark"></span> ' . esc_attr($option) . '
                                         </label>';
 						}

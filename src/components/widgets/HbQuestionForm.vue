@@ -145,6 +145,7 @@ const UpdateQuestionsData = async (validator_field) => {
     <!-- Options -->
 
     <HbSwitch  
+         v-if=" questions_data.type != 'checkbox'"
         v-model="questions_data.required"
         :label="__('Required', 'hydra-booking')"  
     /> 

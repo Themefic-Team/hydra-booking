@@ -23,6 +23,11 @@ class Enqueue {
 		return $tag;
 	}
 	public function admin_enqueue_scripts() {
+
+		// if page=hydra-booking then load the script
+		if ( ! isset( $_GET['page'] ) || 'hydra-booking' !== $_GET['page'] ) {
+			return;
+		}
 		$user      = new AuthController();
 		$user_auth = array(
 			'id'   => $user->userID(),

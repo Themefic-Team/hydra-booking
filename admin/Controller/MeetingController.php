@@ -91,15 +91,7 @@ class MeetingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
-		register_rest_route(
-			'hydra-booking/v1',
-			'/meetings/get-single-meeting-permalink',
-			array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'fetchSingleMeetingPermalink' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
-			)
-		);
+	 
 
 		register_rest_route(
 			'hydra-booking/v1',
@@ -468,35 +460,6 @@ class MeetingController {
 		}
 	}
 
-	/**
-	 * Single Meeting Permalink
-	 *
-	 *  
-	 *
-	 *  
-	 */
-	public function fetchSingleMeetingPermalink(){
-		$request = json_decode( file_get_contents( 'php://input' ), true );
-	 
-		$post_id = isset($request['post_id']) ? $request['post_id'] : '';
-		if(empty($post_id)){
-			return rest_ensure_response(
-				array(
-					'status'  => false,
-					'message' => 'Invalid Post ID',
-				)
-			);
-		}
-		$permalink = get_permalink($post_id);
-
-		return rest_ensure_response(
-			array(
-				'status'  => true,
-				'permalink' => $permalink,
-				'message' => 'Permalink Successfully Retrieve!',
-			)
-		);
-	}
 
 	// Integrations
 	public function updateMeetingIntegration() {
