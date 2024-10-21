@@ -113,7 +113,7 @@ window.addEventListener('click', function(e) {
 
                 <!-- Single Meeting -->
                 <div class="tfhb-single-meeting  tfhb-flexbox"> 
-                    <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox">
+                    <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox tfhb-full-width">
                         <div class="single-meeting-content">
                             <h3> {{ setupWizard.data.meeting ? setupWizard.data.meeting.title : 'No Title' }} </h3>
                             <div class="meeting-user-info">

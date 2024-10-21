@@ -89,6 +89,7 @@ const tfhbValidateInput = (fieldName) => {
 
 // Host Wise Availability
 const HostAvailabilities = reactive([]);
+const host_availble_type = ref('settings');
 const fetchHostAvailability = async (host) => {
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/single-host-availability/'+host, {
@@ -102,6 +103,7 @@ const fetchHostAvailability = async (host) => {
         for (const key in HostAvailabilities) {
             delete HostAvailabilities[key];
         }
+        host_availble_type.value = response.data.host_availble;
         if("settings"==response.data.host_availble){ 
             Settings_avalibility.value = response.data.host;
         }else{
@@ -396,7 +398,7 @@ const isobjectempty = (data) => {
             :selected = "1"
             :placeholder="__('Choose Schedule', 'hydra-booking')"   
             :option="HostAvailabilities.value"
-            v-if="'settings'==meeting.availability_type"
+            v-if="'settings'==meeting.availability_type && host_availble_type != 'settings'"
             @add-change="tfhbValidateInput('availability_id')" 
             @add-click="tfhbValidateInput('availability_id')" 
             :errors="errors.availability_id"

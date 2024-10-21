@@ -289,7 +289,7 @@ const truncateString = (str, num) => {
 
             <!-- Single Meeting -->
             <div class="tfhb-single-meeting tfhb-flexbox" v-for="(smeeting, key) in Meeting.meetings"> 
-                <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox">
+                <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox tfhb-full-width">
                     <div class="single-meeting-content">
                         <h3> {{ smeeting.title ? truncateString(smeeting.title, 60) : 'No Title' }} </h3>
                         <div class="meeting-user-info">
