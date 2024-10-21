@@ -116,6 +116,13 @@ const routes = [
                 component: () => import('../view/meetings/meetings-list.vue')
             }, 
             {
+                path: 'create-meeting-single/:id',
+                props: true,
+                name: 'MeetingsCreateSingle',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                component: () => import('../view/meetings/meetings-create-single.vue')
+            },
+            {
                 path: 'single/:id',
                 name: 'MeetingsCreate',
                 meta: { Capabilities: 'tfhb_manage_options' },
@@ -123,6 +130,7 @@ const routes = [
                 props: true,
                 redirect: { name: 'MeetingsCreateDetails' },
                 children: [
+                    
                     {
                         path: 'details',
                         props: true,

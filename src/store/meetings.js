@@ -1,7 +1,6 @@
 import { reactive } from 'vue'
 import { toast } from "vue3-toastify"; 
 import axios from 'axios'  
-
 const Meeting = reactive({
     meetings: [],
     meetingCategory: [],
@@ -10,6 +9,11 @@ const Meeting = reactive({
         paypal: true, 
         stripe: true,
     },
+    singleMeeting: {
+        MeetingData: {},
+        integrations: {},
+    },
+
 
     // Meeting List
     async fetchMeetings() {
@@ -26,7 +30,75 @@ const Meeting = reactive({
         }
 
     },
+    async fetchSingleMeeting(meetingId){
+        try { 
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/'+meetingId, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            });
+            if (response.data.status == true) { 
+                this.singleMeeting.MeetingData = response.data.meeting;
 
+                if(response.data.meeting.meeting_locations == null){
+                    this.singleMeeting.MeetingData.meeting_locations = [];
+                    this.singleMeeting.MeetingData.meeting_locations.push({
+                        location: '',
+                        address: ''
+                    });
+
+
+                }else{
+                    this.singleMeeting.MeetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
+                }
+
+                this.singleMeeting.integrations.google_calendar_status = response.data.integrations.google_calendar_status && response.data.integrations.google_calendar_status == 1 ? false : true;  
+                this.singleMeeting.integrations.zoom_meeting_status = response.data.integrations.zoom_meeting_status && response.data.integrations.zoom_meeting_status == 1  ? false : true;  
+                this.singleMeeting.integrations.cf7_status = response.data.integrations.cf7_status && response.data.integrations.cf7_status == 1  ? false : true;  
+                this.singleMeeting.integrations.fluent_status = response.data.integrations.fluent_status && response.data.integrations.fluent_status == 1  ? false : true;  
+                this.singleMeeting.integrations.forminator_status = response.data.integrations.forminator_status && response.data.integrations.forminator_status == 1  ? false : true;  
+                this.singleMeeting.integrations.gravity_status = response.data.integrations.gravity_status && response.data.integrations.gravity_status == 1  ? false : true;  
+                this.singleMeeting.integrations.webhook_status = response.data.integrations.webhook_status && response.data.integrations.webhook_status == 1  ? false : true;  
+                this.singleMeeting.integrations.fluent_crm_status = response.data.integrations.fluent_crm_status && response.data.integrations.fluent_crm_status == 1  ? false : true;  
+                this.singleMeeting.integrations.zoho_crm_status = response.data.integrations.zoho_crm_status && response.data.integrations.zoho_crm_status == 1  ? false : true;  
+    
+                console.log(this.singleMeeting);
+                // skeleton.value = false
+            }else{ 
+                router.push({ name: 'MeetingsLists' });
+            }
+        } catch (error) {
+            console.log(error);
+        } 
+    },
+
+    async updateSingleMeetingData(routes){
+         // Api Submission
+        try { 
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/details/update', this.singleMeeting.MeetingData, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            });
+            if (response.data.status == true) { 
+                this.singleMeeting.MeetingData.slug = response.data.meeting.slug; 
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+                routes.push({ name: 'MeetingsCreate', params: { id: response.data.meeting.id} });
+            }else{ 
+                toast.error(response.data.message, {
+                        position: 'bottom-right', // Set the desired position
+                        "autoClose": 1500,
+                    });
+            }
+        } catch (error) {
+            console.log(error);
+        } 
+    },
      // Meeting List
      async fetchMeetingsPaymentIntegration() {
 
@@ -95,7 +167,7 @@ const Meeting = reactive({
                      position: 'bottom-right', // Set the desired position
                      "autoClose": 1500,
                  });   
-                routes.push({ name: 'MeetingsCreate', params: { id: response.data.id} });
+                routes.push({ name: 'MeetingsCreateSingle', params: { id: response.data.id} });
              }else{
                  toast.error(response.data.message, {
                      position: 'bottom-right', // Set the desired position
