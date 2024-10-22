@@ -61,7 +61,7 @@ window.addEventListener('click', function(e) {
             </div> 
         </div>
         <div class="tfhb-availability-single-box-info  tfhb-flexbox">
-            <Icon name="Clock" size=20 />  
+            <span><Icon name="Clock" size=20 /> </span>
             <span class="fthb-availability-timeslots"><p v-for="(day, key)  in availability.time_slots" :key="key"  v-show = "day.status == 1"  >    
                 {{ day.status == 1 ? day.day + ' (' + day.times[0].start + ' - ' + day.times[0].end + ') ,' : '' }} 
             </p></span>

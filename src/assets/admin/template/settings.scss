@@ -56,22 +56,29 @@
 			  }
 			  .tfhb-availability-single-box-info{
 				margin-bottom: 16px;
+
 				// last child
 				&:last-child {
 					margin-bottom: 0;
 				}
 				&.tfhb-flexbox {
-
+					align-items: normal !important;
 					justify-content: normal !important;
 					gap: 16px !important; 
 				}
 				span {
+					margin: 0 !important;
 					font-size: $heading-font-size-small !important; 
-					line-height: 24px !important; 
-					width: calc(100% - 36px);
+					svg{
+						margin-top: 4px;
+					}
+					
 				  }
 				.fthb-availability-timeslots{
+					width: calc(100% - 36px);
 					p{ 
+						line-height: 24px !important; 
+						margin: 0 !important;
 						display: inline-block; 
 					}
 				}
