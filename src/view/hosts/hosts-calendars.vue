@@ -142,7 +142,7 @@ const fetchIntegration = async () => {
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
             Integration.stripe = response.data.stripe  ? response.data.stripe  : Integration.stripe ;  
-            console.log(response.data);
+           
             
 
             skeleton.value = false;

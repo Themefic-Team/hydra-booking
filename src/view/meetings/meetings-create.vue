@@ -610,7 +610,7 @@ const truncateString = (str, num) => {
 }
 </script>
 
-<template>
+<template> 
     <div class="tfhb-meeting-create" :class="{ 'tfhb-skeleton': skeleton }">
         <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
             <div class="tfhb-meeting-heading-wrap tfhb-flexbox tfhb-gap-8">

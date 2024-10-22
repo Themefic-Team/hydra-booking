@@ -24,8 +24,7 @@ const UploadImage = () => {
       wp.media.editor.open();
 
 }
-const imageChange = (attachment) => { 
-  console.log(attachment);
+const imageChange = (attachment) => {  
     const image = document.querySelector('.'+props.name+'_display'); 
     image.src = attachment.url; 
     // props.modelValue = attachment.url;

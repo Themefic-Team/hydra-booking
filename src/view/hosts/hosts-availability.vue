@@ -44,12 +44,14 @@ const skeleton = ref(true);
 const GeneralSettings = reactive({});
 
 const openModal = () => {
+
   availabilityDataSingle.value = {
     host: props.hostId,
     user_id: props.host.user_id,
     key: 0,
     id: '',
     title: '',
+    default_status: false,
     time_zone: '',
     date_status: 0,
     time_slots: [
@@ -152,8 +154,7 @@ const fetchAvailabilitySingle = async (setting) => {
             } 
         } );
         if (response.data.status) { 
-            Settings_avalibility.value = response.data;
-            console.log(response.data);
+            Settings_avalibility.value = response.data; 
             Settings_avalibility.value.availability.time_slots = Availability.GeneralSettings.week_start_from ?  Availability.RearraingeWeekStart(Availability.GeneralSettings.week_start_from, Settings_avalibility.value.availability.time_slots) : Settings_avalibility.value.availability.time_slots;
             
 
@@ -230,7 +231,10 @@ const deleteAvailabilitySettings = async (key, id, user_id ) => {
   }
   try { 
       const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/availability/delete', deleteAvailability, {
-             
+        headers: {
+            'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+            'capability': 'tfhb_manage_options'
+        }
       } );
       if (response.data.status) { 
         AvailabilityGet.data = response.data.availability; 
@@ -383,9 +387,12 @@ const formatTimeSlots = (timeSlots) =>  {
     </div>
 
     <div class="tfhb-content-wrap tfhb-host-availability-list-wrap tfhb-flexbox" v-if="'custom'==host.availability_type">
+
         <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key"  @edit-availability="EditAvailabilitySettings(key, availability.id, availability)" @delete-availability="deleteAvailabilitySettings(key, availability.id, host.user_id)" />
 
+       
         <AvailabilityPopupSingle v-if="isModalOpened" max_width="800px !important" :timeZone="timeZone.value" :display_overwrite="true" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />
+
     </div>
     <div class="tfhb-submission-btn tfhb-mt-24">
         <button class="tfhb-btn boxed-btn" @click="emit('save-host-info')">{{ __('Save', 'hydra-booking') }}</button>

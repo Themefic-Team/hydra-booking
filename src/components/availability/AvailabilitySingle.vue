@@ -20,8 +20,7 @@ const markAsDefault = () => {
 
 const activeItemDropdown = ref(0);
 // on click add class active
-const activeSingleMeetingDropdown = (id) => {
-    
+const activeSingleMeetingDropdown = (id) => { 
     if(activeItemDropdown.value == id) {
         activeItemDropdown.value = 0;
         return;
@@ -36,7 +35,7 @@ window.addEventListener('click', function(e) {
 });
 </script>
 
-<template>
+<template> 
   <div class="tfhb-availability-single-box">
     <div class="tfhb-availability-single-box-wrap">
         <div  class="tfhb-dashboard-heading ">
@@ -54,7 +53,7 @@ window.addEventListener('click', function(e) {
                     </svg>
                     <div v-show="availability.id == activeItemDropdown"  class="tfhb-dropdown-wrap active">
                         <span class="tfhb-dropdown-single" @click="editAvailability">{{ __('Edit', 'hydra-booking') }}</span>
-                        <span  v-if="availability.default_status != true"  class="tfhb-dropdown-single" @click="markAsDefault">{{ __('Default', 'hydra-booking') }}</span>
+                        <span  v-if="availability.default_status != true && availability.host"  class="tfhb-dropdown-single" @click="markAsDefault">{{ __('Default', 'hydra-booking') }}</span>
                         <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
                         <span v-if="availability.default_status != true"  class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ __('Delete', 'hydra-booking') }}</span>
                     </div>

@@ -106,6 +106,8 @@ const fetchHostAvailability = async (host) => {
         host_availble_type.value = response.data.host_availble;
         if("settings"==response.data.host_availble){ 
             Settings_avalibility.value = response.data.host;
+            props.meeting.availability_id = response.data.host.availability.id; 
+            
         }else{
             Settings_avalibility.value = '';
             if(response.data.host.availability){
@@ -682,7 +684,7 @@ const isobjectempty = (data) => {
             <HbButton 
                 v-if="'settings'==meeting.availability_type"
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                @click="emit('update-meeting', ['host_id', 'availability_id'])"
+                @click="emit('update-meeting', ['host_id'])"
                 :buttonText="__('Save & Continue', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 

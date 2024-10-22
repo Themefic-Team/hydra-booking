@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, reactive } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
@@ -18,9 +18,12 @@ import { Host } from '@/store/hosts';
 
 const router = useRouter();
 const route = useRoute();
-
-
-
+const user = tfhb_core_apps.user || '';
+const user_id = user.id || '';
+const user_role = user.role[0] || '';
+const HostAvailabilities = reactive([]);
+const host_availble_type = ref('settings');
+const Settings_avalibility = ref();
 const tfhbValidateInput = (fieldName) => {
     
     // Clear the errors object
@@ -43,16 +46,17 @@ const meetingId = route.params.id;
 
 onBeforeMount(() => { 
     
-    Meeting.fetchSingleMeeting(meetingId);
+    // Meeting.fetchSingleMeeting(meetingId);
+    Meeting.singleMeeting.MeetingData.id = meetingId; 
 
     Host.fetchHosts().then(() => {
-        if('tfhb_host' == user_role && props.meeting.host_id == ''){
+        if('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == ''){
            
-            props.meeting.host_id = user_id 
+            Meeting.singleMeeting.MeetingData.host_id = user_id 
         } 
-        if(props.meeting.host_id!=0){
-            fetchHostAvailability(props.meeting.host_id);
-            fetchSingleAvailabilitySettings(props.meeting.host_id, props.meeting.availability_id);
+        if(Meeting.singleMeeting.MeetingData.host_id!=0){
+            fetchHostAvailability(Meeting.singleMeeting.MeetingData.host_id);
+            // fetchSingleAvailabilitySettings( Meeting.singleMeeting.MeetingData.host_id, props.meeting.availability_id);
         }
     });
 });
@@ -114,10 +118,53 @@ const truncateString = (str, num) => {
     }
     return str.slice(0, num) + '...'
 }
+const Host_Avalibility_Callback = (value) => {
+    
+    if(value){
+        fetchHostAvailability(value);
+    }
+}
+const fetchHostAvailability = async (host) => {
+    alert(1);
+    try { 
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/single-host-availability/'+host, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_integrations'
+            } 
+        }); 
+        
+        // Clear existing data before updating
+        for (const key in HostAvailabilities) {
+            delete HostAvailabilities[key];
+        }
+        host_availble_type.value = response.data.host_availble;
+        if("settings"==response.data.host_availble){ 
+            Settings_avalibility.value = response.data.host;
+            Meeting.singleMeeting.MeetingData.availability_id = response.data.host.availability.id; 
+        }else{
+            Settings_avalibility.value = '';
+            if(response.data.host.availability){
+
+                let HostAvailabilitiesData = [];
+                // use Each Loop
+                for (const key in response.data.host.availability) {
+                    HostAvailabilitiesData.push({
+                        name: response.data.host.availability[key].title,
+                        value: key // Adjust 'someValue' as per your data structure
+                    });
+                } 
+                HostAvailabilities.value = HostAvailabilitiesData;
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+}
 </script>
 
 <template> 
-
+     
     <div  class="tfhb-meeting-create" :class="{ 'tfhb-skeleton': false }">
         <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
             <div class="tfhb-meeting-heading-wrap tfhb-flexbox tfhb-gap-8">
@@ -157,24 +204,36 @@ const truncateString = (str, num) => {
                     :placeholder="__('Describe about meeting', 'hydra-booking')" 
                 /> 
 
+                 <!-- Select Host -->
+                <HbDropdown 
+                    v-if="'tfhb_host' != user_role"
+                    v-model="Meeting.singleMeeting.MeetingData.host_id"
+                    required= "true" 
+                    :label="__('Select Host', 'hydra-booking')"  
+                    name="host_id"
+                    :placeholder="__('Select Host', 'hydra-booking')"  
+                    :option = "Host.hosts" 
+                    @add-change="tfhbValidateInput('host_id')" 
+                    @add-click="tfhbValidateInput('host_id')" 
+                    :errors="errors.host_id"
+                    @tfhb-onchange="Host_Avalibility_Callback"
+                />
 
-                <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-16 tfhb-m-0 tfhb-full-width"> 
-                    
-                    <!-- Select Host -->
-                    <HbDropdown 
-                        v-if="'tfhb_host' != user_role"
-                        v-model="Meeting.singleMeeting.MeetingData.host_id"
-                        required= "true" 
-                        :label="__('Select Host', 'hydra-booking')"  
-                        name="host_id"
-                        :placeholder="__('Select Host', 'hydra-booking')"  
-                        :option = "Host.hosts" 
-                        @add-change="tfhbValidateInput('host_id')" 
-                        @add-click="tfhbValidateInput('host_id')" 
-                        :errors="errors.host_id"
-                        @tfhb-onchange="Host_Avalibility_Callback"
-                    />
-                </div>
+                 <!-- Choose Schedule -->
+
+                <HbDropdown 
+                    v-model="Meeting.singleMeeting.MeetingData.availability_id"
+                    required= "true" 
+                    :label="__('Choose Schedule', 'hydra-booking')"  
+                    :selected = "1"
+                    :placeholder="__('Choose Schedule', 'hydra-booking')"   
+                    :option="HostAvailabilities.value"
+                    v-if="host_availble_type != 'settings'"
+                    @add-change="tfhbValidateInput('availability_id')" 
+                    @add-click="tfhbValidateInput('availability_id')" 
+                    :errors="errors.availability_id" 
+                />
+ 
                 <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-16 tfhb-m-0 tfhb-full-width"> 
                     <!-- Duration -->
                     <HbDropdown 

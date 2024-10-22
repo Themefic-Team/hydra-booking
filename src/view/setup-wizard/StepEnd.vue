@@ -77,8 +77,7 @@ const FilterBySearch = (e) => {
     });
     //
 
-
-    console.log(e.target.value);
+ 
 }
  
 const RedirectToDeshboard = () => {

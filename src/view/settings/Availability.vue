@@ -116,8 +116,7 @@ const EditAvailabilitySettings = async (key, id, availability ) => {
   isModalOpened.value = true;
 }
 
-const marAsDefault = async (key, id, availability ) => { 
-    console.log(key, id, availability);
+const marAsDefault = async (key, id, availability ) => {  
     // Remove default from all
     if (AvailabilityGet.data.length > 1) {
         AvailabilityGet.data.forEach((item) => {

@@ -983,6 +983,7 @@ class HostsController {
 		$availability['id']          = isset( $request['id'] ) ? sanitize_text_field( $request['id'] ) : '';
 		$availability['user_id']     = isset( $request['user_id'] ) ? sanitize_text_field( $request['user_id'] ) : '';
 		$availability['title']       = sanitize_text_field( $request['title'] );
+		$availability['default_status']       = false;
 		$availability['time_zone']   = sanitize_text_field( $request['time_zone'] );
 		$availability['date_status'] = sanitize_text_field( $request['date_status'] );
 		$availability['override']    = '';
@@ -1025,11 +1026,12 @@ class HostsController {
 				}
 			}
 		}
-		if ( $availability['id'] == '' ) {
+		if ( $availability['id'] == ''  ) {
 			// Host Availability DB
 			$availbility_data = array(
 				'host'        => isset( $request['host'] ) ? sanitize_text_field( $request['host'] ) : '',
 				'title'       => $availability['title'],
+				'default_status'       => false,
 				'time_zone'   => $availability['time_zone'],
 				'override'    => '',
 				'time_slots'  => $request['time_slots'],
@@ -1052,6 +1054,7 @@ class HostsController {
 				);
 			}
 			$host_insert_availablekey = count( $tfhb_host_availability );
+			$_tfhb_host_info['availability'][ $host_insert_availablekey ]['id'] = $insert['insert_id'];
 			$_tfhb_host_info['availability'][ $host_insert_availablekey ]['available_id'] = $insert['insert_id'];
 		} else {
 			// Host Availability DB
@@ -1059,6 +1062,7 @@ class HostsController {
 				'id'          => $request['available_id'],
 				'host'        => isset( $request['host'] ) ? sanitize_text_field( $request['host'] ) : '',
 				'title'       => $availability['title'],
+				'default_status'       => false,
 				'time_zone'   => $availability['time_zone'],
 				'override'    => '',
 				'time_slots'  => serialize( $request['time_slots'] ),
