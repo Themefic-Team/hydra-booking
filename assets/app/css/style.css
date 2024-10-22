@@ -71,7 +71,7 @@
   padding: 8px 16px 16px 16px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details h2, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details h2 {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
@@ -81,7 +81,7 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-short-description,
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-full-description, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-short-description,
 .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-full-description {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -91,14 +91,14 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-short-description span,
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-full-description span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-short-description span,
 .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-full-description span {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   cursor: pointer;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-full-description, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-full-description {
   display: none;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details p, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details p {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -106,7 +106,7 @@
   margin: 0;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details p span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details p span {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   cursor: pointer;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul {
@@ -116,7 +116,7 @@
   margin-bottom: 40px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul li, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul li {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 600;
@@ -143,7 +143,7 @@
   justify-content: center;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul li .tfhb-icon svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details ul li .tfhb-icon svg path {
-  stroke: #273F2B;
+  stroke: var(--tfhb-secondary-color);
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone {
   border-radius: 8px;
@@ -172,7 +172,7 @@
   background-size: 0 !important;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-title, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-title {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 600;
@@ -191,7 +191,7 @@
   border: none;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .select2-selection .select2-selection__rendered, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .select2-selection .select2-selection__rendered {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   padding: 0px !important;
   line-height: normal;
 }
@@ -201,7 +201,7 @@
   transform: translateY(-50%);
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .select2-selection .select2-selection__arrow b, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .select2-selection .select2-selection__arrow b {
-  border-color: #2E6B38 transparent transparent transparent;
+  border-color: var(--tfhb-primary-color) transparent transparent transparent;
   display: block;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-icon, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-icon {
@@ -216,7 +216,7 @@
   justify-content: center;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-icon svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-meeting-details .tfhb-timezone .tfhb-timezone-icon svg path {
-  stroke: #273F2B;
+  stroke: var(--tfhb-secondary-color);
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .select2-dropdown.tfhb-select2-dropdown {
   border: 1px solid #56765B;
@@ -327,11 +327,11 @@
   transition: 0.3s all ease;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span svg path {
-  stroke: #2E6B38;
+  stroke: var(--tfhb-primary-color);
   transition: 0.3s all ease;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover {
-  background-color: #2E6B38;
+  background-color: var(--tfhb-primary-color);
   border-radius: 5px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover svg path {
@@ -350,7 +350,7 @@
   left: -24px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-current-date, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-current-date {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
@@ -367,7 +367,7 @@
   padding: 0;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-weekdays li, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-weekdays li {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   text-align: center;
   font-size: 15px;
   font-style: normal;
@@ -387,7 +387,7 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li {
   border: 0.5px solid rgba(227, 207, 215, 0);
   width: 14.2857142857%;
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -396,7 +396,7 @@
   box-sizing: border-box;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li.inactive, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-dates li.inactive {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   cursor: not-allowed !important;
   background-color: transparent !important;
 }
@@ -443,7 +443,7 @@
   border-radius: 8px;
   border: 0.5px solid rgba(227, 207, 215, 0);
   box-shadow: 0px 8px 30px 0px rgba(0, 64, 11, 0.3);
-  background: #2E6B38 !important;
+  background: var(--tfhb-primary-color) !important;
   height: 90%;
   width: 90%;
   left: 50%;
@@ -563,10 +563,10 @@
   background: #C0D8C4;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs ul li.active label {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times h3, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times h3 {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -605,10 +605,10 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span {
   border-radius: 8px;
-  border: 0.5px solid #2E6B38;
+  border: 0.5px solid var(--tfhb-primary-color);
   background: #FFFFFF;
   padding: 16px 10px;
-  color: #2E6B38;
+  color: var(--tfhb-primary-color);
   text-align: center;
   font-size: 15px;
   font-style: normal;
@@ -625,16 +625,16 @@
   }
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span:hover, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span:hover {
-  border: 0.5px solid #2E6B38;
+  border: 0.5px solid var(--tfhb-primary-color);
   background: #C0D8C4;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.time.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.time.active {
-  border: 0.5px solid #2E6B38;
+  border: 0.5px solid var(--tfhb-primary-color);
   background: #C0D8C4;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.next, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.next {
   border-radius: 8px;
-  background: #2E6B38;
+  background: var(--tfhb-primary-color);
   color: #FFFFFF;
   align-items: center;
   justify-content: center;
@@ -662,10 +662,10 @@
   cursor: pointer;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-back-btn svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-back-btn svg path {
-  stroke: #2E6B38;
+  stroke: var(--tfhb-primary-color);
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-back-btn h3, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-back-btn h3 {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -685,7 +685,7 @@
   margin-bottom: 16px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form label {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
@@ -717,7 +717,7 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio {
   position: relative;
-  color: #273F2B !important;
+  color: var(---tfhb-paragraph-color) !important;
   font-size: 15px !important;
   margin-left: 40px;
   font-weight: 400;
@@ -727,8 +727,8 @@
   margin-right: 16px !important;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark {
-  background-color: #2E6B38;
-  border: 1px solid #2E6B38;
+  background-color: var(--tfhb-primary-color);
+  border: 1px solid var(--tfhb-primary-color);
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark:after, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox input:checked ~ .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio input:checked ~ .checkmark:after {
   display: block;
@@ -747,7 +747,7 @@
   width: 20px;
   background-color: #C0D8C4;
   border-radius: 3px;
-  border: 1px solid #2E6B38;
+  border: 1px solid var(--tfhb-primary-color);
   margin: 0 !important;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .checkmark:after, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox .checkmark:after, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark:after {
@@ -777,7 +777,7 @@
   align-items: center;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box .tfhb-swicher-wrap .swicher-label, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box .tfhb-swicher-wrap .swicher-label {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -793,7 +793,7 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-button button, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-button button {
   border-radius: 8px;
-  background: #2E6B38;
+  background: var(--tfhb-primary-color);
   padding: 16px;
   color: #FFFFFF;
   justify-content: center;
@@ -837,7 +837,7 @@
   margin-bottom: 24px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-confirmation-seccess h3, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-confirmation-seccess h3 {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
@@ -845,7 +845,7 @@
   margin: 0 0 16px 0;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-confirmation-seccess p, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-confirmation-seccess p {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -858,7 +858,7 @@
   padding: 24px;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-hostinfo h4, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-hostinfo h4 {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -871,7 +871,7 @@
   list-style: none;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-hostinfo ul li, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-hostinfo ul li {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -908,7 +908,7 @@
   margin: 32px 0 0 0;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-calender h3, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-calender h3 {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   text-align: center;
   font-size: 15px;
   font-style: normal;
@@ -936,7 +936,7 @@
   background: #FFFFFF;
   padding: 8px 24px;
   width: 158px;
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -1088,7 +1088,7 @@
   border-radius: 50%;
 }
 .tfhb-swicher-wrap .switch input:checked + .slider {
-  background-color: #2E6B38;
+  background-color: var(--tfhb-primary-color);
 }
 .tfhb-swicher-wrap .switch input:focus + .slider {
   box-shadow: none;
@@ -1134,7 +1134,7 @@
   display: none;
 }
 .tfhb-checkbox-wrap label {
-  color: #273F2B;
+  color: var(--tfhb-secondary-color);
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -1144,8 +1144,8 @@
   padding-left: 40px;
 }
 .tfhb-checkbox-wrap label input:checked ~ .checkmark {
-  background-color: #2E6B38;
-  border: 1px solid #2E6B38;
+  background-color: var(--tfhb-primary-color);
+  border: 1px solid var(--tfhb-primary-color);
 }
 .tfhb-checkbox-wrap label input:checked ~ .checkmark:after {
   display: block;

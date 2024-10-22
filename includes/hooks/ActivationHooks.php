@@ -10,8 +10,19 @@ class ActivationHooks {
 
 	public function tfhb_activate() {
 
+		global $wp_rewrite;
+
+		// if permalink strucutrre is  Day and name then change it to postname
+		$permalink_structure = get_option( 'permalink_structure' );
+		if ( '/%year%/%monthnum%/%day%/%postname%/' === $permalink_structure ) {
+			$wp_rewrite->set_permalink_structure( '/%postname%/' );
+			$wp_rewrite->flush_rules();
+		}else{
+			$wp_rewrite->flush_rules(); 
+		}
+		
 		// Flash Rewrite Rules
-		flush_rewrite_rules();
+		// flush_rewrite_rules();
 
 		// Create a New host Role
 		$this->tfhb_create_host_role();

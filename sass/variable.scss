@@ -2,18 +2,18 @@
 // Color Variables
 
 // Primary
-$primary-default : #2E6B38;
+$primary-default : var(--tfhb-primary-color);
 $primary-color : #17030C;
 $primary-hover : #4C9959;
 $primary-text : #FFFFFF;
 
 // Secondary
-$secondary-default : #273F2B;
+$secondary-default : var(--tfhb-secondary-color);
 $secondary-hover : #E1F2E4;
 
 // Text Color
 $text-title : #141915;
-$text-paragraph : #273F2B;
+$text-paragraph : var(---tfhb-paragraph-color);
 $text-input : #273F2B;
 
 // Background

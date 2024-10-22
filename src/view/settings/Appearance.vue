@@ -14,9 +14,9 @@ const router = useRouter();
 
 const appearanceSettings = reactive({
   themes: 'System default',
-  primary_color: '$primary-default',
-  secondary_color: '$text-paragraph',
-  paragraph_color: '#765664',
+  primary_color: '#2E6B38',
+  secondary_color: '#273F2B',
+  paragraph_color: '#273F2B',
   titleTypo: '',
   desTypo: '',
 });
@@ -33,12 +33,11 @@ try {
         } 
     });
     if (response.data.status) { 
-  
         // Set Appearance Settings
         appearanceSettings.themes = response.data.appearance_settings.themes ? response.data.appearance_settings.themes : 'System default';
-        appearanceSettings.primary_color = response.data.appearance_settings.primary_color ? response.data.appearance_settings.primary_color : '$primary-default';
-        appearanceSettings.secondary_color = response.data.appearance_settings.secondary_color ? response.data.appearance_settings.secondary_color : '$text-paragraph';
-        appearanceSettings.paragraph_color = response.data.appearance_settings.paragraph_color ? response.data.appearance_settings.paragraph_color : '#765664';
+        appearanceSettings.primary_color = response.data.appearance_settings.primary_color ? response.data.appearance_settings.primary_color : '#2E6B38';
+        appearanceSettings.secondary_color = response.data.appearance_settings.secondary_color ? response.data.appearance_settings.secondary_color : '#273F2B';
+        appearanceSettings.paragraph_color = response.data.appearance_settings.paragraph_color ? response.data.appearance_settings.paragraph_color : '#273F2B';
         appearanceSettings.titleTypo = response.data.appearance_settings.titleTypo ? response.data.appearance_settings.titleTypo : '';
         appearanceSettings.desTypo = response.data.appearance_settings.desTypo ? response.data.appearance_settings.desTypo : '';
         skeleton.value = false;
