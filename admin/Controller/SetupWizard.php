@@ -134,7 +134,7 @@ class SetupWizard {
 			$availabilityDataSingle['id'] = $insert_availability['insert_id'];
 		}
 		update_option( '_tfhb_availability_settings', $availability_settings, true );
-
+		
 		// GET Current User
 		$current_user = wp_get_current_user();
 		$host         = $this->CreateHost( $current_user, $insert_availability['insert_id']);
@@ -144,7 +144,7 @@ class SetupWizard {
 		
 
 		// Checked if Host Already Exist
-
+		
 		$meeting = $this->CreateDemoMeetings( $request );
 
 		$data = array(
@@ -177,12 +177,12 @@ class SetupWizard {
 				'availability_type'      => 'settings',
 				'availability_id'      => $defult_availability_id,
 				'featured_image' => '', 
-				'availability'   => array(),
 				'status'         => 'activate',
 			);
 
 			// Insert Host
 			$hostInsert = $host->add( $data );
+			
 			if ( ! $hostInsert['status'] ) {
 				return rest_ensure_response(
 					array(
@@ -194,6 +194,7 @@ class SetupWizard {
 			$hosts_id = $data['user_id'];
 			unset( $data['user_id'] );
 			$data['host_id'] = $hostInsert['insert_id'];
+			$data['availability'] = array();
 
 			// Update user Option
 			update_user_meta( $user_id, '_tfhb_host', $data );

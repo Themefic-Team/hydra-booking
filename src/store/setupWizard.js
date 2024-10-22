@@ -121,6 +121,7 @@ const setupWizard = reactive({
 
     // Other Information 
     async importDemoMeeting() {   
+        
         this.pre_loader = 'true';
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/setup-wizard/import-meeting', this.data, {

@@ -85,7 +85,8 @@ const activeSingleMeetingDropdown = (id) => {
 }
 // outside click
 window.addEventListener('click', function(e) {
-    if (!document.querySelector('.tfhb-meetings-list-wrap').contains(e.target)) {
+    if (!document.querySelector('.tfhb-s-w-integrations-dropdown').contains(e.target)) {
+        // alert('outside');
         activeItemDropdown.value = 0;
     }
 });
