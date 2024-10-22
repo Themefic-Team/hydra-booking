@@ -316,7 +316,7 @@ const tfhbValidateInput = (fieldName) => {
 
                     <div class="tfhb-admin-card-box ">  
                         <div  class="tfhb-dashboard-heading ">
-                            <div class="tfhb-admin-title"> 
+                            <div class="tfhb-availability-title"> 
                                 <h3> {{ __('Weekly hours', 'hydra-booking') }} </h3>  
                             </div>
                             <div class="thb-admin-btn right"> 
@@ -372,114 +372,110 @@ const tfhbValidateInput = (fieldName) => {
                                 </div>
                                 
                             </div>
+                        </div> 
+                    </div>  
+                    <!-- Date Overrides -->
+                    <div v-if="props.display_overwrite == true" class="tfhb-admin-card-box  tfhb-flexbox">  
+
+                        <div  class="tfhb-dashboard-heading tfhb-overrides-heading tfhb-full-width" :style="{margin: '0 !important'}">
+                            <div class="tfhb-admin-title"> 
+                                <h3>{{ __('Add date overrides', 'hydra-booking') }}</h3>  
+                                <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
+                            </div> 
                         </div>
-                        
 
-                        <!-- Date Overrides -->
-                        <div v-if="props.display_overwrite == true" class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox">  
-
-                            <div  class="tfhb-dashboard-heading tfhb-overrides-heading tfhb-full-width" :style="{margin: '0 !important'}">
-                                <div class="tfhb-admin-title"> 
-                                    <h3>{{ __('Add date overrides', 'hydra-booking') }}</h3>  
-                                    <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
-                                </div> 
-                            </div>
-
-                            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in props.availabilityDataSingle.date_slots" :key="key">
-                                <div class="tfhb-flexbox">
-                                    <div class="tfhb-overrides-date">
-                                        <h4>{{ date_slot.date }}</h4>
-                                        <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
-                                    </div>
-                                    <div class="tfhb-overrides-action tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
-                                        <button class="question-edit-btn" @click="editAvailabilityDate(key)">
-                                            <Icon name="PencilLine" :width="16" />
-                                        </button>
-                                        <button class="question-edit-btn" @click="removeAvailabilityTDate(key)">
-                                            <Icon name="Trash" :width="16"/>
-                                        </button>
-                                    </div>
+                        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in props.availabilityDataSingle.date_slots" :key="key">
+                            <div class="tfhb-flexbox">
+                                <div class="tfhb-overrides-date">
+                                    <h4>{{ date_slot.date }}</h4>
+                                    <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
+                                </div>
+                                <div class="tfhb-overrides-action tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
+                                    <button class="question-edit-btn" @click="editAvailabilityDate(key)">
+                                        <Icon name="PencilLine" :width="16" />
+                                    </button>
+                                    <button class="question-edit-btn" @click="removeAvailabilityTDate(key)">
+                                        <Icon name="Trash" :width="16"/>
+                                    </button>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Overrides Calendar Form -->
+                        <!-- Overrides Calendar Form -->
 
-                            <div class="tfhb-overrides-add-form tfhb-flexbox tfhb-full-width" v-if="OverridesOpen">
-                                <div class="tfhb-flexbox tfhb-align-normal">
-                                    <div class="tfhb-override-calendar">
-                                        <HbDateTime  
-                                            v-model="OverridesDates.date"
-                                            selected = "1" 
-                                            :config="{
-                                                inline: true,
-                                                monthSelectorType: 'static',
-                                                yearSelectorType: 'static',
-                                                mode: 'multiple',
-                                                nextArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='chevron-right'><path id='Vector' d='M7.5 15L12.5 10L7.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></g></svg>`,
-                                                prevArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M11.5 15L6.5 10L11.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>`
-                                            }"
-                                            placeholder="Enter schedule title"   
-                                        /> 
-                                    </div>
-                                    <div class="tfhb-override-times">
-                                        <h3>{{ __('Which hours are you free?', 'hydra-booking') }}</h3>
+                        <div class="tfhb-overrides-add-form tfhb-flexbox tfhb-full-width" v-if="OverridesOpen">
+                            <div class="tfhb-flexbox tfhb-align-normal">
+                                <div class="tfhb-override-calendar">
+                                    <HbDateTime  
+                                        v-model="OverridesDates.date"
+                                        selected = "1" 
+                                        :config="{
+                                            inline: true,
+                                            monthSelectorType: 'static',
+                                            yearSelectorType: 'static',
+                                            mode: 'multiple',
+                                            nextArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='chevron-right'><path id='Vector' d='M7.5 15L12.5 10L7.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></g></svg>`,
+                                            prevArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M11.5 15L6.5 10L11.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>`
+                                        }"
+                                        placeholder="Enter schedule title"   
+                                    /> 
+                                </div>
+                                <div class="tfhb-override-times">
+                                    <h3>{{ __('Which hours are you free?', 'hydra-booking') }}</h3>
 
-                                        <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
-                                            <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8">
-                                                
-                                                <HbDropdown 
-                                                    v-model="time.start"  
-                                                    required= "true" 
-                                                    width="45"
-                                                    :selected = "1"
-                                                    placeholder="Start"   
-                                                    :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
-                                                />  
-                                                <Icon name="MoveRight" size=20 /> 
-                                                <HbDropdown 
-                                                    v-model="time.end"  
-                                                    required= "true" 
-                                                    width="45"
-                                                    :selected = "1"
-                                                    placeholder="End"   
-                                                    :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
-                                                />  
-
-                                            </div>
+                                    <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
+                                        <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8">
                                             
-                                            <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
-                                                <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size=20 /> </button> 
-                                            </div>
-                                            <div v-else class="tfhb-availability-schedule-clone-single">
-                                                <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size=20 /> </button> 
-                                            </div>
-                                        </div>
+                                            <HbDropdown 
+                                                v-model="time.start"  
+                                                required= "true" 
+                                                width="45"
+                                                :selected = "1"
+                                                placeholder="Start"   
+                                                :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
+                                            />  
+                                            <Icon name="MoveRight" size=20 /> 
+                                            <HbDropdown 
+                                                v-model="time.end"  
+                                                required= "true" 
+                                                width="45"
+                                                :selected = "1"
+                                                placeholder="End"   
+                                                :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
+                                            />  
 
-                                        <div class="tfhb-mark-unavailable tfhb-full-width tfhb-mt-16">
-                                            <HbCheckbox 
-                                                v-model="OverridesDates.available"
-                                                :label="__('Mark unavailable (All day)', 'hydra-booking')"
-                                                :name="'mark_unavailable'+key"
-                                            />
                                         </div>
                                         
+                                        <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
+                                            <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size=20 /> </button> 
+                                        </div>
+                                        <div v-else class="tfhb-availability-schedule-clone-single">
+                                            <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size=20 /> </button> 
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                                    <!-- <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button> -->
-                                    <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ __('Add override', 'hydra-booking') }}</button>
+                                    <div class="tfhb-mark-unavailable tfhb-full-width tfhb-mt-16">
+                                        <HbCheckbox 
+                                            v-model="OverridesDates.available"
+                                            :label="__('Mark unavailable (All day)', 'hydra-booking')"
+                                            :name="'mark_unavailable'+key"
+                                        />
+                                    </div>
+                                    
                                 </div>
                             </div>
 
+                            <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
+                                <!-- <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button> -->
+                                <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ __('Add override', 'hydra-booking') }}</button>
+                            </div>
+                        </div>
 
-                            <button v-if="!OverridesOpen" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
-                                <Icon name="PlusCircle" :width="20"/>
-                                {{ __('Add an override', 'hydra-booking') }}
-                            </button>
-                            
-                        </div>  
 
+                        <button v-if="!OverridesOpen" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
+                            <Icon name="PlusCircle" :width="20"/>
+                            {{ __('Add an override', 'hydra-booking') }}
+                        </button>
 
                     </div>  
 

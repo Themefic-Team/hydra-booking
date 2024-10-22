@@ -124,8 +124,7 @@ const Host_Avalibility_Callback = (value) => {
         fetchHostAvailability(value);
     }
 }
-const fetchHostAvailability = async (host) => {
-    alert(1);
+const fetchHostAvailability = async (host) => { 
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/single-host-availability/'+host, {
             headers: {

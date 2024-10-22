@@ -69,12 +69,6 @@ class SetupWizard {
 	public function ImportMeetingDemo() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 
-		// GET Current User
-		$current_user = wp_get_current_user();
-		$host         = $this->CreateHost( $current_user );
-
-		$request['host_id'] = $host->id;
-		$request['user_id'] = $host->user_id;
 
 		// collect email form request
 		$email_subscribe                         = array();
@@ -135,12 +129,18 @@ class SetupWizard {
 
 		// Insert into database
 
-		$insert = $Availability->add( $availabilityDataSingle );
-		if ( $insert['status'] === true ) {
-			$availabilityDataSingle['id'] = $insert['insert_id'];
+		$insert_availability = $Availability->add( $availabilityDataSingle );
+		if ( $insert_availability['status'] === true ) {
+			$availabilityDataSingle['id'] = $insert_availability['insert_id'];
 		}
 		update_option( '_tfhb_availability_settings', $availability_settings, true );
 
+		// GET Current User
+		$current_user = wp_get_current_user();
+		$host         = $this->CreateHost( $current_user, $insert_availability['insert_id']);
+
+		$request['host_id'] = $host->id;
+		$request['user_id'] = $host->user_id;
 		
 
 		// Checked if Host Already Exist
@@ -158,7 +158,7 @@ class SetupWizard {
 	}
 
 	// Create New Host
-	public function CreateHost( $user ) {
+	public function CreateHost( $user, $defult_availability_id ) {
 		$user_id   = $user->ID;
 		$host      = new Host();
 		$host_data = $host->get( $user_id );
@@ -174,7 +174,10 @@ class SetupWizard {
 				'time_zone'      => '',
 				'about'          => '',
 				'avatar'         => '',
-				'featured_image' => '',
+				'availability_type'      => 'settings',
+				'availability_id'      => $defult_availability_id,
+				'featured_image' => '', 
+				'availability'   => array(),
 				'status'         => 'activate',
 			);
 
