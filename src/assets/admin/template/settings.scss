@@ -16,11 +16,11 @@
 		margin-bottom: 32px;
 	}
 	.tfhb-content-wrap{
+		flex-direction: row;
 		&.tfhb-flexbox{
 			justify-content: normal;
 		}
-		flex-direction: row;
-
+	
 		.tfhb-availability-single-box{
 			width: 100%;
 			@media #{$max991}{
@@ -149,12 +149,12 @@
 
 	.tfhb-availability-popup{   
 		.tfhb-availability-content-wrap{
+			margin-top: 32px;
 			.tfhb-dashboard-heading{
 				span{
 					font-size: 15px !important;
 				}
 			}
-			margin-top: 32px;
 			.tfhb-availability-schedule-single  {
 				margin-bottom: 24px;
 				// last child
