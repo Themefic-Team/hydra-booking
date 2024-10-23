@@ -127,6 +127,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterMeetings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -776,7 +777,7 @@ class MeetingController {
 		}
 
 		// Integration
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
 		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'woocommerce/woocommerce.php' ) ) {
 			$woo_connection_status = 0;
 

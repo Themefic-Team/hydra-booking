@@ -85,10 +85,10 @@ class SetupWizard {
 		update_option( 'tfhb_hydra_email_subscribe', $email_subscribe );
 
 		// Update General Settings available
-		$availability_settings = get_option( '_tfhb_availability_settings' );
+		$availability_settings =  !empty( get_option( '_tfhb_availability_settings' ) ) && get_option( '_tfhb_availability_settings' ) != 'false' ? get_option( '_tfhb_availability_settings' ) : array();
 		// get last array data
 		$last_data                    = ! empty( $availability_settings ) ? end( $availability_settings ) : array();
-		$new_id                       = $last_data['id'] + 1;
+		$new_id                       =  isset($last_data['id']) ? $last_data['id'] + 1 : 1;
 		$availabilityDataSingle       = $request['availabilityDataSingle'];
 
 

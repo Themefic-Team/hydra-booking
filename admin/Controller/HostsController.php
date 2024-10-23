@@ -162,6 +162,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterHosts' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -614,6 +615,7 @@ class HostsController {
 		// Google Calendar API
 		$google_calendar = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 
+		tfhb_print_r($google_calendar);
 
 		if ( isset($_tfhb_integration_settings['google_calendar']['status']) && $_tfhb_integration_settings['google_calendar']['status']  ) {
 
@@ -625,8 +627,8 @@ class HostsController {
 
 		}else{
 			$google_calendar['type']              = 'google_calendar';
-			$google_calendar['status']            = $_tfhb_integration_settings['google_calendar']['status'];
-			$google_calendar['connection_status'] = $_tfhb_integration_settings['google_calendar']['connection_status'];
+			$google_calendar['status']            = false;
+			$google_calendar['connection_status'] = false;
 		}
 
 		// Outlook Calendar API

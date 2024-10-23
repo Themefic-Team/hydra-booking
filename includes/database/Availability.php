@@ -57,7 +57,9 @@ class Availability {
 
 		$table_name            = $wpdb->prefix . $this->table;
 		$request['time_slots'] = maybe_serialize( $request['time_slots'] );
-		$request['date_slots'] = maybe_serialize( $request['date_slots'] );
+		if(isset($request['date_status'])){
+			$request['date_status'] = maybe_serialize( $request['date_status'] );
+		} 
 
 		// insert availability
 		$result = $wpdb->insert(

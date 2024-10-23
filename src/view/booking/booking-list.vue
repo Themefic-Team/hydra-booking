@@ -177,8 +177,8 @@ const deleteBooking = async ($id, $host) => {
         console.log(error);
     }
 }
-const Booking_Status_Callback = (e) => {
-    UpdateMeetingStatus(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id, e.value);
+const Booking_Status_Callback = (value) => {
+    UpdateMeetingStatus(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id, value);
 }
 
 const Bulk_Status_Callback = async (value) => { 
@@ -399,7 +399,7 @@ const deleteItemConfirm = () => {
       </div>
 
       <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
-        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn-danger flex-btn"><Icon name="Download" size=20 /> {{ __('Export Meeting', 'hydra-booking') }}</button> 
+        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ __('Export Meeting', 'hydra-booking') }}</button> 
       </div>
     </template> 
 </HbPopup>

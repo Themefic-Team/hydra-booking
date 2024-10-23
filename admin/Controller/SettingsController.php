@@ -53,7 +53,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAvailabilitySettings' ),
-			// 	'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -83,7 +83,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetSingleAvailabilitySettings' ),
-				// 'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		// Mark as default
@@ -197,7 +197,8 @@ class SettingsController {
 	// Update General Settings
 	public function UpdateGeneralSettings() {
 		$request                = json_decode( file_get_contents( 'php://input' ), true );
-		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+		$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+		
 
 		// senitaized
 		$_tfhb_general_settings['time_zone']                               = sanitize_text_field( $request['time_zone'] );
@@ -349,7 +350,7 @@ class SettingsController {
 		$data = array(
 			'status'       => true,
 			'availability' => $availability,
-			'update'       => $update,
+			// 'update'       => $update,
 			'message'      => 'Availability Updated Successfully',
 		);
 		return rest_ensure_response( $data );
@@ -435,7 +436,7 @@ class SettingsController {
 
 	// Get Integration Settings
 	public function GetIntegrationSettings() {
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
 		// Checked woocommerce installed and activated
 		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'woocommerce/woocommerce.php' ) ) {
 			$woo_connection_status = 0;
@@ -477,8 +478,9 @@ class SettingsController {
 	// Update Integration Settings.
 	public function UpdateIntegrationSettings() {
 
-		$request                    = json_decode( file_get_contents( 'php://input' ), true );
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$request                    = json_decode( file_get_contents( 'php://input' ), true ); 
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
+		
 		$key                        = sanitize_text_field( $request['key'] );
 		$data                       = $request['value'];
 
@@ -489,8 +491,7 @@ class SettingsController {
 
 		} elseif ( $key == 'woo_payment' ) {
 			$_tfhb_integration_settings['woo_payment']['type']        = sanitize_text_field( $data['type'] );
-			$_tfhb_integration_settings['woo_payment']['status']      = sanitize_text_field( $data['status'] );
-			$_tfhb_integration_settings['woo_payment']['woo_payment'] = sanitize_text_field( $data['woo_payment'] );
+			$_tfhb_integration_settings['woo_payment']['status']      = sanitize_text_field( $data['status'] ); 
 
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
@@ -635,7 +636,8 @@ class SettingsController {
 
 	// Get Notification Settings
 	public function GetNotificationSettings() {
-		$_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+		// $_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+		$_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
 		
 		if(empty($_tfhb_notification_settings)){
 			$default_notification =  new Helper();
@@ -653,13 +655,14 @@ class SettingsController {
 	public function UpdateNotificationSettings() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		$data    = get_option( '_tfhb_notification_settings' );
+		
 
 		// sanitize Hosts Notification
 		if ( isset( $request['host'] ) ) {
 			foreach ( $request['host'] as $key => $value ) {
 				$data['host'][ $key ]['status']   = sanitize_text_field( $value['status'] );
 				$data['host'][ $key ]['template'] = sanitize_text_field( $value['template'] );
-				$data['host'][ $key ]['from']     = sanitize_text_field( $value['form'] );
+				$data['host'][ $key ]['from']     = sanitize_text_field( $value['from'] );
 				$data['host'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['host'][ $key ]['body']     = wp_kses_post( $value['body'] );
 			}
@@ -670,7 +673,7 @@ class SettingsController {
 			foreach ( $request['attendee'] as $key => $value ) {
 				$data['attendee'][ $key ]['status']   = sanitize_text_field( $value['status'] );
 				$data['attendee'][ $key ]['template'] = sanitize_text_field( $value['template'] );
-				$data['attendee'][ $key ]['from']     = sanitize_text_field( $value['form'] );
+				$data['attendee'][ $key ]['form']     = sanitize_text_field( $value['from'] );
 				$data['attendee'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['attendee'][ $key ]['body']     = wp_kses_post( $value['body'] );
 			}
