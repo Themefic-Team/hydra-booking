@@ -28,7 +28,7 @@ const Notification = reactive({
     }, 
 
     async MarkAsRead() {
-        alert(1);
+         
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/notifaction/markasread', this.Data, {
                 headers: {

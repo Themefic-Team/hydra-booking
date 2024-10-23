@@ -282,7 +282,7 @@ onBeforeMount(() => {
 const activeDropdown = ref(false);
 
 const toggleDropdown = () => {
-    // alert('test');
+    
     activeDropdown.value = !activeDropdown.value;
 }
 

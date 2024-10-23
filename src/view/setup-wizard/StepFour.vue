@@ -86,7 +86,7 @@ const activeSingleMeetingDropdown = (id) => {
 // outside click
 window.addEventListener('click', function(e) {
     if (!document.querySelector('.tfhb-s-w-integrations-dropdown').contains(e.target)) {
-        // alert('outside');
+         
         activeItemDropdown.value = 0;
     }
 });

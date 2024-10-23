@@ -275,8 +275,7 @@ const router = createRouter({
 
 // Navigation guards to check authentication status
 router.beforeEach(async (to, from, next) => { 
-
-//   alert('to.meta.Capabilities: ' + to.meta.Capabilities); 
+ 
     if (to.name == 'setupWizard') { 
         document.body.classList.add('tfhb-setup-wizard-body');
     }else{ 

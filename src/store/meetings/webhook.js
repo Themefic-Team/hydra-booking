@@ -117,7 +117,7 @@ const webhookData = reactive({
 
     // Popup Meeting Creation
     async addNewIntegrations (integration){   
-        alert(1)
+        
         this.integrationsList = false;
         this.integrationscreate = true;
         this.integrationsListopen = false;

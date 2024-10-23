@@ -3,6 +3,7 @@ namespace HydraBooking\App;
 
 // Use Classes
 use HydraBooking\App\Shortcode\HydraBookingShortcode;
+use HydraBooking\App\Enqueue;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Transactions;
@@ -15,8 +16,12 @@ class App {
 
 	public function init() {
 
+		// Load Enqueue Class
+		new Enqueue();
+
 		// Load Shortcode Class
 		new HydraBookingShortcode();
+
 
 		// display booking_id  into checkout page
 		add_filter( 'woocommerce_get_item_data', array( new WooBooking(), 'tfhb_woocommerce_get_item_data' ), 10, 2 );
