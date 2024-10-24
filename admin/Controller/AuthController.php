@@ -82,7 +82,7 @@ class AuthController {
 
 				$value = get_user_meta( $user_obj->ID, '_tfhb_host', true );
 				if ( $value != '' && $value['status'] != 'activate' ) {
-					$user = new \WP_Error( 'denied', __( '<strong>ERROR</strong>: Your account is disabled by Admin!', 'thb-hydra-booking' ) );
+					$user = new \WP_Error( 'denied', __( '<strong>ERROR</strong>: Your account is disabled by Admin!', 'hydra-booking' ) );
 					remove_action( 'authenticate', 'wp_authenticate_username_password', 20 );
 				}
 			}

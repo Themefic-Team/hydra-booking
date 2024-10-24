@@ -40,13 +40,13 @@ class ScheduleController {
 
 			$schedules['tfhb_after_booking_status'] = array(
 				'interval' => $every_minute,
-				'display'  => __( 'Hydra After booking Completed' ),
+				'display'  => __( 'Hydra After booking Completed', 'hydra-booking' ),
 			);
 		} else {
 
 			$schedules['tfhb_after_booking_status'] = array(
 				'interval' => $every_minute,
-				'display'  => __( 'Hydra After booking Completed' ),
+				'display'  => __( 'Hydra After booking Completed', 'hydra-booking' ),
 			);
 		}
 
