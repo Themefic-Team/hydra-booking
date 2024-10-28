@@ -92,7 +92,10 @@ const TfhbMeetingType = (type, router) => {
         });
         return;
     }
+
     meeting.meeting_type = type;
+    console.log(meeting)
+     alert(type)
     Meeting.CreatePopupMeeting(meeting, router);
 }
 

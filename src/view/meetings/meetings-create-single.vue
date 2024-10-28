@@ -46,8 +46,8 @@ const meetingId = route.params.id;
 
 onBeforeMount(() => { 
     
-    // Meeting.fetchSingleMeeting(meetingId);
-    Meeting.singleMeeting.MeetingData.id = meetingId; 
+    Meeting.fetchSingleMeeting(meetingId);
+    // Meeting.singleMeeting.MeetingData.id = meetingId; 
 
     Host.fetchHosts().then(() => {
         if('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == ''){
@@ -162,8 +162,8 @@ const fetchHostAvailability = async (host) => {
 }
 </script>
 
-<template> 
-     
+<template>  
+{{Meeting.singleMeeting.MeetingData}}
     <div  class="tfhb-meeting-create" :class="{ 'tfhb-skeleton': false }">
         <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
             <div class="tfhb-meeting-heading-wrap tfhb-flexbox tfhb-gap-8">
@@ -173,7 +173,8 @@ const fetchHostAvailability = async (host) => {
                 <div class="tfhb-meeting-heading tfhb-flexbox">
                   
                     <h3 v-if="Meeting.singleMeeting.MeetingData.title != '' && Meeting.singleMeeting.MeetingData.title != null">{{ truncateString(Meeting.singleMeeting.MeetingData.title, 110) }}</h3>
-                    <h3 v-else >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
+                    <h3 v-else-if="Meeting.singleMeeting.MeetingData.type == 'one-to-one'" >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
+                    <h3 v-else >{{ __('Create One-to-Group booking', 'hydra-booking') }}</h3>
                 </div> 
                 <!-- <div  class="tfhb-meeting-subtitle">
                     {{ __('Create and manage booking/appointment form', 'hydra-booking') }}

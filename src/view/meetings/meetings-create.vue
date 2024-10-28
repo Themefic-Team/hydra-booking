@@ -366,6 +366,7 @@ const fetchMeeting = async () => {
             meetingData.custom_duration = response.data.meeting.custom_duration
             meetingData.meeting_category = response.data.meeting.meeting_category
             meetingData.payment_method = response.data.meeting.payment_method
+            meetingData.max_book_per_slot = response.data.meeting.max_book_per_slot
 
             if(response.data.meeting.meeting_locations){
                 meetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
@@ -620,7 +621,8 @@ const truncateString = (str, num) => {
                 <div class="tfhb-meeting-heading tfhb-flexbox">
                   
                     <h3 v-if="meetingData.title != '' && meetingData.title != null">{{ truncateString(meetingData.title, 110) }}</h3>
-                    <h3 v-else >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
+                    <h3 v-else-if="meetingData.type == 'one-to-one'" >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
+                    <h3 v-else >{{ __('Create One-to-Group booking', 'hydra-booking') }}</h3>
                 </div> 
                 <!-- <div  class="tfhb-meeting-subtitle">
                     {{ __('Create and manage booking/appointment form', 'hydra-booking') }}

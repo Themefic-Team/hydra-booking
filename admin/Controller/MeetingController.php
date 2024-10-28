@@ -641,7 +641,7 @@ class MeetingController {
 			'post_author' => $current_user_id,
 		);
 		$meeting_post_id   = wp_insert_post( $meeting_post_data );
-
+ 
 		$data = array(
 			'user_id'      => $current_user_id,
 			'meeting_type' => isset( $request_data['meeting_type'] ) ? sanitize_text_field( $request_data['meeting_type'] ) : '',

@@ -276,6 +276,7 @@ const Meeting = reactive({
             if (response.data.status == true) { 
                 // this.singleMeeting.MeetingData = response.data.meeting;
 
+
                 // if(response.data.meeting.meeting_locations == null){
                 //     this.singleMeeting.MeetingData.meeting_locations = [];
                 //     this.singleMeeting.MeetingData.meeting_locations.push({
@@ -289,90 +290,8 @@ const Meeting = reactive({
                 // }
 
                 this.singleMeeting.MeetingData.id = response.data.meeting.id
-                this.singleMeeting.MeetingData.user_id = response.data.meeting.user_id
-                this.singleMeeting.MeetingData.host_id = response.data.meeting.host_id && response.data.meeting.host_id!=0 ? response.data.meeting.host_id : '';
-                this.singleMeeting.MeetingData.slug = response.data.meeting.slug  ? response.data.meeting.slug : response.data.meeting.title;
-                this.singleMeeting.MeetingData.post_id = response.data.meeting.post_id
-                this.singleMeeting.MeetingData.title = response.data.meeting.title
-                this.singleMeeting.MeetingData.description = response.data.meeting.description
                 this.singleMeeting.MeetingData.meeting_type = response.data.meeting.meeting_type
-                this.singleMeeting.MeetingData.duration = response.data.meeting.duration
-                this.singleMeeting.MeetingData.custom_duration = response.data.meeting.custom_duration
-                this.singleMeeting.MeetingData.meeting_category = response.data.meeting.meeting_category
-                this.singleMeeting.MeetingData.payment_method = response.data.meeting.payment_method
-
-                if(response.data.meeting.meeting_locations){
-                    this.singleMeeting.MeetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
-                }
-
-                this.singleMeeting.MeetingData.availability_range_type = response.data.meeting.availability_range_type ? response.data.meeting.availability_range_type : 'indefinitely'
-
-                this.singleMeeting.MeetingData.availability_range = response.data.meeting.availability_range ? JSON.parse(response.data.meeting.availability_range) : {}
-            
-                if(response.data.meeting.availability_custom){
-                    
-                    this.singleMeeting.MeetingData.availability_custom = JSON.parse(response.data.meeting.availability_custom)
-                
-                    
-                } 
-                // this.singleMeeting.MeetingData.availability_custom.time_zone = Availability.GeneralSettings.time_zone ? Availability.GeneralSettings.time_zone : '';
-
-                this.singleMeeting.MeetingData.availability_custom.time_slots = Availability.GeneralSettings.week_start_from ?  Availability.RearraingeWeekStart(Availability.GeneralSettings.week_start_from, this.singleMeeting.MeetingData.availability_custom.time_slots) : this.singleMeeting.MeetingData.availability_custom.time_slots;
-                
-                if(response.data.meeting.availability_type){
-                    this.singleMeeting.MeetingData.availability_type = response.data.meeting.availability_type
-                }
-                this.singleMeeting.MeetingData.availability_id = response.data.meeting.availability_id
-                this.singleMeeting.MeetingData.buffer_time_before = response.data.meeting.buffer_time_before
-                this.singleMeeting.MeetingData.buffer_time_after = response.data.meeting.buffer_time_after
-                this.singleMeeting.MeetingData.meeting_interval = response.data.meeting.meeting_interval
-                if(response.data.meeting.recurring_status){
-                    this.singleMeeting.MeetingData.recurring_status = response.data.meeting.recurring_status
-                }
-                this.singleMeeting.MeetingData.recurring_maximum = response.data.meeting.recurring_maximum
-
-                if(response.data.meeting.recurring_repeat){
-                    this.singleMeeting.MeetingData.recurring_repeat = JSON.parse(response.data.meeting.recurring_repeat)
-                }
-                if(response.data.meeting.booking_frequency){
-                    this.singleMeeting.MeetingData.booking_frequency = JSON.parse(response.data.meeting.booking_frequency)
-                }
-
-                this.singleMeeting.MeetingData.attendee_can_cancel = response.data.meeting.attendee_can_cancel
-                this.singleMeeting.MeetingData.attendee_can_reschedule = response.data.meeting.attendee_can_reschedule
-
-                if(response.data.meeting.questions_type){
-                    this.singleMeeting.MeetingData.questions_type = response.data.meeting.questions_type
-                }
-                if(response.data.meeting.questions_form_type){
-                    this.singleMeeting.MeetingData.questions_form_type = response.data.meeting.questions_form_type
-                }
-
-                if(response.data.meeting.questions){
-                    this.singleMeeting.MeetingData.questions = JSON.parse(response.data.meeting.questions)
-                }
-                if(response.data.meeting.questions_form){
-                    this.singleMeeting.MeetingData.questions_form = response.data.meeting.questions_form
-                }
-                if(response.data.meeting.notification && "string" == typeof response.data.meeting.notification){
-                    this.singleMeeting.MeetingData.notification = JSON.parse(response.data.meeting.notification)
-                }
-                if(response.data.meeting.notification && "object" == typeof response.data.meeting.notification){
-                    this.singleMeeting.MeetingData.notification = response.data.meeting.notification
-                }
-                if(response.data.meeting.payment_status){
-                    this.singleMeeting.MeetingData.payment_status = response.data.meeting.payment_status
-                }
-                this.singleMeeting.MeetingData.meeting_price = response.data.meeting.meeting_price
-                this.singleMeeting.MeetingData.payment_currency = response.data.meeting.payment_currency
-
-                if(response.data.meeting.payment_meta && "string" == typeof response.data.meeting.payment_meta){
-                    this.singleMeeting.MeetingData.payment_meta = JSON.parse(response.data.meeting.payment_meta)
-                }
-                if(response.data.meeting.payment_meta && "object" == typeof response.data.meeting.payment_meta){
-                    this.singleMeeting.MeetingData.payment_meta = response.data.meeting.payment_meta
-                }
-
+             
                 this.singleMeeting.MeetingData.webhook = response.data.meeting.webhook ? JSON.parse(response.data.meeting.webhook) : '';
                 this.singleMeeting.MeetingData.integrations = response.data.meeting.integrations ? JSON.parse(response.data.meeting.integrations) : '';
                 this.singleMeeting.MeetingData.mailchimp = response.data.mailchimp ? response.data.mailchimp : '';
