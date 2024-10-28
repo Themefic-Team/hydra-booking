@@ -2,6 +2,8 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
+import useValidators from '@/store/validator';
+const { errors, isEmpty } = useValidators();
 
 // import Form Field 
 import HbText from '@/components/form-fields/HbText.vue' 
@@ -75,6 +77,8 @@ const closePopup = () => {
                 <HbText  
                     v-model="stripe_data.public_key"  
                     required= "true"  
+                    name="public_key"
+                    :errors="errors.public_key"
                     :label="__('Stripe Public Key', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Your Public Key', 'hydra-booking')"  
@@ -82,11 +86,13 @@ const closePopup = () => {
                 <HbText  
                     v-model="stripe_data.secret_key"  
                     required= "true"  
+                    name="secret_key"
+                    :errors="errors.secret_key"
                     :label="__('Stripe Secret Key', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Your Stripe Secret', 'hydra-booking')"  
                 />
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'stripe', stripe_data)">{{ __('Save & Validate', 'hydra-booking') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'stripe', stripe_data, ['public_key', 'secret_key'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 

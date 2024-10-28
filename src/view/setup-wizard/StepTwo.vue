@@ -57,8 +57,11 @@ const StepTwo = (validator_field) => {
 
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
-    if(!isEmpty){
-        toast.error('Fill Up The Required Fields'); 
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        }); 
         return
     }
    
@@ -92,22 +95,32 @@ const StepTwo = (validator_field) => {
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation left" 
                 @click="props.setupWizard.currentStep = 'step-one'" 
                 :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
                 icon_position="left"
+                width="84px"
             /> 
             <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
                 @click="StepTwo(['title', 'time_zone'])" 
                 :buttonText="__('Next', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                width="84px"
             /> 
+            <HbButton 
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
+                @click="props.setupWizard.currentStep = 'step-end'" 
+                :buttonText="__('Skip', 'hydra-booking')"  
+                :hover_animation="true" 
+                icon="ChevronRight"   
+                width="80px"
+            />  
             
             <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size=20 />  </button> -->
         </div>

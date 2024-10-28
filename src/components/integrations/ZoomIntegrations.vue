@@ -7,6 +7,8 @@ import { RouterView } from 'vue-router'
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
+import useValidators from '@/store/validator';
+const { errors, isEmpty } = useValidators();
 
 const zoomPopup = ref(false);
 
@@ -69,6 +71,8 @@ const closePopup = () => {
                     <HbText  
                         v-model="zoom_meeting.account_id"  
                         required= "true"  
+                        name="account_id"
+                        :errors="errors.account_id"
                         :label="__('Zoom Account ID', 'hydra-booking')"  
                         selected = "1"
                         :placeholder="__('Enter Your Account ID', 'hydra-booking')"  
@@ -76,6 +80,8 @@ const closePopup = () => {
                     <HbText  
                         v-model="zoom_meeting.app_client_id"  
                         required= "true"  
+                        name="app_client_id"
+                        :errors="errors.app_client_id"
                         :label="__('Zoom App Client ID', 'hydra-booking')"  
                         selected = "1"
                         :placeholder="__('Enter Your App Client ID', 'hydra-booking')"  
@@ -83,12 +89,14 @@ const closePopup = () => {
                     <HbText  
                         v-model="zoom_meeting.app_secret_key"  
                         required= "true"  
+                        name="app_secret_key"
+                        :errors="errors.app_secret_key"
                         :label="__('Zoom App Secret Key', 'hydra-booking')"  
                         selected = "1"
                         type = "password"
                         :placeholder="__('Enter Your App Secret Key', 'hydra-booking')"  
                     /> 
-                    <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'zoom_meeting', zoom_meeting)">{{ __('Save & Validate', 'hydra-booking') }}</button>
+                    <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'zoom_meeting', zoom_meeting, ['account_id', 'app_client_id', 'app_secret_key'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
                 </template> 
             </HbPopup>
         <!-- </Transition > -->

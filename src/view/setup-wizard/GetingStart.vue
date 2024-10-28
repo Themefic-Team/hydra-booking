@@ -20,6 +20,9 @@ const props = defineProps({
 }); 
 
 const GettingStart = () => {
+    // tfhbApps.config.globalProperties.$tfhb_pre_loader echo the url 
+    const tfhb_pre_loader = tfhb_core_apps.tfhb_url+'/assets/images/pre-loader.svg';
+ 
     if(props.setupWizard.data.email == ''){
         toast.error('Email is required');
         return;
@@ -52,12 +55,14 @@ const GettingStart = () => {
                 :placeholder="__('Enter your email', 'hydra-booking')"  
             /> 
              <!-- Custom Duration -->
-            <HbCheckbox 
+            <div class="tfhb-recevie-updates">
+                <HbCheckbox 
                 v-model="props.setupWizard.data.enable_recevie_updates"  
                 type="checkbox" 
                 required= "true"  
                 :label="__('Receive updates and promotions', 'hydra-booking')"  
             />
+            </div>
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
             <HbButton 
@@ -67,6 +72,8 @@ const GettingStart = () => {
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                icon_position="right"
+                width="196px"
             />   
  
         </div>

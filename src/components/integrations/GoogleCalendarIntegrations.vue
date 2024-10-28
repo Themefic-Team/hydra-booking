@@ -9,6 +9,8 @@ import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 // import { Copy } from 'lucide-vue-next';
 import { toast } from "vue3-toastify"; 
+import useValidators from '@/store/validator';
+const { errors, isEmpty } = useValidators();
 
 const props = defineProps([
     'google_calendar', 
@@ -59,7 +61,9 @@ const closePopup = () => {
                 </p>
                 <HbText  
                     v-model="props.google_calendar.client_id"  
-                    required= "true"  
+                    required= "true"
+                    name="client_id"
+                    :errors="errors.client_id"  
                     :label="__('Client ID', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Client ID', 'hydra-booking')"  
@@ -67,6 +71,8 @@ const closePopup = () => {
                 <HbText  
                     v-model="props.google_calendar.secret_key"  
                     required= "true"  
+                    name="secret_key"
+                    :errors="errors.secret_key"  
                     :label="__('Secret Key', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Secret Key', 'hydra-booking')"  
@@ -74,11 +80,13 @@ const closePopup = () => {
                 <HbText  
                     v-model="props.google_calendar.redirect_url"  
                     required= "true"   
+                    name="redirect_url"
+                    :errors="errors.redirect_url"  
                     :label="__('Redirect Url', 'hydra-booking')"   
                     selected = "1" 
                     :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar)">{{ __('Save & Validate', 'hydra-booking') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar, ['client_id', 'secret_key', 'redirect_url'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 

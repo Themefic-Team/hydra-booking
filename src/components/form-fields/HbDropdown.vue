@@ -34,6 +34,17 @@ const handleChange = (e) => {
     emit('tfhb_start_change', props.parent_key, props.single_key, e.value)
     emit('tfhb_body_value_change', props.single_key, e.value);
 }
+
+const focusOnSearch = (e) => {  
+ 
+ 
+  setTimeout(() => {
+        const searchInput = document.querySelector('.p-dropdown-filter');
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 10); // Slight delay to wait for rendering
+}
 </script>
 
 <template> 
@@ -58,6 +69,7 @@ const handleChange = (e) => {
                       @change="handleChange"   
                       :filter="filter == true ? true : false"
                       :options="option"  
+                      @show="focusOnSearch"
                       :overlay="false"
                       :placeholder="placeholder" 
                       :style="{ 'width': '100%' }"  
@@ -88,6 +100,7 @@ const handleChange = (e) => {
                     v-model="props.modelValue"  
                     @change="handleChange"   
                     :filter="filter == true ? true : false"
+                    @show="focusOnSearch"
                     :options="option"
                     :placeholder="placeholder"  
                     :optionDisabled="disabled"
@@ -105,6 +118,7 @@ const handleChange = (e) => {
                     v-model="props.modelValue"  
                     @change="handleChange"   
                     :filter="filter == true ? true : false"
+                    @show="focusOnSearch"
                     :options="option" 
                     optionLabel="name"
                     optionValue="value"

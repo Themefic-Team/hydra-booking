@@ -7,7 +7,9 @@ const props = defineProps([
     'icon', 
     'hover_icon', 
     'hover_animation',   
-    'icon_position'
+    'icon_position',
+    'width',
+    
 
 ]) 
 const hover_icon_status = ref(false)
@@ -17,23 +19,19 @@ const hover_icon_status = ref(false)
 </script>
 
 <template>
-    <button :class="classValue" @mouseover="hover_icon_status = true"  @mouseleave="hover_icon_status = false">
-        <span  v-if="icon_position == 'left'">
-            <!-- <transition v-if="props.hover_animation == true" name="icon-fade" mode="out-in"> -->
-                <Icon v-if="hover_icon !='' && hover_icon_status == true" :name="hover_icon" size=20 />
-                <Icon v-else :name="icon"  size=20 />
-            <!-- </transition>  -->
-            <Icon v-else :name="icon"  size=20 /> 
+    <button :class="classValue" class="" @mouseover="hover_icon_status = true"  @mouseleave="hover_icon_status = false"
+    :style="{ 'width':  width ? width : 'auto' }" 
+    >
+        <span class="tfhb-button-icon" :class="icon_position" v-if="icon_position == 'left'">
+           
+            <Icon  :name="icon"  size=20 /> 
         </span>
-        <span >{{ buttonText }} </span>
+        <span class="tfhb-button-text">{{ buttonText }} </span>
          
          <!-- {{ hover_icon_status }} -->
-         <span v-if="icon_position != 'left'" >
-            <!-- <transition v-if="props.hover_animation == true" name="icon-fade" mode="out-in"> -->
-                <Icon v-if="hover_icon !='' && hover_icon_status == true" :name="hover_icon" size=20 />
-                <Icon v-else :name="icon"  size=20 />
-            <!-- </transition>  -->
-            <Icon v-else :name="icon"  size=20 /> 
+         <span class="tfhb-button-icon" :class="icon_position" v-if="icon_position != 'left'" >
+           
+            <Icon :name="icon"  size=20 /> 
         </span>
            
          
@@ -42,10 +40,5 @@ const hover_icon_status = ref(false)
 </template>
 
 <style scoped>
-.icon-fade-enter-active, .icon-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.icon-fade-enter-from, .icon-fade-leave-to {
-  opacity: 0;
-}
+
 </style> 

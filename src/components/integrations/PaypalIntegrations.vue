@@ -7,6 +7,8 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import useValidators from '@/store/validator';
+const { errors, isEmpty } = useValidators();
 
 const props = defineProps([
     'class', 
@@ -45,7 +47,7 @@ const closePopup = () => {
 
                 <HbSwitch 
                 v-if="paypal_data.secret_key != '' &&  paypal_data.client_id  != '' && paypal_data.secret_key != null &&  paypal_data.client_id  != null" 
-                @change="emit('update-integrations', 'paypal', paypal_data)" v-model="paypal_data.status"    />
+                @change="emit('update-integrations', 'paypal', paypal_data, [])" v-model="paypal_data.status"    />
             <!-- Swicher --> 
         </div>
 
@@ -62,6 +64,8 @@ const closePopup = () => {
                 <HbDropdown 
                     v-model="paypal_data.environment"
                     required= "true"  
+                    name="environment"
+                    :errors="errors.environment"
                     :label="__('Environment', 'hydra-booking')"   
                     selected = "1"
                     placeholder="Select Environment"  
@@ -73,18 +77,22 @@ const closePopup = () => {
                 <HbText  
                     v-model="paypal_data.client_id"  
                     required= "true"  
+                    name="client_id"
+                    :errors="errors.client_id"
                     :label="__('Paypal Client ID', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Your Client ID', 'hydra-booking')"  
                 /> 
                 <HbText  
                     v-model="paypal_data.secret_key"  
+                    name="secret_key"
+                    :errors="errors.secret_key"
                     required= "true"  
                     :label="__('Paypal Secret Key', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Your Paypal Secret', 'hydra-booking')"  
                 />
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'paypal', paypal_data)">{{ __('Save & Validate', 'hydra-booking') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'paypal', paypal_data, ['environment', 'client_id', 'secret_key'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 

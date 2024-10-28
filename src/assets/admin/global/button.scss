@@ -9,6 +9,7 @@
     font-size: $text-font-size;
     font-weight: $font-weight-medium;
     line-height: 24px;
+    transition: $transition;
    
     &.tfhb-docs-btn{
         font-weight: 600;
@@ -79,28 +80,80 @@
         border: 0px $border-type;
         cursor: pointer;
     }
-    &.tfhb-icon-hover-animation{
-        &:hover svg{
-            transition:$transition !important;
-            // transform: translateX(8px);
+    // &.tfhb-icon-hover-animation{
+    //     &:hover svg{
+    //         transition: transform 0.4s ease, opacity 0.4s ease;
+    //     }
+    //     svg {
+    //         transform: scale(0.98); /* Subtle scale effect */
+    //         opacity: 0.95; 
+    //     }
+    // }
+
+    &.tfhb-icon-hover-animation {
+        position: relative;
+        // cursor: not-allowed;
+        .tfhb-button-icon {
+            position: absolute;
+            right: 8px;
+            top: 0;
+            height: 100%;
+            padding: 8px 8px;
+            visibility: hidden;
+            opacity: 0;
+
+            &.left {
+                right: auto;
+                left: 8px;
+            }
         }
-        svg {
-            transition:$transition !important;
+        &.disabled {
+            cursor: not-allowed !important;
+            color: $surface-border;
+            pointer-events: none !important;
         }
+
+        &:hover,  &.active, &.disabled { 
+            text-indent: -8px;
+
+            &.left{
+                text-indent: 6px;
+            }
+            .tfhb-button-icon {
+                right: 0;
+                visibility: visible;
+                opacity: 1;
+
+                &.left {
+                    right: auto;
+                    left: 0;
+                }
+            }
+        }
+      
     }
    
+ 
     &:hover, &:focus, &:active {
         color: $primary-hover;
+        transition: $transition;
+   
+        
+    }
+    &:hover{ 
+        transition: $transition;
+   
     }
     span{
 
         color: $primary-default;
-        font-size: $text-font-size;
+        font-size: $text-font-size !important;
         font-weight: $font-weight-medium !important;
         line-height: 24px;
         transition:$transition !important;
         margin: 0 !important;
         display: inline-flex;
+        font-weight: 600;
     }
     &.tfhb-btn-large{ 
         font-size: $heading-font-size-small; 
@@ -144,3 +197,4 @@
      
   }
   
+

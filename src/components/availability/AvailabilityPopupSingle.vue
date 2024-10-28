@@ -233,6 +233,10 @@ const getLatestEndTime = (day) => {
 }
 
 const TfhbStartDataEvent = (key, skey, startTime) => {
+     
+    if(skey == 0){
+        return;
+    }
     const day = props.availabilityDataSingle.time_slots[key];
     const latestEndTime = getLatestEndTime(day);
 
@@ -327,10 +331,10 @@ const tfhbValidateInput = (fieldName) => {
                             <div class="tfhb-swicher-wrap  tfhb-flexbox tfhb-gap-8">
                                 <!-- Checkbox swicher -->
                                 <label class="switch">
-                                    <input id="swicher" v-model="time_slot.status" true-value="1"    type="checkbox">
+                                    <input :id="'swicher-'+key" v-model="time_slot.status" true-value="1"    type="checkbox">
                                     <span class="slider"></span>
                                 </label>
-                                <label class="tfhb-schedule-swicher" for="swicher"> {{time_slot.day}}</label>
+                                <label class="tfhb-schedule-swicher" :for="'swicher-'+key"> {{time_slot.day}}</label>
                                 <!-- Swicher -->
                             </div>
                             <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap "> 
@@ -341,6 +345,7 @@ const tfhbValidateInput = (fieldName) => {
                                             required= "true" 
                                             width="50"
                                             :selected = "1"
+                                            :filter="true"
                                             icon="Clock"
                                             placeholder="Start"   
                                             :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
@@ -352,6 +357,7 @@ const tfhbValidateInput = (fieldName) => {
                                         <HbDropdown 
                                             v-model="time.end"  
                                             required= "true" 
+                                            :filter="true"
                                             width="50"
                                             :selected = "1"
                                             icon="Clock"

@@ -40,41 +40,50 @@ onBeforeMount(() => {
      </div>
 
      <!-- Getting Start Component -->
+     <transition name="tfhb-fade-right">
      <GettingStart 
         v-if="setupWizard.currentStep  == 'getting-start'"
         :setupWizard="setupWizard"
 
      />
-
+    </transition>
      <!-- Step One -->
+     <transition name="tfhb-fade-right">
      <StepOne 
-        v-if="setupWizard.currentStep  == 'step-one'"
+        v-show="setupWizard.currentStep  == 'step-one'"
         :setupWizard="setupWizard"
     />
+    </transition>
 
     <!-- // Step two -->
+    <transition name="tfhb-fade-right">
     <StepTwo 
         v-if="setupWizard.currentStep  == 'step-two'"
         :setupWizard="setupWizard"
      />
-
+    </transition>
      <!-- Step Three -->
+     <transition name="tfhb-fade-right">
     <StepThree 
         v-if="setupWizard.currentStep  == 'step-three'"
         :setupWizard="setupWizard"
     />
-
+    </transition>
     <!-- Step Four -->
+    <transition name="tfhb-fade-right"> 
     <StepFour 
         v-if="setupWizard.currentStep  == 'step-four'"
         :setupWizard="setupWizard"
     />
+    </transition>
 
     <!-- Step End -->
+    <transition name="tfhb-fade-right"> 
     <StepEnd 
         v-if="setupWizard.currentStep  == 'step-end'"
         :setupWizard="setupWizard"
     />
+</transition>
    </div>
 </template>
  

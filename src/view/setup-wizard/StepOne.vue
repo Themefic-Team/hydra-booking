@@ -34,8 +34,9 @@ const StepOne = () => {
 
 <template>
     <!-- Step One -->
+    
     <div class="tfhb-setup-wizard-content-wrap tfhb-s-w-step-one tfhb-flexbox">
-       
+        
         <div class="tfhb-s-w-icon-text">
             <div class="tfhb-step-wizard-steper tfhb-flexbox tfhb-gap-16" >
                 <span class="tfhb-step-bar step-1 active"></span>
@@ -59,31 +60,42 @@ const StepOne = () => {
                     :option = "[
                         {'name': 'Consultant', 'value': 'Consultant'}, 
                         {'name': 'Doctor', 'value': 'Doctor'}, 
-                        {'name': 'Teacher', 'value': 'Teacher'}
+                        {'name': 'Teacher', 'value': 'Teacher'},
+                        {'name': 'Others', 'value': 'Others'}
                     ]"
                     
                 />
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox"> 
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation left" 
                 @click="props.setupWizard.currentStep = 'getting-start'" 
                 :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
                 icon_position="left"
+                width="84px"
             /> 
             <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
                 @click="StepOne" 
                 :buttonText="__('Next', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                width="84px"
+            />  
+            <HbButton 
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
+                @click="props.setupWizard.currentStep = 'step-end'" 
+                :buttonText="__('Skip', 'hydra-booking')"  
+                :hover_animation="true" 
+                icon="ChevronRight"   
+                width="80px"
             />   
         </div>
-     </div>
+     </div> 
      <!-- Step One -->
 </template>
  

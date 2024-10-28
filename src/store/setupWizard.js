@@ -20,6 +20,17 @@ const setupWizard = reactive({
             date_status: 0,
             default_status: true,
             time_slots: [
+
+                { 
+                    day: 'Sunday', 
+                    status: 1,
+                    times: [
+                        {
+                            start: '09:00',
+                            end: '17:00',
+                        }
+                    ]
+                },
                 { 
                     day: 'Monday',
                     status: 1,
@@ -79,16 +90,6 @@ const setupWizard = reactive({
                             end: '17:00',
                         }
                     ]
-                },
-                { 
-                    day: 'Sunday', 
-                    status: 1,
-                    times: [
-                        {
-                            start: '09:00',
-                            end: '17:00',
-                        }
-                    ]
                 }
             ],
             date_slots: [
@@ -121,8 +122,13 @@ const setupWizard = reactive({
 
     // Other Information 
     async importDemoMeeting() {   
-        
-        this.pre_loader = 'true';
+        alert
+        let import_demo_class = document.querySelector('.tfhb-import-demo');
+        // this.pre_loader = 'true';
+        {}
+        // add class disable
+        import_demo_class.classList.add('disable');
+        return;
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/setup-wizard/import-meeting', this.data, {
                 headers: {

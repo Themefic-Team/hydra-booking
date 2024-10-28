@@ -9,7 +9,8 @@ import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
-
+import useValidators from '@/store/validator'
+const { errors } = useValidators();
 
 // component
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
@@ -232,7 +233,43 @@ const fetchIntegration = async () => {
         console.log(error);
     } 
 }
-const UpdateIntegration = async (key, value) => { 
+
+const UpdateIntegration = async (key, value, validator_field) => { 
+     // Clear the errors object
+     Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+   
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!Integration[key][fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!Integration[key][fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return
+    }
+   
     let data = {
         key: key,
         value: value
@@ -240,7 +277,8 @@ const UpdateIntegration = async (key, value) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration/update', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
             } 
         } );
     

@@ -16,7 +16,7 @@ const tfhbApps = createApp(App).use(router);
 tfhbApps.use(PrimeVue); 
 // tfhbApps.component("toast", toast); 
 tfhbApps.config.globalProperties.$tfhb_url = tfhb_url;  
-tfhbApps.config.globalProperties.$tfhb_hydra_admin_url = tfhb_hydra_admin_url;  
+tfhbApps.config.globalProperties.$tfhb_hydra_admin_url = tfhb_hydra_admin_url;   
 tfhbApps.config.globalProperties.$user = user; 
 tfhbApps.config.globalProperties.$tfhb_is_pro = tfhb_is_pro; 
 

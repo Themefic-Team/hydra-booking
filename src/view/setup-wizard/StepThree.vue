@@ -43,25 +43,41 @@ const props = defineProps({
         </div>
         <div class="tfhb-s-w-getting-email">
 
-            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="props.setupWizard.importDemoMeeting" >Import demo data
+            <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation tfhb-import-demo" 
+                @click="props.setupWizard.importDemoMeeting"
+                :buttonText="__('Import demo data', 'hydra-booking')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"
+                width="164px"
+            /> 
+            <!-- <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="props.setupWizard.importDemoMeeting" >Import demo data
                
                 <Icon v-if="props.setupWizard.pre_loader == 'false'"  name="ChevronRight" size=20 />   
                 <svg class="tfhb-s-w-preloader" v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle fill="none" stroke-opacity="1" stroke="#FFFFFF" stroke-width=".5" cx="100" cy="100" r="0"><animate attributeName="r" calcMode="spline" dur="2" values="1;80" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-width" calcMode="spline" dur="2" values="0;25" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" calcMode="spline" dur="2" values="1;0" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate></circle></svg>
             
-            </button>
+            </button> -->
              
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox tfhb-gap-8"> 
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
                 :buttonText="__('Back', 'hydra-booking')"
-                icon="ChevronLeft" 
-                hover_icon="ArrowLeft" 
+                icon="ChevronLeft"  
                 :hover_animation="true" 
                 icon_position="left"
+                width="84px"
             /> 
-            <button  @click="props.setupWizard.currentStep = 'step-end'"  class="tfhb-btn  tfhb-flexbox tfhb-gap-8" >Skip </button>
+            <HbButton 
+                classValue="tfhb-btn secondary-btn  tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation" 
+                @click="props.setupWizard.currentStep = 'step-end'" 
+                :buttonText="__('Skip', 'hydra-booking')"  
+                :hover_animation="true"  
+                icon="ChevronRight"  
+                width="80px"
+            />  
         </div>
      </div>
      <!-- Step Three -->

@@ -304,7 +304,7 @@ window.addEventListener('click', function(e) {
                 icon_position="left"
             /> 
             <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
                 @click="StepFour" 
                 :buttonText="__('Complete setup', 'hydra-booking')"
                 icon="ChevronRight" 

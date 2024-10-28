@@ -2,6 +2,8 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
+import useValidators from '@/store/validator';
+const { errors, isEmpty } = useValidators();
 
 // import Form Field 
 import HbText from '@/components/form-fields/HbText.vue'
@@ -70,6 +72,8 @@ const closePopup = () => {
                 <HbText  
                     v-model="outlook_calendar.client_id"  
                     required= "true"  
+                    name="client_id"
+                    :errors="errors.client_id"  
                     :label="__('Client ID', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Client ID', 'hydra-booking')"  
@@ -77,6 +81,8 @@ const closePopup = () => {
                 <HbText  
                     v-model="outlook_calendar.secret_key"  
                     required= "true"  
+                    name="secret_key"
+                    :errors="errors.secret_key"  
                     :label="__('Secret Key', 'hydra-booking')"  
                     selected = "1"
                     :placeholder="__('Enter Secret Key', 'hydra-booking')"  
@@ -84,11 +90,13 @@ const closePopup = () => {
                 <HbText  
                     v-model="outlook_calendar.redirect_url"  
                     required= "true"  
+                    name="redirect_url"
+                    :errors="errors.redirect_url"  
                     :label="__('Redirect Url', 'hydra-booking')"  
                     selected = "1" 
                     :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar)">{{ __('Save & Validate', 'hydra-booking') }}</button>
+                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar, ['client_id', 'secret_key', 'redirect_url'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
             </template> 
         </HbPopup>
 
