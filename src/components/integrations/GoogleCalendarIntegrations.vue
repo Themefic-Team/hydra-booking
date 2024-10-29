@@ -6,7 +6,8 @@ import Icon from '@/components/icon/LucideIcon.vue'
 // import Form Field 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
-import HbPopup from '@/components/widgets/HbPopup.vue';  
+import HbPopup from '@/components/widgets/HbPopup.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
 // import { Copy } from 'lucide-vue-next';
 import { toast } from "vue3-toastify"; 
 import useValidators from '@/store/validator';
@@ -15,6 +16,7 @@ const { errors, isEmpty } = useValidators();
 const props = defineProps([
     'google_calendar', 
     'class', 
+    'pre_loader', 
     'display', 
     'ispopup'
 ])
@@ -40,8 +42,14 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ props.google_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
-                <!-- Checkbox swicher -->
+            <!-- <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ props.google_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button> -->
+            <HbButton  
+                @click="emit('popup-open-control')" 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
+                :buttonText="props.google_calendar.connection_status == 1 ? 'Connected' : 'Connect' " 
+                :hover_animation="false"    
+            />     
+            <!-- Checkbox swicher -->
 
                 <HbSwitch v-if="props.google_calendar.connection_status" @change="emit('update-integrations', 'google_calendar', props.google_calendar)" v-model="props.google_calendar.status"    />
             <!-- Swicher --> 
@@ -81,12 +89,23 @@ const closePopup = () => {
                     v-model="props.google_calendar.redirect_url"  
                     required= "true"   
                     name="redirect_url"
+                    :readonly="true"
                     :errors="errors.redirect_url"  
                     :label="__('Redirect Url', 'hydra-booking')"   
                     selected = "1" 
                     :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar, ['client_id', 'secret_key', 'redirect_url'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
+
+                <HbButton  
+                    @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar, ['client_id', 'secret_key', 'redirect_url'])"
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
+                    :buttonText="'Save & Validate' "
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true" 
+                    :pre_loader="props.pre_loader"
+                    width="150px"
+                />   
             </template> 
         </HbPopup>
 

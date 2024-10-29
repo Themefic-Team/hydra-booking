@@ -9,11 +9,13 @@ const { errors, isEmpty } = useValidators();
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
 
 const props = defineProps([
     'class', 
     'display', 
     'stripe_data', 
+    'pre_loader', 
     'ispopup',
     'from'
 
@@ -55,7 +57,16 @@ const closePopup = () => {
 
         <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox">
             <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ stripe_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
-                <!-- Checkbox swicher -->
+             
+            <HbButton  
+                @click="emit('popup-open-control')"
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
+                :buttonText="props.stripe_data.secret_key == 1 ? 'Connected' : 'Connect' "
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"   
+                width="80px"
+            /> 
 
             <HbSwitch 
                 v-if="stripe_data.secret_key != '' &&  stripe_data.public_key  != '' && stripe_data.secret_key != 'null' &&  stripe_data.public_key  != 'null'" 
@@ -92,7 +103,16 @@ const closePopup = () => {
                     selected = "1"
                     :placeholder="__('Enter Your Stripe Secret', 'hydra-booking')"  
                 />
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'stripe', stripe_data, ['public_key', 'secret_key'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
+                <HbButton  
+                    @click.stop="emit('update-integrations', 'stripe', stripe_data, ['public_key', 'secret_key'])"
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
+                    :buttonText="'Save & Validate' "
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true" 
+                    :pre_loader="props.pre_loader"
+                    width="150px"
+                />   
             </template> 
         </HbPopup>
 

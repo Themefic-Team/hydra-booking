@@ -1,5 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
+import { ref, reactive, onBeforeMount } from 'vue';
 import { RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
@@ -12,6 +13,7 @@ import { setupWizard } from '@/store/setupWizard';
 // Toast
 import { toast } from "vue3-toastify"; 
 
+const pre_loader = ref(false);
 const props = defineProps({
     setupWizard : {
         type: Object,
@@ -20,6 +22,27 @@ const props = defineProps({
 }); 
 
 
+const StepThree = () => {
+    
+    if(props.setupWizard.pre_loader == true){
+        return;
+    }
+    props.setupWizard.pre_loader = true;
+   
+
+
+    props.setupWizard.importDemoMeeting(); 
+}
+
+ 
+const sikpStepThree = () => { 
+    if(props.setupWizard.skip_preloader == true){
+        return;
+    } 
+    props.setupWizard.skip_import = true;
+    props.setupWizard.skip_preloader = true; 
+    props.setupWizard.importDemoMeeting();
+}
 </script>
 
 <template>
@@ -42,13 +65,14 @@ const props = defineProps({
             <img :src="$tfhb_url+'/assets/images/import.gif'" style="height: 96px;" alt="">
         </div>
         <div class="tfhb-s-w-getting-email">
-
+            
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation tfhb-import-demo" 
-                @click="props.setupWizard.importDemoMeeting"
+                @click="StepThree"
                 :buttonText="__('Import demo data', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
+                :pre_loader="props.setupWizard.pre_loader"
                 :hover_animation="true"
                 width="164px"
             /> 
@@ -60,7 +84,7 @@ const props = defineProps({
             </button> -->
              
         </div>
-        <div class="tfhb-submission-btn tfhb-flexbox tfhb-gap-8"> 
+        <div class="tfhb-submission-btn tfhb-flexbox"> 
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
@@ -72,9 +96,10 @@ const props = defineProps({
             /> 
             <HbButton 
                 classValue="tfhb-btn secondary-btn  tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation" 
-                @click="props.setupWizard.currentStep = 'step-end'" 
+                @click="sikpStepThree" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true"  
+                :pre_loader="props.setupWizard.skip_preloader"
                 icon="ChevronRight"  
                 width="80px"
             />  

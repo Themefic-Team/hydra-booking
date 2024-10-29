@@ -371,7 +371,7 @@ const truncateString = (str, num) => {
                     <div @click="activeSingleMeetingDropdown(smeeting.id)" class="tfhb-single-hosts-action tfhb-dropdown">
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                         <transition name="tfhb-dropdown-transition">
-                            <div v-show="smeeting.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
+                            <div v-show="smeeting.id == activeItemDropdown" class="tfhb-dropdown-wrap "> 
                                 <!-- route link -->
                                 <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ __('Edit', 'hydra-booking') }}</router-link>
                                 

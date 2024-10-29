@@ -51,7 +51,7 @@ window.addEventListener('click', function(e) {
                         <path d="M10.0001 4.99967C10.4603 4.99967 10.8334 4.62658 10.8334 4.16634C10.8334 3.7061 10.4603 3.33301 10.0001 3.33301C9.53984 3.33301 9.16675 3.7061 9.16675 4.16634C9.16675 4.62658 9.53984 4.99967 10.0001 4.99967Z" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M10.0001 16.6667C10.4603 16.6667 10.8334 16.2936 10.8334 15.8333C10.8334 15.3731 10.4603 15 10.0001 15C9.53984 15 9.16675 15.3731 9.16675 15.8333C9.16675 16.2936 9.53984 16.6667 10.0001 16.6667Z" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <div v-show="availability.id == activeItemDropdown"  class="tfhb-dropdown-wrap active">
+                    <div v-show="availability.id == activeItemDropdown"  class="tfhb-dropdown-wrap">
                         <span class="tfhb-dropdown-single" @click="editAvailability">{{ __('Edit', 'hydra-booking') }}</span>
                         <span  v-if="availability.default_status != true && availability.host"  class="tfhb-dropdown-single" @click="markAsDefault">{{ __('Default', 'hydra-booking') }}</span>
                         <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->

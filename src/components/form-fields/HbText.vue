@@ -12,6 +12,7 @@ const props = defineProps([
     'description', 
     'limit',
     'disabled', 
+    'readonly', 
     'errors',
     'tooltip',
     'tooltipText'
@@ -48,6 +49,7 @@ const emit = defineEmits(['update:modelValue'])
           :type="type || 'text'"
           :placeholder="placeholder"
           :disabled="disabled"
+          :readonly="readonly"
           :class="errors ? 'tfhb-required' : ''"
           :min="limit"
         /> 

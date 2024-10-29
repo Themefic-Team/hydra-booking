@@ -19,7 +19,7 @@ const isModalOpened = ref(true);
 const timeZone = ref({});
 const availabilityDataSingle = ref({});
 const fetchAvailabilitySettingsUpdate = () => {
-    console.log('fetchAvailabilitySettingsUpdate');
+    // console.log('fetchAvailabilitySettingsUpdate');
 }
 const closeModal = () => {
     isModalOpened.value = false;
@@ -113,9 +113,10 @@ const StepTwo = (validator_field) => {
                 :hover_animation="true"
                 width="84px"
             /> 
+            
             <HbButton 
                 classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
-                @click="props.setupWizard.currentStep = 'step-end'" 
+                @click="props.setupWizard.currentStep = 'step-three'" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true" 
                 icon="ChevronRight"   

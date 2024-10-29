@@ -24,7 +24,7 @@ onBeforeMount(() => {
 
 <template> 
    <div class="tfhb-setup-wizard tfhb-flexbox tfhb-hydra-wrap" 
-        :style="'background-image: url(' + $tfhb_url+'/assets/images/setup-wizard.png' + ')'" 
+        :style="'background-image: url(' + $tfhb_url+'/assets/images/setup-wizard.jpg' + ')'" 
         alt=""
     >
     

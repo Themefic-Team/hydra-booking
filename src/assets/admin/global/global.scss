@@ -430,16 +430,13 @@
             border-radius: 6px;
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            visibility: hidden;
-            opacity: 0;
-            transition: all 0.3s ease-in-out;
+            gap: 2px; 
             z-index: 99;
             
-            &.active{
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
+            // &.active{
+            //     visibility: visible !important;
+            //     opacity: 1 !important;
+            // }
             .tfhb-dropdown-single {
                 display: block; 
                 padding: 8px 12px;
@@ -477,11 +474,7 @@
         }
 
         
-
-        &:hover .tfhb-dropdown-wrap {
-            visibility: visible;
-            opacity: 1;
-        }
+ 
         &.tfhb-no-hover:hover .tfhb-dropdown-wrap {
             visibility: hidden ;
             opacity: 0;

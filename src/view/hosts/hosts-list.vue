@@ -101,7 +101,7 @@ window.addEventListener('click', function(e) {
                     <div @click="activeSingleHostDropdown(host.id)" class="tfhb-single-hosts-action tfhb-dropdown">
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                         <transition  name="tfhb-dropdown-transition">
-                            <div v-show="host.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
+                            <div v-if="host.id == activeItemDropdown" class="tfhb-dropdown-wrap"> 
                                 <!-- route link -->
                                 <router-link :to="{ name: 'HostsProfile', params: { id: host.user_id } }" class="tfhb-dropdown-single">{{ __('View & Edit', 'hydra-booking') }}</router-link>
                                 <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->

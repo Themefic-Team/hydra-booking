@@ -6,12 +6,14 @@ const setupWizard = reactive({
     skeleton: true,
     // currentStep: 'step-end',
     time_zone: {},
-    pre_loader: 'false',
+    pre_loader: false,
+    skip_preloader: false,
     currentStep: 'getting-start',
     data: {
         email: '',
         enable_recevie_updates: 1,
         business_type : '',
+        skip_import: false,
         meeting : {},
         availabilityDataSingle: { 
             id: 0,
@@ -121,14 +123,7 @@ const setupWizard = reactive({
 
 
     // Other Information 
-    async importDemoMeeting() {   
-        alert
-        let import_demo_class = document.querySelector('.tfhb-import-demo');
-        // this.pre_loader = 'true';
-        {}
-        // add class disable
-        import_demo_class.classList.add('disable');
-        return;
+    async importDemoMeeting() {    
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/setup-wizard/import-meeting', this.data, {
                 headers: {
@@ -138,9 +133,18 @@ const setupWizard = reactive({
             } );
     
             if (response.data.status) { 
-                this.pre_loader = 'false';
-                this.data.meeting = response.data.meeting;
-                this.currentStep = 'step-four'; 
+
+                this.data.meeting = response.data.meeting; 
+
+                if(this.skip_preloader == false) {
+                    this.pre_loader = false;
+                    this.currentStep = 'step-four'; 
+                }else{
+
+                    this.skip_preloader = false;
+                    this.currentStep = 'step-end';
+                }
+                
             }
         } catch (error) {
 

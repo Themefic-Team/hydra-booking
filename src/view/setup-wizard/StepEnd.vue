@@ -2,14 +2,13 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
-import { RouterView } from 'vue-router' 
-import HbText from '@/components/form-fields/HbText.vue'
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbDateTime from '@/components/form-fields/HbDateTime.vue';
+import { useRouter, useRoute, RouterView } from 'vue-router'  
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
-import useValidators from '@/store/validator'
+import useValidators from '@/store/validator';
+const router = useRouter();
+
 const { errors } = useValidators();
 
 // component
@@ -28,6 +27,7 @@ import GravityFormsIntegrations from '@/components/integrations/GravityFormsInte
 import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
 // Toast
 import { toast } from "vue3-toastify"; 
 //  Load Time Zone 
@@ -120,7 +120,7 @@ const ispaypalPopupOpen = () => {
 const ispaypalPopupClose = (data) => {
     paypalpopup.value = false;
 }
-
+const submit_preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
         type: 'payment', 
@@ -213,7 +213,13 @@ const Integration = reactive( {
 const fetchIntegration = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration');
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration',
+        {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
         if (response.data.status) { 
             
             // console.log(response.data.integration_settings);
@@ -240,6 +246,7 @@ const UpdateIntegration = async (key, value, validator_field) => {
         delete errors[key];
     });
     
+   
    
     // Errors Added
     if(validator_field){
@@ -269,7 +276,7 @@ const UpdateIntegration = async (key, value, validator_field) => {
         });
         return
     }
-   
+    submit_preloader.value = true;
     let data = {
         key: key,
         value: value
@@ -305,13 +312,14 @@ const UpdateIntegration = async (key, value, validator_field) => {
             gpopup.value = false;
             outlookpopup.value = false;
         }
+        submit_preloader.value = false;
     } catch (error) {
         toast.error('Action successful', {
             position: 'bottom-right', // Set the desired position
         });
     }
 }
-onBeforeMount(() => {  
+onBeforeMount(() => {   
     fetchIntegration();
     // if currentHash == all 
    
@@ -324,6 +332,28 @@ const toggleDropdown = () => {
     activeDropdown.value = !activeDropdown.value;
 }
 
+const pre_loader = ref(false);
+const gotoDashboard = () => {
+    
+    // weit for 2 sec
+    pre_loader.value = true;
+    setTimeout(() => {
+        pre_loader.value = false;
+        router.push({ name: 'dashboard' });
+        props.setupWizard.currentStep = 'getting-start'
+    }, 500);  
+    
+}
+
+window.addEventListener('click', function(e) { 
+    if( props.setupWizard.currentStep == 'step-end' ){
+        if (!document.querySelector('.tfhb-s-w-integrations-dropdown').contains(e.target)) {
+            
+            activeDropdown.value = 0;
+        }
+    }
+    
+});
 </script>
 
 <template>
@@ -343,7 +373,7 @@ const toggleDropdown = () => {
                 <div  @click="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
                     <span>All Integrations </span>  <Icon name="ChevronDown" size=20 /> 
                     <transition name="tfhb-dropdown-transition">
-                        <div v-show="activeDropdown == true" class="tfhb-dropdown-wrap active"> 
+                        <div v-show="activeDropdown == true" class="tfhb-dropdown-wrap"> 
                             <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> All Integrations</span>
                             <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> Conference</span>
                             <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> Calendars</span>
@@ -364,13 +394,14 @@ const toggleDropdown = () => {
 
                 <WooIntegrations
                 display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :woo_payment="Integration.woo_payment" @update-integrations="UpdateIntegration" v-if="currentHash === 'all' || currentHash === 'payments'"/>
+                :woo_payment="Integration.woo_payment" :pre_loader="submit_preloader" @update-integrations="UpdateIntegration" v-if="currentHash === 'all' || currentHash === 'payments'"/>
 
                 <!-- Woo Integrations  -->
 
                 <!-- zoom intrigation -->
                 <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :zoom_meeting="Integration.zoom_meeting" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="popup"
                 @popup-open-control="isPopupOpen"
@@ -381,7 +412,8 @@ const toggleDropdown = () => {
 
                 <!-- zoom intrigation -->
                 <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :google_calendar="Integration.google_calendar" 
+                :google_calendar="Integration.google_calendar"
+                :pre_loader="submit_preloader"  
                 @update-integrations="UpdateIntegration"
                 :ispopup="gpopup"
                 @popup-open-control="isgPopupOpen"
@@ -393,6 +425,7 @@ const toggleDropdown = () => {
                 <!-- Outlook intrigation -->
                 <OutlookCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :outlook_calendar="Integration.outlook_calendar" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"
                 :ispopup="outlookpopup"
                 @popup-open-control="isOutlookPopupOpen"
@@ -407,6 +440,7 @@ const toggleDropdown = () => {
                 <!-- stripe intrigation -->
                 <StripeIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :stripe_data="Integration.stripe" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="spopup"
                 @popup-open-control="isstripePopupOpen"
@@ -419,6 +453,7 @@ const toggleDropdown = () => {
                 <!-- paypal intrigation -->
                 <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :paypal_data="Integration.paypal" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="paypalpopup"
                 @popup-open-control="ispaypalPopupOpen"
@@ -430,6 +465,7 @@ const toggleDropdown = () => {
                <!-- CF7 -->
                <CF7Integrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :cf7_data="Integration.cf7" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
@@ -438,6 +474,7 @@ const toggleDropdown = () => {
                 <!-- Fluent -->
                 <FluentFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :fluent_data="Integration.fluent" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
@@ -449,6 +486,7 @@ const toggleDropdown = () => {
                 <!-- gravity -->
                 <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :gravity_data="Integration.gravity" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
@@ -457,6 +495,7 @@ const toggleDropdown = () => {
                 <!-- webhook -->
                 <WebhookIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :webhook_data="Integration.webhook" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'others'"
                 />
@@ -465,6 +504,7 @@ const toggleDropdown = () => {
                 <!-- Mailchimp intrigation -->
                 <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :mail_data="Integration.mailchimp" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="mailpopup"
                 @popup-open-control="ismailchimpPopupOpen"
@@ -476,6 +516,7 @@ const toggleDropdown = () => {
                 <!-- Fluent CRM -->
                 <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :fluent_crm_data="Integration.fluent_crm" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'others'"
                 />
@@ -484,6 +525,7 @@ const toggleDropdown = () => {
                 <!-- Zoho CRM -->
                 <ZohoCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
                 :zoho_crm_data="Integration.zoho_crm" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'others'"
                 />
@@ -496,8 +538,17 @@ const toggleDropdown = () => {
             
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
-             <a  :href="$tfhb_hydra_admin_url + ''"  class="tfhb-btn boxed-btn tfhb-flexbox tfhb-flexbox tfhb-gap-8" > Visit Dashboard <Icon name="ChevronRight" size=20 /> </a>
-            
+             
+             <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation" 
+                @click="gotoDashboard" 
+                :buttonText="__('Visit Dashboard', 'hydra-booking')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"  
+                :pre_loader="pre_loader"
+                width="150px"
+            /> 
         </div>
      </div>
      <!-- Step End-->

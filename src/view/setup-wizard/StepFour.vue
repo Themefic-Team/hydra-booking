@@ -11,6 +11,7 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { setupWizard } from '@/store/setupWizard';
 
+
 // Toast
 import { toast } from "vue3-toastify"; 
 
@@ -84,11 +85,14 @@ const activeSingleMeetingDropdown = (id) => {
 
 }
 // outside click
-window.addEventListener('click', function(e) {
-    if (!document.querySelector('.tfhb-s-w-integrations-dropdown').contains(e.target)) {
-         
-        activeItemDropdown.value = 0;
+window.addEventListener('click', function(e) { 
+    if( props.setupWizard.currentStep == 'step-four' ){
+        if (!document.querySelector('.tfhb-single-meeting').contains(e.target)) {
+            
+            activeItemDropdown.value = 0;
+        }
     }
+    
 });
 </script>
 
@@ -192,7 +196,7 @@ window.addEventListener('click', function(e) {
                         <div @click="activeSingleMeetingDropdown(setupWizard.data.meeting.id)" class="tfhb-single-hosts-action tfhb-dropdown">
                             <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                             <transition name="tfhb-dropdown-transition">
-                                <div v-show="setupWizard.data.meeting.id == activeItemDropdown" class="tfhb-dropdown-wrap active"> 
+                                <div v-show="setupWizard.data.meeting.id == activeItemDropdown" class="tfhb-dropdown-wrap"> 
                                     <!-- route link -->
                                     <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single">{{ __('Edit', 'hydra-booking') }}</router-link>
                                     
@@ -294,22 +298,24 @@ window.addEventListener('click', function(e) {
         </div>
       
         <div class="tfhb-submission-btn tfhb-flexbox">
+             
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation left" 
                 @click="props.setupWizard.currentStep = 'step-three'" 
                 :buttonText="__('Back', 'hydra-booking')"
-                icon="ChevronLeft" 
-                hover_icon="ArrowLeft" 
+                icon="ChevronLeft"  
                 :hover_animation="true" 
                 icon_position="left"
+                width="84px"
             /> 
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation" 
                 @click="StepFour" 
                 :buttonText="__('Complete setup', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"  
+                width="150px"
             /> 
             <!-- <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="" > <Icon name="ChevronLeft" size=20 /> Back </button>
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size=20 />  </button> -->

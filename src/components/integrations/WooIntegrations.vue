@@ -1,8 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, } from 'vue'; 
-import Icon from '@/components/icon/LucideIcon.vue'
-
+import { ref, reactive, onBeforeMount, } from 'vue';  
+import HbButton from '@/components/form-fields/HbButton.vue';
 // import Form Field 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 
@@ -19,6 +18,11 @@ const props = defineProps([
 ])
 const emit = defineEmits([ "update-integrations", ]); 
 const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooCommerce&tab=search';
+
+const installWooPlugin = () => {
+    // redirect to plugin_url in new devs
+    window.open(plugin_url, '_blank');
+}
 </script>
 
 <template>
@@ -39,12 +43,26 @@ const plugin_url = tfhb_core_apps.admin_url+'/wp-admin/plugin-install.php?s=WooC
 
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
            
-            <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connected', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></button>
-            <a v-else :href="plugin_url" target="__blank"  class="tfhb-btn tfhb-install-plugins tfhb-flexbox tfhb-gap-8" :data-connection-status="woo_payment.connection_status" @click="installPlugins">{{ __('Connect', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></a>
-                <!-- Checkbox swicher -->
-
-                <HbSwitch v-if="woo_payment.connection_status" @change="emit('update-integrations', 'woo_payment', woo_payment)"  v-model="woo_payment.status"    />
-            <!-- Swicher --> 
+             
+            <!-- <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connected', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></button> -->
+            <HbButton 
+                 v-if="woo_payment.connection_status == 1" 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
+                :buttonText="__('Connected', 'hydra-booking')" 
+                :hover_animation="false"
+            /> 
+      
+              
+            <HbButton 
+                v-else
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8" 
+                @click="installWooPlugin"
+                :buttonText="__('Connect', 'hydra-booking')"  
+                :hover_animation="false"
+            /> 
+                
+            <HbSwitch v-if="woo_payment.connection_status" @change="emit('update-integrations', 'woo_payment', woo_payment)"  v-model="woo_payment.status"    />
+            
         </div>
  
     </div>  

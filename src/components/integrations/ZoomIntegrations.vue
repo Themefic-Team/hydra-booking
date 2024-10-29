@@ -8,6 +8,7 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import useValidators from '@/store/validator';
+import HbButton from '@/components/form-fields/HbButton.vue';
 const { errors, isEmpty } = useValidators();
 
 const zoomPopup = ref(false);
@@ -21,6 +22,7 @@ const props = defineProps([
     'class', 
     'display', 
     'zoom_meeting', 
+    'pre_loader', 
     'Integration', 
     'ispopup',
     'from'
@@ -52,7 +54,14 @@ const closePopup = () => {
             <router-link  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
            
 
-            <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ zoom_meeting.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
+            <HbButton 
+                v-else @click="emit('popup-open-control')" 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
+                :buttonText="zoom_meeting.connection_status == 1 ? 'Connected' : 'Connect'" 
+                hover_icon="ArrowRight" 
+                :hover_animation="false"    
+            /> 
+      
             <!-- Checkbox swicher --> 
             <HbSwitch v-if="zoom_meeting.connection_status" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
             <!-- Swicher --> 
@@ -96,7 +105,17 @@ const closePopup = () => {
                         type = "password"
                         :placeholder="__('Enter Your App Secret Key', 'hydra-booking')"  
                     /> 
-                    <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'zoom_meeting', zoom_meeting, ['account_id', 'app_client_id', 'app_secret_key'])">{{ __('Save & Validate', 'hydra-booking') }}</button>
+
+                    <HbButton  
+                         @click.stop="emit('update-integrations', 'zoom_meeting', zoom_meeting, ['account_id', 'app_client_id', 'app_secret_key'])"
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
+                        :buttonText="'Save & Validate' "
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true" 
+                        :pre_loader="props.pre_loader"
+                        width="150px"
+                    />   
                 </template> 
             </HbPopup>
         <!-- </Transition > -->

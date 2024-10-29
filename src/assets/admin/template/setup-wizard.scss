@@ -94,6 +94,7 @@
         &.tfhb-s-w-step-end {
             // width: 90%;
             // padding: 64px 30px;
+            width: 100%;
             .cartbox-text {
                 max-width: 175px !important;
             }
@@ -285,10 +286,14 @@
                 gap : 16px !important;
                 
             }
-            .tfhb-integrations-single-block-btn{
-                .tfhb-btn{
-                    padding: 0 !important;
+            .tfhb-integrations-single-block-btn{ 
+                flex-direction: column;
+                align-items: end !important;
+                gap: 8px !important; 
+                .tfhb-field-swicher{
+                    padding: 0 4px;
                 }
+                
 
             }
             &.tfhb-pro{ 

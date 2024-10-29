@@ -10,7 +10,21 @@
     font-weight: $font-weight-medium;
     line-height: 24px;
     transition: $transition;
-   
+    // padding: 8px 24px; 
+
+    &:hover, &:focus, &:active {
+        span{
+             color: $primary-hover !important;
+         }
+         
+     }
+     &:hover{ 
+         transition: $transition;
+    
+     }
+    .tfhb-button-icon {
+        padding: 3px 8px !important;
+    }
     &.tfhb-docs-btn{
         font-weight: 600;
     }
@@ -28,6 +42,14 @@
         }
         span{
             color: $primary-text !important;
+        }
+        &.disabled {
+            span{
+               color: #FFFFFF70 !important;
+            }
+       }
+       .tfhb-button-icon {
+            padding: 10px 8px !important;
         }
     }
     &.boxed-btn-danger{
@@ -56,7 +78,7 @@
             box-shadow: $btn-box-shadow;
         }
         span{
-            color: $secondary-default !important;
+            color: $secondary-default;
             font-size: $text-font-size;
         }
     }
@@ -68,6 +90,20 @@
         color: $secondary-default;
         
         font-weight: $font-weight-reguler;
+
+        &.disabled {
+            span{
+               color: #273F2B70 !important;
+            }
+            .tfhb-button-icon svg {
+                g circle {
+                    stroke: #273F2B70 !important;
+                }
+            }
+       }
+       .tfhb-button-icon {
+            padding: 10px 8px !important;
+        }
     }
     &.flex-btn{
         display: flex;
@@ -98,7 +134,7 @@
             right: 8px;
             top: 0;
             height: 100%;
-            padding: 8px 8px;
+            
             visibility: hidden;
             opacity: 0;
 
@@ -107,15 +143,16 @@
                 left: 8px;
             }
         }
+       
         &.disabled {
-            cursor: not-allowed !important;
+            cursor: not-allowed;
             color: $surface-border;
             pointer-events: none !important;
         }
 
         &:hover,  &.active, &.disabled { 
             text-indent: -8px;
-
+           
             &.left{
                 text-indent: 6px;
             }
@@ -132,24 +169,17 @@
         }
       
     }
+
+   
    
  
-    &:hover, &:focus, &:active {
-        color: $primary-hover;
-        transition: $transition;
    
-        
-    }
-    &:hover{ 
-        transition: $transition;
-   
-    }
     span{
 
-        color: $primary-default;
+        color: $primary-default !important;
         font-size: $text-font-size !important;
         font-weight: $font-weight-medium !important;
-        line-height: 24px;
+        line-height: 24px !important;
         transition:$transition !important;
         margin: 0 !important;
         display: inline-flex;
@@ -159,6 +189,7 @@
         font-size: $heading-font-size-small; 
     }
    
+    
     &.tfhb-preloader {
         position: relative;
         

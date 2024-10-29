@@ -92,6 +92,8 @@ class SetupWizard {
 		$availabilityDataSingle       = $request['availabilityDataSingle'];
 
 
+		$availabilityDataSingle['title'] =  $availabilityDataSingle['title'] != '' ? $availabilityDataSingle['title'] : 'No Title';
+		$availabilityDataSingle['time_zone'] =   $availabilityDataSingle['time_zone'] != '' ? $availabilityDataSingle['time_zone'] : 'UTC';
 		$Availability = new Availability();
 		
 		// get all availability data
@@ -143,9 +145,13 @@ class SetupWizard {
 		$request['user_id'] = $host->user_id;
 		
 
-		// Checked if Host Already Exist
-		
-		$meeting = $this->CreateDemoMeetings( $request );
+		// Checked if Host Already Exist 
+		if($request['skip_import'] == false){
+
+			$meeting = $this->CreateDemoMeetings( $request );
+		}else{
+			$meeting = array();
+		}
 
 		$data = array(
 			'status'                => true,

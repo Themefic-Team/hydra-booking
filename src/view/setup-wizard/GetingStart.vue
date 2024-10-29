@@ -1,12 +1,8 @@
 <script setup>
-import { __ } from '@wordpress/i18n';
-import { RouterView } from 'vue-router' 
-import HbText from '@/components/form-fields/HbText.vue'
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbDateTime from '@/components/form-fields/HbDateTime.vue';
-import Icon from '@/components/icon/LucideIcon.vue'
+import { __ } from '@wordpress/i18n'; 
+import HbText from '@/components/form-fields/HbText.vue' 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
-import { setupWizard } from '@/store/setupWizard';
+// import { setupWizard } from '@/store/setupWizard';
 import HbButton from '@/components/form-fields/HbButton.vue'
 
 // Toast
@@ -20,9 +16,7 @@ const props = defineProps({
 }); 
 
 const GettingStart = () => {
-    // tfhbApps.config.globalProperties.$tfhb_pre_loader echo the url 
-    const tfhb_pre_loader = tfhb_core_apps.tfhb_url+'/assets/images/pre-loader.svg';
- 
+   
     if(props.setupWizard.data.email == ''){
         toast.error('Email is required');
         return;
@@ -72,7 +66,7 @@ const GettingStart = () => {
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
-                icon_position="right"
+                icon_position="right" 
                 width="196px"
             />   
  
