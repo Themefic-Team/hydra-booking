@@ -3,12 +3,14 @@ import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import { RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
+import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
 import { setupWizard } from '@/store/setupWizard';
 
 
@@ -204,7 +206,7 @@ window.addEventListener('click', function(e) {
                             </transition>
                         </div>
                     </div>
-                    <div class="single-meeting-action-btn tfhb-flexbox">
+                    <div class="single-meeting-action-btn tfhb-flexbox tfhb-justify-between">
                         <a :href="'/' + setupWizard.data.meeting.slug" class="tfhb-flexbox" target="_blank">
                             <Icon name="Eye" size=20 /> 
                             {{ __('Preview', 'hydra-booking') }}
@@ -218,6 +220,7 @@ window.addEventListener('click', function(e) {
 
 
                 <HbPopup :isOpen="sharePopup" @modal-close="sharePopup = false" max_width="600px" name="first-modal">
+        
                     <template #header> 
                         <h3>{{ shareData.title }}</h3>
                     </template>
@@ -228,7 +231,7 @@ window.addEventListener('click', function(e) {
                                 <li v-if="shareData.time">
                                     <div class="tfhb-flexbox tfhb-gap-8">
                                         <div class="user-info-icon">
-                                            <Icon name="Clock" size=16 /> 
+                                            <Icon name="Clock" size=16 />  
                                         </div>
                                         <div class="user-info-title">
                                             {{ shareData.time }} {{ __('minutes', 'hydra-booking') }}
@@ -268,31 +271,54 @@ window.addEventListener('click', function(e) {
                             </div>
 
                             <div class="tfhb-shareing-data tfhb-full-width">
-                                <div class="share-link" v-if="'link'==shareData.share_type">
-                                    <input type="text" :value="shareData.link" readonly>
+                                <div class="share-link" v-if="'link'==shareData.share_type"> 
+                                    <HbText 
+                                        v-model="shareData.link"  
+                                        :readonly="true"
 
-                                    <div class="tfhb-copy-btn">
-                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.link)">{{ __('Copy link', 'hydra-booking') }}</button>
+                                    />
+                                    <div class="tfhb-copy-btn "> 
+                                        <HbButton 
+                                            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                                            @click="copyMeeting(shareData.embed)" 
+                                            :buttonText="__('Copy Code', 'hydra-booking')" 
+                                        />  
                                     </div>
                                 </div>
-                                <div class="share-link" v-if="'short'==shareData.share_type">
-                                    <input type="text" :value="shareData.shortcode" readonly>
+                                <div class="share-link" v-if="'short'==shareData.share_type"> 
+                                    <HbText 
+                                        v-model="shareData.shortcode"  
+                                        :readonly="true"
 
+                                    />
                                     <div class="tfhb-copy-btn">
-                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.shortcode)">{{ __('Copy Code', 'hydra-booking') }}</button>
+                                        <HbButton 
+                                            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                                            @click="copyMeeting(shareData.embed)" 
+                                            :buttonText="__('Copy Code', 'hydra-booking')" 
+                                        /> 
                                     </div>
                                 </div>
-                                <div class="share-link" v-if="'embed'==shareData.share_type">
-                                    <input type="text" :value="shareData.embed" readonly>
+                                <div class="share-link tfhb-flexbox tfhb-gap-24 tfhb-justify-end" v-if="'embed'==shareData.share_type">
+                                
+            
+                                    <HbTextarea 
+                                        v-model="shareData.embed"  
+                                        :readonly="true"
 
-                                    <div class="tfhb-copy-btn">
-                                        <button class="tfhb-btn boxed-btn flex-btn" @click="copyMeeting(shareData.embed)">{{ __('Copy Code', 'hydra-booking') }}</button>
-                                    </div>
+                                    />
+            
+                                    <HbButton 
+                                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                                        @click="copyMeeting(shareData.embed)" 
+                                        :buttonText="__('Copy Code', 'hydra-booking')" 
+                                    /> 
                                 </div>
+                                
                             </div>
                         </div>
                     </template> 
-                </HbPopup>
+                </HbPopup> 
 
                 </div>
         </div>
@@ -304,9 +330,9 @@ window.addEventListener('click', function(e) {
                 @click="props.setupWizard.currentStep = 'step-three'" 
                 :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft"  
+                hover_icon="ArrowLeft" 
                 :hover_animation="true" 
-                icon_position="left"
-                width="84px"
+                icon_position="left" 
             /> 
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation tfhb-justify-center" 
@@ -314,8 +340,7 @@ window.addEventListener('click', function(e) {
                 :buttonText="__('Complete setup', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
-                :hover_animation="true"  
-                width="154px"
+                :hover_animation="true"   
             /> 
             <!-- <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="" > <Icon name="ChevronLeft" size=20 /> Back </button>
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size=20 />  </button> -->

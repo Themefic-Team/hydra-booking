@@ -50,7 +50,7 @@ onBeforeMount(() => {
      <!-- Step One -->
      <transition name="tfhb-fade-right">
      <StepOne 
-        v-show="setupWizard.currentStep  == 'step-one'"
+        v-if="setupWizard.currentStep  == 'step-one'"
         :setupWizard="setupWizard"
     />
     </transition>

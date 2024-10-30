@@ -69,7 +69,15 @@ const StepTwo = (validator_field) => {
     props.setupWizard.currentStep = 'step-three';
 }
 
+const sikpStepThree = () => { 
+    if(props.setupWizard.skip_preloader == true){
+        return;
+    } 
 
+    // props.setupWizard.skip_import = true;
+    props.setupWizard.skip_preloader = true;  
+    props.setupWizard.importDemoMeeting();
+}
 </script>
 
 <template>
@@ -95,32 +103,31 @@ const StepTwo = (validator_field) => {
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
                 @click="props.setupWizard.currentStep = 'step-one'" 
                 :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
-                icon_position="left"
-                width="84px"
+                icon_position="left" 
             /> 
             <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="StepTwo(['title', 'time_zone'])" 
                 :buttonText="__('Next', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
-                :hover_animation="true"
-                width="84px"
+                :hover_animation="true" 
             /> 
             
             <HbButton 
-                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
-                @click="props.setupWizard.currentStep = 'step-three'" 
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
+                @click="sikpStepThree" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true" 
                 icon="ChevronRight"   
-                width="80px"
+                :pre_loader="props.setupWizard.skip_preloader"
+                hover_icon="ArrowRight"  
             />  
             
             <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size=20 />  </button> -->

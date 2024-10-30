@@ -17,10 +17,18 @@ const props = defineProps({
 
 const GettingStart = () => {
    
-    if(props.setupWizard.data.email == ''){
-        toast.error('Email is required');
+    if(props.setupWizard.data.email == ''){ 
+        toast.error('Email is required', {
+            position: 'bottom-right', // Set the desired position
+        });
+        return; 
+    }
+    // if email is not valid
+    if(!props.setupWizard.data.email.includes('@')){ 
+        toast.error('Please enter a valid email', {
+            position: 'bottom-right', // Set the desired position
+        });
         return;
-
     }
     
     props.setupWizard.currentStep = 'step-one';
@@ -60,14 +68,13 @@ const GettingStart = () => {
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
             <HbButton 
-                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                classValue="tfhb-btn boxed-btn flex-btn" 
                 @click="GettingStart" 
                 :buttonText="__('Get Started in a Minute', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
-                icon_position="right" 
-                width="196px"
+                icon_position="right"  
             />   
  
         </div>

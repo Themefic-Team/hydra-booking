@@ -23,9 +23,9 @@
          transition: $transition;
     
      }
-    .tfhb-button-icon {
-        padding: 3px 8px !important;
-    }
+    // .tfhb-button-icon {
+    //     padding: 3px 8px !important;
+    // }
     &.tfhb-docs-btn{
         font-weight: 600;
     }
@@ -49,9 +49,9 @@
                color: #FFFFFF70 !important;
             }
        }
-       .tfhb-button-icon {
-            padding: 10px 8px !important;
-        }
+    //    .tfhb-button-icon {
+    //         padding: 10px 8px !important;
+    //     }
     }
     &.boxed-btn-danger{
         padding: 8px 24px; 
@@ -102,9 +102,7 @@
                 }
             }
        }
-       .tfhb-button-icon {
-            padding: 11px 8px !important;
-        }
+       
     }
     &.flex-btn{
         display: flex;
@@ -128,47 +126,58 @@
     // }
 
     &.tfhb-icon-hover-animation {
-        position: relative;
-        // cursor: not-allowed;
-        .tfhb-button-icon {
-            position: absolute;
-            right: 8px;
-            top: 0;
-            height: 100%;
-            
-            visibility: hidden;
-            opacity: 0;
-
-            &.left {
-                right: auto;
-                left: 8px;
+        padding-right: 20px !important;
+        &.left {
+            padding-left: 20px !important;
+            padding-right: 24px !important;
+        }
+        .tfhb-button-icon{
+            position: relative;
+            height: 20px;
+            width: 20px;
+            .tfhb-btn-hover-icon {
+                transition: all ease .4s;
+              position: absolute;
+              left: 0;
+              height: 100%;
+              width: 0;
+              visibility: hidden;
+              opacity: 0;
             }
-        }
-       
-        &.disabled {
-            cursor: not-allowed;
-            color: $surface-border;
-            pointer-events: none !important;
-        }
-
-        &:hover,  &.active, &.disabled { 
-            text-indent: -8px;
-           
+            .tfhb-btn-icon { 
+                position: absolute;
+                left: 0;
+                height: 100%;
+                width: 100;
+                transition: all ease .4s;
+                
+                }
             &.left{
-                text-indent: 6px;
+                .tfhb-btn-hover-icon { 
+                    left: 100%;
+                }
+                   
             }
-            .tfhb-button-icon {
-                right: 0;
+        }
+        &:hover{
+            .tfhb-btn-hover-icon { 
+                transition: all ease .4s;
                 visibility: visible;
                 opacity: 1;
-
-                &.left {
-                    right: auto;
+                width: 100%;
+              }
+              .tfhb-btn-icon {  
+                visibility: hidden;
+                opacity: 0; 
+              }
+              &.left{
+                .tfhb-btn-hover-icon { 
                     left: 0;
                 }
+                   
             }
         }
-      
+         
     }
 
    

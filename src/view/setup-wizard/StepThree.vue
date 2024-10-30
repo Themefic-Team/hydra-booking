@@ -67,14 +67,13 @@ const sikpStepThree = () => {
         <div class="tfhb-s-w-getting-email">
             
             <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation tfhb-import-demo" 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-import-demo" 
                 @click="StepThree"
-                :buttonText="__('Import demo data', 'hydra-booking')"
+                :buttonText="__('Create demo Meeting', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :pre_loader="props.setupWizard.pre_loader"
-                :hover_animation="true"
-                width="164px"
+                :hover_animation="true" 
             /> 
             <!-- <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="props.setupWizard.importDemoMeeting" >Import demo data
                
@@ -86,13 +85,13 @@ const sikpStepThree = () => {
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox"> 
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
                 :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft"  
+                hover_icon="ArrowLeft" 
                 :hover_animation="true" 
-                icon_position="left"
-                width="84px"
+                icon_position="left" 
             /> 
             <HbButton 
                 classValue="tfhb-btn secondary-btn  tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation" 
@@ -101,7 +100,7 @@ const sikpStepThree = () => {
                 :hover_animation="true"  
                 :pre_loader="props.setupWizard.skip_preloader"
                 icon="ChevronRight"  
-                width="80px"
+                hover_icon="ArrowRight"  
             />  
         </div>
      </div>

@@ -151,8 +151,7 @@ class SetupWizard {
 			$meeting = $this->CreateDemoMeetings( $request );
 		}else{
 			$meeting = array();
-		}
-
+		} 
 		$data = array(
 			'status'                => true,
 			'message'               => 'General Settings Updated Successfully',
@@ -217,16 +216,19 @@ class SetupWizard {
 	// Create Demo Meetings
 	public function CreateDemoMeetings( $request ) {
 
+		$business_type = isset( $request['business_type'] ) && !empty($request['business_type']) ? $request['business_type'] : 'Demo Meeting';
 		// Create an array to store the post data for meeting the current row
+		$meeting_category = $this->create_meeting_category( esc_html($business_type), '' );
 		$meeting_post_data = array(
 			'post_type'   => 'tfhb_meeting',
-			'post_title'  => esc_html( $request['business_type'] ),
+			'post_title'  => esc_html( $business_type ),
 			'post_status' => 'publish',
 			'post_author' => $request['user_id'],
 		);
 
+	
 		// Create Meeting Category as per Business Type
-		$this->create_meeting_category( esc_html($request['business_type']), '' );
+		
 		$meeting_post_id   = wp_insert_post( $meeting_post_data );
 		$meeting_slug      = get_post_field( 'post_name', $meeting_post_id );
 		$data              = array(
@@ -234,11 +236,12 @@ class SetupWizard {
 			'host_id'                  => $request['host_id'],
 			'user_id'                  => $request['user_id'],
 			'post_id'                  => $meeting_post_id,
-			'title'                    => esc_html( $request['business_type'] ),
+			'title'                    => esc_html( $business_type ),
 			'description'              => '',
 			'meeting_type'             => 'one-to-one',
 			'duration'                 => '30',
 			'meeting_locations'        => '[{"location":"Attendee Phone Number","address":""}]',
+			'meeting_category'        =>  esc_html($meeting_category),
 			'availability_range_type'  => 'indefinitely',
 			'availability_type'        => 'custom',
 			'availability_id'          => '0',
@@ -285,7 +288,7 @@ class SetupWizard {
 
 		// meetings Lists
 		$meeting = $meeting->get( $meetings_id );
-
+		
 		return $meeting;
 	}
 
@@ -309,6 +312,8 @@ class SetupWizard {
 				'slug'        => sanitize_title( $title ),
 			)
 		);
+		// term id
+		return  $term['term_id'];
 
 	}
 }

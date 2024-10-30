@@ -550,8 +550,7 @@ window.addEventListener('click', function(e) {
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"  
-                :pre_loader="pre_loader"
-                width="154px"
+                :pre_loader="pre_loader" 
             /> 
         </div>
      </div>

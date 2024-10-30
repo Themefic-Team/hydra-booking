@@ -142,7 +142,11 @@ const setupWizard = reactive({
                 }else{
 
                     this.skip_preloader = false;
-                    this.currentStep = 'step-end';
+                    if(this.currentStep == 'step-two') {
+                        this.currentStep = 'step-four';
+                    }else{
+                        this.currentStep = 'step-end';
+                    } 
                 }
                 
             }

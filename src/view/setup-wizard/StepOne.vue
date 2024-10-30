@@ -20,8 +20,11 @@ const props = defineProps({
 }); 
 
 const StepOne = () => {
-    if(props.setupWizard.data.business_type == ''){
-        toast.error('Please select your business type');
+    if(props.setupWizard.data.business_type == ''){ 
+        toast.error('Please select your business type', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        }); 
         return;
 
     }
@@ -68,31 +71,29 @@ const StepOne = () => {
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox"> 
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
                 @click="props.setupWizard.currentStep = 'getting-start'" 
                 :buttonText="__('Back', 'hydra-booking')"
                 icon="ChevronLeft" 
                 hover_icon="ArrowLeft" 
                 :hover_animation="true"
-                icon_position="left"
-                width="84px"
+                icon_position="left" 
             /> 
             <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="StepOne" 
                 :buttonText="__('Next', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
-                :hover_animation="true"
-                width="84px"
+                :hover_animation="true" 
             />  
             <HbButton 
-                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation" 
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="props.setupWizard.currentStep = 'step-two'" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true" 
                 icon="ChevronRight"   
-                width="80px"
+                hover_icon="ArrowRight"  
             />   
         </div>
      </div> 
