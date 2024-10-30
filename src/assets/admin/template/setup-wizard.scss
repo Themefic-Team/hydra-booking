@@ -91,6 +91,13 @@
         justify-content: center !important;
         gap : 56px !important;
         
+        .tfhb-s-w-getting-email{
+            .tfhb-field-checkbox {
+                > div{
+                    justify-content: center !important;
+                }
+            }
+        }
         &.tfhb-s-w-step-end {
             // width: 90%;
             // padding: 64px 30px;
@@ -322,11 +329,8 @@
                 width: 180px !important;
                 // background-color: $surface-secondary !important;
 
-                &.active {
-                    left: 0;
-                    top: 100%;
-                }
-
+                left: 0;
+                top: 100%;
                 // span {
                 //     padding: 4px 8px;
                 // }

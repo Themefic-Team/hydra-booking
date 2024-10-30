@@ -369,9 +369,13 @@ window.addEventListener('click', function(e) {
         </div>
         <div class="tfhb-s-w-step-end tfhb-flexbox">
 
-            <div class="tfhb-s-w-integrations-bar tfhb-flexbox">
+            <div class="tfhb-s-w-integrations-bar tfhb-flexbox  tfhb-justify-between">
                 <div  @click="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
-                    <span>All Integrations </span>  <Icon name="ChevronDown" size=20 /> 
+                    <span class="tfhb-btn tfhb-flexbox tfhb-gap-8">All Integrations 
+                        <Icon v-if="activeDropdown == false" name="ChevronDown" size=20 /> 
+                        <Icon v-else="activeDropdown == false" name="ChevronUp" size=20 /> 
+                    </span> 
+                     
                     <transition name="tfhb-dropdown-transition">
                         <div v-show="activeDropdown == true" class="tfhb-dropdown-wrap"> 
                             <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> All Integrations</span>
@@ -399,7 +403,7 @@ window.addEventListener('click', function(e) {
                 <!-- Woo Integrations  -->
 
                 <!-- zoom intrigation -->
-                <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :zoom_meeting="Integration.zoom_meeting" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
@@ -411,7 +415,7 @@ window.addEventListener('click', function(e) {
                 <!-- zoom intrigation -->
 
                 <!-- zoom intrigation -->
-                <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :google_calendar="Integration.google_calendar"
                 :pre_loader="submit_preloader"  
                 @update-integrations="UpdateIntegration"
@@ -423,7 +427,7 @@ window.addEventListener('click', function(e) {
                 <!-- zoom intrigation -->
                 
                 <!-- Outlook intrigation -->
-                <OutlookCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <OutlookCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :outlook_calendar="Integration.outlook_calendar" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"
@@ -438,7 +442,7 @@ window.addEventListener('click', function(e) {
                 <!-- Apple intrigation -->
 
                 <!-- stripe intrigation -->
-                <StripeIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <StripeIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :stripe_data="Integration.stripe" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
@@ -451,7 +455,7 @@ window.addEventListener('click', function(e) {
  
 
                 <!-- paypal intrigation -->
-                <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :paypal_data="Integration.paypal" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
@@ -463,7 +467,7 @@ window.addEventListener('click', function(e) {
                 <!-- paypal intrigation -->
 
                <!-- CF7 -->
-               <CF7Integrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+               <CF7Integrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :cf7_data="Integration.cf7" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
@@ -472,7 +476,7 @@ window.addEventListener('click', function(e) {
                 <!-- CF7 -->
 
                 <!-- Fluent -->
-                <FluentFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <FluentFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :fluent_data="Integration.fluent" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
@@ -484,7 +488,7 @@ window.addEventListener('click', function(e) {
                 <!-- CF7 -->
 
                 <!-- gravity -->
-                <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :gravity_data="Integration.gravity" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
@@ -493,7 +497,7 @@ window.addEventListener('click', function(e) {
                 <!-- gravity -->
 
                 <!-- webhook -->
-                <WebhookIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <WebhookIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :webhook_data="Integration.webhook" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
@@ -502,7 +506,7 @@ window.addEventListener('click', function(e) {
                 <!-- webhook -->
           
                 <!-- Mailchimp intrigation -->
-                <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :mail_data="Integration.mailchimp" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
@@ -514,7 +518,7 @@ window.addEventListener('click', function(e) {
                 <!-- Mailchimp intrigation -->
 
                 <!-- Fluent CRM -->
-                <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :fluent_crm_data="Integration.fluent_crm" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
@@ -523,7 +527,7 @@ window.addEventListener('click', function(e) {
                 <!-- Fluent CRM -->
                 
                 <!-- Zoho CRM -->
-                <ZohoCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <ZohoCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :zoho_crm_data="Integration.zoho_crm" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   

@@ -80,14 +80,17 @@ const truncateString = (str, num) => {
 
 <!-- {{ tfhbClass }} -->
 <div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
-    <Header title="Dashboard" :notifications="Notification.Data" :total_unread="Notification.total_unread" /> 
-    <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox">
+    <Header title="Dashboard" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+    <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
         <div class="thb-admin-title">
             <h2>{{ __('Booking Overview', 'hydra-booking') }}</h2>
             <p>{{ __('A complete view of all your bookings at a glance.', 'hydra-booking') }}</p> 
         </div>  
-        <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-datachart-box-dropdown tfhb-no-hover">
-            <span class="tfhb-flexbox tfhb-gap-8 tfhb-mega-dropdown-heading " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ __('Today', 'hydra-booking') }}</span>  <Icon name="ChevronDown" size=20 /> </span>
+        <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-datachart-box-dropdown  ">
+            <span class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ __('Today', 'hydra-booking') }}</span>  
+                <Icon v-if="datachart_box_dropdown == false" name="ChevronDown" size=20 /> 
+                <Icon v-else name="ChevronUp" size=20 /> 
+            </span>
             
             <transition name="tfhb-dropdown-transition">
                 <div v-show="datachart_box_dropdown" class="tfhb-dropdown-wrap "  > 
@@ -125,7 +128,7 @@ const truncateString = (str, num) => {
                         </div> 
                     </div> 
                     <div class="tfhb-dropdown-single">
-                        <button class="tfhb-btn tfhb-btn-primary boxed-btn   tfhb-full-width" @click="updateDashboardDateRange">{{ __('Apply', 'hydra-booking') }}</button>
+                        <button class="tfhb-btn tfhb-btn-primary boxed-btn   tfhb-full-width" @click="updateDashboardDateRange"><span>{{ __('Apply', 'hydra-booking') }}</span></button>
                     </div>   
                 </div>
             </transition>
@@ -302,7 +305,7 @@ const truncateString = (str, num) => {
                             <div class="tfhb-admin-card-box tfhb-p-16">
                                 
                                 <p>{{truncateString(data.title, 70)}}    </p>
-                                <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8"> 
+                                <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
                                     <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
                                     <span  class="tfhb-flexbox tfhb-gap-8">
                                         <Icon name="UserRound" size=15 /> 
@@ -342,7 +345,7 @@ const truncateString = (str, num) => {
                             <span > {{ data.start_time}} </span>
                             <div class="tfhb-admin-card-box tfhb-p-16">
                                 <p>{{data.attendee_name}} ({{data.attendee_email}})  </p>
-                                <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8"> 
+                                <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
                                     <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
                                         <!-- convert 2024-05-29 to 25 Sep, 24 -->   
 
@@ -369,13 +372,16 @@ const truncateString = (str, num) => {
         <!-- Cart statistic -->
         <div   class="tfhb-chart-statistic-wrap tfhb-dashboard-notice-box"> 
             <div class="tfhb-dashboard-notice-box-wrap" >
-                <div  class="tfhb-dashboard-heading tfhb-flexbox">
+                <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
                     <div class="tfhb-admin-title"> 
                         <h3 >{{ __('Booking Statistics', 'hydra-booking') }}</h3>  
                     </div>
                     <div class="thb-admin-btn right"> 
-                        <div class="tfhb-dropdown datachart-dropdown tfhb-no-hover">
-                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" > <span> {{ __('Last 7 Days', 'hydra-booking') }}</span>  <Icon name="ChevronDown" size=20 /> </a>
+                        <div class="tfhb-dropdown datachart-dropdown  ">
+                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" >  {{ __('Last 7 Days',   'hydra-booking') }} 
+                                <Icon  v-if="datachart_dropdown == false" name="ChevronDown" size=20 /> 
+                                <Icon  v-else name="ChevronUp" size=20 /> 
+                            </a>
                             <transition name="tfhb-dropdown-transition">
                                 <div   
                                 v-show="datachart_dropdown"

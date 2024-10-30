@@ -13,7 +13,7 @@ onMounted(() => {
 <!-- {{ tfhbClass }} -->
 <div class="tfhb-admin-booking">
 
-    <Header title="Booking" :notifications="Notification.Data"  :total_unread="Notification.total_unread"/>
+    <Header title="Booking" :notifications="Notification.Data"  :total_unread="Notification.total_unread"  @MarkAsRead="Notification.MarkAsRead()"/>
     
     <router-view />
 </div> 

@@ -327,7 +327,7 @@ const tfhbValidateInput = (fieldName) => {
                                 <span>{{props.availabilityDataSingle.time_zone}}</span> 
                             </div> 
                         </div>
-                        <div v-for="(time_slot, key) in props.availabilityDataSingle.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline">
+                        <div v-for="(time_slot, key) in props.availabilityDataSingle.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-justify-between">
                             <div class="tfhb-swicher-wrap  tfhb-flexbox tfhb-gap-8">
                                 <!-- Checkbox swicher -->
                                 <label class="switch">

@@ -100,7 +100,7 @@ class DateTimeController extends \DateTimeZone {
 			$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
 		}
 		// Meeting time zone
-		$time_zone = isset( $availability_data['time_zone'] ) ? $availability_data['time_zone'] : 'UTC';
+		$time_zone = isset( $availability_data['time_zone'] ) && !empty($availability_data['time_zone']) ? $availability_data['time_zone'] : 'UTC';
 
 		// Disable Unavailable days
 		$time_slots = isset( $availability_data['time_slots'] ) ? $availability_data['time_slots'] : array();
@@ -267,6 +267,7 @@ class DateTimeController extends \DateTimeZone {
 	}
 
 	public function formatTime( $dateTime, $timeFormat, $timeZone ) {
+		
 		$dateTime->setTimezone( new \DateTimeZone( $timeZone ) );
 
 		$format = '';

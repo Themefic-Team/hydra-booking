@@ -1,15 +1,20 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
+import { ref, onMounted  } from 'vue';
 import { RouterView } from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue';
 import { Notification } from '@/store/notification';
 import Header from '@/components/Header.vue';
+
+onMounted(() => { 
+    Notification.fetchNotifications();
+}); 
 </script>
 
 <template>
     <!-- {{ tfhbClass }} -->
     <div class="tfhb-hydra-dasboard">
-        <Header title="Meetings" :notifications="Notification.Data" :total_unread="Notification.total_unread" />
+        <Header title="Meetings" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
         <div class="tfhb-hydra-wrap ">    
             <nav class="tfhb-hydra-admin-tabs tfhb-hydra-settings">  
                 <ul>

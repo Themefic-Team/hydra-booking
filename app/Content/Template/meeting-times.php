@@ -13,18 +13,20 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage HydraBooking/app
  */
 
+ use HydraBooking\Admin\Controller\DateTimeController;
+
 $meeting          = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host 		   = isset( $args['host'] ) ? $args['host'] : array();
 $general_settings = isset( $args['general_settings'] ) ? $args['general_settings'] : array();
 $time_format      = isset( $general_settings['time_format'] ) && ! empty( $general_settings['time_format'] ) ? $general_settings['time_format'] : '12';
-use HydraBooking\Admin\Controller\DateTimeController;
+
 
 
 // Selecte suld be current date 
 $selected_date        = gmdate( 'Y-m-d' );
 $meeting_id           = isset($meeting['id']) ? $meeting['id'] : 0;
 
-$selected_timezone = $meeting['availability_custom']['time_zone'];
+$selected_timezone =  isset($meeting['availability_custom']['time_zone']) && !empty($meeting['availability_custom']['time_zone']) ? $meeting['availability_custom']['time_zone'] : 'UTC';
 if ( 'settings' === $meeting['availability_type'] ) {
 	$_tfhb_availability_settings = get_user_meta( $meeting['host_id'], '_tfhb_host', true );
 	if($_tfhb_availability_settings['availability_type'] === 'settings' ){
@@ -41,6 +43,7 @@ if ( 'settings' === $meeting['availability_type'] ) {
 		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
 	}
 }
+
 $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
 
 $date_time = new DateTimeController( $selected_timezone );

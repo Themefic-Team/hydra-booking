@@ -309,13 +309,13 @@ window.addEventListener('click', function(e) {
                 width="84px"
             /> 
             <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation" 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation tfhb-justify-center" 
                 @click="StepFour" 
                 :buttonText="__('Complete setup', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"  
-                width="150px"
+                width="154px"
             /> 
             <!-- <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="" > <Icon name="ChevronLeft" size=20 /> Back </button>
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size=20 />  </button> -->

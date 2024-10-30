@@ -83,7 +83,7 @@ const MarkAsRead = () => {
 
             <transition name="tfhb-dropdown-transition">
                 <div v-show="displayNotification" class="tfhb-dropdown-wrap " >   <!-- active class-->
-                    <div class="tfhb-flexbox">
+                    <div class="tfhb-flexbox tfhb-justify-between">
                         <h3>{{ __('Notifications', 'hydra-booking') }}</h3>
                         <button @click="MarkAsRead" class="tfhb-btn">{{ __('Mark as read', 'hydra-booking') }}</button>
                         <!-- {{ notifications }} -->

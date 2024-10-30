@@ -13,6 +13,7 @@
     // padding: 8px 24px; 
 
     &:hover, &:focus, &:active {
+        color: $primary-hover !important;
         span{
              color: $primary-hover !important;
          }
@@ -102,7 +103,7 @@
             }
        }
        .tfhb-button-icon {
-            padding: 10px 8px !important;
+            padding: 11px 8px !important;
         }
     }
     &.flex-btn{

@@ -315,25 +315,28 @@
     .tfhb-flexbox {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        // justify-content: space-between;
         flex-wrap: wrap;
         gap: 24px;
         box-sizing: border-box;
     }
     .tfhb-justify-normal{
-        justify-content: normal !important;
+        justify-content: normal;
+    }
+    .tfhb-justify-center{
+        justify-content: center;
     }
     .tfhb-justify-between{
-        justify-content: space-between !important;
+        justify-content: space-between;
     }
     .tfhb-justify-end{
-        justify-content: end !important;
+        justify-content: end;
     }
     .tfhb-align-baseline{
-        align-items: baseline !important;
+        align-items: baseline;
     }
     .tfhb-align-normal{
-        align-items: normal !important;
+        align-items: normal;
     }
     .tfhb-flexbox-nowrap{
         flex-wrap: nowrap !important;
@@ -425,7 +428,7 @@
             right:  0;
             width: 120px;
             box-shadow: $dropdown-box-shadow ;
-            background-color: $surface-primary;
+            background-color: $surface-background;
             padding: 2px;
             border-radius: 6px;
             display: flex;
