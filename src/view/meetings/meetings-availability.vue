@@ -190,11 +190,6 @@ const removeOverridesTime = (key, tkey = null) => {
     OverridesDates.times.splice(tkey, 1);
 }
 
-// Remove Single Availability
-const removeAvailabilityTDate = (key) => {
-    props.meeting.availability_custom.date_slots.splice(key, 1);
-}
-
 // Open Overrides Form
 const openOverridesCalendarDate = () => {
     props.meeting.availability_custom.date_slots.push({
@@ -221,6 +216,13 @@ const openOverridesCalendarDate = () => {
 
     OverridesOpen.value = true;
 }
+
+
+// Remove Single Availability
+const removeAvailabilityTDate = (key) => {
+    props.meeting.availability_custom.date_slots.splice(key, 1);
+}
+
 
 // Store to the reactive
 const addAvailabilityDate = (key) => {
@@ -680,6 +682,7 @@ const isobjectempty = (data) => {
             </div>  
         
         </div>  
+
         <div class="tfhb-submission-btn"> 
             <HbButton 
                 v-if="'settings'==meeting.availability_type"

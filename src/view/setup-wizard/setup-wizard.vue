@@ -28,7 +28,7 @@ onBeforeMount(() => {
         alt=""
     >
     
-     <div class="tfhb-setup-wizard-header tfhb-flexbox">
+     <div class="tfhb-setup-wizard-header tfhb-flexbox tfhb-justify-between">
         <div class="tfhb-s-w-logo">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
         </div>

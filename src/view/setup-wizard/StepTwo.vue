@@ -66,18 +66,16 @@ const StepTwo = (validator_field) => {
     }
    
     
-    props.setupWizard.currentStep = 'step-three';
-}
-
-const sikpStepThree = () => { 
     if(props.setupWizard.skip_preloader == true){
         return;
     } 
 
     // props.setupWizard.skip_import = true;
     props.setupWizard.skip_preloader = true;  
-    props.setupWizard.importDemoMeeting();
+    props.setupWizard.importDemoMeeting(); 
 }
+
+ 
 </script>
 
 <template>
@@ -118,15 +116,15 @@ const sikpStepThree = () => {
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true" 
+                :pre_loader="props.setupWizard.skip_preloader"
             /> 
             
             <HbButton 
                 classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
-                @click="sikpStepThree" 
+                @click="props.setupWizard.currentStep = 'step-three';" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true" 
-                icon="ChevronRight"   
-                :pre_loader="props.setupWizard.skip_preloader"
+                icon="ChevronRight"    
                 hover_icon="ArrowRight"  
             />  
             

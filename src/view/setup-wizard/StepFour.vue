@@ -325,15 +325,7 @@ window.addEventListener('click', function(e) {
       
         <div class="tfhb-submission-btn tfhb-flexbox">
              
-            <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation left" 
-                @click="props.setupWizard.currentStep = 'step-three'" 
-                :buttonText="__('Back', 'hydra-booking')"
-                icon="ChevronLeft"  
-                hover_icon="ArrowLeft" 
-                :hover_animation="true" 
-                icon_position="left" 
-            /> 
+           
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation tfhb-justify-center" 
                 @click="StepFour" 

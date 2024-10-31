@@ -3,6 +3,10 @@ import { toast } from "vue3-toastify";
 import axios from 'axios'  
 const Meeting = reactive({
     meetings: [],
+    skeleton: true,
+    pre_loader: false,
+    isModalOpened: false,
+    time_zone: {},
     meetingCategory: [],
     meetingPaymentIntegration: {
         woo_payment: true,
@@ -262,10 +266,13 @@ const Meeting = reactive({
 
         if (response.data.status) { 
             this.meetings = response.data.meetings;
+
+            this.skeleton = false; 
         }
 
     },
     async fetchSingleMeeting(meetingId){
+        this.skeleton = true; 
         try { 
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/'+meetingId, {
                 headers: {
@@ -274,23 +281,17 @@ const Meeting = reactive({
                 } 
             });
             if (response.data.status == true) { 
-                // this.singleMeeting.MeetingData = response.data.meeting;
-
-
-                // if(response.data.meeting.meeting_locations == null){
-                //     this.singleMeeting.MeetingData.meeting_locations = [];
-                //     this.singleMeeting.MeetingData.meeting_locations.push({
-                //         location: '',
-                //         address: ''
-                //     });
-
-
-                // }else{
-                //     this.singleMeeting.MeetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
-                // }
+ 
 
                 this.singleMeeting.MeetingData.id = response.data.meeting.id
                 this.singleMeeting.MeetingData.meeting_type = response.data.meeting.meeting_type
+                this.singleMeeting.MeetingData.title = response.data.meeting.title	
+                this.singleMeeting.MeetingData.description	 = response.data.meeting.description
+                this.singleMeeting.MeetingData.duration	 = response.data.meeting.duration
+                this.singleMeeting.MeetingData.host_id	 = response.data.meeting.host_id
+                if(response.data.meeting.meeting_locations){
+                    this.singleMeeting.MeetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
+                }
              
                 this.singleMeeting.MeetingData.webhook = response.data.meeting.webhook ? JSON.parse(response.data.meeting.webhook) : '';
                 this.singleMeeting.MeetingData.integrations = response.data.meeting.integrations ? JSON.parse(response.data.meeting.integrations) : '';
@@ -310,6 +311,10 @@ const Meeting = reactive({
                 this.singleMeeting.integrations.zoho_crm_status = response.data.integrations.zoho_crm_status && response.data.integrations.zoho_crm_status == 1  ? false : true;  
      
                 // skeleton.value = false
+                this.time_zone = response.data.time_zone;
+                // alert(1);
+                this.skeleton = false; 
+            
             }else{ 
                 router.push({ name: 'MeetingsLists' });
             }
@@ -319,6 +324,7 @@ const Meeting = reactive({
     },
 
     async updateSingleMeetingData(routes){
+        this.pre_loader = true;
          // Api Submission
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/details/update', this.singleMeeting.MeetingData, {
@@ -329,11 +335,16 @@ const Meeting = reactive({
             });
             if (response.data.status == true) { 
                 this.singleMeeting.MeetingData.slug = response.data.meeting.slug; 
-                toast.success(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });
+             
                 routes.push({ name: 'MeetingsCreate', params: { id: response.data.meeting.id} });
+                // toast.success(response.data.message, {
+                //     position: 'bottom-right', // Set the desired position
+                //     "autoClose": 1500,
+                // });
+                // windows redirect to the MeetingsCreate route 
+                this.pre_loader = false;
+
+                windows.location.reload();
             }else{ 
                 toast.error(response.data.message, {
                         position: 'bottom-right', // Set the desired position
@@ -394,6 +405,9 @@ const Meeting = reactive({
 
     // Popup Meeting Creation
     async CreatePopupMeeting (type, routes){    
+
+        this.pre_loader = true;
+
         let TypeData = {
             data: type
         }
@@ -407,11 +421,15 @@ const Meeting = reactive({
              } );
      
              if (response.data.status) {  
-                 toast.success(response.data.message, {
-                     position: 'bottom-right', // Set the desired position
-                     "autoClose": 1500,
-                 });   
+               
                 routes.push({ name: 'MeetingsCreateSingle', params: { id: response.data.id} });
+
+                this.pre_loader = false; 
+                this.isModalOpened = false;
+                //  toast.success(response.data.message, {
+                //      position: 'bottom-right', // Set the desired position
+                //      "autoClose": 1500,
+                //  });   
              }else{
                  toast.error(response.data.message, {
                      position: 'bottom-right', // Set the desired position
@@ -425,6 +443,7 @@ const Meeting = reactive({
     
     // Filter By Meeting Title
     async Tfhb_Meeting_Filter (filterData){
+        this.skeleton = true; 
         try {
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/filter', {
                 params: {
@@ -438,6 +457,7 @@ const Meeting = reactive({
             
             if (response.data.status) { 
                 this.meetings = response.data.meetings;  
+                this.skeleton = false; 
             }
     
         } catch (error) {
@@ -446,6 +466,7 @@ const Meeting = reactive({
     },
 
     async Tfhb_Meeting_Select_Filter (filterData){
+        this.skeleton = true; 
         try {
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/filter', {
                 params: {
@@ -459,6 +480,7 @@ const Meeting = reactive({
             
             if (response.data.status) { 
                 this.meetings = response.data.meetings;  
+                this.skeleton = false; 
             }
     
         } catch (error) {

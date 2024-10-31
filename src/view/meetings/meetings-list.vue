@@ -6,15 +6,16 @@ const router = useRouter();
 import { toast } from "vue3-toastify"; 
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue'; 
+import HbPreloader from '@/components/icon/HbPreloader.vue'
 import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
 import { Host } from '@/store/hosts'
 import { Meeting } from '@/store/meetings'
 
 const FilterPreview = ref(false);
 const FilterHostPreview = ref(true);
-const FilterCatgoryPreview = ref(true);
-const isModalOpened = ref(false);
+const FilterCatgoryPreview = ref(true); 
 
 const deletePopup = ref(false)
 const deleteItem = reactive({
@@ -30,12 +31,7 @@ const deleteItemConfirm = () => {
     Meeting.deleteMeeting(deleteItem.id, deleteItem.post_id);
     deletePopup.value = false;
 }
-const openModal = () => {
-  isModalOpened.value = true;
-};
-const closeModal = () => { 
-  isModalOpened.value = false;
-};
+ 
 
 onBeforeMount(() => { 
     Host.fetchHosts();
@@ -93,9 +89,7 @@ const TfhbMeetingType = (type, router) => {
         return;
     }
 
-    meeting.meeting_type = type;
-    console.log(meeting)
-     alert(type)
+    meeting.meeting_type = type; 
     Meeting.CreatePopupMeeting(meeting, router);
 }
 
@@ -141,7 +135,7 @@ const truncateString = (str, num) => {
 <template>
 <!-- {{ filterData }} -->
 
-    <div class="tfhb-dashboard-heading tfhb-flexbox">
+    <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between" >
         <div class="tfhb-filter-box tfhb-flexbox">
             <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
                 <div class="tfhb-filter-icon tfhb-filter-btn tfhb-flexbox"  @click="FilterPreview=!FilterPreview"><Icon name="Filter" size=20 /> 
@@ -205,13 +199,21 @@ const truncateString = (str, num) => {
                 <span><Icon name="Search" size=20 /></span>
             </div>
         </div>
-        <div class="thb-admin-btn right">
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ __('Create New Meeting', 'hydra-booking') }}</button>
+        <div class="thb-admin-btn">
+            <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                @click="Meeting.isModalOpened = true"
+                :buttonText="__('Create New Meeting', 'hydra-booking')"
+                icon="PlusCircle"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />  
+            <!-- <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ __('Create New Meeting', 'hydra-booking') }}</button> -->
         </div> 
     </div>
 
  
-    <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="400px" name="first-modal">
+    <HbPopup :isOpen="Meeting.isModalOpened" @modal-close="Meeting.isModalOpened = false" max_width="400px" name="first-modal">
         <template #header> 
             <!-- {{ google_calendar }} -->
             <h2>{{ __('Create New Meeting Type', 'hydra-booking') }} </h2>
@@ -233,17 +235,17 @@ const truncateString = (str, num) => {
                         <p>{{ __('One host with one invitee. Good for: 1:1 interview, coffee chats', 'hydra-booking') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
-                        <Icon name="ArrowRight" width="20"/>
+                        <Icon v-if="Meeting.pre_loader == false" name="ArrowRight" width="20"/>
+                        <HbPreloader v-else color="#2E6B38" />
+                        
                     </div>
                 </div>
             </div>
             <div class="tfhb-meeting-person-type" 
-                    :class="
-                    {
-                        'tfhb-pro': !$tfhb_is_pro, 
-                    }
-                    "
-                > 
+                :class=" {
+                    'tfhb-pro': !$tfhb_is_pro, 
+                }"
+            > 
                 <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="$tfhb_is_pro == false"><Icon name="Crown" size=20 />  {{ __('Pro', 'hydra-booking') }}</span>
                 <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
                     <div class="tfhb-meeting-type-content">
@@ -287,11 +289,11 @@ const truncateString = (str, num) => {
 
     
 
-    <div class="tfhb-meetings-list-content">
+    <div class="tfhb-meetings-list-content" :class="{ 'tfhb-skeleton': Meeting.skeleton }"> 
         <div  v-if="Meeting.meetings.length > 0" class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
 
             <!-- Single Meeting -->
-            <div class="tfhb-single-meeting tfhb-flexbox" v-for="(smeeting, key) in Meeting.meetings"> 
+            <div class="tfhb-single-meeting tfhb-flexbox " v-for="(smeeting, key) in Meeting.meetings"> 
                 <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox tfhb-full-width">
                     <div class="single-meeting-content">
                         <h3> {{ smeeting.title ? truncateString(smeeting.title, 60) : 'No Title' }} </h3>
@@ -381,7 +383,7 @@ const truncateString = (str, num) => {
                         </transition>
                     </div>
                 </div>
-                <div class="single-meeting-action-btn tfhb-flexbox">
+                <div class="single-meeting-action-btn tfhb-flexbox tfhb-justify-between">
                     <a :href="smeeting.permalink" class="tfhb-flexbox" target="_blank">
                         <Icon name="Eye" size=20 /> 
                         {{ __('Preview', 'hydra-booking') }}
@@ -399,7 +401,7 @@ const truncateString = (str, num) => {
             
         </div>
         <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
-            <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
+            <span > <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" > </span>
             <p>{{ __('No Meeting Created', 'hydra-booking') }}</p> 
         </div>
     </div>
