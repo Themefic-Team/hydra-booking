@@ -10,7 +10,11 @@ const props = defineProps([
     'IntegrationsValue',  
     'meeting',  
 ])
- 
+
+// dropdown change 
+const changeIntegrations = (value) => { 
+    props.IntegrationsValue.addNewIntegrations(value)
+}
  
 </script>
 
@@ -24,25 +28,14 @@ const props = defineProps([
 
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width">
 
-        <div class="tfhb-integration-box">
-            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationsList" @click="props.IntegrationsValue.integrationsListopen=!props.IntegrationsValue.integrationsListopen">
-                <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add New Integrations', 'hydra-booking') }}
-            </button>
-            <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationscreate" @click="props.IntegrationsValue.backtointegrationsList">
-                <Icon name="ArrowLeft" :width="20"/>
-                {{ __('Back', 'hydra-booking') }}
-            </button>
+        <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationscreate" @click="props.IntegrationsValue.backtointegrationsList">
+            <Icon name="ArrowLeft" :width="20"/>
+            {{ __('Back', 'hydra-booking') }}
+        </button> 
 
-            <div class="tfhb-integrations-lists" v-if="props.IntegrationsValue.integrationsListopen">
-                <ul>
-                    <li @click="props.IntegrationsValue.addNewIntegrations('Mailchimp')" v-if="props.meeting.mailchimp.status">{{ __('Mailchimp', 'hydra-booking') }}</li>
-                    <li @click="props.IntegrationsValue.addNewIntegrations('FluentCRM')" v-if="props.meeting.fluentcrm.status">{{ __('FluentCRM', 'hydra-booking') }}</li>
-                    <li @click="props.IntegrationsValue.addNewIntegrations('ZohoCRM')" v-if="props.meeting.zohocrm.status">{{ __('ZohoCRM', 'hydra-booking') }}</li>
-                </ul>
-            </div>
-        </div> 
         <div class="tfhb-webhook-content tfhb-full-width" v-if="props.IntegrationsValue.meeting.integrations.length > 0 && props.IntegrationsValue.integrationsList ">
+           
+            
             <div class="tfhb-admin-card-box tfhb-full-width tfhb-justify-between tfhb-mb-16" v-for="(hook, key)  in props.IntegrationsValue.meeting.integrations" :key="key">
                 <div class="tfhb-webhook-info">
                     <h4>{{ hook.webhook }}</h4>
@@ -89,7 +82,7 @@ const props = defineProps([
                 selected = "1"
                 placeholder="Select Audience"  
                 :option = "meeting.mailchimp.audience"
-                @tfhb-onchange="moduleFields"
+                @tfhb-onchange="moduleFields" 
             />
 
             <HbDropdown  
@@ -205,6 +198,28 @@ const props = defineProps([
             </div>
         </div>
       
+        <div class="tfhb-integration-box tfhb-full-width">
+            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationsList" @click="props.IntegrationsValue.integrationsListopen=!props.IntegrationsValue.integrationsListopen">
+                <Icon name="PlusCircle" :width="20"/>
+                {{ __('Add New Integrations', 'hydra-booking') }}
+            </button>
+
+            <HbDropdown  
+                v-if="props.IntegrationsValue.integrationsListopen"
+                v-model="selecte_integrations"
+                required= "true"  
+                class="tfhb-mt-16" 
+                :label="__('Select integrations', 'hydra-booking')"    
+                selected = "1"
+                placeholder="Select integrations"
+                :option = "[
+                    {name: 'Mailchimp', value: 'Mailchimp', disable: !props.meeting.mailchimp.status},  
+                    {name: 'FluentCRM', value: 'FluentCRM', disable: !props.meeting.mailchimp.status},  
+                    {name: 'ZohoCRM', value: 'ZohoCRM', disable: !props.meeting.mailchimp.status},
+                ]"
+                @tfhb-onchange="changeIntegrations"
+            /> 
+        </div> 
 
     </div>
 

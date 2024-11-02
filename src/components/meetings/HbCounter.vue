@@ -34,14 +34,14 @@ function CounterDec(key){
 </script>
 
 <template>
-    <div class="tfhb-counter-box" :class="name" 
+    <div class="tfhb-counter-box " :class="name" 
             :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }">
         <div class="tfhb-single-form-field">
             <div class="tfhb-single-form-field-wrap">
                 <label v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> </label>
                 <h4 v-if="subtitle">{{ subtitle }}</h4>
                 <div class="tfhb-flexbox tfhb-gap-0 tfhb-counter-wrap tfhb-flexbox-nowrap" v-for="(counter, key)  in counter_value" :key="key">
-                    <div class="tfhb-counter tfhb-flexbox">
+                    <div class="tfhb-counter tfhb-flexbox tfhb-justify-between">
                         <div class="tfhb-dec" @click="CounterDec(key)">
                             <Icon name="Minus" />
                         </div>
@@ -59,10 +59,10 @@ function CounterDec(key){
                         :selected = "1"   
                         placeholder="Select" 
                         :option = "[ 
-                            {'name': 'days', 'value': 'days'},  
-                            {'name': 'weeks', 'value': 'weeks'},  
-                            {'name': 'months', 'value': 'months'},  
-                            {'name': 'years', 'value': 'years'},
+                            {'name': 'Days', 'value': 'days'},  
+                            {'name': 'Weeks', 'value': 'weeks'},  
+                            {'name': 'Months', 'value': 'months'},  
+                            {'name': 'Years', 'value': 'years'},
                         ]"
                     /> 
 

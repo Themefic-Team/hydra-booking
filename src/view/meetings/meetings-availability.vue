@@ -33,6 +33,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 });
 
@@ -316,7 +320,7 @@ const isobjectempty = (data) => {
                 <p>{{ __('How many days can the invitee schedule?', 'hydra-booking') }}</p>
             </div>
 
-            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal">
+            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
                 <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline">
                     <label for="tfhb_continuos_date" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                         <div class="tfhb-range-checkbox">
@@ -340,7 +344,7 @@ const isobjectempty = (data) => {
                             <p class="tfhb-m-0">{{ __('Meeting will be only available on specific dates', 'hydra-booking') }}</p>
                         </div>
                     </label>
-                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8" v-if="meeting.availability_range_type == 'range'">
+                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between" v-if="meeting.availability_range_type == 'range'">
                         <HbDateTime   
                             v-model="meeting.availability_range.start"
                             icon="CalendarDays"
@@ -437,8 +441,8 @@ const isobjectempty = (data) => {
         <!-- Time Zone --> 
         <!-- Settings Data -->
         
-        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
-            <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox">
+        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width tfhb-availability-details-wrap tfhb-m-0" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
+            <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-justify-between">
                 <div class="tfhb-admin-title"> 
                     <h3> {{ __('Schedule Preview', 'hydra-booking') }} </h3>  
                 </div>
@@ -447,7 +451,7 @@ const isobjectempty = (data) => {
                 </div> 
             </div>
             
-            <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline">
+            <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-justify-between">
                 <div class="tfhb-swicher-wrap tfhb-gap-8  tfhb-flexbox">
                     <!-- Checkbox swicher -->
                     <label class="switch">
@@ -459,7 +463,7 @@ const isobjectempty = (data) => {
                 </div>
                 <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
                     <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox">
-                        <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8">
+                        <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                             
                             <div class="tfhb-single-form-field" style="width: calc(45% - 12px);" selected="1">
                                 <div class="tfhb-single-form-field-wrap tfhb-field-date">
@@ -488,34 +492,30 @@ const isobjectempty = (data) => {
                 <div v-else class="tfhb-availability-schedule-wrap"> 
                    <h4 class="tfhb-availability-schedule">Unavailable</h4>
                 </div>
+            </div> 
+        </div>  
+        <!-- Date Overrides --> 
+        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility && 'settings'==meeting.availability_type && Settings_avalibility.availability.date_slots.length > 0">  
+            <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
+                <div class="tfhb-admin-title tfhb-m-0"> 
+                    <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
+                    <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
+                </div> 
             </div>
 
-            <!-- Date Overrides -->
-            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility.availability.date_slots">  
-                <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
-                    <div class="tfhb-admin-title tfhb-m-0"> 
-                        <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
-                        <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
-                    </div> 
-                </div>
-
-                <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Settings_avalibility.availability.date_slots" :key="key">
-                    <div class="tfhb-flexbox tfhb-full-width">
-                        <div class="tfhb-overrides-date">
-                            <h4>{{ date_slot.date }}</h4>
-                            <p class="tfhb-m-0">{{ date_slot.available!=1 ? date_slot.times : 'Unavailable' }}</p>
-                        </div>
+            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Settings_avalibility.availability.date_slots" :key="key">
+                <div class="tfhb-flexbox tfhb-full-width">
+                    <div class="tfhb-overrides-date">
+                        <h4>{{ date_slot.date }}</h4>
+                        <p class="tfhb-m-0">{{ date_slot.available!=1 ? date_slot.times : 'Unavailable' }}</p>
                     </div>
                 </div>
             </div>
-            
-            
-
-        </div>  
+        </div>
 
         <!-- Custom Data -->
-        <div class="tfhb-admin-card-box tfhb-gap-24  " v-if="'custom'==meeting.availability_type">  
-            <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox">
+        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0" v-if="'custom'==meeting.availability_type">  
+            <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-justify-between">
                 <div class="tfhb-admin-title"> 
                     <h3> {{ __('Weekly hours', 'hydra-booking') }} </h3>  
                 </div>
@@ -524,7 +524,7 @@ const isobjectempty = (data) => {
                 </div> 
             </div>
             
-            <div v-for="(time_slot, key) in meeting.availability_custom.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline">
+            <div v-for="(time_slot, key) in meeting.availability_custom.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-justify-between">
                 <div class="tfhb-swicher-wrap tfhb-gap-8 tfhb-flexbox">
                     <!-- Checkbox swicher -->
                     <label class="switch">
@@ -535,7 +535,7 @@ const isobjectempty = (data) => {
                     <!-- Swicher -->
                 </div>
                 <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
-                    <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-8">
+                    <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-no-wrap tfhb-gap-8">
 
                             <HbDropdown 
@@ -574,114 +574,113 @@ const isobjectempty = (data) => {
                     </div>
                     
                 </div>
+            </div> 
+        </div>  
+
+         <!-- Date Overrides -->
+         <div v-if="'custom'==meeting.availability_type" class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width">  
+
+            <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
+                <div class="tfhb-admin-title"> 
+                    <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
+                    <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
+                </div> 
+            </div>
+
+            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in meeting.availability_custom.date_slots" :key="key">
+                <div class="tfhb-flexbox tfhb-full-width">
+                    <div class="tfhb-overrides-date">
+                        <h4>{{ date_slot.date }}</h4>
+                        <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
+                    </div>
+                    <div class="tfhb-overrides-action tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
+                        <button class="question-edit-btn" @click="editAvailabilityDate(key)">
+                            <Icon name="PencilLine" :width="16" />
+                        </button>
+                        <button class="question-edit-btn" @click="removeAvailabilityTDate(key)">
+                            <Icon name="Trash" :width="16"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overrides Calendar Form -->
+
+            <div class="tfhb-overrides-add-form tfhb-flexbox tfhb-full-width" v-if="OverridesOpen">
+                <div class="tfhb-flexbox tfhb-align-normal">
+                    <div class="tfhb-override-calendar">
+                        <HbDateTime  
+                            v-model="OverridesDates.date"
+                            selected = "1" 
+                            :config="{
+                                inline: true,
+                                monthSelectorType: 'static',
+                                yearSelectorType: 'static',
+                                mode: 'multiple',
+                                nextArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='chevron-right'><path id='Vector' d='M7.5 15L12.5 10L7.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></g></svg>`,
+                                prevArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M11.5 15L6.5 10L11.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>`
+                            }"
+                            placeholder="Enter schedule title"   
+                        /> 
+                    </div>
+                    <div class="tfhb-override-times">
+                        <h3>{{ __('Which hours are you free?', 'hydra-booking') }}</h3>
+
+                        <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
+                            <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
+                                <HbDropdown 
+                                    v-model="time.start"  
+                                    required= "true" 
+                                    width="45"
+                                    :selected = "1"
+                                    placeholder="Start"   
+                                    :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
+                                />  
+                                <Icon name="MoveRight" size=20 /> 
+                                <HbDropdown 
+                                    v-model="time.end"  
+                                    required= "true" 
+                                    width="45"
+                                    :selected = "1"
+                                    placeholder="End"   
+                                    :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
+                                /> 
+
+                            </div>
+                            
+                            <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
+                                <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size=20 /> </button> 
+                            </div>
+                            <div v-else class="tfhb-availability-schedule-clone-single">
+                                <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size=20 /> </button> 
+                            </div>
+                        </div>
+
+                        <div class="tfhb-mark-unavailable tfhb-full-width tfhb-mt-16">
+                            <HbCheckbox 
+                                v-model="OverridesDates.available"
+                                :label="__('Mark unavailable (All day)', 'hydra-booking')"
+                                :name="'mark_unavailable'+key"
+                            />
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
+                    <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button>
+                    <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ __('Add override', 'hydra-booking') }}</button>
+                </div>
             </div>
 
 
-            <!-- Date Overrides -->
-            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width">  
+            <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
+                <Icon name="PlusCircle" :width="20"/>
+                {{ __('Add an override', 'hydra-booking') }}
+            </button>
 
-                <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
-                    <div class="tfhb-admin-title"> 
-                        <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
-                        <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
-                    </div> 
-                </div>
-
-                <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in meeting.availability_custom.date_slots" :key="key">
-                    <div class="tfhb-flexbox tfhb-full-width">
-                        <div class="tfhb-overrides-date">
-                            <h4>{{ date_slot.date }}</h4>
-                            <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
-                        </div>
-                        <div class="tfhb-overrides-action tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
-                            <button class="question-edit-btn" @click="editAvailabilityDate(key)">
-                                <Icon name="PencilLine" :width="16" />
-                            </button>
-                            <button class="question-edit-btn" @click="removeAvailabilityTDate(key)">
-                                <Icon name="Trash" :width="16"/>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Overrides Calendar Form -->
-
-                <div class="tfhb-overrides-add-form tfhb-flexbox tfhb-full-width" v-if="OverridesOpen">
-                    <div class="tfhb-flexbox tfhb-align-normal">
-                        <div class="tfhb-override-calendar">
-                            <HbDateTime  
-                                v-model="OverridesDates.date"
-                                selected = "1" 
-                                :config="{
-                                    inline: true,
-                                    monthSelectorType: 'static',
-                                    yearSelectorType: 'static',
-                                    mode: 'multiple',
-                                    nextArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='chevron-right'><path id='Vector' d='M7.5 15L12.5 10L7.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></g></svg>`,
-                                    prevArrow: `<svg width='19' height='20' viewBox='0 0 19 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M11.5 15L6.5 10L11.5 5' stroke='$primary-default' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>`
-                                }"
-                                placeholder="Enter schedule title"   
-                            /> 
-                        </div>
-                        <div class="tfhb-override-times">
-                            <h3>{{ __('Which hours are you free?', 'hydra-booking') }}</h3>
-
-                            <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
-                                <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8"> 
-                                    <HbDropdown 
-                                        v-model="time.start"  
-                                        required= "true" 
-                                        width="45"
-                                        :selected = "1"
-                                        placeholder="Start"   
-                                        :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
-                                    />  
-                                    <Icon name="MoveRight" size=20 /> 
-                                    <HbDropdown 
-                                        v-model="time.end"  
-                                        required= "true" 
-                                        width="45"
-                                        :selected = "1"
-                                        placeholder="End"   
-                                        :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
-                                    /> 
-
-                                </div>
-                                
-                                <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
-                                    <button class="tfhb-availability-schedule-btn" @click="addOverridesTime(key)"><Icon name="Plus" size=20 /> </button> 
-                                </div>
-                                <div v-else class="tfhb-availability-schedule-clone-single">
-                                    <button class="tfhb-availability-schedule-btn" @click="removeOverridesTime(key, tkey)"><Icon name="X" size=20 /> </button> 
-                                </div>
-                            </div>
-
-                            <div class="tfhb-mark-unavailable tfhb-full-width tfhb-mt-16">
-                                <HbCheckbox 
-                                    v-model="OverridesDates.available"
-                                    :label="__('Mark unavailable (All day)', 'hydra-booking')"
-                                    :name="'mark_unavailable'+key"
-                                />
-                            </div>
-                            
-                        </div>
-                    </div>
-
-                    <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                        <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button>
-                        <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ __('Add override', 'hydra-booking') }}</button>
-                    </div>
-                </div>
-
-
-                <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
-                    <Icon name="PlusCircle" :width="20"/>
-                    {{ __('Add an override', 'hydra-booking') }}
-                </button>
-
-            </div>  
-        
         </div>  
+
 
         <div class="tfhb-submission-btn"> 
             <HbButton 
@@ -700,6 +699,7 @@ const isobjectempty = (data) => {
                 :buttonText="__('Save & Continue', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
+                :pre_loader="props.update_preloader"
                 :hover_animation="true"
             />   
         </div>

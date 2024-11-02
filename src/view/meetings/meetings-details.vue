@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { defineProps, defineEmits, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue'; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
@@ -35,6 +35,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 });
 const createMeetingPopup = ref(false);
@@ -54,11 +58,13 @@ const tfhbValidateInput = (fieldName) => {
         isEmpty(fieldParts[0]+'___'+[fieldParts[1]], props.meeting[fieldParts[0]][fieldParts[1]]);
     }
 };
+
 const CategoryData = {
     id: '',
     title: '',
     description: '',
 };
+
 // Create and Update Category
 const UpdateCategory = async () => {  
     try { 
@@ -99,7 +105,14 @@ const UpdateCategory = async () => {
 const closePopup = () => {
     createMeetingPopup.value = false;
 }
- 
+onMounted(() => {   
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Optional: Use 'auto' for instant scroll
+      });
+   
+});
+
 
 </script>
 
@@ -155,12 +168,7 @@ const closePopup = () => {
                 :placeholder="__('Type Custom Duration', 'hydra-booking')"  
                 v-if="'custom'==meeting.duration"
             /> 
-             <!-- Custom Duration -->
-            <!-- <HbSwitch 
-                type="checkbox" 
-                required= "true" 
-                :label="__('Allow attendee to select duration', 'hydra-booking')" 
-            /> -->
+        
         </div>
 
         <div class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width"> 
@@ -273,7 +281,9 @@ const closePopup = () => {
                 :buttonText="__('Save & Continue', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
+                :pre_loader="props.update_preloader"
                 :hover_animation="true"
+                
             />  
         </div>
         <!--Bookings -->

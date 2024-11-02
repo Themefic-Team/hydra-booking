@@ -6,6 +6,7 @@ import { useRouter, useRoute, RouterView } from 'vue-router'
 import axios from 'axios'  
 import { toast } from "vue3-toastify"; 
 import useValidators from '@/store/validator'
+import HbPreloader from '@/components/icon/HbPreloader.vue'
 import { Availability } from '@/store/availability';
 import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
 const { errors } = useValidators();
@@ -456,13 +457,13 @@ const fetchMeeting = async () => {
     } 
 } 
 
-onBeforeMount(() => { 
-
+onBeforeMount(() => {  
     fetchMeeting();
-    Availability.getGeneralSettings();
+    Availability.getGeneralSettings(); 
+   
 });
 
-
+const update_preloader = ref(false);
 const UpdateMeetingData = async (validator_field) => {
     
     // Clear the errors object
@@ -499,6 +500,7 @@ const UpdateMeetingData = async (validator_field) => {
         return
     }
 
+    update_preloader.value = true;
     // Api Submission
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/details/update', meetingData, {
@@ -533,11 +535,10 @@ const UpdateMeetingData = async (validator_field) => {
             }
             if("MeetingsCreatePayment"==route.name){ 
                 // sharePopupData();
-                window.open(meetingData.permalink, '_blank');
-
+                window.open(meetingData.permalink, '_blank'); 
 
             }
-            
+            update_preloader.value = false;
             // if("MeetingsCreateIntegrations"==route.name){
             //     router.push({ name: 'MeetingsCreatePayment' });
             // }
@@ -551,29 +552,35 @@ const UpdateMeetingData = async (validator_field) => {
         console.log(error);
     } 
 }
+const beck_to_prev = ref(false);
+const TfhbPrevNavigator = () => { 
+    beck_to_prev.value = true;
+   
 
-const TfhbPrevNavigator = () => {
-    if("MeetingsCreateDetails"==route.name){
+    setTimeout(() => {
+        if("MeetingsCreateDetails"==route.name){
         router.push({ name: 'MeetingsLists' });
-    }
-    if("MeetingsCreateAvailability"==route.name){
-        router.push({ name: 'MeetingsCreateDetails' });
-    }
-    if("MeetingsCreateLimits"==route.name){
-        router.push({ name: 'MeetingsCreateAvailability' });
-    }
-    if("MeetingsCreateQuestions"==route.name){
-        router.push({ name: 'MeetingsCreateLimits' });
-    }
-    if("MeetingsCreateNotifications"==route.name){
-        router.push({ name: 'MeetingsCreateQuestions' });
-    }
-    if("MeetingsCreatePayment"==route.name){
-        router.push({ name: 'MeetingsCreateNotifications' });
-    }
-    if("MeetingsCreateWebhook"==route.name){
-        router.push({ name: 'MeetingsCreatePayment' });
-    }
+        }
+        if("MeetingsCreateAvailability"==route.name){
+            router.push({ name: 'MeetingsCreateDetails' });
+        }
+        if("MeetingsCreateLimits"==route.name){
+            router.push({ name: 'MeetingsCreateAvailability' });
+        }
+        if("MeetingsCreateQuestions"==route.name){
+            router.push({ name: 'MeetingsCreateLimits' });
+        }
+        if("MeetingsCreateNotifications"==route.name){
+            router.push({ name: 'MeetingsCreateQuestions' });
+        }
+        if("MeetingsCreatePayment"==route.name){
+            router.push({ name: 'MeetingsCreateNotifications' });
+        }
+        if("MeetingsCreateWebhook"==route.name){
+            router.push({ name: 'MeetingsCreatePayment' });
+        }
+        beck_to_prev.value = false;
+    }, 500);
 }
 
 const sharePopup = reactive({
@@ -616,7 +623,8 @@ const truncateString = (str, num) => {
         <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
             <div class="tfhb-meeting-heading-wrap tfhb-flexbox tfhb-gap-8">
                 <div class="prev-navigator" @click="TfhbPrevNavigator()">
-                        <Icon name="ArrowLeft" size=20 /> 
+                    <Icon v-if="beck_to_prev == false" name="ArrowLeft" size=20 /> 
+                    <HbPreloader v-else color="#2E6B38" />
                 </div>
                 <div class="tfhb-meeting-heading tfhb-flexbox">
                   
@@ -658,6 +666,7 @@ const truncateString = (str, num) => {
             :timeZone="timeZone.value" 
             :wcProduct="wcProduct.value" 
             :formsList="formsList" 
+            :update_preloader="update_preloader" 
             :meetingCategory="meetingCategory" 
             @add-more-location="addMoreLocations" 
             @remove-meeting-location="removeLocations" 

@@ -21,6 +21,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 });
 
@@ -402,6 +406,7 @@ const deleteBodyField = (key) => {
         <HbButton  
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
+            :pre_loader="props.update_preloader"
             :buttonText="__('Save & Continue', 'hydra-booking')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 

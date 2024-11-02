@@ -117,6 +117,7 @@ const IntegrationsValue = reactive({
 
     // Popup Meeting Creation
     async addNewIntegrations (integration){    
+        alert(integration);
         this.integrationsList = false;
         this.integrationscreate = true;
         this.integrationsListopen = false;

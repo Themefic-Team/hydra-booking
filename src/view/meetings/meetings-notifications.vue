@@ -15,6 +15,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 });
 
@@ -141,7 +145,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     :data="meeting.notification.attendee.booking_confirmation"  
                     :ispopup="attendeeBookingConfirmPopUp"
                     @popup-open-control="attendeeBookingConfirmPopUp = true"
-                    @popup-close-control="attendeeBookingConfirmPopUp = true"
+                    @popup-close-control="attendeeBookingConfirmPopUp = false"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -156,6 +160,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     @popup-open-control="attendeeBookingCancelPopUp = true"
                     @popup-close-control="attendeeBookingCancelPopUp = false"
                 /> 
+                 
                 <!-- Single Integrations  -->
 
                 <!-- Single Notification  -->
@@ -194,6 +199,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                :pre_loader="props.update_preloader"
             />  
         </div>
         <!--Bookings -->

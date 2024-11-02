@@ -24,8 +24,12 @@ const copyMeeting = (link) => {
     document.execCommand('copy');
     document.body.removeChild(textarea);
     
-    // Show a toast notification or perform any other action
-    toast.success( link + ' is Copied' );
+    // Show a toast notification or perform any other action 
+    // success mess into bottom right
+    toast.success( link + ' is Copied' , {
+        position: 'bottom-right', // Set the desired position
+        duration: 2000 // Set the desired duration
+    });
 }
 const ShareTabs = (tab) => {
     props.shareData.share_type = tab;
@@ -96,7 +100,7 @@ const ShareTabs = (tab) => {
                         <div class="tfhb-copy-btn "> 
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
-                                @click="copyMeeting(props.shareData.embed)" 
+                                @click="copyMeeting(props.shareData.link)" 
                                 :buttonText="__('Copy Code', 'hydra-booking')" 
                             />  
                         </div>
@@ -110,7 +114,7 @@ const ShareTabs = (tab) => {
                         <div class="tfhb-copy-btn">
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
-                                @click="copyMeeting(props.shareData.embed)" 
+                                @click="copyMeeting(props.shareData.shortcode)" 
                                 :buttonText="__('Copy Code', 'hydra-booking')" 
                             /> 
                         </div>

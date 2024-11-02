@@ -127,8 +127,7 @@ const openModal = () => {
             ]
         },
     ],
-    date_slots: [
-    ],
+    date_slots: [],
     availability_id: ''
   };
 

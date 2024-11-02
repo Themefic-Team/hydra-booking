@@ -27,6 +27,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 }); 
 const QuestionPopup = ref(false);
@@ -123,7 +127,7 @@ const GetFormsData = async (value) => {
                 <p>{{ __('Create your own booking page questions', 'hydra-booking') }}</p>
             </div>
 
-            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal">
+            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
                 <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline">
                     <label for="tfhb_continuos_date" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                         <div class="tfhb-range-checkbox">
@@ -161,10 +165,15 @@ const GetFormsData = async (value) => {
                 @question-remove="removeExtraQuestion"
             />
 
-            <div class="tfhb-add-new-question tfhb-flexbox tfhb-gap-8"  @click="QuestionPopupAdd()" >
-                <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add more questions', 'hydra-booking') }}
-            </div>
+            
+            <HbButton  
+                classValue="tfhb-btn flex-btn" 
+                @click="QuestionPopupAdd()"
+                :buttonText="__('Add more questions', 'hydra-booking')"
+                icon="PlusCircle"  
+                :hover_animation="false" 
+                icon_position="left"
+            /> 
 
             <HbPopup :isOpen="QuestionPopup" @modal-close="QuestionPopup = false" max_width="400px" name="first-modal">
                 <template #header> 
@@ -225,6 +234,7 @@ const GetFormsData = async (value) => {
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                :pre_loader="props.update_preloader"
             />  
         </div>
         <!--Bookings -->

@@ -312,23 +312,24 @@
                     gap: 2px !important;
     
                     width: calc(100% - 40px); 
-                    .prev-navigator{
-                        
-                        svg{
-                            transition: 0.2s;
-                            cursor: pointer;
-                        }
-                        &:hover{
-                            svg{
-                                color: $primary-default;
-                            }
-                        }
-                    }
+                    
                     h3{
                         font-size: $heading-font-size-medium;
                         
                         line-height: 150%; /* 25.5px */
                         margin: 0px !important;
+                    }
+                }
+                .prev-navigator{
+                        
+                    svg{
+                        transition: 0.2s;
+                        cursor: pointer;
+                    }
+                    &:hover{
+                        svg{
+                            color: $primary-default;
+                        }
                     }
                 }
                 .tfhb-meeting-subtitle{

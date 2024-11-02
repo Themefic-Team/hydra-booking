@@ -14,6 +14,7 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbEditor from '@/components/form-fields/HbEditor.vue';
+import HbButton from '@/components/form-fields/HbButton.vue'
 import Editor from 'primevue/editor';
 
 //  Load Time Zone 
@@ -70,8 +71,8 @@ const closePopup = () => {
 </script>
 <template>
     <!-- Single Notification  -->
-    <div class="tfhb-notification-single tfhb-flexbox">
-        <div class="tfhb-swicher-wrap  tfhb-flexbox">
+    <div class="tfhb-notification-single tfhb-flexbox tfhb-justify-between">
+        <div class="tfhb-swicher-wrap  tfhb-flexbox"> 
 
             <!-- Checkbox swicher -->
             <HbSwitch v-model="props.data.status"  @change="emit('update-notification')"  :label="props.label "  /> 
@@ -100,7 +101,7 @@ const closePopup = () => {
                     :option = "[
                         {'name': 'Default', 'value': 'default'},  
                     ]"  
-                />
+                /> 
                 <!-- Time format --> 
                 <HbText  
                     v-model="props.data.from"   
@@ -136,8 +137,13 @@ const closePopup = () => {
                     <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
 
                 </div>
-                <button class="tfhb-btn boxed-btn" @click.stop="emit('update-notification')">{{ __('Update', 'hydra-booking') }}</button>
-            </template> 
+
+                <HbButton  
+                    classValue="tfhb-btn boxed-btn" 
+                    @click="emit('update-notification')"
+                    :buttonText="__('Update', 'hydra-booking')" 
+                />  
+             </template> 
         </HbPopup>
     </div>
     <!-- Single Integrations  -->

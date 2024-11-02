@@ -4,6 +4,7 @@ import HbText from '../form-fields/HbText.vue';
 import HbSwitch from '../form-fields/HbSwitch.vue';
 import HbSelect from '../form-fields/HbSelect.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import HbButton from '@/components/form-fields/HbButton.vue'
 import Icon from '@/components/icon/LucideIcon.vue';
 import { toast } from "vue3-toastify"; 
 import useValidators from '@/store/validator';
@@ -151,8 +152,17 @@ const UpdateQuestionsData = async (validator_field) => {
     /> 
 
     <div class="tfhb-action-btn tfhb-full-width tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
-        <button class="tfhb-btn secondary-btn" @click="emit('question-cancel')">Cancel</button> 
-        <button class="tfhb-btn boxed-btn" @click="UpdateQuestionsData(['type', 'label', 'placeholder'])">Save</button>
+        <!-- <button class="tfhb-btn secondary-btn" @click="emit('question-cancel')">Cancel</button>  -->
+         <HbButton  
+            classValue="tfhb-btn secondary-btn" 
+            @click="emit('question-cancel')"
+            :buttonText="__('Cancel', 'hydra-booking')" 
+        />  
+        <HbButton  
+            classValue="tfhb-btn boxed-btn" 
+            @click="UpdateQuestionsData(['type', 'label', 'placeholder'])"
+            :buttonText="__('Save', 'hydra-booking')" 
+        /> 
     </div>
 </template>
 

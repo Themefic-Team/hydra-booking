@@ -1015,6 +1015,10 @@ class HostsController {
 			}
 		}
 
+		if( empty($request['date_slots']) ){
+			$availability['date_slots'] = array();
+		}
+
 		if ( $availability['id'] == '' ) {
 
 			$_tfhb_host_info['availability'][] = $availability;

@@ -111,8 +111,17 @@ const focusOnSearch = (e) => {
                 <template v-if="props.icon" #dropdownicon>
 
                     <Icon :name="props.icon" size=16 />
+
                 </template>
+
+                <template #itemTemplate="{ item }">
+                    <div class="flex align-items-center">
+                      <span>Hello</span>
+                      <span>{{ item.label }}</span>
+                    </div>
+                  </template>
                 </Dropdown>
+
                 <Dropdown 
                     v-else
                     v-model="props.modelValue"  
@@ -123,6 +132,7 @@ const focusOnSearch = (e) => {
                     optionLabel="name"
                     optionValue="value"
                     optionDisabled="disable"
+                  
                     :placeholder="placeholder" 
                     :style="{ 'width': '100%' }"  
                     @click="emit('add-click')"
@@ -132,7 +142,18 @@ const focusOnSearch = (e) => {
 
                     <Icon :name="props.icon" size=16 />
                 </template>
+
+                <template #optionTemplate="{ option }">
+                  <div class="flex align-items-center">
+                    <!-- Add the SVG icon here -->
+                     <span>hello world</span>
+                    <img v-if="item.icon" :src="item.icon" alt="" class="icon" style="width: 16px; height: 16px; margin-right: 8px;" />
+                    <span>{{ item.name }} hello</span> <!-- Make sure you access the correct property for display -->
+                  </div>
+                </template>
                 </Dropdown>
+
+              
             </div>
      
     

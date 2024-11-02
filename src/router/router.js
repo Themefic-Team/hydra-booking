@@ -110,18 +110,19 @@ const routes = [
         redirect: { name: 'MeetingsLists' },
         children: [ 
             {
-                path: 'list',
-                name: 'MeetingsLists',
-                meta: { Capabilities: 'tfhb_manage_options' },
-                component: () => import('../view/meetings/meetings-list.vue')
-            }, 
-            {
                 path: 'create-meeting-single/:id',
                 props: true,
                 name: 'MeetingsCreateSingle',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 component: () => import('../view/meetings/meetings-create-single.vue')
             },
+            {
+                path: 'list',
+                name: 'MeetingsLists',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                component: () => import('../view/meetings/meetings-list.vue')
+            }, 
+            
             {
                 path: 'single/:id',
                 name: 'MeetingsCreate',
@@ -269,9 +270,17 @@ const routes = [
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Return a promise for smooth scrolling
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ top: 0, behavior: 'smooth' });
+      }, 0);
+    });
+  },
 });
-
+ 
 
 // Navigation guards to check authentication status
 router.beforeEach(async (to, from, next) => { 

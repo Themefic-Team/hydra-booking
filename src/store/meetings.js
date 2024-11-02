@@ -336,15 +336,14 @@ const Meeting = reactive({
             if (response.data.status == true) { 
                 this.singleMeeting.MeetingData.slug = response.data.meeting.slug; 
              
-                routes.push({ name: 'MeetingsCreate', params: { id: response.data.meeting.id} });
+                routes.push({ name: 'MeetingsCreate', params: { id: response.data.meeting.id} }); 
                 // toast.success(response.data.message, {
                 //     position: 'bottom-right', // Set the desired position
                 //     "autoClose": 1500,
                 // });
                 // windows redirect to the MeetingsCreate route 
                 this.pre_loader = false;
-
-                windows.location.reload();
+ 
             }else{ 
                 toast.error(response.data.message, {
                         position: 'bottom-right', // Set the desired position

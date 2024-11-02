@@ -1,7 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
-import { useRouter, RouterView } from 'vue-router' 
+import { useRouter, RouterView, onBeforeRouteLeave  } from 'vue-router' 
 const router = useRouter();
 import { toast } from "vue3-toastify"; 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -32,12 +32,33 @@ const deleteItemConfirm = () => {
     deletePopup.value = false;
 }
  
+function hideDropdownOutsideClick(e) {
+    if (!document.querySelector('.tfhb-meetings-list-wrap').contains(e.target)) {
+        activeItemDropdown.value = 0;
+    }
+    if (!document.querySelector('.tfhb-filter-content-wrap').contains(e.target)) {
+        FilterPreview.value = false;
+    }
+    window.addEventListener('click', function(e) {  
+      
+    });
+}
 
 onBeforeMount(() => { 
     Host.fetchHosts();
     Meeting.fetchMeetings();
-    Meeting.fetchMeetingCategory()
+    Meeting.fetchMeetingCategory();
+    window.addEventListener('click', hideDropdownOutsideClick);
+
+    
+
 });
+
+onBeforeRouteLeave((to, from, next) => {
+    activeItemDropdown.value = 0;
+    window.removeEventListener('click', hideDropdownOutsideClick);
+    next();
+})
 
 
 // Filtering
@@ -100,12 +121,7 @@ const resetFilter = () => {
     Meeting.fetchMeetings();
 }
 
-// outside click
-window.addEventListener('click', function(e) {
-    if (!document.querySelector('.tfhb-filter-content-wrap').contains(e.target)) {
-        FilterPreview.value = false;
-    }
-});
+
 
 const activeItemDropdown = ref(0);
 // on click add class active
@@ -118,11 +134,6 @@ const activeSingleMeetingDropdown = (id) => {
 
 }
 // outside click
-window.addEventListener('click', function(e) {
-    if (!document.querySelector('.tfhb-meetings-list-wrap').contains(e.target)) {
-        activeItemDropdown.value = 0;
-    }
-});
 
 // trunkate string 
 const truncateString = (str, num) => {

@@ -18,6 +18,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 });
 
@@ -200,6 +204,7 @@ const removeExtraFrequency = (key) => {
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                :pre_loader="props.update_preloader"
             />   
         </div>
         <!--Bookings -->
