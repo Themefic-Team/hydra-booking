@@ -297,7 +297,7 @@ onBeforeMount(() => {
 
                 <!-- zoom intrigation -->
                 <ZoomIntregration 
-                :zoom_meeting="Integration.zoom_meeting" 
+                :zoom_meeting="Integration.zoom_meeting"  
                 @update-integrations="UpdateIntegration" 
                 :ispopup="popup"
                 @popup-open-control="isPopupOpen"

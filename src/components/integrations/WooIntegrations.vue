@@ -41,7 +41,7 @@ const installWooPlugin = () => {
 
 <!-- Aadmin -->
 
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
            
              
             <!-- <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connected', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></button> -->

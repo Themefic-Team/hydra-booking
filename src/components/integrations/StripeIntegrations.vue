@@ -55,7 +55,7 @@ const closePopup = () => {
  
         </div>
 
-        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ stripe_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
              
             <HbButton  

@@ -6,6 +6,7 @@ import axios from 'axios'
 import Icon from '@/components/icon/LucideIcon.vue'
 import Header from '@/components/Header.vue'; 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
+import HbButton from '@/components/form-fields/HbButton.vue';
 import HbSelect from  '@/components/form-fields/HbSelect.vue';
 import HbText from  '@/components/form-fields/HbText.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
@@ -44,9 +45,10 @@ const fetchHosts = async () => {
     } 
 } 
 // Hosts
+const create_host_preloader = ref(false);
 const CreateHosts = async () => {    
     // redirect with router argument
-   
+   create_host_preloader.value = true;
     try { 
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/create', host, {
@@ -62,6 +64,7 @@ const CreateHosts = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });  
+            create_host_preloader.value = false;
             closeModal(); 
             hosts.data = response.data.hosts;  
             router.push({ name: 'HostsProfile', params: { id: response.data.id} });
@@ -72,6 +75,7 @@ const CreateHosts = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
+            create_host_preloader.value = false;
         }
     } catch (error) {
         console.log(error);
@@ -171,7 +175,7 @@ const Tfhb_Host_Filter = async (e) =>{
     <!-- {{ tfhbClass }} -->
     <div :class="{ 'tfhb-skeleton': skeleton }"  class="tfhb-admin-hosts">
         <Header title="Hosts" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
-        <div class="tfhb-dashboard-heading tfhb-flexbox">
+        <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 
                 <span><Icon name="Search" size=20 /></span>
@@ -233,8 +237,16 @@ const Tfhb_Host_Filter = async (e) =>{
                     <!-- Password -->
                     
 
-                    <!-- Create Or Update Availability -->
-                    <button class="tfhb-btn boxed-btn" @click="CreateHosts">{{ __('Create Hosts', 'hydra-booking') }}</button>
+                    <!-- Create Or Update Availability --> 
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="CreateHosts"
+                        :buttonText="__('Create Hosts', 'hydra-booking')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true"
+                        :pre_loader="create_host_preloader"
+                    />   
                 </template> 
             </HbPopup>
              <router-view :host_list="hosts.data" @update-host-status="updateHostStatus" @delete-host="deleteHost" :host_skeleton="skeleton" /> 

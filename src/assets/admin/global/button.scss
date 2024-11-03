@@ -58,11 +58,17 @@
         border-radius: $border-radius-medium; 
         border: $button-border $border-type $error-text;
         background-color: $error-background;
-        color: $error-text;
+       
         transition: $transition;
         &:hover, &:focus, &:active {
+
             background-color: $error-text;
-            color: $surface-secondary;
+            span{
+                color: $surface-secondary !important;
+            }
+        }
+        span{
+            color: $error-text !important;
         }
     }
     &.tab-btn {

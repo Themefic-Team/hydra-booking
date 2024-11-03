@@ -3,7 +3,9 @@ import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
 import HbText from '@/components/form-fields/HbText.vue'
+import HbPreloader from '@/components/icon/HbPreloader.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
@@ -54,9 +56,17 @@ const fetchPreBookingData = async () => {
     } 
 }
 
+const backToPrevLoader = ref(false);
 // Back to Booking
 const TfhbPrevNavigator = () => {
+
+    backToPrevLoader.value = true;
+
     router.push({ name: 'BookingLists' });
+    setTimeout(() => {
+
+        backToPrevLoader.value = false;
+    }, 8000);
 }
 
 // Meeting Change
@@ -140,7 +150,9 @@ const bookingSlot = async (date) => {
 }
 
 // Add New Booking
+const create_meeting_preLoader = ref(false);
 const createBooking = async () => {
+    create_meeting_preLoader.value = true;
     // Api Submission
     try { 
 
@@ -153,16 +165,20 @@ const createBooking = async () => {
 
         // Api Response
         if (response.data.status) {   
+          
+            create_meeting_preLoader.value = false;
             toast.success(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });  
             router.push({ name: 'BookingLists' });
         }else{
+            create_meeting_preLoader.value = false;
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
+            
         }
 
     } catch (error) {
@@ -190,7 +206,9 @@ onBeforeMount(() => {
         <div class="tfhb-booking-box tfhb-flexbox">
             <div class="tfhb-meeting-heading tfhb-flexbox tfhb-gap-8">
                 <div class="prev-navigator tfhb-cursor-pointer" @click="TfhbPrevNavigator()">
-                    <Icon name="ArrowLeft" size=20 /> 
+                     
+                    <Icon v-if="backToPrevLoader == false" name="ArrowLeft" size=20 /> 
+                    <HbPreloader v-else color="#2E6B38" />
                 </div>
                 <h3>{{ __('Back to Booking', 'hydra-booking') }}</h3>
             </div>
@@ -288,7 +306,15 @@ onBeforeMount(() => {
             />  
 
             <div class="tfhb-submission-btn">
-                <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="createBooking">{{ __('Create Booking', 'hydra-booking') }} </button>
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                    @click="createBooking"
+                    :buttonText="__('Create Booking', 'hydra-booking')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true"
+                    :pre_loader="create_meeting_preLoader"
+                />   
             </div>
         </div>
     </div>

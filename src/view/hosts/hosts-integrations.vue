@@ -219,7 +219,7 @@ onBeforeMount(() => {
 <template>
     <div class="tfhb-admin-card-box tfhb-m-0">    
         <!-- Woo  Integrations  --> 
-        <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations" 
+        <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" 
         :zoom_meeting="Integration.zoom_meeting"  
         @update-integrations="UpdateIntegration"
         from="host"
@@ -232,7 +232,7 @@ onBeforeMount(() => {
  
 
         <!-- Mailchimp intrigation -->
-        <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"  
+        <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :mail_data="Integration.mailchimp" 
         @update-integrations="UpdateIntegration" 
         from="host"
@@ -243,7 +243,7 @@ onBeforeMount(() => {
         <!-- Mailchimp intrigation -->
 
         <!-- Zoho intrigation -->
-        <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"  
+        <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :zoho_data="Integration.zoho"  
         @update-integrations="UpdateIntegration" 
         from="host"

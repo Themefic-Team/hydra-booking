@@ -42,7 +42,7 @@ const closePopup = () => {
                 <p>{{ __('Implement Zoho CRM for comprehensive sales and marketing automation.', 'hydra-booking') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbSwitch v-if="$tfhb_is_pro == true"  @change="emit('update-integrations', 'zoho_crm', zoho_crm_data)" v-model="zoho_crm_data.status"    />
             <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  

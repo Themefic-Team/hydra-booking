@@ -2,8 +2,8 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios'  
-import Icon from '@/components/icon/LucideIcon.vue'
-import HbSelect from '@/components/form-fields/HbSelect.vue'
+import Icon from '@/components/icon/LucideIcon.vue' 
+import HbButton from '@/components/form-fields/HbButton.vue'
 import AvailabilityPopupSingle from '@/components/availability/AvailabilityPopupSingle.vue';
 import AvailabilitySingle from '@/components/availability/AvailabilitySingle.vue';
 import { toast } from "vue3-toastify"; 
@@ -26,6 +26,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_host_preloader: {
+        type: Boolean,
+        required: true
+    }
 });
 
 const HostAvailability = reactive({
@@ -304,7 +308,7 @@ const formatTimeSlots = (timeSlots) =>  {
 
     <!-- Settings Data -->
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24 tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==host.availability_type">  
-        <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-full-width">
+        <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-full-width tfhb-justify-between">
             <div class="tfhb-admin-title"> 
                 <h3> {{ __('Weekly hours', 'hydra-booking') }} </h3>  
             </div>
@@ -313,8 +317,8 @@ const formatTimeSlots = (timeSlots) =>  {
             </div> 
         </div>
         
-        <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-full-width">
-            <div class="tfhb-swicher-wrap  tfhb-flexbox">
+        <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-full-width tfhb-justify-between">
+            <div class="tfhb-swicher-wrap  tfhb-flexbox tfhb-gap-8">
                  <!-- Checkbox swicher -->
                  <label class="switch">
                         <input id="swicher" disabled v-model="time_slot.status" true-value="1" type="checkbox">
@@ -325,7 +329,7 @@ const formatTimeSlots = (timeSlots) =>  {
             </div>
             <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
                 <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox">
-                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8">
+                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         
                         <div class="tfhb-single-form-field" style="width: calc(45% - 12px);" selected="1">
                             <div class="tfhb-single-form-field-wrap tfhb-field-date">
@@ -352,36 +356,43 @@ const formatTimeSlots = (timeSlots) =>  {
             </div>
         </div>
 
-        <!-- Date Overrides -->
-        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility.availability.date_slots">  
-            <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
-                <div class="tfhb-admin-title tfhb-m-0"> 
-                    <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
-                    <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
-                </div> 
-            </div>
-
-            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Settings_avalibility.availability.date_slots" :key="key">
-                <div class="tfhb-flexbox">
-                    <div class="tfhb-overrides-date">
-                        <h4>{{ date_slot.date }}</h4>
-                        <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
         
 
     </div>  
 
+    <!-- Date Overrides -->
+    <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility && 'settings'==host.availability_type && Settings_avalibility.availability.date_slots > 0">  
+        <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
+            <div class="tfhb-admin-title tfhb-m-0"> 
+                <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
+                <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
+            </div> 
+        </div>
 
+        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Settings_avalibility.availability.date_slots" :key="key">
+            <div class="tfhb-flexbox">
+                <div class="tfhb-overrides-date">
+                    <h4>{{ date_slot.date }}</h4>
+                    <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="tfhb-dashboard-heading" v-if="'custom'==host.availability_type && true == $user.caps.tfhb_manage_custom_availability">
         <div class="tfhb-admin-title"> 
             <h3 >{{ __('Availability', 'hydra-booking') }}</h3> 
             <p>{{ __('Set up booking times when you are available', 'hydra-booking') }}</p>
         </div>
-        <div class="thb-admin-btn right"> 
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=15 /> {{ __(' Add New Availability', 'hydra-booking') }}</button> 
+        <div class="thb-admin-btn right">  
+            <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn" 
+                @click="openModal"
+                :buttonText="__('Add New Availability', 'hydra-booking')"
+                icon="PlusCircle"  
+                icon_position="left"
+                
+            />   
         </div> 
     </div>
 
@@ -390,11 +401,19 @@ const formatTimeSlots = (timeSlots) =>  {
         <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key"  @edit-availability="EditAvailabilitySettings(key, availability.id, availability)" @delete-availability="deleteAvailabilitySettings(key, availability.id, host.user_id)" />
 
        
-        <AvailabilityPopupSingle v-if="isModalOpened" max_width="800px !important" :timeZone="timeZone.value" :display_overwrite="true" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />
+        <AvailabilityPopupSingle v-if="isModalOpened" max_width="850px !important" :timeZone="timeZone.value" :display_overwrite="true" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />
 
     </div>
     <div class="tfhb-submission-btn tfhb-mt-24">
-        <button class="tfhb-btn boxed-btn" @click="emit('save-host-info')">{{ __('Save', 'hydra-booking') }}</button>
+        <HbButton 
+            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+            @click="emit('save-host-info')"
+            :buttonText="__('Save', 'hydra-booking')"
+            icon="ChevronRight" 
+            hover_icon="ArrowRight" 
+            :hover_animation="true"
+            :pre_loader="props.update_host_preloader"
+        />   
     </div>
 </div>
 </template>

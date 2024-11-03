@@ -66,9 +66,9 @@ onBeforeMount(() => {
                         name="payment_method"
                         placeholder="Select Payment Method"  
                         :option = "[
-                            {name: 'Woocommerce', value: 'woo_payment', disable: Meeting.meetingPaymentIntegration.woo_payment},  
-                            {name: 'Paypal', value: 'paypal_payment', disable: Meeting.meetingPaymentIntegration.paypal}, 
-                            {name: 'Stripe Pay', value: 'stripe_payment', disable: Meeting.meetingPaymentIntegration.stripe}, 
+                            {name: 'Woocommerce', value: 'woo_payment', disable: Meeting.meetingPaymentIntegration.woo_payment, icon: $tfhb_url+'/assets/images/Woo.png',  },  
+                            {name: 'Paypal', value: 'paypal_payment', disable: Meeting.meetingPaymentIntegration.paypal, icon: $tfhb_url+'/assets/images/paypal.svg',}, 
+                            {name: 'Stripe Pay', value: 'stripe_payment', disable: Meeting.meetingPaymentIntegration.stripe, icon: $tfhb_url+'/assets/images/stripe.png',}, 
                         ]"   
                     /> 
                     <!-- Woo Integrations  -->

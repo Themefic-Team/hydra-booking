@@ -40,6 +40,7 @@ const AvailabilityTabs = (type) => {
     hostData.availability_type = type
 }
 
+const update_host_preloader = ref(false);
 // Save and Update Host Info
 const UpdateHostsInformation = async (validator_field) => {
 
@@ -77,6 +78,8 @@ const UpdateHostsInformation = async (validator_field) => {
         return
     }
 
+    update_host_preloader.value = true;
+
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/information/update', hostData, {
             headers: {
@@ -98,11 +101,13 @@ const UpdateHostsInformation = async (validator_field) => {
             if("HostsProfileCalendars"==route.name){
                 router.push({ name: 'HostsProfileIntegrations' });
             }
+            update_host_preloader.value = false;
         }else{ 
             toast.error(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+            update_host_preloader.value = false;
         }
     } catch (error) {
         console.log(error);
@@ -179,6 +184,7 @@ onBeforeMount(() => {
             <router-view 
             :hostId ="hostId" 
             :host="hostData" 
+            :update_host_preloader="update_host_preloader" 
             :time_zone="time_zones.data" 
             :hosts_settings="hosts_settings.data" 
             :settingsAvailabilityData="settingsAvailabilityData.data" 

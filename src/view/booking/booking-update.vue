@@ -2,8 +2,9 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
-import HbText from '@/components/form-fields/HbText.vue'
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbText from '@/components/form-fields/HbText.vue';
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
@@ -142,8 +143,10 @@ const bookingSlot = async (date) => {
     }
 }
 
+const create_meeting_preLoader = ref(false);
 // Add New Booking
 const createBooking = async () => {
+    create_meeting_preLoader.value = true;
     // Api Submission
     try { 
 
@@ -161,11 +164,13 @@ const createBooking = async () => {
                 "autoClose": 1500,
             });  
             router.push({ name: 'BookingLists' });
+            create_meeting_preLoader.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
+            create_meeting_preLoader.value = false;
         }
 
     } catch (error) {
@@ -331,7 +336,15 @@ onBeforeMount(() => {
             />  
 
             <div class="tfhb-submission-btn">
-                <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="createBooking">{{ __('Create Booking', 'hydra-booking') }} </button>
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                    @click="createBooking"
+                    :buttonText="__('Update Booking', 'hydra-booking')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true"
+                    :pre_loader="create_meeting_preLoader"
+                />    
             </div>
         </div>
     </div>

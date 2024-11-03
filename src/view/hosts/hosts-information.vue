@@ -4,6 +4,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
@@ -31,6 +32,10 @@ const props = defineProps({
         },
         required: true
     }, 
+    update_host_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 }); 
  
@@ -212,7 +217,15 @@ const tfhbValidateInput = (fieldName) => {
 
 
     <!--  Update Hosts Information -->
-    <button class="tfhb-btn boxed-btn" @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone', 'phone_number'])">{{ __('Save', 'hydra-booking') }}</button>
+    <HbButton 
+        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+        @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone', 'phone_number'])"
+        :buttonText="__('Save', 'hydra-booking')"
+        icon="ChevronRight" 
+        hover_icon="ArrowRight" 
+        :hover_animation="true"
+        :pre_loader="props.update_host_preloader"
+    />  
 </template>
 
 

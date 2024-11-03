@@ -49,7 +49,7 @@ const closePopup = () => {
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
-        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbButton  
                 @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  

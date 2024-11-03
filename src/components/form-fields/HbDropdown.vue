@@ -1,6 +1,7 @@
 <script setup>
 import {ref} from 'vue'; 
 import Dropdown from 'primevue/dropdown';
+
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'modelValue',
@@ -80,10 +81,13 @@ const focusOnSearch = (e) => {
                       <div v-if="slotProps.value" class="flex align-items-center">
                           <img :alt="slotProps.value.label" :src="`https://flagsapi.com/${slotProps.value.value}/flat/64.png`" style="width: 18px" />
                           <div>{{ slotProps.value.name }}</div>
+
+                          
                       </div>
                       <span v-else>
                           {{ slotProps.placeholder }}
                       </span>
+
                   </template>
                   <template #option="slotProps">
                       <div class="flex align-items-center">
@@ -114,12 +118,7 @@ const focusOnSearch = (e) => {
 
                 </template>
 
-                <template #itemTemplate="{ item }">
-                    <div class="flex align-items-center">
-                      <span>Hello</span>
-                      <span>{{ item.label }}</span>
-                    </div>
-                  </template>
+                
                 </Dropdown>
 
                 <Dropdown 
@@ -143,13 +142,22 @@ const focusOnSearch = (e) => {
                     <Icon :name="props.icon" size=16 />
                 </template>
 
-                <template #optionTemplate="{ option }">
-                  <div class="flex align-items-center">
-                    <!-- Add the SVG icon here -->
-                     <span>hello world</span>
-                    <img v-if="item.icon" :src="item.icon" alt="" class="icon" style="width: 16px; height: 16px; margin-right: 8px;" />
-                    <span>{{ item.name }} hello</span> <!-- Make sure you access the correct property for display -->
-                  </div>
+                
+                <template #option="slotProps">
+                    <div  v-if="slotProps.option.icon && slotProps.option.icon_position == 'right'" class="tfhb-p-dropdown-option-with-icon right">
+                       
+                        <div>{{ slotProps.option.name }} {{ slotProps.value }}</div>
+                        <img :alt="slotProps.option.label" :src="slotProps.option.icon"   style="width: 20px" />
+                         
+                    </div>
+                    <div  v-else-if="slotProps.option.icon" class="tfhb-p-dropdown-option-with-icon">
+                        <img :alt="slotProps.option.label" :src="slotProps.option.icon"   style="width: 20px" /> 
+                        <div>{{ slotProps.option.name }} {{ slotProps.value }}</div>
+
+                    </div>
+                    <span v-else>
+                        {{ slotProps.option.name }}
+                    </span>
                 </template>
                 </Dropdown>
 

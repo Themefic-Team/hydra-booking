@@ -48,7 +48,7 @@ const storedOptionData = (data) => {
 
             </div>
         </div> 
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <!-- Checke -->
             <!-- <button @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ google_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button> -->
              <!-- a tag for get access token  -->

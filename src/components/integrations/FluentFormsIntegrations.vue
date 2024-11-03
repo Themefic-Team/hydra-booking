@@ -36,7 +36,7 @@ const closePopup = () => {
                 <p>{{ __('Install and enable Fluent Forms for meeting forms.', 'hydra-booking') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbSwitch  @change="emit('update-integrations', 'fluent', fluent_data)" v-model="fluent_data.status"    />
         </div>
 

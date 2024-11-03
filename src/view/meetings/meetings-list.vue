@@ -155,7 +155,7 @@ const truncateString = (str, num) => {
                     <div class="tfhb-filter-box-content" v-show="FilterPreview">
                         <div class="tfhb-filter-form">
                             <div class="tfhb-filter-category">
-                                <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterHostPreview=!FilterHostPreview">
+                                <div class="tfhb-host-filter-box tfhb-flexbox tfhb-justify-between" @click="FilterHostPreview=!FilterHostPreview">
                                     {{ __('All Host', 'hydra-booking') }} <Icon name="ChevronUp" size=20 v-if="FilterHostPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterHostPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterHostPreview">
@@ -175,7 +175,7 @@ const truncateString = (str, num) => {
                             </div>
 
                             <div class="tfhb-filter-category">
-                                <div class="tfhb-host-filter-box tfhb-flexbox" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
+                                <div class="tfhb-host-filter-box tfhb-flexbox tfhb-justify-between" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
                                     {{ __('All Category', 'hydra-booking') }} <Icon name="ChevronUp" size=20 v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterCatgoryPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterCatgoryPreview">
@@ -218,8 +218,7 @@ const truncateString = (str, num) => {
                 icon="PlusCircle"   
                 :hover_animation="false" 
                 icon_position = 'left'
-            />  
-            <!-- <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ __('Create New Meeting', 'hydra-booking') }}</button> -->
+            />   
         </div> 
     </div>
 

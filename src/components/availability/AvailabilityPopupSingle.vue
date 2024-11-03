@@ -56,8 +56,10 @@ const UpdateAvailabilitySettings = async (validator_field) => {
 
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
-    if(!isEmpty){
-        toast.error('Fill Up The Required Fields'); 
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+        }); 
         return
     }
 
@@ -472,22 +474,31 @@ const tfhbValidateInput = (fieldName) => {
                             </div>
 
                             <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                                <!-- <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button> -->
-                                <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ __('Add override', 'hydra-booking') }}</button>
+                                <!-- <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button> --> 
+                                <HbButton 
+                                    classValue="tfhb-btn boxed-btn flex-btn" 
+                                    @click="addAvailabilityDate(key)"
+                                    :buttonText="__('Add override', 'hydra-booking')"
+                                    icon="ChevronRight" 
+                                    hover_icon="ArrowRight" 
+                                    :hover_animation="true" 
+                                />  
                             </div>
                         </div>
 
 
-                        <button v-if="!OverridesOpen" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
-                            <Icon name="PlusCircle" :width="20"/>
-                            {{ __('Add an override', 'hydra-booking') }}
-                        </button>
+                        <HbButton 
+                            v-if="!OverridesOpen"
+                            classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" 
+                            @click="openOverridesCalendarDate()"
+                            :buttonText="__('Add an override', 'hydra-booking')"
+                            icon="PlusCircle"  
+                            icon_position="left"
+                        />  
+                  
 
                     </div>  
-
-                    
-
-
+ 
                     <!-- Create Or Update Availability -->
                     <HbButton 
                             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 

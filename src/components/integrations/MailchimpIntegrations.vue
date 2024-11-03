@@ -41,7 +41,7 @@ const closePopup = () => {
                 <p>{{ __('Integrate Mailchimp API to collect attendee emails and info.', 'hydra-booking') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <!-- <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span> -->
             
             <router-link v-if="props.from == 'host' && mail_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>

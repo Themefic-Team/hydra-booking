@@ -24,7 +24,7 @@ const hover_icon_status = ref(false)
 </script>
 
 <template> 
-    <button   @mouseover="hover_icon_status = true"  @mouseleave="hover_icon_status = false"
+    <button   @mouseover="hover_icon_status = true"  @mouseleave="hover_icon_status = false" :disabled="props.pre_loader || props.disabled" 
         :style="{ 'width':  width ? width : 'auto' }" 
         :class="[
             classValue,

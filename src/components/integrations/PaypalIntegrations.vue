@@ -44,7 +44,7 @@ const closePopup = () => {
                 <p>{{ __('Connect PayPal API for easy online payment solutions.', 'hydra-booking') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <!-- <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span> -->
             <router-link  v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
             <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ paypal_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>

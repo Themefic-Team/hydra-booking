@@ -405,18 +405,30 @@
             .tfhb-single-form-field-wrap{
                 .tfhb-time-date-view{
                     border-radius: $border-radius-small;
-                    border: $border-reguler $border-type $surface-border;
+                    border: $border-reguler $border-type $surface-input-field;
                     background-color: transparent;
                     padding: 8px 8px 8px 12px;
                     flex-wrap: nowrap !important;
                     justify-content: normal !important;
                     gap: 8px !important;
                     height: 40px;
+                    &:focus, &:active, &:hover {
+                        outline: none;
+                        box-shadow: none; 
+                        color : $primary-color !important;
+                        box-shadow: $input-field-box-shadow;
+                        background-color: $surface-primary;
+                    }
                     input{
                         min-width: auto !important;
                         padding: 0;
                         border: 0px;
                         height: auto;
+                        &:focus, &:hover{
+                            box-shadow: none;
+                            outline: none;
+                            background-color: transparent;
+                        }
                     }
                 }
             }

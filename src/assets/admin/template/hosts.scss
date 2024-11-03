@@ -165,15 +165,13 @@
       }
 
   
-
+      .cartbox-text {
+        max-width: 330px !important;
+      }
       .tfhb-integrations-single-block {
         position: relative !important;
         transition: $transition;
-        .tfhb-admin-cartbox-cotent {
-          .cartbox-text {
-            max-width: 330px !important;
-          }
-        }
+       
 
         &:hover {
           background-color: $surface-primary;

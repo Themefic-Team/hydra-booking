@@ -182,8 +182,8 @@ onMounted(() => {
                         :selected = "1"
                         :placeholder="__('Location', 'hydra-booking')" 
                         :option = "[
-                            {name: 'Zoom', value: 'zoom', disable:  props.integrations.zoom_meeting_status, icon: 'Fullscreen'}, 
-                            {name: 'Google Meet', value: 'meet', disable: props.integrations.google_calendar_status}, 
+                            {name: 'Zoom', value: 'zoom', disable:  props.integrations.zoom_meeting_status, icon: $tfhb_url+'/assets/images/zoom-icon-small.svg',}, 
+                            {name: 'Google Meet', value: 'meet', disable: props.integrations.google_calendar_status, icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
                             {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
                             {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                             {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},

@@ -2,12 +2,14 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, onMounted, computed } from 'vue';
 import axios from 'axios'   
+import { useRouter } from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbSelect from '@/components/form-fields/HbSelect.vue';
 import HbRadio from '@/components/form-fields/HbRadio.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import { toast } from "vue3-toastify"; 
 import useDateFormat from '@/store/dateformat'
 const { Tfhb_Date, Tfhb_Time } = useDateFormat();
@@ -19,6 +21,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
+const router = useRouter()
 const BookingDetailsPopup = ref(false);
 const BookingEditPopup = ref(false);
 const ExportAsCSV = ref(false);
@@ -189,33 +192,33 @@ const Bulk_Status_Callback = async (value) => {
         status: value
     } 
     try { 
-            // axisos sent dataHeader Nonce Data
-            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/bulk-update', bookings, {
-                headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
-                } 
-            } );
+        // axisos sent dataHeader Nonce Data
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/bulk-update', bookings, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
 
-            if (response.data.status) {  
-              
-                Booking.bookings = response.data.booking; 
-                Booking.calendarbooking.events = response.data.booking_calendar;
-                BookingEditPopup.value = false;
+        if (response.data.status) {  
+            
+            Booking.bookings = response.data.booking; 
+            Booking.calendarbooking.events = response.data.booking_calendar;
+            BookingEditPopup.value = false;
 
-                toast.success(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });   
-            }else{
-                toast.error(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        } 
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });   
+        }else{
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    } 
 }
 
 
@@ -286,7 +289,7 @@ const deleteItemConfirm = () => {
 <template>
 <!-- {{ tfhbClass }} -->
 <!-- :class="{ 'tfhb-skeleton': Booking.skeleton }" -->
-<div class="tfhb-dashboard-heading tfhb-flexbox">
+<div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
     <div class="tfhb-filter-box tfhb-flexbox">
         <div class="tfhb-booking-view">
             <div class="tfhb-list-calendar">
@@ -317,15 +320,33 @@ const deleteItemConfirm = () => {
             ]"
             @tfhb-onchange="Bulk_Status_Callback" 
         />  
-        <button  v-if="selected_items.length > 0" @click="deletePopup = true" class="tfhb-btn  tfhb-flexbox boxed-btn-danger">
-            <!-- <Icon name="PlusCircle " size=20 />   -->
-            {{ __('Delete', 'hydra-booking') }}
-        </button>
-        <button @click="ExportAsCSV = true" class="tfhb-btn boxed-secondary-btn flex-btn">
-            <!-- <Icon name="PlusCircle " size=20 />   -->
-            {{ __('Export as CSV', 'hydra-booking') }}
-        </button>
-        <router-link :to="{ name: 'BookingCreate' }" class="tfhb-btn boxed-btn flex-btn"><Icon name="PlusCircle" size=20 /> {{ __('Add New Booking', 'hydra-booking') }}</router-link>
+        
+        <HbButton 
+            v-if="selected_items.length > 0" 
+            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+            @click="deletePopup = true"
+            :buttonText="__('Delete', 'hydra-booking')"
+            icon="Trash2"   
+            :hover_animation="false" 
+            icon_position = 'left'
+        /> 
+  
+        <HbButton 
+            classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
+            @click="ExportAsCSV"
+            :buttonText="__('Export as CSV', 'hydra-booking')"
+            icon="FileDown"   
+            :hover_animation="false" 
+            icon_position = 'left'
+        /> 
+        <HbButton 
+            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+            @click="router.push({ name: 'BookingCreate' })"
+            :buttonText="__('Add New Booking', 'hydra-booking')"
+            icon="PlusCircle"   
+            :hover_animation="false" 
+            icon_position = 'left'
+        /> 
     </div> 
 </div>
 
@@ -339,9 +360,20 @@ const deleteItemConfirm = () => {
                 <h3>{{ __('Are you absolutely sure??', 'hydra-booking') }}  </h3>  
                 <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
             </div>
-            <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
-                <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ __('Cancel', 'hydra-booking') }}</button>
-                <button class="tfhb-btn boxed-btn-danger flex-btn" @click="deleteItemConfirm">{{ __('Delete', 'hydra-booking') }}</button>
+            <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16">  
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                    @click=" deletePopup = !deletePopup"
+                    :buttonText="__('Cancel', 'hydra-booking')" 
+                />  
+                <HbButton  
+                    classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                    @click="deleteItemConfirm"
+                    :buttonText="__('Delete', 'hydra-booking')"
+                    icon="Trash2"   
+                    :hover_animation="false" 
+                    icon_position = 'left'
+                />
             </div>
         </div> 
     </template> 
@@ -492,7 +524,7 @@ const deleteItemConfirm = () => {
 <!-- Booking Quick View End -->
 
 <!-- Booking Calendar View -->
-<div class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
+<div    class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
     <FullCalendar class='demo-app-calendar ' :options='Booking.calendarbooking'>
         <template v-slot:eventContent='arg'>
             <!-- {{ arg.event.booking_date }}
@@ -549,7 +581,15 @@ const deleteItemConfirm = () => {
         <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width">
             <!-- <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size=20 /> {{ __('Join Meet', 'hydra-booking') }}</a> -->
 
-            <button class="tfhb-btn boxed-btn flex-btn tfhb-warning" @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)">{{ __('Delete', 'hydra-booking') }}</button>
+            <HbButton  
+                classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)"
+                :buttonText="__('Delete', 'hydra-booking')"
+                icon="Trash2"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            /> 
+ 
         </div>
     </template> 
 </HbPopup>

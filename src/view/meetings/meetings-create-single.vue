@@ -46,6 +46,33 @@ const tfhbValidateInput = (fieldName) => {
 }; 
 const meetingId = route.params.id;
 
+onBeforeMount(() => { 
+    
+    Meeting.fetchSingleMeeting(meetingId);
+    // Meeting.singleMeeting.MeetingData.id = meetingId; 
+
+    Host.fetchHosts().then(() => {
+        if('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == ''){
+           
+            Meeting.singleMeeting.MeetingData.host_id = user_id 
+        } 
+        if(Meeting.singleMeeting.MeetingData.host_id!=0){
+            
+            fetchHostAvailability(Meeting.singleMeeting.MeetingData.host_id);
+            fetchSingleAvailabilitySettings( Meeting.singleMeeting.MeetingData.host_id, Meeting.singleMeeting.MeetingData.availability_id);
+        }
+    });
+ 
+    // if previuse page is MeetingsLists then show the toast message
+    // if(route.query && route.query.success){
+    //     toast.success('Meeting Updated Successfully', {
+    //         position: 'bottom-right', // Set the desired position
+    //         "autoClose": 1500,
+    //     });
+    // }
+
+  
+});
 
 // Overrides Calander Open
 const OverridesOpen = ref(false);
@@ -285,35 +312,6 @@ const TfhbPrevNavigator = () => {
 const AvailabilityTabs = (type) => {
     Meeting.singleMeeting.MeetingData.availability_type = type
 }
-
-onBeforeMount(() => { 
-    
-    Meeting.fetchSingleMeeting(meetingId);
-    // Meeting.singleMeeting.MeetingData.id = meetingId; 
-
-    Host.fetchHosts().then(() => {
-        if('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == ''){
-           
-            Meeting.singleMeeting.MeetingData.host_id = user_id 
-        } 
-        if(Meeting.singleMeeting.MeetingData.host_id!=0){
-            
-            fetchHostAvailability(Meeting.singleMeeting.MeetingData.host_id);
-            fetchSingleAvailabilitySettings( Meeting.singleMeeting.MeetingData.host_id, Meeting.singleMeeting.MeetingData.availability_id);
-        }
-    });
- 
-    // if previuse page is MeetingsLists then show the toast message
-    // if(route.query && route.query.success){
-    //     toast.success('Meeting Updated Successfully', {
-    //         position: 'bottom-right', // Set the desired position
-    //         "autoClose": 1500,
-    //     });
-    // }
-
-  
-});
-
 </script>
 
 <template>  
@@ -391,7 +389,12 @@ onBeforeMount(() => {
                             :placeholder="__('Type Custom Duration', 'hydra-booking')"  
                             v-if="'custom'==Meeting.singleMeeting.MeetingData.duration"
                         /> 
-                         
+                        <!-- Custom Duration -->
+                        <!-- <HbSwitch 
+                            type="checkbox" 
+                            required= "true" 
+                            :label="__('Allow attendee to select duration', 'hydra-booking')" 
+                        /> -->
                     </div>
 
                     <div class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width"> 
@@ -405,8 +408,8 @@ onBeforeMount(() => {
                                     :selected = "1"
                                     :placeholder="__('Location', 'hydra-booking')" 
                                     :option = "[
-                                        {name: 'Zoom', value: 'zoom', disable:  Meeting.singleMeeting.integrations.zoom_meeting_status, icon: 'Fullscreen'}, 
-                                        {name: 'Google Meet', value: 'meet', disable: Meeting.singleMeeting.integrations.google_calendar_status}, 
+                                        {name: 'Zoom', value: 'zoom', disable:  Meeting.singleMeeting.integrations.zoom_meeting_status, icon: $tfhb_url+'/assets/images/zoom-icon-small.svg', }, 
+                                        {name: 'Google Meet', value: 'meet', disable: Meeting.singleMeeting.integrations.google_calendar_status, icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
                                         {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
                                         {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                                         {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},
@@ -494,9 +497,8 @@ onBeforeMount(() => {
                     />
 
                     <!-- Choose Schedule -->
-
-                  
-                    <div v-if="Meeting.singleMeeting.MeetingData.host_id != null " class="tfhb-availaility-tabs">
+ 
+                    <div v-if="Meeting.singleMeeting.MeetingData.host_id != 0" class="tfhb-availaility-tabs">
                         <ul class="tfhb-flexbox tfhb-gap-16">
                             <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==Meeting.singleMeeting.MeetingData.availability_type ? 'active' : ''" @click="AvailabilityTabs('settings')"><Icon name="Heart" :width="20" /> {{ __('Use existing availability', 'hydra-booking') }}</li>
                             <li class="tfhb-flexbox tfhb-gap-8" :class="'custom'==Meeting.singleMeeting.MeetingData.availability_type ? 'active' : ''" @click="AvailabilityTabs('custom') "><Icon name="PencilLine" :width="20" /> {{ __('Custom availability', 'hydra-booking') }}</li>
@@ -789,7 +791,7 @@ onBeforeMount(() => {
                         <HbButton 
                             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                             @click="updateMeetingData(['title',  'duration'])"
-                            :buttonText="__('Update Meeting', 'hydra-booking')"
+                            :buttonText="__('Save & Continue', 'hydra-booking')"
                             icon="ChevronRight" 
                             hover_icon="ArrowRight" 
                             :hover_animation="true"

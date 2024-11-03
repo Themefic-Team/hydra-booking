@@ -1304,6 +1304,12 @@
                 font-size: $heading-font-size-small;
                 color: $secondary-default !important;
             }
+
+            .tfhb-p-dropdown-option-with-icon{
+                display: flex;
+                align-items: center;
+                gap: 8px; 
+            }
         }
     }
 } 

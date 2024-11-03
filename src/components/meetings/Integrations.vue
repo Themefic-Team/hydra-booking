@@ -213,9 +213,9 @@ const changeIntegrations = (value) => {
                 selected = "1"
                 placeholder="Select integrations"
                 :option = "[
-                    {name: 'Mailchimp', value: 'Mailchimp', disable: !props.meeting.mailchimp.status},  
-                    {name: 'FluentCRM', value: 'FluentCRM', disable: !props.meeting.mailchimp.status},  
-                    {name: 'ZohoCRM', value: 'ZohoCRM', disable: !props.meeting.mailchimp.status},
+                    {name: 'Mailchimp', value: 'Mailchimp', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/Mailchimp.svg',},  
+                    {name: 'FluentCRM', value: 'FluentCRM', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
+                    {name: 'ZohoCRM', value: 'ZohoCRM', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/Zoho.svg',},
                 ]"
                 @tfhb-onchange="changeIntegrations"
             /> 

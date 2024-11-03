@@ -36,7 +36,7 @@ const closePopup = () => {
                 <p>{{ __('Install and enable Forminator for meeting forms.', 'hydra-booking') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbSwitch  @change="emit('update-integrations', 'forminator', forminator_data)" v-model="forminator_data.status"    />
         </div>
 

@@ -88,6 +88,7 @@ const fetchGeneralSettings = async () => {
         console.log(error);
     } 
 }
+const generalSettings_pre_loader = ref(false);
 const UpdateGeneralSettings = async () => { 
 
     // Clear the errors object
@@ -125,6 +126,9 @@ const UpdateGeneralSettings = async () => {
         return
     }
 
+
+    generalSettings_pre_loader.value = true;
+
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/general/update', generalSettings, {
             headers: {
@@ -138,12 +142,15 @@ const UpdateGeneralSettings = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             }); 
+
+            generalSettings_pre_loader.value = false;
             
         }
     } catch (error) {
         toast.error('Action successful', {
             position: 'bottom-right', // Set the desired position
         });
+        generalSettings_pre_loader.value = false;
     }
 }
 onBeforeMount(() => { 
@@ -172,7 +179,7 @@ onBeforeMount(() => {
                 <h2>{{ __('Date and Time', 'hydra-booking') }}</h2> 
                 <p>{{ __('Configure your date and time', 'hydra-booking') }}</p>
             </div>
-            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24">  
+            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
 
                 <!-- Time Zone -->
                 <HbText  
@@ -290,7 +297,7 @@ onBeforeMount(() => {
                 <h2>{{ __('Bookings', 'hydra-booking') }}</h2> 
                 <p>{{ __('Manage your bookings and reservations', 'hydra-booking') }}</p>
             </div>
-            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24">  
+            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <!-- Bookings will be completed automatically after -->
                 <HbDropdown 
                     
@@ -362,6 +369,7 @@ onBeforeMount(() => {
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                :pre_loader="generalSettings_pre_loader"
             /> 
 
         </div>

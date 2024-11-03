@@ -36,7 +36,7 @@ const closePopup = () => {
                 <p>{{ __('Install and enable Gravity Forms for meeting forms.', 'hydra-booking') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbSwitch  @change="emit('update-integrations', 'gravity', gravity_data)" v-model="gravity_data.status"    />
         </div>
 
