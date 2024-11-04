@@ -77,7 +77,7 @@ const tfhbValidateInput = (fieldName) => {
             <div class="tfhb-field-image" > 
                 <img v-if="host.avatar != ''"  class='avatar_display'  :src="host.avatar">
                 <img v-else  class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >
-                <button class="tfhb-image-btn tfhb-btn" @click="UploadImage">{{ __('Change', 'hydra-booking') }}</button> 
+                <button class="tfhb-image-btn" @click="UploadImage">{{ __('Change', 'hydra-booking') }}</button> 
                 <input  type="text"  :v-model="host.avatar"   />  
             </div>
             <div class="tfhb-image-box-content">  
@@ -220,7 +220,7 @@ const tfhbValidateInput = (fieldName) => {
     <HbButton 
         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
         @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone', 'phone_number'])"
-        :buttonText="__('Save', 'hydra-booking')"
+        :buttonText="__('Save & Continue', 'hydra-booking')"
         icon="ChevronRight" 
         hover_icon="ArrowRight" 
         :hover_animation="true"

@@ -50,6 +50,7 @@ const updateHosts = async () => {
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true"
+                        :pre_loader="hostsSettings.update_preloader"
                     />  
                 </div> 
 

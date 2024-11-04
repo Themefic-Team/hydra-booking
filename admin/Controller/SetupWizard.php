@@ -166,7 +166,7 @@ class SetupWizard {
 	public function CreateHost( $user, $defult_availability_id ) {
 		$user_id   = $user->ID;
 		$host      = new Host();
-		$host_data = $host->get( $user_id );
+		$host_data = $host->getHostByUserId( $user_id );
 
 		if ( $host_data == null ) {
 

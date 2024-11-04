@@ -469,7 +469,7 @@ class HostsController {
 		// return rest_ensure_response($request['others_information']);
 		// Check if user is selected
 		// $host_id = $request['id'];
-		$host_id = $request['user_id'];
+		$user_id = $request['user_id'];
 		if ( empty( $host_id ) || $host_id == 0 ) {
 			return rest_ensure_response(
 				array(
@@ -480,7 +480,7 @@ class HostsController {
 		}
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $host_id );
+		$HostData = $host->getHostByUserId( $user_id );
 
 		if ( empty( $HostData ) ) {
 			return rest_ensure_response(
@@ -533,7 +533,7 @@ class HostsController {
 	public function UpdateHostsStatus() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 
-		$host_id = $request['user_id'];
+		$user_id = $request['user_id'];
 		if ( $request['status'] == 1 || 'deactivate' == $request['status'] ) {
 			$status = 'activate';
 		}
@@ -552,7 +552,7 @@ class HostsController {
 
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $host_id );
+		$HostData = $host->getHostByUserId( $user_id );
 
 		if ( empty( $HostData ) ) {
 			return rest_ensure_response(

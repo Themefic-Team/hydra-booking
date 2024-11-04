@@ -39,9 +39,7 @@ function hideDropdownOutsideClick(e) {
     if (!document.querySelector('.tfhb-filter-content-wrap').contains(e.target)) {
         FilterPreview.value = false;
     }
-    window.addEventListener('click', function(e) {  
-      
-    });
+    
 }
 
 onBeforeMount(() => { 
@@ -226,7 +224,7 @@ const truncateString = (str, num) => {
     <HbPopup :isOpen="Meeting.isModalOpened" @modal-close="Meeting.isModalOpened = false" max_width="400px" name="first-modal">
         <template #header> 
             <!-- {{ google_calendar }} -->
-            <h2>{{ __('Create New Meeting Type', 'hydra-booking') }} </h2>
+            <h2>{{ __('Create New Meeting', 'hydra-booking') }} </h2>
             
         </template>
 

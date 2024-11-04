@@ -1,6 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onBeforeMount } from 'vue';
+import { onBeforeRouteLeave  } from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';
 const emit = defineEmits(["delete-host", "update-host-status"]); 
@@ -41,13 +42,22 @@ const activeSingleHostDropdown = (id) => {
     activeItemDropdown.value = id; 
 
 }
-// outside click
-window.addEventListener('click', function(e) {
+ 
+// if click outside the dropdown
+ 
+function hideDropdownOutsideClick(e) {
     if (!document.querySelector('.tfhb-hosts-list-wrap').contains(e.target)) {
         activeItemDropdown.value = 0;
     }
-});
-
+}
+onBeforeMount(() => {  
+    window.addEventListener('click', hideDropdownOutsideClick); 
+}); 
+onBeforeRouteLeave((to, from, next) => {
+    activeItemDropdown.value = 0; 
+    window.removeEventListener('click', hideDropdownOutsideClick);
+    next();
+})
 
 </script>
 <template>

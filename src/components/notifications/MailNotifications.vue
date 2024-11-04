@@ -25,7 +25,8 @@ const props = defineProps([
     'title', 
     'label', 
     'data',
-    'ispopup'
+    'ispopup',
+    'update_preloader'
 ])
 const emit = defineEmits(['update-notification', 'popup-open-control', 'popup-close-control']);
 
@@ -139,9 +140,13 @@ const closePopup = () => {
                 </div>
 
                 <HbButton  
-                    classValue="tfhb-btn boxed-btn" 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                     @click="emit('update-notification')"
                     :buttonText="__('Update', 'hydra-booking')" 
+                    icon="ChevronRight"
+                    hover_icon="ArrowRight"
+                    :hover_animation="true"
+                    :pre_loader="props.update_preloader"
                 />  
              </template> 
         </HbPopup>

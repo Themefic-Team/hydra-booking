@@ -47,7 +47,9 @@ try {
 } 
 }
 
+const update_preloader = ref(false);
 const UpdateAppearanceSettings = async () => { 
+    update_preloader.value = true;
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/appearance-settings/update', appearanceSettings, {
             headers: {
@@ -61,12 +63,14 @@ const UpdateAppearanceSettings = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             }); 
+            update_preloader.value = false;
             
         }
     } catch (error) {
         toast.error('Action successful', {
             position: 'bottom-right', // Set the desired position
         });
+        update_preloader.value = false;
     }
 }
 
@@ -119,7 +123,7 @@ onBeforeMount(() => {
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
                 <div class="tfhb-colorbox tfhb-full-width">
-                    <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16">
+                    <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
                             {{ __('Primary Color', 'hydra-booking') }}
                         </label>
@@ -128,7 +132,7 @@ onBeforeMount(() => {
                             <span>{{ __('Select Color', 'hydra-booking') }}</span>
                         </div>
                     </div>
-                    <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16">
+                    <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
                             {{ __('Secondary Color', 'hydra-booking') }}
                         </label>
@@ -137,7 +141,7 @@ onBeforeMount(() => {
                             <span>{{ __('Select Color', 'hydra-booking') }}</span>
                         </div>
                     </div>
-                    <div class="tfhb-single-colorbox tfhb-flexbox">
+                    <div class="tfhb-single-colorbox tfhb-flexbox tfhb-justify-between">
                         <label>
                             {{ __('Paragraph Color', 'hydra-booking') }}
                         </label>
@@ -155,7 +159,7 @@ onBeforeMount(() => {
                 <p>{{ __('Set your own typography for your brand', 'hydra-booking') }}</p>
             </div>
 
-            <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">  
+            <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <HbDropdown 
                     v-model="appearanceSettings.titleTypo"
                     required= "true"  
@@ -185,11 +189,12 @@ onBeforeMount(() => {
                 />
             </div>
             <HbButton 
-                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                classValue="tfhb-btn boxed-btn flex-btn" 
                 @click="UpdateAppearanceSettings" 
                 :buttonText="__('Save', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
+                :pre_loader="update_preloader"
                 :hover_animation="true"
             />   
 

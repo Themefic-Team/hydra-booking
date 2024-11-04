@@ -260,6 +260,7 @@ const formatTimeSlots = (timeSlots) =>  {
 }
 
 const fetchHostAvailability = async (host) => { 
+    alert(host)
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/single-host-availability/'+host, {
             headers: {
@@ -515,6 +516,7 @@ const AvailabilityTabs = (type) => {
                         :option="HostAvailabilities.value"
                         v-if="host_availble_type != 'settings'" 
                         :errors="errors.availability_id" 
+                        @tfhb-onchange="Settings_Avalibility_Callback"
                     />
                 
                     <HbText 

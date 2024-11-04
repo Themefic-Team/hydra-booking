@@ -110,7 +110,7 @@ class Host {
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $where = null, $filterData = '' ) {
+	public function get( $where = null, $filterData = '',  ) {
 
 		global $wpdb;
 
@@ -132,7 +132,7 @@ class Host {
 			);
 		} elseif ( $where != null ) {
 			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE user_id = %d",$where )
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE id = %d",$where )
 			);
 		} elseif ( ! empty( $filterData['name'] ) ) {
 			// Corrected SQL query for searching by name
@@ -142,6 +142,19 @@ class Host {
 			$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_hosts");
 		}
 		// Get all data
+
+		return $data;
+	}
+
+	// Get Host By User ID
+	public function getHostByUserId( $user_id ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id )
+		);
 
 		return $data;
 	}

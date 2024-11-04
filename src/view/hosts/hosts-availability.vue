@@ -408,7 +408,7 @@ const formatTimeSlots = (timeSlots) =>  {
         <HbButton 
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('save-host-info')"
-            :buttonText="__('Save', 'hydra-booking')"
+            :buttonText="__('Save & Continue', 'hydra-booking')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

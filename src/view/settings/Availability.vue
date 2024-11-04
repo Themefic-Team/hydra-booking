@@ -226,7 +226,13 @@ onBeforeMount(() => {
             <p>{{ __('Set up booking times when you are available', 'hydra-booking') }}</p>
         </div>
         <div class="thb-admin-btn right"> 
-            <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ __(' Add New Availability', 'hydra-booking') }}</button> 
+            <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn" 
+                @click="openModal" 
+                :buttonText="__('Add New Availability', 'hydra-booking')"
+                icon="PlusCircle"  
+                icon_position="left"
+            />  
         </div> 
     </div>
     <div class="tfhb-content-wrap tfhb-flexbox tfhb-gap-tb-24"> 

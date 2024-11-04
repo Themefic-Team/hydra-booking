@@ -274,7 +274,7 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     // Return a promise for smooth scrolling
     return new Promise((resolve) => {
-      setTimeout(() => {
+      setTimeout(() => { 
         resolve({ top: 0, behavior: 'smooth' });
       }, 0);
     });

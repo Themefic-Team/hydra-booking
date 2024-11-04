@@ -1,7 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
-import { useRouter, RouterView,} from 'vue-router' 
+import { useRouter, RouterView, onBeforeRouteLeave} from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'availability', 
@@ -28,11 +28,24 @@ const activeSingleMeetingDropdown = (id) => {
     activeItemDropdown.value = id;  
 }
 // outside click
-window.addEventListener('click', function(e) {
+ 
+// if click outside the dropdown
+ 
+function hideDropdownOutsideClick(e) {
     if (!document.querySelector('.tfhb-content-wrap').contains(e.target)) {
         activeItemDropdown.value = 0;
     }
-});
+}
+onBeforeMount(() => {  
+    window.addEventListener('click', hideDropdownOutsideClick); 
+}); 
+onBeforeRouteLeave((to, from, next) => {
+    activeItemDropdown.value = 0;
+    window.removeEventListener('click', hideDropdownOutsideClick);
+    next();
+})
+
+
 </script>
 
 <template> 

@@ -75,7 +75,7 @@ class DashboardController {
 		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 		$current_user_id   = $current_user->ID;
 		$host              = new Host();
-		$HostData          = $host->get( $current_user_id );
+		$HostData          = $host->getHostByUserId( $current_user_id );
 
 		$bookings               = $booking->get(
 			"created_at BETWEEN '$previous_date' AND '$current_date'",
@@ -205,7 +205,7 @@ class DashboardController {
 		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 		$current_user_id   = $current_user->ID;
 		$host              = new Host();
-		$HostData          = $host->get( $current_user_id );
+		$HostData          = $host->getHostByUserId( $current_user_id );
 
 		$booking                          = new Booking();
 		$statistics['total_bookings']     = array();

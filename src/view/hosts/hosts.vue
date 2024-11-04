@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { reactive, onBeforeMount, ref } from 'vue';
+import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import { useRouter, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -13,6 +13,10 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 // Import for redirect route   
 import { Notification } from '@/store/notification'; 
 import { toast } from "vue3-toastify"; 
+
+import useValidators from '@/store/validator'
+const { errors } = useValidators();
+
 const router = useRouter();
 const isModalOpened = ref(false);
 const skeleton = ref(true);
@@ -46,7 +50,40 @@ const fetchHosts = async () => {
 } 
 // Hosts
 const create_host_preloader = ref(false);
-const CreateHosts = async () => {    
+const CreateHosts = async (validator_field) => {    
+
+    // Clear the errors object
+    Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!host[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!host[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty && host.id == 0){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return
+    }
     // redirect with router argument
    create_host_preloader.value = true;
     try { 
@@ -66,8 +103,15 @@ const CreateHosts = async () => {
             });  
             create_host_preloader.value = false;
             closeModal(); 
-            hosts.data = response.data.hosts;  
-            router.push({ name: 'HostsProfile', params: { id: response.data.id} });
+            hosts.data = response.data.hosts;   
+            router.push({ name: 'HostsProfile', params: { id: response.data.id} }).then(() => {
+                    nextTick(() => {
+                        toast.success(response.data.message, {
+                            position: 'bottom-right',
+                            autoClose: 1500,
+                        });
+                    });
+                }); 
             // Redirecto to Other Route
             // router.push({ name: 'HostsProfile' });
         }else{
@@ -180,8 +224,15 @@ const Tfhb_Host_Filter = async (e) =>{
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 
                 <span><Icon name="Search" size=20 /></span>
            </div>
-            <div class="thb-admin-btn right">
-               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size=20 /> {{ __('Add New Host', 'hydra-booking') }}</button> 
+            <div class="thb-admin-btn right"> 
+               <HbButton 
+                    classValue="tfhb-btn boxed-btn flex-btn " 
+                    @click="openModal"
+                    :buttonText="__('Add New Host', 'hydra-booking')"
+                    icon="PlusCircle"  
+                    icon_position="left"
+
+                />  
             </div> 
         </div>
         <div class="tfhb-hosts-content">  
@@ -196,9 +247,11 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.id"  
                         required= "true"  
                         :label="__('Select User', 'hydra-booking')"  
+                        name="id"
                         selected = "1"
                         :placeholder="__('Select User', 'hydra-booking')" 
                         :option = "usersData.data" 
+                        :errors="errors.id"
                     /> 
                     <!-- Select User --> 
                     <!-- UsernName -->
@@ -207,8 +260,10 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.username"  
                         required= "true"  
                         :label="__('Username', 'hydra-booking')"  
+                        name="username"
                         selected = "1"
                         :placeholder="__('Type Username', 'hydra-booking')"  
+                        :errors="errors.username"
                     /> 
                     <!-- UsernName -->
                     <!-- Email -->
@@ -217,9 +272,11 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.email"  
                         required= "true"  
                         type= "email"  
+                        name="email"
                         :label="__('Email', 'hydra-booking')"  
                         selected = "1"
                         :placeholder="__('Type User Email', 'hydra-booking')"  
+                        :errors="errors.email"
                     /> 
                     <!-- Email -->
 
@@ -229,18 +286,20 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-if="host.id == 0"
                         v-model="host.password"  
                         required= "true"  
+                        name="password"
                         type= "password"  
                         :label="__('Password', 'hydra-booking')"  
                         selected = "1"
                         :placeholder="__('Type User Password', 'hydra-booking')"  
+                        :errors="errors.password"
                     /> 
                     <!-- Password -->
                     
 
                     <!-- Create Or Update Availability --> 
                     <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="CreateHosts"
+                        classValue="tfhb-btn boxed-btn flex-btn " 
+                        @click="CreateHosts( ['user_id', 'username', 'email', 'password'] )"
                         :buttonText="__('Create Hosts', 'hydra-booking')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 

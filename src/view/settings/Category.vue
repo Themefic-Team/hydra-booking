@@ -6,10 +6,12 @@ import axios from 'axios'
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
 import { Meeting } from '@/store/meetings';
-
+import useValidators from '@/store/validator'
+const { errors } = useValidators();
 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
 
 const itemsPerPage = ref(5);
 const currentPage = ref(1);
@@ -20,8 +22,46 @@ const CategoryData = reactive({
   description: '',
 });
 
+const update_preloader = ref(false);
 // Create and Update Category
-const UpdateCategory = async () => { 
+const UpdateCategory = async (validator_field) => { 
+
+
+    // Clear the errors object
+    Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!CategoryData[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!CategoryData[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return
+    }
+
+
+    update_preloader.value = true;
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories/create-update', CategoryData, {
             headers: {
@@ -44,11 +84,13 @@ const UpdateCategory = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             }); 
+            update_preloader.value = false;
         }
     } catch (error) {
         toast.error('Action successful', {
             position: 'bottom-right', // Set the desired position
         });
+        update_preloader.value = false;
     }
 }
 
@@ -139,17 +181,26 @@ const prevPage = () => {
                     <HbText  
                         v-model="CategoryData.title"
                         required= "true"  
-                        :label="__('Category Title', 'hydra-booking')"  
+                        :label="__('Category Title', 'hydra-booking')" 
+                        :errors="errors.title"
                         name="title"
                     /> 
                     <HbTextarea  
                         v-model="CategoryData.description"
-                        required= "true"  
+                        required= "false"  
                         name="description"
                         :label="__('Description', 'hydra-booking')"  
                     /> 
-                    <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ CategoryData.id ? __('Update Category', 'hydra-booking'): __('Save Category', 'hydra-booking')}}</button>
-                </div>  
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                        @click="UpdateCategory(['title'])" 
+                        :buttonText="CategoryData.id ? __('Update Category', 'hydra-booking'): __('Save Category', 'hydra-booking')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :pre_loader="update_preloader"
+                        :hover_animation="true"
+                    />    
+                 </div>  
                 <div class="tfhb-category-list">
                     <table class="table" cellpadding="0" :cellspacing="0">
                         <thead>

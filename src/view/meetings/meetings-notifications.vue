@@ -34,9 +34,7 @@ const isPopupClose = (data) => {
     popup.value = false;
 }
 
-const UpdateNotification = async () => {  
-    popup.value = false;
-}
+
 // Update Notification 
 const changeTab = (e) => {  
     // get data-tab attribute value of clicked button
@@ -70,6 +68,23 @@ const attendeeBookingReschedulePopUp = ref(false);
 // Attendee Booking Reminder PopUp
 const attendeeBookingReminderPopUp = ref(false);
 
+const UpdateNotification = async () => {  
+
+
+
+    emit('update-meeting', []) 
+
+    setTimeout(() => {
+        hostBookingConfirmPopUp.value = false;
+        hostBookingCencelPopUp.value = false;
+        hostBookingReschedulePopUp.value = false;
+        hostBookingReminderPopUp.value = false;
+        attendeeBookingConfirmPopUp.value = false;
+        attendeeBookingCancelPopUp.value = false;
+        attendeeBookingReschedulePopUp.value = false;
+        attendeeBookingReminderPopUp.value = false;
+    }, 800);
+}
 </script>
 
 <template>
@@ -88,8 +103,9 @@ const attendeeBookingReminderPopUp = ref(false);
                 <MailNotifications 
                     title="Send Email to Host" 
                     :label="__('Booking Confirmation', 'hydra-booking')" 
-                    @update-notification="hostBookingConfirmPopUp = false"
+                    @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_confirmation"  
+                    :update_preloader="props.update_preloader"  
                     :ispopup="hostBookingConfirmPopUp"
                     @popup-open-control="hostBookingConfirmPopUp = true"
                     @popup-close-control="hostBookingConfirmPopUp = false"
@@ -103,6 +119,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     :label="__('Booking Cancel', 'hydra-booking')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_cancel"  
+                    :update_preloader="props.update_preloader"  
                     :ispopup="hostBookingCencelPopUp"
                     @popup-open-control="hostBookingCencelPopUp = true"
                     @popup-close-control="hostBookingCencelPopUp = false"
@@ -115,6 +132,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     :label="__('Booking Reschedule', 'hydra-booking')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_reschedule" 
+                    :update_preloader="props.update_preloader"  
                     :ispopup="hostBookingReschedulePopUp"
                     @popup-open-control="hostBookingReschedulePopUp = true"
                     @popup-close-control="hostBookingReschedulePopUp = false"
@@ -127,6 +145,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     :label="__('Booking Reminder', 'hydra-booking')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_reminder"  
+                    :update_preloader="props.update_preloader"  
                     :ispopup="hostBookingReminderPopUp"
                     @popup-open-control="hostBookingReminderPopUp = true"
                     @popup-close-control="hostBookingReminderPopUp = false"
@@ -143,6 +162,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     :label="__('Booking Confirmation', 'hydra-booking')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_confirmation"  
+                    :update_preloader="props.update_preloader"  
                     :ispopup="attendeeBookingConfirmPopUp"
                     @popup-open-control="attendeeBookingConfirmPopUp = true"
                     @popup-close-control="attendeeBookingConfirmPopUp = false"
@@ -156,6 +176,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     :label="__('Booking Cancel', 'hydra-booking')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_cancel"  
+                    :update_preloader="props.update_preloader"  
                     :ispopup="attendeeBookingCancelPopUp"
                     @popup-open-control="attendeeBookingCancelPopUp = true"
                     @popup-close-control="attendeeBookingCancelPopUp = false"
@@ -168,6 +189,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     title="Send Email to Attendee" 
                     :label="__('Booking Reschedule', 'hydra-booking')"
                     :data="meeting.notification.attendee.booking_reschedule"  
+                    :update_preloader="props.update_preloader"  
                     :ispopup="attendeeBookingReschedulePopUp"
                     @popup-open-control="attendeeBookingReschedulePopUp = true"
                     @popup-close-control="attendeeBookingReschedulePopUp = false"
@@ -180,6 +202,7 @@ const attendeeBookingReminderPopUp = ref(false);
                     :label="__('Booking Reminder', 'hydra-booking')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_reminder"  
+                    :update_preloader="props.update_preloader"  
                     :ispopup="attendeeBookingReminderPopUp"
                     @popup-open-control="attendeeBookingReminderPopUp = true"
                     @popup-close-control="attendeeBookingReminderPopUp = false"
@@ -192,7 +215,7 @@ const attendeeBookingReminderPopUp = ref(false);
         </div> 
 
         <div class="tfhb-submission-btn"> 
-            <HbButton  
+            <!-- <HbButton  
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting')"
                 :buttonText="__('Save & Continue', 'hydra-booking')"
@@ -200,7 +223,7 @@ const attendeeBookingReminderPopUp = ref(false);
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
                 :pre_loader="props.update_preloader"
-            />  
+            />   -->
         </div>
         <!--Bookings -->
     </div>

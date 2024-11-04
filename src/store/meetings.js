@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, nextTick } from 'vue'
 import { toast } from "vue3-toastify"; 
 import axios from 'axios'  
 const Meeting = reactive({
@@ -335,13 +335,17 @@ const Meeting = reactive({
             });
             if (response.data.status == true) { 
                 this.singleMeeting.MeetingData.slug = response.data.meeting.slug; 
-             
-                routes.push({ name: 'MeetingsCreate', params: { id: response.data.meeting.id} }); 
-                // toast.success(response.data.message, {
-                //     position: 'bottom-right', // Set the desired position
-                //     "autoClose": 1500,
-                // });
-                // windows redirect to the MeetingsCreate route 
+  
+                routes.push({ name: 'MeetingsCreate', params: { id: response.data.meeting.id} }).then(() => {
+                    nextTick(() => {
+                        toast.success(response.data.message, {
+                            position: 'bottom-right',
+                            autoClose: 1500,
+                        });
+                        // add scrool to top with smooth 
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }); 
                 this.pre_loader = false;
  
             }else{ 
@@ -404,6 +408,9 @@ const Meeting = reactive({
 
     // Popup Meeting Creation
     async CreatePopupMeeting (type, routes){    
+        if(this.pre_loader == true){
+            return;
+        }
 
         this.pre_loader = true;
 

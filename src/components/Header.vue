@@ -1,6 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref } from 'vue'; 
+import { ref, onBeforeMount } from 'vue'; 
+import { onBeforeRouteLeave  } from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'title',
@@ -38,12 +39,7 @@ const timeAgo = (date) => {
     return Math.floor(seconds) + " seconds";
 }
 
-// if click outside the dropdown
-window.addEventListener('click', function(e) {
-    if (!document.querySelector('.tfhb-header-notification').contains(e.target)) {
-        displayNotification.value = false;
-    }
-});
+
 const MarkAsRead = () => {
     //  remove the unread class
     document.querySelectorAll('.tfhb-single-notification').forEach((el) => {
@@ -51,6 +47,22 @@ const MarkAsRead = () => {
     });
     emit('MarkAsRead')
 }
+
+// if click outside the dropdown
+ 
+function hideDropdownOutsideClick(e) {
+    if (!document.querySelector('.tfhb-header-notification').contains(e.target)) {
+        displayNotification.value = false;
+    }
+}
+onBeforeMount(() => {  
+    window.addEventListener('click', hideDropdownOutsideClick); 
+}); 
+onBeforeRouteLeave((to, from, next) => {
+    displayNotification.value = 0;
+    window.removeEventListener('click', hideDropdownOutsideClick);
+    next();
+})
 </script>
 
 

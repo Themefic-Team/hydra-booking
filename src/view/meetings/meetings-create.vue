@@ -1,14 +1,15 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { reactive, onBeforeMount, ref } from 'vue';
+import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import { toast } from "vue3-toastify"; 
-import useValidators from '@/store/validator'
+
 import HbPreloader from '@/components/icon/HbPreloader.vue'
 import { Availability } from '@/store/availability';
 import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
+import useValidators from '@/store/validator'
 const { errors } = useValidators();
 
 const route = useRoute();
@@ -511,32 +512,49 @@ const UpdateMeetingData = async (validator_field) => {
         });
         if (response.data.status == true) { 
             meetingData.slug = response.data.meeting.slug; 
-            toast.success(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });
-            if("MeetingsCreateDetails"==route.name){
-                router.push({ name: 'MeetingsCreateAvailability' });
+            // toast.success(response.data.message, {
+            //         position: 'bottom-right', // Set the desired position
+            //         "autoClose": 1500,
+            //     });
+            let nextRouteName = '';
+            if("MeetingsCreateDetails"==route.name){ 
+                nextRouteName = 'MeetingsCreateAvailability';
             }
-            if("MeetingsCreateAvailability"==route.name){
-                router.push({ name: 'MeetingsCreateLimits' });
+            if("MeetingsCreateAvailability"==route.name){ 
+                nextRouteName = 'MeetingsCreateLimits';
             }
-            if("MeetingsCreateLimits"==route.name){
-                router.push({ name: 'MeetingsCreateQuestions' });
+            if("MeetingsCreateLimits"==route.name){ 
+                nextRouteName = 'MeetingsCreateQuestions';
             }
-            if("MeetingsCreateQuestions"==route.name){
-                router.push({ name: 'MeetingsCreateNotifications' });
+            if("MeetingsCreateQuestions"==route.name){ 
+                nextRouteName = 'MeetingsCreateNotifications';
             }
-            if("MeetingsCreateNotifications"==route.name){
-                router.push({ name: 'MeetingsCreateIntegrations' });
-            }
-            if("MeetingsCreateIntegrations"==route.name){
-                router.push({ name: 'MeetingsCreatePayment' });
+            // if("MeetingsCreateNotifications"==route.name){
+            //     // router.push({ name: 'MeetingsCreateIntegrations' });
+            //     nextRouteName = 'MeetingsCreateIntegrations';
+            // }
+            if("MeetingsCreateIntegrations"==route.name){ 
+                nextRouteName = 'MeetingsCreatePayment';
             }
             if("MeetingsCreatePayment"==route.name){ 
                 // sharePopupData();
                 window.open(meetingData.permalink, '_blank'); 
 
+            }
+            if (nextRouteName) {
+                router.push({ name: nextRouteName }).then(() => {
+                    nextTick(() => {
+                        toast.success(response.data.message, {
+                            position: 'bottom-right',
+                            autoClose: 1500,
+                        });
+                    });
+                });
+            }else{
+                toast.success(response.data.message, {
+                    position: 'bottom-right',
+                    autoClose: 1500,
+                });
             }
             update_preloader.value = false;
             // if("MeetingsCreateIntegrations"==route.name){

@@ -139,7 +139,7 @@ class BookingController {
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host     = new Host();
-			$HostData = $host->get( $current_user_id );
+			$HostData = $host->getHostByUserId( $current_user_id );
 
 			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->user_id );
 		}
@@ -441,7 +441,7 @@ class BookingController {
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host         = new Host();
-			$HostData     = $host->get( $current_user_id );
+			$HostData     = $host->getHostByUserId( $current_user_id );
 			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->host_id );
 
 		}
@@ -601,7 +601,7 @@ class BookingController {
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host         = new Host();
-			$HostData     = $host->get( $current_user_id );
+			$HostData     = $host->getHostByUserId( $current_user_id );
 			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->host_id ); 
 
 		} 
@@ -707,7 +707,7 @@ class BookingController {
 
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host         = new Host();
-			$HostData     = $host->get( $current_user_id );
+			$HostData     = $host->getHostByUserId( $current_user_id );
 			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->user_id );
 
 		}else{

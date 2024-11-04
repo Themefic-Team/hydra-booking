@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { reactive, onBeforeMount, ref } from 'vue';
+import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import { toast } from "vue3-toastify";
@@ -88,18 +88,32 @@ const UpdateHostsInformation = async (validator_field) => {
             } 
         });
         if (response.data.status == true) {  
-            toast.success(response.data.message, {
+            
+
+            let nextRouteName = ''; 
+            if("HostsProfileInformation"==route.name){ 
+                nextRouteName = 'HostsAvailability';
+            }
+            if("HostsAvailability"==route.name){ 
+                nextRouteName = 'HostsProfileCalendars';
+            }
+            if("HostsProfileCalendars"==route.name){ 
+                nextRouteName = 'HostsProfileIntegrations';
+            }
+            if (nextRouteName) {
+                router.push({ name: nextRouteName }).then(() => {
+                    nextTick(() => {
+                        toast.success(response.data.message, {
+                            position: 'bottom-right', // Set the desired position
+                            "autoClose": 1500,
+                        });
+                    });
+                });
+            }else{
+                toast.success(response.data.message, {
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
-            if("HostsProfileInformation"==route.name){
-                router.push({ name: 'HostsAvailability' });
-            }
-            if("HostsAvailability"==route.name){
-                router.push({ name: 'HostsProfileCalendars' });
-            }
-            if("HostsProfileCalendars"==route.name){
-                router.push({ name: 'HostsProfileIntegrations' });
             }
             update_host_preloader.value = false;
         }else{ 

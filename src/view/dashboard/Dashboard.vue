@@ -1,7 +1,8 @@
 <script setup>
 import { __ } from '@wordpress/i18n'; 
 import Chart from 'primevue/chart';
-import { ref, onMounted  } from 'vue';
+import { ref, onMounted, onBeforeMount  } from 'vue';
+import { onBeforeRouteLeave  } from 'vue-router' 
 import Header from '@/components/Header.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
@@ -49,16 +50,27 @@ const  ChangeStatisticData = (day) => {
     Dashboard.fetcDashboardStatistics(); 
 }
 // Click outside the dropdown
-window.addEventListener('click', function(e) {
+
+
+// if click outside the dropdown
+ 
+function hideDropdownOutsideClick(e) {
     if (!document.querySelector('.tfhb-datachart-box-dropdown').contains(e.target)) { 
         datachart_box_dropdown.value = false;
     }
-});
-window.addEventListener('click', function(e) {
     if (!document.querySelector('.datachart-dropdown').contains(e.target)) { 
         datachart_dropdown.value = false;
     }
-});
+}
+onBeforeMount(() => {  
+    window.addEventListener('click', hideDropdownOutsideClick); 
+}); 
+onBeforeRouteLeave((to, from, next) => {
+    datachart_box_dropdown.value = 0;
+    datachart_dropdown.value = 0;
+    window.removeEventListener('click', hideDropdownOutsideClick);
+    next();
+})
 
 const FormatDate = (date) => {  
     // convert 2024-05-29 to 25 Sep, 24
