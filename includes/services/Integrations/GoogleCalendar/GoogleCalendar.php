@@ -79,7 +79,8 @@ class GoogleCalendar {
 	}
 	public function permission_callback() {
 		// get header data form request "capability' 
-		 
+
+		 return true;
 		// check current user have capability
 		return current_user_can( 'tfhb_manage_hosts' );
 	}

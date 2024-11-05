@@ -607,15 +607,18 @@ class HostsController {
 		$host     = new Host();
 		$hostData = $host->get( $host_id );
 		$user_id  = $hostData->user_id;
+		
+		
 
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 
+		
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 
 		// Google Calendar API
 		$google_calendar = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 
-		tfhb_print_r($google_calendar);
+		
 
 		if ( isset($_tfhb_integration_settings['google_calendar']['status']) && $_tfhb_integration_settings['google_calendar']['status']  ) {
 
