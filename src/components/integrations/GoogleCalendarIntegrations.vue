@@ -98,13 +98,12 @@ const closePopup = () => {
 
                 <HbButton  
                     @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar, ['client_id', 'secret_key', 'redirect_url'])"
-                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"  
                     :buttonText="'Save & Validate' "
                     icon="ChevronRight" 
                     hover_icon="ArrowRight" 
                     :hover_animation="true" 
                     :pre_loader="props.pre_loader"
-                    width="150px"
                 />   
             </template> 
         </HbPopup>

@@ -111,7 +111,6 @@ const closePopup = () => {
                     hover_icon="ArrowRight" 
                     :hover_animation="true" 
                     :pre_loader="props.pre_loader"
-                    width="150px"
                 />  
             </template> 
         </HbPopup>

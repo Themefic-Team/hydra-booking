@@ -87,7 +87,6 @@ const closePopup = () => {
                     hover_icon="ArrowRight" 
                     :hover_animation="true"   
                     :pre_loader="props.pre_loader"
-                    width="150px"
                 /> 
                 <!-- <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'mailchimp', mail_data, ['mailchimp_api_key'])">{{ __('Save & Validate', 'hydra-booking') }}</button> -->
             </template> 

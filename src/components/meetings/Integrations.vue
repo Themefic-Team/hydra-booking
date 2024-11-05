@@ -203,7 +203,7 @@ const changeIntegrations = (value) => {
                 <Icon name="PlusCircle" :width="20"/>
                 {{ __('Add New Integrations', 'hydra-booking') }}
             </button>
-
+            
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsListopen"
                 v-model="selecte_integrations"
@@ -213,9 +213,9 @@ const changeIntegrations = (value) => {
                 selected = "1"
                 placeholder="Select integrations"
                 :option = "[
-                    {name: 'Mailchimp', value: 'Mailchimp', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/Mailchimp.svg',},  
-                    {name: 'FluentCRM', value: 'FluentCRM', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
-                    {name: 'ZohoCRM', value: 'ZohoCRM', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/Zoho.svg',},
+                    {name: 'Mailchimp', value: 'Mailchimp', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
+                    {name: 'FluentCRM', value: 'FluentCRM', disable: !props.meeting.fluentcrm.status, icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
+                    {name: 'ZohoCRM', value: 'ZohoCRM', disable: !props.meeting.zohocrm.status, icon: $tfhb_url+'/assets/images/Zoho.svg',},
                 ]"
                 @tfhb-onchange="changeIntegrations"
             /> 
