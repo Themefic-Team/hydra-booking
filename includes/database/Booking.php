@@ -262,6 +262,51 @@ class Booking {
 
 	public function getFilter( $filterData = '' ) {
 
+		global $wpdb;
+
+		$table_name    = $wpdb->prefix . $this->table;
+		$meeting_table = $wpdb->prefix . 'tfhb_meetings';
+		$host_table    = $wpdb->prefix . 'tfhb_hosts';
+
+		$query = "SELECT 
+                b.id,
+                b.host_id,
+                b.meeting_id,
+                b.attendee_name,
+                b.email AS attendee_email,
+                b.attendee_time_zone AS attendee_time_zone,
+                b.address,
+                b.meeting_dates,
+                b.start_time,
+                b.end_time,
+                b.status AS booking_status,
+                b.payment_status AS payment_status,
+                b.created_at AS booking_created_at,
+                m.host_id AS meeting_host_id,
+                m.title,
+                m.duration,
+                b.meeting_locations,
+                m.meeting_price,
+                m.payment_currency,
+                m.payment_status AS meeting_payment_status,
+                m.meeting_type,
+                h.first_name AS host_first_name,
+                h.last_name AS host_last_name,
+                h.email AS host_email,
+                h.time_zone AS host_time_zone
+              FROM $table_name AS b
+              LEFT JOIN $meeting_table AS m ON b.meeting_id = m.id
+              LEFT JOIN $host_table AS h ON b.host_id = h.id
+              WHERE 1=1";
+
+		// Apply filter to match meeting title or host name
+		if ( ! empty( $filterData['name'] ) ) {
+		$title = '%' . $wpdb->esc_like( $filterData['name'] ) . '%';
+		$query .= $wpdb->prepare(" AND (m.title LIKE %s OR h.first_name LIKE %s OR h.last_name LIKE %s)", $title, $title, $title);
+		}
+
+		return $wpdb->get_results( $query );
+
 	}
 
 	// delete

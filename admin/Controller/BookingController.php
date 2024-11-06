@@ -371,15 +371,51 @@ class BookingController {
 	// Booking Filter
 	public function filterBookings( $request ) {
 		$filterData = $request->get_param( 'filterData' );
-		// Hosts Lists
-		$host      = new Host();
-		$HostsList = $host->get( '', $filterData );
+
+		// Booking Lists
+		$booking      = new Booking();
+		$bookingsList = $booking->getFilter( $filterData );
+		
+		$extractedBookings = array_map(
+			function ( $booking ) {
+				return array(
+					'id'            => $booking->id,
+					'title'         => $booking->title,
+					'meeting_dates' => $booking->meeting_dates,
+					'start_time'    => $booking->start_time,
+					'end_time'      => $booking->end_time,
+					'status'        => $booking->booking_status,
+					'host_id'       => $booking->host_id,
+				);
+			},
+			$bookingsList
+		);
+
+		$booking_array = array();
+		foreach ( $extractedBookings as $book ) {
+
+			// Convert start and end times to 24-hour format
+			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
+			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
+
+			$booking_array[] = array(
+				'booking_id'   => $book['id'],
+				'title'        => $book['title'],
+				'start'        => $book['meeting_dates'] . 'T' . $start_time_24hr,
+				'end'          => $book['meeting_dates'] . 'T' . $end_time_24hr,
+				'status'       => $book['status'],
+				'booking_date' => $book['meeting_dates'],
+				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
+				'host_id'      => $book['host_id'],
+			);
+		}
 
 		// Return response
 		$data = array(
-			'status'  => true,
-			'hosts'   => $HostsList,
-			'message' => 'Host Data Successfully Retrieve!',
+			'status'           => true,
+			'bookings'         => $bookingsList,
+			'booking_calendar' => $booking_array,
+			'message'          => 'Booking Data Successfully Retrieve!',
 		);
 		return rest_ensure_response( $data );
 	}
