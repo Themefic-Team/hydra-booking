@@ -62,7 +62,7 @@ const sikpStepThree = () => {
             <p>{{ __('It helps you customize the booking process to fit your workflow and make things run more smoothly.', 'hydra-booking') }}</p>
         </div>
         <div class="tfhb-s-w-import-data">
-            <img :src="$tfhb_url+'/assets/images/import.gif'" style="height: 96px;" alt="">
+            <img :src="$tfhb_url+'/assets/images/Import.svg'" style="height: 96px;" alt="">
         </div>
         <div class="tfhb-s-w-getting-email">
             
@@ -93,6 +93,7 @@ const sikpStepThree = () => {
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true"  
                 :pre_loader="props.setupWizard.skip_preloader"
+                pre_loader_color="#2E6B38"
                 icon="ChevronRight"  
                 hover_icon="ArrowRight"  
             />  

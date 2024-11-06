@@ -37,9 +37,10 @@ const select_all = ref(false);
 const selected_items = ref([]);
 const host_id = ref('');
 
-
+const exportAsPreloader = ref(false);
 // Export CSV
 const ExportBookingAsCSV = async () => {
+    exportAsPreloader.value = true;
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/export-csv', exportData, {
             headers: {
@@ -73,11 +74,15 @@ const ExportBookingAsCSV = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });   
+            exportAsPreloader.value = false;
+            ExportAsCSV.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
+            exportAsPreloader.value = false;
+            
         }
     } catch (error) {
         console.log(error);
@@ -361,7 +366,7 @@ const Tfhb_Booking_Filter = async (e) =>{
   
         <HbButton 
             classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
-            @click="ExportAsCSV"
+            @click="ExportAsCSV = true"
             :buttonText="__('Export as CSV', 'hydra-booking')"
             icon="FileDown"   
             :hover_animation="false" 
@@ -464,7 +469,17 @@ const Tfhb_Booking_Filter = async (e) =>{
       </div>
 
       <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
-        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ __('Export Meeting', 'hydra-booking') }}</button> 
+        <HbButton 
+            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+            @click="ExportBookingAsCSV"
+            :buttonText="__('Export Booking', 'hydra-booking')"
+            icon="ChevronRight"   
+            hover_icon="ArrowRight"
+            :pre_loader="exportAsPreloader"
+            :hover_animation="true" 
+            icon_position = 'right'
+        /> 
+      
       </div>
     </template> 
 </HbPopup>

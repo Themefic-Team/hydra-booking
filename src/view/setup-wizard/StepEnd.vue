@@ -367,13 +367,13 @@ window.addEventListener('click', function(e) {
             <p>{{ __('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.', 'hydra-booking') }}</p> 
        
         </div>
-        <div class="tfhb-s-w-step-end tfhb-flexbox">
+        <div class="tfhb-s-w-step-end tfhb-flexbox tfhb-full-width">
 
             <div class="tfhb-s-w-integrations-bar tfhb-flexbox  tfhb-justify-between">
                 <div  @click="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
                     <span class="tfhb-btn tfhb-flexbox tfhb-gap-8">All Integrations 
-                        <Icon v-if="activeDropdown == false" name="ChevronDown" size=20 /> 
-                        <Icon v-else="activeDropdown == false" name="ChevronUp" size=20 /> 
+                        <Icon v-if="activeDropdown == false" @click="toggleDropdown"  name="ChevronDown" size=20 /> 
+                        <Icon v-else name="ChevronUp" @click="toggleDropdown"  size=20 /> 
                     </span> 
                      
                     <transition name="tfhb-dropdown-transition">
