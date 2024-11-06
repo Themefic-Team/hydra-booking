@@ -608,7 +608,7 @@ class HydraBookingShortcode {
 			false,
 			true
 		);
-
+		
 		// Zoom Meeting
 		$this->tfhb_create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta);
 
@@ -619,6 +619,7 @@ class HydraBookingShortcode {
 
 		// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
 		do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
+		
   
 		// Load Meeting Confirmation Template
 		$confirmation_template = $this->tfhb_booking_confirmation( $data, $MeetingData, $host_meta );

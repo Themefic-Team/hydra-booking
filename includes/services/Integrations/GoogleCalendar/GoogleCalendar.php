@@ -389,11 +389,32 @@ class GoogleCalendar {
 				}
 				$body = wp_remote_retrieve_body( $response );
 
+				
+
 				$google_calendar_body[] = json_decode( $body, true );
 			}
 		}
+		
+		$meet_link = '';
+		foreach ( $google_calendar_body as $key => $value ) {
+			$hangoutLink = isset( $value['hangoutLink'] ) ? $value['hangoutLink'] : '';
+			if ( $hangoutLink != '' ) {
+				$meet_link .= $hangoutLink . ', ';
+			}
+		}
+		if($meet_link != '' && $enable_meeting_location == true ){
+			$data->meeting_locations = array(
+				'location' => 'meet',
+				'address'     => $meet_link,
+			);
 
-		// Update the Booking
+			// conver object to array
+			$update_booking_data = (array) $data;
+			$booking = new Booking();
+			$booking->update( $update_booking_data );
+			
+		}
+		
 		$value['google_calendar'] = $google_calendar_body;
 
 		return $value;

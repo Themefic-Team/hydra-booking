@@ -308,30 +308,33 @@ const truncateString = (str, num) => {
 
                     <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ __('Recent Bookings', 'hydra-booking') }}</h3>
                     <!-- Single Notice Box -->
-                    <div v-if="Dashboard.data.recent_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-flexbox tfhb-gap-16 tfhb-full-width">
-                        <div
-                            v-for="(data, index) in Dashboard.data.recent_booking"
-                                :key="index" 
-                            class="tfhb-dashboard-notice-single-box tfhb-full-width" 
-                        > 
-                            <div class="tfhb-admin-card-box tfhb-p-16">
-                                
-                                <p>{{truncateString(data.title, 70)}}    </p>
-                                <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
-                                    <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
-                                    <span  class="tfhb-flexbox tfhb-gap-8">
-                                        <Icon name="UserRound" size=15 /> 
-                                        <Icon name="ArrowRight" size=15 /> 
-                                        <Icon name="UserRound" size=15 /> 
-                                        <Icon v-if="data.meeting_type != 'one-to-one'" name="UserRound" size=15 /> 
-                                    </span>
+                    <div  v-if="Dashboard.data.recent_booking.length > 0"  class="tfhb-dashboard-notice-box-content tfhb-scrollbar ">
+                        <div class=" tfhb-flexbox tfhb-gap-16 tfhb-full-width">
+                            <div
+                                v-for="(data, index) in Dashboard.data.recent_booking"
+                                    :key="index" 
+                                class="tfhb-dashboard-notice-single-box tfhb-full-width" 
+                            > 
+                                <div class="tfhb-admin-card-box tfhb-p-16">
+                                    
+                                    <p>{{truncateString(data.title, 70)}}    </p>
+                                    <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
+                                        <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
+                                        <span  class="tfhb-flexbox tfhb-gap-8">
+                                            <Icon name="UserRound" size=15 /> 
+                                            <Icon name="ArrowRight" size=15 /> 
+                                            <Icon name="UserRound" size=15 /> 
+                                            <Icon v-if="data.meeting_type != 'one-to-one'" name="UserRound" size=15 /> 
+                                        </span>
 
-                                    <span v-if="data.meeting_payment_status == true"  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.meeting_price}} {{ data.payment_currency }} </span>
-                                    <span v-else  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> Free  </span>
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}} </span>
-                                </div>
+                                        <span v-if="data.meeting_payment_status == true"  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.meeting_price}} {{ data.payment_currency }} </span>
+                                        <span v-else  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> Free  </span>
+                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}} </span>
+                                    </div>
+                                </div> 
                             </div> 
-                        </div> 
+                        </div>
+                        
                     </div>
                     <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
                         <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
@@ -347,27 +350,29 @@ const truncateString = (str, num) => {
                 <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
                     <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ __('Upcoming Meetings', 'hydra-booking') }}</h3>
 
-                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-flexbox tfhb-gap-16 tfhb-full-width" >
+                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar " >
                         <!-- Single Notice Box -->
-                        <div 
-                            v-for="(data, index) in Dashboard.data.upcoming_booking"
-                            :key="index" 
-                            class="tfhb-dashboard-notice-single-box tfhb-flexbox tfhb-gap-8 tfhb-full-width"
-                         >
-                            <span > {{ data.start_time}} </span>
-                            <div class="tfhb-admin-card-box tfhb-p-16">
-                                <p>{{data.attendee_name}} ({{data.attendee_email}})  </p>
-                                <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
-                                    <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
-                                        <!-- convert 2024-05-29 to 25 Sep, 24 -->   
+                        <div class="tfhb-flexbox tfhb-gap-16 tfhb-full-width">
+                            <div 
+                                v-for="(data, index) in Dashboard.data.upcoming_booking"
+                                :key="index" 
+                                class="tfhb-dashboard-notice-single-box tfhb-flexbox tfhb-gap-8 tfhb-full-width"
+                            >
+                                <span > {{ data.start_time}} </span>
+                                <div class="tfhb-admin-card-box tfhb-p-16">
+                                    <p>{{data.attendee_name}} ({{data.attendee_email}})  </p>
+                                    <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
+                                        <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
+                                            <!-- convert 2024-05-29 to 25 Sep, 24 -->   
 
-                                        {{ FormatDate(data.meeting_dates) }}
-                                    </span> 
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.attendee_time_zone}}</span>
-                                    <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}}</span>
-                                </div>
+                                            {{ FormatDate(data.meeting_dates) }}
+                                        </span> 
+                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.attendee_time_zone}}</span>
+                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}}</span>
+                                    </div>
+                                </div> 
                             </div> 
-                        </div> 
+                        </div>
                     </div> 
                     <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
                         <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >

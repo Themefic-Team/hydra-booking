@@ -105,6 +105,12 @@ class Booking {
 
 		$id = $request['id'];
 		unset( $request['id'] );
+
+		$request['others_info']       = wp_json_encode( $request['others_info'] );
+		$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] ); 
+
+		
+
 		// Update Booking
 		$result = $wpdb->update(
 			$table_name,
@@ -214,7 +220,7 @@ class Booking {
                 $meeting_table.host_id,
                 $meeting_table.title,
                 $meeting_table.duration,
-                $meeting_table.meeting_locations,
+                $table_name.meeting_locations,
                 $meeting_table.meeting_price,
                 $meeting_table.payment_currency,
                 $meeting_table.payment_status AS meeting_payment_status,

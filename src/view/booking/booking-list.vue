@@ -351,13 +351,18 @@ const deleteItemConfirm = () => {
 </div>
 
 <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal"> 
+    <template #header> 
+        <!-- {{ google_calendar }} -->
+        <h2>{{ __('Confirmation', 'hydra-booking') }}</h2>
+        
+    </template>  
     <template #content>  
         <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
             <div class="tfhb-close-icon">
                 <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
             </div>
             <div class="tfhb-close-content">
-                <h3>{{ __('Are you absolutely sure??', 'hydra-booking') }}  </h3>  
+                <h3>{{ __('Are you absolutely sure?', 'hydra-booking') }}  </h3>  
                 <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
             </div>
             <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16">  
@@ -503,7 +508,7 @@ const deleteItemConfirm = () => {
                 </div>
             </div>
 
-            <!-- Location --> 
+            <!-- Location -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
                 <h3>{{ __('Meeting Location', 'hydra-booking') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">  

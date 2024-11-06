@@ -74,12 +74,24 @@ onBeforeRouteLeave((to, from, next) => {
                     <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
                 </div>
                 <div class="tfhb-close-content">
-                    <h3>{{ __('Are you absolutely sure??', 'hydra-booking') }}  </h3>  
+                    <h3>{{ __('Are you absolutely sure?', 'hydra-booking') }}  </h3>  
                     <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
                 </div>
                 <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
-                    <button class="tfhb-btn secondary-btn flex-btn" @click=" deletePopup = !deletePopup">{{ __('Cancel', 'hydra-booking') }}</button>
-                    <button class="tfhb-btn boxed-btn-danger flex-btn" @click="deleteItemConfirm">{{ __('Delete', 'hydra-booking') }}</button>
+                    <HbButton 
+                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                        @click=" deletePopup = !deletePopup"
+                        :buttonText="__('Cancel', 'hydra-booking')" 
+                    />  
+                    <HbButton  
+                        classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                        @click="deleteItemConfirm"
+                        :buttonText="__('Delete', 'hydra-booking')"
+                        icon="Trash2"   
+                        :hover_animation="false" 
+                        icon_position = 'left'
+                    />
+                   
                 </div>
             </div> 
         </template> 
