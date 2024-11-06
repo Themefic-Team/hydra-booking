@@ -4,6 +4,7 @@ import { ref, reactive, onBeforeMount } from 'vue';
 import { onBeforeRouteLeave  } from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 const emit = defineEmits(["delete-host", "update-host-status"]); 
 const props = defineProps({
     host_list: {
