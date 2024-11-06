@@ -191,7 +191,6 @@ const Booking_Status_Callback = (value) => {
 
 const Bulk_Status_Callback = async (value) => { 
 
-
     let bookings = {
         items: selected_items.value,
         status: value
@@ -226,6 +225,34 @@ const Bulk_Status_Callback = async (value) => {
     } 
 }
 
+// Filtering
+const filterData = reactive({
+    name: '',
+})
+const Tfhb_Booking_Filter = async (e) =>{
+    filterData.name=e.target.value;
+    Booking.skeleton = true;
+    try {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/filter', {
+            params: {
+                filterData
+            },
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_integrations'
+            }
+        });
+        
+        if (response.data.status) { 
+            Booking.bookings = response.data.bookings; 
+            Booking.calendarbooking.events = response.data.booking_calendar;
+            Booking.skeleton = false;
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
 // Pagination
 const totalPages = computed(() => {
@@ -309,7 +336,7 @@ const deleteItemConfirm = () => {
             </div>
         </div>
         <div class="tfhb-header-filters">
-            <input type="text" placeholder="Host name or meeting title" /> 
+            <input type="text" placeholder="Host name or meeting title" @keyup="Tfhb_Booking_Filter" /> 
             <span><Icon name="Search" size=20 /></span>
         </div>
     </div>
@@ -544,7 +571,7 @@ const deleteItemConfirm = () => {
 <!-- Booking Quick View End -->
 
 <!-- Booking Calendar View -->
-<div    class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
+<div :class="{ 'tfhb-skeleton': Booking.skeleton }" class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
     <FullCalendar class='demo-app-calendar ' :options='Booking.calendarbooking'>
         <template v-slot:eventContent='arg'>
             <!-- {{ arg.event.booking_date }}
