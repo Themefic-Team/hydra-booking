@@ -558,6 +558,7 @@ const deleteItemConfirm = () => {
             :option = "[
                 {'name': 'Pending', 'value': 'pending'},  
                 {'name': 'Confirmed', 'value': 'confirmed'},   
+                {'name': 'Re-schedule', 'value': 'schedule'},   
                 {'name': 'Canceled', 'value': 'canceled'}
             ]"
             @tfhb-onchange="Booking_Status_Callback" 
@@ -662,7 +663,7 @@ const deleteItemConfirm = () => {
                             </svg>
                             <div class="tfhb-status-popup">
                                 <ul class="tfhb-flexbox tfhb-gap-2">
-                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'approved')">{{ __('Approved', 'hydra-booking') }}</li>
+                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ __('Confirmed', 'hydra-booking') }}</li>
                                     <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ __('Pending', 'hydra-booking') }}</li>
                                     <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ __('Re-schedule', 'hydra-booking') }}</li>
                                     <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ __('Canceled', 'hydra-booking') }}</li>
