@@ -212,6 +212,13 @@
                         line-height: 24px;
                         margin: 0 !important;
                         width: calc(100% - 20px) !important;
+                        a{
+                            color: #273F2B;
+                            text-decoration: none;
+                            font-size: $heading-font-size-small;
+                            font-weight: $font-weight-medium !important;
+                            line-height: 24px;
+                        }
                     }
                     .meeting-user-info{
                         margin-top: 16px;
