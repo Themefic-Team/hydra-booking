@@ -862,7 +862,7 @@ class MeetingController {
 		} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
 			$fluentcrm_Data['status'] = false;
 		} else {
-			$fluentcrm_Data['status'] = true;
+			$fluentcrm_Data['status'] = false;
 		}
 		if ( $fluentcrm_Data['status'] ) {
 			global $wpdb;
