@@ -64,8 +64,6 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
     <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
         <template #header> 
-            <!-- {{ google_calendar }} -->
-            <h2>{{ __('Confirmation', 'hydra-booking') }}</h2>
             
         </template>
 

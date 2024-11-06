@@ -10,7 +10,6 @@ import HbPreloader from '@/components/icon/HbPreloader.vue'
 import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
-import HbButton from '@/components/form-fields/HbButton.vue';
 import { Host } from '@/store/hosts'
 import { Meeting } from '@/store/meetings'
 
