@@ -84,6 +84,17 @@
             margin-top: 0px;
             margin-bottom: 16px;
         }
+        button.boxed-btn-danger{
+            background-color: #AC0C22;
+            span{
+                color: #FFFFFF !important;
+            }
+        }
+        button.secondary-btn{
+            span{
+                color: #273F2B !important;
+            }
+        }
     }
 
     // Tooltip
