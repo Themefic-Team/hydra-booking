@@ -102,7 +102,7 @@ window.addEventListener('click', function(e) {
  
 
      <!-- Step Four -->
-     <div class="tfhb-setup-wizard-content-wrap tfhb-admin-meetings tfhb-s-w-step-four tfhb-flexbox">
+     <div class="tfhb-setup-wizard-content-wrap tfhb-admin-meetings tfhb-s-w-step-four tfhb-flexbox tfhb-gap-32">
        
         <div class="tfhb-s-w-icon-text">
             <div class="tfhb-step-wizard-steper tfhb-flexbox tfhb-gap-16" >
@@ -111,6 +111,10 @@ window.addEventListener('click', function(e) {
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 active"></span>
             </div> 
+
+            <div class="tfhb-s-w-success-data tfhb-mt-32">
+                <img :src="$tfhb_url+'/assets/images/success.gif'" style="height: 50px;" alt="">
+            </div>
             <h2>{{ __('Your Meeting is ready!', 'hydra-booking') }}</h2>
             <p>{{ __(`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`, 'hydra-booking') }}</p> 
         </div>
@@ -119,6 +123,7 @@ window.addEventListener('click', function(e) {
             <div class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
 
                 <!-- Single Meeting -->
+                
                 <div class="tfhb-single-meeting  tfhb-flexbox"> 
                     <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox tfhb-full-width">
                         <div class="single-meeting-content">
@@ -200,7 +205,10 @@ window.addEventListener('click', function(e) {
                             <transition name="tfhb-dropdown-transition">
                                 <div v-show="setupWizard.data.meeting.id == activeItemDropdown" class="tfhb-dropdown-wrap"> 
                                     <!-- route link -->
-                                    <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single">{{ __('Edit', 'hydra-booking') }}</router-link>
+                                    <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single tfhb-flexbox tfhb-gap-4 tfhb-align-center">
+                                        <Icon name="SquarePen" size=16 />
+                                        {{ __('Edit', 'hydra-booking') }}
+                                    </router-link>
                                     
                                 </div>
                             </transition>
