@@ -299,7 +299,7 @@ const Tfhb_Host_Filter = async (e) =>{
                     <!-- Create Or Update Availability --> 
                     <HbButton 
                         classValue="tfhb-btn boxed-btn flex-btn " 
-                        @click="CreateHosts( ['user_id', 'username', 'email', 'password'] )"
+                        @click="CreateHosts( ['username', 'email', 'password'] )"
                         :buttonText="__('Create Hosts', 'hydra-booking')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 

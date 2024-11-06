@@ -260,7 +260,7 @@ const formatTimeSlots = (timeSlots) =>  {
 }
 
 const fetchHostAvailability = async (host) => { 
-    alert(host)
+  
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/single-host-availability/'+host, {
             headers: {

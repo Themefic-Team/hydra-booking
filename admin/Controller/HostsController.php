@@ -468,8 +468,7 @@ class HostsController {
 
 		// return rest_ensure_response($request['others_information']);
 		// Check if user is selected
-		// $host_id = $request['id'];
-		$user_id = $request['user_id'];
+		$host_id = $request['id'];
 		if ( empty( $host_id ) || $host_id == 0 ) {
 			return rest_ensure_response(
 				array(
@@ -480,7 +479,7 @@ class HostsController {
 		}
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->getHostByUserId( $user_id );
+		$HostData = $host->get( $host_id );
 
 		if ( empty( $HostData ) ) {
 			return rest_ensure_response(
