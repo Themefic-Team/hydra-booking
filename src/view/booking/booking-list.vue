@@ -37,9 +37,10 @@ const select_all = ref(false);
 const selected_items = ref([]);
 const host_id = ref('');
 
-
+const exportAsPreloader = ref(false);
 // Export CSV
 const ExportBookingAsCSV = async () => {
+    exportAsPreloader.value = true;
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/export-csv', exportData, {
             headers: {
@@ -73,11 +74,15 @@ const ExportBookingAsCSV = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });   
+            exportAsPreloader.value = false;
+            ExportAsCSV.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
+            exportAsPreloader.value = false;
+            
         }
     } catch (error) {
         console.log(error);
@@ -333,7 +338,7 @@ const deleteItemConfirm = () => {
   
         <HbButton 
             classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
-            @click="ExportAsCSV"
+            @click="ExportAsCSV = true"
             :buttonText="__('Export as CSV', 'hydra-booking')"
             icon="FileDown"   
             :hover_animation="false" 
@@ -436,7 +441,17 @@ const deleteItemConfirm = () => {
       </div>
 
       <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
-        <button @click="ExportBookingAsCSV" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ __('Export Meeting', 'hydra-booking') }}</button> 
+        <HbButton 
+            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+            @click="ExportBookingAsCSV"
+            :buttonText="__('Export Booking', 'hydra-booking')"
+            icon="ChevronRight"   
+            hover_icon="ArrowRight"
+            :pre_loader="exportAsPreloader"
+            :hover_animation="true" 
+            icon_position = 'right'
+        /> 
+      
       </div>
     </template> 
 </HbPopup>
@@ -558,6 +573,7 @@ const deleteItemConfirm = () => {
             :option = "[
                 {'name': 'Pending', 'value': 'pending'},  
                 {'name': 'Confirmed', 'value': 'confirmed'},   
+                {'name': 'Re-schedule', 'value': 'schedule'},   
                 {'name': 'Canceled', 'value': 'canceled'}
             ]"
             @tfhb-onchange="Booking_Status_Callback" 
@@ -662,7 +678,7 @@ const deleteItemConfirm = () => {
                             </svg>
                             <div class="tfhb-status-popup">
                                 <ul class="tfhb-flexbox tfhb-gap-2">
-                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'approved')">{{ __('Approved', 'hydra-booking') }}</li>
+                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ __('Confirmed', 'hydra-booking') }}</li>
                                     <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ __('Pending', 'hydra-booking') }}</li>
                                     <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ __('Re-schedule', 'hydra-booking') }}</li>
                                     <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ __('Canceled', 'hydra-booking') }}</li>

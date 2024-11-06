@@ -277,8 +277,7 @@ const truncateString = (str, num) => {
 
     <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
         <template #header> 
-            <!-- {{ google_calendar }} -->
-            <h2>{{ __('Confirmation', 'hydra-booking') }}</h2>
+
             
         </template>  
 
@@ -320,7 +319,7 @@ const truncateString = (str, num) => {
             <div class="tfhb-single-meeting tfhb-flexbox " v-for="(smeeting, key) in Meeting.meetings"> 
                 <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox tfhb-full-width">
                     <div class="single-meeting-content">
-                        <h3> {{ smeeting.title ? truncateString(smeeting.title, 60) : 'No Title' }} </h3>
+                        <h3> <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }">{{ smeeting.title ? truncateString(smeeting.title, 60) : 'No Title' }} </router-link> </h3>
                         <div class="meeting-user-info">
                             <ul class="tfhb-flexbox">
                                 <li v-if="smeeting.duration">
