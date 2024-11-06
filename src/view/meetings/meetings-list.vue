@@ -399,10 +399,9 @@ const truncateString = (str, num) => {
                         <transition name="tfhb-dropdown-transition">
                             <div v-show="smeeting.id == activeItemDropdown" class="tfhb-dropdown-wrap "> 
                                 <!-- route link -->
-                                <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single">{{ __('Edit', 'hydra-booking') }}</router-link>
+                                <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single"><Icon name="SquarePen" size=16 />{{ __('Edit', 'hydra-booking') }}</router-link>
                                 
-                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="Meeting.deleteMeeting(smeeting.id, smeeting.post_id)">{{ __('Delete', 'hydra-booking') }}</span> -->
-                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)">{{ __('Delete', 'hydra-booking') }}</span>
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)"><Icon name="Trash2" size=16 />{{ __('Delete', 'hydra-booking') }}</span>
                             </div>
                         </transition>
                     </div>

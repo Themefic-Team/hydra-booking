@@ -124,12 +124,11 @@ onBeforeRouteLeave((to, from, next) => {
                         <transition  name="tfhb-dropdown-transition">
                             <div v-if="host.id == activeItemDropdown" class="tfhb-dropdown-wrap"> 
                                 <!-- route link -->
-                                <router-link :to="{ name: 'HostsProfile', params: { id: host.id } }" class="tfhb-dropdown-single">{{ __('View & Edit', 'hydra-booking') }}</router-link>
+                                <router-link :to="{ name: 'HostsProfile', params: { id: host.id } }" class="tfhb-dropdown-single"><Icon name="SquarePen" size=16 />{{ __('Edit', 'hydra-booking') }}</router-link>
                                 <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
                                 <span class="tfhb-dropdown-single" @click="emit('update-host-status',host.id, host.user_id, host.status)">{{host.status == 'activate' ? 'Deactivate' : 'Activate'}}</span>
                         
-                                <!-- <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="emit('delete-host', host.id, host.user_id)">{{ __('Delete', 'hydra-booking') }}</span> -->
-                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(host.id, host.user_id)">{{ __('Delete', 'hydra-booking') }}</span>
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(host.id, host.user_id)"><Icon name="Trash2" size=16 />{{ __('Delete', 'hydra-booking') }}</span>
                             </div>
                         </transition>
                     </div>

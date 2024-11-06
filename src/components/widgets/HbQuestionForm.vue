@@ -98,8 +98,8 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbText  
         v-model="questions_data.label"
         required= "true"  
-        :label="__('Level', 'hydra-booking')"  
-        :placeholder="__('Enter field level', 'hydra-booking')" 
+        :label="__('Label', 'hydra-booking')"  
+        :placeholder="__('Enter field Label', 'hydra-booking')" 
         name="type"
         @keyup="() => tfhbValidateInput('label')"
         @click="() => tfhbValidateInput('label')"
