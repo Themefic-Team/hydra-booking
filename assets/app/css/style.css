@@ -253,6 +253,7 @@
   z-index: 99;
   background-color: #fff;
   min-height: 100%;
+  box-sizing: border-box;
 }
 @media only screen and (max-width: 1170px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar {

@@ -274,6 +274,7 @@
             z-index: 99;
             background-color: #fff;
             min-height: 100%;
+            box-sizing: border-box;
             @media #{$max1170}{
                 padding: 0 16px 16px 0;
             }
