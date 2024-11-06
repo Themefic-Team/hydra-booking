@@ -43,13 +43,13 @@ const closePopup = () => {
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <!-- <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span> -->
-            
+             
             <router-link v-if="props.from == 'host' && mail_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <HbButton  
                 v-else @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="props.mail_data.key == 1 ? 'Connected' : 'Connect' " 
+                :buttonText="props.mail_data.status == 1 ? 'Connected' : 'Connect' " 
                 :hover_animation="false"    
             /> 
 
