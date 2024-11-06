@@ -116,7 +116,7 @@ class MeetingController {
 			'/meetings/integration/fields',
 			array(
 				'methods'  => 'POST',
-				'callback' => array( $this, 'getZohoModulsFields' ),
+				'callback' => array( $this, 'getIntegrationModulsFields' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
@@ -862,7 +862,7 @@ class MeetingController {
 		} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
 			$fluentcrm_Data['status'] = false;
 		} else {
-			$fluentcrm_Data['status'] = true;
+			$fluentcrm_Data['status'] = false;
 		}
 		if ( $fluentcrm_Data['status'] ) {
 			global $wpdb;
@@ -1189,7 +1189,7 @@ class MeetingController {
 	}
 
 	/* Modules Fileds */
-	public function getZohoModulsFields( $request ) {
+	public function getIntegrationModulsFields( $request ) {
 		$host      = ! empty( $request['host_id'] ) ? $request['host_id'] : '';
 		$hook_type = ! empty( $request['webhook'] ) ? $request['webhook'] : '';
 

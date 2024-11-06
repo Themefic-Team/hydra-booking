@@ -6,6 +6,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import axios from 'axios'  
 const props = defineProps([
     'IntegrationsValue',  
     'meeting',  
@@ -15,7 +16,32 @@ const props = defineProps([
 const changeIntegrations = (value) => { 
     props.IntegrationsValue.addNewIntegrations(value)
 }
- 
+
+// modules callback
+const moduleFields = async (e) => {
+    if(e){
+        let data = {
+            host_id: props.meeting.host_id,
+            webhook: props.IntegrationsValue.integrationsData.webhook,
+            module: e
+        };  
+        
+        try { 
+            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/integration/fields', data, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                }
+            } );
+            if (response.data.status) { 
+                props.IntegrationsValue.integrationsData.fields = response.data.fields;
+            }
+        } catch (error) {
+            console.log(error);
+        } 
+    }
+}
+
 </script>
 
 <template> 
