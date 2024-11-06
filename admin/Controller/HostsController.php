@@ -532,7 +532,7 @@ class HostsController {
 	public function UpdateHostsStatus() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 
-		$user_id = $request['user_id'];
+		$host_id = $request['id'];
 		if ( $request['status'] == 1 || 'deactivate' == $request['status'] ) {
 			$status = 'activate';
 		}
@@ -551,7 +551,7 @@ class HostsController {
 
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->getHostByUserId( $user_id );
+		$HostData = $host->get( $host_id );
 
 		if ( empty( $HostData ) ) {
 			return rest_ensure_response(
