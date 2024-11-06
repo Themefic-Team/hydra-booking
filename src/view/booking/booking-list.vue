@@ -285,6 +285,34 @@ const deleteItemConfirm = () => {
     selected_items.value = [];
 }
 
+// Filtering
+const filterData = reactive({
+    name: '',
+})
+const Tfhb_Booking_Filter = async (e) =>{
+    filterData.name=e.target.value;
+    skeleton.value = true;
+    try {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/filter', {
+            params: {
+                filterData
+            },
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_integrations'
+            }
+        });
+        
+        if (response.data.status) { 
+            hosts.data = response.data.hosts;  
+            skeleton.value = false;
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -304,7 +332,7 @@ const deleteItemConfirm = () => {
             </div>
         </div>
         <div class="tfhb-header-filters">
-            <input type="text" placeholder="Host name or meeting title" /> 
+            <input type="text" placeholder="Host name or meeting title" @keyup="Tfhb_Booking_Filter" /> 
             <span><Icon name="Search" size=20 /></span>
         </div>
     </div>

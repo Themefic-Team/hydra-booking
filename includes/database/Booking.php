@@ -260,6 +260,10 @@ class Booking {
 		return $data;
 	}
 
+	public function getFilter( $filterData = '' ) {
+
+	}
+
 	// delete
 	public function delete( $id ) {
 		global $wpdb;

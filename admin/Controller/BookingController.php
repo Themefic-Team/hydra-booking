@@ -120,6 +120,22 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+		// Filter Booking
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/filter',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'filterBookings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'args'     => array(
+					'title' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+			)
+		);
 	}
 
 
@@ -352,6 +368,21 @@ class BookingController {
 		);
 	}
 
+	// Booking Filter
+	public function filterBookings( $request ) {
+		$filterData = $request->get_param( 'filterData' );
+		// Hosts Lists
+		$host      = new Host();
+		$HostsList = $host->get( '', $filterData );
+
+		// Return response
+		$data = array(
+			'status'  => true,
+			'hosts'   => $HostsList,
+			'message' => 'Host Data Successfully Retrieve!',
+		);
+		return rest_ensure_response( $data );
+	}
 
 	// Create Booking
 	public function CreateBooking() {
