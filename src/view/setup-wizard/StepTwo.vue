@@ -120,7 +120,7 @@ const StepTwo = (validator_field) => {
             /> 
             
             <HbButton 
-                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8" 
                 @click="props.setupWizard.currentStep = 'step-three';" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true" 
