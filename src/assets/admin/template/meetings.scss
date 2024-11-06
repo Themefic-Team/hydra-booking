@@ -313,6 +313,7 @@
             margin-left: 16px !important;
         }
         .tfhb-meeting-create-notice{ 
+            flex-wrap: nowrap !important;
             .tfhb-meeting-heading-wrap{
                 width: calc(100% - 100px);
                 .tfhb-meeting-heading{
@@ -442,7 +443,7 @@
         width: calc(100% - 32px);
     }
     .tfhb-meeting-location-removed{
-        margin-top: 24px;
+        margin-top: 30px;
         cursor: pointer;
         transition:$transition;
         &:hover{

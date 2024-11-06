@@ -293,6 +293,10 @@ const Meeting = reactive({
                     this.singleMeeting.MeetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
                 }
              
+                if(response.data.meeting.notification){
+                    this.singleMeeting.MeetingData.notification = response.data.meeting.notification
+                }
+
                 this.singleMeeting.MeetingData.webhook = response.data.meeting.webhook ? JSON.parse(response.data.meeting.webhook) : '';
                 this.singleMeeting.MeetingData.integrations = response.data.meeting.integrations ? JSON.parse(response.data.meeting.integrations) : '';
                 this.singleMeeting.MeetingData.mailchimp = response.data.mailchimp ? response.data.mailchimp : '';
@@ -312,7 +316,6 @@ const Meeting = reactive({
      
                 // skeleton.value = false
                 this.time_zone = response.data.time_zone;
-                // alert(1);
                 this.skeleton = false; 
             
             }else{ 

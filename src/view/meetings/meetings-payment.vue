@@ -2,12 +2,14 @@
 import { __ } from '@wordpress/i18n';
 import {ref, onBeforeMount} from 'vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'
-
+import { useRouter} from 'vue-router' 
 // component
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { Meeting } from '@/store/meetings'
 
+
+const router = useRouter();
 
 const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
@@ -56,7 +58,7 @@ onBeforeMount(() => {
         <div v-if="meeting.payment_status == 1"  class="tfhb-notification-wrap tfhb-admin-card-box tfhb-m-0 tfhb-gap-32 tfhb-full-width">
             
             <div  class="tfhb-content-wrap tfhb-full-width"> 
-                <div class="tfhb-integrations-wrap tfhb-flexbox"> 
+                <div class="tfhb-integrations-wrap tfhb-flexbox tfhb-gap-4"> 
 
                     <HbDropdown 
                         v-model="meeting.payment_method" 
@@ -66,15 +68,38 @@ onBeforeMount(() => {
                         name="payment_method"
                         placeholder="Select Payment Method"  
                         :option = "[
-                            {name: 'Woocommerce', value: 'woo_payment', disable: Meeting.meetingPaymentIntegration.woo_payment, icon: $tfhb_url+'/assets/images/Woo.png',  },  
-                            {name: 'Paypal', value: 'paypal_payment', disable: Meeting.meetingPaymentIntegration.paypal, icon: $tfhb_url+'/assets/images/paypal.svg',}, 
-                            {name: 'Stripe Pay', value: 'stripe_payment', disable: Meeting.meetingPaymentIntegration.stripe, icon: $tfhb_url+'/assets/images/stripe-small.svg',}, 
+                            {name: 'Woocommerce', value: 'woo_payment', icon: $tfhb_url+'/assets/images/Woo.png',  },  
+                            {name: 'Paypal', value: 'paypal_payment', icon: $tfhb_url+'/assets/images/paypal.svg',}, 
+                            {name: 'Stripe Pay', value: 'stripe_payment', icon: $tfhb_url+'/assets/images/stripe-small.svg',}, 
                         ]"   
                     /> 
+
+                    <div  v-if="meeting.payment_method == 'woo_payment' && Meeting.meetingPaymentIntegration.woo_payment == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Woocommerce is not connected. 
+                        <HbButton 
+                            classValue="tfhb-btn flex-btn" 
+                            @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                            :buttonText="__('Please Configure', 'hydra-booking')"
+                        />  
+                    </div>
+                    <div  v-if="meeting.payment_method == 'paypal_payment' && Meeting.meetingPaymentIntegration.paypal == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Paypal is not connected. 
+                        <HbButton 
+                            classValue="tfhb-btn flex-btn" 
+                            @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                            :buttonText="__('Please Configure', 'hydra-booking')"
+                        />  
+                    </div>
+                    <div  v-if="meeting.payment_method == 'stripe_payment' && Meeting.meetingPaymentIntegration.stripe == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Stripe is not connected. 
+                        <HbButton 
+                            classValue="tfhb-btn flex-btn" 
+                            @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                            :buttonText="__('Please Configure', 'hydra-booking')"
+                        />  
+                    </div>
                     <!-- Woo Integrations  -->
                 </div> 
             </div>
-            <div v-if="meeting.payment_status == 1 && meeting.payment_method=='woo_payment'" class="tfhb-single-form-field" style="width: 100%;" selected="1">
+
+            <div v-if="meeting.payment_status == 1 && meeting.payment_method=='woo_payment' && Meeting.meetingPaymentIntegration.woo_payment == false" class="tfhb-single-form-field" style="width: 100%;" selected="1">
                 <HbDropdown 
                     v-model="meeting.payment_meta.product_id" 
                     required= "true" 
@@ -116,7 +141,7 @@ onBeforeMount(() => {
             <HbButton  
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
-            :buttonText="__('Save & Preview', 'hydra-booking')"
+            :buttonText="__('Save & Finish', 'hydra-booking')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

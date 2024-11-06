@@ -7,6 +7,8 @@ import { toast } from "vue3-toastify";
 // Get Current Route url
 const currentRoute = useRouter().currentRoute.value.path;
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import GoogleCalendarIntegrations from '@/components/hosts/GoogleCalendarIntegrations.vue';
 import OutlookCalendarIntegrations from '@/components/hosts/OutlookCalendarIntegrations.vue';
 import AppleCalendarIntegrations from '@/components/hosts/AppleCalendarIntegrations.vue';
@@ -14,6 +16,7 @@ import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 
 const route = useRoute();
+const router = useRouter();
 //  Load Time Zone 
 const skeleton = ref(true);
 const props = defineProps({
@@ -194,7 +197,22 @@ onBeforeMount(() => {
 </script>
 
 <template>
+    <HbInfoBox name="first-modal">
+        
+        <template #content>
+            <span>Before connecting make sure you provide the necessary credentials to 
+                <HbButton 
+                        classValue="tfhb-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        buttonText="Settings  Integrations"
+                    />  
+            </span>
+            
+        </template>
+    </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-m-0">     
+
+        
         <!-- Host Integration -->
         <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
         <OutlookCalendarIntegrations  display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />

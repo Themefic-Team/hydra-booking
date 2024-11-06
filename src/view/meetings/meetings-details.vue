@@ -172,9 +172,9 @@ onMounted(() => {
         </div>
 
         <div class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width"> 
-            <div class="tfhb-flexbox tfhb-gap-16 tfhb-mb-24" v-for="(slocation, index) in meeting.meeting_locations" :key="index">
+            <div class="tfhb-flexbox  tfhb-mb-24" style="gap:4px 16px"  v-for="(slocation, index) in meeting.meeting_locations" :key="index">
                 <div class="tfhb-meeting-location tfhb-flexbox tfhb-gap-16" :style="meeting.meeting_locations.length<2 ?'width:100%' : '' ">
-                    <!-- Location --> 
+                  
                     <HbDropdown 
                         v-model="slocation.location" 
                         required= "true" 
@@ -182,15 +182,19 @@ onMounted(() => {
                         :selected = "1"
                         :placeholder="__('Location', 'hydra-booking')" 
                         :option = "[
-                            {name: 'Zoom', value: 'zoom', disable:  props.integrations.zoom_meeting_status, icon: $tfhb_url+'/assets/images/zoom-icon-small.svg',}, 
-                            {name: 'Google Meet', value: 'meet', disable: props.integrations.google_calendar_status, icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
+                            {name: 'Zoom', value: 'zoom',  icon: $tfhb_url+'/assets/images/zoom-icon-small.svg', }, 
+                            {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
                             {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
                             {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                             {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},
                             {name: 'Organizer Phone Number', value: 'Organizer Phone Number'},
-                            {name: 'Add Custom', value: 'Add Custom'}
+                            {name: 'Add Custom', value: 'Custom'}
                         ]" 
-                        :width= "50"
+                        :width= "
+                        slocation.location ==  'Custom' ||
+                        slocation.location ==  'In Person (Organizer Address)' ||
+                        slocation.location ==  'Organizer Phone Number' 
+                        ? 50 : 100"
                     />
                     <!-- Address -->
                     <HbText  
@@ -209,7 +213,7 @@ onMounted(() => {
                         selected = "1"
                         :placeholder="__('Enter Address', 'hydra-booking')" 
                         :width= "50"
-                        v-if="'Add Custom'==slocation.location"
+                        v-if="'Custom'==slocation.location"
                     /> 
                     <HbText  
                         v-model="slocation.address" 
@@ -224,6 +228,21 @@ onMounted(() => {
                 </div>
                 <div class="tfhb-meeting-location-removed" v-if="meeting.meeting_locations.length>1" @click="emit('remove-meeting-location', index)">
                     <Icon name="Trash" :width="16" />
+                </div>
+
+                <div  v-if="slocation.location == 'zoom' && props.integrations.zoom_meeting_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Zoom is not connected. 
+                    <HbButton 
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        :buttonText="__('Please Configure', 'hydra-booking')"
+                    />  
+                </div>
+                <div  v-if="slocation.location == 'meet' && props.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Google Meet is not connected. 
+                    <HbButton 
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        :buttonText="__('Please Configure', 'hydra-booking')"
+                    />  
                 </div>
             </div>
             <div class="tfhb-add-new-question">

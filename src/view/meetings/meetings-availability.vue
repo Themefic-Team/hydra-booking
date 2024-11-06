@@ -351,7 +351,7 @@ const isobjectempty = (data) => {
                             selected = "1" 
                             :config="{
                             }"
-                            width="41"
+                            width="45"
                             :placeholder="__('Start', 'hydra-booking')"
                         /> 
                         <Icon name="MoveRight" size=20 /> 
@@ -361,7 +361,7 @@ const isobjectempty = (data) => {
                             selected = "1"
                             :config="{
                             }"
-                            width="41"
+                            width="45"
                             :placeholder="__('End', 'hydra-booking')"   
                         /> 
 

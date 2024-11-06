@@ -6,6 +6,8 @@ import { toast } from "vue3-toastify";
 
 // Get Current Route url
 const currentRoute = useRouter().currentRoute.value.path;
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue';
@@ -13,6 +15,7 @@ import MailchimpIntegrations from '@/components/integrations/MailchimpIntegratio
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
 
 const route = useRoute();
+const router = useRouter();
 //  Load Time Zone 
 const skeleton = ref(true);
 const props = defineProps({
@@ -217,6 +220,21 @@ onBeforeMount(() => {
 </script>
 
 <template>
+
+    <HbInfoBox name="first-modal">
+        
+        <template #content>
+            <span>Before connecting make sure you provide the necessary credentials to 
+                <HbButton 
+                        classValue="tfhb-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        buttonText="Settings  Integrations"
+                    />  
+            </span>
+            
+        </template>
+    </HbInfoBox>
+            
     <div class="tfhb-admin-card-box tfhb-m-0">    
         <!-- Woo  Integrations  --> 
         <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" 

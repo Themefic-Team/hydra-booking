@@ -347,8 +347,6 @@ const AvailabilityTabs = (type) => {
                         name="title"
                         selected = "1"
                         :placeholder="__('Type meeting title', 'hydra-booking')" 
-                        @keyup="() => tfhbValidateInput('title')"
-                        @click="() => tfhbValidateInput('title')"
                         :errors="errors.title"
                     /> 
                     <HbTextarea  
@@ -375,8 +373,6 @@ const AvailabilityTabs = (type) => {
                                 {name: '60 minutes', value: '60'},
                                 {name: 'Custom', value: 'custom'} 
                             ]" 
-                            @add-change="tfhbValidateInput('duration')" 
-                            @add-click="tfhbValidateInput('duration')" 
                             :errors="errors.duration"
                         />
                         <!-- Duration -->
@@ -399,8 +395,8 @@ const AvailabilityTabs = (type) => {
                     </div>
 
                     <div class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width"> 
-                        <div class="tfhb-flexbox tfhb-gap-16 tfhb-mb-24" v-for="(slocation, index) in Meeting.singleMeeting.MeetingData.meeting_locations" :key="index">
-                            <div class="tfhb-meeting-location tfhb-flexbox tfhb-gap-16" :style="Meeting.singleMeeting.MeetingData.meeting_locations.length<2 ?'width:100%' : '' ">
+                        <div class="tfhb-flexbox  tfhb-mb-24"  style="gap:4px 16px"  v-for="(slocation, index) in Meeting.singleMeeting.MeetingData.meeting_locations" :key="index">
+                            <div class="tfhb-meeting-location tfhb-gap-16" :style="Meeting.singleMeeting.MeetingData.meeting_locations.length<2 ?'width:100%' : '' ">
                                 <!-- Location --> 
                                 <HbDropdown 
                                     v-model="slocation.location" 
@@ -409,15 +405,19 @@ const AvailabilityTabs = (type) => {
                                     :selected = "1"
                                     :placeholder="__('Location', 'hydra-booking')" 
                                     :option = "[
-                                        {name: 'Zoom', value: 'zoom', disable:  Meeting.singleMeeting.integrations.zoom_meeting_status, icon: $tfhb_url+'/assets/images/zoom-icon-small.svg', }, 
-                                        {name: 'Google Meet', value: 'meet', disable: Meeting.singleMeeting.integrations.google_calendar_status, icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
+                                        {name: 'Zoom', value: 'zoom',  icon: $tfhb_url+'/assets/images/zoom-icon-small.svg', }, 
+                                        {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
                                         {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
                                         {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                                         {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},
                                         {name: 'Organizer Phone Number', value: 'Organizer Phone Number'},
-                                        {name: 'Add Custom', value: 'Add Custom'}
+                                        {name: 'Add Custom', value: 'Custom'}
                                     ]" 
-                                    :width= "50"
+                                    :width= "
+                                    slocation.location ==  'Custom' ||
+                                    slocation.location ==  'In Person (Organizer Address)' ||
+                                    slocation.location ==  'Organizer Phone Number' 
+                                    ? 50 : 100"
                                 />
                                 <!-- Address -->
                                 <HbText  
@@ -436,7 +436,7 @@ const AvailabilityTabs = (type) => {
                                     selected = "1"
                                     :placeholder="__('Enter Address', 'hydra-booking')" 
                                     :width= "50"
-                                    v-if="'Add Custom'==slocation.location"
+                                    v-if="'Custom'==slocation.location"
                                 /> 
                                 <HbText  
                                     v-model="slocation.address" 
@@ -452,6 +452,22 @@ const AvailabilityTabs = (type) => {
                             <div class="tfhb-meeting-location-removed" v-if="Meeting.singleMeeting.MeetingData.meeting_locations.length>1" @click="removeLocations(index)">
                                 <Icon name="Trash" :width="16" />
                             </div>
+  
+                            <div  v-if="slocation.location == 'zoom' && Meeting.singleMeeting.integrations.zoom_meeting_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Zoom is not connected. 
+                                <HbButton 
+                                    classValue="tfhb-btn flex-btn" 
+                                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                                    :buttonText="__('Please Configure', 'hydra-booking')"
+                                />  
+                            </div>
+                            <div  v-if="slocation.location == 'meet' && Meeting.singleMeeting.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Google Meet is not connected. 
+                                <HbButton 
+                                    classValue="tfhb-btn flex-btn" 
+                                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                                    :buttonText="__('Please Configure', 'hydra-booking')"
+                                />  
+                            </div>
+
                         </div>
                         <div class="tfhb-add-new-question">
                         
@@ -491,8 +507,6 @@ const AvailabilityTabs = (type) => {
                         name="host_id"
                         :placeholder="__('Select Host', 'hydra-booking')"  
                         :option = "Host.hosts" 
-                        @add-change="tfhbValidateInput('host_id')" 
-                        @add-click="tfhbValidateInput('host_id')" 
                         :errors="errors.host_id"
                         @tfhb-onchange="Host_Avalibility_Callback"
                     />
@@ -538,8 +552,6 @@ const AvailabilityTabs = (type) => {
                         placeholder="Select Time Zone"  
                         :option = "Meeting.time_zone" 
                         v-if="'custom'==Meeting.singleMeeting.MeetingData.availability_type"
-                        @add-change="tfhbValidateInput('availability_custom.time_zone')" 
-                        @add-click="tfhbValidateInput('availability_custom.time_zone')" 
                         :errors="errors.availability_custom___time_zone"
                     /> 
                     <!-- Time Zone --> 
@@ -792,7 +804,7 @@ const AvailabilityTabs = (type) => {
                         
                         <HbButton 
                             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                            @click="updateMeetingData(['title',  'duration'])"
+                            @click="updateMeetingData(['title',  'duration', 'host_id'])"
                             :buttonText="__('Save & Continue', 'hydra-booking')"
                             icon="ChevronRight" 
                             hover_icon="ArrowRight" 

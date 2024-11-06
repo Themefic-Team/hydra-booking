@@ -1,6 +1,9 @@
-.toplevel_page_hydra-booking #wpcontent {
-	padding: 0;
+.toplevel_page_hydra-booking {
     background-color: $surface-primary;
+    #wpcontent {
+        padding: 0;
+        
+    }
 }
 #tfhb-admin-app { 
     // margin-top: 20px;
@@ -71,6 +74,27 @@
         margin: 0;
         font-family: "Inter", sans-serif;
         margin-bottom: 2px;
+    }
+
+    .tfhb-warning-message{
+        color: $error-text;
+        font-weight: $font-weight-medium;
+    }
+
+    // info box
+    .tfhb-info-box{
+        background-color: $info-background;
+        border: $border-reguler $border-type $surface-border;
+        border-radius: $border-radius-medium;
+        padding: 16px;
+        margin-bottom: 16px;
+        color: $info-text;
+        flex-wrap: nowrap !important;
+
+        .tfhb-btn{
+            margin: 0 !important;
+            padding: 0 !important;
+        }
     }
 
     #toplevel_page_hydra-booking .wp-submenu-wrap li.current a{

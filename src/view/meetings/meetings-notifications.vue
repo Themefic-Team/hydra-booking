@@ -72,7 +72,7 @@ const UpdateNotification = async () => {
 
 
 
-    emit('update-meeting', []) 
+    // emit('update-meeting', []) 
 
     setTimeout(() => {
         hostBookingConfirmPopUp.value = false;
@@ -215,7 +215,7 @@ const UpdateNotification = async () => {
         </div> 
 
         <div class="tfhb-submission-btn"> 
-            <!-- <HbButton  
+            <HbButton  
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting')"
                 :buttonText="__('Save & Continue', 'hydra-booking')"
@@ -223,7 +223,7 @@ const UpdateNotification = async () => {
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
                 :pre_loader="props.update_preloader"
-            />   -->
+            />  
         </div>
         <!--Bookings -->
     </div>

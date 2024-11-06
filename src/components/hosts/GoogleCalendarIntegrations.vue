@@ -44,7 +44,7 @@ const storedOptionData = (data) => {
 
             <div class="cartbox-text">
                 <h3>{{ __('Google Calendar/Meet', 'hydra-booking') }}</h3> 
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <p>{{ __('Connect your Google Calendar/Meet to sync your booked events.', 'hydra-booking') }}</p>
 
             </div>
         </div> 

@@ -3,17 +3,32 @@ import { __ } from '@wordpress/i18n';
 import {ref} from 'vue'
 import Icon from '@/components/icon/LucideIcon.vue'  
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import { useRouter, useRoute, RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import axios from 'axios'  
 const props = defineProps([
     'IntegrationsValue',  
     'meeting',  
 ])
-
+const router = useRouter();
+const selecte_integrations = ref('')
 // dropdown change 
 const changeIntegrations = (value) => { 
+    
+    if(value == 'Mailchimp' && !props.meeting.mailchimp.status == true){
+        return;
+    }
+    if(value == 'FluentCRM' && !props.meeting.fluentcrm.status == true){
+        return;
+    }
+    if(value == 'ZohoCRM' && !props.meeting.zohocrm.status == true){
+        return;
+    }
+    
+    
     props.IntegrationsValue.addNewIntegrations(value)
 }
 
@@ -239,12 +254,33 @@ const moduleFields = async (e) => {
                 selected = "1"
                 placeholder="Select integrations"
                 :option = "[
-                    {name: 'Mailchimp', value: 'Mailchimp', disable: !props.meeting.mailchimp.status, icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
-                    {name: 'FluentCRM', value: 'FluentCRM', disable: !props.meeting.fluentcrm.status, icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
-                    {name: 'ZohoCRM', value: 'ZohoCRM', disable: !props.meeting.zohocrm.status, icon: $tfhb_url+'/assets/images/Zoho.svg',},
+                    {name: 'Mailchimp', value: 'Mailchimp', icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
+                    {name: 'FluentCRM', value: 'FluentCRM', icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
+                    {name: 'ZohoCRM', value: 'ZohoCRM', icon: $tfhb_url+'/assets/images/Zoho.svg',},
                 ]"
                 @tfhb-onchange="changeIntegrations"
             /> 
+            <div  v-if="selecte_integrations == 'Mailchimp' && !props.meeting.mailchimp.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Mailchimp is not connected. 
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div>
+            <div  v-if="selecte_integrations == 'FluentCRM' && !props.meeting.fluentcrm.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">FluentCRM is not connected. 
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div>
+            <div  v-if="selecte_integrations == 'ZohoCRM' && !props.meeting.zohocrm.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">ZohoCRM is not connected. 
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div>
         </div> 
 
     </div>

@@ -513,7 +513,7 @@ const UpdateMeetingData = async (validator_field) => {
         if (response.data.status == true) { 
             meetingData.slug = response.data.meeting.slug; 
             // toast.success(response.data.message, {
-            //         position: 'bottom-right', // Set the desired position
+            //         position: 'bottom-right', // Set the Fdesired position
             //         "autoClose": 1500,
             //     });
             let nextRouteName = '';
@@ -529,16 +529,17 @@ const UpdateMeetingData = async (validator_field) => {
             if("MeetingsCreateQuestions"==route.name){ 
                 nextRouteName = 'MeetingsCreateNotifications';
             }
-            // if("MeetingsCreateNotifications"==route.name){
-            //     // router.push({ name: 'MeetingsCreateIntegrations' });
-            //     nextRouteName = 'MeetingsCreateIntegrations';
-            // }
+            if("MeetingsCreateNotifications"==route.name){
+                // router.push({ name: 'MeetingsCreateIntegrations' });
+                nextRouteName = 'MeetingsCreateIntegrations';
+            }
             if("MeetingsCreateIntegrations"==route.name){ 
                 nextRouteName = 'MeetingsCreatePayment';
             }
             if("MeetingsCreatePayment"==route.name){ 
-                // sharePopupData();
-                window.open(meetingData.permalink, '_blank'); 
+                sharePopupData();
+                // window.open(meetingData.permalink, '_blank'); 
+
 
             }
             if (nextRouteName) {
