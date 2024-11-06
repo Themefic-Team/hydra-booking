@@ -88,7 +88,7 @@ const sikpStepThree = () => {
                 icon_position="left" 
             /> 
             <HbButton 
-                classValue="tfhb-btn secondary-btn  tfhb-flexbox tfhb-gap-8  tfhb-icon-hover-animation" 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="sikpStepThree" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true"  

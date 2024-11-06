@@ -158,7 +158,7 @@ const truncateString = (str, num) => {
                     </span>
 
                     <span class="cartbox-title">{{ __('Total Booking', 'hydra-booking') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
+                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_bookings.total}}</span>
                             
@@ -194,7 +194,7 @@ const truncateString = (str, num) => {
                     </span>
 
                     <span class="cartbox-title">{{ __('Total Earnings', 'hydra-booking') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
+                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_earning.total}}</span>
                             
@@ -231,7 +231,7 @@ const truncateString = (str, num) => {
                     </span>
 
                     <span class="cartbox-title">{{ __('Completed Bookings', 'hydra-booking') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
+                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_completed_bookings.total}}</span>
                             
@@ -267,7 +267,7 @@ const truncateString = (str, num) => {
                     </span>
 
                     <span class="cartbox-title">{{ __('Canceled Bookings', 'hydra-booking') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8">
+                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_cancelled_bookings.total}}</span>
                             
@@ -308,7 +308,7 @@ const truncateString = (str, num) => {
 
                     <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ __('Recent Bookings', 'hydra-booking') }}</h3>
                     <!-- Single Notice Box -->
-                    <div  v-if="Dashboard.data.recent_booking.length > 0"  class="tfhb-dashboard-notice-box-content tfhb-scrollbar ">
+                    <div  v-if="Dashboard.data.recent_booking.length > 0"  class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width">
                         <div class=" tfhb-flexbox tfhb-gap-16 tfhb-full-width">
                             <div
                                 v-for="(data, index) in Dashboard.data.recent_booking"
@@ -350,7 +350,7 @@ const truncateString = (str, num) => {
                 <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
                     <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ __('Upcoming Meetings', 'hydra-booking') }}</h3>
 
-                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar " >
+                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width" >
                         <!-- Single Notice Box -->
                         <div class="tfhb-flexbox tfhb-gap-16 tfhb-full-width">
                             <div 

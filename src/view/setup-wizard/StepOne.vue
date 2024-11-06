@@ -88,7 +88,7 @@ const StepOne = () => {
                 :hover_animation="true" 
             />  
             <HbButton 
-                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8 " 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="props.setupWizard.currentStep = 'step-two'" 
                 :buttonText="__('Skip', 'hydra-booking')"  
                 :hover_animation="true" 
