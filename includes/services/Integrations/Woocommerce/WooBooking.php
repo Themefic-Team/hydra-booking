@@ -65,7 +65,7 @@ class WooBooking {
 		
 		$order = wc_get_order( $order_id );
 		$items = $order->get_items(); 
-		// tfhb_print_r($order->get_meta( 'tfhb_order_meta' ));
+		 
 		foreach ( $items as $item_id => $item ) { 
 			if ( ! empty( $item->get_meta( '_tfhb_booking_id' ) ) ) {
 				// Item Sales Price
@@ -82,7 +82,7 @@ class WooBooking {
 					)
 				);
 
-				// tfhb_print_r( $item->get_meta( '_tfhb_booking_id' ) );
+				
 				// Update Transaction ID Data 
 				$booking = new Booking();
 				$get_booking = $booking->get( 
@@ -102,7 +102,7 @@ class WooBooking {
 					true
 				);
 
-				// tfhb_print_r($price);
+				
 				$transactions = new Transactions();
 				$transation_history = array(
 					'wc_order_id' => $order_id, 

@@ -155,7 +155,7 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 			
 		
 			?> 
-				<div class="tfhb-confirmation-button">
+				<div class="tfhb-confirmation-button tfhb-mt-32">
 					<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
 					<?php echo ! empty( $booking_data ) ? 'Reschedule' : 'Confirm'; ?>  
 						<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 

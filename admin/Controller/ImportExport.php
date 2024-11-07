@@ -90,11 +90,11 @@ class ImportExport {
 			}
 		}
 		$data[0] = $newData;
-		tfhb_print_r( $firstData );
+		 
 
 		$booking = new Booking();
 		$booking->importBooking( $data );
-		tfhb_print_r( $data );
+		 
 		$data = array(
 			'status'  => true,
 			'data'    => true,

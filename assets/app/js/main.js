@@ -458,8 +458,7 @@
 		
 				// If the buyer cancels the payment
 				onCancel: function (data) {
-					// console.log('Payment was canceled by the user');
-					// alert('Payment canceled!');
+					
 				},
 		
 				// If there is an error
@@ -479,6 +478,7 @@
 
 			$this.find('.tfhb-booking-submit').append(submitPreLoader); 
 			$this.find('.tfhb-booking-submit').attr('disabled', 'disabled');
+			
  
 			// Interval to show the preloader
 			$this.find('.tfhb-notice').hide();
@@ -892,111 +892,6 @@
 		 
 			
 
-			// let dayNameText = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; 
-			// // Get Selected Date day
-			// let selected_date_day = new Date(selected_date).getDay(),
-			// 	selected_date_day_name = dayNameText[selected_date_day],
-			//  	calender_data = calenderData,
-			//  	duration = calender_data.duration,
-			//  	meeting_interval = calender_data.meeting_interval,
-			//  	buffer_time_before = calender_data.buffer_time_before,
-			//  	buffer_time_after = calender_data.buffer_time_after,
-			//  	availability = calender_data.availability,
-			// 	date_slots = availability.date_slots,
-			// 	time_slots = availability.time_slots, 
-			// 	selected_date_slots = time_slots.find( slot => slot.day == selected_date_day_name ),
-			// 	times = selected_date_slots.times, //array  
-			// 	timesData = []; //array 
-  
-			
-			// if(data_available == 'available'){
-			// 	// Generate time slots  form date_slots
-				
-			// 	for (var i = 0; i < date_slots.length; i++) {
-			// 		var date_slot = date_slots[i]; 
-			// 		// if In array current day 
-			// 		if(date_slot.status == false){
-			// 			continue;
-			// 		}
-
-			// 		//  has current date in this string 2024-05-17, 2024-06-29, 2024-06-28, 2024-06-26
-			// 		$dates = date_slot.date.split(',');
-			// 		if(!$dates.includes(selected_date)){ 
-			// 			continue;
-			// 		} 
-			// 		for (var i = 0; i < date_slot.times.length; i++) {
-						
-
-			// 			var startTime = date_slot.times[i].start;
-			// 			var endTime = date_slot.times[i].end;
-			// 			var generatedSlots = generateTimeSlots(startTime, endTime, duration, meeting_interval, buffer_time_before, buffer_time_after, selected_date, time_format, time_zone);
-			// 			// merge with timesData 
-			// 			// Current time 
-			// 			timesData = timesData.concat(generatedSlots);
-			// 		} 
-			// 	}
-
-			// }else{
-			// 	// Generate time slots
-			// 	for (var i = 0; i < times.length; i++) {
-			// 		var startTime = times[i].start;
-			// 		var endTime = times[i].end;
-			// 		var generatedSlots = generateTimeSlots(startTime, endTime, duration, meeting_interval, buffer_time_before, buffer_time_after, selected_date, time_format, time_zone);
-			// 		// merge with timesData 
-			// 		timesData = timesData.concat(generatedSlots);
-			// 	} 
-			// }
-			
-		 
-			// $.ajax({
-			// 	url: tfhb_app_booking.ajax_url, 
-			// 	type: 'POST',
-			// 	data: {
-			// 		action: 'tfhb_already_booked_times',
-			// 		nonce: tfhb_app_booking.nonce,
-			// 		selected_date: selected_date,
-			// 		time_format: time_format,
-			// 		time_zone: time_zone,
-			// 	}, 
-			// 	success: function (response) {  
-			// 		if(response.success){  
-
-			// 			var already_booked_times = response.data;
-			// 			console.log(already_booked_times);
- 
-			// 			$this.find('.tfhb-available-times ul').html('');
-
-			// 			for (var i = 0; i < timesData.length; i++) {
- 
-			// 				// if 24 hours format then convert to 12 hours format
-			// 				var already_booked = already_booked_times.find( slot => slot.start_time == timesData[i].start && slot.end_time == timesData[i].end );
-						 
-			// 				if(already_booked){ 
-								
-			// 					// Remove
-			// 					continue;
-			// 				}
- 
-			// 				// Remove 
-			// 				$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span class="time" data-time-start="'+ timesData[i].start +'" data-time-end="'+ timesData[i].end +'">' + timesData[i].start + '</span> </li>');
-						
-			// 			}
-
-			// 			// tfhb-meeting-times  with animation 
-			// 			$this.find('.tfhb-meeting-times').show();
-
-			// 		}
-			// 	},
-			// 	error: function (error) {
-			// 		console.log(error);
-			// 	}
-			// });
-			
-
-			
-
-
-			// loop times and add to html li
 			 
 
 		}

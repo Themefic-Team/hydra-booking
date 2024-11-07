@@ -108,8 +108,14 @@ class ZoomServices {
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
 
+
+			// get Option 
+			$option = get_option( '_tfhb_integration_settings' );
+
+
 			$data = array(
 				'status'  => true,
+				'integration_settings'  => $option,
 				'message' => 'Zoom Integration Settings Updated Successfully',
 			);
 			return $data;

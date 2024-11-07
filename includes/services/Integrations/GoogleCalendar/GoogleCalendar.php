@@ -406,18 +406,18 @@ class GoogleCalendar {
 		}
 		
 		if($meet_link != '' && $enable_meeting_location == true ){
-			$meeting_loaction  = json_decode($data->meeting_locations);
+			$booking = new Booking();
+			$getBookingData = $booking->get( $data->id ); 
+			$meeting_loaction  = json_decode($getBookingData->meeting_locations);
 			
 			$meeting_loaction->meet->address = $meet_link;
 
 			$data->meeting_locations = $meeting_loaction;
-			// conver object to array
-			// $update_booking_data = (array) $data;
-			// $booking = new Booking();
-			// $booking->update( $update_booking_data );
+		
 			
 		}
 		
+
 		$value['google_calendar'] = $google_calendar_body;
 
 		return $value;

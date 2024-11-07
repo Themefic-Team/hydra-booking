@@ -13,7 +13,7 @@ class MailHooks {
 	// Re-schedule
 	// Canceled
 	public function __construct() {
-		add_action( 'hydra_booking/after_booking_completed', array( $this, 'pushBookingToCompleted' ), 10, 1 );
+		add_action( 'hydra_booking/after_booking_completed', array( $this, 'pushBookingToCompleted' ), 20, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 10, 1 );
 	}
@@ -35,7 +35,6 @@ class MailHooks {
 	// If booking Status is Complted
 	public function pushBookingToCompleted( $booking ) {
 
-		
 
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
@@ -115,7 +114,7 @@ class MailHooks {
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $booking->host_id );
 
-		// tfhb_print_r($hostData);
+		
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
 			// Host Canceled Email, If Settings Enable for Host Canceled
@@ -370,7 +369,7 @@ class MailHooks {
 			$booking_locations_html = '<ul>';
 			foreach ($booking_locations as $key => $value) { 
 				if($key == 'zoom'){
-					$link = $value->address->join_url;
+					$link = $value->address->link;
 					$password = $value->address->password; 
 					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'</li>';
 				}else{

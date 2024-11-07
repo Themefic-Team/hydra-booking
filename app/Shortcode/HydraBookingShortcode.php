@@ -34,7 +34,7 @@ class HydraBookingShortcode {
 		add_action( 'wp_ajax_nopriv_tfhb_meeting_form_cencel', array( $this, 'tfhb_meeting_form_cencel_callback' ) );
 		add_action( 'wp_ajax_tfhb_meeting_form_cencel', array( $this, 'tfhb_meeting_form_cencel_callback' ) );
 
-		add_action( 'hydra_booking/after_booking_completed', array( $this, 'insert_calender_after_booking_completed' ) );
+		add_action( 'hydra_booking/after_booking_completed', array( $this, 'insert_calender_after_booking_completed' ), 10, 2 );
 
 		// Paypal Payment Confirmation
 		add_action( 'wp_ajax_nopriv_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
@@ -112,7 +112,7 @@ class HydraBookingShortcode {
 		$hostData =  new Host();
 		$host_meta = (array) $hostData->get( $host_id ); 
 		 
-		// tfhb_print_r($host_meta);
+		
 		// Time Zone
 		$DateTimeZone = new DateTimeController( 'UTC' );
 		$time_zone    = $DateTimeZone->TimeZone();
@@ -802,15 +802,50 @@ class HydraBookingShortcode {
 			$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
 			$meeting_creation = $zoom->create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta );
 			
+			
 
-			$meeting_location_data['zoom']['address'] = $meeting_creation;
+			$BookingMeta = new BookingMeta();
 
-			// Get Post Meta
-			$meeting_address_data = array(
-				'id'                => $single_booking_meta->id,
-				'meeting_locations' => wp_json_encode( $meeting_location_data ),
+			$booking_meta = array(
+				'booking_id' => $single_booking_meta->id,
+				'meta_key'   => 'zoom_meeting',
+				'value'      => wp_json_encode( $meeting_creation, true ),
 			);
-			$booking->update( $meeting_address_data );
+
+			$insert = $BookingMeta->add( $booking_meta );
+			
+			$insert_id = $insert['insert_id'];
+			
+			if ( $insert_id === false ) {
+				return false;
+			}
+
+			$getBookingData = $booking->get( $single_booking_meta->id );
+			$meeting_locations =  json_decode( $getBookingData->meeting_locations );
+
+			
+			$meeting_locations->zoom->address = array(
+				'link' => $meeting_creation['join_url'],
+				'password' => $meeting_creation['password'],
+			);
+
+			
+			
+			$update                     = array();
+			$update['id']               = $single_booking_meta->id;
+			$update['meeting_locations'] = $meeting_locations;
+
+
+			$booking->update( $update );
+
+			// $meeting_location_data['zoom']['address'] = $meeting_creation;
+
+			// // Get Post Meta
+			// $meeting_address_data = array(
+			// 	'id'                => $single_booking_meta->id,
+			// 	'meeting_locations' => wp_json_encode( $meeting_location_data ),
+			// );
+			// $booking->update( $meeting_address_data );
 
 		}
 	}

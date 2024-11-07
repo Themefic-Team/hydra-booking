@@ -106,6 +106,21 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 			<?php
 			if ( ! empty( $meeting['meeting_locations'] ) ) {
 				foreach ( $meeting['meeting_locations'] as $key => $location ) { 
+
+					$location_value = $location['address'];
+					if($location['location'] == 'zoom'){
+						$location_value = 'Zoom';
+					}elseif($location['location'] == 'meet'){
+						$location_value = 'Google Meet';
+					}elseif($location['location'] == 'Attendee Phone Number'){
+						$location_value = 'Attendee Phone Number';
+					}elseif($location['location'] == 'Organizer Phone Number'){
+						$location_value = 'Organizer Phone Number';
+					
+					}elseif($location['location'] == 'In Person (Attendee Address)'){
+						$location_value = 'In Person (Attendee Address) ';
+					}
+
 					 if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
 						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';
 					 }elseif($location['location'] == 'zoom'){
@@ -119,7 +134,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
                                 <input type="hidden" id="meeting_locations[' . esc_attr($key) . '][location]" name="meeting_locations[' . esc_attr($key) . '][location]" value="' . esc_attr( $location['location'] ) . '">
                                 <input type="hidden" id="meeting_locations[' . esc_attr($key) . '][address]" name="meeting_locations[' . esc_attr($key) . '][address]" value="' . esc_attr( $location['address'] ) . '">
                                 <div class="tfhb-icon">'.$icon.'</div> 
-                                ' . esc_html( $location['location'] ) . '
+                                ' . esc_html( $location_value ) . '
                             </li>';
 				}
 			}

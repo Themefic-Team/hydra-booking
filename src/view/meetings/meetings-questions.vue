@@ -191,9 +191,10 @@ const GetFormsData = async (value) => {
 
         </div>
 
-        <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0 tfhb-full-width" v-if="meeting.questions_type == 'existing'">  
+        <div class="tfhb-admin-card-box  tfhb-m-0 tfhb-full-width"  style="gap:4px 24px"   v-if="meeting.questions_type == 'existing'">  
   
                <!-- Time format -->
+               
                <HbDropdown 
                     
                     v-model="meeting.questions_form_type"  
@@ -203,7 +204,7 @@ const GetFormsData = async (value) => {
                     :selected = "1"
                     placeholder="Select Form Types"   
                     :option = "[
-                        {'name': 'Contact Form 7', 'value': 'wpcf7', disable:  integrations.cf7_status},  
+                        {'name': 'Contact Form 7', 'value': 'wpcf7' },  
                         {'name': 'Fluent Forms', 'value': 'fluent-forms', disable:  integrations.fluent_status},  
                         // {'name': 'Forminator Forms', 'value': 'forminator', disable:  integrations.forminator_status},  
                         {'name': 'Gravity Forms', 'value': 'gravityforms', disable:  integrations.gravity_status},  
@@ -211,6 +212,7 @@ const GetFormsData = async (value) => {
                     @tfhb-onchange="GetFormsData" 
                     
                 />
+              
 
                 <!-- Time format -->
                <HbDropdown 
@@ -223,6 +225,28 @@ const GetFormsData = async (value) => {
                     :option = "props.formsList.value" 
                    
                 />
+
+                <div  v-if="meeting.questions_form_type == 'wpcf7' && integrations.cf7_status == false" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Contact Form 7 is not connected. 
+                    <HbButton 
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        :buttonText="__('Please Configure', 'hydra-booking')"
+                    />  
+                </div>
+                <div  v-if="meeting.questions_form_type == 'fluent-forms' && integrations.fluent_status == false" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Fluent Forms is not connected. 
+                    <HbButton 
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        :buttonText="__('Please Configure', 'hydra-booking')"
+                    />  
+                </div>
+                <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == false" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Gravity Forms is not connected. 
+                    <HbButton 
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        :buttonText="__('Please Configure', 'hydra-booking')"
+                    />  
+                </div>
 
         </div>
 

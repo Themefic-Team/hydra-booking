@@ -56,7 +56,7 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
 				foreach ( $meeting_dates as $key => $date ) {
 
 					$date_strings .= gmdate( 'l, F j', strtotime( $date ) );
-					$date_strings .= ', ';
+					// $date_strings .= ', ';
 				}
 
 					echo ! empty( $booking['start_time'] ) ? '' . esc_html( $booking['start_time'] ) . ' - ' . esc_html( $booking['end_time'] ) . ', ' . esc_html( $date_strings ) . '' : ''
@@ -82,7 +82,11 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
 				
 				foreach ( $meeting_location as $key => $location ) {
 
-
+					
+					$address = $location['address'];
+					if($key == 'zoom'){
+						$address = $location['address']['link'];
+					}
 					if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
 						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';
 					 }elseif($location['location'] == 'zoom'){
@@ -96,7 +100,8 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
                                 <div class="tfhb-icon">
                                     '.$icon.'  
                                 </div> 
-                                ' . esc_html( $location['address'] ) . '
+                                ' . 
+								esc_html( $address ) . '
                             </li>';
 				}
 			}

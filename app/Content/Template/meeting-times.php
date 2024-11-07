@@ -49,7 +49,7 @@ $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data-
 $date_time = new DateTimeController( $selected_timezone );
 $data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_timezone, $time_format );
 
-// tfhb_print_r($data);
+
 ?> 
 <div class="tfhb-meeting-times">
 
