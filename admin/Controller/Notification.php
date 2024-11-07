@@ -80,7 +80,7 @@ class Notification {
     // Add Notification
     public function AddNotification($data){ 
         
-        // tfhb_print_r($data);
+       
 
         $meta = new Meta();
 

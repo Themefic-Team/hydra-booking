@@ -234,7 +234,7 @@ const Meeting = reactive({
                     },
                 }
             },
-            payment_status: 1,
+            payment_status: 0,
             meeting_price: '',
             payment_currency: '',
             payment_method: '',

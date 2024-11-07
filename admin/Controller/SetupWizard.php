@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 use HydraBooking\admin\Controller\RouteController;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\Meeting;
+use HydraBooking\Admin\Controller\Helper;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Availability;
 // exit
@@ -225,7 +226,7 @@ class SetupWizard {
 			'post_status' => 'publish',
 			'post_author' => $request['user_id'],
 		);
-
+		
 	
 		// Create Meeting Category as per Business Type
 		
@@ -246,12 +247,12 @@ class SetupWizard {
 			'availability_type'        => 'custom',
 			'availability_id'          => '0',
 			'availability_custom'      => isset( $request['availabilityDataSingle'] ) ? wp_json_encode( $request['availabilityDataSingle'] ) : '',
-			'booking_frequency'        => '[{"limit":1,"times":"Year"}]',
+			'booking_frequency'        => '[{"limit":200,"times":"Year"}]',
 			'recurring_status'         => '0',
 			'recurring_repeat'         => '[{"limit":1,"times":"Year"}]',
 			'questions_type'           => 'custom',
 			'questions'                => '[{"label":"name","type":"Text","placeholder":"Name","options":[],"required":1},{"label":"email","type":"Email","options":[],"placeholder":"Email","required":1},{"label":"address","type":"Text","placeholder":"Address","options":[],"required":1}]',
-			'payment_status'           => 0,
+			'payment_status'           => 1,
 			'payment_method'           => '',
 			'max_book_per_slot'        => 1,
 			'is_display_max_book_slot' => '0',
@@ -261,6 +262,14 @@ class SetupWizard {
 			'updated_at'               => gmdate( 'Y-m-d' ),
 			'status'                   => 'publish',
 		);
+
+		$_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+
+		if(empty($_tfhb_notification_settings)){
+			$default_notification =  new Helper();
+			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
+		}
+		$data['notification']   = json_encode($_tfhb_notification_settings);
 
 		// Check if user is already a meeting
 		$meeting = new Meeting();

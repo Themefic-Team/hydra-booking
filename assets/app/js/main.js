@@ -538,6 +538,7 @@
 				setTimeout(function(){ 
 					$this.find('.tfhb-notice').append('Payment Method Required');
 					$this.find('.tfhb-notice').show();
+					$this.find('.tfhb-booking-submit .tfhb-submit-preloader').remove();  
 				},  2000); // 2000 milliseconds = 2 seconds
 				
 			}
