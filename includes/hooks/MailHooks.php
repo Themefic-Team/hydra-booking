@@ -366,15 +366,16 @@ class MailHooks {
 			$booking_locations = json_decode($booking_data->booking_locations);
 			
 
+			
 			$booking_locations_html = '<ul>';
 			foreach ($booking_locations as $key => $value) { 
 				if($key == 'zoom'){
 					$link = $value->address->join_url;
 					$password = $value->address->password; 
-					$booking_locations_html .= '<li> <b>'.$key.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'</li>';
+					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'</li>';
 				}else{
 
-					$booking_locations_html .= '<li> <b>'.$key.' :</b> '.$value.'</li>'; 
+					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> '.$value->address.'</li>'; 
 				}
 			}
 			$booking_locations_html .= '</ul>';

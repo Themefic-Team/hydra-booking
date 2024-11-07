@@ -250,6 +250,7 @@ class GoogleCalendar {
 
 	// Insert Booking to Google Calendar
 	public function InsertGoogleCalender( $value, $data ) {
+		
 
 		if ( ! isset( $data->id ) ) {
 			return;
@@ -368,9 +369,10 @@ class GoogleCalendar {
 					);
 
 				} else {
-					$url = $this->calendarEvent . $calendarId . '/events';
+					$url = $this->calendarEvent . $calendarId . '/events?sendUpdates=all';
 					if ( $enable_meeting_location == true ) {
-						$url .= '?conferenceDataVersion=1';
+						$url .= '&conferenceDataVersion=1';
+
 
 					}
 					// set all events
@@ -399,19 +401,20 @@ class GoogleCalendar {
 		foreach ( $google_calendar_body as $key => $value ) {
 			$hangoutLink = isset( $value['hangoutLink'] ) ? $value['hangoutLink'] : '';
 			if ( $hangoutLink != '' ) {
-				$meet_link .= $hangoutLink . ', ';
+				$meet_link .= $hangoutLink . '';
 			}
 		}
+		
 		if($meet_link != '' && $enable_meeting_location == true ){
-			$data->meeting_locations = array(
-				'location' => 'meet',
-				'address'     => $meet_link,
-			);
+			$meeting_loaction  = json_decode($data->meeting_locations);
+			
+			$meeting_loaction->meet->address = $meet_link;
 
+			$data->meeting_locations = $meeting_loaction;
 			// conver object to array
-			$update_booking_data = (array) $data;
-			$booking = new Booking();
-			$booking->update( $update_booking_data );
+			// $update_booking_data = (array) $data;
+			// $booking = new Booking();
+			// $booking->update( $update_booking_data );
 			
 		}
 		

@@ -113,7 +113,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 					 }elseif($location['location'] == 'meet'){
 						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">';
 					 }else{
-						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/location.png').'" alt="Location">';
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/location.svg').'" alt="Location">';
 					 }
 					echo '<li class="tfhb-flexbox tfhb-gap-8">
                                 <input type="hidden" id="meeting_locations[' . esc_attr($key) . '][location]" name="meeting_locations[' . esc_attr($key) . '][location]" value="' . esc_attr( $location['location'] ) . '">

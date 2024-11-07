@@ -75,13 +75,28 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
 			<?php } ?>
 			<!-- Meeting location -->
 			<?php
+			
 			if ( ! empty( $booking['meeting_locations'] ) ) {
-				foreach ( $booking['meeting_locations'] as $key => $location ) {
+				$meeting_location = json_decode( $booking['meeting_locations'], true );
+
+				
+				foreach ( $meeting_location as $key => $location ) {
+
+
+					if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
+						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';
+					 }elseif($location['location'] == 'zoom'){
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
+					 }elseif($location['location'] == 'meet'){
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">';
+					 }else{
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/location.svg').'" alt="Location">';
+					 }
 					echo '<li class="tfhb-flexbox tfhb-gap-8">
                                 <div class="tfhb-icon">
-                                    <img src="' . esc_url( THB_URL . 'assets/app/images/location.svg' ) . '" alt="location">   
+                                    '.$icon.'  
                                 </div> 
-                                ' . esc_html( $location['location'] ) . '
+                                ' . esc_html( $location['address'] ) . '
                             </li>';
 				}
 			}
