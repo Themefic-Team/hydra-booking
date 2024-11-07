@@ -556,8 +556,14 @@ const deleteItemConfirm = () => {
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">  
                     <!-- [ { "location": "In Person (Organizer Address)", "address": "Address" }, { "location": "Organizer Phone Number", "address": "9098080" } ]  -->
                     <div v-for=" (address, index) in meeting_address.value" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
+                       <span class="tfhb-flexbox tfhb-gap-8" v-if="address.location == 'zoom'" >
                         <Icon name="MapPin" size=20 /> 
-                        Location : {{address.location}} - {{address.address}}
+                        Location : {{address.location}} - {{address.address.link}}
+                       </span>
+                       <span class="tfhb-flexbox tfhb-gap-8" v-else  >
+                        <Icon name="MapPin" size=20 /> 
+                        Location : {{address.location}} - {{address.address.link}}
+                       </span>
                     </div>    
                 </div>
             </div>
