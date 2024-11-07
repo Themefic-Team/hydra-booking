@@ -313,6 +313,7 @@
                                                 line-height: 20px; /* 153.846% */
                                                 padding: 0;
                                                 background: transparent;
+                                                inset: auto;
                                                 b{
                                                     padding: 6px 8px;
                                                     color: $info-text;
@@ -682,6 +683,7 @@
                 font-size: 1.6;
                 font-weight: 400px;
                 line-height: 24px;
+                width: calc(33% - 6px);
             }
         }
     }

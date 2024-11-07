@@ -496,16 +496,16 @@ const deleteItemConfirm = () => {
             <!-- Host Info -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
                 <h3>{{ __('Host', 'hydra-booking') }}  </h3>
-                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
-                    <div v-if="singleBookingData.host_first_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33% - 16px)">
+                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
+                    <div v-if="singleBookingData.host_first_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="User" size=20 /> 
                         {{ singleBookingData.host_first_name }}
                     </div>  
-                    <div v-if="singleBookingData.host_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                    <div v-if="singleBookingData.host_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="Mail" size=20 /> 
                         {{ singleBookingData.host_email }}
                     </div>  
-                    <div v-if="singleBookingData.host_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                    <div v-if="singleBookingData.host_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="Globe" size=20 /> 
                         {{singleBookingData.host_time_zone}}
                     </div>  
@@ -515,20 +515,20 @@ const deleteItemConfirm = () => {
             <!-- Attendee Info -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
                 <h3>{{ __('Attendee', 'hydra-booking') }}  </h3>
-                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
-                    <div v-if="singleBookingData.attendee_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33% - 16px)">
+                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
+                    <div v-if="singleBookingData.attendee_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="User" size=20 /> 
                         {{ singleBookingData.attendee_name }}
                     </div>  
-                    <div v-if="singleBookingData.attendee_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                    <div v-if="singleBookingData.attendee_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" >
                         <Icon name="Mail" size=20 /> 
                         {{ singleBookingData.attendee_email }}
                     </div>  
-                    <div v-if="singleBookingData.attendee_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33.33%  - 16px)">
+                    <div v-if="singleBookingData.attendee_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="Globe" size=20 /> 
                         {{singleBookingData.attendee_time_zone}}
                     </div>  
-                    <div v-if="singleBookingData.address" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
+                    <div v-if="singleBookingData.address" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: 100%">
                         <Icon name="MapPin" size=20 /> 
                         {{singleBookingData.address}}
                     </div>   
@@ -538,12 +538,12 @@ const deleteItemConfirm = () => {
             <!-- Meeting -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
                 <h3>{{ __('Meeting', 'hydra-booking') }}  </h3>
-                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">
-                    <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33% - 16px)">
+                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
+                    <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="Clock" size=20 /> 
                         {{singleBookingData.start_time }} - {{singleBookingData.end_time }}
                     </div>  
-                    <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(33% - 16px)">
+                    <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="CalendarDays" size=20 /> 
                         {{singleBookingData.meeting_dates }}
                     </div>   

@@ -190,19 +190,18 @@ const moduleFields = async (e) => {
                             selected = "1"
                             :placeholder="__('Enter Value', 'hydra-booking')" 
                             :option = "[
-                                {'name': '{{attendee.full_name}}', 'value': '{{attendee.full_name}}'}, 
-                                {'name': '{{attendee.email}}', 'value': '{{attendee.email}}'},
-                                {'name': '{{attendee.phone}}', 'value': '{{attendee.phone}}'},
-                                {'name': '{{attendee.timezone}}', 'value': '{{attendee.timezone}}'},
-                                {'name': '{{attendee.address}}', 'value': '{{attendee.address}}'},
-                                {'name': '{{booking.meeting_date}}', 'value': '{{booking.meeting_date}}'},
-                                {'name': '{{booking.start_time}}', 'value': '{{booking.start_time}}'},
-                                {'name': '{{booking.end_time}}', 'value': '{{booking.end_time}}'},
-                                {'name': '{{booking.duration}}', 'value': '{{booking.duration}}'},
-                                {'name': '{{booking.hash}}', 'value': '{{booking.hash}}'},
-                                {'name': '{{host.name}}', 'value': '{{host.name}}'},
-                                {'name': '{{host.email}}', 'value': '{{host.email}}'},
-                                {'name': '{{host.timezone}}', 'value': '{{host.timezone}}'},
+                                {'name': '{{attendee.full_name}}', 'value': 'full_name'}, 
+                                {'name': '{{attendee.email}}', 'value': 'email'},
+                                {'name': '{{attendee.timezone}}', 'value': 'timezone'},
+                                {'name': '{{attendee.address}}', 'value': 'address'},
+                                {'name': '{{booking.meeting_date}}', 'value': 'meeting_date'},
+                                {'name': '{{booking.start_time}}', 'value': 'start_time'},
+                                {'name': '{{booking.end_time}}', 'value': 'end_time'},
+                                {'name': '{{booking.duration}}', 'value': 'duration'},
+                                {'name': '{{booking.hash}}', 'value': 'hash'},
+                                {'name': '{{host.name}}', 'value': 'host_name'},
+                                {'name': '{{host.email}}', 'value': 'host_email'},
+                                {'name': '{{host.timezone}}', 'value': 'host_timezone'},
                                 {'name': 'Custom', 'value': 'tfhb_ct'},
                             ]"
                             @tfhb_body_value_change="BodyValues"

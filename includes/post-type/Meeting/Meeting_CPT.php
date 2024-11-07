@@ -33,7 +33,7 @@ class Meeting_CPT extends \HydraBooking\PostType\Post_Type {
 			'menu_icon'     => 'dashicons-admin-home',
 			'supports'      => apply_filters( 'tfhb_meeting_supports', array( 'title', 'editor', 'thumbnail', 'comments', 'author' ) ),
 			'capability'    => 'post',
-			'rewrite_slug'  => 'tfhb_meeting',
+			'rewrite_slug'  => '',
 			'show_ui'       => true,
 			'show_in_menu'  => false,
 		);

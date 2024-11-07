@@ -138,16 +138,22 @@ class MailChimp {
 
 			$extra_merge_fields = '';
 			foreach ( $extra_fields as $extra_field ) {
-				$field_name          = $extra_field['name'];
+				$field_name          = $extra_field['type'];
+				if($field_name!='tfhb_ct'){
 				$field_value         = isset( $booking->$field_name ) ? $booking->$field_name : ''; // Check if the property exists
-				$extra_merge_fields .= '"' . $extra_field['value'] . '": "' . $field_value . '",';
+				}else{
+					$field_value = $extra_field['value'];
+				}
+				if(!empty($field_value)){
+					$extra_merge_fields .= '"' . $extra_field['name'] . '": "' . $field_value . '",';
+				}
 			}
 			$extra_merge_fields = trim( $extra_merge_fields, ',' );
 
 			if ( $extra_merge_fields != '' ) {
 				$extra_merge_fields = ',' . $extra_merge_fields;
 			}
-			// var_dump($extra_merge_fields); exit();
+
 			$url = "https://$server_prefix.api.mailchimp.com/3.0/lists/" . $hook['audience'] . '/members';
 
 			$curl = curl_init( $url );
