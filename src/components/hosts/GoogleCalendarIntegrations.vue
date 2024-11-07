@@ -85,7 +85,7 @@ const storedOptionData = (data) => {
                     />  
                 </div>
                 <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8">
-                    <button class="tfhb-btn boxed-btn tfhb-flexbox"   @click.stop="emit('update-integrations', 'google_calendar', google_calendar)">{{ __('Update Host Settings', 'hydra-booking') }} </button>
+                    <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect"   @click.stop="emit('update-integrations', 'google_calendar', google_calendar)">{{ __('Update Host Settings', 'hydra-booking') }} </button>
                 </div> 
             </template> 
         </HbPopup>

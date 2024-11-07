@@ -378,8 +378,6 @@ const isobjectempty = (data) => {
             name="host_id"
             :placeholder="__('Select Host', 'hydra-booking')"  
             :option = "Host.hosts" 
-            @add-change="tfhbValidateInput('host_id')" 
-            @add-click="tfhbValidateInput('host_id')" 
             :errors="errors.host_id"
             @tfhb-onchange="Host_Avalibility_Callback"
         />
@@ -407,8 +405,6 @@ const isobjectempty = (data) => {
             :placeholder="__('Choose Schedule', 'hydra-booking')"   
             :option="HostAvailabilities.value"
             v-if="'settings'==meeting.availability_type && host_availble_type != 'settings'"
-            @add-change="tfhbValidateInput('availability_id')" 
-            @add-click="tfhbValidateInput('availability_id')" 
             :errors="errors.availability_id"
             @tfhb-onchange="Settings_Avalibility_Callback"
         />
@@ -419,8 +415,6 @@ const isobjectempty = (data) => {
             :label="__('Choose Schedule', 'hydra-booking')"  
             :placeholder="__('Availability title', 'hydra-booking')"   
             v-if="'custom'==meeting.availability_type"
-            @keyup="() => tfhbValidateInput('availability_custom.title')"
-            @click="() => tfhbValidateInput('availability_custom.title')"
             :errors="errors.availability_custom___title"
         /> 
         <!-- Time Zone --> 
@@ -434,8 +428,6 @@ const isobjectempty = (data) => {
             placeholder="Select Time Zone"  
             :option = "props.timeZone" 
             v-if="'custom'==meeting.availability_type"
-            @add-change="tfhbValidateInput('availability_custom.time_zone')" 
-            @add-click="tfhbValidateInput('availability_custom.time_zone')" 
             :errors="errors.availability_custom___time_zone"
         /> 
         <!-- Time Zone --> 

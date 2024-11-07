@@ -234,7 +234,7 @@ const moduleFields = async (e) => {
             />
 
             <div class="tfhb-submission-btn">
-                <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="props.IntegrationsValue.updateIntegrations">{{ __('Save Webhook', 'hydra-booking') }} </button>
+                <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect" @click="props.IntegrationsValue.updateIntegrations">{{ __('Save Webhook', 'hydra-booking') }} </button>
             </div>
         </div>
       

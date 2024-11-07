@@ -21,7 +21,6 @@ const Booking = reactive({
         },
         dayMaxEvents: 3,
         allDaySlot: false,
-        dayMaxEventRows: true,
     },
     skeleton : ref(true),
 
