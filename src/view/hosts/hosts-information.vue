@@ -97,8 +97,6 @@ const tfhbValidateInput = (fieldName) => {
             selected = "1"
             :placeholder="__('Type your first name', 'hydra-booking')" 
             width="50"
-            @keyup="() => tfhbValidateInput('first_name')"
-            @click="() => tfhbValidateInput('first_name')"
             :errors="errors.first_name"
         /> 
         <HbText  
@@ -108,8 +106,6 @@ const tfhbValidateInput = (fieldName) => {
             selected = "1"
             :placeholder="__('Type your last name', 'hydra-booking')" 
             width="50"
-            @keyup="() => tfhbValidateInput('last_name')"
-            @click="() => tfhbValidateInput('last_name')"
             :errors="errors.last_name"
         />  
         <HbText  
@@ -131,8 +127,6 @@ const tfhbValidateInput = (fieldName) => {
             placeholder="Select Time Zone"  
             :option = "time_zone" 
             width="50" 
-            @add-change="tfhbValidateInput('time_zone')" 
-            @add-click="tfhbValidateInput('time_zone')" 
             :errors="errors.time_zone"
         /> 
         <HbText  
@@ -142,8 +136,6 @@ const tfhbValidateInput = (fieldName) => {
             selected = "1"
             :placeholder="__('Type your mobile no', 'hydra-booking')" 
             width="50" 
-            @keyup="() => tfhbValidateInput('phone_number')"
-            @click="() => tfhbValidateInput('phone_number')"
             :errors="errors.phone_number"
         />  
          
@@ -205,8 +197,6 @@ const tfhbValidateInput = (fieldName) => {
                     :label="field.placeholder"   
                     :placeholder="field.placeholder"  
                     :type="field.type"  
-                    @keyup="field.required == 1 ? tfhbValidateInput('others_information.'+field.label) : ''"
-                    @click="field.required == 1 ? tfhbValidateInput('others_information.'+field.label) : ''"
                     :errors="field.required == 1 ? errors['others_information___' + field.label] : ''"
                 />
             </div>

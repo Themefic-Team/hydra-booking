@@ -189,8 +189,6 @@ onBeforeMount(() => {
                     selected = "1"
                     :placeholder="__('Type your Admin Email', 'hydra-booking')" 
                     width="50"
-                    @keyup="() => tfhbValidateInput('admin_email')"
-                    @click="() => tfhbValidateInput('admin_email')"
                     :errors="errors.admin_email"
                 /> 
 
@@ -205,8 +203,6 @@ onBeforeMount(() => {
                     selected = "1"
                     placeholder="Select Time Zone"  
                     :option = "timeZone.value" 
-                    @add-change="tfhbValidateInput('time_zone')" 
-                    @add-click="tfhbValidateInput('time_zone')" 
                     :errors="errors.time_zone"
                 />  
                 <!-- Time Zone -->
@@ -224,8 +220,6 @@ onBeforeMount(() => {
                         {'name': '12 Hours', 'value': '12'}, 
                         {'name': '24 Hours', 'value': '24'}
                     ]"
-                    @add-change="tfhbValidateInput('time_format')" 
-                    @add-click="tfhbValidateInput('time_format')" 
                     :errors="errors.time_format"
                 />
                 <!-- Time format --> 
@@ -248,8 +242,6 @@ onBeforeMount(() => {
                         {'name': 'Friday', 'value': 'Friday'},
                         {'name': 'Saturday', 'value': 'Saturday'}
                     ]"
-                    @add-change="tfhbValidateInput('week_start_from')" 
-                    @add-click="tfhbValidateInput('week_start_from')" 
                     :errors="errors.week_start_from"
                     
                 />
@@ -284,8 +276,6 @@ onBeforeMount(() => {
                     selected = "1"
                     placeholder="Select Country"  
                     :option = "countryList.value"
-                    @add-change="tfhbValidateInput('country')" 
-                    @add-click="tfhbValidateInput('country')" 
                     :errors="errors.country"
                 />
                 <!-- Select countr --> 

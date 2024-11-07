@@ -125,8 +125,6 @@ onMounted(() => {
             name="title"
             selected = "1"
             :placeholder="__('Type meeting title', 'hydra-booking')" 
-            @keyup="() => tfhbValidateInput('title')"
-            @click="() => tfhbValidateInput('title')"
             :errors="errors.title"
         /> 
         <HbTextarea  
@@ -153,8 +151,6 @@ onMounted(() => {
                     {name: '60 minutes', value: '60'},
                     {name: 'Custom', value: 'custom'} 
                 ]" 
-                @add-change="tfhbValidateInput('duration')" 
-                @add-click="tfhbValidateInput('duration')" 
                 :errors="errors.duration"
             />
             <!-- Duration -->
