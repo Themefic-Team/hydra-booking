@@ -42,7 +42,7 @@ const Meeting = reactive({
             availability_custom: 
                 {
                 title: '',
-                time_zone: '',
+                time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 date_status: 0,
                 time_slots: [
                     { 

@@ -24,6 +24,20 @@ class DateTimeController extends \DateTimeZone {
 		return $time_zone;
 	}
 
+	// Get Current Time Zone
+	public function getCurrentTimeZone() {
+		//  get current time zone based on current location
+		// Get the user's current local time zone
+		// Get the current time zone
+		$currentTimeZone = new \DateTimeZone(date_default_timezone_get());
+
+		// Get the time zone name
+		$timeZoneName = $currentTimeZone->getName();
+
+		// Output the time zone name
+		echo $timeZoneName;
+	}
+
 	public function convert_time_based_on_timezone( $time, $time_zone, $selected_time_zone, $time_format, ) {
 
 		$time = new \DateTime( $time, new \DateTimeZone( $time_zone ) );

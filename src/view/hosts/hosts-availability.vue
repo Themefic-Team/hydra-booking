@@ -49,6 +49,7 @@ const GeneralSettings = reactive({});
 
 const openModal = () => {
 
+  const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   availabilityDataSingle.value = {
     host: props.hostId,
     user_id: props.host.user_id,
@@ -135,7 +136,7 @@ const openModal = () => {
     availability_id: ''
   };
 
-  availabilityDataSingle.value.time_zone = Availability.GeneralSettings.time_zone ? Availability.GeneralSettings.time_zone : '';
+  availabilityDataSingle.value.time_zone = Availability.GeneralSettings.time_zone ? Availability.GeneralSettings.time_zone : local_time_zone;
   
   availabilityDataSingle.value.time_slots = Availability.GeneralSettings.week_start_from ?  Availability.RearraingeWeekStart(Availability.GeneralSettings.week_start_from, availabilityDataSingle.value.time_slots) : availabilityDataSingle.value.time_slots;
 

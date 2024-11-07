@@ -15,10 +15,10 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
-
+const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const generalSettings = reactive({
   admin_email: '{{wp.admin_email}}',
-  time_zone: '',
+  time_zone: local_time_zone,
   time_format: '12',
   week_start_from: 'Sunday',
   date_format: '',

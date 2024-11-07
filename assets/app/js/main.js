@@ -2,6 +2,9 @@
 
     $(document).ready(function () {
 	 
+
+		const tfhb_local_timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
         /**
          * Time Zone Change
          * @author Jahid
@@ -62,6 +65,9 @@
 			$this.find('.tfhb-time-zone-select').select2({
 				dropdownCssClass: 'tfhb-select2-dropdown',
 			}); 
+
+			// selected local time zone
+			$this.find('.tfhb-time-zone-select').val(tfhb_local_timeZone).trigger('change');
 
 			
 

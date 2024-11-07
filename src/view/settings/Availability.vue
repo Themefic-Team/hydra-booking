@@ -20,6 +20,9 @@ const skeleton = ref(true);
 
 
 const openModal = () => {
+
+    const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   availabilityDataSingle.value = {
     key: 0,
     id: 0,
@@ -102,7 +105,7 @@ const openModal = () => {
     date_slots: [
     ]
   }; 
-    availabilityDataSingle.value.time_zone = GeneralSettings.value.time_zone ? GeneralSettings.value.time_zone : '';
+    availabilityDataSingle.value.time_zone = GeneralSettings.value.time_zone ? GeneralSettings.value.time_zone : local_time_zone;
   
     availabilityDataSingle.value.time_slots = GeneralSettings.value.week_start_from ?  Availability.RearraingeWeekStart(GeneralSettings.value.week_start_from, availabilityDataSingle.value.time_slots) : availabilityDataSingle.value.time_slots;
  

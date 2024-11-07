@@ -166,6 +166,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		</ul>
 
 		<div class="tfhb-timezone ">   
+			
 			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone">
 				<?php
 				if ( ! empty( $time_zone ) ) {

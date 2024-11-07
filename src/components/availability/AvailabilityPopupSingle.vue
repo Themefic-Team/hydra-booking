@@ -311,8 +311,6 @@ const tfhbValidateInput = (fieldName) => {
                             :filter="true"
                             placeholder="Select Time Zone"  
                             :option = "props.timeZone" 
-                            @add-change="tfhbValidateInput('time_zone')" 
-                            @add-click="tfhbValidateInput('time_zone')" 
                             :errors="errors.time_zone"
                         /> 
                         <!-- Time Zone --> 

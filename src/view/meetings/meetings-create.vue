@@ -29,6 +29,8 @@ const integrations = reactive({
     zoho_status : 1,
 });
 const formsList = reactive({});
+
+const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const meetingData = reactive({
     id: 0,
     user_id: 0,
@@ -57,7 +59,7 @@ const meetingData = reactive({
     availability_custom: 
         {
         title: '',
-        time_zone: '',
+        time_zone: local_time_zone,
         date_status: 0,
         time_slots: [
             { 
