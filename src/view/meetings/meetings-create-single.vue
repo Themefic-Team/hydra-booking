@@ -396,7 +396,7 @@ const AvailabilityTabs = (type) => {
 
                     <div class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width"> 
                         <div class="tfhb-flexbox  tfhb-mb-24"  style="gap:4px 16px"  v-for="(slocation, index) in Meeting.singleMeeting.MeetingData.meeting_locations" :key="index">
-                            <div class="tfhb-meeting-location tfhb-gap-16" :style="Meeting.singleMeeting.MeetingData.meeting_locations.length<2 ?'width:100%' : '' ">
+                            <div class="tfhb-meeting-location tfhb-gap-16 tfhb-flexbox" :style="Meeting.singleMeeting.MeetingData.meeting_locations.length<2 ?'width:100%' : '' ">
                                 <!-- Location --> 
                                 <HbDropdown 
                                     v-model="slocation.location" 
