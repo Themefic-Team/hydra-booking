@@ -62,8 +62,18 @@ class App {
 		add_filter( 'single_template', array( $this, 'tfhb_single_meeting_template' ) );
 
 		add_action( 'hydra_booking/stripe_payment_method', array( $this, 'tfhb_stripe_payment_callback' ), 10, 2 );
+		
+		add_filter( 'post_type_link',  array( $this,'tfhb_meeting_permalink'), 10, 2 );
+	
 	 }
 
+	public function tfhb_meeting_permalink( $permalink, $post ) {
+		$permalink_structure = get_option( 'permalink_structure' );
+		if ( !empty($permalink_structure) && $post->post_type === 'tfhb_meeting' && '/%postname%/' == $permalink_structure) {
+			return home_url( '/' . $post->post_name . '/' );
+		}
+		return $permalink;
+	}
 	public function tfhb_single_meeting_template( $single_template ) {
 		global $post;
 

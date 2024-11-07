@@ -20,9 +20,6 @@ class ActivationHooks {
 		}else{
 			$wp_rewrite->flush_rules(); 
 		}
-		
-		// Flash Rewrite Rules
-		// flush_rewrite_rules();
 
 		// Create a New host Role
 		$this->tfhb_create_host_role();
