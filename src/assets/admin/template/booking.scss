@@ -590,7 +590,7 @@
                             font-weight: $font-weight-reguler;
                             line-height: 16px; /* 145.455% */
                             text-transform: capitalize;
-                            &.approved{
+                            &.confirmed{
                                 background: $success-background; 
                                 color: $success-text; 
                             }
