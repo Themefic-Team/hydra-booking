@@ -569,6 +569,18 @@ class SettingsController {
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity') { 
 
+			if($key == 'cf7' && !empty($data['status'])){
+				if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
+					$this->install_contact_form_7_plugin();
+				}
+			}
+			
+			if($key == 'fluent' && !empty($data['status'])){
+				if (!is_plugin_active('fluentform/fluentform.php')) {
+					$this->install_fluent_form_plugin();
+				}
+			}
+
 			$_tfhb_integration_settings[$key]['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings[$key]['status']      = sanitize_text_field( $data['status'] ); 
 
@@ -581,6 +593,11 @@ class SettingsController {
 				'integration_settings'  => $option,
 				'message' => $name . ' Settings Updated Successfully',
 			);
+
+			if($key == 'gravity' && !empty($data['status'])){
+				$data['message'] = 'Install and activate the Gravity Forms plugin if it is not already installed or active.';
+			}
+			
 			return rest_ensure_response( $data );
 		}else{ 
 
@@ -602,6 +619,69 @@ class SettingsController {
 		}
 	}
 
+	public function install_contact_form_7_plugin() {
+		// Define the plugin slug and plugin file path
+		$plugin_slug = 'contact-form-7';
+		$plugin_file = $plugin_slug . '/wp-contact-form-7.php';
+	
+		// Check if the plugin is already installed
+		if (file_exists(WP_PLUGIN_DIR . '/' . $plugin_file)) {
+			// If the plugin exists but isn't active, activate it
+			if (!is_plugin_active($plugin_file)) {
+				activate_plugin($plugin_file);
+			}
+		} else {
+			// Ensure the necessary WordPress files are included for plugin installation
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/misc.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+	
+			// Plugin download URL for Contact Form 7
+			$download_url = 'https://downloads.wordpress.org/plugin/contact-form-7.latest-stable.zip';
+	
+			// Use Plugin_Upgrader to install the plugin
+			$upgrader = new \Plugin_Upgrader();
+			$upgrader->install($download_url);
+	
+			// Activate the plugin after installation
+			if (!is_wp_error($upgrader->result) && $upgrader->result) {
+				activate_plugin($plugin_file);
+			}
+		}
+	}
+
+	public function install_fluent_form_plugin() {
+		// Define the plugin slug and plugin file path
+		$plugin_slug = 'fluentform';
+		$plugin_file = $plugin_slug . '/fluentform.php';
+	
+		// Check if the plugin is already installed
+		if (file_exists(WP_PLUGIN_DIR . '/' . $plugin_file)) {
+			// If the plugin exists but isn't active, activate it
+			if (!is_plugin_active($plugin_file)) {
+				activate_plugin($plugin_file);
+			}
+		} else {
+			// Ensure the necessary WordPress files are included for plugin installation
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/misc.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+	
+			// Plugin download URL for Contact Form 7
+			$download_url = 'https://downloads.wordpress.org/plugin/fluentform.latest-stable.zip';
+	
+			// Use Plugin_Upgrader to install the plugin
+			$upgrader = new \Plugin_Upgrader();
+			$upgrader->install($download_url);
+	
+			// Activate the plugin after installation
+			if (!is_wp_error($upgrader->result) && $upgrader->result) {
+				activate_plugin($plugin_file);
+			}
+		}
+	}
 
 	// Install Active Plugins
 	public function installActivePlugins() {
