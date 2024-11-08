@@ -100,6 +100,26 @@ class BookingMeta {
 		global $wpdb;
 	}
 
+	/**
+	 * getWithIdKey
+	 */
+	public function getWithIdKey($id, $key) { 
+
+		// example 
+	 
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s", $id, $key)
+		);
+
+		return $data;
+	}
+
+
 		/**
 		 * Get all  availability Data.
 		 */
@@ -139,5 +159,20 @@ class BookingMeta {
 	// delete
 	public function delete( $id ) {
 		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$result = $wpdb->delete(
+			$table_name,
+			array( 'id' => $id )
+		);
+
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status' => true,
+			);
+		}
 	}
 }

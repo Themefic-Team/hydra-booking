@@ -25,11 +25,17 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
     // Deactivation Hooks
     new HydraBooking\Hooks\DeactivationHooks();
 
+    
+     // Action Hooks
+     new HydraBooking\Hooks\ActionHooks();
+
     // Mail Hooks
     new HydraBooking\Hooks\MailHooks();
     
     // Filter Hooks
     new HydraBooking\Hooks\FilterHooks();
+
+   
 
 /**
  *  Class Include

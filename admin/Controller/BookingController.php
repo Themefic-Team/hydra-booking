@@ -436,6 +436,7 @@ class BookingController {
 				'attendee_time_zone' => isset( $request['time_zone'] ) ? $request['time_zone'] : '',
 				'start_time'         => isset( $request['time']['start'] ) ? $request['time']['start'] : '',
 				'end_time'           => isset( $request['time']['end'] ) ? $request['time']['end'] : '',
+				'meeting_dates'      => isset( $request['date'] ) ? $request['date'] : '',
 				'status'             => isset( $request['status'] ) ? $request['status'] : '',
 			);
 
@@ -467,6 +468,24 @@ class BookingController {
 				);
 			}
 		}
+
+		$single_booking_meta = $booking->get(
+			array( 'id' => $request['id'] ),
+			false,
+		);
+
+		if ( 'approved' == $request['status'] ) {
+			do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
+		}
+
+		if ( 'canceled' == $request['status'] ) { 
+			do_action( 'hydra_booking/after_booking_canceled', $single_booking_meta );
+		}
+
+		if ( 'schedule' == $request['status'] ) {
+			do_action( 'hydra_booking/after_booking_schedule', $single_booking_meta );
+		}
+
 
 		// booking Lists
 		$booking_List = $booking->get();
@@ -716,7 +735,7 @@ class BookingController {
 			do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
 		}
 
-		if ( 'canceled' == $request['status'] ) {
+		if ( 'canceled' == $request['status'] ) { 
 			do_action( 'hydra_booking/after_booking_canceled', $single_booking_meta );
 		}
 

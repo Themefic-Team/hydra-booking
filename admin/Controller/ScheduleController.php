@@ -1,11 +1,12 @@
 <?php
 namespace HydraBooking\Admin\Controller;
 
-	// exit
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
-	use HydraBooking\DB\Booking;
-	use HydraBooking\Admin\Controller\DateTimeController;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+
+use HydraBooking\DB\Booking;
+use HydraBooking\Admin\Controller\DateTimeController;
 
 class ScheduleController {
 

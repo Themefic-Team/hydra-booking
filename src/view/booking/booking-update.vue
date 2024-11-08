@@ -331,7 +331,8 @@ onBeforeMount(() => {
                 :option = "[
                     {'name': 'Pending', 'value': 'pending'},  
                     {'name': 'Confirmed', 'value': 'confirmed'},   
-                    {'name': 'Canceled', 'value': 'canceled'}
+                    {'name': 'Canceled', 'value': 'canceled'},
+                    {'name': 'schedule', 'value': 'schedule'}
                 ]" 
             />  
 
