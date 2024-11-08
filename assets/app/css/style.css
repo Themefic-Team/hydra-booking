@@ -264,6 +264,7 @@
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar {
     width: 100%;
     padding: 0 0 16px 0;
+    min-height: auto;
   }
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container {
@@ -609,7 +610,7 @@
   border-radius: 8px;
   border: 0.5px solid var(--tfhb-primary-color);
   background: #FFFFFF;
-  padding: 10px 10px;
+  padding: 10px 8px;
   color: var(--tfhb-primary-color);
   text-align: center;
   font-size: 15px;
