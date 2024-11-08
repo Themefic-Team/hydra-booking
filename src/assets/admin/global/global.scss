@@ -965,6 +965,7 @@
                 }
                 .tfhb-inc,
                 .tfhb-dec{
+                    height: 24px;
                     cursor: pointer;
                     transition:$transition;
                     &:hover{

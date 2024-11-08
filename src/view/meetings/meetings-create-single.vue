@@ -326,9 +326,8 @@ const AvailabilityTabs = (type) => {
                             <HbPreloader v-else color="#2E6B38" />
                     </div>
                     <div class="tfhb-meeting-heading tfhb-flexbox">
-                    
                         <h3 v-if="Meeting.singleMeeting.MeetingData.title != '' && Meeting.singleMeeting.MeetingData.title != null">{{ truncateString(Meeting.singleMeeting.MeetingData.title, 110) }}</h3>
-                        <h3 v-else-if="Meeting.singleMeeting.MeetingData.type == 'one-to-one'" >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
+                        <h3 v-else-if="Meeting.singleMeeting.MeetingData.meeting_type == 'one-to-one'" >{{ __('Create One-to-One booking', 'hydra-booking') }}</h3>
                         <h3 v-else >{{ __('Create One-to-Group booking', 'hydra-booking') }}</h3>
                     </div> 
                     <!-- <div  class="tfhb-meeting-subtitle">

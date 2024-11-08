@@ -24,7 +24,7 @@ const generalSettings = reactive({
   date_format: '',
   country: '',
   after_booking_completed: '10',
-  booking_status: '',
+  booking_status: 1,
   reschedule_status: '',
   allowed_reschedule_before_meeting_start: '10', 
 });

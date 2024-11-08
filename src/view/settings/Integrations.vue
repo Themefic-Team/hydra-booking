@@ -282,7 +282,7 @@ onBeforeMount(() => {
                 <p>{{ __('Configure integration for conferencing, calendar and payment', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=20 /></a>
+                <a href="https://themefic.com/docs/hydrabooking/hydrabooking/integrations/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap"> 
