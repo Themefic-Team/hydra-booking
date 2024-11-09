@@ -386,6 +386,7 @@ const fetchMeeting = async () => {
             meetingData.meeting_category = response.data.meeting.meeting_category
             meetingData.payment_method = response.data.meeting.payment_method
             meetingData.max_book_per_slot = response.data.meeting.max_book_per_slot
+            meetingData.is_display_max_book_slot = response.data.meeting.is_display_max_book_slot
 
             if(response.data.meeting.meeting_locations){
                 meetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)

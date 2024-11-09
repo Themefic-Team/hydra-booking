@@ -21,3 +21,17 @@ function tfhb_character_limit_callback( $str, $limit, $dots = true ) {
 		return $str;
 	}
 }
+
+/**
+ * checked pro plugins is active or not
+ *
+ * @return string
+ */
+
+ function tfhb_is_pro_active() {
+	if ( class_exists( 'TFHB_INIT_PRO' ) ) { 
+		return true;
+	} else {
+		return false;
+	}
+} 

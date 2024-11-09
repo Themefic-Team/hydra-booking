@@ -5,6 +5,7 @@ const Meeting = reactive({
     meetings: [],
     skeleton: true,
     pre_loader: false,
+    pre_loader_group: false,
     isModalOpened: false,
     time_zone: {},
     meetingCategory: [],
@@ -430,7 +431,11 @@ const Meeting = reactive({
             return;
         }
 
-        this.pre_loader = true;
+        if(type == 'one-to-group'){
+            this.pre_loader_group = true;
+        }else{
+            this.pre_loader = true;
+        }
 
         let TypeData = {
             data: type
@@ -449,6 +454,7 @@ const Meeting = reactive({
                 routes.push({ name: 'MeetingsCreateSingle', params: { id: response.data.id} });
 
                 this.pre_loader = false; 
+                this.pre_loader_group = false; 
                 this.isModalOpened = false;
                 //  toast.success(response.data.message, {
                 //      position: 'bottom-right', // Set the desired position
@@ -459,6 +465,8 @@ const Meeting = reactive({
                      position: 'bottom-right', // Set the desired position
                      "autoClose": 1500,
                  });
+                 this.pre_loader = false; 
+                this.pre_loader_group = false; 
              }
          } catch (error) {
              console.log(error);

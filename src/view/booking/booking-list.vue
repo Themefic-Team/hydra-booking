@@ -576,6 +576,7 @@ const deleteItemConfirm = () => {
 
 <!-- Booking Calendar View -->
 <div :class="{ 'tfhb-skeleton': Booking.skeleton }" class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
+     
     <FullCalendar class='demo-app-calendar ' :options='Booking.calendarbooking'>
         <template v-slot:eventContent='arg'>
             <!-- {{ arg.event.booking_date }}

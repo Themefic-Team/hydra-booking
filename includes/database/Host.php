@@ -110,7 +110,7 @@ class Host {
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $where = null, $filterData = '',  ) {
+	public function get( $where = null, $filterData = ''  ) {
 
 		global $wpdb;
 

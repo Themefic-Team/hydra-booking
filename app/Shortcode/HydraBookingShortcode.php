@@ -466,21 +466,10 @@ class HydraBookingShortcode {
 
 		// Recurring Meeting
 		if ( isset( $meta_data['recurring_status'] ) && $meta_data['recurring_status'] == true ) {
-			$recurring_repeat       = isset( $meta_data['recurring_repeat'] ) ? $meta_data['recurring_repeat'] : array();
-			$recurring_repeat_limit = isset( $recurring_repeat[0]['limit'] ) ? $recurring_repeat[0]['limit'] : array();
-			$recurring_repeat_times = isset( $recurring_repeat[0]['times'] ) ? $recurring_repeat[0]['times'] : array();
-			$recurring_maximum      = isset( $meta_data['recurring_maximum'] ) ? $meta_data['recurring_maximum'] : 0;
 			$meeting_dates          = isset( $_POST['meeting_dates'] ) ? sanitize_text_field( $_POST['meeting_dates'] ) : '';
-			// based on the recurring repeat limit and times
-			$next_date = $meeting_dates;
 
-			for ( $i = 1; $i < $recurring_maximum; $i++ ) {
-
-				$recurring_current_date = gmdate( 'Y-m-d', strtotime( $next_date . ' + ' . $recurring_repeat_limit . ' ' . $recurring_repeat_times . '' ) );
-				$meeting_dates         .= ',' . $recurring_current_date;
-				$next_date              = $recurring_current_date;
-			}
-			$data['meeting_dates'] = $meeting_dates;
+			$data['meeting_dates'] = apply_filters( 'hydra_booking/calculate_recurring_meeting_dates', $meeting_dates, $meta_data );
+ 
 
 		}
 

@@ -99,6 +99,7 @@ class DateTimeController extends \DateTimeZone {
 		
 		// Meeting Information
 		$data = get_post_meta( $MeetingsData->post_id, '__tfhb_meeting_opt', true );
+	 
 
 		$meeting_type      = isset( $data['meeting_type'] ) ? $data['meeting_type'] : 'one-to-single';
 		$max_book_per_slot = isset( $data['max_book_per_slot'] ) ? $data['max_book_per_slot'] : 1;
@@ -125,8 +126,10 @@ class DateTimeController extends \DateTimeZone {
 		// Duration
 		$duration = isset( $data['duration'] ) && ! empty( $data['duration'] ) ? $data['duration'] : 30;
 
-		$duration = isset( $data['custom_duration'] ) && ! empty( $data['custom_duration'] ) ? $data['custom_duration'] : $duration;
+		if($duration == 'custom'){
+			$duration = isset( $data['custom_duration'] ) && ! empty( $data['custom_duration'] ) ? $data['custom_duration'] : $duration;
 
+		}  
 		// Buffer Time Before
 		$buffer_time_before = isset( $data['buffer_time_before'] ) && ! empty( $data['buffer_time_before'] ) ? $data['buffer_time_before'] : 0;
 

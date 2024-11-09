@@ -56,8 +56,9 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
 				foreach ( $meeting_dates as $key => $date ) {
 
 					$date_strings .= gmdate( 'l, F j', strtotime( $date ) );
-					// $date_strings .= ', ';
+					$date_strings .= '| ';
 				}
+				$date_strings = rtrim( $date_strings, '| ' );
 
 					echo ! empty( $booking['start_time'] ) ? '' . esc_html( $booking['start_time'] ) . ' - ' . esc_html( $booking['end_time'] ) . ', ' . esc_html( $date_strings ) . '' : ''
 				?>

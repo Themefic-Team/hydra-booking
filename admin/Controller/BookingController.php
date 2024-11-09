@@ -182,13 +182,16 @@ class BookingController {
 			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
 			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
 
+			$dates = explode( ',', $book['meeting_dates'] );
+			$first_date = $dates[0];
+
 			$booking_array[] = array(
 				'booking_id'   => $book['id'],
 				'title'        => $book['title'],
-				'start'        => $book['meeting_dates'] . 'T' . $start_time_24hr,
-				'end'          => $book['meeting_dates'] . 'T' . $end_time_24hr,
+				'start'        => $first_date . 'T' . $start_time_24hr,
+				'end'          => $first_date . 'T' . $end_time_24hr,
 				'status'       => $book['status'],
-				'booking_date' => $book['meeting_dates'],
+				'booking_date' => $first_date,
 				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
 				'host_id'      => $book['host_id'],
 			);
@@ -398,13 +401,16 @@ class BookingController {
 			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
 			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
 
+			$dates = explode( ',', $book['meeting_dates'] );
+			$first_date = $dates[0];
+
 			$booking_array[] = array(
 				'booking_id'   => $book['id'],
 				'title'        => $book['title'],
-				'start'        => $book['meeting_dates'] . 'T' . $start_time_24hr,
-				'end'          => $book['meeting_dates'] . 'T' . $end_time_24hr,
+				'start'        => $first_date . 'T' . $start_time_24hr,
+				'end'          => $first_date . 'T' . $end_time_24hr,
 				'status'       => $book['status'],
-				'booking_date' => $book['meeting_dates'],
+				'booking_date' => $first_date,
 				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
 				'host_id'      => $book['host_id'],
 			);
@@ -552,14 +558,19 @@ class BookingController {
 			// Convert start and end times to 24-hour format
 			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
 			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
+		 
 
+
+			$dates = explode( ',', $book['meeting_dates'] );
+			$first_date = $dates[0];
+			
 			$booking_array[] = array(
 				'booking_id'   => $book['id'],
 				'title'        => $book['title'],
-				'start'        => $book['meeting_dates'] . 'T' . $start_time_24hr,
-				'end'          => $book['meeting_dates'] . 'T' . $end_time_24hr,
+				'start'        => $first_date . 'T' . $start_time_24hr,
+				'end'          => $first_date . 'T' . $end_time_24hr,
 				'status'       => $book['status'],
-				'booking_date' => $book['meeting_dates'],
+				'booking_date' => $first_date,
 				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
 				'host_id'      => $book['host_id'],
 			);
@@ -712,13 +723,16 @@ class BookingController {
 			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
 			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
 
+			$dates = explode( ',', $book['meeting_dates'] );
+			$first_date = $dates[0];
+
 			$booking_array[] = array(
 				'booking_id'   => $book['id'],
 				'title'        => $book['title'],
-				'start'        => $book['meeting_dates'] . 'T' . $start_time_24hr,
-				'end'          => $book['meeting_dates'] . 'T' . $end_time_24hr,
+				'start'        => $first_date . 'T' . $start_time_24hr,
+				'end'          => $first_date . 'T' . $end_time_24hr,
 				'status'       => $book['status'],
-				'booking_date' => $book['meeting_dates'],
+				'booking_date' => $first_date,
 				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
 				'host_id'      => $book['host_id'],
 			);
@@ -826,13 +840,15 @@ class BookingController {
 			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
 			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
 
+			$dates = explode( ',', $book['meeting_dates'] );
+			$first_date = $dates[0];
 			$booking_array[] = array(
 				'booking_id'   => $book['id'],
 				'title'        => $book['title'],
-				'start'        => $book['meeting_dates'] . 'T' . $start_time_24hr,
-				'end'          => $book['meeting_dates'] . 'T' . $end_time_24hr,
+				'start'        => $first_date . 'T' . $start_time_24hr,
+				'end'          => $first_date . 'T' . $end_time_24hr,
 				'status'       => $book['status'],
-				'booking_date' => $book['meeting_dates'],
+				'booking_date' => $first_date,
 				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
 				'host_id'      => $book['host_id'],
 			);

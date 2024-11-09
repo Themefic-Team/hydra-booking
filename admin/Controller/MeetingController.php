@@ -633,6 +633,16 @@ class MeetingController {
 		// get user id
 		$current_user_id = $current_user->ID;
 
+		if(tfhb_is_pro_active() == false){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Please activate the pro version to use this feature',
+				)
+			);
+		}
+ 
+
 		// Create an array to store the post data for meeting the current row
 		$meeting_post_data = array(
 			'post_type'   => 'tfhb_meeting',
@@ -985,7 +995,7 @@ class MeetingController {
 		$current_user = wp_get_current_user();
 		// get user id
 		$current_user_id = $current_user->ID; 
-
+		 
 		// Update Meeting
 		$data = array(
 			'id'                       => $request['id'],

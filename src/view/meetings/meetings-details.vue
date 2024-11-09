@@ -252,15 +252,14 @@ onMounted(() => {
 
         <div v-if="meeting.meeting_type == 'one-to-group'" class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width">  
             <div class="tfhb-meeting-location tfhb-flexbox tfhb-gap-16" > 
-                <HbText  
+                    <HbText  
                         v-model="meeting.max_book_per_slot"  
                         type= "number"
                         :label="__('Max invitees in a spot', 'hydra-booking')"   
                         :placeholder="'Max invitees in a spot'" 
                         :width= "100"
                        
-                    /> 
-
+                    />  
                     <HbSwitch 
                         v-model="meeting.is_display_max_book_slot" 
                         type="checkbox" 

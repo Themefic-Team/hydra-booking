@@ -49,7 +49,12 @@ const closePopup = () => {
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
-        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+        <div v-if="$tfhb_is_pro == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
+            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upcoming', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+ 
+        </div>
+
+        <!-- <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbButton  
                 @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
@@ -62,7 +67,7 @@ const closePopup = () => {
             <HbSwitch v-if="outlook_calendar.connection_status" @change="emit('update-integrations', 'outlook_calendar', outlook_calendar)" v-model="outlook_calendar.status"    />
              
  
-        </div>
+        </div> -->
 
 
         <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">

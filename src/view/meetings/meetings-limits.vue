@@ -152,14 +152,15 @@ const removeExtraFrequency = (key) => {
                 </h2> 
                 <p>Set up a repeating schedule</p>
             </div>
-            <div class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="meeting.recurring_status">  
+            <div
+            :class="{'tfhb-pro': $tfhb_is_pro == false}"
+            class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="meeting.recurring_status">  
 
                 <!-- Meeting interval -->
 
                 <HbCounter
                     :label="__('Repeats every', 'hydra-booking')"
-                    width="100"
-                    class="tfhb-pro"
+                    width="100" 
                     :repater="false"
                     :counter_value="meeting.recurring_repeat"
                     limit="1"
@@ -169,8 +170,7 @@ const removeExtraFrequency = (key) => {
                 <HbText  
                         v-model="meeting.recurring_maximum"   
                         type="number"
-                        :label="__('Maximum number of bookings', 'hydra-booking')"  
-                        class="tfhb-pro"
+                        :label="__('Maximum number of bookings', 'hydra-booking')"   
                         selected = "1"
                         :placeholder="__('Use meeting length (default)', 'hydra-booking')" 
                         width="50"  
