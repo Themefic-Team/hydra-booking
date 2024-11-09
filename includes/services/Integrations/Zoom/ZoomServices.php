@@ -235,7 +235,13 @@ class ZoomServices {
 	}
 
 	public function zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta ) {
-		$time_in_24_hour_format = gmdate( 'H:i:s', strtotime( $booking_meta->start_time ) );
+
+		$start_time_combined = $booking_meta->meeting_dates . ' ' . $booking_meta->start_time;
+    
+		$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $booking_meta->attendee_time_zone ) ? $booking_meta->attendee_time_zone : '') );
+		$date->setTimezone( new \DateTimeZone('UTC') );
+		$time_in_24_hour_format = $date->format('H:i:s');
+
 		$attendee_data = array(
 			array(
 				'email' => $booking_meta->email,
