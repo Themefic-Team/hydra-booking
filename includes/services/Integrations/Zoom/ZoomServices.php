@@ -180,8 +180,9 @@ class ZoomServices {
 	}
 
 	public function create_zoom_meeting( $booking_meta, $meeting_meta, $host_meta  ) {
-	 
-	 
+
+	 	
+	
 		$access_response = $this->generateAccessToken();
 		$data = $this->zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta );
 	 

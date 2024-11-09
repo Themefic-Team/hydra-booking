@@ -34,13 +34,13 @@ class HydraBookingShortcode {
 		add_action( 'wp_ajax_nopriv_tfhb_meeting_form_cencel', array( $this, 'tfhb_meeting_form_cencel_callback' ) );
 		add_action( 'wp_ajax_tfhb_meeting_form_cencel', array( $this, 'tfhb_meeting_form_cencel_callback' ) );
 
-		add_action( 'hydra_booking/after_booking_completed', array( $this, 'insert_calender_after_booking_completed' ), 10, 2 );
-
+	
 		// Paypal Payment Confirmation
 		add_action( 'wp_ajax_nopriv_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
 		add_action( 'wp_ajax_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
-
-		// $this->tfhdb_wp_mail_sent();
+ 
+		// Create Zoom Meeting
+		add_action( 'hydra_booking/after_booking_completed', array( $this, 'tfhb_create_zoom_meeting' ), 10, 2 ); 
 	}
 
 	// Test Wp Mail Sent
@@ -336,6 +336,8 @@ class HydraBookingShortcode {
 
 		// General Settings
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
+		
+		
 
 		// Generate Meeting Hash Based on start time and end time and Date And Meeting id + random number
 		if ( isset( $_POST['booking_hash'] ) ) {
@@ -353,6 +355,8 @@ class HydraBookingShortcode {
 
 		$meeting     = new Meeting();
 		$MeetingData = $meeting->get( $data['meeting_id'] );
+ 
+		
 
 		$meta_data = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 
@@ -507,8 +511,8 @@ class HydraBookingShortcode {
 				);
 			}
 		}
+		
 		$data['cancelled_by'] = '';
-		$data['status']       = isset( $general_settings['booking_status'] ) && $general_settings['booking_status'] == 1 ? 'confirmed' : 'pending';
 		$data['reason']       = '';
 		$data['booking_type'] = 'single';
 
@@ -524,6 +528,20 @@ class HydraBookingShortcode {
 			$data['payment_status'] = 'completed';
 
 		}
+
+		$booking_status = 'pending';
+		if(isset($general_settings['booking_status']) && $general_settings['booking_status'] == 1){
+			$booking_status = 'confirmed';
+		}
+		if(!isset($general_settings['booking_status'])){
+			$booking_status = 'confirmed';
+		}
+
+		if(!$data['payment_method'] == 'free' && $data['payment_status'] == 'pending'){
+			$booking_status = 'pending';
+		}
+
+		$data['status'] = $booking_status;
 
 		// Before Booking Hooks Action
 		do_action( 'hydra_booking/before_booking_confirmation', $data );
@@ -617,17 +635,18 @@ class HydraBookingShortcode {
 			true
 		);
 		
-		// Zoom Meeting
-		$this->tfhb_create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta);
+	
+		if($single_booking_meta->status == 'confirmed'){
+			// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
+			do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
 
+			
+		}
 
-		// After Booking Hooks
-		do_action( 'hydra_booking/after_booking_confirmation', $single_booking_meta );
-
+		if($single_booking_meta->status == 'pending'){  
+			do_action( 'hydra_booking/after_booking_pending', $single_booking_meta );
+		}
 		
-
-		// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
-		do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
 		
   
 		// Load Meeting Confirmation Template
@@ -751,7 +770,28 @@ class HydraBookingShortcode {
 	 * @param $host_meta
 	 * @return void
 	 */
-	public function tfhb_create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta) {
+	public function tfhb_create_zoom_meeting( $single_booking_meta) { 
+
+
+		$BookingMeta = new BookingMeta();
+		// check if the meeting id is available
+		$get_booking_meta = $BookingMeta->getWithIdKey( $single_booking_meta->id, 'zoom_meeting' );
+
+		if ( $get_booking_meta ) {
+			return false;
+		}
+
+
+		
+		$meeting = new Meeting();
+		$MeetingData = $meeting->get( $single_booking_meta->meeting_id );
+
+		
+
+		$meta_data = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
+
+		$host_id   = isset( $meta_data['host_id'] ) ? $meta_data['host_id'] : 0;
+		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
 
 		$booking = new Booking();
 		// Host Meta by Booking Id
@@ -780,7 +820,7 @@ class HydraBookingShortcode {
 
 		// Global Integration
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
-
+		
 		if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
 			$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
 			$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
@@ -793,9 +833,9 @@ class HydraBookingShortcode {
 			$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
 			$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
 		}
-
+		
 		if ( $zoom_exists == true && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) { 
-			
+	 
 
 			$zoom             = new ZoomServices( );
 			$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
@@ -803,7 +843,7 @@ class HydraBookingShortcode {
 			
 			
 
-			$BookingMeta = new BookingMeta();
+			
 
 			$booking_meta = array(
 				'booking_id' => $single_booking_meta->id,
@@ -820,9 +860,10 @@ class HydraBookingShortcode {
 			}
 
 			$getBookingData = $booking->get( $single_booking_meta->id );
-			$meeting_locations =  json_decode( $getBookingData->meeting_locations );
-
 			
+			$meeting_locations =  json_decode( $getBookingData->meeting_locations );
+			 
+		 
 			$meeting_locations->zoom->address = array(
 				'link' => $meeting_creation['join_url'],
 				'password' => $meeting_creation['password'],
@@ -993,93 +1034,7 @@ class HydraBookingShortcode {
 	}
 
 
-	// Insert Calender After Booking Schedule
-	public function insert_calender_after_booking_completed( $data ) {
-		
-		$booking     = new Booking();
-		$meeting     = new Meeting();
-		$BookingMeta = new BookingMeta();
-		$MeetingData = $meeting->get( $data->meeting_id );
-		$meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
-		if ( 'one-to-group' == $meta_data['meeting_type'] ) {
-			$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
-			$check_booking     = $booking->get(
-				array(
-					'meeting_id'    => $data->meeting_id,
-					'meeting_dates' => $data->meeting_dates,
-					'start_time'    => $data->start_time,
-					'end_time'      => $data->end_time,
-				),
-				false,
-				false,
-				false,
-				'id DESC',
-			);
-
-			// unset if check_booking has current booking data->id without loop and array maps or filter
-			$check_booking = array_filter(
-				$check_booking,
-				function ( $booking ) use ( $data ) {
-					return $booking->id !== $data->id;
-				}
-			);
-			// Get First Items form the array
-			$first_item = reset( $check_booking );
-
-			if ( $first_item->meeting_calendar != 'null' && ! empty( $first_item->meeting_calendar ) && $first_item->meeting_calendar != 0 ) {
-
-				$booking_calendar           = $BookingMeta->getFirstOrFail(
-					$first_item->meeting_calendar
-				);
-				$update                     = array();
-				$update['id']               = $data->id;
-				$update['meeting_calendar'] = $booking_calendar->id;
-
-				$booking->update( $update );
-				$booking_calendar_value = json_decode( $booking_calendar->value );
-
-				$booking_calendar_value = apply_filters( 'hydra_booking_calendar_add_new_attendee', $booking_calendar_value, $data );
-
-				// Update the Booking meta
-				$booking_meta = array(
-					'id'    => $booking_calendar->id,
-					'value' => wp_json_encode( $booking_calendar_value, true ),
-				);
-
-				$BookingMeta->update( $booking_meta );
-
-				return;
-
-			}
-		} else {
-			
-			// Update the Booking
-			$calendar_data = apply_filters( 'after_booking_completed_calendar_data', array(), $data );
- 
-			
-			$booking_meta = array(
-				'booking_id' => $data->id,
-				'meta_key'   => 'booking_calendar',
-				'value'      => wp_json_encode( $calendar_data, true ),
-			);
-
-			$insert = $BookingMeta->add( $booking_meta );
-
-			$insert_id = $insert['insert_id'];
-			if ( $insert_id === false ) {
-				return false;
-			}
-
-			$update                     = array();
-			$update['id']               = $data->id;
-			$update['meeting_calendar'] = $insert_id;
-			$update['meeting_locations'] = $data->meeting_locations;
-
-			$booking->update( $update );
-		}
-
-		return true;
-	}
+	
 
 	// Already Booked Times Callback
 	public function tfhb_already_booked_times_callback() {

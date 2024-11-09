@@ -78,14 +78,15 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
 			
 			if ( ! empty( $booking['meeting_locations'] ) ) {
 				$meeting_location = json_decode( $booking['meeting_locations'], true );
-
+				
 				
 				foreach ( $meeting_location as $key => $location ) {
 
 					
-					$address = $location['address'];
+					$address =  isset($location['address']) && !empty($location['address']) ? $location['address'] : $key;
+					 
 					if($key == 'zoom'){
-						$address = $location['address']['link'];
+						$address = isset($location['address']['link']) ? $location['address']['link'] : $key;
 					}
 					if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
 						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';

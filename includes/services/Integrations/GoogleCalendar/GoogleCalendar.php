@@ -31,22 +31,17 @@ class GoogleCalendar {
 	public function __construct() {
 
 		$this->setClientData();
+ 
 
-		// add_action('hydra_booking/after_booking_completed', array($this, 'InsertGoogleCalender'));
-		// add_action('hydra_booking/after_booking_schedule', array($this, 'InsertGoogleCalender'));
-
-		if($this->clientId != '' && $this->clientSecret != '' && $this->redirectUrl != ''){
-			add_filter( 'after_booking_completed_calendar_data', array( $this, 'InsertGoogleCalender' ), 10, 2 );
-			add_filter( 'hydra_booking_calendar_add_new_attendee', array( $this, 'addAttendeeGoogleCalender' ), 10, 2 ); 
-
-			// delete google calendar
-			add_action( 'hydra_booking/after_booking_canceled', array( $this, 'deleteGoogleCalender' ), 10, 2 );
-
-			// Reshedule the booking
-			add_action( 'hydra_booking/after_booking_schedule', array( $this, 'UpdateGoogleCalender' ), 10, 2 );
-			
-		}
 		
+	}
+
+	// Update Google Calender
+	public function checkConnectionStatus(){
+		if($this->clientId != '' && $this->clientSecret != '' && $this->redirectUrl != ''){
+			return true;
+		}
+		return false;
 	}
 
 	// Set Client Data
@@ -257,8 +252,9 @@ class GoogleCalendar {
 
 
 	// Insert Booking to Google Calendar
-	public function InsertGoogleCalender( $value, $data ) {
+	public function InsertGoogleCalender($data ) {
 		
+		$value = array();
 	
 		if ( ! isset( $data->id ) ) {
 			return;
@@ -302,6 +298,7 @@ class GoogleCalendar {
 
 		$google_calendar_body = array(); 
 
+		
 		
 		foreach ( $meeting_dates as $meeting_date ) {
 			$start_date = gmdate( 'Y-m-d', strtotime( $meeting_date ) ) . 'T' . gmdate( 'H:i:s', $start_time );
@@ -392,7 +389,7 @@ class GoogleCalendar {
 			}
 			
 		}
-	
+		
 		$meet_link = '';
 		foreach ( $google_calendar_body as $key => $mvalue ) {
 			$hangoutLink = isset( $mvalue['hangoutLink'] ) ? $mvalue['hangoutLink'] : '';
@@ -412,8 +409,7 @@ class GoogleCalendar {
 			
 		}
 		
-		$value['google_calendar'] = $google_calendar_body;
-		 
+		$value['google_calendar'] = $google_calendar_body; 
 		return $value;
 		// $update = array();
 		// $update['id'] = $data->id;
@@ -422,6 +418,107 @@ class GoogleCalendar {
 		// $booking = new Booking();
 
 		// $booking->update($update);
+	}
+
+
+	// Insert Calender After Booking Schedule
+	public function insert_calender_after_booking_completed( $data ) {
+
+		
+		if($this->checkConnectionStatus() == false){
+			return;
+		}
+
+
+		$booking     = new Booking();
+		$meeting     = new Meeting();
+		$BookingMeta = new BookingMeta(); 
+		$get_booking_meta = $BookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
+
+		if ( $get_booking_meta ) {
+			return false;
+		}
+		$MeetingData = $meeting->get( $data->meeting_id );
+		$meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
+		if ( 'one-to-group' == $meta_data['meeting_type'] ) {
+			$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
+			$check_booking     = $booking->get(
+				array(
+					'meeting_id'    => $data->meeting_id,
+					'meeting_dates' => $data->meeting_dates,
+					'start_time'    => $data->start_time,
+					'end_time'      => $data->end_time,
+				),
+				false,
+				false,
+				false,
+				'id DESC',
+			);
+
+			// unset if check_booking has current booking data->id without loop and array maps or filter
+			$check_booking = array_filter(
+				$check_booking,
+				function ( $booking ) use ( $data ) {
+					return $booking->id !== $data->id;
+				}
+			);
+			// Get First Items form the array
+			$first_item = reset( $check_booking );
+
+			if ( $first_item->meeting_calendar != 'null' && ! empty( $first_item->meeting_calendar ) && $first_item->meeting_calendar != 0 ) {
+
+				$booking_calendar           = $BookingMeta->getFirstOrFail(
+					$first_item->meeting_calendar
+				);
+				$update                     = array();
+				$update['id']               = $data->id;
+				$update['meeting_calendar'] = $booking_calendar->id;
+
+				$booking->update( $update );
+				$booking_calendar_value = json_decode( $booking_calendar->value );
+
+				$booking_calendar_value = apply_filters( 'hydra_booking_calendar_add_new_attendee', $booking_calendar_value, $data );
+
+				// Update the Booking meta
+				$booking_meta = array(
+					'id'    => $booking_calendar->id,
+					'value' => wp_json_encode( $booking_calendar_value, true ),
+				);
+
+				$BookingMeta->update( $booking_meta );
+
+				return;
+
+			}
+		} else {
+			
+			// Update the Booking
+			$calendar_data = $this->InsertGoogleCalender($data);
+			// $calendar_data = apply_filters( 'after_booking_completed_calendar_data', array(), $data );
+		 
+			
+			$booking_meta = array(
+				'booking_id' => $data->id,
+				'meta_key'   => 'booking_calendar',
+				'value'      => wp_json_encode( $calendar_data, true ),
+			);
+
+			$insert = $BookingMeta->add( $booking_meta );
+
+			$insert_id = $insert['insert_id'];
+			if ( $insert_id === false ) {
+				return false;
+			}
+
+			$update                     = array();
+			$update['id']               = $data->id;
+			$update['meeting_calendar'] = $insert_id;
+			$update['meeting_locations'] = json_decode($data->meeting_locations);
+
+			$booking->update( $update );
+		}
+
+		return true;
 	}
 
 	// add new attendee existing Booking to Google Calendar
@@ -475,7 +572,9 @@ class GoogleCalendar {
 	 * @param $booking
 	 */
 	public function deleteGoogleCalender( $booking ) { 
-
+		if($this->checkConnectionStatus() == false){
+			return;
+		}
 		// Get Meeting Calendar Data
 		$meeting = new Meeting();
 		$meetingData = $meeting->get( $booking->meeting_id );
@@ -569,6 +668,10 @@ class GoogleCalendar {
 	 */
 
 	public function UpdateGoogleCalender( $booking ) {
+
+		if($this->checkConnectionStatus() == false){
+			return;
+		}
 
 		// Get Meeting Calendar Data
 		$meeting = new Meeting();

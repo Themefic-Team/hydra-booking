@@ -731,7 +731,9 @@ class BookingController {
 			array( 'id' => $request['id'] ),
 			false,
 		);
-		if ( 'approved' == $request['status'] ) {
+
+		if ( 'confirmed' == $request['status'] ) {
+		 
 			do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
 		}
 
