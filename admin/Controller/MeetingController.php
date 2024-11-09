@@ -633,7 +633,7 @@ class MeetingController {
 		// get user id
 		$current_user_id = $current_user->ID;
 
-		if(tfhb_is_pro_active() == false){
+		if(tfhb_is_pro_active() == false && $request_data['meeting_type'] == 'one-to-group'){
 			return rest_ensure_response(
 				array(
 					'status'  => false,
