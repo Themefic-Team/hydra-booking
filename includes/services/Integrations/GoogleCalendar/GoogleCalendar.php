@@ -253,7 +253,7 @@ class GoogleCalendar {
 
 	// Insert Booking to Google Calendar
 	public function InsertGoogleCalender($data ) {
-		
+	
 		$value = array();
 	
 		if ( ! isset( $data->id ) ) {
@@ -285,7 +285,7 @@ class GoogleCalendar {
 		$meeting           = new Meeting();
 		$meetingData       = $meeting->get( $data->meeting_id );
 		$meeting_locations = json_decode( $meetingData->meeting_locations, true );
-
+		
 		$enable_meeting_location = false;
 		// if in array location value is meet then set google meet using array filter
 		$meeting_location        = array_filter(
@@ -293,7 +293,8 @@ class GoogleCalendar {
 			function ( $location ) {
 				return $location['location'] == 'meet';
 			}
-		);
+		); 
+		
 		$enable_meeting_location = count( $meeting_location ) > 0 ? true : false;
 
 		$google_calendar_body = array(); 
@@ -394,30 +395,34 @@ class GoogleCalendar {
 		foreach ( $google_calendar_body as $key => $mvalue ) {
 			$hangoutLink = isset( $mvalue['hangoutLink'] ) ? $mvalue['hangoutLink'] : '';
 			if ( $hangoutLink != '' ) {
-				$meet_link .= $hangoutLink . '';
+				$meet_link .= $hangoutLink . ' | ';
 			}
 		} 
+		
 		if($meet_link != '' && $enable_meeting_location == true ){
 			$booking = new Booking();
 			$getBookingData = $booking->get( $data->id ); 
-			$meeting_loaction  = json_decode($getBookingData->meeting_locations);
+			$meeting_loaction  = json_decode($getBookingData->meeting_locations); 
 			
-			$meeting_loaction->meet->address = $meet_link;
+			// remove the last pipe
+			$meet_link = rtrim($meet_link, '|');
+
+			if(isset($meeting_loaction->meet)){
+				$meeting_loaction->meet->address = $meet_link;
+			} 
 
 			$data->meeting_locations = $meeting_loaction;
 		
 			
 		}
 		
-		$value['google_calendar'] = $google_calendar_body; 
-		return $value;
-		// $update = array();
-		// $update['id'] = $data->id;
-		// $update['meeting_calendar'] = json_encode($google_calendar_data, true);
+		$data = array(
+			'meeting_locations' => $data->meeting_locations,
+			'google_calendar' => $google_calendar_body,
+		); 
+	
+		return $data; 
 
-		// $booking = new Booking();
-
-		// $booking->update($update);
 	}
 
 
@@ -439,8 +444,10 @@ class GoogleCalendar {
 			return false;
 		}
 		$MeetingData = $meeting->get( $data->meeting_id );
+		
 		$meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 		if ( 'one-to-group' == $meta_data['meeting_type'] ) {
+			
 			$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
 			$check_booking     = $booking->get(
 				array(
@@ -495,12 +502,15 @@ class GoogleCalendar {
 			// Update the Booking
 			$calendar_data = $this->InsertGoogleCalender($data);
 			// $calendar_data = apply_filters( 'after_booking_completed_calendar_data', array(), $data );
-		 
 			
+			$value = array(
+				'google_calendar' => $calendar_data['google_calendar'],
+			);
+		
 			$booking_meta = array(
 				'booking_id' => $data->id,
 				'meta_key'   => 'booking_calendar',
-				'value'      => wp_json_encode( $calendar_data, true ),
+				'value'      => wp_json_encode( $value, true ),
 			);
 
 			$insert = $BookingMeta->add( $booking_meta );
@@ -508,12 +518,16 @@ class GoogleCalendar {
 			$insert_id = $insert['insert_id'];
 			if ( $insert_id === false ) {
 				return false;
-			}
+			} 
+			$meeting_loaction = (array) $calendar_data['meeting_locations'];
+ 			$meeting_locations = is_array($meeting_loaction) ? $meeting_loaction  : wp_json_decode($meeting_loaction);
+		
 
+			
 			$update                     = array();
 			$update['id']               = $data->id;
 			$update['meeting_calendar'] = $insert_id;
-			$update['meeting_locations'] = json_decode($data->meeting_locations);
+			$update['meeting_locations'] = $meeting_locations; 
 
 			$booking->update( $update );
 		}

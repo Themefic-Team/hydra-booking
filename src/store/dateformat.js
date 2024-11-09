@@ -1,21 +1,19 @@
 export default function useDateFormat() {
 
     const Tfhb_Date = (dateString) => {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', options);
+        // const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        // const date = new Date(dateString);
+        // return date.toLocaleDateString('en-US', options);
 
-        // const dates = dateString.split(','); 
-
-        // // make array of date objects
-        // const dateObjects = dates.map(date => {
-        //     const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        //     const dateObject = new Date(date);
-        //     return dateObject.toLocaleDateString('en-US', options);
-        // });
-        // // make array to string
-        // return dateObjects.join(', ');
-        // console.log('dateObjects', dateObjects);
+        const dates = dateString.split(',');  
+        // make array of date objects
+        const dateObjects = dates.map(date => {
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const dateObject = new Date(date);
+            return dateObject.toLocaleDateString('en-US', options);
+        }); 
+        // make array to string
+        return dateObjects.join(', '); 
     }
 
     const Tfhb_Time = (timeString) => {

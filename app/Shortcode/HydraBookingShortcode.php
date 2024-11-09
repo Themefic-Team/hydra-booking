@@ -771,7 +771,7 @@ class HydraBookingShortcode {
 		}
 
 
-		
+		return false;
 		$meeting = new Meeting();
 		$MeetingData = $meeting->get( $single_booking_meta->meeting_id );
 

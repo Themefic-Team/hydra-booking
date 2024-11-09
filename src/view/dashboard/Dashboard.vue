@@ -72,9 +72,12 @@ onBeforeRouteLeave((to, from, next) => {
     next();
 })
 
-const FormatDate = (date) => {  
-    // convert 2024-05-29 to 25 Sep, 24
-    const d = new Date(date);
+const FormatDate = (date) => {   
+    // convert 2024-11-15,2024-11-16,2024-11-17
+    const dates = date.split(',');
+    // get first one 
+    const first_date = dates[0];
+    const d = new Date(first_date);
     const ye = new Intl.DateTimeFormat('en', { year: '2-digit' }).format(d);
     const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
     const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
