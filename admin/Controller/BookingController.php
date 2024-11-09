@@ -735,6 +735,9 @@ class BookingController {
 			do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
 		}
 
+		if ( 'pending' == $request['status'] ) {
+			do_action( 'hydra_booking/after_booking_pending', $single_booking_meta );
+		}
 		if ( 'canceled' == $request['status'] ) { 
 			do_action( 'hydra_booking/after_booking_canceled', $single_booking_meta );
 		}

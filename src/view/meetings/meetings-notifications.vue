@@ -52,6 +52,8 @@ const changeTab = (e) => {
 
 // Host Booking Confirm PopUp
 const hostBookingConfirmPopUp = ref(false);
+// Host booking Pending PopUp
+const hostBookingPendingPopUp = ref(false);
 // Host Booking Cencel PopUp
 const hostBookingCencelPopUp = ref(false);
 // Host Booking Reschedule PopUp
@@ -61,6 +63,8 @@ const hostBookingReminderPopUp = ref(false);
 
 // Attendee Booking Confirm PopUp
 const attendeeBookingConfirmPopUp = ref(false);
+// Attendee Booking Pending PopUp
+const attendeeBookingPendingPopUp = ref(false);
 // Attendee Booking Cancel PopUp
 const attendeeBookingCancelPopUp = ref(false);
 // Attendee Booking Reschedule PopUp
@@ -76,10 +80,12 @@ const UpdateNotification = async () => {
 
     setTimeout(() => {
         hostBookingConfirmPopUp.value = false;
+        hostBookingPendingPopUp.value = false;
         hostBookingCencelPopUp.value = false;
         hostBookingReschedulePopUp.value = false;
         hostBookingReminderPopUp.value = false;
         attendeeBookingConfirmPopUp.value = false;
+        attendeeBookingPendingPopUp.value = false;
         attendeeBookingCancelPopUp.value = false;
         attendeeBookingReschedulePopUp.value = false;
         attendeeBookingReminderPopUp.value = false;
@@ -112,6 +118,18 @@ const UpdateNotification = async () => {
                 /> 
                 <!-- Single Integrations  -->
 
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    title="Send Email to Host" 
+                    :label="__('Booking Pending', 'hydra-booking')" 
+                    @update-notification="UpdateNotification"
+                    :data="meeting.notification.host.booking_pending"  
+                    :update_preloader="props.update_preloader"  
+                    :ispopup="hostBookingPendingPopUp"
+                    @popup-open-control="hostBookingPendingPopUp = true"
+                    @popup-close-control="hostBookingPendingPopUp = false"
+                /> 
+                <!-- Single Integrations  -->
 
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -169,6 +187,18 @@ const UpdateNotification = async () => {
                 /> 
                 <!-- Single Integrations  -->
 
+                <!-- Single Notification  -->
+                <MailNotifications 
+                title="Send Email to Attendee" 
+                :label="__('Booking Pending', 'hydra-booking')"
+                @update-notification="UpdateNotification"
+                :data="meeting.notification.attendee.booking_pending"  
+                :update_preloader="props.update_preloader"  
+                :ispopup="attendeeBookingPendingPopUp"
+                @popup-open-control="attendeeBookingPendingPopUp = true"
+                @popup-close-control="attendeeBookingPendingPopUp = false"
+                /> 
+                <!-- Single Integrations  -->
 
                 <!-- Single Notification  -->
                 <MailNotifications 

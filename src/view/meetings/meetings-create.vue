@@ -185,7 +185,15 @@ const meetingData = reactive({
     notification: {
         host: {
             booking_confirmation: {
-                status : 0,
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_pending: {
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -193,7 +201,7 @@ const meetingData = reactive({
 
             },
             booking_cancel: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -201,7 +209,7 @@ const meetingData = reactive({
 
             },
             booking_reschedule: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -209,7 +217,7 @@ const meetingData = reactive({
 
             },
             booking_reminder: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -219,14 +227,21 @@ const meetingData = reactive({
         },
         attendee : {
             booking_confirmation: {
-                status : 0,
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+            },
+            booking_pending: {
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
                 body : '',
             },
             booking_cancel: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -234,7 +249,7 @@ const meetingData = reactive({
 
             },
             booking_reschedule: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -242,7 +257,7 @@ const meetingData = reactive({
 
             },
             booking_reminder: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',

@@ -34,6 +34,14 @@ const Notification = reactive(  {
             body : '',
 
         },
+        booking_pending: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
         booking_cancel: {
             status : 0,
             template : 'default',
@@ -62,6 +70,14 @@ const Notification = reactive(  {
      },
      attendee : {
         booking_confirmation: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_pending: {
             status : 0,
             template : 'default',
             from : '',
@@ -99,6 +115,8 @@ const Notification = reactive(  {
 
 // Host Booking Confirm PopUp
 const hostBookingConfirmPopUp = ref(false);
+// Host Booking Pending PopUp
+const hostBookingPendingPopUp = ref(false);
 // Host Booking Cencel PopUp
 const hostBookingCencelPopUp = ref(false);
 // Host Booking Reschedule PopUp
@@ -108,6 +126,8 @@ const hostBookingReminderPopUp = ref(false);
 
 // Attendee Booking Confirm PopUp
 const attendeeBookingConfirmPopUp = ref(false);
+// Attendee Booking Pending PopUp
+const attendeeBookingPendingPopUp = ref(false);
 // Attendee Booking Cancel PopUp
 const attendeeBookingCancelPopUp = ref(false);
 // Attendee Booking Reschedule PopUp
@@ -223,6 +243,18 @@ onBeforeMount(() => {
                 /> 
                 <!-- Single Integrations  -->
 
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    title="Send Email to Host for Booking Pending" 
+                   :label="__('Booking Pending', 'hydra-booking')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.host.booking_pending"  
+                    :ispopup="hostBookingPendingPopUp"
+                    @popup-open-control="hostBookingPendingPopUp = true"
+                    @popup-close-control="hostBookingPendingPopUp = false"
+                /> 
+                <!-- Single Integrations  -->
+
 
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -273,6 +305,18 @@ onBeforeMount(() => {
                     :ispopup="attendeeBookingConfirmPopUp"
                     @popup-open-control="attendeeBookingConfirmPopUp = true"
                     @popup-close-control="attendeeBookingConfirmPopUp = false"
+                /> 
+                <!-- Single Integrations  -->
+
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    title="Send Email to Attendee" 
+                    :label="__('Booking Pending', 'hydra-booking')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.attendee.booking_pending"  
+                    :ispopup="attendeeBookingPendingPopUp"
+                    @popup-open-control="attendeeBookingPendingPopUp = true"
+                    @popup-close-control="attendeeBookingPendingPopUp = false"
                 /> 
                 <!-- Single Integrations  -->
 

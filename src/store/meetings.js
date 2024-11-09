@@ -175,6 +175,14 @@ const Meeting = reactive({
                         body : '',
         
                     },
+                    booking_pending: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+        
+                    },
                     booking_cancel: {
                         status : 0,
                         template : 'default',
@@ -202,6 +210,13 @@ const Meeting = reactive({
                 },
                 attendee : {
                     booking_confirmation: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                    },
+                    booking_pending: {
                         status : 0,
                         template : 'default',
                         form : '',

@@ -19,7 +19,8 @@ class Helper {
         );
 
         //  Host Notification
-        $notification['host']['booking_confirmation'] = array(
+         //  Host Notification
+         $notification['host']['booking_confirmation'] = array(
             'status' => 1,
             'template' => 'default',
             'from' =>  '{{wp.admin_email}}',
@@ -73,6 +74,31 @@ class Helper {
                 <h3>Additional Data</h3>
                 <p> {{attendee.additional_data}} </p>
             '
+        );
+        
+        $notification['host']['booking_pending'] = array(
+            'status' => 1,
+            'template' => 'default',
+            'from' =>  '{{wp.admin_email}}',
+            'subject' => 'Pending Booking between {{host.name}} & {{attendee.name}}',
+            'body' =>  ' <h2>A Booking is Pending Approval</h2> <hr> 
+            
+                <h3>Meeting Details</h3>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>
+
+                <h3>When</h3>
+                <p> {{booking.full_start_end_host_timezone}} </p>
+
+                <h3>Who</h3> 
+
+                <p> Host: {{host.name}}  </p>
+                <p> Attendee: {{attendee.name}}  </p>
+ 
+                <h3>Additional Data</h3>
+                <p> {{attendee.additional_data}} </p>
+            '
+            
         );
         $notification['host']['booking_reschedule'] = array(
             'status' => 1,
@@ -148,6 +174,28 @@ class Helper {
 
                 <h3>Where</h3>
                 <p>{{booking.location_details_html}}  </p>
+            '
+
+        );
+        // Attendee Notification
+        $notification['attendee']['booking_pending'] = array(
+            'status' => 1,
+            'template' => 'default',
+            'from' => '{{wp.admin_email}}',
+            'subject' => 'Pending Booking with {{host.name}}',
+            'body' =>  ' <h2>Your Booking is Pending Approval</h2> <hr> 
+                <h3>Meeting Details</h3>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>
+
+                <h3>When</h3>
+                <p> {{booking.full_start_end_attendee_timezone}} </p>
+
+                <h3>Who</h3>
+                <p> Host: {{host.name}}  </p>
+
+                <p> Attendee: {{attendee.name}}  </p>
+ 
             '
 
         );

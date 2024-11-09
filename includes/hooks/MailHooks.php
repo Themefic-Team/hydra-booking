@@ -13,7 +13,8 @@ class MailHooks {
 	// Re-schedule
 	// Canceled
 	public function __construct() {
-		add_action( 'hydra_booking/after_booking_completed', array( $this, 'pushBookingToCompleted' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_completed', array( $this, 'pushBookingToCompleted' ), 20, 1 ); 
+		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 10, 1 );
 	}
@@ -88,6 +89,81 @@ class MailHooks {
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] : '';
+
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+
+				// Result after Shortcode replce
+				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+				// Attendee Email
+				$mailto = ! empty( $booking->email ) ? $booking->email : '';
+
+				$headers = array(
+					'Reply-To: ' . $replyTo,
+				);
+
+				Mailer::send( $mailto, $subject, $body, $headers );
+			}
+		}
+	}
+
+
+	// If booking Status is Pending
+	public function pushBookingToPending( $booking ) {
+
+
+		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $booking->host_id );  
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+
+			// Host Pending Email, If Settings Enable for Host Pending
+			if ( ! empty( $_tfhb_notification_settings['host']['booking_pending']['status'] ) ) {
+				
+				// From Email
+				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_pending']['form'] ) ? $_tfhb_notification_settings['host']['booking_pending']['form'] : get_option( 'admin_email' );
+
+				// Email Subject
+				$subject = ! empty( $_tfhb_notification_settings['host']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['host']['booking_pending']['subject'] : 'Booking Pending';
+
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+				
+				// Setting Body
+				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_pending']['body'] ) ? $_tfhb_notification_settings['host']['booking_pending']['body'] : '';
+
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+
+				// Result after Shortcode replce
+				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+				// Host Email
+				$mailto = ! empty( $hostData->email ) ? $hostData->email : '';
+
+				$headers = array(
+					'Reply-To: ' . $replyTo,
+				);
+
+				Mailer::send( $mailto, $subject, $body, $headers );
+			}
+
+			// Attendee Pending Email, If Settings Enable for Attendee Pending
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['status'] ) ) {
+				// From Email
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['form'] : get_option( 'admin_email' );
+
+				// Email Subject
+				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['subject'] : 'Booking Pending';
+
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+
+
+				// Setting Body
+				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['body'] : '';
 
 				// Replace Shortcode to Values
 				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
