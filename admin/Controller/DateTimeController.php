@@ -38,7 +38,7 @@ class DateTimeController extends \DateTimeZone {
 		echo $timeZoneName;
 	}
 
-	public function convert_time_based_on_timezone( $time, $time_zone, $selected_time_zone, $time_format, ) {
+	public function convert_time_based_on_timezone( $time, $time_zone, $selected_time_zone, $time_format ) {
 
 		$time = new \DateTime( $time, new \DateTimeZone( $time_zone ) );
 
