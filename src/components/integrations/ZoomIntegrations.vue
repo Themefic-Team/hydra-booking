@@ -75,7 +75,7 @@ const closePopup = () => {
 
                 <template #content>  
                     <p>
-                        {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Zoom Account', 'hydra-booking') }} <a href="https://themefic.com/docs/hydrabooking/hydrabooking/integrations/#Zoom" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Read Documentation', 'hydra-booking') }}</a>
+                        {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Zoom Account', 'hydra-booking') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Read Documentation', 'hydra-booking') }}</a>
                     </p>
                     <HbText  
                         v-model="zoom_meeting.account_id"  

@@ -370,10 +370,10 @@ window.addEventListener('click', function(e) {
         <div class="tfhb-s-w-step-end tfhb-flexbox tfhb-full-width">
 
             <div class="tfhb-s-w-integrations-bar tfhb-flexbox  tfhb-justify-between">
-                <div  @click="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
+                <div  @click.stop="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
                     <span class="tfhb-btn tfhb-flexbox tfhb-gap-8">All Integrations 
-                        <Icon v-if="activeDropdown == false" @click="toggleDropdown"  name="ChevronDown" size=20 /> 
-                        <Icon v-else name="ChevronUp" @click="toggleDropdown"  size=20 /> 
+                        <Icon v-if="activeDropdown == false" @click.stop="toggleDropdown"  name="ChevronDown" size=20 /> 
+                        <Icon v-else name="ChevronUp"  @click.stop="toggleDropdown"  size=20 /> 
                     </span> 
                      
                     <transition name="tfhb-dropdown-transition">
