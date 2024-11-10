@@ -657,7 +657,7 @@ const truncateString = (str, num) => {
 
 <template> 
     <div class="tfhb-meeting-create" :class="{ 'tfhb-skeleton': skeleton }">
-        <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
+        <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32 tfhb-justify-between">
             <div class="tfhb-meeting-heading-wrap tfhb-flexbox tfhb-gap-8">
                 <div class="prev-navigator" @click="TfhbPrevNavigator()">
                     <Icon v-if="beck_to_prev == false" name="ArrowLeft" size=20 /> 

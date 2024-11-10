@@ -427,6 +427,7 @@ class GoogleCalendar {
 				$meet_link .= $hangoutLink . ' | ';
 			}
 		} 
+ 
 		
 		if($meet_link != '' && $enable_meeting_location == true ){
 			$booking = new Booking();
@@ -623,8 +624,7 @@ class GoogleCalendar {
 			if ( $hangoutLink != '' ) {
 				$meet_link .= $hangoutLink . ' | ';
 			}
-		} 
-		
+		}  
 		
 		if($meet_link != '' && $enable_meeting_location == true ){
 			$bookingGet = new Booking();

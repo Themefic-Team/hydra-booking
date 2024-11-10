@@ -19,6 +19,7 @@ const router = useRouter();
 
 // Toast
 import { toast } from "vue3-toastify"; 
+import { BookTemplateIcon } from 'lucide-vue-next';
 
 const sharePopup = ref(false)
 
@@ -76,7 +77,10 @@ const copyMeeting = (link) => {
     document.body.removeChild(textarea);
     
     // Show a toast notification or perform any other action
-    toast.success(link + ' is Copied');
+    toast.success(link + ' is Copied', {
+        position: "bottom-right",
+        duration: 2000
+    }); 
 }
 
 const activeItemDropdown = ref(0);
@@ -304,7 +308,7 @@ window.addEventListener('click', function(e) {
                                     <div class="tfhb-copy-btn "> 
                                         <HbButton 
                                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
-                                            @click="copyMeeting(shareData.embed)" 
+                                            @click="copyMeeting(shareData.link)" 
                                             :buttonText="__('Copy Code', 'hydra-booking')" 
                                         />  
                                     </div>
@@ -318,7 +322,7 @@ window.addEventListener('click', function(e) {
                                     <div class="tfhb-copy-btn">
                                         <HbButton 
                                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
-                                            @click="copyMeeting(shareData.embed)" 
+                                            @click="copyMeeting(shareData.shortcode)" 
                                             :buttonText="__('Copy Code', 'hydra-booking')" 
                                         /> 
                                     </div>

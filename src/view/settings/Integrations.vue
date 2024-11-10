@@ -22,6 +22,7 @@ import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.v
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
 
+
 // import Form Field 
 import Icon from '@/components/icon/LucideIcon.vue' 
 
@@ -96,7 +97,7 @@ const ispaypalPopupOpen = () => {
 const ispaypalPopupClose = (data) => {
     paypalpopup.value = false;
 }
-
+const preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
         type: 'payment', 

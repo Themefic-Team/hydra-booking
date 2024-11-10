@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 	?>
 	<div class="tfhb-calendar-container">
 		<header class="tfhb-calendar-header">
-			<p class="tfhb-calendar-current-date"></p>
+			<h2 class="tfhb-calendar-current-date"></h2>
 			<div class="tfhb-calendar-navigation">
 				<span id="tfhb-calendar-prev">
 					<svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">

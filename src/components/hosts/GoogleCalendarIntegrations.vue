@@ -10,6 +10,7 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbRadio from '@/components/form-fields/HbRadio.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 const gCalPopup = ref(false);
 
  
@@ -85,7 +86,15 @@ const storedOptionData = (data) => {
                     />  
                 </div>
                 <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8">
-                    <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect"   @click.stop="emit('update-integrations', 'google_calendar', google_calendar)">{{ __('Update Host Settings', 'hydra-booking') }} </button>
+                    <HbButton  
+                         @click.stop="emit('update-integrations', 'google_calendar', google_calendar)"
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"  
+                        :buttonText="'Update Host Settings' "
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true"  
+                    />   
+                   
                 </div> 
             </template> 
         </HbPopup>
