@@ -49,7 +49,7 @@ const closePopup = () => {
             <HbButton  
                 v-else @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="props.mail_data.status == 1 ? 'Connected' : 'Connect' " 
+                :buttonText="props.mail_data.status == 1 && mail_data.key != '' &&  mail_data.key  != null ? 'Connected' : 'Connect' " 
                 :hover_animation="false"    
             /> 
 

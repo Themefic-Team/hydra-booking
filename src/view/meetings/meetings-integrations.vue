@@ -8,6 +8,10 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 
 import Integrations from '@/components/meetings/Integrations.vue';
 import { IntegrationsValue } from '@/store/meetings/integrations'; 
+
+import Webhook from '@/components/meetings/Webhook.vue';
+import { webhookData } from '@/store/meetings/webhook'; 
+
 const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
     meetingId: {
@@ -43,8 +47,11 @@ onBeforeMount(() => {
 
     </div>
 
-     <!-- WebHook -->
-     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro tfhb-flexbox tfhb-gap-16">
+    <!-- WebHook -->
+    <div class="tfhb-meeting-webhook-wrap  tfhb-full-width tfhb-flexbox tfhb-gap-16" v-if="$tfhb_is_pro == true">
+        <Webhook :meetingId="props.meetingId" :meeting="meeting" />
+    </div>
+    <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro tfhb-flexbox tfhb-gap-16" v-else>
         <div class="tfhb-webhook-title tfhb-flexbox">
             <div class="tfhb-admin-title tfhb-m-0">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
@@ -63,7 +70,7 @@ onBeforeMount(() => {
                 </button>  
             </div> 
         </div>
-     </div>
+    </div>
     
      <!-- WebHook -->
 
