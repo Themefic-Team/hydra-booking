@@ -122,7 +122,8 @@
         cursor: pointer;
     }
     &.tfhb-hover-effect{
-        &:hover{
+        &:hover,
+        &:focus{
             color: #fff !important;
         }
     }

@@ -199,24 +199,23 @@ const deleteBodyField = (key) => {
 
 <template> 
     <!-- {{ props.meetingId  }} -->
-    <div class="meeting-create-details tfhb-gap-24">
-        <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
-            <div class="tfhb-admin-title tfhb-m-0">
-                <h2>{{ __('Availability Range for this Booking', 'hydra-booking') }}'</h2> 
-                <p>{{ __('How many days can the invitee schedule?', 'hydra-booking') }}'</p> 
-            </div>
-    
-            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-hover-effect" v-if="webhookList" @click="addNewWebHook">
-                <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add New Webhook', 'hydra-booking') }}
-            </button>
-            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-hover-effect" v-if="webhookcreate" @click="backtoWebHookList">
-                <Icon name="ArrowLeft" :width="20"/>
-                {{ __('Back', 'hydra-booking') }}
-            </button>
+    <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
+        <div class="tfhb-admin-title tfhb-m-0">
+            <h2>{{ __('Webhook Integration', 'hydra-booking') }}</h2> 
+            <p>{{ __('Webhook integration enables automated data transfer between apps, allowing real-time communication and custom API interactions.', 'hydra-booking') }}</p>
         </div>
+    </div>
+
+    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width">
+
+        <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" v-if="webhookcreate" @click="backtoWebHookList">
+            <Icon name="ArrowLeft" :width="20"/>
+            {{ __('Back', 'hydra-booking') }}
+        </button> 
 
         <div class="tfhb-webhook-content tfhb-full-width" v-if="meeting.webhook && webhookList">
+        
+            
             <div class="tfhb-admin-card-box tfhb-full-width tfhb-justify-between tfhb-mb-16" v-for="(hook, key)  in meeting.webhook" :key="key">
                 <div class="tfhb-webhook-info">
                     <h4>{{ hook.webhook }}</h4>
@@ -228,7 +227,6 @@ const deleteBodyField = (key) => {
                     </ul>
                 </div>
                 <div class="tfhb-webhook-action tfhb-flexbox tfhb-gap-8">
-
                     <HbSwitch 
                     v-model="hook.status"
                     @change="(e) => updateHookStatus(e, hook, key)"
@@ -383,7 +381,17 @@ const deleteBodyField = (key) => {
                 <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect" @click="updateWebHook">{{ __('Save Webhook', 'hydra-booking') }} </button>
             </div>
         </div>
+
+        <div class="tfhb-integration-box tfhb-full-width">
+            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="webhookList" @click="addNewWebHook">
+                <Icon name="PlusCircle" :width="20"/>
+                {{ __('Add New Webhook', 'hydra-booking') }}
+            </button>
+            
+        </div> 
+
     </div>
+    
 </template>
 
 <style scoped>
