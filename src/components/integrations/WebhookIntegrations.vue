@@ -44,9 +44,7 @@ const closePopup = () => {
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
 
-            <!-- <HbSwitch v-if="$tfhb_is_pro == true"    @change="emit('update-integrations', 'webhook', webhook_data)" v-model="webhook_data.status"    /> -->
-
-            <a v-if="$tfhb_is_pro == true"  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upcoming', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+            <HbSwitch v-if="$tfhb_is_pro == true" @change="emit('update-integrations', 'webhook', webhook_data)" v-model="webhook_data.status"    />
             
             <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  

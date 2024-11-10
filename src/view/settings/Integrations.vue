@@ -170,7 +170,7 @@ const Integration = reactive( {
         status: 0, 
     },
     webhook : {
-        type: 'marketing-tools', 
+        type: 'webhook', 
         status: 0, 
     },
     fluent_crm : {
@@ -203,6 +203,7 @@ const fetchIntegration = async () => {
             Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
             Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
             Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
+            Integration.webhook= response.data.integration_settings.webhook ? response.data.integration_settings.webhook : Integration.webhook;
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
@@ -246,6 +247,7 @@ const UpdateIntegration = async (key, value) => {
             Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
             Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
             Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
+            Integration.webhook= response.data.integration_settings.webhook ? response.data.integration_settings.webhook : Integration.webhook;
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;

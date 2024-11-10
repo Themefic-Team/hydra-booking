@@ -65,6 +65,7 @@ class MailHooks {
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
 
+				// tfhb_print_r($body);
 				// Host Email
 				$mailto = ! empty( $hostData->email ) ? $hostData->email : '';
 
