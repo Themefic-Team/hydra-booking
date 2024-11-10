@@ -95,9 +95,18 @@ class BookingMeta {
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $where = null, $filterData = '' ) {
+	public function get( $id ) {
 
 		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE id = %d", $id)
+		);
+
+		return $data;
+ 
 	}
 
 	/**
@@ -119,6 +128,37 @@ class BookingMeta {
 		return $data;
 	}
 
+	/**
+	 * fet first data of multiple ids 
+	 * 
+	 */
+	public function getFirstDataOfMultipleIds($ids, $key) {
+		global $wpdb;
+ 
+		
+		$table_name = $wpdb->prefix . $this->table;
+
+		// Prepare placeholders for each ID in the IN clause
+		$placeholders = implode(',', array_fill(0, count($ids), '%d'));
+	
+		// Construct the SQL query with placeholders
+		$sql = "SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id IN ($placeholders) AND meta_key = %s";
+	
+		// Merge $ids and $key into a single array of arguments
+		$params = array_merge($ids, [$key]);
+	
+		// Use call_user_func_array to dynamically apply $params to $wpdb->prepare
+		$query = call_user_func_array([$wpdb, 'prepare'], array_merge([$sql], $params));
+	
+		// Fetch the first matching row
+		$data = $wpdb->get_row($query); 
+		if($data) {
+			return $data;
+		} else {
+			return false;
+		}
+	}
+	
 
 		/**
 		 * Get all  availability Data.
