@@ -8,8 +8,10 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Git ignore src
-# src
+src
+sass
 # vendor
+
 
 node_modules
 .DS_Store
