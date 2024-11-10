@@ -60,8 +60,7 @@ class Enqueue {
 				'ajax_url'             => admin_url( 'admin-ajax.php' ),
 				'tfhb_url'             => THB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),
-				'user'                 => $user_auth,
-				// 'trans'                => TransStrings::getTransStrings(),
+				'user'                 => $user_auth, 
 				'trans'                => array(),
 			)
 		);
