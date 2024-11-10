@@ -99,37 +99,39 @@ const StepTwo = (validator_field) => {
             <AvailabilityPopupSingle max_width="800px" v-if="isModalOpened" :timeZone="props.setupWizard.time_zone" :display_overwrite="false"  :availabilityDataSingle="props.setupWizard.data.availabilityDataSingle" :isOpen="isModalOpened" @modal-close="closeModal"  @update-availability="fetchAvailabilitySettingsUpdate" />
     
         </div>
-        <div class="tfhb-submission-btn tfhb-flexbox">
-            <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
-                @click="props.setupWizard.currentStep = 'step-one'" 
-                :buttonText="__('Back', 'hydra-booking')"
-                icon="ChevronLeft" 
-                hover_icon="ArrowLeft" 
-                :hover_animation="true"
-                icon_position="left" 
-            /> 
-            <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                @click="StepTwo(['title', 'time_zone'])" 
-                :buttonText="__('Next', 'hydra-booking')"
-                icon="ChevronRight" 
-                hover_icon="ArrowRight" 
-                :hover_animation="true" 
-                :pre_loader="props.setupWizard.skip_preloader"
-            /> 
+        <div class="tfhb-flexbox tfhb-justify-center tfhb-gap-16">
+            <div class="tfhb-submission-btn tfhb-flexbox">
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
+                    @click="props.setupWizard.currentStep = 'step-one'" 
+                    :buttonText="__('Back', 'hydra-booking')"
+                    icon="ChevronLeft" 
+                    hover_icon="ArrowLeft" 
+                    :hover_animation="true"
+                    icon_position="left" 
+                /> 
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                    @click="StepTwo(['title', 'time_zone'])" 
+                    :buttonText="__('Next', 'hydra-booking')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true" 
+                    :pre_loader="props.setupWizard.skip_preloader"
+                /> 
             
+                <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size=20 />  </button> -->
+            </div>
+                
             <HbButton 
-                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8" 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0" 
                 @click="props.setupWizard.currentStep = 'step-three';" 
-                :buttonText="__('Skip', 'hydra-booking')"  
-                :hover_animation="true" 
-                icon="ChevronRight"    
-                hover_icon="ArrowRight"  
-            />  
+                :buttonText="__('Skip', 'hydra-booking')"   
             
-            <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size=20 />  </button> -->
+            />  
         </div>
+     
+            
      </div>
      <!-- Step Two -->
 

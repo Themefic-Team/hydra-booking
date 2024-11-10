@@ -779,11 +779,15 @@ class HydraBookingShortcode {
 		}
 
 
-		return false;
+	
 		$meeting = new Meeting();
 		$MeetingData = $meeting->get( $single_booking_meta->meeting_id );
 
-		
+		$meeting_type = isset( $MeetingData->meeting_type ) ? $MeetingData->meeting_type : 'one-to-one';
+		$recurring_status = isset( $MeetingData->recurring_status ) ? $MeetingData->recurring_status : false;
+		if($meeting_type == 'one-to-group' || $recurring_status == true){
+			return false;
+		}
 
 		$meta_data = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 

@@ -294,7 +294,7 @@ const tfhbValidateInput = (fieldName) => {
                         <HbText  
                             v-model="props.availabilityDataSingle.title"  
                             required= "true"  
-                            :label="__('Title', 'hydra-booking')"  
+                            :label="__(' Availability title', 'hydra-booking')"  
                             selected = "1"
                             placeholder="Enter schedule title"   
                             @keyup="() => tfhbValidateInput('title')"
