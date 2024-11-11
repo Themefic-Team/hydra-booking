@@ -799,7 +799,9 @@ class HydraBookingShortcode {
 		$_tfhb_host_integration_settings = get_user_meta( $single_booking_meta->host_id, '_tfhb_host_integration_settings', true );
 
 		// Booking Table Meeting Location Data
-		$meeting_location_data = json_decode( $single_booking_meta->meeting_locations, true );
+		// $meeting_location_data = json_decode( $single_booking_meta->meeting_locations, true );
+		$meeting_location_data = $single_booking_meta->meeting_locations;
+
 
 		// Meeting Location Check
 		$meeting_locations = $meta_data['meeting_locations'];
