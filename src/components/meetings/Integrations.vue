@@ -190,7 +190,7 @@ const moduleFields = async (e) => {
                             selected = "1"
                             :placeholder="__('Enter Value', 'hydra-booking')" 
                             :option = "[
-                                {'name': '{{attendee.full_name}}', 'value': 'full_name'}, 
+                                {'name': '{{attendee.full_name}}', 'value': 'attendee_name'}, 
                                 {'name': '{{attendee.email}}', 'value': 'email'},
                                 {'name': '{{attendee.timezone}}', 'value': 'timezone'},
                                 {'name': '{{attendee.address}}', 'value': 'address'},
