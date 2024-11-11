@@ -623,6 +623,10 @@
         }
     }
     .tfhb-webhook-info{
+        width: calc(100% - 112px);
+        @media #{$max767}{
+            width: 100%;
+        }
         .webhook-event{
             display: flex;
             gap: 8px;
@@ -633,6 +637,11 @@
                 background-color: $secondary-hover;
                 color: $primary-default;
             }
+        }
+    }
+    .tfhb-webhook-action{
+        @media #{$max767}{
+            margin-top: 10px;
         }
     }
     .tfhb-headers{
