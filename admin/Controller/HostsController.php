@@ -450,6 +450,11 @@ class HostsController {
 			$count++;
 		}
 
+		// Availability
+		$integrations = array();
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
+		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
+
 		// Return response
 		$data = array(
 			'status'         => true,
@@ -457,6 +462,7 @@ class HostsController {
 			'time_zone'      => $time_zone,
 			'settingsAvailabilityData'      => $availabilityData,
 			'hosts_settings' => $_tfhb_hosts_settings,
+			'integrations' => $integrations,
 			'message'        => 'Host Data',
 		);
 		return rest_ensure_response( $data );
@@ -709,13 +715,14 @@ class HostsController {
 			$zoho['status']        = $_tfhb_host_integration_settings['zoho']['status'];
 			$zoho['client_id']     = $_tfhb_host_integration_settings['zoho']['client_id'];
 			$zoho['client_secret'] = $_tfhb_host_integration_settings['zoho']['client_secret'];
-			$zoho['redirect_url']  = $_tfhb_host_integration_settings['zoho']['redirect_url'];
+			$zoho['redirect_url']  = !empty($_tfhb_host_integration_settings['zoho']['redirect_url']) ? $_tfhb_host_integration_settings['zoho']['redirect_url'] : site_url('/wp-json/hydra-booking/v1/integration/zoho-api');
 			$zoho['access_token']  = $_tfhb_host_integration_settings['zoho']['access_token'];
 			$zoho['modules']       = json_decode( $_tfhb_host_integration_settings['zoho']['modules'] );
 			$zoho['refresh_token'] = json_decode( $_tfhb_host_integration_settings['zoho']['refresh_token'] );
 
 		}else{
 			$zoho['type']              = 'zoho';
+			$zoho['redirect_url']  = site_url('/wp-json/hydra-booking/v1/integration/zoho-api');
 			$zoho['status']            = 0; 
 			$zoho['connection_status'] = 0;
 		}

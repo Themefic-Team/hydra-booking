@@ -34,6 +34,7 @@ const time_zones = reactive({});
 const hosts_settings = reactive({});
 const settingsAvailabilityData = reactive({});
 const hostId = route.params.id;
+const integration = reactive({});
 
 // availability type
 const AvailabilityTabs = (type) => {
@@ -159,6 +160,7 @@ const UpdateHostsInformation = async (validator_field) => {
             time_zones.data = response.data.time_zone; 
             hosts_settings.data = response.data.hosts_settings; 
             settingsAvailabilityData.data = response.data.settingsAvailabilityData; 
+            integration.data = response.data.integrations;
         }else{ 
             // return to redirect back route 
             router.push({ name: 'HostsLists' });
