@@ -9,7 +9,8 @@ import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
-
+import { useRouter, useRoute, RouterView } from 'vue-router' 
+const router = useRouter();
  
 const props = defineProps({
     meetingId: {
@@ -194,6 +195,11 @@ const deleteBodyField = (key) => {
     webhookData.bodys.splice(key, 1)
 }
 
+const webhook_integrations = ref(false);
+
+const enableWebhookIntegrations = () => {
+    webhook_integrations.value = true;
+};
 
 </script>
 
@@ -383,12 +389,24 @@ const deleteBodyField = (key) => {
         </div>
 
         <div class="tfhb-integration-box tfhb-full-width">
-            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="webhookList" @click="addNewWebHook">
+            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="webhookList && meeting.setting_webhook==1" @click="addNewWebHook">
+                <Icon name="PlusCircle" :width="20"/>
+                {{ __('Add New Webhook', 'hydra-booking') }}
+            </button>
+
+            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-else  @click="enableWebhookIntegrations">
                 <Icon name="PlusCircle" :width="20"/>
                 {{ __('Add New Webhook', 'hydra-booking') }}
             </button>
             
         </div> 
+        <div  v-if="webhook_integrations" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Webhook is not connected. 
+            <HbButton 
+                classValue="tfhb-btn flex-btn" 
+                @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                :buttonText="__('Please Configure', 'hydra-booking')"
+            />  
+        </div>
 
     </div>
     
