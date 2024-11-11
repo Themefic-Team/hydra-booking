@@ -43,6 +43,7 @@ onMounted(() => {
 
                     <li><router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }"> <Icon name="ClipboardList" /> {{ __('Meeting Category', 'hydra-booking') }}</router-link></li>
                     <li><router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }"> <Icon name="UserCog" /> {{ __('Host Settings', 'hydra-booking') }}</router-link></li> 
+                    <li><router-link to="/settings/license" exact :class="{ 'active': $route.path.startsWith('/settings/license') }"> <Icon name="FileLock2" /> {{ __('License', 'hydra-booking') }}</router-link></li> 
                 </ul>  
             </nav>  
             <div class="tfhb-hydra-dasboard-content"> 
