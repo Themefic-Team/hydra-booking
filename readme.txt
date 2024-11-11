@@ -1,17 +1,108 @@
-=== Hydra Booking ===
-Contributors: themefic, hasanet, mdrejon, kamrul07
-Tags: Booking Plugin, hydra booking, booking form, ultimate booking form
-Requires at least: 4.2
-Tested up to: 6.4
-Requires PHP: 7.4
-Stable tag: 1.0.0
-License: GPL-2.0+
-License URI: http://www.gnu.org/licenses/gpl-2.0.txt 
+=== Hydra Booking ===  
+Contributors: themefic, hasanet, mdrejon, kamrul07  
+Tags: Booking Plugin, hydra booking, booking form, ultimate booking form  
+Requires at least: 4.2  
+Tested up to: 6.4  
+Requires PHP: 7.4  
+Stable tag: 1.0.0  
+License: GPL-2.0+  
+License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
 Hydra Booking is a powerful and flexible WordPress plugin designed to simplify the booking and appointment scheduling process for businesses of all types. Whether you run a spa, salon, medical practice, or any service-oriented business, Hydra Booking empowers you to manage your appointments seamlessly, providing a streamlined experience for both you and your clients.
 
+== Description ==
+
+**Hydra Booking** is crafted to make scheduling easy, efficient, and fully customizable to meet the unique needs of each business. The plugin comes loaded with features that cater to both small businesses and larger service-oriented teams, offering flexibility and advanced scheduling options that enhance both your workflow and your clients' booking experience.
+
+### Key Features
+
+1. **Powerful Dashboard and Analytics**  
+   - **Real-Time Booking Insights**: Monitor bookings, earnings, and completed and canceled appointments with options to view data daily, weekly, or monthly.  
+   - **Performance Analytics**: Visual reports provide insights into booking patterns and trends.  
+   - **Instant Notifications**: Receive real-time updates on bookings and site activity.
+
+2. **Efficient Booking Management**  
+   - **Custom Scheduling**: Set appointment durations, intervals, and buffer times for optimal scheduling.  
+   - **Flexible Cancellations and Rescheduling**: Let attendees modify bookings based on your settings.  
+   - **Custom Attendee Forms**: Integrate with Contact Form 7, Fluent Forms, and others to capture booking details.
+
+3. **Host and Team Coordination**  
+   - **Host Assignment**: Assign and manage hosts, including their availability and permissions.  
+   - **Role-Based Access**: Control host access to dashboards and settings.  
+   - **Independent Integrations**: Hosts can link their own CRM and video conferencing accounts (e.g., Mailchimp, Zoom).
+
+4. **Advanced Availability and Scheduling Options**  
+   - **Flexible Availability**: Configure date-specific or indefinite availability.  
+   - **Buffer and Interval Control**: Set buffer times for seamless transitions.  
+   - **Recurring Events (Pro)**: Automate recurring bookings for clients.
+
+5. **Diverse Meeting Types and Locations**  
+   - **Versatile Formats**: Support for one-on-one, group, round-robin, and single-event sessions.  
+   - **Location Flexibility**: Choose virtual, in-person, or phone-based meeting options.  
+   - **Custom Locations**: Add unique meeting location types.
+
+6. **Integrated Payment Options**  
+   - **WooCommerce Integration**: Direct clients to WooCommerce’s secure checkout for payments.  
+   - **Multiple Payment Options**: Supports PayPal and Stripe for easy transactions.  
+   - **Flexible Pricing**: Designate certain bookings as free or paid.
+
+7. **Automated Notifications and Reminders**  
+   - **Email Notifications**: Automate confirmation, cancellation, and reminder emails.  
+   - **Custom Notification Settings**: Tailor notifications by booking status.
+
+8. **Seamless Integrations**  
+   - **CRM & Email Integration**: Connect with CRMs like Zoho and FluentCRM.  
+   - **Calendar Sync**: Integrate with Google and Outlook calendars to avoid double bookings.  
+   - **Video Conferencing**: Automatic Zoom or Google Meet links for virtual appointments.  
+   - **Webhook Support (Pro)**: Transfer data across applications with ease.
+
+9. **Flexible Booking Views and Export Options**  
+   - **List and Calendar Views**: Display bookings by list or calendar, sorted by daily, weekly, or monthly formats.  
+   - **Data Export**: Export bookings to CSV for detailed analysis.  
+   - **Custom Filters**: Locate bookings by host, date, or other parameters.
+
+10. **Comprehensive Global and Host Settings**  
+    - **Global Time & Date Controls**: Centralized settings for time zones, start-of-week, and formats.  
+    - **Automatic Confirmations**: Simplify the process with automated confirmations and reschedules.  
+    - **Master Notification Control**: Manage all notifications from one place.
+
+11. **Streamlined and User-Friendly Design**  
+    - **Frontend Booking**: Provide users with an easy-to-navigate booking system directly on the website.  
+    - **Responsive Design**: Optimized for desktops, tablets, and mobile devices.  
+    - **Built by Industry Experts**: Created by developers experienced in booking systems, HydraBooking offers a reliable solution for diverse booking needs.
+
+== Installation ==
+
+1. Download the plugin ZIP file from the WordPress Plugin Directory or your account if purchased directly.
+2. In your WordPress dashboard, go to Plugins > Add New and click "Upload Plugin."
+3. Select the ZIP file and click "Install Now."
+4. Once installed, click "Activate" to start using HydraBooking.
+
+== Frequently Asked Questions ==
+
+**Q: Can HydraBooking be used for multiple business types?**  
+A: Yes, HydraBooking is designed to be versatile, making it suitable for businesses like spas, salons, medical practices, and beyond.
+
+**Q: Does HydraBooking integrate with third-party CRM and calendar services?**  
+A: Yes, it supports CRM integrations such as Zoho and FluentCRM, and calendar syncing with Google and Outlook.
+
+**Q: Are payment options customizable?**  
+A: You can configure bookings as free or paid and accept payments through WooCommerce, PayPal, and Stripe.
+
+**Q: Can I assign different hosts to manage different bookings?**  
+A: Yes, HydraBooking allows host assignments with specific roles and permissions for a flexible booking management experience.
+
 == Changelog ==
 
-= 1.0.0 - 17/01/2024 =
+= 1.0.0 - 11/11/2024 =  
+- Initial stable release
 
-- Initial stable realese 
+== Upgrade Notice ==
+
+= 1.0.0 =  
+First official release. Upgrade recommended for access to all initial features.
+
+== License ==
+
+This plugin is licensed under the GPL-2.0+ License, meaning it is open-source and free to use, modify, and distribute with the appropriate credit to the original developers. [Learn more about the GPL-2.0+ license](http://www.gnu.org/licenses/gpl-2.0.txt).
+
