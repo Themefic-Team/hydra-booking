@@ -22,6 +22,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    integrations: {
+        type: Object,
+        required: true
+    },
     update_preloader: {
         type: Boolean,
         required: true
@@ -49,7 +53,7 @@ onBeforeMount(() => {
 
     <!-- WebHook -->
     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width tfhb-flexbox tfhb-gap-16" v-if="$tfhb_is_pro == true">
-        <Webhook :meetingId="props.meetingId" :meeting="meeting" />
+        <Webhook :meetingId="props.meetingId" :meeting="meeting" :integrations="integrations" />
     </div>
     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro tfhb-flexbox tfhb-gap-16" v-else>
         <div class="tfhb-webhook-title tfhb-flexbox">

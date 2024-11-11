@@ -21,6 +21,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    integrations: {
+        type: Object,
+        required: true
+    },
 
 });
 
@@ -389,7 +393,7 @@ const enableWebhookIntegrations = () => {
         </div>
 
         <div class="tfhb-integration-box tfhb-full-width">
-            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="webhookList && meeting.setting_webhook==1" @click="addNewWebHook">
+            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="webhookList && integrations.webhook_status==1" @click="addNewWebHook">
                 <Icon name="PlusCircle" :width="20"/>
                 {{ __('Add New Webhook', 'hydra-booking') }}
             </button>

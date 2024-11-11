@@ -45,7 +45,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
     // Integrations
     new HydraBooking\Services\Integrations\MailChimp\MailChimp();
     new HydraBooking\Services\Integrations\Zoho\Zoho();
-    new HydraBooking\Services\Integrations\FluentCRM\FluentCRM();
  
  
 

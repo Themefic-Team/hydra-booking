@@ -266,8 +266,10 @@ const moduleFields = async (e) => {
                     :buttonText="__('Please Configure', 'hydra-booking')"
                 />  
             </div>
-            <div  v-if="selecte_integrations == 'FluentCRM' && !props.meeting.fluentcrm.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">FluentCRM is not connected. 
+            <div  v-if="selecte_integrations == 'FluentCRM' && !props.meeting.fluentcrm.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">
+                <span>{{ props.meeting.fluentcrm.error_msg ? props.meeting.fluentcrm.error_msg : 'FluentCRM is not connected. ' }}</span>
                 <HbButton 
+                    v-if="props.meeting.fluentcrm.error_msg==''"
                     classValue="tfhb-btn flex-btn" 
                     @click="() => router.push({ name: 'SettingsAntegrations' })" 
                     :buttonText="__('Please Configure', 'hydra-booking')"

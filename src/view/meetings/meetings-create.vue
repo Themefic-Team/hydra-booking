@@ -280,8 +280,7 @@ const meetingData = reactive({
     is_display_max_book_slot: 0,
     mailchimp: '',
     fluentcrm: '',
-    zohocrm: '',
-    setting_webhook: ''
+    zohocrm: ''
 });
 
 
@@ -366,7 +365,7 @@ const fetchMeeting = async () => {
             integrations.fluent_status = response.data.integrations.fluent_status && response.data.integrations.fluent_status == 1  ? false : true;  
             integrations.forminator_status = response.data.integrations.forminator_status && response.data.integrations.forminator_status == 1  ? false : true;  
             integrations.gravity_status = response.data.integrations.gravity_status && response.data.integrations.gravity_status == 1  ? false : true;  
-            integrations.webhook_status = response.data.integrations.webhook_status && response.data.integrations.webhook_status == 1  ? false : true;  
+            integrations.webhook_status = response.data.integrations.webhook_status;
             integrations.fluent_crm_status = response.data.integrations.fluent_crm_status && response.data.integrations.fluent_crm_status == 1  ? false : true;  
             integrations.zoho_crm_status = response.data.integrations.zoho_crm_status && response.data.integrations.zoho_crm_status == 1  ? false : true;  
 
@@ -466,7 +465,6 @@ const fetchMeeting = async () => {
             meetingData.mailchimp = response.data.mailchimp ? response.data.mailchimp : '';
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
-            meetingData.setting_webhook = response.data.setting_webhook ? response.data.setting_webhook : '';
             meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
 
             skeleton.value = false

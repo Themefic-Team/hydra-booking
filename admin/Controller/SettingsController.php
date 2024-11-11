@@ -581,6 +581,20 @@ class SettingsController {
 				'message' => 'Webhook Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
+		}elseif ( $key == 'fluent_crm' ) {
+
+			$_tfhb_integration_settings['fluent_crm']['status']      = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option,
+				'message' => 'FluentCRM Settings Updated Successfully',
+			);
+			return rest_ensure_response( $data );
 		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity') { 
 
 			if($key == 'cf7' && !empty($data['status'])){

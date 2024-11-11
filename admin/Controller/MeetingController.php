@@ -869,11 +869,16 @@ class MeetingController {
 
 		// FluentCRM
 		$fluentcrm_Data = array();
-		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'fluent-crm/fluent-crm.php' ) ) {
-			$fluentcrm_Data['status'] = false;
-
-		} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
-			$fluentcrm_Data['status'] = false;
+		if(!empty($integrations['fluent_crm_status'])){
+			if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'fluent-crm/fluent-crm.php' ) ) {
+				$fluentcrm_Data['status'] = false;
+				$fluentcrm_Data['error_msg'] = 'Install and activate the Fluent CRM plugin.';
+			} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
+				$fluentcrm_Data['status'] = false;
+				$fluentcrm_Data['error_msg'] = 'Activate the Fluent CRM plugin.';
+			}else{
+				$fluentcrm_Data['status'] = true;
+			}
 		} else {
 			$fluentcrm_Data['status'] = false;
 		}
@@ -960,7 +965,6 @@ class MeetingController {
 			'mailchimp'        => $mailchimp_Data,
 			'fluentcrm'        => $fluentcrm_Data,
 			'zohocrm'          => $zohocrm_Data,
-			'setting_webhook' => $setting_webhook,
 			'formsList'        => $formsList,
 			'integrations'     => $integrations,
 			'message'          => 'Meeting Data',
