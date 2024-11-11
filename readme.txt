@@ -1,4 +1,4 @@
-=== Hydra Booking ===  
+=== Hydra Booking - All-in-One Appointment Management Solution ===  
 Contributors: themefic, hasanet, mdrejon, kamrul07  
 Tags: Booking Plugin, hydra booking, booking form, ultimate booking form  
 Requires at least: 4.2  
