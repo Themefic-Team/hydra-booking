@@ -111,7 +111,7 @@ class Booking {
 		// 	$request['others_info']       = wp_json_encode( $request['others_info'] );
 		// } 
 		if(isset($request['meeting_locations'])) { 
-			$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] ); 
+			$request['meeting_locations'] = is_array($request['meeting_locations']) ? wp_json_encode( $request['meeting_locations']  ) : $request['meeting_locations']; 
 		} 
 
 		// Update Booking

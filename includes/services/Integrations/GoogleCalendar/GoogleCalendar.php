@@ -445,11 +445,10 @@ class GoogleCalendar {
 		
 			
 		}
-		$meeting_loaction = (array) $data->meeting_locations;
-		$meeting_locations = is_array($meeting_loaction) ? $meeting_loaction  : wp_json_decode($meeting_loaction);
-
-		
-		$update                     = array();
+		$meeting_loaction =   $data->meeting_locations; 
+		$meeting_locations = is_array($meeting_loaction) ?  json_decode($meeting_loaction)  :  $meeting_loaction;
+	 
+		$booking = new Booking();
 		$update['id']               = $data->id;
 		$update['meeting_calendar'] = $insert_id;
 		$update['meeting_locations'] = $meeting_locations; 
