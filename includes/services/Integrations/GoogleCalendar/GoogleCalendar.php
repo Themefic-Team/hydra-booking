@@ -448,6 +448,7 @@ class GoogleCalendar {
 		$meeting_loaction =   $data->meeting_locations; 
 		$meeting_locations = is_array($meeting_loaction) ?  json_decode($meeting_loaction)  :  $meeting_loaction;
 	 
+		
 		$booking = new Booking();
 		$update['id']               = $data->id;
 		$update['meeting_calendar'] = $insert_id;
@@ -473,17 +474,17 @@ class GoogleCalendar {
 		$BookingMeta = new BookingMeta(); 
 		$get_booking_meta = $BookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
 		 
+
+		 
+		$MeetingData = $meeting->get( $data->meeting_id );
+		
+		$meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 		if ( $get_booking_meta && 'one-to-one' == $meta_data['meeting_type']) {
 			$booking_meta_value = json_decode($get_booking_meta->value);
 			if(isset($booking_meta_value->google_calendar)){
 				return;
 			} 
 		}
-
-		 
-		$MeetingData = $meeting->get( $data->meeting_id );
-		
-		$meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 		if ( 'one-to-group' == $meta_data['meeting_type'] ) {
 			
 			$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
