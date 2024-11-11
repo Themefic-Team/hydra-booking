@@ -4,7 +4,7 @@ Tags: Booking Plugin, hydra booking, booking form, ultimate booking form
 Requires at least: 4.2  
 Tested up to: 6.4  
 Requires PHP: 7.4  
-Stable tag: 1.0.0  
+Stable tag: 1.0.2  
 License: GPL-2.0+  
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -37,7 +37,7 @@ Hydra Booking is a powerful and flexible WordPress plugin designed to simplify t
    - **Recurring Events (Pro)**: Automate recurring bookings for clients.
 
 5. **Diverse Meeting Types and Locations**  
-   - **Versatile Formats**: Support for one-on-one, group, round-robin, and single-event sessions.  
+   - **Versatile Formats**: Support for one-on-one, one-to-group sessions.  
    - **Location Flexibility**: Choose virtual, in-person, or phone-based meeting options.  
    - **Custom Locations**: Add unique meeting location types.
 
@@ -51,7 +51,7 @@ Hydra Booking is a powerful and flexible WordPress plugin designed to simplify t
    - **Custom Notification Settings**: Tailor notifications by booking status.
 
 8. **Seamless Integrations**  
-   - **CRM & Email Integration**: Connect with CRMs like Zoho and FluentCRM.  
+   - **CRM & Email Integration**: Connect with CRMs like Zoho and FluentCRM(upcoming).  
    - **Calendar Sync**: Integrate with Google and Outlook calendars to avoid double bookings.  
    - **Video Conferencing**: Automatic Zoom or Google Meet links for virtual appointments.  
    - **Webhook Support (Pro)**: Transfer data across applications with ease.
@@ -84,7 +84,7 @@ Hydra Booking is a powerful and flexible WordPress plugin designed to simplify t
 A: Yes, HydraBooking is designed to be versatile, making it suitable for businesses like spas, salons, medical practices, and beyond.
 
 **Q: Does HydraBooking integrate with third-party CRM and calendar services?**  
-A: Yes, it supports CRM integrations such as Zoho and FluentCRM, and calendar syncing with Google and Outlook.
+A: Yes, it supports CRM integrations such as Zoho and FluentCRM(upcoming), and calendar syncing with Google and Outlook.
 
 **Q: Are payment options customizable?**  
 A: You can configure bookings as free or paid and accept payments through WooCommerce, PayPal, and Stripe.
@@ -92,7 +92,28 @@ A: You can configure bookings as free or paid and accept payments through WooCom
 **Q: Can I assign different hosts to manage different bookings?**  
 A: Yes, HydraBooking allows host assignments with specific roles and permissions for a flexible booking management experience.
 
+== Screenshots ==
+
+1. Booking Calendar Preview
+2. Dashboard Statistics
+3. Booking Availability
+4. General Settings
+5. Form & API Integration
+6. Host Profile Management
+7. Booking Details - List View
+8. Booking Details - Calendar View
+9. Meeting Overview
+10. Design & Appearance Settings
+11. Email Notification Customization
+12. Notification Controls
+
 == Changelog ==
+
+= 1.0.2 - 11/11/2024 =  
+- Screenshots Updated
+
+= 1.0.1 - 11/11/2024 =  
+- Readme updated
 
 = 1.0.0 - 11/11/2024 =  
 - Initial stable release
