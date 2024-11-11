@@ -280,7 +280,8 @@ const meetingData = reactive({
     is_display_max_book_slot: 0,
     mailchimp: '',
     fluentcrm: '',
-    zohocrm: ''
+    zohocrm: '',
+    setting_webhook: ''
 });
 
 
@@ -465,6 +466,7 @@ const fetchMeeting = async () => {
             meetingData.mailchimp = response.data.mailchimp ? response.data.mailchimp : '';
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
+            meetingData.setting_webhook = response.data.setting_webhook ? response.data.setting_webhook : '';
             meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
 
             skeleton.value = false

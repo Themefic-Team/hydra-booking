@@ -816,6 +816,9 @@ class MeetingController {
 		$woo_commerce = new WooBooking();
 		$wc_product   = $woo_commerce->getAllProductList();
 
+		// Webhook status
+		$setting_webhook = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
+
 		// google  Meeting 
 		$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
 		
@@ -957,6 +960,7 @@ class MeetingController {
 			'mailchimp'        => $mailchimp_Data,
 			'fluentcrm'        => $fluentcrm_Data,
 			'zohocrm'          => $zohocrm_Data,
+			'setting_webhook' => $setting_webhook,
 			'formsList'        => $formsList,
 			'integrations'     => $integrations,
 			'message'          => 'Meeting Data',

@@ -37,13 +37,10 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
    
 
-/**
- *  Class Include
- *  Load Integrations Class
- */
-
-    // Web Hooks
-    new HydraBooking\Services\Integrations\WebHook\WebHook();
+    /**
+     *  Class Include
+     *  Load Integrations Class
+     */
 
     // Integrations
     new HydraBooking\Services\Integrations\MailChimp\MailChimp();
