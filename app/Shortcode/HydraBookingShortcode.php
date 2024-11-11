@@ -120,78 +120,17 @@ class HydraBookingShortcode {
 		// Start Buffer
 		ob_start();
 
-		// Before Load the Calendar.
-		do_action( 'hydra_booking/before_meeting_render', $meta_data );
-
-		?>
-		<div class="tfhb-meeting-box tfhb-meeting-<?php echo esc_attr( $calendar_id ); ?>" data-calendar="<?php echo esc_attr( $calendar_id ); ?>">
-			
-			<?php
-
-			if ( ! empty( $booking_data ) && 'reschedule' == $atts['type'] ) {
-				// Load Reschedule Template
-				// You are rescheduling the booking: 3:15 pm - 3:30 pm, May 27, 2024 (Asia/Dhaka)
-				echo '<div class="tfhb-reschedule-box">';
-				echo '<p>' . esc_html__( 'You are rescheduling the booking:', 'hydra-booking' ) . ' ' . esc_html( $booking_data->start_time ) . ' - ' . esc_html( $booking_data->end_time ) . ', ' . esc_html( gmdate( 'F j, Y', strtotime( $booking_data->meeting_dates ) ) ) . ' (' . esc_html( $booking_data->attendee_time_zone ) . ')</p>';
-				echo '</div>';
-
-			}
-
-			?>
-			<!-- <form  method="post" action="" class="tfhb-meeting-form ajax-submit"  enctype="multipart/form-data"> -->
-				<div class="tfhb-meeting-card">
-				
-						<?php
-						// Load Meeting Info Template
-						load_template(
-							THB_PATH . '/app/Content/Template/meeting-info.php',
-							false,
-							array(
-								'meeting'      => $meta_data,
-								'host'         => $host_meta,
-								'time_zone'    => $time_zone,
-								'booking_data' => $booking_data,
-							)
-						);
-						?>
-						<div class="tfhb-calander-times tfhb-flexbox"> 
-							<?php
-							// Load Meeting Calendar Template
-							load_template( THB_PATH . '/app/Content/Template/meeting-calendar.php', false, $meta_data );
-
-							// Load Meeting Time Template
-							load_template(
-								THB_PATH . '/app/Content/Template/meeting-times.php',
-								false,
-								array(
-									'meeting'          => $meta_data,
-									'host'         => $host_meta,
-									'general_settings' => $general_settings,
-								)
-							);
-							?>
-						</div>
-						<?php
-						// Load Meeting Form Template
-						load_template(
-							THB_PATH . '/app/Content/Template/meeting-form.php',
-							false,
-							array(
-								'meeting'      => $meta_data,
-								'booking_data' => $booking_data,
-							)
-						);
-						?>
-				</div>
-
-			<!-- </form> -->
-				
-		</div>
-		<?php
-
-		// After Load the Calendar.
-		do_action( 'hydra_booking/after_meeting_render', $meta_data );
-
+		load_template(
+			THB_PATH . '/app/Content/calendar.php',
+			false,
+			array(
+				'meeting'      => $meta_data,
+				'host'         => $host_meta,
+				'time_zone'    => $time_zone,
+				'booking_data' => $booking_data,
+				'general_settings' => $general_settings,
+			)
+		);
 		// Return Buffer
 		return ob_get_clean();
 	}
@@ -275,16 +214,17 @@ class HydraBookingShortcode {
 		if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 &&  ! wp_script_is( 'tfhb-paypal-script', 'enqueued' )){ 
 			wp_enqueue_script( 'tfhb-paypal-sdk',  ); 
 		}
-		// Enqueue Scripts Register scripts
-		if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {
-			wp_enqueue_script( 'tfhb-app-script',  );
-		}
-
 		// Enqueue Select2
 		if ( ! wp_script_is( 'tfhb-select2-script', 'enqueued' ) ) {
 			wp_enqueue_script( 'tfhb-select2-script' );
 		}
-	
+		
+		// Enqueue Scripts Register scripts 
+		// if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {
+		
+			
+		// }
+		
 		
 
 		// Localize Script

@@ -51,7 +51,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		}
 		?>
 	</div>  
-	<div class="tfhb-host-info" style="background: linear-gradient(181deg, rgba(19, 25, 20, 0.00) 1.18%, rgba(19, 25, 20, 0.50) 98.83%), url(<?php echo esc_url(THB_URL . 'assets/app/images/meeting-cover.png'); ?>) lightgray 50% / cover no-repeat; ?>) lightgray 50% / cover no-repeat;">
+	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_attr(THB_URL . 'assets/app/images/meeting-cover.png'); ?>) ;">
 		<div class="tfhb-host-profile tfhb-flexbox tfhb-gap-8">
 			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : '<img src="' . THB_URL.'assets/images/avator.png' . '" alt="">'; ?>
 			
