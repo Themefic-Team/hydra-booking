@@ -39,7 +39,8 @@ class DateTimeController extends \DateTimeZone {
 	}
 
 	public function convert_time_based_on_timezone( $time, $time_zone, $selected_time_zone, $time_format ) {
-
+		 
+	
 		$time = new \DateTime( $time, new \DateTimeZone( $time_zone ) );
 
 		$time->setTimezone( new \DateTimeZone( $selected_time_zone ) );
@@ -145,14 +146,9 @@ class DateTimeController extends \DateTimeZone {
 		// Get All Booking Data.
 		$booking = new Booking();
 
-		$bookings = $booking->get(
-			array(
-				'meeting_id'    => $meeting_id,
-				'meeting_dates' => $selected_date,
-			),
-			true // Return as array,
-		);
-		
+		$bookings = $booking->getByIdDates( $meeting_id, $selected_date ); 
+
+ 
 
 		$disabled_times = array();
 		foreach ( $bookings as $booking ) {
@@ -177,7 +173,7 @@ class DateTimeController extends \DateTimeZone {
 				if ( count( $check_booking ) != $max_book_per_slot ) {
 					continue;
 				}
-			}
+			} 
 
 			$start_time = $this->convert_time_based_on_timezone( $start_time, $time_zone, $selected_time_zone, $selected_time_format );
 			$end_time   = $this->convert_time_based_on_timezone( $end_time, $time_zone, $selected_time_zone, $selected_time_format );

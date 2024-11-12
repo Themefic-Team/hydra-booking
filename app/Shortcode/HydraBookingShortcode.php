@@ -219,17 +219,15 @@ class HydraBookingShortcode {
 			wp_enqueue_script( 'tfhb-select2-script' );
 		}
 		
-		// Enqueue Scripts Register scripts 
-		// if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {
+		// Enqueue Scripts scripts 
+		wp_enqueue_script( 'tfhb-app-script-app', THB_URL . 'assets/app/js/app.js', array( 'jquery', 'tfhb-app-script' ), THB_VERSION, true );
 		
-			
-		// }
 		
 		
 
 		// Localize Script
 		wp_localize_script(
-			'tfhb-app-script',
+			'tfhb-app-script-app',
 			'tfhb_app_booking_' . $id,
 			array(
 				'meeting_id'              => $id,
@@ -859,6 +857,7 @@ class HydraBookingShortcode {
 				$DateTime                                = new DateTimeController( $booking_meta['attendee_time_zone'] );
 				// Time format if has AM and PM into start time
 				$time_format  = strpos( $booking_meta['start_time'], 'AM' ) || strpos( $booking_meta['start_time'], 'PM' ) ? '12' : '24';
+				
 				$current_time = strtotime( $DateTime->convert_time_based_on_timezone( gmdate( 'Y-m-d H:i:s' ), 'UTC', $booking_meta['attendee_time_zone'], $time_format ) );
 				$meeting_time = strtotime( $booking_meta['meeting_dates'] . ' ' . $booking_meta['start_time'] );
 				$time_diff    = $meeting_time - $current_time;
@@ -1013,6 +1012,8 @@ class HydraBookingShortcode {
 		$date_time = new DateTimeController( $selected_time_zone );
 		$data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format );
 
+
+		
 		if ( empty( $data ) ) {
 			wp_send_json_error( array( 'message' => 'No time slots are currently available.' ) );
 		}

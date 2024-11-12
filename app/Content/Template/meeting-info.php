@@ -178,11 +178,10 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 			}
 			?>
  
-		</ul>
-
+		</ul> 
 		<div class="tfhb-timezone ">   
 			
-			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone">
+			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone_<?php echo esc_attr($meeting['id']) ?>">
 				<?php
 				if ( ! empty( $time_zone ) ) {
 
@@ -215,7 +214,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 				}
 
 				?>
-							</select>
+			</select>
 			<div class="tfhb-timezone-icon ">
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<g clip-path="url(#clip0_1911_10296)">

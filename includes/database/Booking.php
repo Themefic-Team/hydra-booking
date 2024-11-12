@@ -264,6 +264,27 @@ class Booking {
 		return $data;
 	}
 
+
+	/**
+	 * Get Booking ID and Dates 
+	 * 
+	 */
+	public function getByIdDates($id, $dates) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$sql = "SELECT * FROM $table_name WHERE id = %d AND meeting_dates = %s";
+
+		$data = $wpdb->get_results(
+			$wpdb->prepare($sql, $id, $dates)
+		);
+
+		return $data;
+
+	}
+
+
 	public function getFilter( $filterData = '' ) {
 
 		global $wpdb;
