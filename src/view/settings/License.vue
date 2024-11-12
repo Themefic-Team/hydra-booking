@@ -23,6 +23,10 @@ const upgradeToPro = () => {
     window.open('https://hydrabooking.com/#pricing', '_blank');
 }
 
+onBeforeMount(async () => {
+    LicenseBase.GetLicense();
+});
+
 const updateLicense = async (validator_field) => {
 
       // Clear the errors object
@@ -63,10 +67,16 @@ const updateLicense = async (validator_field) => {
     LicenseBase.UpdateLicense();
 }
 
+const deactivateLicense = async () => {
+ 
+
+    LicenseBase.DeactivateLicense();
+}
+
 </script>
 <template>
     
-    <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard">
+    <div :class="{ 'tfhb-skeleton': LicenseBase.skeleton }" class="thb-event-dashboard">
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
@@ -104,11 +114,69 @@ const updateLicense = async (validator_field) => {
 
             {{ LicenseBase }}
             <!-- Date And Time --> 
-            <div  v-if="$tfhb_is_pro == true"  class="tfhb-admin-title" >
-                <h2>{{ __(' License Info', 'hydra-booking') }}</h2> 
-                <p>{{ __('Explore licensing options and benefits for advanced features.', 'hydra-booking') }}</p>
-            </div>
-            <div  v-if="$tfhb_is_pro == true" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
+                <div  v-if="$tfhb_is_pro == true"  class="tfhb-admin-title" >
+                    <h2>{{ __(' License Info', 'hydra-booking') }}</h2> 
+                    <p>{{ __('Explore licensing options and benefits for advanced features.', 'hydra-booking') }}</p>
+                </div>
+                <div  v-if="$tfhb_is_pro == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
+
+                    <ul class="el-license-info">
+                        <li>
+                            <div>
+                                <span class="el-license-info-title">Status</span>
+    
+                                    <span v-if="LicenseBase.LicenseData.is_valid == true " class="el-license-valid">Valid</span> 
+                                    <span v-else class="el-license-valid">Invalid</span> 
+                            </div>
+                        </li>
+
+                        <li>
+                            <div>
+                                <span class="el-license-info-title">License Type</span>
+                                {{ LicenseBase.LicenseData.license_title }} 
+                            </div>
+                        </li>
+
+                    <li>
+                        <div>
+                            <span class="el-license-info-title">License Expired on</span>
+                            {{ LicenseBase.LicenseData.expire_date }} 
+                        
+                                <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">Renew</a>
+                            
+                        </div>
+                    </li>
+
+                    <li>
+                        <div>
+                            <span class="el-license-info-title">Support Expired on</span>
+                            {{ LicenseBase.LicenseData.support_end }}
+                            <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">Renew</a> 
+                        </div>
+                    </li>
+                        <li>
+                            <div>
+                                <span class="el-license-info-title">Your License Key</span>
+                                <span class="el-license-key">{{LicenseBase.LicenseData.license_key }}</span>
+                                <!-- <span class="el-license-key"><?php echo esc_attr( substr($this->response_obj->license_key,0,9)."XXXXXXXX-XXXXXXXX".substr($this->response_obj->license_key,-9) ); ?></span> -->
+
+
+                            </div>
+                        </li>
+                    </ul>
+  
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn-danger flex-btn tfhb-icon-hover-animation tfhb-mt-16" 
+                        @click="deactivateLicense()" 
+                        :buttonText="__('Deactivate', 'hydra-booking')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true" 
+                    /> 
+
+            </div>  
+
+            <div  v-if="$tfhb_is_pro == true && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
 
                 <!-- Time Zone -->
                 <HbText  
@@ -133,20 +201,22 @@ const updateLicense = async (validator_field) => {
                     :placeholder="__('Type your Admin Email', 'hydra-booking')"  
                     :errors="errors.license_email"
                 /> 
-  
-                
-            </div>  
+
+                    <HbButton 
+                        
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="updateLicense(['license_key', 'license_email'])" 
+                        :buttonText="__('Activate', 'hydra-booking')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true" 
+                    /> 
+                </div>  
             <!-- Date And Time -->
 
-            <HbButton 
-                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                @click="updateLicense(['license_key', 'license_email'])" 
-                :buttonText="__('Update General Settings', 'hydra-booking')"
-                icon="ChevronRight" 
-                hover_icon="ArrowRight" 
-                :hover_animation="true" 
-            /> 
+            
 
+           
         </div>
     </div>
  
