@@ -6,25 +6,61 @@ import { useRouter } from 'vue-router'
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
+import { LicenseBase } from '@/store/license'; 
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
-// import Form Field  
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbText from '@/components/form-fields/HbText.vue'
-import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
+// import Form Field   
+import HbText from '@/components/form-fields/HbText.vue' 
 import HbButton from '@/components/form-fields/HbButton.vue'; 
 
-const licenseData = reactive({
-    license_key: '',
-    license_email: '', 
-});
+ 
 
 const upgradeToPro = () => {
     // https://themefic.com/docs/hydrabooking redirecto this url in new tab
 
     window.open('https://hydrabooking.com/#pricing', '_blank');
+}
+
+const updateLicense = async (validator_field) => {
+
+      // Clear the errors object
+      Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+    // Errors Added 
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!LicenseBase[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!LicenseBase[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        }); 
+        return
+    }
+
+
+    LicenseBase.UpdateLicense();
 }
 
 </script>
@@ -42,33 +78,31 @@ const upgradeToPro = () => {
             </div> 
         </div>
         <div class="tfhb-content-wrap">
-          
-            <!-- Date And Time --> 
-         
-            <!-- <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between ">   -->
-                <HbInfoBox v-if="$tfhb_is_pro == false"  icon="Lock" name="first-modal">
-                    
-                    <template #content>
-                        <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
-                            <div class="tfhb-admin-title tfhb-m-0"> 
-                                <h2 >{{ __('Unlock Advanced Capabilities with HydraBooking Pro !', 'hydra-booking') }}</h2>  
-                                <p>{{ __('Please upgrade to get all the advanced features. ', 'hydra-booking') }}</p>
-                            </div>
-                            
-                            <div class="thb-admin-btn right"> 
-                                <HbButton 
-                                    classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                                    @click="upgradeToPro" 
-                                    :buttonText="__('Upgrade to Pro', 'hydra-booking')"
-                                    icon="ChevronRight" 
-                                    hover_icon="ArrowRight" 
-                                    :hover_animation="true" 
-                                />  
-                            </div> 
+           
+            <HbInfoBox v-if="$tfhb_is_pro == false"  icon="Lock" name="first-modal">
+                
+                <template #content>
+                    <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
+                        <div class="tfhb-admin-title tfhb-m-0"> 
+                            <h2 >{{ __('Unlock Advanced Capabilities with HydraBooking Pro !', 'hydra-booking') }}</h2>  
+                            <p>{{ __('Please upgrade to get all the advanced features. ', 'hydra-booking') }}</p>
+                        </div>
+                        
+                        <div class="thb-admin-btn right"> 
+                            <HbButton 
+                                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                                @click="upgradeToPro" 
+                                :buttonText="__('Upgrade to Pro', 'hydra-booking')"
+                                icon="ChevronRight" 
+                                hover_icon="ArrowRight" 
+                                :hover_animation="true" 
+                            />  
                         </div> 
-                    </template>
-                </HbInfoBox>
-            <!-- </div>   -->
+                    </div> 
+                </template>
+            </HbInfoBox> 
+
+            {{ LicenseBase }}
             <!-- Date And Time --> 
             <div  v-if="$tfhb_is_pro == true"  class="tfhb-admin-title" >
                 <h2>{{ __(' License Info', 'hydra-booking') }}</h2> 
@@ -78,24 +112,26 @@ const upgradeToPro = () => {
 
                 <!-- Time Zone -->
                 <HbText  
-                    v-model="licenseData.license_key"  
+                    v-model="LicenseBase.license_key"  
                     required= "true"  
+                    type="password"
+                    name="license_key"
                     :label="__(' License Key', 'hydra-booking')"  
                     :description="__('Insert your license key here. You can get it from our Client Portal -> Support -> License keys.', 'hydra-booking')"
                     selected = "1"
                     :placeholder="__('Type your Admin Email', 'hydra-booking')"  
-                    :errors="errors.admin_email"
+                    :errors="errors.license_key"
                 /> 
 
                 <HbText  
-                    v-model="licenseData.license_email"  
+                    v-model="LicenseBase.license_email"  
                     required= "true"  
                     :label="__(' License Email ', 'hydra-booking')"  
                     :description="__('Please enter the email address you used for purchasing the plugin.', 'hydra-booking')"
-                    
+                    name="license_email"
                     selected = "1"
                     :placeholder="__('Type your Admin Email', 'hydra-booking')"  
-                    :errors="errors.admin_email"
+                    :errors="errors.license_email"
                 /> 
   
                 
@@ -104,12 +140,11 @@ const upgradeToPro = () => {
 
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                @click="UpdateGeneralSettings" 
+                @click="updateLicense(['license_key', 'license_email'])" 
                 :buttonText="__('Update General Settings', 'hydra-booking')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
-                :hover_animation="true"
-                :pre_loader="generalSettings_pre_loader"
+                :hover_animation="true" 
             /> 
 
         </div>
