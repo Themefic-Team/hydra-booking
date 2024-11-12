@@ -269,17 +269,15 @@ class Booking {
 	 * Get Booking ID and Dates 
 	 * 
 	 */
-	public function getByIdDates($id, $dates) {
+	public function getByMeetingIdDates($meeting_id, $dates) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . $this->table;
-
-		$sql = "SELECT * FROM $table_name WHERE id = %d AND meeting_dates = %s";
-
+ 
+		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s";
 		$data = $wpdb->get_results(
-			$wpdb->prepare($sql, $id, $dates)
+			$wpdb->prepare( $sql, $meeting_id, $dates )
 		);
-
 		return $data;
 
 	}

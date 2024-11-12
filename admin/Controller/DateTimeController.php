@@ -146,7 +146,7 @@ class DateTimeController extends \DateTimeZone {
 		// Get All Booking Data.
 		$booking = new Booking();
 
-		$bookings = $booking->getByIdDates( $meeting_id, $selected_date ); 
+		$bookings = $booking->getByMeetingIdDates( $meeting_id, $selected_date ); 
 
  
 
