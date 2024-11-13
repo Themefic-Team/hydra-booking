@@ -51,17 +51,16 @@ class Enqueue {
 		}
 		wp_register_script( 'tfhb-paypal-script', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
 		wp_register_script( 'tfhb-select2-script', THB_URL . 'assets/app/js/select2.min.js', array( 'jquery', 'tfhb-app-script' ), THB_VERSION, true );
-		wp_register_script( 'tfhb-app-script', THB_URL . 'assets/app/js/main.js', array( 'jquery' ), THB_VERSION, true );
-
-		wp_localize_script(
-			'tfhb-app-script',
-			'tfhb_app_booking',
-			array(
-				'ajax_url'         => admin_url( 'admin-ajax.php' ),
-				'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
-				'general_settings' => $general_settings,
-			)
-		);
+		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/app/js/main.js', array( 'jquery' ), THB_VERSION, true );
+			wp_localize_script(
+				'tfhb-app-script',
+				'tfhb_app_booking',
+				array(
+					'ajax_url'         => admin_url( 'admin-ajax.php' ),
+					'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
+					'general_settings' => $general_settings,
+				)
+			);
 	}
 
 

@@ -79,8 +79,7 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
 			
 			if ( ! empty( $booking['meeting_locations'] ) ) {
 				$meeting_location = json_decode( $booking['meeting_locations'], true );
-				
-				
+				 
 				foreach ( $meeting_location as $key => $location ) {
 
 					

@@ -111,9 +111,10 @@ class Booking {
 		// 	$request['others_info']       = wp_json_encode( $request['others_info'] );
 		// } 
 		if(isset($request['meeting_locations'])) { 
-			$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] ); 
+			$request['meeting_locations'] = is_array($request['meeting_locations']) || is_object($request['meeting_locations']) ? wp_json_encode( $request['meeting_locations']  ) : $request['meeting_locations']; 
+			 
 		} 
-
+	
 		// Update Booking
 		$result = $wpdb->update(
 			$table_name,
@@ -262,6 +263,25 @@ class Booking {
 
 		return $data;
 	}
+
+
+	/**
+	 * Get Booking ID and Dates 
+	 * 
+	 */
+	public function getByMeetingIdDates($meeting_id, $dates) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+ 
+		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s";
+		$data = $wpdb->get_results(
+			$wpdb->prepare( $sql, $meeting_id, $dates )
+		);
+		return $data;
+
+	}
+
 
 	public function getFilter( $filterData = '' ) {
 

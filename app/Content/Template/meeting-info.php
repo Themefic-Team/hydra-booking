@@ -51,7 +51,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		}
 		?>
 	</div>  
-	<div class="tfhb-host-info" style="background: linear-gradient(181deg, rgba(19, 25, 20, 0.00) 1.18%, rgba(19, 25, 20, 0.50) 98.83%), url(<?php echo esc_url(THB_URL . 'assets/app/images/meeting-cover.png'); ?>) lightgray 50% / cover no-repeat; ?>) lightgray 50% / cover no-repeat;">
+	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_attr(THB_URL . 'assets/app/images/meeting-cover.png'); ?>) ;">
 		<div class="tfhb-host-profile tfhb-flexbox tfhb-gap-8">
 			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : '<img src="' . THB_URL.'assets/images/avator.png' . '" alt="">'; ?>
 			
@@ -178,11 +178,10 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 			}
 			?>
  
-		</ul>
-
+		</ul> 
 		<div class="tfhb-timezone ">   
 			
-			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone">
+			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone_<?php echo esc_attr($meeting['id']) ?>">
 				<?php
 				if ( ! empty( $time_zone ) ) {
 
@@ -215,7 +214,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 				}
 
 				?>
-							</select>
+			</select>
 			<div class="tfhb-timezone-icon ">
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<g clip-path="url(#clip0_1911_10296)">

@@ -35,3 +35,12 @@ function tfhb_character_limit_callback( $str, $limit, $dots = true ) {
 		return false;
 	}
 } 
+
+/*
+ * Load Template
+ * 
+ * @param string $template_path
+ * @param array $data
+ * @return string
+ */
+ 
