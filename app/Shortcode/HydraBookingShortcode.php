@@ -266,14 +266,19 @@ class HydraBookingShortcode {
 
 		$payment_status = isset( $data['payment_status'] ) && ! empty( $data['payment_status'] ) ? $data['payment_status'] : 0;
 
-		// 
+	
 		// Integration Settings
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 		$tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array();
+		$tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integration_settings['stripe'] : array();
 	 
 
 		if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 &&  ! wp_script_is( 'tfhb-paypal-script', 'enqueued' )){ 
 			wp_enqueue_script( 'tfhb-paypal-sdk',  ); 
+		}
+
+		if(isset($tfhb_stripe['status']) && $tfhb_stripe['status'] == 1){ 
+			wp_enqueue_script( 'tfhb-stripe-script',  ); 
 		}
 		// Enqueue Scripts Register scripts
 		if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {

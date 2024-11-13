@@ -312,6 +312,24 @@ class Booking {
 
 	}
 
+	public function getMeetingByBooking( $booking_id = '' ) {
+
+		global $wpdb;
+	
+		$table_name    = $wpdb->prefix . $this->table;
+		$meeting_table = $wpdb->prefix . 'tfhb_meetings';
+	
+		$query = $wpdb->prepare(
+			"SELECT b.*, m.*
+			 FROM $table_name AS b
+			 LEFT JOIN $meeting_table AS m ON b.meeting_id = m.id
+			 WHERE b.id = %d",
+			$booking_id
+		);
+	
+		return $wpdb->get_row( $query );
+	}
+
 	//getCheckBooking
 	public function getCheckBooking( $meeting_id, $meeting_dates, $start_time, $end_time ) {
 

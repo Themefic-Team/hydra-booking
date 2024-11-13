@@ -664,34 +664,6 @@ class HostsController {
 			$apple_calendar['app_password']      = isset( $apple_calendar['app_password'] ) ? $apple_calendar['app_password'] : '';
 		}
 
-		// Stripe API
-		$stripe = isset( $_tfhb_host_integration_settings['stripe'] ) ? $_tfhb_host_integration_settings['stripe'] : array();
-		if ( isset($_tfhb_integration_settings['stripe']['status']) && $_tfhb_integration_settings['stripe']['status'] == true ) {
-
-			$stripe['type']              = 'stripe';
-			$stripe['status']            = $_tfhb_host_integration_settings['stripe']['status'];
-			$stripe['connection_status'] = $_tfhb_integration_settings['stripe']['status'];
-			$stripe['public_key']        = $_tfhb_host_integration_settings['stripe']['public_key'];
-			$stripe['secret_key']        = $_tfhb_host_integration_settings['stripe']['secret_key'];
-
-		}
-
-		// Paypal API
-		$paypal = isset( $_tfhb_host_integration_settings['paypal'] ) ? $_tfhb_host_integration_settings['paypal'] : array();
-		if ( isset($_tfhb_integration_settings['paypal']['status']) && $_tfhb_integration_settings['paypal']['status'] == true ) {
-
-			$paypal['type']              = 'paypal';
-			$paypal['status']            = $_tfhb_host_integration_settings['paypal']['status'];
-			$paypal['connection_status'] = $_tfhb_integration_settings['paypal']['status'];
-			$paypal['client_id']         = $_tfhb_host_integration_settings['paypal']['client_id'];
-			$paypal['secret_key']        = $_tfhb_host_integration_settings['paypal']['secret_key'];
-			$paypal['environment']       = $_tfhb_host_integration_settings['paypal']['environment'];
-
-		}else{
-			$paypal['type']              = 'paypal';
-			$paypal['status']            = 0; 
-		}
-
 		// Mailchimp API
 		$mailchimp = isset( $_tfhb_host_integration_settings['mailchimp'] ) ? $_tfhb_host_integration_settings['mailchimp'] : array();
 		if (isset($_tfhb_integration_settings['mailchimp']['status']) && $_tfhb_integration_settings['mailchimp']['status'] == true ) {
@@ -735,9 +707,7 @@ class HostsController {
 			'outlook_calendar'           => $outlook_calendar,
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
-			'stripe'                     => $stripe,
 			'zoho'                       => $zoho,
-			'paypal'                     => $paypal,
 			'_tfhb_integration_settings' => $_tfhb_integration_settings,
 		);
 		return rest_ensure_response( $data );
@@ -825,21 +795,6 @@ class HostsController {
 				'message' => 'Apple Calendar Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
-		} elseif ( $key == 'stripe' ) {
-			$_tfhb_host_integration_settings['stripe']['type']       = 'stripe';
-			$_tfhb_host_integration_settings['stripe']['status']     = sanitize_text_field( $data['status'] );
-			$_tfhb_host_integration_settings['stripe']['public_key'] = sanitize_text_field( $data['public_key'] );
-			$_tfhb_host_integration_settings['stripe']['secret_key'] = sanitize_text_field( $data['secret_key'] );
-
-			// update User Meta
-			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-			// stripe payment
-			$data = array(
-				'status'  => true,
-				'message' => 'Stripe Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
 		} elseif ( $key == 'mailchimp' ) {
 			$_tfhb_host_integration_settings['mailchimp']['type']   = 'mailchimp';
 			$_tfhb_host_integration_settings['mailchimp']['status'] = sanitize_text_field( $data['status'] );
@@ -869,21 +824,6 @@ class HostsController {
 			$data = array(
 				'status'  => true,
 				'message' => 'Zoho Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
-		} elseif ( $key == 'paypal' ) {
-			$_tfhb_host_integration_settings['paypal']['type']        = 'paypal';
-			$_tfhb_host_integration_settings['paypal']['status']      = sanitize_text_field( $data['status'] );
-			$_tfhb_host_integration_settings['paypal']['client_id']   = sanitize_text_field( $data['client_id'] );
-			$_tfhb_host_integration_settings['paypal']['secret_key']  = sanitize_text_field( $data['secret_key'] );
-			$_tfhb_host_integration_settings['paypal']['environment'] = sanitize_text_field( $data['environment'] );
-
-			// update User Meta
-			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-			$data = array(
-				'status'  => true,
-				'message' => 'Paypal Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
 		}

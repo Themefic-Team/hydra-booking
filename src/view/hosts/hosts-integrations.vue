@@ -108,21 +108,6 @@ const Integration = reactive( {
         app_password: '',
 
     },
-    stripe : {
-        type: 'stripe', 
-        status: 0, 
-        connection_status: 0, 
-        public_key: '',
-        secret_key: ''
-    },
-    paypal : {
-        type: 'paypal', 
-        environment: '',
-        status: 0, 
-        connection_status: 0, 
-        client_id: '',
-        secret_key: '',
-    },
     mailchimp : {
         type: 'mailchimp', 
         status: 0, 
@@ -163,10 +148,7 @@ const fetchIntegration = async () => {
             Integration.outlook_calendar = response.data.outlook_calendar  ? response.data.outlook_calendar  : Integration.outlook_calendar ;  
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
-            Integration.stripe = response.data.stripe  ? response.data.stripe  : Integration.stripe ;  
-            Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ;  
-            Integration.paypal = response.data.paypal  ? response.data.paypal  : Integration.paypal ;  
-            Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ;  
+            Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
             
 
             skeleton.value = false;

@@ -54,20 +54,13 @@ const closePopup = () => {
             <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
-        <div v-if="$tfhb_is_pro == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upcoming', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
- 
-        </div>
 
-        <!-- <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <button @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ stripe_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
+        <div v-if="$tfhb_is_pro == true" class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
              
             <HbButton  
                 @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
-                :buttonText="props.stripe_data.secret_key == 1 ? 'Connected' : 'Connect' "
-                icon="ChevronRight" 
-                hover_icon="ArrowRight" 
+                :buttonText="stripe_data.secret_key != '' &&  stripe_data.public_key  != '' && stripe_data.secret_key != 'null' &&  stripe_data.public_key  != 'null' ? 'Connected' : 'Connect' "
                 :hover_animation="true"   
                 width="80px"
             /> 
@@ -76,7 +69,7 @@ const closePopup = () => {
                 v-if="stripe_data.secret_key != '' &&  stripe_data.public_key  != '' && stripe_data.secret_key != 'null' &&  stripe_data.public_key  != 'null'" 
                 @change="emit('update-integrations', 'stripe', stripe_data)" v-model="stripe_data.status"    
              /> 
-        </div> -->
+        </div>
 
         <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
