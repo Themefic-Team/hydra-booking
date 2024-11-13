@@ -22,6 +22,7 @@ import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.v
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
 
+
 // import Form Field 
 import Icon from '@/components/icon/LucideIcon.vue' 
 
@@ -96,7 +97,7 @@ const ispaypalPopupOpen = () => {
 const ispaypalPopupClose = (data) => {
     paypalpopup.value = false;
 }
-
+const preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
         type: 'payment', 
@@ -287,7 +288,7 @@ onBeforeMount(() => {
                 <p>{{ __('Configure integration for conferencing, calendar and payment', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="https://themefic.com/docs/hydrabooking/hydrabooking/integrations/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=20 /></a>
+                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap"> 

@@ -33,9 +33,9 @@ onBeforeMount(() => {
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
         </div>
         <div class="tfhb-s-w-cta tfhb-flexbox tfhb-gap-16">
-            <a href="#">Need Help</a>
+            <a target="_blank" href="https://themefic.com/docs/hydrabooking">Need Help</a>
             <span></span>
-            <a href="#">FAQ</a>
+            <a target="_blank"  href="https://hydrabooking.com/">FAQ</a>
         </div>
      </div>
 

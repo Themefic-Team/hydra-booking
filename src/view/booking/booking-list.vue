@@ -560,7 +560,7 @@ const deleteItemConfirm = () => {
                        </span>
                        <span class="tfhb-flexbox tfhb-gap-8" v-else  >
                         <Icon name="MapPin" size=20 /> 
-                        Location : {{address.location}} - {{address.address.link}}
+                        Location : {{address.location}} - {{address.address}}
                        </span>
                     </div>    
                 </div>

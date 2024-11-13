@@ -103,8 +103,8 @@ const truncateString = (str, num) => {
         </div>  
         <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-datachart-box-dropdown  ">
             <span class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ __('Today', 'hydra-booking') }}</span>  
-                <Icon v-if="datachart_box_dropdown == false" name="ChevronDown" size=20 /> 
-                <Icon v-else name="ChevronUp" size=20 /> 
+                <Icon @click.stop="datachart_box_dropdown = !datachart_box_dropdown"  v-if="datachart_box_dropdown == false" name="ChevronDown" size=20 /> 
+                <Icon  @click.stop="datachart_box_dropdown = !datachart_box_dropdown"  v-else name="ChevronUp" size=20 /> 
             </span>
             
             <transition name="tfhb-dropdown-transition">
@@ -399,8 +399,8 @@ const truncateString = (str, num) => {
                     <div class="thb-admin-btn right"> 
                         <div class="tfhb-dropdown datachart-dropdown  ">
                             <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" >  {{ __('Last 7 Days',   'hydra-booking') }} 
-                                <Icon  v-if="datachart_dropdown == false" name="ChevronDown" size=20 /> 
-                                <Icon  v-else name="ChevronUp" size=20 /> 
+                                <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-if="datachart_dropdown == false" name="ChevronDown" size=20 /> 
+                                <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-else name="ChevronUp" size=20 /> 
                             </a>
                             <transition name="tfhb-dropdown-transition">
                                 <div   

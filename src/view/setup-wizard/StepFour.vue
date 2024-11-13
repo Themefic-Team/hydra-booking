@@ -1,7 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
-import { RouterView } from 'vue-router' 
+import { RouterView, useRouter } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
@@ -11,11 +11,15 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
-import { setupWizard } from '@/store/setupWizard';
+import { setupWizard } from '@/store/setupWizard'; 
 
+
+
+const router = useRouter();
 
 // Toast
 import { toast } from "vue3-toastify"; 
+import { BookTemplateIcon } from 'lucide-vue-next';
 
 const sharePopup = ref(false)
 
@@ -73,7 +77,10 @@ const copyMeeting = (link) => {
     document.body.removeChild(textarea);
     
     // Show a toast notification or perform any other action
-    toast.success(link + ' is Copied');
+    toast.success(link + ' is Copied', {
+        position: "bottom-right",
+        duration: 2000
+    }); 
 }
 
 const activeItemDropdown = ref(0);
@@ -85,6 +92,19 @@ const activeSingleMeetingDropdown = (id) => {
     }
     activeItemDropdown.value = id; 
 
+}
+
+const pre_loader = ref(false);
+const gotoDashboard = () => {
+    
+    // weit for 2 sec
+    pre_loader.value = true;
+    setTimeout(() => {
+        pre_loader.value = false;
+        router.push({ name: 'dashboard' });
+        props.setupWizard.currentStep = 'getting-start'
+    }, 500);  
+    
 }
 // outside click
 window.addEventListener('click', function(e) { 
@@ -288,7 +308,7 @@ window.addEventListener('click', function(e) {
                                     <div class="tfhb-copy-btn "> 
                                         <HbButton 
                                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
-                                            @click="copyMeeting(shareData.embed)" 
+                                            @click="copyMeeting(shareData.link)" 
                                             :buttonText="__('Copy Code', 'hydra-booking')" 
                                         />  
                                     </div>
@@ -302,7 +322,7 @@ window.addEventListener('click', function(e) {
                                     <div class="tfhb-copy-btn">
                                         <HbButton 
                                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
-                                            @click="copyMeeting(shareData.embed)" 
+                                            @click="copyMeeting(shareData.shortcode)" 
                                             :buttonText="__('Copy Code', 'hydra-booking')" 
                                         /> 
                                     </div>
@@ -331,17 +351,31 @@ window.addEventListener('click', function(e) {
                 </div>
         </div>
       
+        <div class="tfhb-flexbox tfhb-justify-center tfhb-gap-16">
+            <div class="tfhb-submission-btn tfhb-flexbox">
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation tfhb-justify-center" 
+                    @click="StepFour" 
+                    :buttonText="__('View Integrations', 'hydra-booking')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true"   
+                />  
+                
+            
+                <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size=20 />  </button> -->
+            </div>
+                
+            <HbButton 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 " 
+                @click="gotoDashboard" 
+                :buttonText="__('Back to Dashboard ', 'hydra-booking')"   
+            />  
+        </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
              
            
-            <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation tfhb-justify-center" 
-                @click="StepFour" 
-                :buttonText="__('Complete setup', 'hydra-booking')"
-                icon="ChevronRight" 
-                hover_icon="ArrowRight" 
-                :hover_animation="true"   
-            /> 
+          
             <!-- <button class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="" > <Icon name="ChevronLeft" size=20 /> Back </button>
             <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="StepFour" >Complete setup<Icon name="ChevronRight" size=20 />  </button> -->
         </div>

@@ -623,8 +623,12 @@ class SettingsController {
 				}
 			}
 
+			
+
 			$_tfhb_integration_settings[$key]['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings[$key]['status']      = sanitize_text_field( $data['status'] ); 
+
+			 
 
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );

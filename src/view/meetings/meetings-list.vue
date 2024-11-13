@@ -243,7 +243,7 @@ const truncateString = (str, num) => {
                         <p>{{ __('One host with one invitee. Good for: 1:1 interview, coffee chats', 'hydra-booking') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
-                        <Icon v-if="Meeting.pre_loader_group == false" name="ArrowRight" width="20"/>
+                        <Icon v-if="Meeting.pre_loader == false" name="ArrowRight" width="20"/>
                         <HbPreloader v-else color="#2E6B38" />
                         
                     </div>
@@ -269,7 +269,7 @@ const truncateString = (str, num) => {
                     </div>
                     <div class="tfhb-meeting-type-icon">
                         <div v-if="$tfhb_is_pro == true" class="tfhb-meeting-type-icon">
-                            <Icon v-if="Meeting.pre_loader == false" name="ArrowRight" width="20"/>
+                            <Icon v-if="Meeting.pre_loader_group == false" name="ArrowRight" width="20"/>
                             <HbPreloader v-else color="#2E6B38" />
                             
                         </div>

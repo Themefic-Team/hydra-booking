@@ -8,6 +8,7 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbPreloader from '@/components/icon/HbPreloader.vue';
 // import { Copy } from 'lucide-vue-next';
 import { toast } from "vue3-toastify"; 
 import useValidators from '@/store/validator';
@@ -18,6 +19,7 @@ const props = defineProps([
     'class', 
     'pre_loader', 
     'display', 
+    'pre_loader', 
     'ispopup'
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
@@ -50,7 +52,7 @@ const closePopup = () => {
                 :hover_animation="false"    
             />     
             <!-- Checkbox swicher -->
-
+                
                 <HbSwitch v-if="props.google_calendar.connection_status" @change="emit('update-integrations', 'google_calendar', props.google_calendar)" v-model="props.google_calendar.status"    />
             <!-- Swicher --> 
         </div>

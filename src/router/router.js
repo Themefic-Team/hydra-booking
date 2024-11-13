@@ -249,6 +249,11 @@ const routes = [
                 name: 'SettingsCategory',
                 component: () => import('../view/settings/Category.vue')
             },
+            {
+                path: 'license',
+                name: 'LicenseCategory',
+                component: () => import('../view/settings/License.vue')
+            },
              
         ]
         

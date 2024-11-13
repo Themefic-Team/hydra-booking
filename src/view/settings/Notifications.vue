@@ -219,7 +219,7 @@ onBeforeMount(() => {
                 <p>{{ __('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee', 'hydra-booking') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=15 /></a>
+                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">

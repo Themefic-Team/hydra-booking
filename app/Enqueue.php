@@ -10,6 +10,7 @@ class Enqueue {
 	public function __construct() {
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'tfhb_enqueue_scripts' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'tfhb_enqueue_scripts' ) );
 	} 
 
     public function tfhb_enqueue_scripts() {

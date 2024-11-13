@@ -356,9 +356,17 @@ class HydraBookingShortcode {
 		$meeting     = new Meeting();
 		$MeetingData = $meeting->get( $data['meeting_id'] );
  
-		
-
+	
 		$meta_data = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
+
+		if($meta_data['meeting_type'] == 'one-to-group' && tfhb_is_pro_active() == false ){
+			 
+			wp_send_json_error( array( 'message' => 'Please upgrade to pro version for group meeting' ) );
+			wp_die();
+		}
+
+	 
+
 
 		$data['host_id']            = isset( $_POST['host_id'] ) ? sanitize_text_field( $_POST['host_id'] ) : 0;
 		$data['attendee_id']        = isset( $_POST['attendee_id'] ) ? sanitize_text_field( $_POST['attendee_id'] ) : 0;
@@ -771,11 +779,15 @@ class HydraBookingShortcode {
 		}
 
 
-		return false;
+	
 		$meeting = new Meeting();
 		$MeetingData = $meeting->get( $single_booking_meta->meeting_id );
 
-		
+		$meeting_type = isset( $MeetingData->meeting_type ) ? $MeetingData->meeting_type : 'one-to-one';
+		$recurring_status = isset( $MeetingData->recurring_status ) ? $MeetingData->recurring_status : false;
+		if($meeting_type == 'one-to-group' || $recurring_status == true){
+			return false;
+		}
 
 		$meta_data = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 
@@ -1040,6 +1052,15 @@ class HydraBookingShortcode {
 		// Check if the request is not empty.
 		if ( empty( $_POST ) ) {
 			wp_send_json_error( array( 'message' => 'Invalid request' ) );
+		} 
+
+		$meeting = new Meeting();
+		$meetingData = $meeting->get( $_POST['meeting_id'] );
+		$meeting_type =  $meetingData->meeting_type;
+		if($meeting_type == 'one-to-group' && tfhb_is_pro_active() == false ){
+			 
+			wp_send_json_error( array( 'message' => 'Please upgrade to pro version for group meeting' ) );
+			wp_die();
 		}
 
 		$selected_date        = isset( $_POST['selected_date'] ) ? sanitize_text_field( $_POST['selected_date'] ) : '';

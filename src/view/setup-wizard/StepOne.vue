@@ -69,32 +69,36 @@ const StepOne = () => {
                     
                 />
         </div>
-        <div class="tfhb-submission-btn tfhb-flexbox"> 
-            <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
-                @click="props.setupWizard.currentStep = 'getting-start'" 
-                :buttonText="__('Back', 'hydra-booking')"
-                icon="ChevronLeft" 
-                hover_icon="ArrowLeft" 
-                :hover_animation="true"
-                icon_position="left" 
-            /> 
-            <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                @click="StepOne" 
-                :buttonText="__('Next', 'hydra-booking')"
-                icon="ChevronRight" 
-                hover_icon="ArrowRight" 
-                :hover_animation="true" 
-            />  
+        
+        <div class="tfhb-flexbox tfhb-justify-center tfhb-gap-16">
+            <div class="tfhb-submission-btn tfhb-flexbox">
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
+                    @click="props.setupWizard.currentStep = 'getting-start'" 
+                    :buttonText="__('Back', 'hydra-booking')"
+                    icon="ChevronLeft" 
+                    hover_icon="ArrowLeft" 
+                    :hover_animation="true"
+                    icon_position="left" 
+                /> 
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                    @click="StepOne" 
+                    :buttonText="__('Next', 'hydra-booking')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true" 
+                />  
+                
+            
+                <!-- <button @click="props.setupWizard.currentStep = 'step-one'" class="tfhb-btn tfhb-btn tfhb-flexbox tfhb-gap-8" >Skip<Icon name="ChevronRight" size=20 />  </button> -->
+            </div>
+                
             <HbButton 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="props.setupWizard.currentStep = 'step-two'" 
-                :buttonText="__('Skip', 'hydra-booking')"  
-                :hover_animation="true" 
-                icon="ChevronRight"   
-                hover_icon="ArrowRight"  
-            />   
+                :buttonText="__('Skip', 'hydra-booking')"   
+            />  
         </div>
      </div> 
      <!-- Step One -->

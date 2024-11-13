@@ -38,7 +38,7 @@ class DateTimeController extends \DateTimeZone {
 		echo $timeZoneName;
 	}
 
-	public function convert_time_based_on_timezone( $time, $time_zone, $selected_time_zone, $time_format, ) {
+	public function convert_time_based_on_timezone( $time, $time_zone, $selected_time_zone, $time_format ) {
 
 		$time = new \DateTime( $time, new \DateTimeZone( $time_zone ) );
 
@@ -104,6 +104,7 @@ class DateTimeController extends \DateTimeZone {
 		$meeting_type      = isset( $data['meeting_type'] ) ? $data['meeting_type'] : 'one-to-single';
 		$max_book_per_slot = isset( $data['max_book_per_slot'] ) ? $data['max_book_per_slot'] : 1;
 
+		
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
 			$_tfhb_availability_settings = get_user_meta( $MeetingsData->host_id, '_tfhb_host', true );
 			if ( in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {

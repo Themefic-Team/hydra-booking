@@ -429,11 +429,10 @@ const Meeting = reactive({
     async CreatePopupMeeting (type, routes){    
         if(this.pre_loader == true){
             return;
-        }
-
-        if(type == 'one-to-group'){
+        } 
+        if(type.meeting_type == 'one-to-group'){
             this.pre_loader_group = true;
-        }else{
+        }else{ 
             this.pre_loader = true;
         }
 
