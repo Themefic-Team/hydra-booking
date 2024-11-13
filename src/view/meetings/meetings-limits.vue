@@ -133,7 +133,7 @@ const removeExtraFrequency = (key) => {
        </div>
 
        <div class="tfhb-meeting-limit tfhb-flexbox tfhb-gap-16">
-            <div v-if="$tfhb_is_pro == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
+            <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
                 <div class=" tfhb-pro">
                     <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                     Recurring Event
@@ -153,7 +153,7 @@ const removeExtraFrequency = (key) => {
                 <p>Set up a repeating schedule</p>
             </div>
             <div
-            :class="{'tfhb-pro': $tfhb_is_pro == false}"
+            :class="{'tfhb-pro': $tfhb_is_pro == false || $tfhb_license_status == false}"
             class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="meeting.recurring_status">  
 
                 <!-- Meeting interval -->

@@ -99,8 +99,17 @@ const sharePopupData = (data) => {
 
 
 const meeting = reactive({});
-const TfhbMeetingType = (type, router) => { 
-    if(type == 'one-to-group' && typeof tfhb_core_apps_pro === 'undefined') { 
+const TfhbMeetingType = (type, router) => {  
+    // return false;
+    if(type == 'one-to-group' && typeof tfhb_core_apps_pro === 'undefined' ) { 
+       
+        toast.error('This feature is only available in pro version', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return;
+    }
+    if((type == 'one-to-group' && tfhb_core_apps_pro.tfhb_license_status !=true)) {  
         toast.error('This feature is only available in pro version', {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
@@ -251,10 +260,10 @@ const truncateString = (str, num) => {
             </div>
             <div class="tfhb-meeting-person-type" 
                 :class=" {
-                    'tfhb-pro': !$tfhb_is_pro, 
+                    'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status, 
                 }"
             > 
-                <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="$tfhb_is_pro == false"><Icon name="Crown" size=20 />  {{ __('Pro', 'hydra-booking') }}</span>
+                <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="$tfhb_is_pro == false || $tfhb_license_status == false"><Icon name="Crown" size=20 />  {{ __('Pro', 'hydra-booking') }}</span>
                 <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
@@ -268,7 +277,7 @@ const truncateString = (str, num) => {
                         <p>{{ __('One host with group of invitee. Good for: webinars, online clasess', 'hydra-booking') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
-                        <div v-if="$tfhb_is_pro == true" class="tfhb-meeting-type-icon">
+                        <div v-if="$tfhb_is_pro == true && $tfhb_license_status == true" class="tfhb-meeting-type-icon">
                             <Icon v-if="Meeting.pre_loader_group == false" name="ArrowRight" width="20"/>
                             <HbPreloader v-else color="#2E6B38" />
                             

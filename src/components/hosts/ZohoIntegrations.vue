@@ -28,7 +28,7 @@ const closePopup = () => {
       <!-- Zoho Integrations  -->
       <div  class="tfhb-integrations-single-block tfhb-admin-card-box "
         :class="props.class,{
-            'tfhb-pro': !$tfhb_is_pro,
+            'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
         }"
       >
         
@@ -43,13 +43,13 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+            <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
            
-            <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Get Access Token', 'hydra-booking') }}</a>
+            <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Get Access Token', 'hydra-booking') }}</a>
 
-            <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size=18 /></button>
+            <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size=18 /></button>
 
-            <button v-else-if="$tfhb_is_pro == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Connect<Icon name="ChevronRight" size=18 /></button>
+            <button v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Connect<Icon name="ChevronRight" size=18 /></button>
 
             <!-- Checkbox swicher -->
 
@@ -60,7 +60,7 @@ const closePopup = () => {
             <!-- Swicher --> 
         </div>
 
-        <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
+        <HbPopup  v-if="$tfhb_is_pro == true && $tfhb_license_status == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
                 <h2>{{ __('Connect Your Zoho Account', 'hydra-booking') }}</h2>
                 

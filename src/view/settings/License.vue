@@ -14,7 +14,10 @@ import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 // import Form Field   
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbButton from '@/components/form-fields/HbButton.vue'; 
+import HbPopup from '@/components/widgets/HbPopup.vue';
 
+
+const deletePopup = ref(false)
  
 
 const upgradeToPro = () => {
@@ -71,6 +74,7 @@ const deactivateLicense = async () => {
  
 
     LicenseBase.DeactivateLicense();
+    deletePopup.value = false;
 }
 
 </script>
@@ -111,14 +115,13 @@ const deactivateLicense = async () => {
                     </div> 
                 </template>
             </HbInfoBox> 
-
-            {{ LicenseBase }}
+ 
             <!-- Date And Time --> 
-                <div  v-if="$tfhb_is_pro == true"  class="tfhb-admin-title" >
+                <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == false"  class="tfhb-admin-title" >
                     <h2>{{ __(' License Info', 'hydra-booking') }}</h2> 
                     <p>{{ __('Explore licensing options and benefits for advanced features.', 'hydra-booking') }}</p>
                 </div>
-                <div  v-if="$tfhb_is_pro == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
+                <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
 
                     <ul class="el-license-info">
                         <li>
@@ -167,16 +170,51 @@ const deactivateLicense = async () => {
   
                     <HbButton 
                         classValue="tfhb-btn boxed-btn-danger flex-btn tfhb-icon-hover-animation tfhb-mt-16" 
-                        @click="deactivateLicense()" 
+                        @click.stop="deletePopup = true " 
                         :buttonText="__('Deactivate', 'hydra-booking')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true" 
                     /> 
 
+
+                    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
+                            <template #header> 
+                                
+                            </template>
+
+                            <template #content>  
+                                <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+                                    <div class="tfhb-close-icon">
+                                        <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+                                    </div>
+                                    <div class="tfhb-close-content">
+                                        <h3>{{ __('Confirm License Deactivation!', 'hydra-booking') }}  </h3>  
+                                        <p>{{ __('Deactivating the license will remove access to all premium features.', 'hydra-booking') }}</p>
+                                    </div>
+                                    <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                                        <HbButton 
+                                            classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                                            @click=" deletePopup = !deletePopup"
+                                            :buttonText="__('Cancel', 'hydra-booking')" 
+                                        />  
+                                        <HbButton  
+                                            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                                            @click="deactivateLicense()"
+                                            :buttonText="__('Deactivate', 'hydra-booking')"
+                                            icon="Trash2"   
+                                            :hover_animation="false" 
+                                            icon_position = 'left'
+                                        />
+                                    
+                                    </div>
+                                </div> 
+                            </template> 
+                        </HbPopup>
+
             </div>  
 
-            <div  v-if="$tfhb_is_pro == true && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
+            <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == false && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
 
                 <!-- Time Zone -->
                 <HbText  
@@ -205,7 +243,7 @@ const deactivateLicense = async () => {
                     <HbButton 
                         
                         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="updateLicense(['license_key', 'license_email'])" 
+                        @click.stop="updateLicense(['license_key', 'license_email'])" 
                         :buttonText="__('Activate', 'hydra-booking')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
@@ -221,3 +259,28 @@ const deactivateLicense = async () => {
     </div>
  
 </template>
+
+<style scoped>
+
+ 
+.el-license-info-title {
+  width: 150px;
+  display: inline-block;
+  position: relative;
+  padding-right: 10px;
+  margin-right: 20px !important;
+}
+.el-license-info-title:after {
+  content: ":";
+  position: absolute;
+  right: 2px;
+}
+.el-license-valid {
+  padding: 0 5px 2px;
+  color: #fff;
+  background-color: #8fcc77;
+  border-radius: 3px;
+  color: #fff !important;
+  padding: 6px 12px;
+}
+</style>

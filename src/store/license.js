@@ -63,7 +63,9 @@ const LicenseBase = reactive({
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
-                this.skeleton = false;
+                window.location.reload();
+                // this.skeleton = false;
+
 
             }else{
                 toast.error(response.data.data.message, {
@@ -100,7 +102,8 @@ const LicenseBase = reactive({
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
-                this.skeleton = false;
+                // this.skeleton = false;
+                window.location.reload();
 
             }else{
                 toast.error(response.data.data.message, {

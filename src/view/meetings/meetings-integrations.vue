@@ -48,7 +48,7 @@ onBeforeMount(() => {
     </div>
 
     <!-- WebHook -->
-    <div class="tfhb-meeting-webhook-wrap  tfhb-full-width tfhb-flexbox tfhb-gap-16" v-if="$tfhb_is_pro == true">
+    <div class="tfhb-meeting-webhook-wrap  tfhb-full-width tfhb-flexbox tfhb-gap-16" v-if="$tfhb_is_pro == true && $tfhb_license_status == true">
         <Webhook :meetingId="props.meetingId" :meeting="meeting" />
     </div>
     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro tfhb-flexbox tfhb-gap-16" v-else>

@@ -38,7 +38,7 @@ const storedOptionData = (data) => {
       <!-- Zoom Integrations  -->
       <div  class="tfhb-integrations-single-block tfhb-admin-card-box "
         :class="props.class,{
-            'tfhb-pro': !$tfhb_is_pro,
+            'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
         }"
       >
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
@@ -46,13 +46,13 @@ const storedOptionData = (data) => {
                 <img :src="$tfhb_url+'/assets/images/outlook-calendar.png'" alt="" >
             </span> 
 
-            <div class="cartbox-text">
+            <div class="cartbox-text"> 
                 <h3>{{ __('Outlook Calendar', 'hydra-booking') }}</h3> 
                 <p>{{ __('Connect your Google Outlook Calendar to sync your booked events.', 'hydra-booking') }}</p>
 
             </div>
         </div> 
-        <div v-if="$tfhb_is_pro == false" class="tfhb-integrations-single-block-btn tfhb-flexbox"> 
+        <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-integrations-single-block-btn tfhb-flexbox"> 
             <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
            
         </div>

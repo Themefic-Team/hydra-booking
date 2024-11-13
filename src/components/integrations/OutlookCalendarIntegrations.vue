@@ -29,10 +29,10 @@ const closePopup = () => {
       <!-- Zoom Integrations  -->
       <div  class="tfhb-integrations-single-block tfhb-admin-card-box "
       :class="props.class,{
-        'tfhb-pro': !$tfhb_is_pro,
+        'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
       }"
       >
-        <span v-if="$tfhb_is_pro == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+        <span v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
          
         <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
@@ -45,11 +45,11 @@ const closePopup = () => {
 
             </div>
         </div>
-        <div v-if="$tfhb_is_pro == false" class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-integrations-single-block-btn tfhb-flexbox">
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
-        <div v-if="$tfhb_is_pro == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upcoming', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
@@ -70,7 +70,7 @@ const closePopup = () => {
         </div> -->
 
 
-        <HbPopup  v-if="$tfhb_is_pro == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
+        <HbPopup  v-if="$tfhb_is_pro == true ||  $tfhb_license_status == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
                 <!-- {{ outlook_calendar }} -->
                 <h2>{{ __('Add Outlook Calendar', 'hydra-booking') }}</h2>
