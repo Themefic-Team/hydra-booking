@@ -39,8 +39,7 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <!-- <HbSwitch v-if="$tfhb_is_pro == true" @change="emit('update-integrations', 'fluent_crm', fluent_crm_data)" v-model="fluent_crm_data.status"    /> -->
-            <a v-if="$tfhb_is_pro == true && $tfhb_license_status == true"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upcoming', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+            <HbSwitch v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" @change="emit('update-integrations', 'fluent_crm', fluent_crm_data)" v-model="fluent_crm_data.status"    />
             
             <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  

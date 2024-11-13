@@ -6,7 +6,6 @@ use HydraBooking\App\Shortcode\HydraBookingShortcode;
 use HydraBooking\App\Enqueue;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\DB\Booking;
-use HydraBooking\DB\Transactions;
 
 class App {
 	public function __construct() {
@@ -60,8 +59,6 @@ class App {
 
 		add_action( 'pre_get_posts', array( $this, 'tfhb_remove_posttype_request' ) );
 		add_filter( 'single_template', array( $this, 'tfhb_single_meeting_template' ) );
-
-		add_action( 'hydra_booking/stripe_payment_method', array( $this, 'tfhb_stripe_payment_callback' ), 10, 2 );
 		
 		add_filter( 'post_type_link',  array( $this,'tfhb_meeting_permalink'), 10, 2 );
 	
@@ -171,87 +168,6 @@ class App {
 
 		}
 		return $template;
-	}
-
-	// Stripe Callback
-	public function tfhb_stripe_payment_callback( $data, $booking_id ) {
-
-		if ( file_exists( THB_PATH . '/app/integration/stripe/vendor/autoload.php' ) ) {
-			require_once THB_PATH . '/app/integration/stripe/vendor/autoload.php';
-		}
-
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
-		$stripeSecret               = ! empty( $_tfhb_integration_settings['stripe']['secret_key'] ) ? $_tfhb_integration_settings['stripe']['secret_key'] : '';
-
-		$_tfhb_host_integration_settings = get_user_meta( $data['host_id'], '_tfhb_host_integration_settings' );
-
-		$stripeSecret = ! empty( $_tfhb_host_integration_settings['stripe']['secret_key'] ) ? $_tfhb_host_integration_settings['stripe']['secret_key'] : $stripeSecret;
-
-		if ( ! empty( $stripeSecret ) ) {
-			try {
-
-				\Stripe\Stripe::setVerifySslCerts( false );
-
-				// See your keys here: https://dashboard.stripe.com/account/apikeys
-				\Stripe\Stripe::setApiKey( $stripeSecret );
-
-				// Get the payment token ID submitted by the form:
-				$token  = ! empty( $data['tokenId'] ) ? $data['tokenId'] : '';
-				$amount = ! empty( $data['price'] ) ? $data['price'] : 0;
-
-				$customer = \Stripe\Customer::create(
-					array(
-						'email'   => ! empty( $data['email'] ) ? $data['email'] : '',
-						'source'  => $token,
-						'address' => array(
-							'city'        => 'Dhaka',
-							'country'     => ! empty( $data['address'] ) ? $data['address'] : '',
-							'line1'       => 'dhaka',
-							'line2'       => '',
-							'postal_code' => '1000',
-							'state'       => 'dhaka',
-						),
-					)
-				);
-
-				$charge = \Stripe\Charge::create(
-					array(
-						'customer'    => $customer->id,
-						'amount'      => $amount * 100,
-						'currency'    => $data['currency'],
-						'description' => 'test stipe payment',
-					)
-				);
-
-				if ( $charge->balance_transaction ) {
-					$booking = new Booking();
-					$data    = array(
-						'id'             => $booking_id,
-						'payment_status' => 'Completed',
-					);
-					// Booking Update
-					$bookingUpdate = $booking->update( $data );
-
-					// Data for Transactions Table
-					$tdata        = array(
-						'booking_id'         => $booking_id,
-						'transation_history' => wp_json_encode( $charge ),
-					);
-					$Transactions = new Transactions();
-					$Transactions = $Transactions->add( $tdata );
-				}
-
-				// $data = array('success' => true, 'data' => $charge);
-
-				// echo wp_json_encode($data);
-			} catch ( \Throwable $th ) {
-				$data = array(
-					'success' => false,
-					'data'    => $th->getMessage(),
-				);
-				echo wp_json_encode( $data );
-			}
-		}
 	}
 
 	 

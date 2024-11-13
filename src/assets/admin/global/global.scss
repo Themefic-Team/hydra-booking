@@ -79,6 +79,11 @@
     .tfhb-warning-message{
         color: $error-text;
         font-weight: $font-weight-medium;
+        span{
+            color: $error-text;
+            font-weight: $font-weight-medium;
+            margin: 0;
+        }
     }
 
     // info box
