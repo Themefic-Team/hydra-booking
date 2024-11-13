@@ -1,0 +1,35 @@
+{
+    "name": "hydra-booking/hydra-booking",
+    "description": "Create a booking / Appointment Form using Contact Form 7. You can insert Calendar, Time on the form and manage your booking. User can pay using WooCommerce. ",
+    "type": "project",
+    "require": {
+        "sabre/dav": "^4.6",
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "HydraBooking\\Admin\\": "admin/",
+            "HydraBooking\\DB\\": "includes/database/",
+            "HydraBooking\\Services\\": "includes/services/",
+            "HydraBooking\\PostType\\": "includes/post-type/",
+            "HydraBooking\\Hooks\\": "includes/hooks/",
+            "HydraBooking\\Migration\\": "includes/migration/",
+            "HydraBooking\\App\\": "app/"
+        }
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "3.0"
+    },
+    "scripts": {
+        "lint": "phpcs",
+        "lint-fix": "phpcbf"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "platform": {
+            "php": "7.2.0"
+        }
+    }
+}
