@@ -27,7 +27,11 @@ const props = defineProps({
         type: Object,
         required: true
     },
-    time_zone:{}
+    time_zone:{},
+    settings_zoho:{
+        type: Object,
+        required: true,
+    }
 
 });
 
@@ -203,6 +207,7 @@ onBeforeMount(() => {
 
 <template>
 
+{{ integration }} 
     <HbInfoBox name="first-modal">
         
         <template #content>
@@ -245,6 +250,7 @@ onBeforeMount(() => {
         <!-- Zoho intrigation -->
         <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :zoho_data="Integration.zoho"  
+        :zoho_crm_status="settings_zoho.zoho_crm_status"  
         @update-integrations="UpdateIntegration" 
         from="host"
         :ispopup="zohopopup"

@@ -14,6 +14,7 @@ const props = defineProps([
     'zoho_data', 
     'ispopup',
     'host_id',
+    'zoho_crm_status',
     'from'
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
@@ -49,7 +50,9 @@ const closePopup = () => {
 
             <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size=18 /></button>
 
-            <button v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Connect<Icon name="ChevronRight" size=18 /></button>
+            <button v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==1" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connect', 'hydra-booking') }}<Icon name="ChevronRight" size=18 /></button>
+
+            <router-link v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==0"  to="/settings/integrations#marketing-tools" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <!-- Checkbox swicher -->
 

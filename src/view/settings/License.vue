@@ -225,7 +225,7 @@ const deactivateLicense = async () => {
                     :label="__(' License Key', 'hydra-booking')"  
                     :description="__('Insert your license key here. You can get it from our Client Portal -> Support -> License keys.', 'hydra-booking')"
                     selected = "1"
-                    :placeholder="__('Type your Admin Email', 'hydra-booking')"  
+                    :placeholder="__('Enter your License key', 'hydra-booking')"  
                     :errors="errors.license_key"
                 /> 
 

@@ -34,7 +34,9 @@ const time_zones = reactive({});
 const hosts_settings = reactive({});
 const settingsAvailabilityData = reactive({});
 const hostId = route.params.id;
-const integration = reactive({});
+const integration = reactive({
+    zoho_crm_status : 0,
+});
 
 // availability type
 const AvailabilityTabs = (type) => {
@@ -160,7 +162,7 @@ const UpdateHostsInformation = async (validator_field) => {
             time_zones.data = response.data.time_zone; 
             hosts_settings.data = response.data.hosts_settings; 
             settingsAvailabilityData.data = response.data.settingsAvailabilityData; 
-            integration.data = response.data.integrations;
+            integration.zoho_crm_status = response.data.integrations.zoho_crm_status;
         }else{ 
             // return to redirect back route 
             router.push({ name: 'HostsLists' });
@@ -178,7 +180,7 @@ onBeforeMount(() => {
 
 <template>
 
-    <!-- {{ tfhbClass }} --> 
+  
     <div :class="{ 'tfhb-skeleton': skeleton }" class="tfhb-hydra-wrap tfhbb-host-profile-page ">    
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title"> 
@@ -203,6 +205,7 @@ onBeforeMount(() => {
             :update_host_preloader="update_host_preloader" 
             :time_zone="time_zones.data" 
             :hosts_settings="hosts_settings.data" 
+            :settings_zoho="integration" 
             :settingsAvailabilityData="settingsAvailabilityData.data" 
             @availability-tabs="AvailabilityTabs"
             @save-host-info="UpdateHostsInformation"
