@@ -30,7 +30,7 @@ const LicenseBase = reactive({
                 this.skeleton = false;
             }
         } catch (error) {
-
+            this.skeleton = false;
             console.log(error);
 
         } 

@@ -8,7 +8,9 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import axios from 'axios';
+import { useRouter, useRoute, RouterView } from 'vue-router' 
 
+const router = useRouter();
 const emit = defineEmits(["update-meeting", "limits-frequency-add"]); 
 const props = defineProps({
     meetingId: {
@@ -224,23 +226,22 @@ const GetFormsData = async (value) => {
                     placeholder="Select Form Types"   
                     :option = "props.formsList.value" 
                    
-                />
-
-                <div  v-if="meeting.questions_form_type == 'wpcf7' && integrations.cf7_status == false" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Contact Form 7 is not connected. 
+                /> 
+                <div  v-if="meeting.questions_form_type == 'wpcf7' && integrations.cf7_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Contact Form 7 is not connected. 
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
                         :buttonText="__('Please Configure', 'hydra-booking')"
                     />  
                 </div>
-                <div  v-if="meeting.questions_form_type == 'fluent-forms' && integrations.fluent_status == false" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Fluent Forms is not connected. 
+                <div  v-if="meeting.questions_form_type == 'fluent-forms' && integrations.fluent_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Fluent Forms is not connected. 
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
                         :buttonText="__('Please Configure', 'hydra-booking')"
                     />  
                 </div>
-                <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == false" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Gravity Forms is not connected. 
+                <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Gravity Forms is not connected. 
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
