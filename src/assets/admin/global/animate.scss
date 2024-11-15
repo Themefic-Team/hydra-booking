@@ -1,0 +1,136 @@
+/* Define the custom zoomIn animation */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Apply the animation to the transition */
+.zoom-in-enter-active {
+  animation: zoomIn 0.6s ease both;
+}
+.tfhb-popup-open .tfhb-popup-wrap {
+    animation: zoomIn 0.6s ease both;
+}
+
+
+.zoom-in-leave-active {
+  animation: zoomIn 0.6s ease reverse both;
+}
+.tfhb-popup-close .tfhb-popup-wrap {
+  animation: zoomIn 0.6s ease reverse both;
+}
+.tfhb-popup-open {
+    visibility: visible !important;
+    opacity: 1 !important; 
+    transition:$transition;
+} 
+
+
+/* Define the custom flipInX animation */
+@keyframes flipInX {
+  from {
+    transform: perspective(400px) rotateX(90deg);
+    opacity: 0;
+  }
+  40% {
+    transform: perspective(400px) rotateX(-20deg);
+  }
+  60% {
+    transform: perspective(400px) rotateX(10deg);
+    opacity: 1;
+  }
+  80% {
+    transform: perspective(400px) rotateX(-5deg);
+  }
+  to {
+    transform: perspective(400px);
+  }
+}
+
+/* Apply the animation to the transition */
+.flip-in-x-enter-active {
+  animation: flipInX 0.6s ease both;
+}
+
+.flip-in-x-leave-active {
+  animation: flipInX 0.6s ease reverse both;
+}
+
+
+
+// Dropdown animation
+/* Transition styles */
+.tfhb-dropdown-transition-enter-active, .tfhb-dropdown-transition-leave-active {
+  transition: all 0.2s ease;
+}
+.tfhb-dropdown-transition-enter-from{
+  transform: translateY(-20px);
+  opacity: 0; 
+}
+.tfhb-dropdown-transition-leave-to {
+    transform: translateY(-10px); 
+    opacity: 0; 
+}
+.tfhb-dropdown-transition-enter-to { 
+  transform: translateY(0);
+  opacity: 1; 
+}
+.slide-leave-from { 
+  transform: translateY(10);
+  opacity: 1; 
+}
+
+// button animation
+.tfhb-icon-transition-enter-active,
+.tfhb-icon-transition-leave-active {
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.tfhb-icon-transition-enter, 
+.tfhb-icon-transition-leave-to /* .leave-active in <2.1.8 */ {
+  
+  // transform wit transition
+  transform: scale(0.98);
+  opacity: 0.95;
+
+}
+
+// tfhb-fade-left animation
+
+.tfhb-fade-left-enter-active {
+  transition: opacity .8s ease, transform 1.2s ease;
+}
+.tfhb-fade-left-enter-from {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity .3s ease, transform .5s ease;
+
+}
+.tfhb-fade-left-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity .8s ease, transform .7s ease;
+}
+
+// tfhb-fade-right animation  
+.tfhb-fade-right-enter-active {
+  transition: opacity .8s ease, transform 1.2s ease;
+}
+.tfhb-fade-right-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity .3s ease, transform .5s ease;
+}
+.tfhb-fade-right-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity .8s ease, transform 1.2s ease;
+}
