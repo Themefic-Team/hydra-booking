@@ -8,10 +8,19 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Git ignore src
-# src
-# sass
+src
+sass
+.vite
 # vendor
 
+# Git ignore file name:
+composer.lock
+index.html
+jsconfig.json
+package-lock.json
+package.json
+phpcs.xml
+vite.config.js
 
 node_modules
 .DS_Store
