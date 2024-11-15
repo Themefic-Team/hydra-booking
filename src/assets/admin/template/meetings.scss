@@ -350,6 +350,11 @@
                     padding-left: 22px;
                 }
             }
+            .thb-admin-btn{
+                button{
+                    flex-wrap: nowrap !important;
+                }
+            }
             
         }
         .meeting-create-details{
