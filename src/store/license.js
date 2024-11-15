@@ -72,6 +72,7 @@ const LicenseBase = reactive({
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
+                 this.skeleton = false;
             }
         } catch (error) {
 

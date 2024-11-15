@@ -66,6 +66,15 @@ const updateLicense = async (validator_field) => {
         return
     }
 
+    // if LicenseBase.license_email is not email address then return
+    if(LicenseBase.license_email && !LicenseBase.license_email.includes('@')){
+        toast.error(' Please enter a valid email address', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return
+    }
+   
 
     LicenseBase.UpdateLicense();
 }
@@ -232,6 +241,7 @@ const deactivateLicense = async () => {
                 <HbText  
                     v-model="LicenseBase.license_email"  
                     required= "true"  
+                    type="email"
                     :label="__(' License Email ', 'hydra-booking')"  
                     :description="__('Please enter the email address you used for purchasing the plugin.', 'hydra-booking')"
                     name="license_email"
