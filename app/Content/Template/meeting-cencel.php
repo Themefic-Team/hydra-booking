@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */
-wp_head();
+get_header();
 
 global $wp_query;
 
@@ -109,11 +109,11 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 					</div> 
 
 					<div class="tfhb-confirmation-button tfhb-flexbox tfhb-gap-8">
-						<button class="tfhb-flexbox tfhb-gap-8">
+				 
+						<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
 							<?php echo esc_attr( 'Back' ); ?>
-							<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
-						</button>
-						<button class="tfhb-flexbox tfhb-gap-8">
+						 </button>
+						<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
 							<?php echo esc_attr( 'Cancel Booking' ); ?>
 							<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
 						</button>
@@ -131,5 +131,5 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 
 
 
-wp_footer();
+get_footer();
 

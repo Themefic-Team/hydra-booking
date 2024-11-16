@@ -1,5 +1,5 @@
 <?php
-wp_head();
+get_header();
 
 global $wp_query;
 
@@ -17,4 +17,4 @@ if ( isset( $wp_query->query_vars['hydra-booking'] ) ) {
 	}
 }
 
-wp_footer();
+get_footer();
