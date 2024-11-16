@@ -4,7 +4,7 @@ Tags: Booking Plugin, hydra booking, booking form, ultimate booking form
 Requires at least: 5.4
 Tested up to: 6.6
 Requires PHP: 7.4  
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPL-2.0+  
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -114,6 +114,13 @@ A: Yes, HydraBooking allows host assignments with specific roles and permissions
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.4 - 16/11/2024 =  
+- Enhancements: Improved overall design and responsiveness for a smoother user experience.
+- Fixed: Resolved design issues with the question fields.
+- Fixed: Fixed recurring meeting email notification functionality.
+- Added: Pro license control introduced for better management of premium features.
+- Added: Integrations for Fluent CRM, Zoho CRM, WebHook, and Stripe (Pro version).
 
 = 1.0.3 - 13/11/2024 =  
 - Fixed: Compatibility issue with block themes
