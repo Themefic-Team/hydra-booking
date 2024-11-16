@@ -134,7 +134,7 @@
 			});
 
 			// Select Date 
-            $this.find('.tfhb-calendar-dates li').on('click', function (e) {
+            $($this).on('click', '.tfhb-calendar-dates li', function (e) {  
 				var $this_li = $(this);
 				if($this_li.hasClass('inactive')){
 					return false;

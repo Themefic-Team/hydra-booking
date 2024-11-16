@@ -129,7 +129,7 @@ const Meeting = reactive({
                 }
             ],
             meeting_interval: '10',
-            recurring_status: 1,
+            recurring_status: 0,
             recurring_repeat:[
                 {
                     limit: 1,

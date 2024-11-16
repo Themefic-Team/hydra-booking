@@ -19,7 +19,7 @@
         margin: 0 auto; 
         overflow: hidden;
         min-height: 450px;
-        @media #{$max1170}{
+        @media #{$max991}{
             flex-wrap: wrap;
         }
 
@@ -54,15 +54,18 @@
             box-shadow: 0 0px 30px 0px rgba(40, 16, 26, 0.20);
             
             @media #{$max1170}{
-               width: 100%;
-               border-radius: 16px 16px 0 0;
+               width: 220px; 
             }
+            @media #{$max991}{
+                width: 100%; 
+             }
 
             .tfhb-host-info{
                 padding: 38px 16px 16px 16px;
                 border-radius: 16px 0 0 0;
-                @media #{$max1170}{
+                @media #{$max991}{
                     border-radius: 16px 16px 0 0;
+                    width: 100%;
                  }
                 .tfhb-host-profile{
                     img{
@@ -261,7 +264,7 @@
         .tfhb-calander-times{
             position: relative;
             left: 0;
-            @media #{$max1170}{
+            @media #{$max991}{
                 width: 100%;
                 padding: 0px 16px;
                 justify-content: space-between;
@@ -279,15 +282,21 @@
             min-height: 100%;
             box-sizing: border-box;
             @media #{$max1170}{
-                padding: 0 16px 16px 0;
+                // padding: 0 16px 16px 0;
+                width: 500px;
             }
-            @media #{$max767}{
+           
+            @media #{$max991}{
                 width: 100%;
                 padding: 0 0 16px 0;
                 min-height: auto;
             }
             .tfhb-calendar-container {
                 width: 520px;
+                @media #{$max1170}{
+                    width: 480px;
+                }
+                
                 @media #{$max767}{
                     width: 100%;
                 }
@@ -502,11 +511,15 @@
             min-height: 100%;
             box-sizing: border-box;
             @media #{$max1170}{
-                padding: 0 0 16px 0;
-                width: auto !important;
+                // padding: 0 0 16px 0;
+                
+                max-width: 200px;
             }
             @media #{$max991}{
-                width: calc(100% - 536px);
+                padding: 0 0 16px 0;
+                width: auto !important;
+                max-width: auto !important;
+                // width: calc(100% - 536px);
             }
             @media #{$max767}{
                 width: 100%;
@@ -552,13 +565,14 @@
                     li{
                         width: 40px;
                         display: inline-block;
-                        padding: 4px 8px;
                         height: 28px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         box-sizing: border-box;
                         label{
+                            
+                            padding: 4px 8px;
                             color: $text-input;
                             font-size: 11px;
                             font-style: normal;
@@ -666,7 +680,7 @@
             z-index: 9;
             left: -5%;
             opacity: 0;
-            @media #{$max1170}{
+            @media #{$max991}{
                 padding: 0 16px 16px 16px;
                 width: 100% !important;
             }
@@ -706,6 +720,10 @@
                         }
                         input[type="text"],
                         input[type="email"],
+                        input[type="number"],
+                        input[type="tel"],
+                        input[type="date"],
+                        select,
                         textarea{
                             border-radius: 8px;
                             border: 0.5px solid $surface-background;
@@ -841,6 +859,116 @@
                         }
                     }
                 }
+
+                .fluentform{
+                    width: 100%;
+
+                    label{
+                        color: $secondary-default;
+                        font-size: 13px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px; /* 153.846% */
+                        margin: 0 0 4px 0;
+                    }
+                    input[type="text"],
+                    input[type="email"],
+                    input[type="number"],
+                    input[type="tel"],
+                    input[type="date"],
+                    select,
+                    textarea{
+                        border-radius: 8px;
+                        border: 0.5px solid $surface-background;
+                        background: $surface-secondary;
+                        height: 40px;
+                        width: 100%;
+                        padding: 8px 12px;
+                        &:focus{
+                            outline: none;
+                            box-shadow: none;
+                        }
+                    }
+                    textarea{
+                        min-height: 90px;
+                    }
+                    .ff_submit_btn_wrapper{
+                        text-align: right;
+                        button{
+                            border-radius: 8px;
+                            background: $primary-default;
+                            padding: 10px 24px;
+                            color: $surface-secondary;
+                            justify-content: center;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 24px; /* 160% */
+                            cursor: pointer;
+                            // width: 224px; 
+                            border: 0px solid;
+                            transition: .3s all ease;
+                            position: relative;
+                            &:hover{
+                                background-color: $primary-hover;
+                            }
+                        }
+                    }
+                }
+
+                .wpcf7{
+                    width: 100% !important;
+
+                    label{
+                        color: $secondary-default;
+                        font-size: 13px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px; /* 153.846% */
+                        margin: 0 0 4px 0;
+                    }
+                    input[type="text"],
+                    input[type="email"],
+                    input[type="number"],
+                    input[type="tel"],
+                    input[type="date"],
+                    select,
+                    textarea{
+                        border-radius: 8px;
+                        border: 0.5px solid $surface-background;
+                        background: $surface-secondary;
+                        height: 40px;
+                        width: 100%;
+                        padding: 8px 12px;
+                        &:focus{
+                            outline: none;
+                            box-shadow: none;
+                        }
+                    }
+                    textarea{
+                        min-height: 90px;
+                    }
+                    .wpcf7-submit{
+                        float: right;
+                        border-radius: 8px;
+                        background: $primary-default;
+                        padding: 10px 24px;
+                        color: $surface-secondary;
+                        justify-content: center;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 24px; /* 160% */
+                        cursor: pointer;
+                        // width: 224px; 
+                        border: 0px solid;
+                        transition: .3s all ease;
+                        position: relative;
+                        &:hover{
+                            background-color: $primary-hover;
+                        }
+                    }
+                }
             }
         }
 
@@ -848,6 +976,11 @@
         .tfhb-meeting-confirmation{
             width: 500px;
             margin: 64px 265px 64px;
+            @media #{$max991}{
+                margin: 16px;
+                padding: 0 16px 16px 16px;
+                width: 100% !important;
+            }
             .tfhb-confirmation-seccess{
                 text-align: center;
                 img{
@@ -897,6 +1030,7 @@
                         padding-bottom: 8px;
                         margin-bottom: 8px;
                         border-bottom: 1px solid rgba(227, 207, 215, 0.10);
+                        align-items: start !important;
                         &:last-child{
                             margin-bottom: 0px;
                             padding-bottom: 0px;
@@ -981,7 +1115,7 @@
     }
 }
 
-#select2-attendee_time_zone-results {
+.select2-results__options {
     // background-color: $surface-border;
     display: flex;
     flex-direction: column;
@@ -1003,6 +1137,12 @@
         color: #273F2B;
         &:hover {
             background-color: $surface-primary;
+            color: #273F2B;
+        }
+
+        &.select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: $surface-primary;
+            color: #273F2B;
         }
     }
 }
