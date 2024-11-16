@@ -27,7 +27,12 @@ const upgradeToPro = () => {
 }
 
 onBeforeMount(async () => {
-    LicenseBase.GetLicense();
+    if( typeof tfhb_core_apps_pro !== 'undefined'){
+
+        LicenseBase.GetLicense();
+    }else{
+        LicenseBase.skeleton = false;
+    }
 });
 
 const updateLicense = async (validator_field) => {

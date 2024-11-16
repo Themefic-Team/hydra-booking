@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */ 
+$atts          = isset( $args['atts'] ) ? $args['atts'] : array();
 $meeting          = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host 		   = isset( $args['host'] ) ? $args['host'] : array();
 $time_zone = isset( $args['time_zone'] ) ? $args['time_zone'] : array();  
@@ -31,7 +32,22 @@ $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
             // Load Reschedule Template
             // You are rescheduling the booking: 3:15 pm - 3:30 pm, May 27, 2024 (Asia/Dhaka)
             echo '<div class="tfhb-reschedule-box">';
-            echo '<p>' . esc_html__( 'You are rescheduling the booking:', 'hydra-booking' ) . ' ' . esc_html( $booking_data->start_time ) . ' - ' . esc_html( $booking_data->end_time ) . ', ' . esc_html( gmdate( 'F j, Y', strtotime( $booking_data->meeting_dates ) ) ) . ' (' . esc_html( $booking_data->attendee_time_zone ) . ')</p>';
+            echo '<p>' . esc_html__( 'You are rescheduling the booking:', 'hydra-booking' ) . ' ' . esc_html( $booking_data->start_time ) . ' - ' . esc_html( $booking_data->end_time ) . ', ';
+
+            $meeting_dates = explode( ',', $booking_data->meeting_dates );
+   
+
+            $date_strings = '';
+                foreach ( $meeting_dates as $key => $date ) {
+
+                    $date_strings .= gmdate( 'l, F j', strtotime( $date ) );
+                    $date_strings .= '| ';
+                } 
+                $date_strings = rtrim( $date_strings, '| ' );
+
+                echo  $date_strings;
+              
+             echo ' (' . esc_html( $booking_data->attendee_time_zone ) . ')</p>';
             echo '</div>';
 
         }

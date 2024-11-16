@@ -22,6 +22,11 @@
     flex-wrap: wrap;
   }
 }
+@media only screen and (max-width: 570px) {
+  .tfhb-meeting-box .tfhb-meeting-card, .tfhb-booking-cencel .tfhb-meeting-card {
+    width: 100%;
+  }
+}
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info {
   width: 322px;
   z-index: 11;
@@ -497,13 +502,14 @@
 @media only screen and (max-width: 991px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times {
     padding: 0 0 16px 0;
-    width: auto !important;
-    max-width: auto !important;
+    width: 100%;
+    max-width: auto;
   }
 }
 @media only screen and (max-width: 767px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs-warp, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-timezone-tabs-warp {
@@ -1117,6 +1123,11 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action {
   justify-content: center;
   margin-top: 24px;
+}
+@media only screen and (max-width: 570px) {
+  .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action {
+    flex-wrap: wrap;
+  }
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action button, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action a, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action button, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-confirmation-action a {
   border-radius: 8px;

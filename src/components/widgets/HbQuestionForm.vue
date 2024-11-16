@@ -89,9 +89,7 @@ const UpdateQuestionsData = async (validator_field) => {
             {name: 'Checkbox', value: 'checkbox'}, 
             {name: 'Date', value: 'date'}
         ]"
-        name="type"
-        @keyup="() => tfhbValidateInput('type')"
-        @click="() => tfhbValidateInput('type')"
+        name="type" 
         :errors="errors.type"
     />
 
@@ -100,18 +98,14 @@ const UpdateQuestionsData = async (validator_field) => {
         required= "true"  
         :label="__('Label', 'hydra-booking')"  
         :placeholder="__('Enter field Label', 'hydra-booking')" 
-        name="type"
-        @keyup="() => tfhbValidateInput('label')"
-        @click="() => tfhbValidateInput('label')"
+        name="type" 
         :errors="errors.label"
     /> 
     <HbText  
         v-model="questions_data.placeholder"
         required= "true"  
         :label="__('Placeholder', 'hydra-booking')"  
-        :placeholder="__('Enter field placeholder ', 'hydra-booking')" 
-        @keyup="() => tfhbValidateInput('placeholder')"
-        @click="() => tfhbValidateInput('placeholder')"
+        :placeholder="__('Enter field placeholder ', 'hydra-booking')"  
         :errors="errors.placeholder"
     /> 
 

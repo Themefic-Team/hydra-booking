@@ -129,6 +129,7 @@ class HydraBookingShortcode {
 				'time_zone'    => $time_zone,
 				'booking_data' => $booking_data,
 				'general_settings' => $general_settings,
+				'atts' => $atts,
 			)
 		);
 		// Return Buffer
