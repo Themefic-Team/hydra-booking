@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Hydra Booking
- * Plugin URI: https://themefic.com/hydra-booking
+ * Plugin URI: https://hydrabooking.com/
  * Description: Create a booking / Appointment Form using Contact Form 7. You can insert Calendar, Time on the form and manage your booking. User can pay using WooCommerce.
  * Version: 1.0.3
  * Author: Themefic
@@ -42,6 +42,9 @@ class THB_INIT {
 
 		add_action( 'init', array( $this, 'init' ) ); 
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
+
+		// Load Appsero Tracker
+		$this->tfhb_appsero_init_tracker_hydra_booking();
 		
 	}
 
@@ -79,6 +82,25 @@ class THB_INIT {
 	public function tfhb_hide_notices() {
 		remove_all_actions( 'user_admin_notices' );
 		remove_all_actions( 'admin_notices' );
+	}
+
+
+	/**
+	 * Initialize the plugin tracker
+	 *
+	 * @return void
+	 */
+	function tfhb_appsero_init_tracker_hydra_booking() {
+
+		if ( ! class_exists( 'Appsero\Client' ) ) {
+		require_once __DIR__ . '/appsero/src/Client.php';
+		}
+
+		$client = new Appsero\Client( '685ed86d-9a98-46e2-9f07-79206f5fd69b', 'Hydra Booking &#8211; All-in-One Appointment Management Solution', __FILE__ );
+
+		// Active insights
+		$client->insights()->init();
+
 	}
 
 

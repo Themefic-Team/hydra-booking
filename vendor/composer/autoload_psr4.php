@@ -13,4 +13,5 @@ return array(
     'HydraBooking\\DB\\' => array($baseDir . '/includes/database'),
     'HydraBooking\\App\\' => array($baseDir . '/app'),
     'HydraBooking\\Admin\\' => array($baseDir . '/admin'),
+    'Appsero\\' => array($vendorDir . '/appsero/client/src'),
 );
