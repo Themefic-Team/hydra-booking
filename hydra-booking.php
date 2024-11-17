@@ -43,10 +43,13 @@ class THB_INIT {
 		add_action( 'init', array( $this, 'init' ) ); 
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
 		
+		add_action('plugins_loaded', 'tfhb_load_textdomain');
 	}
-
-
+	function tfhb_load_textdomain() {
+		load_plugin_textdomain('hydra-booking', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+	}
 	public function init() {
+ 
 		new HydraBooking\Admin\Controller\ScheduleController();
 
 		// Post Type

@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Hydra Booking 1.0.0\n"
+"Project-Id-Version: Hydra Booking 1.0.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/hydra-booking\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-17T05:38:07+00:00\n"
+"POT-Creation-Date: 2024-11-17T09:13:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: hydra-booking\n"
@@ -71,8 +71,21 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: admin/Controller/HostsController.php:180
+#: admin/Controller/AuthController.php:85
+msgid "<strong>ERROR</strong>: Your account is disabled by Admin!"
+msgstr ""
+
+#: admin/Controller/HostsController.php:181
 msgid "Create new user"
+msgstr ""
+
+#: admin/Controller/ScheduleController.php:44
+#: admin/Controller/ScheduleController.php:50
+msgid "Hydra After booking Completed"
+msgstr ""
+
+#: app/Content/calendar.php:35
+msgid "You are rescheduling the booking:"
 msgstr ""
 
 #: app/Content/Template/meeting-cencel.php:30
@@ -80,7 +93,7 @@ msgid "Your meeting has been "
 msgstr ""
 
 #: app/Content/Template/meeting-cencel.php:103
-#: app/Content/Template/meeting-form.php:133
+#: app/Content/Template/meeting-form.php:148
 msgid "Reason for Reschedule"
 msgstr ""
 
@@ -88,20 +101,16 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: app/Content/Template/meeting-times.php:53
+#: app/Content/Template/meeting-times.php:65
 msgid "12h"
 msgstr ""
 
-#: app/Content/Template/meeting-times.php:58
+#: app/Content/Template/meeting-times.php:70
 msgid "24h"
 msgstr ""
 
-#: app/Content/Template/meeting-times.php:78
+#: app/Content/Template/meeting-times.php:90
 msgid "No time slots are currently available."
-msgstr ""
-
-#: app/Shortcode/HydraBookingShortcode.php:135
-msgid "You are rescheduling the booking:"
 msgstr ""
 
 #: includes/post-type/Post_Type.php:39
