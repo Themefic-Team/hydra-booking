@@ -426,11 +426,12 @@ class MailHooks {
 	
 		// Full start end time with timezone for host
 		$dateTime = new DateTimeController( 'UTC' );
+		$metting_dates = explode(',', $booking_data->meeting_dates);
 		if($booking_data->host_time_zone != ''){
-			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone,  $booking_data->meeting_dates, 'full' );  
+			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone,  $metting_dates[0], 'full' );  
 			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
 
-			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone,  $booking_data->meeting_dates, 'start' );
+			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $booking_data->start_time, $booking_data->end_time, $booking_data->attendee_time_zone, $booking_data->host_time_zone,  $metting_dates[0], 'start' );
 			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
 		}else{
 			$replacements['{{booking.full_start_end_host_timezone}}'] = $booking_data->start_time.' - '.$booking_data->end_time.' ('.$booking_data->attendee_time_zone.')';

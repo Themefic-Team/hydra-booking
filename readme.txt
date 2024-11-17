@@ -1,18 +1,23 @@
 === Hydra Booking - All-in-One Appointment Management Solution ===  
-Contributors: themefic, hasanet, mdrejon, kamrul07  
+Contributors: themefic, hasanet, mdrejon, kamrul0424 
 Tags: Booking Plugin, hydra booking, booking form, ultimate booking form  
-Requires at least: 4.2  
-Tested up to: 6.4  
+Requires at least: 5.4
+Tested up to: 6.6
 Requires PHP: 7.4  
-Stable tag: 1.0.2  
+Stable tag: 1.0.3
 License: GPL-2.0+  
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
-Hydra Booking is a powerful and flexible WordPress plugin designed to simplify the booking and appointment scheduling process for businesses of all types. Whether you run a spa, salon, medical practice, or any service-oriented business, Hydra Booking empowers you to manage your appointments seamlessly, providing a streamlined experience for both you and your clients.
+Hydra Booking is a powerful and flexible WordPress plugin designed to simplify the booking and appointment scheduling process for businesses of all types.
 
 == Description ==
 
-**Hydra Booking** is crafted to make scheduling easy, efficient, and fully customizable to meet the unique needs of each business. The plugin comes loaded with features that cater to both small businesses and larger service-oriented teams, offering flexibility and advanced scheduling options that enhance both your workflow and your clients' booking experience.
+**Hydra Booking** is crafted to make scheduling easy, efficient, and fully customizable to meet the unique needs of each business. 
+
+👉 Our Official Website: [Click Here](https://hydrabooking.com/)
+👉 Buy Pro Version: [Click Here](https://hydrabooking.com/#pricing)
+👉 Our [Documentation](https://themefic.com/docs/hydrabooking/)
+
 
 ### Key Features
 
@@ -73,10 +78,11 @@ Hydra Booking is a powerful and flexible WordPress plugin designed to simplify t
 
 == Installation ==
 
-1. Download the plugin ZIP file from the WordPress Plugin Directory or your account if purchased directly.
-2. In your WordPress dashboard, go to Plugins > Add New and click "Upload Plugin."
-3. Select the ZIP file and click "Install Now."
-4. Once installed, click "Activate" to start using HydraBooking.
+1. Download and Extract: Download the plugin and unzip the folder.
+2. Upload to WordPress: Upload the unzipped folder to the wp-content/plugins directory of your WordPress installation.
+3. Go to your WordPress admin panel, navigate to Plugins, and activate Hydra Booking.
+4. Alternatively, go to Plugins > Add New. In the search bar, type Hydra Booking, then install and activate the plugin.
+5. Quick Setup Wizard: Complete the Quick Setup wizard to configure essential settings and start using Hydra Booking.
 
 == Frequently Asked Questions ==
 
@@ -109,6 +115,11 @@ A: Yes, HydraBooking allows host assignments with specific roles and permissions
 
 == Changelog ==
 
+= 1.0.3 - 13/11/2024 =  
+- Fixed: Compatibility issue with block themes
+- Fixed: Time zone handling corrected 
+- Improved: System stability enhanced for more reliable performance.
+
 = 1.0.2 - 11/11/2024 =  
 - Screenshots Updated
 
@@ -121,9 +132,8 @@ A: Yes, HydraBooking allows host assignments with specific roles and permissions
 == Upgrade Notice ==
 
 = 1.0.0 =  
-First official release. Upgrade recommended for access to all initial features.
+First official release. An upgrade is recommended for access to all initial features.
 
 == License ==
 
 This plugin is licensed under the GPL-2.0+ License, meaning it is open-source and free to use, modify, and distribute with the appropriate credit to the original developers. [Learn more about the GPL-2.0+ license](http://www.gnu.org/licenses/gpl-2.0.txt).
-

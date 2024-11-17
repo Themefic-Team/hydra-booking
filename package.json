@@ -1,0 +1,37 @@
+{
+  "name": "vue",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "watch:scss": "sass --watch sass/global.scss:assets/app/css/style.css"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.14",
+    "@fullcalendar/daygrid": "^6.1.14",
+    "@fullcalendar/interaction": "^6.1.14",
+    "@fullcalendar/timegrid": "^6.1.14",
+    "@fullcalendar/vue3": "^6.1.14",
+    "@wordpress/i18n": "^5.7.0",
+    "axios": "^1.6.5",
+    "chart.js": "^4.4.2",
+    "lightvue": "^1.5.1",
+    "lucide-vue-next": "^0.323.0",
+    "papaparse": "^5.4.1",
+    "primevue": "^3.50.0",
+    "quill": "^1.3.7",
+    "vue": "^3.3.11",
+    "vue-flatpickr-component": "^11.0.5",
+    "vue-router": "^4.2.5",
+    "vue3-loading-skeleton": "^0.0.13",
+    "vue3-toastify": "^0.2.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.6.2",
+    "sass": "^1.70.0",
+    "vite": "^5.0.10"
+  }
+}

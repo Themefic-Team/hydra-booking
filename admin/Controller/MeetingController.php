@@ -816,6 +816,9 @@ class MeetingController {
 		$woo_commerce = new WooBooking();
 		$wc_product   = $woo_commerce->getAllProductList();
 
+		// Webhook status
+		$setting_webhook = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
+
 		// google  Meeting 
 		$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
 		
@@ -866,11 +869,16 @@ class MeetingController {
 
 		// FluentCRM
 		$fluentcrm_Data = array();
-		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'fluent-crm/fluent-crm.php' ) ) {
-			$fluentcrm_Data['status'] = false;
-
-		} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
-			$fluentcrm_Data['status'] = false;
+		if(!empty($integrations['fluent_crm_status'])){
+			if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'fluent-crm/fluent-crm.php' ) ) {
+				$fluentcrm_Data['status'] = false;
+				$fluentcrm_Data['error_msg'] = 'Install and activate the Fluent CRM plugin.';
+			} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
+				$fluentcrm_Data['status'] = false;
+				$fluentcrm_Data['error_msg'] = 'Activate the Fluent CRM plugin.';
+			}else{
+				$fluentcrm_Data['status'] = true;
+			}
 		} else {
 			$fluentcrm_Data['status'] = false;
 		}

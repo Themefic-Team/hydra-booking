@@ -8,8 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Git ignore src
-src
-sass
+# src
+# sass
 # vendor
 
 
@@ -24,6 +24,7 @@ coverage
 
 # Editor directories and files 
 .vscode/*
+.vite/*
 !.vscode/extensions.json
 .idea
 *.suo

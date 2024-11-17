@@ -5,8 +5,7 @@ namespace HydraBooking\Admin\Controller;
 use HydraBooking\Admin\Controller\AuthController;
 
 	// exit
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class Enqueue {
 
@@ -40,6 +39,8 @@ class Enqueue {
 
 		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
  
+		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
+
 		//  Build the core script
 		wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
 		wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');

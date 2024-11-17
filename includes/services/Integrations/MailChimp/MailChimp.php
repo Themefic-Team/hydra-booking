@@ -7,7 +7,7 @@ class MailChimp {
 	public function __construct() {
 		add_action( 'hydra_booking/after_booking_completed', array( $this, 'integrationsBookingToCompleted' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'integrationsBookingToCanceled' ), 10, 1 );
-		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'integrationsBookingToConfirmed' ), 10, 1 );
+		add_action( 'hydra_booking/after_booking_complete', array( $this, 'integrationsBookingToConfirmed' ), 10, 1 );
 	}
 
 	// If booking Completed
