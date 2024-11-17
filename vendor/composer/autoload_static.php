@@ -17,6 +17,10 @@ class ComposerStaticInit0197feaf203ba9066547b49c483e4944
             'HydraBooking\\App\\' => 17,
             'HydraBooking\\Admin\\' => 19,
         ),
+        'A' => 
+        array (
+            'Appsero\\' => 8,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -47,6 +51,10 @@ class ComposerStaticInit0197feaf203ba9066547b49c483e4944
         'HydraBooking\\Admin\\' => 
         array (
             0 => __DIR__ . '/../..' . '/admin',
+        ),
+        'Appsero\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/appsero/client/src',
         ),
     );
 
