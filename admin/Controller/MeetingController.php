@@ -481,6 +481,7 @@ class MeetingController {
 			'webhook'  => ! empty( $request['webhook'] ) ? $request['webhook'] : '',
 			'bodys'    => ! empty( $request['bodys'] ) ? $request['bodys'] : '',
 			'events'   => ! empty( $request['events'] ) ? $request['events'] : '',
+			'url'      => ! empty( $request['url'] ) ? $request['url'] : '',
 			'audience' => 'Mailchimp' == $request['webhook'] && ! empty( $request['audience'] ) ? $request['audience'] : '',
 			'tags'     => 'FluentCRM' == $request['webhook'] && ! empty( $request['tags'] ) ? $request['tags'] : '',
 			'lists'    => 'FluentCRM' == $request['webhook'] && ! empty( $request['lists'] ) ? $request['lists'] : '',
@@ -831,6 +832,8 @@ class MeetingController {
 		$integrations['webhook_status'] = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
 		$integrations['fluent_crm_status'] = isset( $_tfhb_integration_settings['fluent_crm']['status'] ) ? $_tfhb_integration_settings['fluent_crm']['status'] : 0;
 		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
+		$integrations['pabbly_status'] = isset( $_tfhb_integration_settings['pabbly']['status'] ) ? $_tfhb_integration_settings['pabbly']['status'] : 0;
+		$integrations['zapier_status'] = isset( $_tfhb_integration_settings['zapier']['status'] ) ? $_tfhb_integration_settings['zapier']['status'] : 0;
 		 
 
 		// Meeting Category

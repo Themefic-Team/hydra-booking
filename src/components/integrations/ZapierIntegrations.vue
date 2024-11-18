@@ -9,11 +9,10 @@ import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 const props = defineProps([
     'class', 
     'display', 
-    'zoho_crm_data', 
+    'zapier_data', 
     'ispopup'
 ])
 const emit = defineEmits([ "update-integrations" ]); 
-
 
 </script>
 
@@ -28,17 +27,17 @@ const emit = defineEmits([ "update-integrations" ]);
            
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
-                <img :src="$tfhb_url+'/assets/images/zoho.png'" alt="">
+                <img :src="$tfhb_url+'/assets/images/zapier.svg'" alt="">
             </span> 
 
 
             <div class="cartbox-text">
-                <h3>{{ __('Zoho CRM', 'hydra-booking') }}</h3>
-                <p>{{ __('Implement Zoho CRM for comprehensive sales and marketing automation.', 'hydra-booking') }}</p>
+                <h3>{{ __('Zapier', 'hydra-booking') }}</h3>
+                <p>{{ __('Implement Zapier for comprehensive sales and marketing automation.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <HbSwitch v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true"  @change="emit('update-integrations', 'zoho_crm', zoho_crm_data)" v-model="zoho_crm_data.status"    />
+            <HbSwitch v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true"  @change="emit('update-integrations', 'zapier', zapier_data)" v-model="zapier_data.status"    />
             <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>

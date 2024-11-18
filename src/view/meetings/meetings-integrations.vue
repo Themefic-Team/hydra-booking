@@ -47,7 +47,7 @@ onBeforeMount(() => {
     <!-- Integrations  -->
     <div class="tfhb-meeting-integrations-wrap tfhb-full-width tfhb-flexbox tfhb-gap-16 ">
 
-        <Integrations :IntegrationsValue="IntegrationsValue" :meeting="meeting" />
+        <Integrations :IntegrationsValue="IntegrationsValue" :meeting="meeting" :integrations="integrations" />
 
     </div>
 

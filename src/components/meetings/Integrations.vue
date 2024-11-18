@@ -12,6 +12,7 @@ import axios from 'axios'
 const props = defineProps([
     'IntegrationsValue',  
     'meeting',  
+    'integrations'
 ])
 const router = useRouter();
 const selecte_integrations = ref('')
@@ -25,6 +26,12 @@ const changeIntegrations = (value) => {
         return;
     }
     if(value == 'ZohoCRM' && !props.meeting.zohocrm.status == true){
+        return;
+    }
+    if(value == 'Pabbly' && !props.integrations.pabbly_status == true){
+        return;
+    }
+    if(value == 'Zapier' && !props.integrations.zapier_status == true){
         return;
     }
     
@@ -114,6 +121,15 @@ const moduleFields = async (e) => {
                 width="50"
             /> 
 
+            <HbText  
+                v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
+                v-model="props.IntegrationsValue.integrationsData.url"
+                required= "true"  
+                :label="__('URL', 'hydra-booking')"  
+                :placeholder="__('Type your URL', 'hydra-booking')" 
+                width="50"
+            /> 
+
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsData.webhook=='Mailchimp'"
                 v-model="props.IntegrationsValue.integrationsData.audience"
@@ -174,7 +190,16 @@ const moduleFields = async (e) => {
                 <p>{{ __('Other Fields', 'hydra-booking') }}</p>
                 <div class="tfhb-flexbox" v-for="(body, key) in props.IntegrationsValue.integrationsData.bodys">
                     <div class="tfhb-request-header-fields tfhb-flexbox">
+                        <HbText  
+                            v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
+                            v-model="body.name"
+                            required= "true"  
+                            selected = "1"
+                            :placeholder="__('Enter Name', 'hydra-booking')" 
+                            width="50"
+                        />
                         <HbDropdown  
+                            v-if="props.IntegrationsValue.integrationsData.webhook!='Pabbly' && props.IntegrationsValue.integrationsData.webhook!='Zapier'"
                             v-model="body.name"
                             required= "true"    
                             width="50"
@@ -243,7 +268,7 @@ const moduleFields = async (e) => {
                 <Icon name="PlusCircle" :width="20"/>
                 {{ __('Add New Integrations', 'hydra-booking') }}
             </button>
-            
+
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsListopen"
                 v-model="selecte_integrations"
@@ -256,6 +281,8 @@ const moduleFields = async (e) => {
                     {name: 'Mailchimp', value: 'Mailchimp', icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
                     {name: 'FluentCRM', value: 'FluentCRM', icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
                     {name: 'ZohoCRM', value: 'ZohoCRM', icon: $tfhb_url+'/assets/images/Zoho.svg',},
+                    {name: 'Pabbly', value: 'Pabbly', icon: $tfhb_url+'/assets/images/pabbly-small.svg',},
+                    {name: 'Zapier', value: 'Zapier', icon: $tfhb_url+'/assets/images/zapier-small.png',},
                 ]"
                 @tfhb-onchange="changeIntegrations"
             /> 
@@ -276,6 +303,21 @@ const moduleFields = async (e) => {
                 />  
             </div>
             <div  v-if="selecte_integrations == 'ZohoCRM' && !props.meeting.zohocrm.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">ZohoCRM is not connected. 
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div>
+           
+            <div  v-if="selecte_integrations == 'Pabbly' && !props.integrations.pabbly_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Pabbly is not connected. 
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div>
+            <div  v-if="selecte_integrations == 'Zapier' && !props.integrations.zapier_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Zapier is not connected. 
                 <HbButton 
                     classValue="tfhb-btn flex-btn" 
                     @click="() => router.push({ name: 'SettingsAntegrations' })" 

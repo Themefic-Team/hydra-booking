@@ -27,6 +27,8 @@ const integrations = reactive({
     gravity_status : 1,
     fluent_crm_status : 1,
     zoho_status : 1,
+    pabbly_status : 1,
+    zapier_status : 1,
 });
 const formsList = reactive({});
 
@@ -368,6 +370,8 @@ const fetchMeeting = async () => {
             integrations.webhook_status = response.data.integrations.webhook_status;
             integrations.fluent_crm_status = response.data.integrations.fluent_crm_status && response.data.integrations.fluent_crm_status == 1  ? false : true;  
             integrations.zoho_crm_status = response.data.integrations.zoho_crm_status && response.data.integrations.zoho_crm_status == 1  ? false : true;  
+            integrations.pabbly_status = response.data.integrations.pabbly_status && response.data.integrations.pabbly_status == 1  ? true : false;
+            integrations.zapier_status = response.data.integrations.zapier_status && response.data.integrations.zapier_status == 1  ? true : false;
 
             wcProduct.value = response.data.wc_product;  
             formsList.value = response.data.formsList;  
