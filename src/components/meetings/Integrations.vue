@@ -8,6 +8,7 @@ import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbRadio from '@/components/form-fields/HbRadio.vue';
 import axios from 'axios'  
 const props = defineProps([
     'IntegrationsValue',  
@@ -69,7 +70,7 @@ const moduleFields = async (e) => {
 <template> 
     <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
         <div class="tfhb-admin-title tfhb-m-0">
-            <h2>{{ __('Mailchimp, FluentCRM & Zoho Integration ', 'hydra-booking') }}</h2> 
+            <h2>{{ __('Integration ', 'hydra-booking') }}</h2> 
             <p>{{ __('Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.', 'hydra-booking') }}</p>
         </div>
     </div>
@@ -186,12 +187,24 @@ const moduleFields = async (e) => {
                 :options="['Booking Confirmed', 'Booking Canceled', 'Booking Completed']" 
             />
 
-            <div class="tfhb-headers tfhb-full-width">
+            <HbRadio 
+                v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
+                required= "true"
+                v-model="props.IntegrationsValue.integrationsData.request_body"
+                name="request_body"
+                :label="__('Request Body', 'hydra-booking')"
+                :groups="true"
+                :options="[
+                    {'label': 'All Data', 'value': 'all'}, 
+                    {'label': 'Selected Data', 'value': 'selected'}
+                ]" 
+            />
+
+            <div class="tfhb-headers tfhb-full-width" v-if="'selected'==props.IntegrationsValue.integrationsData.request_body && (props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier') ">
                 <p>{{ __('Other Fields', 'hydra-booking') }}</p>
                 <div class="tfhb-flexbox" v-for="(body, key) in props.IntegrationsValue.integrationsData.bodys">
                     <div class="tfhb-request-header-fields tfhb-flexbox">
                         <HbText  
-                            v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
                             v-model="body.name"
                             required= "true"  
                             selected = "1"
@@ -199,7 +212,56 @@ const moduleFields = async (e) => {
                             width="50"
                         />
                         <HbDropdown  
-                            v-if="props.IntegrationsValue.integrationsData.webhook!='Pabbly' && props.IntegrationsValue.integrationsData.webhook!='Zapier'"
+                            v-show="body.type!='tfhb_ct'"
+                            v-model="body.type"
+                            required= "true"  
+                            width="50"
+                            selected = "1"
+                            :placeholder="__('Enter Value', 'hydra-booking')" 
+                            :option = "[
+                                {'name': '{{attendee.full_name}}', 'value': 'attendee_name'}, 
+                                {'name': '{{attendee.email}}', 'value': 'email'},
+                                {'name': '{{attendee.timezone}}', 'value': 'timezone'},
+                                {'name': '{{attendee.address}}', 'value': 'address'},
+                                {'name': '{{booking.meeting_date}}', 'value': 'meeting_date'},
+                                {'name': '{{booking.start_time}}', 'value': 'start_time'},
+                                {'name': '{{booking.end_time}}', 'value': 'end_time'},
+                                {'name': '{{booking.duration}}', 'value': 'duration'},
+                                {'name': '{{booking.hash}}', 'value': 'hash'},
+                                {'name': '{{host.name}}', 'value': 'host_name'},
+                                {'name': '{{host.email}}', 'value': 'host_email'},
+                                {'name': '{{host.timezone}}', 'value': 'host_timezone'},
+                                {'name': 'Custom', 'value': 'tfhb_ct'},
+                            ]"
+                            @tfhb_body_value_change="BodyValues"
+                            :single_key = "key"
+                        />
+                        <HbText  
+                            v-show="body.type=='tfhb_ct'"
+                            v-model="body.value"
+                            required= "true"   
+                            selected = "1"
+                            :placeholder="__('Enter Value', 'hydra-booking')" 
+                            width="50"
+                        /> 
+                    </div>
+                    <div class="request-actions">
+                        <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.addBodyField" v-if="key == 0">
+                            <Icon name="Plus" size=20 /> 
+                        </button> 
+                        <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.deleteBodyField(key)" v-else>
+                            <Icon name="X" size=20 /> 
+                        </button> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="tfhb-headers tfhb-full-width" v-if="props.IntegrationsValue.integrationsData.webhook!='Pabbly' && props.IntegrationsValue.integrationsData.webhook!='Zapier'">
+                <p>{{ __('Other Fields', 'hydra-booking') }}</p>
+                <div class="tfhb-flexbox" v-for="(body, key) in props.IntegrationsValue.integrationsData.bodys">
+                    <div class="tfhb-request-header-fields tfhb-flexbox">
+
+                        <HbDropdown  
                             v-model="body.name"
                             required= "true"    
                             width="50"

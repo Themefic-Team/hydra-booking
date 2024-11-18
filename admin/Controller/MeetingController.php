@@ -488,6 +488,7 @@ class MeetingController {
 			'modules'  => 'ZohoCRM' == $request['webhook'] && ! empty( $request['modules'] ) ? $request['modules'] : '',
 			'fields'   => ! empty( $request['fields'] ) ? $request['fields'] : '',
 			'status'   => ! empty( $request['status'] ) ? $request['status'] : '',
+			'request_body'   => ! empty( $request['request_body'] ) ? $request['request_body'] : '',
 		);
 
 		if ( $key !== '' && isset( $Integrationsdata[ $key ] ) ) {
