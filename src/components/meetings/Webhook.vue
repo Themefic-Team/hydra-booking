@@ -312,7 +312,7 @@ const enableWebhookIntegrations = () => {
             />
             
             <div class="tfhb-headers tfhb-full-width" v-if="'with'==webhookData.request_header">
-                <p>{{ __('Request Headers', 'hydra-booking') }}'</p>
+                <p>{{ __('Request Headers', 'hydra-booking') }}</p>
                 <div class="tfhb-flexbox" v-for="(header, key) in webhookData.headers">
                     <div class="tfhb-request-header-fields tfhb-flexbox">
                         <HbText  
