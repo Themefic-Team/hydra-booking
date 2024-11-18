@@ -656,6 +656,7 @@
 			const currdate = $this.find(".tfhb-calendar-current-date");
   
 			let calender_data = calenderData;
+			console.log(calender_data);
 			let availability = calender_data.availability;
 			let date_slots = availability.date_slots;  
 			let time_slots = availability.time_slots;   

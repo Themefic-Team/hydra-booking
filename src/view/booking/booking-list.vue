@@ -317,6 +317,32 @@ const deleteItemConfirm = () => {
     selected_items.value = [];
 }
 
+const MakeMeetingLink = (link) => {
+   
+    // link like https://meet.google.com/jpu-oxfr-uuc | https://zoom.us/j/1234567890 
+    // mamake <a href="https://meet.google.com/jpu-oxfr-uuc">https://meet.google.com/jpu-oxfr-uuc</a> | <a href="https://zoom.us/j/1234567890">https://zoom.us/j/1234567890</a>
+    if(link == ''){
+        return link;
+    } 
+    if (typeof link !== 'string') { 
+        return link;
+    }
+    // make array based on | 
+    let links = link.split('|');
+   
+    let linkHtml = '';
+    links.forEach((link) => {
+        
+        let linkParts = link.split(','); 
+        linkHtml += '<a href="'+linkParts+'" target="_blank">'+linkParts+'</a> <br>';
+    });
+    return linkHtml;
+
+
+
+
+}
+
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -554,11 +580,15 @@ const deleteItemConfirm = () => {
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">  
                     <!-- [ { "location": "In Person (Organizer Address)", "address": "Address" }, { "location": "Organizer Phone Number", "address": "9098080" } ]  -->
                     <div v-for=" (address, index) in meeting_address.value" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
-                       <span class="tfhb-flexbox tfhb-gap-8" v-if="address.location == 'zoom'" >
+                       <span class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal" v-if="address.location == 'zoom'" >
                         <Icon name="MapPin" size=20 /> 
-                        Location : {{address.location}} - {{address.address.link}}
+                        Location : {{address.location}} - <div v-html="MakeMeetingLink(address.address.link)"></div>  
                        </span>
-                       <span class="tfhb-flexbox tfhb-gap-8" v-else  >
+                       <span class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal" v-else-if="address.location == 'meet'" >
+                        <Icon name="MapPin" size=20 /> 
+                        Location : {{address.location}} - <div v-html="MakeMeetingLink(address.address)"></div> 
+                       </span>
+                       <span class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal" v-else  >
                         <Icon name="MapPin" size=20 /> 
                         Location : {{address.location}} - {{address.address}}
                        </span>

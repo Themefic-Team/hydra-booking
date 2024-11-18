@@ -133,6 +133,32 @@
 						margin-top: 2px;
 					}
 				}
+
+
+				.tfhb-google-calender-redirection-url {
+
+					position: relative;
+					.tfhb-single-form-field.redirect_url input {
+						padding-right: 125px !important;
+					}
+
+ 
+
+					.tfhb-btn {
+						position: absolute;
+						right: 3px;
+						bottom: 3px;
+						height: 34px;
+						border: none !important;
+						border-radius: 4px !important;
+
+						.tfhb-button-text {
+							line-height: 13px !important;
+  							font-size: 13px !important;
+						}
+
+					}
+				}
 			} 
 		}
 		.tfhb-notification-wrap{

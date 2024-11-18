@@ -26,6 +26,10 @@ const storedOptionData = (data) => {
     let options = [];
     // data suild be array single array
     data.forEach((item, index) => {  
+        // fist item id auto selected
+        if(index == 0 && props.google_calendar.selected_calendar_id == ''){
+            props.google_calendar.selected_calendar_id = item.id;
+        }
         options.push({
             value: item.id,
             label: item.title,
@@ -75,8 +79,7 @@ const storedOptionData = (data) => {
                 <p>
                     {{ __('Enable the calendars you want to check for conflicts to prevent double bookings.', 'hydra-booking') }}
                 </p> 
-                <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-16  tfhb-m-0"  >   
-                  
+                <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-16  tfhb-m-0"  >    
                     <HbRadio 
                         v-model="google_calendar.selected_calendar_id" 
                         :groups="true" 

@@ -88,12 +88,15 @@ class Meeting {
 
 		global $wpdb;
 
+
 		$table_name = $wpdb->prefix . $this->table;
 		// insert meeting
 		$result = $wpdb->insert(
 			$table_name,
 			$request
 		);
+
+ 
 
 		if ( $result === false ) {
 			return false;
@@ -197,13 +200,16 @@ class Meeting {
 			}
 
 			$sql .= " GROUP BY $table_name.id" ;  
+
+			$sql .= " ORDER BY $table_name.id DESC";
+
 			$data = $wpdb->get_results( $sql );
 
 		 
 		} elseif ( ! empty( $user_id ) ) {
 			$data = $wpdb->get_results(
 				$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name
-				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id LEFT JOIN $host_table ON $table_name.host_id = $host_table.id WHERE $table_name.user_id = %s GROUP BY $table_name.id", $user_id )
+				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id LEFT JOIN $host_table ON $table_name.host_id = $host_table.id WHERE $table_name.user_id = %s GROUP BY $table_name.id  ORDER BY $table_name.id DESC", $user_id ) 
 			);
 		} else {
 
@@ -211,7 +217,7 @@ class Meeting {
 				"SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name  FROM $table_name
 				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id
 				LEFT JOIN $host_table ON $table_name.host_id = $host_table.id
-				GROUP BY $table_name.id
+				GROUP BY $table_name.id  ORDER BY $table_name.id DESC
 				"
 			);
 		}
@@ -222,6 +228,21 @@ class Meeting {
 
 		return $data;
 	}
+
+	/**
+	 * Get with ID
+	 */
+
+	 public function getWithID( $id ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table; 
+
+		$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s", $id ) );
+
+		return $data;
+	 }
+
 
 	/**
 	 * Get all  meeting Data. with total booking count also host id

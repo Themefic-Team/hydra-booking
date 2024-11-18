@@ -118,6 +118,7 @@ onMounted(() => {
 
 <template> 
     <div class="meeting-create-details tfhb-gap-24">
+        
         <HbText  
             v-model="meeting.title" 
             required= "true"  
