@@ -8,6 +8,7 @@ const Meeting = reactive({
     pre_loader_group: false,
     isModalOpened: false,
     time_zone: {},
+    currency_list: {},
     meetingCategory: [],
     meetingPaymentIntegration: {
         woo_payment: true,
@@ -408,7 +409,7 @@ const Meeting = reactive({
 
      // Meeting List
      async fetchMeetingsPaymentIntegration() {
-
+        this.skeleton = true;
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/payment/payment-method', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
@@ -417,7 +418,11 @@ const Meeting = reactive({
         } );
 
         if (response.data.status) {  
+            this.skeleton = false;
             this.meetingPaymentIntegration = response.data.integrations;
+
+
+            this.currency_list = response.data.currency_list;
         }
 
     },

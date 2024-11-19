@@ -1058,8 +1058,9 @@ class MeetingController {
 
 		// if Payment Methood is woo_payment
 		if ( 'woo_payment' == $data['payment_method'] ) {
-			$products              = wc_get_product( $data['payment_meta']['product_id'] );
+			$products              = wc_get_product( $data['payment_meta']['product_id'] ); 
 			$data['meeting_price'] = $products->price;
+			$data['payment_currency'] = get_woocommerce_currency();
 
 		}
 
@@ -1501,11 +1502,14 @@ class MeetingController {
 		$integrations['paypal'] = isset( $_tfhb_integration_settings['paypal']['status'] ) && !empty($_tfhb_integration_settings['paypal']['client_id'] ) && $_tfhb_integration_settings['paypal']['status'] == true ? false : true;
 		$integrations['stripe'] = isset( $_tfhb_integration_settings['stripe']['status'] ) && !empty($_tfhb_integration_settings['stripe']['public_key'] ) && $_tfhb_integration_settings['stripe']['status'] == true ? false : true;
 		
+		$country = new CountryController();
+		$currency_list = $country->currency_list();
 
 		$data = array(
 			'status'        => true,
 			'integrations' => $integrations, 
 			'_tfhb_integration_settings' => $_tfhb_integration_settings, 
+			'currency_list' => $currency_list, 
 		);
 		return rest_ensure_response( $data );
 

@@ -165,13 +165,14 @@ class WooBooking {
 			'posts_per_page' => -1,
 		);
 		$products    = new \WP_Query( $args );
+		$currency 	=  get_woocommerce_currency();
 		$productList = array();
 		if ( $products->have_posts() ) {
 			while ( $products->have_posts() ) {
 				$products->the_post();
 				$productList[] = array(
 					'value' => get_the_ID(),
-					'name'  => '[#' . get_the_ID() . '] - ' . get_the_title() . ' - ' . get_post_meta( get_the_ID(), '_price', true ),
+					'name'  => '[#' . get_the_ID() . '] - ' . get_the_title() . ' - ' . get_post_meta( get_the_ID(), '_price', true ) .' ( '.$currency.' )',
 				);
 			}
 		}
