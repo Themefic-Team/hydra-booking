@@ -4,6 +4,7 @@ namespace HydraBooking\Hooks;
 // exit
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
+use HydraBooking\Admin\Controller\HostsController;
 
 class ActionHooks {
 
@@ -18,6 +19,9 @@ class ActionHooks {
 			add_action( 'hydra_booking/after_booking_canceled', array( new GoogleCalendar(), 'deleteGoogleCalender' ), 10, 2 );
 			add_action( 'hydra_booking/after_booking_schedule', array( new GoogleCalendar(), 'UpdateGoogleCalender' ), 10, 2 );
 		}
+
+		// host update email 
+		add_action('profile_update', array(new HostsController(), 'update_host_email'), 10, 2);
 	}
 
  
