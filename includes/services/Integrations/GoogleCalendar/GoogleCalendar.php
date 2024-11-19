@@ -61,9 +61,9 @@ class GoogleCalendar {
 		return get_rest_url() . 'hydra-booking/v1/integration/google-api';
 	}
 	// Set Access Token
-	public function setAccessToken( $host_id ) {
+	public function setAccessToken( $user_id ) {
 
-		$_tfhb_host_integration_settings = is_array( get_user_meta( $host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $host_id, '_tfhb_host_integration_settings', true ) : array();
+		$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 		$accessToken                     = isset( $_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar']['access_token'] ) ? $_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar']['access_token'] : '';
 
 		$this->accessToken = $accessToken;
@@ -95,7 +95,7 @@ class GoogleCalendar {
 
 			try {
 
-				$host_id = $_GET['state'];
+				$user_id = $_GET['state'];
 
 				$data  = $this->GetAccessToken( $_GET['code'] ); 
 				$email = $this->getEmailByIdToken( $data['id_token'] );
@@ -121,14 +121,14 @@ class GoogleCalendar {
 				// remove the Id Token
 				unset( $data['id_token'] );
 
-				$_tfhb_host_integration_settings = is_array( get_user_meta( $host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $host_id, '_tfhb_host_integration_settings', true ) : array();
+				$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 
 				$_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar'] = $data;
 
 				// save to user metadata
-				update_user_meta( $host_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings, true );
+				update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings, true );
 
-				$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $host_id . '/calendars';
+				$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $user_id . '/calendars';
 
 				wp_redirect( $redirect_url );
 				// wp_die();
@@ -142,8 +142,8 @@ class GoogleCalendar {
 
 
 	// if Access token is experired
-	public function refreshToken( $host_id ) {
-		$_tfhb_host_integration_settings = is_array( get_user_meta( $host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $host_id, '_tfhb_host_integration_settings', true ) : array();
+	public function refreshToken( $user_id ) {
+		$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 		$refreshToken                    = isset( $_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar']['refresh_token'] ) ? $_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar']['refresh_token'] : '';
 
 		$url          = $this->refreshTokenUrl;
@@ -169,7 +169,7 @@ class GoogleCalendar {
 
 			$this->accessToken = $body['access_token'];
 		} else {
-			$this->setAccessToken( $host_id );
+			$this->setAccessToken( $user_id );
 		}
 
 		return $body;
@@ -199,8 +199,8 @@ class GoogleCalendar {
 		return json_decode( $body, true );
 	}
 
-	public function GetAccessTokenUrl( $host_id ) {
-		return $this->authUrl . '?client_id=' . $this->clientId . '&redirect_uri=' . $this->redirectUrl . '&scope=' . $this->authScope . '&response_type=code&access_type=offline&prompt=consent&state=' . $host_id;
+	public function GetAccessTokenUrl( $user_id ) {
+		return $this->authUrl . '?client_id=' . $this->clientId . '&redirect_uri=' . $this->redirectUrl . '&scope=' . $this->authScope . '&response_type=code&access_type=offline&prompt=consent&state=' . $user_id;
 	}
 
 
@@ -253,7 +253,7 @@ class GoogleCalendar {
 
 	// Insert Booking to Google Calendar
 	public function InsertGoogleCalender($data ) {
-	
+		
 		$value = array();
 	
 		if ( ! isset( $data->id ) ) {
@@ -262,13 +262,15 @@ class GoogleCalendar {
 
 		$settings        = get_option( '_tfhb_integration_settings' );
 		$google_calender = isset( $settings['google_calendar'] ) ? $settings['google_calendar'] : array();
+		
 		if ( isset( $google_calender['status'] ) && $google_calender['status'] == 0 ) {
 			return $value;
 		}
 		if ( isset( $google_calender['connection_status'] ) && $google_calender['connection_status'] == 0 ) {
 			return $value;
 		}
-
+		
+		
 		if($data->meeting_calendar){ 
 			return; 
 		}
@@ -277,8 +279,13 @@ class GoogleCalendar {
 		$end_time      = strtotime( $data->end_time ); // 04:30 AM
 		$meeting_dates = $data->meeting_dates; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
 
+		
+
+		$host     = new Host();
+		$hostData = $host->get( $data->host_id );
+
 		// Set the Access Token
-		$this->refreshToken( $data->host_id );
+		$this->refreshToken( $hostData->user_id );
 
 		$meeting_dates = explode( ',', $meeting_dates );
 
@@ -286,12 +293,9 @@ class GoogleCalendar {
 
 	
 
-		$host     = new Host();
-		$hostData = $host->get( $data->host_id );
-
 		$meeting           = new Meeting();
 		$meetingData       = $meeting->get( $data->meeting_id );
-
+		
 		if ( (count( $meeting_dates ) > 1 && $meetingData->recurring_status != true ) || ( tfhb_is_pro_active() == false  && $meetingData->recurring_status != true && count( $meeting_dates ) > 1 )) {
 			return false;
 		}
@@ -310,7 +314,7 @@ class GoogleCalendar {
 
 		$google_calendar_body = array(); 
 
-		
+	
 		
 		foreach ( $meeting_dates as $meeting_date ) {
 			$start_date = gmdate( 'Y-m-d', strtotime( $meeting_date ) ) . 'T' . gmdate( 'H:i:s', $start_time );
@@ -367,7 +371,8 @@ class GoogleCalendar {
 				);
 			}
 
-			$_tfhb_host_integration_settings = is_array( get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) : array();
+			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
+	
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 			$calendarId                      = isset( $google_calendar['selected_calendar_id'] ) ? $google_calendar['selected_calendar_id'] : '';
 
@@ -462,7 +467,7 @@ class GoogleCalendar {
 
 	// Insert Calender After Booking Schedule
 	public function insert_calender_after_booking_completed( $data ) {
-
+		
 		
 		if($this->checkConnectionStatus() == false){
 			return;
@@ -479,6 +484,7 @@ class GoogleCalendar {
 		$MeetingData = $meeting->get( $data->meeting_id );
 		
 		$meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
+		
 		if ( $get_booking_meta && 'one-to-one' == $meta_data['meeting_type']) {
 			$booking_meta_value = json_decode($get_booking_meta->value);
 			if(isset($booking_meta_value->google_calendar)){
@@ -486,12 +492,10 @@ class GoogleCalendar {
 			} 
 		}
 		if ( 'one-to-group' == $meta_data['meeting_type'] ) {
-			
+		
 			$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
  
-		 
-			
-
+ 
 			$check_booking = $booking->getCheckBooking( $data->meeting_id, $data->meeting_dates, $data->start_time, $data->end_time );
  
 			// unset if check_booking has current booking data->id without loop and array maps or filter
@@ -549,9 +553,10 @@ class GoogleCalendar {
 	// add new attendee existing Booking to Google Calendar
 	public function addAttendeeGoogleCalender( $meta_data_id, $data, $booking ) {
 
-	 
+		$host    = new Host();
+		$hostData = $host->get( $booking->host_id );
 		// Set the Access Token
-		$this->refreshToken( $booking->host_id );
+		$this->refreshToken( $hostData->user_id );
 		$events = $data->google_calendar;
 
 		$google_calendar_body = array();
@@ -562,7 +567,7 @@ class GoogleCalendar {
 			// add new attendee also remaing existing attendee
 			$event->attendees[] = $new_attendees;
 
-			$_tfhb_host_integration_settings = is_array( get_user_meta( $booking->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $booking->host_id, '_tfhb_host_integration_settings', true ) : array();
+			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 			$calendarId                      = isset( $google_calendar['selected_calendar_id'] ) ? $google_calendar['selected_calendar_id'] : '';
 
@@ -671,6 +676,8 @@ class GoogleCalendar {
 		$meeting = new Meeting();
 		$booking = new Booking();
 		$bookingMeta = new BookingMeta();
+		$host = new Host();
+		$hostData = $host->get( $data->host_id );
 		$meetingData = $meeting->get( $data->meeting_id );
 		$meeting_locations = json_decode( $meetingData->meeting_locations, true ); // [{"location":"meet","address":""}]
 
@@ -731,7 +738,7 @@ class GoogleCalendar {
 		
 		$bookingMeta = new BookingMeta(); 
 		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
-
+		
 
 		// if booking calendar data is not found then return false
 		if ( ! $booking_calendarData ) {
@@ -740,17 +747,16 @@ class GoogleCalendar {
  
 
 		// Set the Access Token
-		$this->refreshToken( $data->host_id );
+		$this->refreshToken( $hostData->user_id );
 
 		
 		$value = json_decode($booking_calendarData->value);
 		$events = $value->google_calendar;
-		
-  
+		 
 		foreach($events as $event){
 			$event_id = $event->id;
 
-			$_tfhb_host_integration_settings = is_array( get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) : array();
+			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 			$calendarId                      = isset( $google_calendar['selected_calendar_id'] ) ? $google_calendar['selected_calendar_id'] : '';
 
@@ -772,7 +778,7 @@ class GoogleCalendar {
 		// unest google calendar form value
 		unset($value->google_calendar);
 		$booking_calendarData->value = json_encode($value, true);
-
+		
 		// $Update = $bookingMeta->update( array('id' => $booking_calendarData->id, 'value' => $booking_calendarData->value) );
 		$delete = $bookingMeta->delete( $booking_calendarData->id );
 
@@ -801,8 +807,10 @@ class GoogleCalendar {
 	public function removeAttendeeGoogleCalender($meta_data_id, $booking_calendar_value, $data){
 		
 		
+		$host = new Host();
+		$hostData = $host->get( $data->host_id );
 		// Set the Access Token
-		$this->refreshToken( $data->host_id );
+		$this->refreshToken( $hostData->user_id );
 		$events = $booking_calendar_value->google_calendar;
 
 		$google_calendar_body = array();
@@ -830,7 +838,7 @@ class GoogleCalendar {
 			
 			$event->attendees = $attendees;
 
-			$_tfhb_host_integration_settings = is_array( get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) : array();
+			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 			$calendarId                      = isset( $google_calendar['selected_calendar_id'] ) ? $google_calendar['selected_calendar_id'] : '';
 
@@ -958,8 +966,7 @@ class GoogleCalendar {
 				if ( $booking_calendar ) { 
 					 
 				 
-					 $this->rescheduleGoogleCalender($booking_calendar, $data); 
-					 tfhb_print_r($booking_calendar);
+					 $this->rescheduleGoogleCalender($booking_calendar, $data);
 					return;
 
 				}
@@ -979,16 +986,18 @@ class GoogleCalendar {
 		if ( ! $booking_calendarData ) {
 			return false;
 		}
+		$host = new Host();
+		$hostData = $host->get( $data->host_id );
 
 		// Set the Access Token
-		$this->refreshToken( $data->host_id );
+		$this->refreshToken( $hostData->user_id );
 
 		$bookingMeta = new BookingMeta();
 		$value = json_decode($booking_calendarData->value);
 
 		$events = $value->google_calendar;
 
-		$_tfhb_host_integration_settings = is_array( get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $data->host_id, '_tfhb_host_integration_settings', true ) : array();
+		$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 		$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 		$calendarId                      = isset( $google_calendar['selected_calendar_id'] ) ? $google_calendar['selected_calendar_id'] : '';
 

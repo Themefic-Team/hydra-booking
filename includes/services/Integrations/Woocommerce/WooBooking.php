@@ -160,6 +160,10 @@ class WooBooking {
 
 
 	public function getAllProductList() {
+		// Check if WooCommerce is active
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return array();
+		}
 		$args        = array(
 			'post_type'      => 'product',
 			'posts_per_page' => -1,
