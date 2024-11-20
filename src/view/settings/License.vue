@@ -91,6 +91,12 @@ const deactivateLicense = async () => {
     deletePopup.value = false;
 }
 
+const encryptLicense = (license_key) => {
+    // BDF2D6F8-XXXXXXXX-XXXXXXXX-7DC7E8FC
+    return license_key.substr(0,9) + 'XXXXXXXX-XXXXXXXX' + license_key.substr(-9); 
+}
+
+
 </script>
 <template>
     
@@ -174,7 +180,7 @@ const deactivateLicense = async () => {
                         <li>
                             <div>
                                 <span class="el-license-info-title">Your License Key</span>
-                                <span class="el-license-key">{{LicenseBase.LicenseData.license_key }}</span>
+                                <span class="el-license-key">{{ encryptLicense(LicenseBase.LicenseData.license_key) }}</span>
                                 <!-- <span class="el-license-key"><?php echo esc_attr( substr($this->response_obj->license_key,0,9)."XXXXXXXX-XXXXXXXX".substr($this->response_obj->license_key,-9) ); ?></span> -->
 
 

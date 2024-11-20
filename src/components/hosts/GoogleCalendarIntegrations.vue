@@ -23,9 +23,17 @@ const props = defineProps([
 const emit = defineEmits([ "update-integrations", ]);  
 
 const storedOptionData = (data) => {
+    // if data is undefined
+    if(data == undefined){
+        return [];
+    }
     let options = [];
     // data suild be array single array
     data.forEach((item, index) => {  
+        // fist item id auto selected
+        if(index == 0 && props.google_calendar.selected_calendar_id == ''){
+            props.google_calendar.selected_calendar_id = item.id;
+        }
         options.push({
             value: item.id,
             label: item.title,
@@ -33,9 +41,19 @@ const storedOptionData = (data) => {
     }); 
     return options;
 }
+
+const disconnectIntegration = () => {
+
+    // empty unset props.google_calendar.tfhb_google_calendar 
+
+    props.google_calendar.tfhb_google_calendar  = undefined;
+    props.google_calendar.selected_calendar_id  = '';
+    gCalPopup.value = false;
+    emit('update-integrations', 'google_calendar', props.google_calendar);
+}
 </script>
  
-<template> 
+<template>  
       <!-- Zoom Integrations  -->
       <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
@@ -57,7 +75,7 @@ const storedOptionData = (data) => {
             <!-- <a   :href="'https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar&redirect_uri='+google_calendar.redirect_url+'&response_type=code&client_id='+google_calendar.client_id+'&access_type=online'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">Get Access Token</a> -->
             <router-link  v-if="google_calendar.status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
-            <button  v-else-if="google_calendar.connection_status == 1 && google_calendar.tfhb_google_calendar !== undefined "  @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Settings', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></button>
+            <button  v-else-if="google_calendar.connection_status == 1 && google_calendar.tfhb_google_calendar !== undefined && google_calendar.tfhb_google_calendar != null "  @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Settings', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></button>
              
             <a v-else :href="google_calendar.access_url" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Get Access Token', 'hydra-booking') }}</a>
 
@@ -75,8 +93,7 @@ const storedOptionData = (data) => {
                 <p>
                     {{ __('Enable the calendars you want to check for conflicts to prevent double bookings.', 'hydra-booking') }}
                 </p> 
-                <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-16  tfhb-m-0"  >   
-                  
+                <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-16  tfhb-m-0"  >    
                     <HbRadio 
                         v-model="google_calendar.selected_calendar_id" 
                         :groups="true" 
@@ -85,7 +102,7 @@ const storedOptionData = (data) => {
                         :options="storedOptionData(google_calendar.tfhb_google_calendar.items)"
                     />  
                 </div>
-                <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8">
+                <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8 tfhb-flexbox tfhb-gap-8">
                     <HbButton  
                          @click.stop="emit('update-integrations', 'google_calendar', google_calendar)"
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"  
@@ -93,6 +110,14 @@ const storedOptionData = (data) => {
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true"  
+                    />   
+                    <HbButton  
+                        v-if="google_calendar.tfhb_google_calendar.items !== undefined && google_calendar.tfhb_google_calendar.items.length != 0"
+                         @click.stop="disconnectIntegration()"
+                        classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8"  
+                        :buttonText="'Disconnect' "
+                        icon="Unplug"  
+                        icon_position="left"
                     />   
                    
                 </div> 

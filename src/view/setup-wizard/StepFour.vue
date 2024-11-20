@@ -142,8 +142,7 @@ window.addEventListener('click', function(e) {
         <div class="tfhb-meetings-list-content" >
             <div class="tfhb-meetings-list-wrap tfhb-flexbox tfhb-justify-normal">
 
-                <!-- Single Meeting -->
-                
+                <!-- Single Meeting --> 
                 <div class="tfhb-single-meeting  tfhb-flexbox"> 
                     <div class="single-meeting-content-box tfhb-gap-4 tfhb-flexbox tfhb-full-width">
                         <div class="single-meeting-content">
@@ -235,7 +234,7 @@ window.addEventListener('click', function(e) {
                         </div>
                     </div>
                     <div class="single-meeting-action-btn tfhb-flexbox tfhb-justify-between">
-                        <a :href="'/' + setupWizard.data.meeting.slug" class="tfhb-flexbox" target="_blank">
+                        <a :href="setupWizard.data.meeting.permalink" class="tfhb-flexbox" target="_blank">
                             <Icon name="Eye" size=20 /> 
                             {{ __('Preview', 'hydra-booking') }}
                         </a>

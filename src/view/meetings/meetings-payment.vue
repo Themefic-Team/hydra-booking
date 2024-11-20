@@ -6,6 +6,7 @@ import { useRouter} from 'vue-router'
 // component
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbText from '@/components/form-fields/HbText.vue';
 import { Meeting } from '@/store/meetings'
 
 
@@ -111,28 +112,26 @@ onBeforeMount(() => {
                     :option = "props.wcProduct"   
                 /> 
             </div>
-            <div v-if="meeting.payment_status == 1 && meeting.payment_method=='stripe_payment' || meeting.payment_method=='paypal_payment'" class="tfhb-single-form-field" style="width: 100%;" selected="1">
-                <div class="tfhb-single-form-field-wrap tfhb-field-input">
-                    <label>{{ __('Price', 'hydra-booking') }} <span> *</span></label>
-                    <div class="tfhb-meeting-currency tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
-                        <input v-model="meeting.meeting_price" required="" type="text" placeholder="00.000">
-                        <!-- <select v-model="meeting.payment_currency" placeholder="USD">
-                            <option value="USD">USD</option>
-                            <option value="EUR">Euro</option>
-                        </select> -->
-                        <HbDropdown 
-                            v-model="meeting.payment_currency"   
-                            name="payment_method"
-                            placeholder="Currency"  
-                            :option = "[
-                                {name: 'USD', value: 'USD'},  
-                                {name: 'EUR', value: 'EUR'},   
-                            ]"   
-                        /> 
-                        
-                       
-                    </div>
-                </div>
+            <div v-if="meeting.payment_status == 1 && meeting.payment_method=='stripe_payment' || meeting.payment_method=='paypal_payment'" class="tfhb-single-form-field tfhb-flexbox" style="width: 100%;" selected="1">
+                <HbText  
+                    v-model="meeting.meeting_price"  
+                    type= "number"
+                    required= "true" 
+                    :label="__('Price', 'hydra-booking')"   
+                    :placeholder="'00.000'" 
+                    :width= "60"
+                
+                /> 
+                <HbDropdown 
+                    v-model="meeting.payment_currency"   
+                    name="payment_method"
+                    required= "true" 
+                    :label="__('Currency', 'hydra-booking')"  
+                    placeholder="Currency"  
+                    :width= "40"
+                    :filter="true"
+                    :option = "Meeting.currency_list"   
+                />  
             </div>
             
 

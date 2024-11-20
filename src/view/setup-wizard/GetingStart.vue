@@ -17,19 +17,7 @@ const props = defineProps({
 
 const GettingStart = () => {
    
-    if(props.setupWizard.data.email == ''){ 
-        toast.error('Email is required', {
-            position: 'bottom-right', // Set the desired position
-        });
-        return; 
-    }
-    // if email is not valid
-    if(!props.setupWizard.data.email.includes('@')){ 
-        toast.error('Please enter a valid email', {
-            position: 'bottom-right', // Set the desired position
-        });
-        return;
-    }
+ 
     
     props.setupWizard.currentStep = 'step-one';
 }
@@ -58,12 +46,11 @@ const GettingStart = () => {
             /> 
              <!-- Custom Duration -->
             <div class="tfhb-recevie-updates">
-                <HbCheckbox 
-                v-model="props.setupWizard.data.enable_recevie_updates"  
-                type="checkbox" 
-                required= "true"  
-                :label="__('Receive updates and promotions', 'hydra-booking')"  
-            />
+                    <HbCheckbox 
+                    v-model="props.setupWizard.data.enable_recevie_updates"  
+                    type="checkbox"  
+                    :label="__('Receive updates and promotions', 'hydra-booking')"  
+                />
             </div>
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">

@@ -42,6 +42,7 @@ const closePopup = () => {
             <div class="cartbox-text">
                 <h3>{{ __('PayPal', 'hydra-booking') }}</h3>
                 <p>{{ __('Connect PayPal API for easy online payment solutions.', 'hydra-booking') }}</p>
+                
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
@@ -70,6 +71,7 @@ const closePopup = () => {
             <template #content>  
                 <p>
                     {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Paypal Account', 'hydra-booking') }}
+                    <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Read Documentation', 'hydra-booking') }}</a>
                 </p>
                 <HbDropdown 
                     v-model="paypal_data.environment"

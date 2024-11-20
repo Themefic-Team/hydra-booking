@@ -237,7 +237,7 @@ class Booking {
                 INNER JOIN $meeting_table
                 ON $table_name.meeting_id=$meeting_table.id
                 INNER JOIN $host_table
-                ON $meeting_table.host_id=$host_table.user_id";
+                ON $meeting_table.host_id=$host_table.id";
 			} else {
 				$sql = "SELECT * FROM $table_name";
 

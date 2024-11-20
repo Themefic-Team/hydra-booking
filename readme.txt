@@ -1,10 +1,10 @@
 === Hydra Booking - All-in-One Appointment Management Solution ===  
-Contributors: themefic, hasanet, mdrejon, kamrul0424 
+Contributors: themefic, hasanet, mdrejon, kamrul0424, jahidcse
 Tags: Booking Plugin, hydra booking, booking form, ultimate booking form  
 Requires at least: 5.4
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.4  
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPL-2.0+  
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -98,6 +98,9 @@ A: You can configure bookings as free or paid and accept payments through WooCom
 **Q: Can I assign different hosts to manage different bookings?**  
 A: Yes, HydraBooking allows host assignments with specific roles and permissions for a flexible booking management experience.
 
+### Privacy Policy
+HydraBooking uses [Appsero](https://appsero.com/) SDK to collect some telemetry data. Appsero SDK does not gather any data by default. The SDK only starts gathering basic telemetry data when a user allows it via the admin notice. Appsero SDK DOES NOT IMMEDIATELY start gathering data, without confirmation from users in any case. We use this data to troubleshoot problems faster, make product improvements & ensure a great user experience for all our users.
+
 == Screenshots ==
 
 1. Booking Calendar Preview
@@ -114,6 +117,11 @@ A: Yes, HydraBooking allows host assignments with specific roles and permissions
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.5 - 17/11/2024 =  
+- Enhancements: Improved and Optimized overall codebase and design for a better user experience. 
+- Added: Appsero Integration
+
 
 = 1.0.4 - 16/11/2024 =  
 - Enhancements: Improved overall design and responsiveness for a smoother user experience.

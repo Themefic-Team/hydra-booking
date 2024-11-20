@@ -42,7 +42,15 @@ const ShareTabs = (tab) => {
     <HbPopup :isOpen="props.sharePopup.value" @modal-close="props.sharePopup.value = false" max_width="600px" name="first-modal">
         
         <template #header> 
+           <div class="tfhb-share-title-wraps tfhb-flexbox tfhb-gap-8">
+            
             <h3>{{ props.shareData.title }}</h3>
+            <a :href="props.shareData.link" class="tfhb-flexbox tfhb-gap-8 tfhb-btn" target="_blank">
+                <Icon name="ExternalLink" size=20 />  
+            </a>
+           
+           </div>
+            
         </template>
 
         <template #content>  
