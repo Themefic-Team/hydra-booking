@@ -305,6 +305,10 @@ class SettingsController {
 			}
 		}
 
+		if(empty($request['date_slots'] )){
+			$availability['date_slots'] = array();
+		}
+
 		if ( $availability['id'] == 0 ) {
 
 			// Insert into database

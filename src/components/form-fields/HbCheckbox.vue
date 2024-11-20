@@ -46,7 +46,7 @@ const MulticheckedValue = (e) => {
     > 
     <div class="tfhb-single-form-field-wrap tfhb-field-checkbox">
         <div class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal"> 
-            <span class="tfhb-flexbox tfhb-gap-4 tfhb-checkbox-label"  style="width: 100%; font-size: 13px;" v-if="label && groups == true " :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> 
+            <span class="tfhb-flexbox tfhb-gap-4 tfhb-checkbox-label"  style="width: 100%; font-size: 13px;" v-if="label && groups == true " :for="name">{{ label }} <span  v-if="required == 'true'"></span> 
                 <span v-if="tooltip" class="tfhb-tooltip">
                     <Icon name="Info" size=15 />
                     <span class="tfhb-tooltiptext"> 
@@ -68,7 +68,7 @@ const MulticheckedValue = (e) => {
                 type="checkbox"
                 />     
                 <span class="checkmark"></span>
-                {{ label }} <span  v-if="required == 'true'"> *</span> 
+                {{ label }} <span  v-if="required == 'true'"> </span> 
             </label>
             <label v-else-if="groups == true && options" v-for="(value, key) in options"  :for="key+'-'+name"> 
                 <input 

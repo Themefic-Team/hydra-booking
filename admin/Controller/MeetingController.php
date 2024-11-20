@@ -1055,6 +1055,11 @@ class MeetingController {
 			'updated_at'               => gmdate( 'Y-m-d' ),
 			'updated_by'               => $current_user_id,
 		);
+		$host = new Host ();
+		$host_data = $host->getHostById( $data['host_id'] );
+		if($host_data){ 
+			$data['user_id'] = $host_data->user_id;
+		}
 
 		// if Payment Methood is woo_payment
 		if ( 'woo_payment' == $data['payment_method'] ) {
