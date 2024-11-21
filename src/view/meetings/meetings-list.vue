@@ -52,6 +52,10 @@ onBeforeMount(() => {
 
 });
 
+const CloneMeetings = (id, data) => {
+    Meeting.cloneMeeting(id, data);
+}
+
 onBeforeRouteLeave((to, from, next) => {
     activeItemDropdown.value = 0;
     window.removeEventListener('click', hideDropdownOutsideClick);
@@ -412,8 +416,11 @@ const truncateString = (str, num) => {
                             <div v-show="smeeting.id == activeItemDropdown" class="tfhb-dropdown-wrap "> 
                                 <!-- route link -->
                                 <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single"><Icon name="SquarePen" size=16 />{{ __('Edit', 'hydra-booking') }}</router-link>
+
+                                <span class="tfhb-dropdown-single" @click="CloneMeetings(smeeting.id, smeeting)"><Icon name="CopyCheck" size=16 />{{ __('Clone', 'hydra-booking') }}</span>
                                 
                                 <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)"><Icon name="Trash2" size=16 />{{ __('Delete', 'hydra-booking') }}</span>
+                               
                             </div>
                         </transition>
                     </div>

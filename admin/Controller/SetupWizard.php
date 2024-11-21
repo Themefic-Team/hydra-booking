@@ -247,9 +247,9 @@ class SetupWizard {
 			'availability_type'        => 'custom',
 			'availability_id'          => '0',
 			'availability_custom'      => isset( $request['availabilityDataSingle'] ) ? wp_json_encode( $request['availabilityDataSingle'] ) : '',
-			'booking_frequency'        => '[{"limit":200,"times":"Year"}]',
+			'booking_frequency'        => '[{"limit":5,"times":"days"}]',
 			'recurring_status'         => '0',
-			'recurring_repeat'         => '[{"limit":1,"times":"Year"}]',
+			'recurring_repeat'         => '[{"limit":1,"times":"days"}]',
 			'questions_type'           => 'custom',
 			'questions'                => '[{"label":"name","type":"Text","placeholder":"Name","options":[],"required":1},{"label":"email","type":"Email","options":[],"placeholder":"Email","required":1},{"label":"address","type":"Text","placeholder":"Address","options":[],"required":1}]',
 			'payment_status'           => 1,
@@ -297,6 +297,9 @@ class SetupWizard {
 
 		// meetings Lists
 		$meeting = $meeting->get( $meetings_id );
+
+		// Get Meeting Permalink 
+		$meeting->permalink = get_permalink( $meeting_post_id );
 		
 		return $meeting;
 	}

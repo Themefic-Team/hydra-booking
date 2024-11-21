@@ -61,6 +61,7 @@ const removeExtraFrequency = (key) => {
                     :selected = "1"
                     placeholder="No buffer time"  
                     :option = "[
+                        {name: 'No buffer time', value: '0'}, 
                         {name: '5 Minutes', value: '5'},  
                         {name: '10 Minutes', value: '10'},  
                         {name: '15 Minutes', value: '15'},  
@@ -82,6 +83,7 @@ const removeExtraFrequency = (key) => {
                     selected = "1"
                     placeholder="No buffer time"  
                     :option = "[
+                        {name: 'No buffer time', value: '0'},  
                         {name: '5 Minutes', value: '5'},  
                         {name: '10 Minutes', value: '10'},  
                         {name: '15 Minutes', value: '15'},  
@@ -117,6 +119,7 @@ const removeExtraFrequency = (key) => {
                     selected = "1"
                     :placeholder="__('Default interval', 'hydra-booking')"
                     :option = "[
+                        {name: 'No interval', value: '0'}, 
                         {name: '5 Minutes', value: '5'},  
                         {name: '10 Minutes', value: '10'},  
                         {name: '15 Minutes', value: '15'},  

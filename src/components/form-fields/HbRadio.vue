@@ -70,13 +70,14 @@ const MulticheckedValue = (e) => {
             </label>
             <div style="display: inline-block !important; width: 100%;"  v-else-if="groups == true && options" v-for="(value, key) in options">
             <label   :for="key+'-'+name">  
+                <!-- first item auto checked by defult -->
                 <input
                 :id="key+'-'+name"
                 :v-model="groupsvalue"
                 @change="MulticheckedValue"
                 :name="name"
                 :checked="props.modelValue == value.value ? true : false"
-                :value="groups == true ? value.value : key"
+                :value="groups == true ? value.value : key" 
                 type="radio"
                 /> 
                 <span class="checkmark"></span>

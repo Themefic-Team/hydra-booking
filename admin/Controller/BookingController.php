@@ -687,7 +687,10 @@ class BookingController {
 		// Booking Update
 		$bookingUpdate = $booking->update( $data );
 
-		$current_user = get_userdata( $booking_owner );
+		$host = new Host();
+		$hostData = $host->getHostById( $booking_owner );
+
+		$current_user = get_userdata( $hostData->user_id );
 		$booking = new Booking();
 		// get user role
 		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';

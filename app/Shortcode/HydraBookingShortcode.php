@@ -40,7 +40,7 @@ class HydraBookingShortcode {
 		add_action( 'wp_ajax_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
  
 		// Create Zoom Meeting
-		add_action( 'hydra_booking/after_booking_completed', array( $this, 'tfhb_create_zoom_meeting' ), 10, 2 ); 
+		
 	}
 
 	// Test Wp Mail Sent
@@ -565,10 +565,6 @@ class HydraBookingShortcode {
 			$woo_booking->add_to_cart( $product_id, $data );
 			$response['redirect'] = wc_get_checkout_url();
 		}
-		
-		// payment methood check and process the payment
-		$this->tfhb_booking_payment_method( $meta_data, $MeetingData, $result );
-
 
 
 		$single_booking_meta = $booking->get(
@@ -597,7 +593,7 @@ class HydraBookingShortcode {
 		$response['message']               = 'Booking Successful';
 		$response['action']                = 'create';
 		
-		if('paypal_payment' == $meta_data['payment_method']){
+		if('paypal_payment' == $meta_data['payment_method'] || 'stripe_payment' == $meta_data['payment_method']){
 			$response['data']                = array( 
 				'hash' 	  => $data['hash'], 
 				'booking_id' => $result['insert_id'],
@@ -676,166 +672,6 @@ class HydraBookingShortcode {
 		update_post_meta( $meeting_post_id, '_tfhb_booking_opt', $data );
 
 		return $meeting_post_id;
-	}
-
-	/* payment methood check and process the payment
-	 * @param $meta_data
-	 * @param $MeetingData
-	 * @param $result
-	 * @return void
-	 */
-	public function tfhb_booking_payment_method( $meta_data, $MeetingData, $result ) {
-
-		if ( true == $meta_data['payment_status'] && 'stripe_payment' == $meta_data['payment_method'] ) {
-			$data['tokenId']  = ! empty( $_POST['tokenId'] ) ? $_POST['tokenId'] : '';
-			$data['price']    = ! empty( $MeetingData->meeting_price ) ? $MeetingData->meeting_price : '';
-			$data['currency'] = ! empty( $MeetingData->payment_currency ) ? $MeetingData->payment_currency : 'USD';
-			if ( empty( $_POST['action_type'] ) ) {
-				do_action( 'hydra_booking/stripe_payment_method', $data, $result['insert_id'] );
-			}
-		}
-		if ( true == $meta_data['payment_status'] && 'paypal_payment' == $meta_data['payment_method'] ) {
-			$data['paymentID']    = ! empty( $_POST['paymentID'] ) ? $_POST['paymentID'] : '';
-			$data['paymentToken'] = ! empty( $_POST['paymentToken'] ) ? $_POST['paymentToken'] : '';
-			$data['payerID']      = ! empty( $_POST['payerID'] ) ? $_POST['payerID'] : '';
-			$data['price']        = ! empty( $MeetingData->meeting_price ) ? $MeetingData->meeting_price : '';
-			$data['currency']     = ! empty( $MeetingData->payment_currency ) ? $MeetingData->payment_currency : 'USD';
-			if ( empty( $_POST['action_type'] ) ) {
-				do_action( 'hydra_booking/paypal_payment_method', $data, $result['insert_id'] );
-			}
-		}
-	}
-
-	/* Create Zoom Meeting
-	 * @param $single_booking_meta
-	 * @param $meta_data
-	 * @param $host_meta
-	 * @return void
-	 */
-	public function tfhb_create_zoom_meeting( $single_booking_meta) { 
-
-
-		$BookingMeta = new BookingMeta();
-		// check if the meeting id is available
-		$get_booking_meta = $BookingMeta->getWithIdKey( $single_booking_meta->id, 'zoom_meeting' );
-
-		if ( $get_booking_meta ) {
-			return false;
-		}
-
-
-	
-		$meeting = new Meeting();
-		$MeetingData = $meeting->get( $single_booking_meta->meeting_id );
-
-		$meeting_type = isset( $MeetingData->meeting_type ) ? $MeetingData->meeting_type : 'one-to-one';
-		$recurring_status = isset( $MeetingData->recurring_status ) ? $MeetingData->recurring_status : false;
-		if($meeting_type == 'one-to-group' || $recurring_status == true){
-			return false;
-		}
-
-		$meta_data = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
-
-		$host_id   = isset( $meta_data['host_id'] ) ? $meta_data['host_id'] : 0;
-		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
-
-		$booking = new Booking();
-		// Host Meta by Booking Id
-		$_tfhb_host_integration_settings = get_user_meta( $single_booking_meta->host_id, '_tfhb_host_integration_settings', true );
-
-		// Booking Table Meeting Location Data
-		// $meeting_location_data = json_decode( $single_booking_meta->meeting_locations, true );
-		$meeting_location_data = $single_booking_meta->meeting_locations;
-
-
-		// Meeting Location Check
-		$meeting_locations = $meta_data['meeting_locations'];
-		
-		
-		$zoom_exists = false;
-		if ( is_array( $meeting_locations ) ) {
-			
-			// if in array location value is meet then set google meet using array filter
-			$meeting_location = array_filter(
-				$meeting_locations,
-				function ( $location ) {
-					return $location['location'] == 'zoom';
-				}
-			);
-
-			$zoom_exists = count( $meeting_location ) > 0 ? true : false;
-		} 
-
-		// Global Integration
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
-		
-		if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
-			$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
-			$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
-			$app_secret_key = $_tfhb_integration_settings['zoom_meeting']['app_secret_key'];
-		}
-
-		// Host Integration
-		if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
-			$account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
-			$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
-			$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
-		}
-		
-		if ( $zoom_exists == true && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) { 
-	 
-
-			$zoom             = new ZoomServices( );
-			$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
-			$meeting_creation = $zoom->create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta );
-			
-			
-
-			
-
-			$booking_meta = array(
-				'booking_id' => $single_booking_meta->id,
-				'meta_key'   => 'zoom_meeting',
-				'value'      => wp_json_encode( $meeting_creation, true ),
-			);
-
-			$insert = $BookingMeta->add( $booking_meta );
-			
-			$insert_id = $insert['insert_id'];
-			
-			if ( $insert_id === false ) {
-				return false;
-			}
-
-			$getBookingData = $booking->get( $single_booking_meta->id );
-			
-			$meeting_locations =  json_decode( $getBookingData->meeting_locations );
-			 
-		 
-			$meeting_locations->zoom->address = array(
-				'link' => $meeting_creation['join_url'],
-				'password' => $meeting_creation['password'],
-			);
-
-			
-			
-			$update                     = array();
-			$update['id']               = $single_booking_meta->id;
-			$update['meeting_locations'] = $meeting_locations;
-
-
-			$booking->update( $update );
-
-			// $meeting_location_data['zoom']['address'] = $meeting_creation;
-
-			// // Get Post Meta
-			// $meeting_address_data = array(
-			// 	'id'                => $single_booking_meta->id,
-			// 	'meeting_locations' => wp_json_encode( $meeting_location_data ),
-			// );
-			// $booking->update( $meeting_address_data );
-
-		}
 	}
 
 

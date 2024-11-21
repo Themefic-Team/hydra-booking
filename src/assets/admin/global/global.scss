@@ -963,7 +963,7 @@
                 background: $surface-primary;
                 height: 40px;
                 width: calc(100% - 174px);
-                padding: 8px 12px;
+                padding: 0 12px;
                 @media #{$max1140}{
                     gap: 8px !important;
                     width: calc(100% - 100px);
@@ -975,6 +975,16 @@
                     transition:$transition;
                     &:hover{
                         color: $primary-default;
+                    }
+                }
+                input {
+                    width: 50px; 
+                    text-align: center;
+                    margin-right: 8px; 
+                    border: $fields-border $border-type $surface-input-field;
+                    &:focus, &:active, &:hover {
+                        outline: none;
+                        box-shadow: none;  
                     }
                 }
             

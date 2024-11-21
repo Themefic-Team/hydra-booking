@@ -43,13 +43,16 @@ class THB_INIT {
 		add_action( 'init', array( $this, 'init' ) ); 
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
 
-		// Load Appsero Tracker
-		$this->tfhb_appsero_init_tracker_hydra_booking();
 		
 	}
 
 
 	public function init() {
+
+		
+		// Load Appsero Tracker
+		$this->tfhb_appsero_init_tracker_hydra_booking();
+
 		new HydraBooking\Admin\Controller\ScheduleController();
 
 		// Post Type
@@ -93,11 +96,12 @@ class THB_INIT {
 	function tfhb_appsero_init_tracker_hydra_booking() {
 
 		if ( ! class_exists( 'Appsero\Client' ) ) {
-		require_once __DIR__ . '/appsero/src/Client.php';
+			require_once __DIR__ . '/appsero/src/Client.php';
 		}
 
 		$client = new Appsero\Client( '685ed86d-9a98-46e2-9f07-79206f5fd69b', 'Hydra Booking &#8211; All-in-One Appointment Management Solution', __FILE__ );
-
+		$notice = sprintf( $client->__trans( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information. I agree to get Important Product Updates & Discount related information on my email from  %1$s (I can unsubscribe anytime).' ), $client->name );
+		$client->insights()->notice( $notice );
 		// Active insights
 		$client->insights()->init();
 

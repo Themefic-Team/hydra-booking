@@ -27,6 +27,26 @@ const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-c
 const closePopup = () => { 
     emit('popup-close-control', false)
 } 
+
+const copyRedirectionURL = () => {
+    //  copy to clipboard without navigator 
+    const textarea = document.createElement('textarea');
+    textarea.value = props.google_calendar.redirect_url;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Show a toast notification or perform any other action 
+    // success mess into bottom right
+    toast.success( props.google_calendar.redirect_url + ' is Copied' , {
+        position: 'bottom-right', // Set the desired position
+        duration: 2000 // Set the desired duration
+    });
+}
 </script>
  
 <template>
@@ -67,6 +87,7 @@ const closePopup = () => {
             <template #content>  
                 <p>
                     {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar', 'hydra-booking') }}
+                    <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Read Documentation', 'hydra-booking') }}</a>
                     
                 </p>
                 <HbText  
@@ -87,16 +108,24 @@ const closePopup = () => {
                     selected = "1"
                     :placeholder="__('Enter Secret Key', 'hydra-booking')"  
                 /> 
-                <HbText  
-                    v-model="props.google_calendar.redirect_url"  
-                    required= "true"   
-                    name="redirect_url"
-                    :readonly="true"
-                    :errors="errors.redirect_url"  
-                    :label="__('Redirect Url', 'hydra-booking')"   
-                    selected = "1" 
-                    :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
-                /> 
+                <div class="tfhb-google-calender-redirection-url tfhb-full-width"  >
+                    <HbText  
+                        v-model="props.google_calendar.redirect_url"  
+                        required= "true"   
+                        name="redirect_url"
+                        :readonly="true"
+                        :errors="errors.redirect_url"  
+                        :label="__('Redirect Url', 'hydra-booking')"   
+                        selected = "1" 
+                        :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
+                    /> 
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                        @click="copyRedirectionURL()" 
+                        :buttonText="__('Copy URL', 'hydra-booking')" 
+                    /> 
+                </div>
+                
 
                 <HbButton  
                     @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar, ['client_id', 'secret_key', 'redirect_url'])"
@@ -116,5 +145,6 @@ const closePopup = () => {
 </template>
  
 
-<style scoped>
+<style lang="scss" scoped>
+
 </style> 

@@ -534,6 +534,8 @@ const UpdateMeetingData = async (validator_field) => {
         });
         if (response.data.status == true) { 
             meetingData.slug = response.data.meeting.slug; 
+           
+            meetingData.permalink = response.data.meeting.permalink; 
             // toast.success(response.data.message, {
             //         position: 'bottom-right', // Set the Fdesired position
             //         "autoClose": 1500,

@@ -24,6 +24,9 @@ class Enqueue {
 	public function admin_enqueue_scripts() {
 
 		// if page=hydra-booking then load the script
+		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ),  time(), true );
+ 
+
 		if ( ! isset( $_GET['page'] ) || 'hydra-booking' !== $_GET['page'] ) {
 			return;
 		}
@@ -39,6 +42,7 @@ class Enqueue {
 
 		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
  
+		
 		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		//  Build the core script

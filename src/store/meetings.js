@@ -8,6 +8,7 @@ const Meeting = reactive({
     pre_loader_group: false,
     isModalOpened: false,
     time_zone: {},
+    currency_list: {},
     meetingCategory: [],
     meetingPaymentIntegration: {
         woo_payment: true,
@@ -133,7 +134,7 @@ const Meeting = reactive({
             recurring_repeat:[
                 {
                     limit: 1,
-                    times:'Year'
+                    times:'days'
                 }
             ],
             recurring_maximum: '',
@@ -377,9 +378,38 @@ const Meeting = reactive({
             console.log(error);
         } 
     },
+
+    // Clone Meeting
+    async cloneMeeting($id, $data){
+        this.skeleton = true;
+        let cloneMeeting = {
+            id: $id,
+            data: $data
+        }
+        try { 
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/clone', cloneMeeting, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+            if (response.data.status) { 
+                this.meetings = response.data.meetings;    
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+                this.skeleton = false;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+      
+    },
+
      // Meeting List
      async fetchMeetingsPaymentIntegration() {
-
+        this.skeleton = true;
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/payment/payment-method', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
@@ -388,7 +418,11 @@ const Meeting = reactive({
         } );
 
         if (response.data.status) {  
+            this.skeleton = false;
             this.meetingPaymentIntegration = response.data.integrations;
+
+
+            this.currency_list = response.data.currency_list;
         }
 
     },
