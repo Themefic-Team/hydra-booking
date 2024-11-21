@@ -56,7 +56,7 @@ const removeExtraFrequency = (key) => {
                 <HbDropdown 
                     v-model="meeting.buffer_time_before"
                     required= "true" 
-                    :label="__('Buffer time before meeting', 'hydra-booking')"  
+                    :label="$tfhb_trans['Buffer time before meeting']"  
                     width="50"
                     :selected = "1"
                     placeholder="No buffer time"  
@@ -78,10 +78,10 @@ const removeExtraFrequency = (key) => {
                 <HbDropdown 
                     v-model="meeting.buffer_time_after"
                     required= "true"  
-                    :label="__('Buffer time after meeting', 'hydra-booking')"   
+                    :label="$tfhb_trans['Buffer time after meeting']"   
                     width="50"
                     selected = "1"
-                    placeholder="No buffer time"  
+                    :placeholder="$tfhb_trans['No buffer time']"  
                     :option = "[
                         {name: 'No buffer time', value: '0'},  
                         {name: '5 Minutes', value: '5'},  
@@ -101,8 +101,8 @@ const removeExtraFrequency = (key) => {
                 <!-- Booking Frequency -->
             
                 <HbCounter
-                    :label="__('Booking frequency', 'hydra-booking')" 
-                    :description="__('Limit how many times this meeting can be booked', 'hydra-booking')"
+                    :label="$tfhb_trans['Booking frequency']" 
+                    :description="$tfhb_trans['Limit how many times this meeting can be booked']"
                     :repater="true" 
                     counterLabel="Bookings"
                     :counter_value="meeting.booking_frequency"
@@ -115,9 +115,9 @@ const removeExtraFrequency = (key) => {
                   <HbDropdown 
                     v-model="meeting.meeting_interval"
                     required= "true"  
-                    :label="__('Meeting interval', 'hydra-booking')"  
+                    :label="$tfhb_trans['Meeting interval']"  
                     selected = "1"
-                    :placeholder="__('Default interval', 'hydra-booking')"
+                    :placeholder="$tfhb_trans['Default interval']"
                     :option = "[
                         {name: 'No interval', value: '0'}, 
                         {name: '5 Minutes', value: '5'},  
@@ -139,8 +139,8 @@ const removeExtraFrequency = (key) => {
             <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
                 <div class=" tfhb-pro">
                     <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    Recurring Event
-                        <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+                    {{$tfhb_trans['Recurring Event']}}
+                        <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans['Pro'] }}</span>
                     </h2> 
                     <!-- <p>Set up a repeating schedule</p>  -->
                 </div> 
@@ -148,12 +148,12 @@ const removeExtraFrequency = (key) => {
             </div>
             <div v-else class="tfhb-admin-title tfhb-full-width tfhb-m-0">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    Recurring Event
+                    {{$tfhb_trans['Recurring Event']}}
                     <HbSwitch 
                         v-model="meeting.recurring_status"
                     />
                 </h2> 
-                <p>Set up a repeating schedule</p>
+                <p> {{$tfhb_trans['Set up a repeating schedule']}}</p>
             </div> 
             <div
             :class="{'tfhb-pro': $tfhb_is_pro == false || $tfhb_license_status == false}"
@@ -162,7 +162,7 @@ const removeExtraFrequency = (key) => {
                 <!-- Meeting interval -->
 
                 <HbCounter
-                    :label="__('Repeats every', 'hydra-booking')"
+                    :label="$tfhb_trans['Repeats every']"
                     width="100" 
                     :repater="false"
                     :counter_value="meeting.recurring_repeat"
@@ -173,9 +173,9 @@ const removeExtraFrequency = (key) => {
                 <HbText  
                         v-model="meeting.recurring_maximum"   
                         type="number"
-                        :label="__('Maximum number of bookings', 'hydra-booking')"   
+                        :label="$tfhb_trans['Maximum number of bookings']"   
                         selected = "1"
-                        :placeholder="__('Use meeting length (default)', 'hydra-booking')" 
+                        :placeholder="$tfhb_trans['Use meeting length (default)']" 
                         width="50"  
                         limit="1"
                     /> 
@@ -189,12 +189,12 @@ const removeExtraFrequency = (key) => {
         <div class="tfhb-meeting-schedule tfhb-full-width tfhb-flexbox tfhb-gap-16">
             <HbCheckbox 
                 v-model="meeting.attendee_can_cancel"
-                :label="__('Attendee can cancel this meeting', 'hydra-booking')"
+                :label="$tfhb_trans['Attendee can cancel this meeting']"
                 name="attendee_can_cancel"
             />
             <HbCheckbox 
                 v-model="meeting.attendee_can_reschedule"
-                :label="__('Attendee can reschedule this meeting', 'hydra-booking')"
+                :label="$tfhb_trans['Attendee can reschedule this meeting']"
                 name="attendee_can_reschedule"
             />
         </div>
@@ -203,7 +203,7 @@ const removeExtraFrequency = (key) => {
             <HbButton  
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting')"
-                :buttonText="__('Save & Continue', 'hydra-booking')"
+                :buttonText="$tfhb_trans['Save & Continue']"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

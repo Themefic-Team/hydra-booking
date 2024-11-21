@@ -24,6 +24,10 @@ class THB_INIT {
 		define( 'THB_URL', plugin_dir_url( __FILE__ ) );
 		define( 'THB_VERSION', '1.0.3' );
 
+
+		
+
+
 		// Load Vendor Auto Load
 		if ( file_exists( THB_PATH . '/vendor/autoload.php' ) ) {
 
@@ -39,17 +43,22 @@ class THB_INIT {
 		
 
 	
-
 		add_action( 'init', array( $this, 'init' ) ); 
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
 
+
 		
 	}
+
+ 
 
 
 	public function init() {
 
 		
+		//Register text domain
+		load_plugin_textdomain( 'hydra-booking', false, basename( dirname( __FILE__ ) ) . '/languages' );
+
 		// Load Appsero Tracker
 		$this->tfhb_appsero_init_tracker_hydra_booking();
 
@@ -60,8 +69,7 @@ class THB_INIT {
 		new HydraBooking\PostType\Booking\Booking_CPT();
 
 		// Create a New host Role
-		new HydraBooking\Admin\Controller\RouteController();
-
+		new HydraBooking\Admin\Controller\RouteController(); 
 		if ( is_admin() ) {
 			// Load Admin Class
 			new HydraBooking\Admin\Admin();

@@ -228,7 +228,7 @@ const Tfhb_Host_Filter = async (e) =>{
                <HbButton 
                     classValue="tfhb-btn boxed-btn flex-btn " 
                     @click="openModal"
-                    :buttonText="__('Add New Host', 'hydra-booking')"
+                    :buttonText="$tfhb_trans['Add New Host']"
                     icon="PlusCircle"  
                     icon_position="left"
 
@@ -238,7 +238,7 @@ const Tfhb_Host_Filter = async (e) =>{
         <div class="tfhb-hosts-content">  
             <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
                 <template #header> 
-                    <h2>{{ __('Add New Host', 'hydra-booking') }}</h2>   
+                    <h2>{{ $tfhb_trans['Add New Host'] }}</h2>   
                 </template>
 
                 <template #content>  
@@ -246,10 +246,10 @@ const Tfhb_Host_Filter = async (e) =>{
                     <HbDropdown    
                         v-model="host.id"  
                         required= "true"  
-                        :label="__('Select User', 'hydra-booking')"  
+                        :label="$tfhb_trans['Select User']"  
                         name="id"
                         selected = "1"
-                        :placeholder="__('Select User', 'hydra-booking')" 
+                        :placeholder="$tfhb_trans['Select User']" 
                         :option = "usersData.data" 
                         :errors="errors.id"
                     /> 
@@ -259,10 +259,10 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-if="host.id == 0"
                         v-model="host.username"  
                         required= "true"  
-                        :label="__('Username', 'hydra-booking')"  
+                        :label="$tfhb_trans['Username']"  
                         name="username"
                         selected = "1"
-                        :placeholder="__('Type Username', 'hydra-booking')"  
+                        :placeholder="$tfhb_trans['Type Username']"  
                         :errors="errors.username"
                     /> 
                     <!-- UsernName -->
@@ -273,9 +273,9 @@ const Tfhb_Host_Filter = async (e) =>{
                         required= "true"  
                         type= "email"  
                         name="email"
-                        :label="__('Email', 'hydra-booking')"  
+                        :label="$tfhb_trans['Email']"  
                         selected = "1"
-                        :placeholder="__('Type User Email', 'hydra-booking')"  
+                        :placeholder="$tfhb_trans['Type User Email']"  
                         :errors="errors.email"
                     /> 
                     <!-- Email -->
@@ -288,9 +288,9 @@ const Tfhb_Host_Filter = async (e) =>{
                         required= "true"  
                         name="password"
                         type= "password"  
-                        :label="__('Password', 'hydra-booking')"  
+                        :label="$tfhb_trans['Password']"  
                         selected = "1"
-                        :placeholder="__('Type User Password', 'hydra-booking')"  
+                        :placeholder="$tfhb_trans['Type User Password']"  
                         :errors="errors.password"
                     /> 
                     <!-- Password -->
@@ -300,7 +300,7 @@ const Tfhb_Host_Filter = async (e) =>{
                     <HbButton 
                         classValue="tfhb-btn boxed-btn flex-btn " 
                         @click="CreateHosts( ['username', 'email', 'password'] )"
-                        :buttonText="__('Create Hosts', 'hydra-booking')"
+                        :buttonText="$tfhb_trans['Create Hosts']"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true"

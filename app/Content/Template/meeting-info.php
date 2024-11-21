@@ -31,7 +31,10 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 ?> 
 
-<div class="tfhb-meeting-info">
+<div class="tfhb-meeting-info"> 
+	
+	
+	<?php //echo esc_html( __( 'Booking Overview-w', 'hydra-booking' ) ); ?>
 	<div class="hidden-field">
 		<input type="hidden" id="meeting_id" name="meeting_id" value="<?php echo esc_attr($meeting['id']); ?>">
 		<input type="hidden" id="host_id" name="host_id" value="<?php echo esc_attr($host['id']); ?>"> 

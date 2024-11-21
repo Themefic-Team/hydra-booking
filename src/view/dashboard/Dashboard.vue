@@ -95,14 +95,14 @@ const truncateString = (str, num) => {
 
 <!-- {{ tfhbClass }} -->
 <div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
-    <Header title="Dashboard" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+    <Header :title="$tfhb_trans['Dashboard']" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
         <div class="thb-admin-title">
-            <h2>{{ __('Booking Overview', 'hydra-booking') }}</h2>
-            <p>{{ __('A complete view of all your bookings at a glance.', 'hydra-booking') }}</p> 
+            <h2>{{ $tfhb_trans['Booking Overview'] }}</h2>
+            <p>{{ $tfhb_trans['A complete view of all your bookings at a glance.'] }}</p> 
         </div>  
         <div class="tfhb-dropdown tfhb-mega-dropdown tfhb-datachart-box-dropdown  ">
-            <span class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ __('Today', 'hydra-booking') }}</span>  
+            <span class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8  " @click="datachart_box_dropdown = !datachart_box_dropdown"  id="tfhb-datachart-filter"> <span>{{ $tfhb_trans['Today'] }}</span>  
                 <Icon @click.stop="datachart_box_dropdown = !datachart_box_dropdown"  v-if="datachart_box_dropdown == false" name="ChevronDown" size=20 /> 
                 <Icon  @click.stop="datachart_box_dropdown = !datachart_box_dropdown"  v-else name="ChevronUp" size=20 /> 
             </span>
@@ -110,20 +110,20 @@ const truncateString = (str, num) => {
             <transition name="tfhb-dropdown-transition">
                 <div v-show="datachart_box_dropdown" class="tfhb-dropdown-wrap "  > 
                     <!-- route link -->
-                    <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ __('Today', 'hydra-booking') }}</span>
-                    <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ __('Last 7 week', 'hydra-booking') }}</span> 
-                    <span  @click="updateDashboardDay(30)" data-name="Last 30 Days" class="tfhb-dropdown-single">{{ __('Last 30 Days', 'hydra-booking') }}</span> 
-                    <span  @click="updateDashboardDay(60)" data-name="Last 3 months" class="tfhb-dropdown-single">{{ __('Last 3 months', 'hydra-booking') }}</span> 
+                    <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ $tfhb_trans['Today'] }}</span>
+                    <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ $tfhb_trans['Last 7 week'] }}</span> 
+                    <span  @click="updateDashboardDay(30)" data-name="Last 30 Days" class="tfhb-dropdown-single">{{ $tfhb_trans['Last 30 Days'] }}</span> 
+                    <span  @click="updateDashboardDay(60)" data-name="Last 3 months" class="tfhb-dropdown-single">{{ $tfhb_trans['Last 3 months'] }}</span> 
                     <div class="tfhb-dropdown-single tfhb-no-hover">
                         <div class="tfhb-filter-dates  tfhb-flexbox tfhb-gap-8">
                             <div class="tfhb-filter-start-end-date">
-                                <!-- <span>{{ __('From', 'hydra-booking') }}</span> -->
+                                <!-- <span>{{ $tfhb_trans['From'] }}</span> -->
                                 <HbDateTime 
                                     v-model="Dashboard.data_request.from_date"
                                     selected = "1" 
                                     label="From"
                                     enableTime='true'
-                                    placeholder="From"  
+                                    :placeholder="$tfhb_trans['From']"  
                                     icon="CalendarDays"   
                                 />  
                             </div>
@@ -136,14 +136,14 @@ const truncateString = (str, num) => {
                                     selected = "1" 
                                     label="To"
                                     enableTime='true'
-                                    placeholder="To"   
+                                    :placeholder="$tfhb_trans['To']"   
                                     icon="CalendarDays"   
                                 />  
                             </div>
                         </div> 
                     </div> 
                     <div class="tfhb-dropdown-single">
-                        <button class="tfhb-btn tfhb-btn-primary boxed-btn   tfhb-full-width" @click="updateDashboardDateRange"><span>{{ __('Apply', 'hydra-booking') }}</span></button>
+                        <button class="tfhb-btn tfhb-btn-primary boxed-btn   tfhb-full-width" @click="updateDashboardDateRange"><span>{{ $tfhb_trans['Apply'] }}</span></button>
                     </div>   
                 </div>
             </transition>
@@ -160,7 +160,7 @@ const truncateString = (str, num) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-1.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ __('Total Booking', 'hydra-booking') }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans['Total Booking'] }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_bookings.total}}</span>
@@ -183,8 +183,8 @@ const truncateString = (str, num) => {
                             <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_bookings.percentage}}%</span>
                         </span>
-                        <span> {{ __('VS', 'hydra-booking') }} </span>
-                        <span class="cartbox-date">{{ __('Last', 'hydra-booking') }} {{Dashboard.data_request.days}} {{ __('days', 'hydra-booking') }}</span>
+                        <span> {{ $tfhb_trans['VS'] }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} {{Dashboard.data_request.days}} {{ $tfhb_trans['days'] }}</span>
                     </div>
                 </div>
             </div>
@@ -196,7 +196,7 @@ const truncateString = (str, num) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-2.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ __('Total Earnings', 'hydra-booking') }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans['Total Earnings'] }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_earning.total}}</span>
@@ -219,8 +219,8 @@ const truncateString = (str, num) => {
                             <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_earning.percentage}}%</span>
                         </span>
-                        <span> {{ __('VS', 'hydra-booking') }} </span>
-                        <span class="cartbox-date">{{ __('Last', 'hydra-booking') }} {{Dashboard.data_request.days}} {{ __('days', 'hydra-booking') }}</span>
+                        <span> {{ $tfhb_trans['VS'] }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} {{Dashboard.data_request.days}} {{ $tfhb_trans['days'] }}</span>
                     </div>
                 </div>
             </div>
@@ -233,7 +233,7 @@ const truncateString = (str, num) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-3.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ __('Completed Bookings', 'hydra-booking') }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans['Completed Bookings'] }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_completed_bookings.total}}</span>
@@ -256,8 +256,8 @@ const truncateString = (str, num) => {
                             <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_completed_bookings.percentage}}%</span>
                         </span>
-                        <span> {{ __('VS', 'hydra-booking') }} </span>
-                        <span class="cartbox-date">{{ __('Last', 'hydra-booking') }} {{Dashboard.data_request.days}} {{ __('days', 'hydra-booking') }}</span>
+                        <span> {{ $tfhb_trans['VS'] }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} {{Dashboard.data_request.days}} {{ $tfhb_trans['days'] }}</span>
                     </div>
                 </div>
             </div>
@@ -269,7 +269,7 @@ const truncateString = (str, num) => {
                         <!-- <img  :src="$tfhb_url+'/assets/images/shape-4.svg'" alt=""> -->
                     </span>
 
-                    <span class="cartbox-title">{{ __('Canceled Bookings', 'hydra-booking') }}</span> 
+                    <span class="cartbox-title">{{ $tfhb_trans['Canceled Bookings'] }}</span> 
                     <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-single-chartbox-content">
                             <span class="cartbox-value ">{{Dashboard.data.total_cancelled_bookings.total}}</span>
@@ -292,8 +292,8 @@ const truncateString = (str, num) => {
                             <Icon v-else name="ArrowDown" size=15 />
                             <span> {{Dashboard.data.total_cancelled_bookings.percentage}}%</span>
                         </span>
-                        <span> {{ __('VS', 'hydra-booking') }} </span>
-                        <span class="cartbox-date">{{ __('Last', 'hydra-booking') }} {{Dashboard.data_request.days}} {{ __('days', 'hydra-booking') }}</span>
+                        <span> {{ $tfhb_trans['VS'] }} </span>
+                        <span class="cartbox-date">{{ $tfhb_trans['Last'] }} {{Dashboard.data_request.days}} {{ $tfhb_trans['days'] }}</span>
                     </div>
                 </div>
             </div>
@@ -309,7 +309,7 @@ const truncateString = (str, num) => {
             <div class="tfhb-dashboard-notice-box-inner">
                 <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
 
-                    <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ __('Recent Bookings', 'hydra-booking') }}</h3>
+                    <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ $tfhb_trans['Recent Bookings'] }}</h3>
                     <!-- Single Notice Box -->
                     <div  v-if="Dashboard.data.recent_booking.length > 0"  class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width">
                         <div class=" tfhb-flexbox tfhb-gap-16 tfhb-full-width">
@@ -331,7 +331,7 @@ const truncateString = (str, num) => {
                                         </span>
 
                                         <span v-if="data.meeting_payment_status == true"  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.meeting_price}} {{ data.payment_currency }} </span>
-                                        <span v-else  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> Free  </span>
+                                        <span v-else  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{ $tfhb_trans['Free'] }}  </span>
                                         <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}} </span>
                                     </div>
                                 </div> 
@@ -341,7 +341,7 @@ const truncateString = (str, num) => {
                     </div>
                     <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
                         <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-                        <p>{{ __('No Upcoming Meetings', 'hydra-booking') }}</p> 
+                        <p>{{ $tfhb_trans['No Recent Bookings'] }}</p> 
                     </div>
                     
                     <!-- Single Notice Box -->
@@ -351,7 +351,7 @@ const truncateString = (str, num) => {
 
             <div class="tfhb-dashboard-notice-box-inner">
                 <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
-                    <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ __('Upcoming Meetings', 'hydra-booking') }}</h3>
+                    <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ $tfhb_trans['Upcoming Meetings'] }}</h3>
 
                     <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width" >
                         <!-- Single Notice Box -->
@@ -379,7 +379,7 @@ const truncateString = (str, num) => {
                     </div> 
                     <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
                         <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-                        <p>{{ __('No Recent Bookings', 'hydra-booking') }}</p> 
+                        <p>{{ $tfhb_trans['No Upcoming Meetings'] }}</p> 
                     </div>
 
                 </div>
@@ -394,11 +394,11 @@ const truncateString = (str, num) => {
             <div class="tfhb-dashboard-notice-box-wrap" >
                 <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
                     <div class="tfhb-admin-title"> 
-                        <h3 >{{ __('Booking Statistics', 'hydra-booking') }}</h3>  
+                        <h3 >{{ $tfhb_trans['Booking Statistics'] }}</h3>  
                     </div>
                     <div class="thb-admin-btn right"> 
                         <div class="tfhb-dropdown datachart-dropdown  ">
-                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" >  {{ __('Last 7 Days',   'hydra-booking') }} 
+                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" >  {{ $tfhb_trans['Last 7 Days'] }} 
                                 <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-if="datachart_dropdown == false" name="ChevronDown" size=20 /> 
                                 <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-else name="ChevronUp" size=20 /> 
                             </a>
@@ -408,10 +408,10 @@ const truncateString = (str, num) => {
                                     class="tfhb-dropdown-wrap "
                                 > 
                                     <!-- route link --> 
-                                    <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ __('Last 7 Days', 'hydra-booking') }}</span> 
-                                    <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ __('This month', 'hydra-booking') }}</span> 
-                                    <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ __('Last 3 months', 'hydra-booking') }}</span> 
-                                    <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ __('This Year', 'hydra-booking') }}</span> 
+                                    <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans['Last 7 Days'] }}</span> 
+                                    <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ $tfhb_trans['This month'] }}</span> 
+                                    <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ $tfhb_trans['Last 3 months'] }}</span> 
+                                    <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ $tfhb_trans['This Year'] }}</span> 
                                     
                                 </div>
                             </transition>
