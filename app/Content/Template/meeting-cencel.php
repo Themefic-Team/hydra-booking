@@ -27,8 +27,8 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 			<div class="tfhb-meeting-confirmation">  
 
 				<div class="tfhb-confirmation-seccess"> 
-					<h3><?php echo esc_html( __( 'Your meeting has been ', 'hydra-booking' ) ); ?> <?php echo esc_html( $booking->status ); ?></h3>
-					<p>Please check your email for more information. Now you can reschedule or cancel booking from here.</p>
+					<h3><?php echo esc_html( __( 'Your meeting has been', 'hydra-booking' ) ); ?> <?php echo esc_html( $booking->status ); ?></h3>
+					<p><?php echo esc_html( __( 'Please check your email for more information. Now you can reschedule or cancel booking from here.', 'hydra-booking' ) ); ?></p>
 				</div>
 
 				<div class="tfhb-meeting-hostinfo"> 

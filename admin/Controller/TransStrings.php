@@ -501,13 +501,7 @@ namespace HydraBooking\Admin\Controller;
             'Enter field Label' =>  __('Enter field Label', 'hydra-booking'), 
             'Placeholder' =>  __('Placeholder', 'hydra-booking'), 
             'Options' =>  __('Options', 'hydra-booking'), 
-            'Add New Option' =>  __('Add New Option', 'hydra-booking'), 
-            'Save' =>  __('Save', 'hydra-booking'), 
-            'Save' =>  __('Save', 'hydra-booking'), 
-            'Save' =>  __('Save', 'hydra-booking'), 
-            'Save' =>  __('Save', 'hydra-booking'), 
-            'Save' =>  __('Save', 'hydra-booking'), 
-            'Save' =>  __('Save', 'hydra-booking'), 
+            'Add New Option' =>  __('Add New Option', 'hydra-booking'),  
            
         );
      } 
