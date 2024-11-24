@@ -775,46 +775,46 @@ class HydraBookingShortcode {
 
 		// Meeting Location Check
 		$meeting_locations = json_decode( $single_booking_meta->meeting_location );
-		$zoom_exists       = false;
-		if ( is_array( $meeting_locations ) ) {
-			foreach ( $meeting_locations as $location ) {
-				if ( isset( $location->location ) && $location->location === 'zoom' ) {
-					$zoom_exists = true;
-					break;
-				}
-			}
-		}
+		// $zoom_exists       = false;
+		// if ( is_array( $meeting_locations ) ) {
+		// 	foreach ( $meeting_locations as $location ) {
+		// 		if ( isset( $location->location ) && $location->location === 'zoom' ) {
+		// 			$zoom_exists = true;
+		// 			break;
+		// 		}
+		// 	}
+		// }
 
-		$meeting_schedule_id = ! empty( $meeting_location_data['zoom']['address']['id'] ) ? $meeting_location_data['zoom']['address']['id'] : '';
-		// Global Integration
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
-		if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
-			$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
-			$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
-			$app_secret_key = $_tfhb_integration_settings['zoom_meeting']['app_secret_key'];
-		}
+		// $meeting_schedule_id = ! empty( $meeting_location_data['zoom']['address']['id'] ) ? $meeting_location_data['zoom']['address']['id'] : '';
+		// // Global Integration
+		// $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		// if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
+		// 	$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
+		// 	$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
+		// 	$app_secret_key = $_tfhb_integration_settings['zoom_meeting']['app_secret_key'];
+		// }
 
-		// Host Integration
-		if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
-			$account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
-			$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
-			$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
-		}
+		// // Host Integration
+		// if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
+		// 	$account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
+		// 	$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
+		// 	$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
+		// }
 
-		if ( $zoom_exists && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) {
-			$zoom                                     = new ZoomServices( );
-			$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
-			$meeting_creation                         = $zoom->update_zoom_meeting( $meeting_schedule_id, $single_booking_meta, $meta_data, $host_meta );
-			$meeting_location_data['zoom']['address'] = $meeting_creation;
+		// if ( $zoom_exists && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) {
+		// 	$zoom                                     = new ZoomServices( );
+		// 	$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+		// 	$meeting_creation                         = $zoom->update_zoom_meeting( $meeting_schedule_id, $single_booking_meta, $meta_data, $host_meta );
+		// 	$meeting_location_data['zoom']['address'] = $meeting_creation;
 
-			// Get Post Meta
-			$meeting_address_data = array(
-				'id'                => $single_booking_meta->id,
-				'meeting_locations' => wp_json_encode( $meeting_location_data ),
-			);
-			$booking->update( $meeting_address_data );
+		// 	// Get Post Meta
+		// 	$meeting_address_data = array(
+		// 		'id'                => $single_booking_meta->id,
+		// 		'meeting_locations' => wp_json_encode( $meeting_location_data ),
+		// 	);
+		// 	$booking->update( $meeting_address_data );
 
-		}
+		// }
 
 		$response['message']               = esc_html(__('Rescheduled Successfully', 'hydra-booking'));
 		$response['action']                = 'rescheduled';
