@@ -87,7 +87,7 @@ $data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $sel
 				}
 			}else{
 				?>
-				<li class="tfhb-flexbox"><?php echo esc_html( __( 'No time slots are currently available.', 'hydra-booking' ) ); ?> </li>
+					<li class="tfhb-flexbox"><?php echo esc_html( __( 'No time slots are currently available.', 'hydra-booking' ) ); ?> </li>
 				<?php
 			}
 			?>
