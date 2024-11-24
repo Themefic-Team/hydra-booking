@@ -55,7 +55,7 @@ onBeforeRouteLeave((to, from, next) => {
             <div class="tfhb-admin-title tfhb-flexbox tfhb-gap-16"> 
                 <h3 >{{availability.title}}  </h3>   
                 <!-- {{ availability }} -->
-                <span  v-if="availability.default_status == true"  class="tfhb-availability-default tfhb-flexbox tfhb-gap-4"><Icon name="Heart" size=15 /> {{ __('Default', 'hydra-booking') }}</span>
+                <span  v-if="availability.default_status == true"  class="tfhb-availability-default tfhb-flexbox tfhb-gap-4"><Icon name="Heart" size=15 /> {{ $tfhb_trans('Default') }}</span>
             </div>
             <div class="thb-admin-btn right"> 
                 <div @click="activeSingleMeetingDropdown(availability.id)"  class="tfhb-availability-action tfhb-dropdown">
@@ -65,10 +65,10 @@ onBeforeRouteLeave((to, from, next) => {
                         <path d="M10.0001 16.6667C10.4603 16.6667 10.8334 16.2936 10.8334 15.8333C10.8334 15.3731 10.4603 15 10.0001 15C9.53984 15 9.16675 15.3731 9.16675 15.8333C9.16675 16.2936 9.53984 16.6667 10.0001 16.6667Z" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <div v-show="availability.id == activeItemDropdown"  class="tfhb-dropdown-wrap">
-                        <span class="tfhb-dropdown-single" @click="editAvailability">{{ __('Edit', 'hydra-booking') }}</span>
-                        <span  v-if="availability.default_status != true && availability.host"  class="tfhb-dropdown-single" @click="markAsDefault">{{ __('Default', 'hydra-booking') }}</span>
+                        <span class="tfhb-dropdown-single" @click="editAvailability">{{ $tfhb_trans('Edit') }}</span>
+                        <span  v-if="availability.default_status != true && availability.host"  class="tfhb-dropdown-single" @click="markAsDefault">{{ $tfhb_trans('Default') }}</span>
                         <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
-                        <span v-if="availability.default_status != true"  class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ __('Delete', 'hydra-booking') }}</span>
+                        <span v-if="availability.default_status != true"  class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ $tfhb_trans('Delete') }}</span>
                     </div>
                 </div>
             </div> 

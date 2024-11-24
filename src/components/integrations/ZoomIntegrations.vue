@@ -44,14 +44,14 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('Zoom', 'hydra-booking') }}</h3>
-                <p>{{ __('Connect Zoom API to configure virtual meetings.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Zoom') }}</h3>
+                <p>{{ $tfhb_trans('Connect Zoom API to configure virtual meetings.') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <!-- <span  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span> -->
+            <!-- <span  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span> -->
             
-            <router-link  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <router-link  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
            
 
             <HbButton 
@@ -69,41 +69,41 @@ const closePopup = () => {
         <!-- <Transition name="zoom-in"> -->
             <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
                 <template #header> 
-                    <h2>{{ __('Add New Zoom User Account', 'hydra-booking') }}</h2>
+                    <h2>{{ $tfhb_trans('Add New Zoom User Account') }}</h2>
                     
                 </template>
 
                 <template #content>  
                     <p>
-                        {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Zoom Account', 'hydra-booking') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Read Documentation', 'hydra-booking') }}</a>
+                        {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Zoom Account') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                     </p>
                     <HbText  
                         v-model="zoom_meeting.account_id"  
                         required= "true"  
                         name="account_id"
                         :errors="errors.account_id"
-                        :label="__('Zoom Account ID', 'hydra-booking')"  
+                        :label="$tfhb_trans('Zoom Account ID')"  
                         selected = "1"
-                        :placeholder="__('Enter Your Account ID', 'hydra-booking')"  
+                        :placeholder="$tfhb_trans('Enter Your Account ID')"  
                     /> 
                     <HbText  
                         v-model="zoom_meeting.app_client_id"  
                         required= "true"  
                         name="app_client_id"
                         :errors="errors.app_client_id"
-                        :label="__('Zoom App Client ID', 'hydra-booking')"  
+                        :label="$tfhb_trans('Zoom App Client ID')"  
                         selected = "1"
-                        :placeholder="__('Enter Your App Client ID', 'hydra-booking')"  
+                        :placeholder="$tfhb_trans('Enter Your App Client ID')"  
                     /> 
                     <HbText  
                         v-model="zoom_meeting.app_secret_key"  
                         required= "true"  
                         name="app_secret_key"
                         :errors="errors.app_secret_key"
-                        :label="__('Zoom App Secret Key', 'hydra-booking')"  
+                        :label="$tfhb_trans('Zoom App Secret Key')"  
                         selected = "1"
                         type = "password"
-                        :placeholder="__('Enter Your App Secret Key', 'hydra-booking')"  
+                        :placeholder="$tfhb_trans('Enter Your App Secret Key')"  
                     /> 
 
                     <HbButton  

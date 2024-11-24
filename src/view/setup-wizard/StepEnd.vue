@@ -363,31 +363,31 @@ window.addEventListener('click', function(e) {
     <div  class="tfhb-setup-wizard-content-wrap tfhb-hydra-dasboard-content tfhb-s-w-step-end tfhb-flexbox">
         <div class="tfhb-s-w-icon-text">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
-            <h2>{{ __('Congratulations! You are All Set Up!', 'hydra-booking') }}</h2>
-            <p>{{ __('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.', 'hydra-booking') }}</p> 
+            <h2>{{ $tfhb_trans('Congratulations! You are All Set Up!') }}</h2>
+            <p>{{ $tfhb_trans('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.') }}</p> 
        
         </div>
         <div class="tfhb-s-w-step-end tfhb-flexbox tfhb-full-width">
 
             <div class="tfhb-s-w-integrations-bar tfhb-flexbox  tfhb-justify-between">
                 <div  @click.stop="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
-                    <span class="tfhb-btn tfhb-flexbox tfhb-gap-8">All Integrations 
+                    <span class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('All Integrations') }} 
                         <Icon v-if="activeDropdown == false" @click.stop="toggleDropdown"  name="ChevronDown" size=20 /> 
                         <Icon v-else name="ChevronUp"  @click.stop="toggleDropdown"  size=20 /> 
                     </span> 
                      
                     <transition name="tfhb-dropdown-transition">
                         <div v-show="activeDropdown == true" class="tfhb-dropdown-wrap"> 
-                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> All Integrations</span>
-                            <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> Conference</span>
-                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> Calendars</span>
-                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="payments"> Payments</span>
-                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms"> Forms</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> {{ $tfhb_trans('All Integrations') }} </span>
+                            <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> {{ $tfhb_trans('Conference') }}</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> {{ $tfhb_trans('Calendars') }}</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="payments"> {{ $tfhb_trans('Payments') }}</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms">{{ $tfhb_trans('Forms') }} </span>
                         </div>
                     </transition>
                 </div>
                 <div class="tfhb-integrations-searchbar">
-                    <input @keyup="FilterBySearch" type="text" placeholder="Search Integrations">
+                    <input @keyup="FilterBySearch" type="text" :placeholder="$tfhb_trans('Search Integrations')">
                     <Icon name="Search" size=20 /> 
                 </div>
             </div>
@@ -546,7 +546,7 @@ window.addEventListener('click', function(e) {
              <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation" 
                 @click="gotoDashboard" 
-                :buttonText="__('Visit Dashboard', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Visit Dashboard')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"  

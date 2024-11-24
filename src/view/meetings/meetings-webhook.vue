@@ -213,23 +213,23 @@ const deleteBodyField = (key) => {
     > 
        <div class="tfhb-admin-title  tfhb-m-0 "  >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                {{ $tfhb_trans['Availability Range for this Booking'] }}
-                <span v-if="tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans['Pro'] }}</span>
+                {{ $tfhb_trans('Availability Range for this Booking') }}
+                <span v-if="tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
             </h2> 
-            <p>{{ $tfhb_trans['How many days can the invitee schedule?'] }}
+            <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}
                 <br>
             </p> 
-            <a  v-if="tfhb_is_pro == false || $tfhb_license_status == false" href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans['Upgrade to Pro'] }}  <Icon name="ChevronRight" size=18 /></a>
+            <a  v-if="tfhb_is_pro == false || $tfhb_license_status == false" href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
            
             
         </div>
         <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookList  " @click="addNewWebHook">
             <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans['Add New Webhook'] }}
+                {{ $tfhb_trans('Add New Webhook') }}
             </button>
         <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookcreate && $tfhb_is_pro == true && $tfhb_license_status == true" @click="backtoWebHookList">
             <Icon name="ArrowLeft" :width="20"/>
-            {{ $tfhb_trans['Back'] }}
+            {{ $tfhb_trans('Back') }}
         </button>
         
     </div>
@@ -266,17 +266,17 @@ const deleteBodyField = (key) => {
         <HbText  
             v-model="webhookData.url"
             required= "true"  
-            :label="$tfhb_trans['Webhook URL']"  
+            :label="$tfhb_trans('Webhook URL')"  
             selected = "1"
-            :placeholder="$tfhb_trans['Type your Webhook URL']" 
+            :placeholder="$tfhb_trans('Type your Webhook URL')" 
         /> 
 
         <HbDropdown  
             v-model="webhookData.request_method"
-            :label="$tfhb_trans['Request Method']"   
+            :label="$tfhb_trans('Request Method')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans['Request Method']"  
+            :placeholder="$tfhb_trans('Request Method')"  
             :option = "[
                 {'name': 'GET', 'value': 'GET'}, 
                 {'name': 'POST', 'value': 'POST'},
@@ -287,10 +287,10 @@ const deleteBodyField = (key) => {
 
         <HbDropdown  
             v-model="webhookData.request_format"
-            :label="$tfhb_trans['Request Format']"   
+            :label="$tfhb_trans('Request Format')"   
             width="50"
             selected = "1"
-            :placeholder="$tfhb_trans['Request Format']"  
+            :placeholder="$tfhb_trans('Request Format')"  
             :option = "[
                 {'name': 'FORM', 'value': 'form'}, 
                 {'name': 'JSON', 'value': 'json'}
@@ -301,7 +301,7 @@ const deleteBodyField = (key) => {
             required= "true"
             v-model="webhookData.events"
             name="webhook_events"
-            :label="$tfhb_trans['Event Triggers']"
+            :label="$tfhb_trans('Event Triggers')"
             :groups="true"
             :options="['Booking Confirmed', 'Booking Canceled', 'Booking Completed']" 
         />
@@ -311,7 +311,7 @@ const deleteBodyField = (key) => {
             required= "true"
             v-model="webhookData.request_header"
             name="request_header"
-            :label="$tfhb_trans['Request Header']"
+            :label="$tfhb_trans('Request Header')"
             :groups="true"
             :options="[
                 {'label': 'No Headers', 'value': 'no'}, 
@@ -320,21 +320,21 @@ const deleteBodyField = (key) => {
         />
         
         <div class="tfhb-headers tfhb-full-width" v-if="'with'==webhookData.request_header && 'Pabbly'!=webhookData.webhook && 'Zapier'!=webhookData.webhook">
-            <p>{{ $tfhb_trans['Request Headers'] }}</p>
+            <p>{{ $tfhb_trans('Request Headers') }}</p>
             <div class="tfhb-flexbox" v-for="(header, key) in webhookData.headers">
                 <div class="tfhb-request-header-fields tfhb-flexbox">
                     <HbText  
                         v-model="header.key"
                         required= "true"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Header Key']" 
+                        :placeholder="$tfhb_trans('Header Key')" 
                         width="50"
                     /> 
                     <HbText  
                         v-model="header.value"
                         required= "true"   
                         selected = "1"
-                        :placeholder="$tfhb_trans['Header Value']" 
+                        :placeholder="$tfhb_trans('Header Value')" 
                         width="50"
                     /> 
                 </div>
@@ -353,7 +353,7 @@ const deleteBodyField = (key) => {
             required= "true"
             v-model="webhookData.request_body"
             name="request_body"
-            :label="$tfhb_trans['Request Body']"
+            :label="$tfhb_trans('Request Body')"
             :groups="true"
             :options="[
                 {'label': 'All Data', 'value': 'all'}, 
@@ -362,21 +362,21 @@ const deleteBodyField = (key) => {
         />
 
         <div class="tfhb-headers tfhb-full-width" v-if="'selected'==webhookData.request_body">
-            <p>{{ $tfhb_trans['Request Fields'] }}</p>
+            <p>{{ $tfhb_trans('Request Fields') }}</p>
             <div class="tfhb-flexbox" v-for="(body, key) in webhookData.bodys">
                 <div class="tfhb-request-header-fields tfhb-flexbox">
                     <HbText  
                         v-model="body.name"
                         required= "true"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Name']" 
+                        :placeholder="$tfhb_trans('Enter Name')" 
                         width="50"
                     /> 
                     <HbText  
                         v-model="body.value"
                         required= "true"   
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Value']" 
+                        :placeholder="$tfhb_trans('Enter Value')" 
                         width="50"
                     /> 
                 </div>
@@ -393,12 +393,12 @@ const deleteBodyField = (key) => {
 
         <HbCheckbox 
             v-model="webhookData.status"
-            :label="$tfhb_trans['Enable this Webhook']"
+            :label="$tfhb_trans('Enable this Webhook')"
             name="enable_webhook"
         />
 
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateWebHook">{{ $tfhb_trans['Save Webhook'] }} </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateWebHook">{{ $tfhb_trans('Save Webhook') }} </button>
         </div>
     </div>
 
@@ -407,7 +407,7 @@ const deleteBodyField = (key) => {
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
             :pre_loader="props.update_preloader"
-            :buttonText="$tfhb_trans['Save & Continue']"
+            :buttonText="$tfhb_trans('Save & Continue')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

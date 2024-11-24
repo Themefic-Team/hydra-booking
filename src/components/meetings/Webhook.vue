@@ -211,8 +211,8 @@ const enableWebhookIntegrations = () => {
     <!-- {{ props.meetingId  }} -->
     <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
         <div class="tfhb-admin-title tfhb-m-0">
-            <h2>{{ __('Webhook Integration', 'hydra-booking') }}</h2> 
-            <p>{{ __('Webhook integration enables automated data transfer between apps, allowing real-time communication and custom API interactions.', 'hydra-booking') }}</p>
+            <h2>{{ $tfhb_trans('Webhook Integration') }}</h2> 
+            <p>{{ $tfhb_trans('Webhook integration enables automated data transfer between apps, allowing real-time communication and custom API interactions.') }}</p>
         </div>
     </div>
 
@@ -220,7 +220,7 @@ const enableWebhookIntegrations = () => {
 
         <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" v-if="webhookcreate" @click="backtoWebHookList">
             <Icon name="ArrowLeft" :width="20"/>
-            {{ __('Back', 'hydra-booking') }}
+            {{ $tfhb_trans('Back') }}
         </button> 
 
         <div class="tfhb-webhook-content tfhb-full-width" v-if="meeting.webhook && webhookList">
@@ -256,14 +256,14 @@ const enableWebhookIntegrations = () => {
             <HbText  
                 v-model="webhookData.url"
                 required= "true"  
-                :label="__('Webhook URL', 'hydra-booking')"  
+                :label="$tfhb_trans('Webhook URL')"  
                 selected = "1"
-                :placeholder="__('Type your Webhook URL', 'hydra-booking')" 
+                :placeholder="$tfhb_trans('Type your Webhook URL')" 
             /> 
 
             <HbDropdown  
                 v-model="webhookData.request_method"
-                :label="__('Request Method', 'hydra-booking')"   
+                :label="$tfhb_trans('Request Method')"   
                 width="50"
                 selected = "1"
                 placeholder="Request Method"  
@@ -277,7 +277,7 @@ const enableWebhookIntegrations = () => {
 
             <HbDropdown  
                 v-model="webhookData.request_format"
-                :label="__('Request Format', 'hydra-booking')"   
+                :label="$tfhb_trans('Request Format')"   
                 width="50"
                 selected = "1"
                 placeholder="Request Format"  
@@ -291,7 +291,7 @@ const enableWebhookIntegrations = () => {
                 required= "true"
                 v-model="webhookData.events"
                 name="webhook_events"
-                :label="__('Event Triggers', 'hydra-booking')"
+                :label="$tfhb_trans('Event Triggers')"
                 :groups="true"
                 :options="['Booking Confirmed', 'Booking Canceled', 'Booking Completed']" 
             />
@@ -301,7 +301,7 @@ const enableWebhookIntegrations = () => {
                 required= "true"
                 v-model="webhookData.request_header"
                 name="request_header"
-                :label="__('Request Header', 'hydra-booking')"
+                :label="$tfhb_trans('Request Header')"
                 :groups="true"
                 :options="[
                     {'label': 'No Headers', 'value': 'no'}, 
@@ -310,21 +310,21 @@ const enableWebhookIntegrations = () => {
             />
             
             <div class="tfhb-headers tfhb-full-width" v-if="'with'==webhookData.request_header && 'Pabbly'!=webhookData.webhook && 'Zapier'!=webhookData.webhook">
-                <p>{{ __('Request Headers', 'hydra-booking') }}'</p>
+                <p>{{ $tfhb_trans('Request Headers') }}'</p>
                 <div class="tfhb-flexbox" v-for="(header, key) in webhookData.headers">
                     <div class="tfhb-request-header-fields tfhb-flexbox">
                         <HbText  
                             v-model="header.key"
                             required= "true"  
                             selected = "1"
-                            :placeholder="__('Header Key', 'hydra-booking')" 
+                            :placeholder="$tfhb_trans('Header Key')" 
                             width="50"
                         /> 
                         <HbText  
                             v-model="header.value"
                             required= "true"   
                             selected = "1"
-                            :placeholder="__('Header Value', 'hydra-booking')" 
+                            :placeholder="$tfhb_trans('Header Value')" 
                             width="50"
                         /> 
                     </div>
@@ -343,7 +343,7 @@ const enableWebhookIntegrations = () => {
                 required= "true"
                 v-model="webhookData.request_body"
                 name="request_body"
-                :label="__('Request Body', 'hydra-booking')"
+                :label="$tfhb_trans('Request Body')"
                 :groups="true"
                 :options="[
                     {'label': 'All Data', 'value': 'all'}, 
@@ -352,21 +352,21 @@ const enableWebhookIntegrations = () => {
             />
 
             <div class="tfhb-headers tfhb-full-width" v-if="'selected'==webhookData.request_body">
-                <p>{{ __('Request Fields', 'hydra-booking') }}'</p>
+                <p>{{ $tfhb_trans('Request Fields') }}'</p>
                 <div class="tfhb-flexbox" v-for="(body, key) in webhookData.bodys">
                     <div class="tfhb-request-header-fields tfhb-flexbox">
                         <HbText  
                             v-model="body.name"
                             required= "true"  
                             selected = "1"
-                            :placeholder="__('Enter Name', 'hydra-booking')" 
+                            :placeholder="$tfhb_trans('Enter Name')" 
                             width="50"
                         /> 
                         <HbText  
                             v-model="body.value"
                             required= "true"   
                             selected = "1"
-                            :placeholder="__('Enter Value', 'hydra-booking')" 
+                            :placeholder="$tfhb_trans('Enter Value')" 
                             width="50"
                         /> 
                     </div>
@@ -383,24 +383,24 @@ const enableWebhookIntegrations = () => {
 
             <HbCheckbox 
                 v-model="webhookData.status"
-                :label="__('Enable this Webhook', 'hydra-booking')"
+                :label="$tfhb_trans('Enable this Webhook')"
                 name="enable_webhook"
             />
 
             <div class="tfhb-submission-btn">
-                <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect" @click="updateWebHook">{{ __('Save Webhook', 'hydra-booking') }} </button>
+                <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect" @click="updateWebHook">{{ $tfhb_trans('Save Webhook') }} </button>
             </div>
         </div>
 
         <div class="tfhb-integration-box tfhb-full-width">
             <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-if="webhookList && integrations.webhook_status==1" @click="addNewWebHook">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add New Webhook', 'hydra-booking') }}
+                {{ $tfhb_trans('Add New Webhook') }}
             </button>
 
             <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-else  @click="enableWebhookIntegrations">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add New Webhook', 'hydra-booking') }}
+                {{ $tfhb_trans('Add New Webhook') }}
             </button>
             
         </div> 
@@ -408,7 +408,7 @@ const enableWebhookIntegrations = () => {
             <HbButton 
                 classValue="tfhb-btn flex-btn" 
                 @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                :buttonText="__('Please Configure', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Please Configure')"
             />  
         </div>
 

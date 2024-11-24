@@ -58,8 +58,8 @@ const sikpStepThree = () => {
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{ __('Experience HydraBooking in Action (Instantly!)', 'hydra-booking') }}</h2>
-            <p>{{ __('It helps you customize the booking process to fit your workflow and make things run more smoothly.', 'hydra-booking') }}</p>
+            <h2>{{ $tfhb_trans('Experience HydraBooking in Action (Instantly!)') }}</h2>
+            <p>{{ $tfhb_trans('It helps you customize the booking process to fit your workflow and make things run more smoothly.') }}</p>
         </div>
         <div class="tfhb-s-w-import-data">
             <img :src="$tfhb_url+'/assets/images/Import.svg'" style="height: 96px;" alt="">
@@ -69,7 +69,7 @@ const sikpStepThree = () => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-import-demo" 
                 @click="StepThree"
-                :buttonText="__('Create demo meeting', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Create demo meeting')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :pre_loader="props.setupWizard.pre_loader"
@@ -81,7 +81,7 @@ const sikpStepThree = () => {
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
-                :buttonText="__('Back', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Back')"
                 icon="ChevronLeft"  
                 hover_icon="ArrowLeft" 
                 :hover_animation="true" 
@@ -90,7 +90,7 @@ const sikpStepThree = () => {
             <HbButton 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="sikpStepThree" 
-                :buttonText="__('Skip', 'hydra-booking')"  
+                :buttonText="$tfhb_trans('Skip')"  
                 :hover_animation="true"  
                 :pre_loader="props.setupWizard.skip_preloader"
                 pre_loader_color="#2E6B38"

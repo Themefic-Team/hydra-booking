@@ -200,11 +200,11 @@ onBeforeMount(() => {
     <HbInfoBox name="first-modal">
         
         <template #content>
-            <span>{{$tfhb_trans['Before connecting make sure you provide the necessary credentials to']}}
+            <span>{{$tfhb_trans('Before connecting make sure you provide the necessary credentials to')}}
                 <HbButton 
                         classValue="tfhb-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                        :buttonText="$tfhb_trans['Settings  Integrations']"
+                        :buttonText="$tfhb_trans('Settings  Integrations')"
                     />  
             </span>
             

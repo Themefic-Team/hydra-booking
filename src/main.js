@@ -21,7 +21,9 @@ tfhbApps.config.globalProperties.$tfhb_url = tfhb_url;
 tfhbApps.config.globalProperties.$tfhb_hydra_admin_url = tfhb_hydra_admin_url;   
 tfhbApps.config.globalProperties.$user = user; 
 tfhbApps.config.globalProperties.$tfhb_is_pro = tfhb_is_pro; 
-tfhbApps.config.globalProperties.$tfhb_license_status = tfhb_license_status; 
-tfhbApps.config.globalProperties.$tfhb_trans = tfhb_trans;
+tfhbApps.config.globalProperties.$tfhb_license_status = tfhb_license_status;  
+tfhbApps.config.globalProperties.$tfhb_trans = function (text) { 
+    return tfhb_trans[text] || text;
+};
 tfhbApps.mount('#tfhb-admin-app')
 

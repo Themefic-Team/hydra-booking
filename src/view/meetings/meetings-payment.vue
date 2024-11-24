@@ -48,13 +48,13 @@ onBeforeMount(() => {
         <div class="tfhb-admin-title tfhb-m-0 tfhb-full-width">
 
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                {{ $tfhb_trans['Payment for this Meeting'] }}
+                {{ $tfhb_trans('Payment for this Meeting') }}
                 
                 <HbSwitch 
                     v-model="meeting.payment_status"
                 />
             </h2> 
-            <p>{{ $tfhb_trans['Securely process payment for this meeting using WooCommerce Payments, Stripe, or PayPal for a seamless transaction experience.'] }}</p>
+            <p>{{ $tfhb_trans('Securely process payment for this meeting using WooCommerce Payments, Stripe, or PayPal for a seamless transaction experience.') }}</p>
         </div> 
         <div v-if="meeting.payment_status == 1"  class="tfhb-notification-wrap tfhb-admin-card-box tfhb-m-0 tfhb-gap-32 tfhb-full-width">
             
@@ -64,10 +64,10 @@ onBeforeMount(() => {
                     <HbDropdown 
                         v-model="meeting.payment_method" 
                         required= "true" 
-                        :label="$tfhb_trans['Payment Method']"  
+                        :label="$tfhb_trans('Payment Method')"  
                         :selected = "1"
                         name="payment_method"
-                        :placeholder="$tfhb_trans['Select Payment Method']"  
+                        :placeholder="$tfhb_trans('Select Payment Method')"  
                         :option = "[
                             {name: 'Woocommerce', value: 'woo_payment', icon: $tfhb_url+'/assets/images/Woo.png',  },  
                             {name: 'Paypal', value: 'paypal_payment', icon: $tfhb_url+'/assets/images/paypal.svg',}, 
@@ -75,25 +75,25 @@ onBeforeMount(() => {
                         ]"   
                     /> 
 
-                    <div  v-if="meeting.payment_method == 'woo_payment' && Meeting.meetingPaymentIntegration.woo_payment == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans['Woocommerce is not connected.'] }} 
+                    <div  v-if="meeting.payment_method == 'woo_payment' && Meeting.meetingPaymentIntegration.woo_payment == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('Woocommerce is not connected.') }} 
                         <HbButton 
                             classValue="tfhb-btn flex-btn" 
                             @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                            :buttonText="$tfhb_trans['Please Configure']"
+                            :buttonText="$tfhb_trans('Please Configure')"
                         />  
                     </div>
-                    <div  v-if="meeting.payment_method == 'paypal_payment' && Meeting.meetingPaymentIntegration.paypal == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">{{ $tfhb_trans['Paypal is not connected.'] }}  
+                    <div  v-if="meeting.payment_method == 'paypal_payment' && Meeting.meetingPaymentIntegration.paypal == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">{{ $tfhb_trans('Paypal is not connected.') }}  
                         <HbButton 
                             classValue="tfhb-btn flex-btn" 
                             @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                            :buttonText="$tfhb_trans['Please Configure']"
+                            :buttonText="$tfhb_trans('Please Configure')"
                         />  
                     </div>
-                    <div  v-if="meeting.payment_method == 'stripe_payment' && Meeting.meetingPaymentIntegration.stripe == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans['Stripe is not connected.'] }}  
+                    <div  v-if="meeting.payment_method == 'stripe_payment' && Meeting.meetingPaymentIntegration.stripe == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('Stripe is not connected.') }}  
                         <HbButton 
                             classValue="tfhb-btn flex-btn" 
                             @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                            :buttonText="$tfhb_trans['Please Configure']"
+                            :buttonText="$tfhb_trans('Please Configure')"
                         />  
                     </div>
                     <!-- Woo Integrations  -->
@@ -105,10 +105,10 @@ onBeforeMount(() => {
                     v-model="meeting.payment_meta.product_id" 
                     required= "true" 
                     :filter="true"
-                    :label="$tfhb_trans['Selecte Product']"  
+                    :label="$tfhb_trans('Selecte Product')"  
                     :selected = "1"
                     name="payment_meta"
-                    :placeholder="$tfhb_trans['Selecte Product']"  
+                    :placeholder="$tfhb_trans('Selecte Product')"  
                     :option = "props.wcProduct"   
                 /> 
             </div>
@@ -117,7 +117,7 @@ onBeforeMount(() => {
                     v-model="meeting.meeting_price"  
                     type= "number"
                     required= "true" 
-                    :label="$tfhb_trans['Price']"   
+                    :label="$tfhb_trans('Price')"   
                     :placeholder="'00.000'" 
                     :width= "60"
                 
@@ -126,7 +126,7 @@ onBeforeMount(() => {
                     v-model="meeting.payment_currency"   
                     name="payment_method"
                     required= "true" 
-                    :label="$tfhb_trans['Currency']"  
+                    :label="$tfhb_trans('Currency')"  
                     placeholder="Currency"  
                     :width= "40"
                     :filter="true"
@@ -140,7 +140,7 @@ onBeforeMount(() => {
             <HbButton  
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
-            :buttonText="$tfhb_trans['Save & Finish']"
+            :buttonText="$tfhb_trans('Save & Finish')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

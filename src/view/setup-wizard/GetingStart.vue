@@ -30,26 +30,26 @@ const GettingStart = () => {
     <div class="tfhb-setup-wizard-content-wrap tfhb-s-w-geting-start tfhb-flexbox">
         <div class="tfhb-s-w-icon-text">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
-            <h2>{{ __('Welcome to HydraBooking!', 'hydra-booking') }}</h2>
-            <p>{{ __('Thank you for choosing HydraBooking, the premier solution for effortless appointment and booking scheduling', 'hydra-booking') }}</p>
+            <h2>{{ $tfhb_trans('Welcome to HydraBooking!') }}</h2>
+            <p>{{ $tfhb_trans('Thank you for choosing HydraBooking, the premier solution for effortless appointment and booking scheduling') }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
              <!-- Custom Duration -->
              <HbText  
                 v-model="props.setupWizard.data.email"  
-                :label="__('Email', 'hydra-booking')"  
+                :label="$tfhb_trans('Email')"  
                 name="title"
                 type="email"
                 selected = "1"
-                :placeholder="__('Enter your email', 'hydra-booking')"  
+                :placeholder="$tfhb_trans('Enter your email')"  
             /> 
              <!-- Custom Duration -->
             <div class="tfhb-recevie-updates">
                     <HbCheckbox 
                     v-model="props.setupWizard.data.enable_recevie_updates"  
                     type="checkbox"  
-                    :label="__('Receive updates and promotions', 'hydra-booking')"  
+                    :label="$tfhb_trans('Receive updates and promotions')"  
                 />
             </div>
         </div>
@@ -57,7 +57,7 @@ const GettingStart = () => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn" 
                 @click="GettingStart" 
-                :buttonText="__('Get Started in a Minute', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Get Started in a Minute')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

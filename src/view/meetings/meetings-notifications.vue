@@ -99,8 +99,8 @@ const UpdateNotification = async () => {
 
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">
-                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn"  :class="host ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans['To Host'] }}</button>
-                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="attendee ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans['To Attendee'] }} </button>
+                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn"  :class="host ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }}</button>
+                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="attendee ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
  
             <div v-if="host" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width"> 
@@ -108,7 +108,7 @@ const UpdateNotification = async () => {
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
-                    :label="$tfhb_trans['Booking Confirmation']" 
+                    :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_confirmation"  
                     :update_preloader="props.update_preloader"  
@@ -120,8 +120,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    :title="$tfhb_trans['Send Email to Host']" 
-                    :label="$tfhb_trans['Booking Pending']" 
+                    :title="$tfhb_trans('Send Email to Host')" 
+                    :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_pending"  
                     :update_preloader="props.update_preloader"  
@@ -133,8 +133,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                   :title="$tfhb_trans['Send Email to Host']" 
-                    :label="$tfhb_trans['Booking Cancel']" 
+                   :title="$tfhb_trans('Send Email to Host')" 
+                    :label="$tfhb_trans('Booking Cancel')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_cancel"  
                     :update_preloader="props.update_preloader"  
@@ -146,8 +146,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                   :title="$tfhb_trans['Send Email to Host']" 
-                    :label="$tfhb_trans['Booking Reschedule']" 
+                   :title="$tfhb_trans('Send Email to Host')" 
+                    :label="$tfhb_trans('Booking Reschedule')" 
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_reschedule" 
                     :update_preloader="props.update_preloader"  
@@ -159,8 +159,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                   :title="$tfhb_trans['Send Email to Host']" 
-                    :label="$tfhb_trans['Booking Reminder']"
+                   :title="$tfhb_trans('Send Email to Host')" 
+                    :label="$tfhb_trans('Booking Reminder')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.host.booking_reminder"  
                     :update_preloader="props.update_preloader"  
@@ -176,8 +176,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    :title="$tfhb_trans['Send Email to Attendee']" 
-                    :label="$tfhb_trans['Booking Confirmation']"
+                    :title="$tfhb_trans('Send Email to Attendee')" 
+                    :label="$tfhb_trans('Booking Confirmation')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_confirmation"  
                     :update_preloader="props.update_preloader"  
@@ -189,8 +189,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    :title="$tfhb_trans['Send Email to Attendee']"
-                    :label="$tfhb_trans['Booking Pending']"
+                    :title="$tfhb_trans('Send Email to Attendee')"
+                    :label="$tfhb_trans('Booking Pending')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_pending"  
                     :update_preloader="props.update_preloader"  
@@ -202,8 +202,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                   :title="$tfhb_trans['Send Email to Attendee']"
-                    :label="$tfhb_trans['Booking Cancel']"
+                   :title="$tfhb_trans('Send Email to Attendee')"
+                    :label="$tfhb_trans('Booking Cancel')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_cancel"  
                     :update_preloader="props.update_preloader"  
@@ -216,8 +216,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                   :title="$tfhb_trans['Send Email to Attendee']"
-                    :label="$tfhb_trans['Booking Reschedule']"
+                   :title="$tfhb_trans('Send Email to Attendee')"
+                    :label="$tfhb_trans('Booking Reschedule')"
                     :data="meeting.notification.attendee.booking_reschedule"  
                     :update_preloader="props.update_preloader"  
                     :ispopup="attendeeBookingReschedulePopUp"
@@ -228,8 +228,8 @@ const UpdateNotification = async () => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                   :title="$tfhb_trans['Send Email to Attendee']"
-                    :label="$tfhb_trans['Booking Reminder']"
+                   :title="$tfhb_trans('Send Email to Attendee')"
+                    :label="$tfhb_trans('Booking Reminder')"
                     @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_reminder"  
                     :update_preloader="props.update_preloader"  
@@ -248,7 +248,7 @@ const UpdateNotification = async () => {
             <HbButton  
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting')"
-                :buttonText="$tfhb_trans['Save & Continue']"
+                :buttonText="$tfhb_trans('Save & Continue')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

@@ -135,8 +135,8 @@ window.addEventListener('click', function(e) {
             <div class="tfhb-s-w-success-data tfhb-mt-32">
                 <img :src="$tfhb_url+'/assets/images/success.gif'" style="height: 50px;" alt="">
             </div>
-            <h2>{{ __('Your Meeting is ready!', 'hydra-booking') }}</h2>
-            <p>{{ __(`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`, 'hydra-booking') }}</p> 
+            <h2>{{ $tfhb_trans('Your Meeting is ready!') }}</h2>
+            <p>{{ $tfhb_trans[`Your HydraBooking meeting is ready. Click 'Preview' to check your booking page or 'Share' to send the link to your attendees`] }}</p> 
         </div>
 
         <div class="tfhb-meetings-list-content" >
@@ -155,7 +155,7 @@ window.addEventListener('click', function(e) {
                                                 <Icon name="Clock" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
-                                                {{ setupWizard.data.meeting.duration }} {{ __('minutes', 'hydra-booking') }}
+                                                {{ setupWizard.data.meeting.duration }} {{ $tfhb_trans('minutes') }}
                                             </div>
                                         </div>
                                     </li>
@@ -167,7 +167,7 @@ window.addEventListener('click', function(e) {
                                                 <Icon name="UserRound" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
-                                                {{ __('One to One', 'hydra-booking') }}
+                                                {{ $tfhb_trans('One to One') }}
                                             </div>
                                         </div>
                                         <div class="tfhb-flexbox" v-if="'one-to-group'==setupWizard.data.meeting.meeting_type">
@@ -177,7 +177,7 @@ window.addEventListener('click', function(e) {
                                                 <Icon name="UsersRound" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
-                                                {{ __('One to Group', 'hydra-booking') }}
+                                                {{ $tfhb_trans('One to Group') }}
                                             </div>
                                         </div>
                                     </li>
@@ -226,7 +226,7 @@ window.addEventListener('click', function(e) {
                                     <!-- route link -->
                                     <router-link :to="{ name: 'MeetingsCreate', params: { id: setupWizard.data.meeting.id } }" class="tfhb-dropdown-single tfhb-flexbox tfhb-gap-4 tfhb-align-center">
                                         <Icon name="SquarePen" size=16 />
-                                        {{ __('Edit', 'hydra-booking') }}
+                                        {{ $tfhb_trans('Edit') }}
                                     </router-link>
                                     
                                 </div>
@@ -236,11 +236,11 @@ window.addEventListener('click', function(e) {
                     <div class="single-meeting-action-btn tfhb-flexbox tfhb-justify-between">
                         <a :href="setupWizard.data.meeting.permalink" class="tfhb-flexbox" target="_blank">
                             <Icon name="Eye" size=20 /> 
-                            {{ __('Preview', 'hydra-booking') }}
+                            {{ $tfhb_trans('Preview') }}
                         </a>
                         <a href="#" class="tfhb-flexbox" @click.prevent="sharePopupData(setupWizard.data.meeting)">
                             <Icon name="Share2" size=20 /> 
-                            {{ __('Share', 'hydra-booking') }}
+                            {{ $tfhb_trans('Share') }}
                         </a>
                     </div>
                 </div>
@@ -261,7 +261,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="Clock" size=16 />  
                                         </div>
                                         <div class="user-info-title">
-                                            {{ shareData.time }} {{ __('minutes', 'hydra-booking') }}
+                                            {{ shareData.time }} {{ $tfhb_trans('minutes') }}
                                         </div>
                                     </div>
                                 </li>
@@ -273,7 +273,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="UserRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ __('One to One', 'hydra-booking') }}
+                                            {{ $tfhb_trans('One to One') }}
                                         </div>
                                     </div>
                                     <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==shareData.meeting_type">
@@ -283,7 +283,7 @@ window.addEventListener('click', function(e) {
                                             <Icon name="UsersRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ __('One to Group', 'hydra-booking') }}
+                                            {{ $tfhb_trans('One to Group') }}
                                         </div>
                                     </div>
                                 </li>
@@ -291,8 +291,8 @@ window.addEventListener('click', function(e) {
 
                             <div class="tfhb-share-type tfhb-full-width">
                                 <ul class="tfhb-flexbox tfhb-gap-8">
-                                    <li :class="'link'==shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ __('Share link', 'hydra-booking') }}</li>
-                                    <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ __('Short code', 'hydra-booking') }}</li>
+                                    <li :class="'link'==shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
+                                    <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Short code') }}</li>
                                     <li :class="'embed'==shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">Embed code</li>
                                 </ul>
                             </div>
@@ -308,7 +308,7 @@ window.addEventListener('click', function(e) {
                                         <HbButton 
                                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                                             @click="copyMeeting(shareData.link)" 
-                                            :buttonText="__('Copy Code', 'hydra-booking')" 
+                                            :buttonText="$tfhb_trans('Copy Code')" 
                                         />  
                                     </div>
                                 </div>
@@ -322,7 +322,7 @@ window.addEventListener('click', function(e) {
                                         <HbButton 
                                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                                             @click="copyMeeting(shareData.shortcode)" 
-                                            :buttonText="__('Copy Code', 'hydra-booking')" 
+                                            :buttonText="$tfhb_trans('Copy Code')" 
                                         /> 
                                     </div>
                                 </div>
@@ -338,7 +338,7 @@ window.addEventListener('click', function(e) {
                                     <HbButton 
                                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                                         @click="copyMeeting(shareData.embed)" 
-                                        :buttonText="__('Copy Code', 'hydra-booking')" 
+                                        :buttonText="$tfhb_trans('Copy Code')" 
                                     /> 
                                 </div>
                                 
@@ -355,7 +355,7 @@ window.addEventListener('click', function(e) {
                 <HbButton 
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation tfhb-justify-center" 
                     @click="StepFour" 
-                    :buttonText="__('View Integrations', 'hydra-booking')"
+                    :buttonText="$tfhb_trans('View Integrations')"
                     icon="ChevronRight" 
                     hover_icon="ArrowRight" 
                     :hover_animation="true"   
@@ -368,7 +368,7 @@ window.addEventListener('click', function(e) {
             <HbButton 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 " 
                 @click="gotoDashboard" 
-                :buttonText="__('Back to Dashboard ', 'hydra-booking')"   
+                :buttonText="$tfhb_trans('Back to Dashboard ')"   
             />  
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">

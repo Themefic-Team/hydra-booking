@@ -33,8 +33,8 @@ const installWooPlugin = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('Woo Payment', 'hydra-booking') }}</h3>
-                <p>{{ __('Connect WooCommerce for manage booking payment.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Woo Payment') }}</h3>
+                <p>{{ $tfhb_trans('Connect WooCommerce for manage booking payment.') }}</p>
             </div>
         </div>
        
@@ -44,11 +44,11 @@ const installWooPlugin = () => {
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
            
              
-            <!-- <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connected', 'hydra-booking') }} <Icon name="ChevronRight" size=18 /></button> -->
+            <!-- <button v-if="woo_payment.connection_status == 1"  class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connected') }} <Icon name="ChevronRight" size=18 /></button> -->
             <HbButton 
                  v-if="woo_payment.connection_status == 1" 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="__('Connected', 'hydra-booking')" 
+                :buttonText="$tfhb_trans('Connected')" 
                 :hover_animation="false"
             /> 
       
@@ -57,7 +57,7 @@ const installWooPlugin = () => {
                 v-else
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8" 
                 @click="installWooPlugin"
-                :buttonText="__('Connect', 'hydra-booking')"  
+                :buttonText="$tfhb_trans('Connect')"  
                 :hover_animation="false"
             /> 
                 

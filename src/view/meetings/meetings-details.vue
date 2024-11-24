@@ -122,18 +122,18 @@ onMounted(() => {
         <HbText  
             v-model="meeting.title" 
             required= "true"  
-            :label="$tfhb_trans['Meeting title']"  
+            :label="$tfhb_trans('Meeting title')"  
             name="title"
             selected = "1"
-            :placeholder="$tfhb_trans['Type meeting title']" 
+            :placeholder="$tfhb_trans('Type meeting title')" 
             :errors="errors.title"
         /> 
         <HbTextarea  
             v-model="meeting.description" 
             required= "false"  
             name="description"
-            :label="$tfhb_trans['Description']"  
-            :placeholder="$tfhb_trans['Describe about meeting']" 
+            :label="$tfhb_trans('Description')"  
+            :placeholder="$tfhb_trans('Describe about meeting')" 
         /> 
 
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-16 tfhb-m-0 tfhb-full-width"> 
@@ -141,7 +141,7 @@ onMounted(() => {
             <HbDropdown 
                 v-model="meeting.duration" 
                 required= "true" 
-                :label="$tfhb_trans['Duration']"  
+                :label="$tfhb_trans('Duration')"  
                 :selected = "1"
                 name="duration"
                 placeholder="Select Meetings Duration"  
@@ -158,11 +158,11 @@ onMounted(() => {
             <!-- Custom Duration -->
             <HbText  
                 v-model="meeting.custom_duration"  
-                :label="$tfhb_trans['Custom Duration']"  
+                :label="$tfhb_trans('Custom Duration')"  
                 name="title"
                 type="number"
                 selected = "1"
-                :placeholder="$tfhb_trans['Type Custom Duration']"  
+                :placeholder="$tfhb_trans('Type Custom Duration')"  
                 v-if="'custom'==meeting.duration"
             /> 
         
@@ -176,9 +176,9 @@ onMounted(() => {
                         v-if="props.meeting.meeting_type ==  'one-to-one'"
                         v-model="slocation.location" 
                         required= "true" 
-                        :label="$tfhb_trans['Location']"  
+                        :label="$tfhb_trans('Location')"  
                         :selected = "1"
-                        :placeholder="$tfhb_trans['Location']" 
+                        :placeholder="$tfhb_trans('Location')" 
                         :option = "[
                             {name: 'Zoom', value: 'zoom',  icon: $tfhb_url+'/assets/images/zoom-icon-small.svg', }, 
                             {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
@@ -199,9 +199,9 @@ onMounted(() => {
                         v-if="props.meeting.meeting_type ==  'one-to-group'"
                         v-model="slocation.location" 
                         required= "true" 
-                        :label="$tfhb_trans['Location']"  
+                        :label="$tfhb_trans('Location')"  
                         :selected = "1"
-                        :placeholder="$tfhb_trans['Location']" 
+                        :placeholder="$tfhb_trans('Location')" 
                         :option = "[ 
                             {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
                             {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
@@ -220,18 +220,18 @@ onMounted(() => {
                     <HbText  
                         v-model="slocation.address" 
                         required= "true"  
-                        :label="$tfhb_trans['Address']"  
+                        :label="$tfhb_trans('Address')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Address']" 
+                        :placeholder="$tfhb_trans('Enter Address')" 
                         :width= "50"
                         v-if="'In Person (Organizer Address)'== slocation.location "
                     /> 
                     <HbText  
                         v-model="slocation.address" 
                         required= "true"  
-                        :label="$tfhb_trans['Add Custom Location']"  
+                        :label="$tfhb_trans('Add Custom Location')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Address']" 
+                        :placeholder="$tfhb_trans('Enter Address')" 
                         :width= "50"
                         v-if="'Custom'==slocation.location"
                     /> 
@@ -239,9 +239,9 @@ onMounted(() => {
                         v-model="slocation.address" 
                         type="number"
                         required= "true"  
-                        :label="$tfhb_trans['Phone Number']"  
+                        :label="$tfhb_trans('Phone Number')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Enter Phone Number']" 
+                        :placeholder="$tfhb_trans('Enter Phone Number')" 
                         :width= "50"
                         v-if="'Organizer Phone Number'==slocation.location"
                     /> 
@@ -250,18 +250,18 @@ onMounted(() => {
                     <Icon name="Trash" :width="16" />
                 </div>
 
-                <div  v-if="slocation.location == 'zoom' && props.integrations.zoom_meeting_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans['Zoom is not connected.']}} 
+                <div  v-if="slocation.location == 'zoom' && props.integrations.zoom_meeting_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Zoom is not connected.')}} 
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                        :buttonText="$tfhb_trans['Please Configure']"
+                        :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
-                <div  v-if="slocation.location == 'meet' && props.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans['Google Meet is not connected.']}}  
+                <div  v-if="slocation.location == 'meet' && props.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Google Meet is not connected.')}}  
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                        :buttonText="$tfhb_trans['Please Configure']"
+                        :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
             </div>
@@ -269,7 +269,7 @@ onMounted(() => {
              
                 <button @click="emit('add-more-location')" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                     <Icon name="PlusCircle" :width="20"/>
-                    {{ $tfhb_trans['Add Another Location'] }}
+                    {{ $tfhb_trans('Add Another Location') }}
                 </button> 
             </div>
         </div>
@@ -279,8 +279,8 @@ onMounted(() => {
                     <HbText  
                         v-model="meeting.max_book_per_slot"  
                         type= "number"
-                        :label="$tfhb_trans['Max invitees in a spot']"   
-                        :placeholder="$tfhb_trans['Max invitees in a spot']" 
+                        :label="$tfhb_trans('Max invitees in a spot')"   
+                        :placeholder="$tfhb_trans('Max invitees in a spot')" 
                         :width= "100"
                        
                     />  
@@ -288,7 +288,7 @@ onMounted(() => {
                         v-model="meeting.is_display_max_book_slot" 
                         type="checkbox" 
                         required= "true" 
-                        :label="$tfhb_trans['Display remaining spots on booking page']" 
+                        :label="$tfhb_trans('Display remaining spots on booking page')" 
                     />
             </div>  
         </div>
@@ -298,9 +298,9 @@ onMounted(() => {
         <HbDropdown 
             v-model="meeting.meeting_category" 
             required= "true" 
-            :label="$tfhb_trans['Select Category']"  
+            :label="$tfhb_trans('Select Category')"  
             :selected = "meeting.meeting_category"
-            :placeholder="$tfhb_trans['Select Category']" 
+            :placeholder="$tfhb_trans('Select Category')" 
             :option = "props.meetingCategory.value" 
         />
         <div class="tfhb-add-moreinfo tfhb-full-width" >
@@ -308,7 +308,7 @@ onMounted(() => {
 
             <button @click="createMeetingPopup = !createMeetingPopup" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans['Create Category'] }}
+                {{ $tfhb_trans('Create Category') }}
             </button> 
         </div>
         <div class="tfhb-submission-btn">
@@ -316,7 +316,7 @@ onMounted(() => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting', ['title',  'duration'])"
-                :buttonText="$tfhb_trans['Save & Continue']"
+                :buttonText="$tfhb_trans('Save & Continue')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :pre_loader="props.update_preloader"
@@ -328,7 +328,7 @@ onMounted(() => {
 
         <HbPopup :isOpen="createMeetingPopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ $tfhb_trans['Create Meeting Category'] }}</h2>
+                <h2>{{ $tfhb_trans('Create Meeting Category') }}</h2>
                 
             </template>
 
@@ -336,16 +336,16 @@ onMounted(() => {
                 <HbText  
                     v-model="CategoryData.title"
                     required= "true"  
-                    :label="$tfhb_trans['Category Title']"  
+                    :label="$tfhb_trans('Category Title')"  
                     name="ctg-title"
                 /> 
                 <HbTextarea  
                     v-model="CategoryData.description"
                     required= "true"  
                     name="ctg-description"
-                    :label="$tfhb_trans['Description']"  
+                    :label="$tfhb_trans('Description')"  
                 /> 
-                <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ $tfhb_trans['Save Category'] }}</button> 
+                <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ $tfhb_trans('Save Category') }}</button> 
             </template> 
         </HbPopup>
     </div>

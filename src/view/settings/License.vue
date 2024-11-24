@@ -99,8 +99,8 @@ const encryptLicense = (license_key) => {
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ __('License Management', 'hydra-booking') }}</h1>  
-                <p>{{ __('Manage your HydraBooking Pro license', 'hydra-booking') }}</p>
+                <h1 >{{ $tfhb_trans('License Management') }}</h1>  
+                <p>{{ $tfhb_trans('Manage your HydraBooking Pro license') }}</p>
             </div>
             <div class="thb-admin-btn right">  
 
@@ -113,15 +113,15 @@ const encryptLicense = (license_key) => {
                 <template #content>
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
                         <div class="tfhb-admin-title tfhb-m-0"> 
-                            <h2 >{{ __('Unlock Advanced Capabilities with HydraBooking Pro !', 'hydra-booking') }}</h2>  
-                            <p>{{ __('Please upgrade to get all the advanced features. ', 'hydra-booking') }}</p>
+                            <h2 >{{ $tfhb_trans('Unlock Advanced Capabilities with HydraBooking Pro !') }}</h2>  
+                            <p>{{ $tfhb_trans('Please upgrade to get all the advanced features.') }}</p>
                         </div>
                         
                         <div class="thb-admin-btn right"> 
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                                 @click="upgradeToPro" 
-                                :buttonText="__('Upgrade to Pro', 'hydra-booking')"
+                                :buttonText="$tfhb_trans('Upgrade to Pro')"
                                 icon="ChevronRight" 
                                 hover_icon="ArrowRight" 
                                 :hover_animation="true" 
@@ -133,48 +133,48 @@ const encryptLicense = (license_key) => {
  
             <!-- Date And Time --> 
                 <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == false"  class="tfhb-admin-title" >
-                    <h2>{{ __(' License Info', 'hydra-booking') }}</h2> 
-                    <p>{{ __('Explore licensing options and benefits for advanced features.', 'hydra-booking') }}</p>
+                    <h2>{{ $tfhb_trans('License Info') }}</h2> 
+                    <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
                 </div>
                 <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
 
                     <ul class="el-license-info">
                         <li>
                             <div>
-                                <span class="el-license-info-title">Status</span>
+                                <span class="el-license-info-title">{{ $tfhb_trans('Status') }}</span>
     
-                                    <span v-if="LicenseBase.LicenseData.is_valid == true " class="el-license-valid">Valid</span> 
-                                    <span v-else class="el-license-valid">Invalid</span> 
+                                    <span v-if="LicenseBase.LicenseData.is_valid == true " class="el-license-valid">{{ $tfhb_trans('Valid') }}</span> 
+                                    <span v-else class="el-license-valid">{{ $tfhb_trans('Invalid') }}</span> 
                             </div>
                         </li>
 
                         <li>
                             <div>
-                                <span class="el-license-info-title">License Type</span>
+                                <span class="el-license-info-title">{{ $tfhb_trans('License Type') }}</span>
                                 {{ LicenseBase.LicenseData.license_title }} 
                             </div>
                         </li>
 
                     <li>
                         <div>
-                            <span class="el-license-info-title">License Expired on</span>
+                            <span class="el-license-info-title">{{ $tfhb_trans('License Expired on') }}</span>
                             {{ LicenseBase.LicenseData.expire_date }} 
                         
-                                <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">Renew</a>
+                                <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a>
                             
                         </div>
                     </li>
 
                     <li>
                         <div>
-                            <span class="el-license-info-title">Support Expired on</span>
+                            <span class="el-license-info-title">{{ $tfhb_trans('Support Expired on') }}</span>
                             {{ LicenseBase.LicenseData.support_end }}
-                            <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">Renew</a> 
+                            <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a> 
                         </div>
                     </li>
                         <li>
                             <div>
-                                <span class="el-license-info-title">Your License Key</span>
+                                <span class="el-license-info-title">{{ $tfhb_trans('Your License Key') }}</span>
                                 <span class="el-license-key">{{ encryptLicense(LicenseBase.LicenseData.license_key) }}</span>
                                 <!-- <span class="el-license-key"><?php echo esc_attr( substr($this->response_obj->license_key,0,9)."XXXXXXXX-XXXXXXXX".substr($this->response_obj->license_key,-9) ); ?></span> -->
 
@@ -186,7 +186,7 @@ const encryptLicense = (license_key) => {
                     <HbButton 
                         classValue="tfhb-btn boxed-btn-danger flex-btn tfhb-icon-hover-animation tfhb-mt-16" 
                         @click.stop="deletePopup = true " 
-                        :buttonText="__('Deactivate', 'hydra-booking')"
+                        :buttonText="$tfhb_trans('Deactivate')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true" 
@@ -204,19 +204,19 @@ const encryptLicense = (license_key) => {
                                         <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
                                     </div>
                                     <div class="tfhb-close-content">
-                                        <h3>{{ __('Confirm License Deactivation!', 'hydra-booking') }}  </h3>  
-                                        <p>{{ __('Deactivating the license will remove access to all premium features.', 'hydra-booking') }}</p>
+                                        <h3>{{ $tfhb_trans('Confirm License Deactivation!') }}  </h3>  
+                                        <p>{{ $tfhb_trans('Deactivating the license will remove access to all premium features.') }}</p>
                                     </div>
                                     <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
                                         <HbButton 
                                             classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                                             @click=" deletePopup = !deletePopup"
-                                            :buttonText="__('Cancel', 'hydra-booking')" 
+                                            :buttonText="$tfhb_trans('Cancel')" 
                                         />  
                                         <HbButton  
                                             classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                                             @click="deactivateLicense()"
-                                            :buttonText="__('Deactivate', 'hydra-booking')"
+                                            :buttonText="$tfhb_trans('Deactivate')"
                                             icon="Trash2"   
                                             :hover_animation="false" 
                                             icon_position = 'left'
@@ -237,10 +237,10 @@ const encryptLicense = (license_key) => {
                     required= "true"  
                     type="password"
                     name="license_key"
-                    :label="__(' License Key', 'hydra-booking')"  
-                    :description="__('Insert your license key here. You can get it from our Client Portal -> Support -> License keys.', 'hydra-booking')"
+                    :label="$tfhb_trans('License Key')"  
+                    :description="$tfhb_trans('Insert your license key here. You can get it from our Client Portal -> Support -> License keys.')"
                     selected = "1"
-                    :placeholder="__('Enter your License key', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter your License key')"  
                     :errors="errors.license_key"
                 /> 
 
@@ -248,11 +248,11 @@ const encryptLicense = (license_key) => {
                     v-model="LicenseBase.license_email"  
                     required= "true"  
                     type="email"
-                    :label="__(' License Email ', 'hydra-booking')"  
-                    :description="__('Please enter the email address you used for purchasing the plugin.', 'hydra-booking')"
+                    :label="$tfhb_trans('License Email')"  
+                    :description="$tfhb_trans('Please enter the email address you used for purchasing the plugin.')"
                     name="license_email"
                     selected = "1"
-                    :placeholder="__('Type your Admin Email', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Type your Admin Email')"  
                     :errors="errors.license_email"
                 /> 
 
@@ -260,7 +260,7 @@ const encryptLicense = (license_key) => {
                         
                         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                         @click.stop="updateLicense(['license_key', 'license_email'])" 
-                        :buttonText="__('Activate', 'hydra-booking')"
+                        :buttonText="$tfhb_trans('Activate')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true" 
