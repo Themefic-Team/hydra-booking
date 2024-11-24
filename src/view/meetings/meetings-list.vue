@@ -161,13 +161,13 @@ const truncateString = (str, num) => {
         <div class="tfhb-filter-box tfhb-flexbox">
             <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
                 <div class="tfhb-filter-icon tfhb-filter-btn tfhb-flexbox"  @click="FilterPreview=!FilterPreview"><Icon name="Filter" size=20 /> 
-                {{ __('Filter', 'hydra-booking') }}</div>
+                {{ $tfhb_trans('Filter') }}</div>
                 <transition name="tfhb-dropdown-transition">
                     <div class="tfhb-filter-box-content" v-show="FilterPreview">
                         <div class="tfhb-filter-form">
                             <div class="tfhb-filter-category">
                                 <div class="tfhb-host-filter-box tfhb-flexbox tfhb-justify-between" @click="FilterHostPreview=!FilterHostPreview">
-                                    {{ __('All Host', 'hydra-booking') }} <Icon name="ChevronUp" size=20 v-if="FilterHostPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterHostPreview"/>
+                                    {{ $tfhb_trans('All Host') }} <Icon name="ChevronUp" size=20 v-if="FilterHostPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterHostPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterHostPreview">
                                     <ul class="tfhb-flexbox">
@@ -187,7 +187,7 @@ const truncateString = (str, num) => {
 
                             <div class="tfhb-filter-category">
                                 <div class="tfhb-host-filter-box tfhb-flexbox tfhb-justify-between" @click="FilterCatgoryPreview=!FilterCatgoryPreview">
-                                    {{ __('All Category', 'hydra-booking') }} <Icon name="ChevronUp" size=20 v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterCatgoryPreview"/>
+                                    {{ $tfhb_trans('All Category') }} <Icon name="ChevronUp" size=20 v-if="FilterCatgoryPreview"/> <Icon name="ChevronDown" size=20 v-else="FilterCatgoryPreview"/>
                                 </div>
                                 <div class="tfhb-filter-category-box" v-show="FilterCatgoryPreview">
                                     <ul class="tfhb-flexbox">
@@ -210,7 +210,7 @@ const truncateString = (str, num) => {
                         <div class="tfhb-reset-btn" v-if="filterData.fcategory.length > 0 || filterData.fhosts.length > 0 || filterData.title">
                             <button @click="resetFilter" class="tfhb-flexbox">
                                 <Icon name="RefreshCw" size=20 /> 
-                                {{ __('Reset Filter', 'hydra-booking') }}
+                                {{ $tfhb_trans('Reset Filter') }}
                             </button>
                         </div>
                     </div>
@@ -225,7 +225,7 @@ const truncateString = (str, num) => {
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="Meeting.isModalOpened = true"
-                :buttonText="__('Create New Meeting', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Create New Meeting')"
                 icon="PlusCircle"   
                 :hover_animation="false" 
                 icon_position = 'left'
@@ -237,7 +237,7 @@ const truncateString = (str, num) => {
     <HbPopup :isOpen="Meeting.isModalOpened" @modal-close="Meeting.isModalOpened = false" max_width="400px" name="first-modal">
         <template #header> 
             <!-- {{ google_calendar }} -->
-            <h2>{{ __('Create New Meeting', 'hydra-booking') }} </h2>
+            <h2>{{ $tfhb_trans('Create New Meeting') }} </h2>
             
         </template>
 
@@ -251,9 +251,9 @@ const truncateString = (str, num) => {
                                 <Icon name="ArrowRight" size=20 /> 
                                 <Icon name="UserRound" size=20 /> 
                             </div>
-                            <h3>{{ __('One to One', 'hydra-booking') }}</h3>
+                            <h3>{{ $tfhb_trans('One to One') }}</h3>
                         </div>
-                        <p>{{ __('One host with one invitee. Good for: 1:1 interview, coffee chats', 'hydra-booking') }}</p>
+                        <p>{{ $tfhb_trans('One host with one invitee. Good for: 1:1 interview, coffee chats') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
                         <Icon v-if="Meeting.pre_loader == false" name="ArrowRight" width="20"/>
@@ -267,7 +267,7 @@ const truncateString = (str, num) => {
                     'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status, 
                 }"
             > 
-                <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="$tfhb_is_pro == false || $tfhb_license_status == false"><Icon name="Crown" size=20 />  {{ __('Pro', 'hydra-booking') }}</span>
+                <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="$tfhb_is_pro == false || $tfhb_license_status == false"><Icon name="Crown" size=20 />  {{ $tfhb_trans('Pro') }}</span>
                 <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
@@ -276,9 +276,9 @@ const truncateString = (str, num) => {
                                 <Icon name="ArrowRight" size=20 /> 
                                 <Icon name="UsersRound" size=20 /> 
                             </div>
-                            <h3>{{ __('One to Group', 'hydra-booking') }}</h3>
+                            <h3>{{ $tfhb_trans('One to Group') }}</h3>
                         </div>
-                        <p>{{ __('One host with group of invitee. Good for: webinars, online clasess', 'hydra-booking') }}</p>
+                        <p>{{ $tfhb_trans('One host with group of invitee. Good for: webinars, online clasess') }}</p>
                     </div>
                     <div class="tfhb-meeting-type-icon">
                         <div v-if="$tfhb_is_pro == true && $tfhb_license_status == true" class="tfhb-meeting-type-icon">
@@ -304,19 +304,19 @@ const truncateString = (str, num) => {
                     <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
                 </div>
                 <div class="tfhb-close-content">
-                    <h3>{{ __('Are you absolutely sure?', 'hydra-booking') }}  </h3>  
-                    <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
+                    <h3>{{ $tfhb_trans('Are you absolutely sure?') }}  </h3>  
+                    <p>{{ $tfhb_trans('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.') }}</p>
                 </div>
                 <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
                     <HbButton 
                         classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                         @click=" deletePopup = !deletePopup"
-                        :buttonText="__('Cancel', 'hydra-booking')" 
+                        :buttonText="$tfhb_trans('Cancel')" 
                     />  
                     <HbButton  
                         classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                         @click="deleteItemConfirm"
-                        :buttonText="__('Delete', 'hydra-booking')"
+                        :buttonText="$tfhb_trans('Delete')"
                         icon="Trash2"   
                         :hover_animation="false" 
                         icon_position = 'left'
@@ -345,7 +345,7 @@ const truncateString = (str, num) => {
                                             <Icon name="Clock" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ smeeting.duration }} {{ __('minutes', 'hydra-booking') }}
+                                            {{ smeeting.duration }} {{ $tfhb_trans('minutes') }}
                                         </div>
                                     </div>
                                 </li>
@@ -357,7 +357,7 @@ const truncateString = (str, num) => {
                                             <Icon name="UserRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ __('One to One', 'hydra-booking') }}
+                                            {{ $tfhb_trans('One to One') }}
                                         </div>
                                     </div>
                                     <div class="tfhb-flexbox" v-if="'one-to-group'==smeeting.meeting_type">
@@ -367,7 +367,7 @@ const truncateString = (str, num) => {
                                             <Icon name="UsersRound" size=16 /> 
                                         </div>
                                         <div class="user-info-title">
-                                            {{ __('One to Group', 'hydra-booking') }}
+                                            {{ $tfhb_trans('One to Group') }}
                                         </div>
                                     </div>
                                 </li>
@@ -402,7 +402,7 @@ const truncateString = (str, num) => {
                                                 <Icon name="CalendarCheck" size=16 /> 
                                             </div>
                                             <div class="user-info-title">
-                                                {{smeeting.total_booking}} Booked
+                                                {{smeeting.total_booking}} {{ $tfhb_trans('Booked') }}
                                             </div>
                                         </div>
                                     </div>
@@ -415,11 +415,11 @@ const truncateString = (str, num) => {
                         <transition name="tfhb-dropdown-transition">
                             <div v-show="smeeting.id == activeItemDropdown" class="tfhb-dropdown-wrap "> 
                                 <!-- route link -->
-                                <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single"><Icon name="SquarePen" size=16 />{{ __('Edit', 'hydra-booking') }}</router-link>
+                                <router-link :to="{ name: 'MeetingsCreate', params: { id: smeeting.id } }" class="tfhb-dropdown-single"><Icon name="SquarePen" size=16 />{{ $tfhb_trans('Edit') }}</router-link>
 
-                                <span class="tfhb-dropdown-single" @click="CloneMeetings(smeeting.id, smeeting)"><Icon name="CopyCheck" size=16 />{{ __('Clone', 'hydra-booking') }}</span>
+                                <span class="tfhb-dropdown-single" @click="CloneMeetings(smeeting.id, smeeting)"><Icon name="CopyCheck" size=16 />{{ $tfhb_trans('Clone') }}</span>
                                 
-                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)"><Icon name="Trash2" size=16 />{{ __('Delete', 'hydra-booking') }}</span>
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteItemData(smeeting.id, smeeting.post_id)"><Icon name="Trash2" size=16 />{{ $tfhb_trans('Delete') }}</span>
                                
                             </div>
                         </transition>
@@ -428,11 +428,11 @@ const truncateString = (str, num) => {
                 <div class="single-meeting-action-btn tfhb-flexbox tfhb-justify-between">
                     <a :href="smeeting.permalink" class="tfhb-flexbox" target="_blank">
                         <Icon name="Eye" size=20 /> 
-                        {{ __('Preview', 'hydra-booking') }}
+                        {{ $tfhb_trans('Preview') }}
                     </a>
                     <a href="#" class="tfhb-flexbox" @click.prevent="sharePopupData(smeeting)">
                         <Icon name="Share2" size=20 /> 
-                        {{ __('Share', 'hydra-booking') }}
+                        {{ $tfhb_trans('Share') }}
                     </a>
                 </div>
             </div>
@@ -444,7 +444,7 @@ const truncateString = (str, num) => {
         </div>
         <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
             <span > <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" > </span>
-            <p>{{ __('No Meeting Created', 'hydra-booking') }}</p> 
+            <p>{{ $tfhb_trans('No Meeting Created') }}</p> 
         </div>
     </div>
     

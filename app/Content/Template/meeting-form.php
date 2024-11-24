@@ -59,10 +59,7 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 			} elseif ( $questions_form_type == 'forminator' ) {
 					echo do_shortcode( '[forminator_form id="' . $questions_form . '"]' );
 			}
-					// elseif($questions_form_type == 'gravityforms'){
-					// echo do_shortcode('[gravityform id="'.$questions_form.'" title="false" description="false" ajax="true"]');
-
-					// }
+	 
 
 		} else {
 			echo '<form  method="post" action="" class="tfhb-meeting-form ajax-submit"  enctype="multipart/form-data">';
@@ -70,8 +67,7 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
 				foreach ( $questions as $key => $question ) :
-					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']';
-					// $value = !empty($booking_data) ? $booking_data->data[$question['label']] : '';
+					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']'; 
 
 					if ( $name == 'email' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->email : '';

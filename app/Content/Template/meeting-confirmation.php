@@ -110,31 +110,7 @@ $host    = isset( $args['host'] ) ? $args['host'] : array();
 		</ul>
 	</div>
 
-	<!-- <div class="tfhb-meeting-confirmation-calender">
-		<h3>Add to Calendar</h3>
-		<ul class="tfhb-flexbox tfhb-gap-16">
-			<li>
-				<a href="#">
-					<img src="<?php echo esc_url(THB_URL . 'assets/app/images/g-calendar.svg'); ?>" alt="calendar">
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<img src="<?php echo esc_url(THB_URL . 'assets/app/images/g-calendar.svg'); ?>" alt="calendar">
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<img src="<?php echo esc_url(THB_URL . 'assets/app/images/g-calendar.svg'); ?>" alt="calendar">
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<img src="<?php echo esc_url(THB_URL . 'assets/app/images/g-calendar.svg'); ?>" alt="calendar">
-				</a>
-			</li>
-		</ul>
-	</div> -->
+ 
 
 	<div class="tfhb-meeting-confirmation-action tfhb-flexbox tfhb-gap-16">
 		

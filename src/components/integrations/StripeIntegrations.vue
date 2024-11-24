@@ -35,7 +35,7 @@ const closePopup = () => {
             'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
         }"
       >
-        <span v-if="$tfhb_is_pro == false  || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+        <span v-if="$tfhb_is_pro == false  || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
          
         <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
@@ -44,14 +44,14 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ __('Stripe', 'hydra-booking') }}</h3>
-                <p>{{ __('ntegrate Stripe API for secure payment processing.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Stripe') }}</h3>
+                <p>{{ $tfhb_trans('ntegrate Stripe API for secure payment processing.') }}</p>
             </div>
         </div>
         <div v-if="$tfhb_is_pro == false  || $tfhb_license_status == false"  class="tfhb-integrations-single-block-btn tfhb-flexbox"> 
-            <span   v-if=" props.from == 'host' && stripe_data.connection_status != '1'" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+            <span   v-if=" props.from == 'host' && stripe_data.connection_status != '1'" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
            
-            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
 
@@ -73,31 +73,31 @@ const closePopup = () => {
 
         <HbPopup  v-if="$tfhb_is_pro == true  || $tfhb_license_status == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ __('Connect Your Stripe Account', 'hydra-booking') }}</h2>
+                <h2>{{ $tfhb_trans('Connect Your Stripe Account') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Stripe Account', 'hydra-booking') }}
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Stripe Account') }}
                 </p>
                 <HbText  
                     v-model="stripe_data.public_key"  
                     required= "true"  
                     name="public_key"
                     :errors="errors.public_key"
-                    :label="__('Stripe Public Key', 'hydra-booking')"  
+                    :label="$tfhb_trans('Stripe Public Key')"  
                     selected = "1"
-                    :placeholder="__('Enter Your Public Key', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your Public Key')"  
                 /> 
                 <HbText  
                     v-model="stripe_data.secret_key"  
                     required= "true"  
                     name="secret_key"
                     :errors="errors.secret_key"
-                    :label="__('Stripe Secret Key', 'hydra-booking')"  
+                    :label="$tfhb_trans('Stripe Secret Key')"  
                     selected = "1"
-                    :placeholder="__('Enter Your Stripe Secret', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your Stripe Secret')"  
                 />
                 <HbButton  
                     @click.stop="emit('update-integrations', 'stripe', stripe_data, ['public_key', 'secret_key'])"

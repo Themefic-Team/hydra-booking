@@ -84,19 +84,19 @@ onBeforeMount(() => {
 
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ __('Appearance', 'hydra-booking') }}</h1> 
-                <p>{{ __('Set up your appearance settings for bookings', 'hydra-booking') }}</p>
+                <h1 >{{ $tfhb_trans('Appearance') }}</h1> 
+                <p>{{ $tfhb_trans('Set up your appearance settings for bookings') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=15 /></a>
+                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
         
         <div class="thb-content-wrap">
             
             <!-- <div class="tfhb-admin-title" >
-                <h2>{{ __('Theme', 'hydra-booking') }}</h2> 
-                <p>{{ __('This only applies to your attendee booking pages', 'hydra-booking') }}</p>
+                <h2>{{ $tfhb_trans('Theme') }}</h2> 
+                <p>{{ $tfhb_trans('This only applies to your attendee booking pages') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
@@ -117,37 +117,37 @@ onBeforeMount(() => {
             </div> -->
 
             <div class="tfhb-admin-title" >
-                <h2>{{ __('Custom brand colors', 'hydra-booking') }}</h2> 
-                <p>{{ __('Customize your own brand color into your booking page', 'hydra-booking') }}</p>
+                <h2>{{ $tfhb_trans('Custom brand colors') }}</h2> 
+                <p>{{ $tfhb_trans('Customize your own brand color into your booking page') }}</p>
             </div>
 
             <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
                 <div class="tfhb-colorbox tfhb-full-width">
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
-                            {{ __('Primary Color', 'hydra-booking') }}
+                            {{ $tfhb_trans('Primary Color') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.primary_color" v-model="appearanceSettings.primary_color" :withoutInput="true"/>
-                            <span>{{ __('Select Color', 'hydra-booking') }}</span>
+                            <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
-                            {{ __('Secondary Color', 'hydra-booking') }}
+                            {{ $tfhb_trans('Secondary Color') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.secondary_color" v-model="appearanceSettings.secondary_color" :withoutInput="true"/>
-                            <span>{{ __('Select Color', 'hydra-booking') }}</span>
+                            <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-justify-between">
                         <label>
-                            {{ __('Paragraph Color', 'hydra-booking') }}
+                            {{ $tfhb_trans('Paragraph Color') }}
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.paragraph_color" v-model="appearanceSettings.paragraph_color" :withoutInput="true"/>
-                            <span>{{ __('Select Color', 'hydra-booking') }}</span>
+                            <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
                 </div>
@@ -155,18 +155,18 @@ onBeforeMount(() => {
             </div>
 
             <div class="tfhb-admin-title" >
-                <h2>{{ __('Typography', 'hydra-booking') }}</h2> 
-                <p>{{ __('Set your own typography for your brand', 'hydra-booking') }}</p>
+                <h2>{{ $tfhb_trans('Typography') }}</h2> 
+                <p>{{ $tfhb_trans('Set your own typography for your brand') }}</p>
             </div>
 
-            <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
+            <!-- <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <HbDropdown 
                     v-model="appearanceSettings.titleTypo"
                     required= "true"  
-                    :label="__('For title', 'hydra-booking')"   
+                    :label="$tfhb_trans('For title')"   
                     width="50"
                     selected = "1"
-                    placeholder="For title"  
+                    :placeholder="$tfhb_trans('For title')"  
                     :option = "[
                         {'name': 'Inter', 'value': 'Inter'}, 
                         {'name': 'Roboto', 'value': 'Roboto'}
@@ -177,7 +177,7 @@ onBeforeMount(() => {
                 <HbDropdown 
                     v-model="appearanceSettings.desTypo"
                     required= "true"  
-                    :label="__('For paragraph', 'hydra-booking')"   
+                    :label="$tfhb_trans('For paragraph')"   
                     width="50"
                     selected = "1"
                     placeholder="For paragraph"  
@@ -187,11 +187,11 @@ onBeforeMount(() => {
                     ]"
                     
                 />
-            </div>
+            </div> -->
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn" 
                 @click="UpdateAppearanceSettings" 
-                :buttonText="__('Save', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Save')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :pre_loader="update_preloader"

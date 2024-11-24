@@ -1,7 +1,7 @@
 <?php
 namespace HydraBooking\Admin\Controller;
 
-// use HydraBooking\Admin\Controller\TransStrings;
+use HydraBooking\Admin\Controller\TransStrings;
 use HydraBooking\Admin\Controller\AuthController;
 
 	// exit
@@ -11,6 +11,7 @@ class Enqueue {
 
 	// constaract
 	public function __construct() {
+		// tfhb_print_r(TransStrings::getTransStrings());
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'script_loader_tag', array( $this, 'thb_loadScriptAsModule' ), 10, 3 );
 	}
@@ -61,7 +62,7 @@ class Enqueue {
 				'tfhb_url'             => THB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),
 				'user'                 => $user_auth, 
-				'trans'                => array(),
+				'trans'				   => TransStrings::getTransStrings(),
 			)
 		);
 

@@ -58,8 +58,8 @@ const copyRedirectionURL = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('Google Calendar/Meet', 'hydra-booking') }}</h3> 
-                <p>{{ __('Connect Google Calendar/Meet API to add events and create video calls.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Google Calendar/Meet') }}</h3> 
+                <p>{{ $tfhb_trans('Connect Google Calendar/Meet API to add events and create video calls.') }}</p>
 
             </div>
         </div>
@@ -80,14 +80,14 @@ const copyRedirectionURL = () => {
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
                 <!-- {{ google_calendar }} -->
-                <h2>{{ __('Add Google Calendar', 'hydra-booking') }}</h2>
+                <h2>{{ $tfhb_trans('Add Google Calendar') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar', 'hydra-booking') }}
-                    <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Read Documentation', 'hydra-booking') }}</a>
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Google Calendar') }}
+                    <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                     
                 </p>
                 <HbText  
@@ -95,18 +95,18 @@ const copyRedirectionURL = () => {
                     required= "true"
                     name="client_id"
                     :errors="errors.client_id"  
-                    :label="__('Client ID', 'hydra-booking')"  
+                    :label="$tfhb_trans('Client ID')"  
                     selected = "1"
-                    :placeholder="__('Enter Client ID', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Client ID')"  
                 /> 
                 <HbText  
                     v-model="props.google_calendar.secret_key"  
                     required= "true"  
                     name="secret_key"
                     :errors="errors.secret_key"  
-                    :label="__('Secret Key', 'hydra-booking')"  
+                    :label="$tfhb_trans('Secret Key')"  
                     selected = "1"
-                    :placeholder="__('Enter Secret Key', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Secret Key')"  
                 /> 
                 <div class="tfhb-google-calender-redirection-url tfhb-full-width"  >
                     <HbText  
@@ -115,14 +115,14 @@ const copyRedirectionURL = () => {
                         name="redirect_url"
                         :readonly="true"
                         :errors="errors.redirect_url"  
-                        :label="__('Redirect Url', 'hydra-booking')"   
+                        :label="$tfhb_trans('Redirect Url')"   
                         selected = "1" 
-                        :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
+                        :placeholder="$tfhb_trans('Enter Redirect Url')"  
                     /> 
                     <HbButton 
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                         @click="copyRedirectionURL()" 
-                        :buttonText="__('Copy URL', 'hydra-booking')" 
+                        :buttonText="$tfhb_trans('Copy URL')" 
                     /> 
                 </div>
                 

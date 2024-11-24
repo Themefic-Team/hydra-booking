@@ -90,8 +90,8 @@ const StepTwo = (validator_field) => {
                 <span class="tfhb-step-bar step-1 "></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{ __('Take control of your schedule', 'hydra-booking') }}</h2>
-            <p>{{ __('Make your appointment booking process even easier by simply setting your availability.', 'hydra-booking') }}</p> 
+            <h2>{{ $tfhb_trans('Take control of your schedule') }}</h2>
+            <p>{{ $tfhb_trans('Make your appointment booking process even easier by simply setting your availability.') }}</p> 
         </div>
         <div class="tfhb-content-wrap tfhb-s-w-availability-wrap tfhb-flexbox tfhb-gap-tb-24">
 
@@ -104,7 +104,7 @@ const StepTwo = (validator_field) => {
                 <HbButton 
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
                     @click="props.setupWizard.currentStep = 'step-one'" 
-                    :buttonText="__('Back', 'hydra-booking')"
+                    :buttonText="$tfhb_trans('Back')"
                     icon="ChevronLeft" 
                     hover_icon="ArrowLeft" 
                     :hover_animation="true"
@@ -113,7 +113,7 @@ const StepTwo = (validator_field) => {
                 <HbButton 
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                     @click="StepTwo(['title', 'time_zone'])" 
-                    :buttonText="__('Next', 'hydra-booking')"
+                    :buttonText="$tfhb_trans('Next')"
                     icon="ChevronRight" 
                     hover_icon="ArrowRight" 
                     :hover_animation="true" 
@@ -126,7 +126,7 @@ const StepTwo = (validator_field) => {
             <HbButton 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0" 
                 @click="props.setupWizard.currentStep = 'step-three';" 
-                :buttonText="__('Skip', 'hydra-booking')"   
+                :buttonText="$tfhb_trans('Skip')"   
             
             />  
         </div>

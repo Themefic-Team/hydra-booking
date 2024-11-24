@@ -40,14 +40,14 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('PayPal', 'hydra-booking') }}</h3>
-                <p>{{ __('Connect PayPal API for easy online payment solutions.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('PayPal') }}</h3>
+                <p>{{ $tfhb_trans('Connect PayPal API for easy online payment solutions.') }}</p>
                 
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <!-- <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span> -->
-            <router-link  v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <!-- <span v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span> -->
+            <router-link  v-if="props.from == 'host' && paypal_data.secret_key == null && paypal_data.client_id  == null"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
             <button v-else @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ paypal_data.secret_key ? 'Settings' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button>
             <HbButton  
                  v-else @click="emit('popup-open-control')"
@@ -64,21 +64,21 @@ const closePopup = () => {
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ __('Connect Your Paypal Account', 'hydra-booking') }}</h2>
+                <h2>{{ $tfhb_trans('Connect Your Paypal Account') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Paypal Account', 'hydra-booking') }}
-                    <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Read Documentation', 'hydra-booking') }}</a>
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Paypal Account') }}
+                    <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                 </p>
                 <HbDropdown 
                     v-model="paypal_data.environment"
                     required= "true"  
                     name="environment"
                     :errors="errors.environment"
-                    :label="__('Environment', 'hydra-booking')"   
+                    :label="$tfhb_trans('Environment')"   
                     selected = "1"
                     placeholder="Select Environment"  
                     :option = "[
@@ -91,18 +91,18 @@ const closePopup = () => {
                     required= "true"  
                     name="client_id"
                     :errors="errors.client_id"
-                    :label="__('Paypal Client ID', 'hydra-booking')"  
+                    :label="$tfhb_trans('Paypal Client ID')"  
                     selected = "1"
-                    :placeholder="__('Enter Your Client ID', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your Client ID')"  
                 /> 
                 <HbText  
                     v-model="paypal_data.secret_key"  
                     name="secret_key"
                     :errors="errors.secret_key"
                     required= "true"  
-                    :label="__('Paypal Secret Key', 'hydra-booking')"  
+                    :label="$tfhb_trans('Paypal Secret Key')"  
                     selected = "1"
-                    :placeholder="__('Enter Your Paypal Secret', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your Paypal Secret')"  
                 />
 
                 <HbButton  

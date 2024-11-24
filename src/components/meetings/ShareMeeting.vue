@@ -62,7 +62,7 @@ const ShareTabs = (tab) => {
                                 <Icon name="Clock" size=16 />  
                             </div>
                             <div class="user-info-title">
-                                {{ props.shareData.time }} {{ __('minutes', 'hydra-booking') }}
+                                {{ props.shareData.time }} {{ $tfhb_trans('minutes') }}
                             </div>
                         </div>
                     </li>
@@ -74,7 +74,7 @@ const ShareTabs = (tab) => {
                                 <Icon name="UserRound" size=16 /> 
                             </div>
                             <div class="user-info-title">
-                                {{ __('One to One', 'hydra-booking') }}
+                                {{ $tfhb_trans('One to One') }}
                             </div>
                         </div>
                         <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==props.shareData.meeting_type">
@@ -84,7 +84,7 @@ const ShareTabs = (tab) => {
                                 <Icon name="UsersRound" size=16 /> 
                             </div>
                             <div class="user-info-title">
-                                {{ __('One to Group', 'hydra-booking') }}
+                                {{ $tfhb_trans('One to Group') }}
                             </div>
                         </div>
                     </li>
@@ -92,9 +92,9 @@ const ShareTabs = (tab) => {
 
                 <div class="tfhb-share-type tfhb-full-width">
                     <ul class="tfhb-flexbox tfhb-gap-8">
-                        <li :class="'link'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ __('Share link', 'hydra-booking') }}</li>
-                        <li :class="'short'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ __('Short code', 'hydra-booking') }}</li>
-                        <li :class="'embed'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">Embed code</li>
+                        <li :class="'link'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
+                        <li :class="'short'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Short code') }}</li>
+                        <li :class="'embed'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">{{ $tfhb_trans('Embed code') }}</li>
                     </ul>
                 </div>
 
@@ -109,7 +109,7 @@ const ShareTabs = (tab) => {
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                                 @click="copyMeeting(props.shareData.link)" 
-                                :buttonText="__('Copy Code', 'hydra-booking')" 
+                                :buttonText="$tfhb_trans('Copy Code')" 
                             />  
                         </div>
                     </div>
@@ -123,7 +123,7 @@ const ShareTabs = (tab) => {
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                                 @click="copyMeeting(props.shareData.shortcode)" 
-                                :buttonText="__('Copy Code', 'hydra-booking')" 
+                                :buttonText="$tfhb_trans('Copy Code')" 
                             /> 
                         </div>
                     </div>
@@ -139,7 +139,7 @@ const ShareTabs = (tab) => {
                         <HbButton 
                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                             @click="copyMeeting(props.shareData.embed)" 
-                            :buttonText="__('Copy Code', 'hydra-booking')" 
+                            :buttonText="$tfhb_trans('Copy Code')" 
                         /> 
                     </div>
                     

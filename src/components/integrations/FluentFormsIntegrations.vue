@@ -32,8 +32,8 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ __('Fluent Forms', 'hydra-booking') }}</h3>
-                <p>{{ __('Install and enable Fluent Forms for meeting forms.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Fluent Forms') }}</h3>
+                <p>{{ $tfhb_trans('Install and enable Fluent Forms for meeting forms.') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">

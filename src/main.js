@@ -12,7 +12,7 @@ const tfhb_core_apps_pro_data = typeof tfhb_core_apps_pro !== 'undefined' ? tfhb
 const tfhb_is_pro = tfhb_core_apps_pro_data.tfhb_is_pro ? true : false;
 const tfhb_license_status = tfhb_core_apps_pro_data.tfhb_license_status ? true : false;
 
-
+const tfhb_trans = tfhb_core_apps.trans || {};  
 
 const tfhbApps = createApp(App).use(router); 
 tfhbApps.use(PrimeVue); 
@@ -21,7 +21,9 @@ tfhbApps.config.globalProperties.$tfhb_url = tfhb_url;
 tfhbApps.config.globalProperties.$tfhb_hydra_admin_url = tfhb_hydra_admin_url;   
 tfhbApps.config.globalProperties.$user = user; 
 tfhbApps.config.globalProperties.$tfhb_is_pro = tfhb_is_pro; 
-tfhbApps.config.globalProperties.$tfhb_license_status = tfhb_license_status; 
-
+tfhbApps.config.globalProperties.$tfhb_license_status = tfhb_license_status;  
+tfhbApps.config.globalProperties.$tfhb_trans = function (text) { 
+    return tfhb_trans[text] || text;
+};
 tfhbApps.mount('#tfhb-admin-app')
 
