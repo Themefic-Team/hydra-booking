@@ -330,10 +330,9 @@ class ZoomServices {
 			);
 		}
 
-		$account_id = sanitize_text_field( $data['account_id'] );
-		$app_client_id = sanitize_text_field( $data['app_client_id'] );
-		$app_secret_key = sanitize_text_field( $data['app_secret_key'] );
-		$this->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+		$this->account_id = sanitize_text_field( $data['account_id'] );
+		$this->client_id = sanitize_text_field( $data['app_client_id'] );
+		$this->client_secret = sanitize_text_field( $data['app_secret_key'] );  
 	
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 		// return error message if data is not set
@@ -393,11 +392,10 @@ class ZoomServices {
 				'message' => 'Invalid Data',
 			);
 		}
-
-		$account_id = sanitize_text_field( $data['account_id'] );
-		$app_client_id = sanitize_text_field( $data['app_client_id'] );
-		$app_secret_key = sanitize_text_field( $data['app_secret_key'] );
-		$this->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+ 
+		$this->account_id = sanitize_text_field( $data['account_id'] );
+		$this->client_id = sanitize_text_field( $data['app_client_id'] );
+		$this->client_secret = sanitize_text_field( $data['app_secret_key'] );   
 
 		$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings' );
 

@@ -1062,7 +1062,7 @@ class MeetingController {
 		}
 
 		// if Payment Methood is woo_payment
-		if ( 'woo_payment' == $data['payment_method'] ) {
+		if ( 'woo_payment' == $data['payment_method'] &&  class_exists( 'WooCommerce' ) ) {
 			$products              = wc_get_product( $data['payment_meta']['product_id'] ); 
 			$data['meeting_price'] = $products->price;
 			$data['payment_currency'] = get_woocommerce_currency();
