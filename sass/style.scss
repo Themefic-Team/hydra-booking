@@ -816,6 +816,30 @@
                             }
                         }
                     }
+                    .tfhb-stripe-button-container{
+                        a{
+                            text-decoration: none !important;
+                            background-color: rgb(25, 37, 82);
+                            color: rgb(255, 255, 255);
+                            padding: 12px 10px;
+                            display: flex;
+                            text-align: center;
+                            border-radius: 8px;
+                            font-size: 14px;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 8px;
+                            .tfhb-submit-preloader{
+                                svg{
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            }
+                            &.disabled{
+                                pointer-events: none !important;
+                            }
+                        }
+                    }
                 }
                 .tfhb-confirmation-box{
                     flex-wrap: wrap;

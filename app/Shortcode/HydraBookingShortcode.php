@@ -566,10 +566,6 @@ class HydraBookingShortcode {
 			$woo_booking->add_to_cart( $product_id, $data );
 			$response['redirect'] = wc_get_checkout_url();
 		}
-		
-		// payment methood check and process the payment
-		$this->tfhb_booking_payment_method( $meta_data, $MeetingData, $result );
-
 
 
 		$single_booking_meta = $booking->get(
@@ -598,7 +594,7 @@ class HydraBookingShortcode {
 		$response['message']               = 'Booking Successful';
 		$response['action']                = 'create';
 		
-		if('paypal_payment' == $meta_data['payment_method']){
+		if('paypal_payment' == $meta_data['payment_method'] || 'stripe_payment' == $meta_data['payment_method']){
 			$response['data']                = array( 
 				'hash' 	  => $data['hash'], 
 				'booking_id' => $result['insert_id'],
@@ -679,35 +675,6 @@ class HydraBookingShortcode {
 		return $meeting_post_id;
 	}
 
-	/* payment methood check and process the payment
-	 * @param $meta_data
-	 * @param $MeetingData
-	 * @param $result
-	 * @return void
-	 */
-	public function tfhb_booking_payment_method( $meta_data, $MeetingData, $result ) {
-
-		if ( true == $meta_data['payment_status'] && 'stripe_payment' == $meta_data['payment_method'] ) {
-			$data['tokenId']  = ! empty( $_POST['tokenId'] ) ? $_POST['tokenId'] : '';
-			$data['price']    = ! empty( $MeetingData->meeting_price ) ? $MeetingData->meeting_price : '';
-			$data['currency'] = ! empty( $MeetingData->payment_currency ) ? $MeetingData->payment_currency : 'USD';
-			if ( empty( $_POST['action_type'] ) ) {
-				do_action( 'hydra_booking/stripe_payment_method', $data, $result['insert_id'] );
-			}
-		}
-		if ( true == $meta_data['payment_status'] && 'paypal_payment' == $meta_data['payment_method'] ) {
-			$data['paymentID']    = ! empty( $_POST['paymentID'] ) ? $_POST['paymentID'] : '';
-			$data['paymentToken'] = ! empty( $_POST['paymentToken'] ) ? $_POST['paymentToken'] : '';
-			$data['payerID']      = ! empty( $_POST['payerID'] ) ? $_POST['payerID'] : '';
-			$data['price']        = ! empty( $MeetingData->meeting_price ) ? $MeetingData->meeting_price : '';
-			$data['currency']     = ! empty( $MeetingData->payment_currency ) ? $MeetingData->payment_currency : 'USD';
-			if ( empty( $_POST['action_type'] ) ) {
-				do_action( 'hydra_booking/paypal_payment_method', $data, $result['insert_id'] );
-			}
-		}
-	}
-
-	
 
 	/* Reschedule Booking
 	 * @param $data

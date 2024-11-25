@@ -502,8 +502,13 @@
 @media only screen and (max-width: 991px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times {
     padding: 0 0 16px 0;
+<<<<<<< HEAD
     width: 100%;
     max-width: auto;
+=======
+    width: auto !important;
+    max-width: auto !important;
+>>>>>>> dev
   }
 }
 @media only screen and (max-width: 767px) {
@@ -812,6 +817,26 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark {
   border-radius: 50%;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a {
+  text-decoration: none !important;
+  background-color: rgb(25, 37, 82);
+  color: rgb(255, 255, 255);
+  padding: 12px 10px;
+  display: flex;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a .tfhb-submit-preloader svg, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a .tfhb-submit-preloader svg {
+  width: 20px;
+  height: 20px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a.disabled, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a.disabled {
+  pointer-events: none !important;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box {
   flex-wrap: wrap;

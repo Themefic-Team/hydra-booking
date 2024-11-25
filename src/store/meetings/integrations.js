@@ -12,6 +12,8 @@ const IntegrationsValue = reactive({
         meeting_id: '',
         title: '',  
         events: '',  
+        url: '',  
+        request_body: 'all',  
         audience: '',  
         modules: '',  
         tags: '',  
@@ -126,6 +128,8 @@ const IntegrationsValue = reactive({
         this.integrationsData.title = '';
         this.integrationsData.webhook = integration;
         this.integrationsData.events = '';
+        this.integrationsData.url = '';
+        this.integrationsData.request_body = 'all';
         this.integrationsData.audience = '';
         this.integrationsData.tags = '';
         this.integrationsData.lists = '';
@@ -158,8 +162,10 @@ const IntegrationsValue = reactive({
         this.integrationsData.modules = data.modules;
         this.integrationsData.fields = data.fields;
         this.integrationsData.events = data.events;
+        this.integrationsData.url = data.url;
         this.integrationsData.status = data.status;
         this.integrationsData.bodys = data.bodys;
+        this.integrationsData.request_body = data.request_body;
     
         this.integrationsList = false;
         this.integrationsListopen = false;
@@ -174,6 +180,7 @@ const IntegrationsValue = reactive({
         this.integrationsData.webhook = data.webhook;
         this.integrationsData.title = data.title;
         this.integrationsData.events = data.events;
+        this.integrationsData.url = data.url;
         this.integrationsData.audience = data.audience;
         this.integrationsData.tags = data.tags;
         this.integrationsData.lists = data.lists;
@@ -181,6 +188,7 @@ const IntegrationsValue = reactive({
         this.integrationsData.fields = data.fields;
         this.integrationsData.status = e.target.checked ? 1 : 0;
         this.integrationsData.bodys = data.bodys;
+        this.integrationsData.request_body = data.request_body;
 
         this.updateIntegrations();
     },
