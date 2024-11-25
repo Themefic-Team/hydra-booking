@@ -8,6 +8,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import HbRadio from '@/components/form-fields/HbRadio.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 const router = useRouter();
@@ -49,6 +50,7 @@ const webhookData = reactive({
     'bodys': [
         {
             'name': '',
+            'type': 'Settings',
             'value': ''
         }
     ],
@@ -309,7 +311,8 @@ const enableWebhookIntegrations = () => {
                 ]" 
             />
             
-            <div class="tfhb-headers tfhb-full-width" v-if="'with'==webhookData.request_header && 'Pabbly'!=webhookData.webhook && 'Zapier'!=webhookData.webhook">
+             
+            <div class="tfhb-headers tfhb-full-width" v-if="'with'==webhookData.request_header">
                 <p>{{ $tfhb_trans('Request Headers') }}'</p>
                 <div class="tfhb-flexbox" v-for="(header, key) in webhookData.headers">
                     <div class="tfhb-request-header-fields tfhb-flexbox">
@@ -361,8 +364,33 @@ const enableWebhookIntegrations = () => {
                             selected = "1"
                             :placeholder="$tfhb_trans('Enter Name')" 
                             width="50"
-                        /> 
+                        />
+                        <HbDropdown  
+                            v-show="body.type!='tfhb_ct'"
+                            v-model="body.type"
+                            required= "true"  
+                            width="50"
+                            selected = "1"
+                            :placeholder="__('Enter Value', 'hydra-booking')" 
+                            :option = "[
+                                {'name': '{{attendee.full_name}}', 'value': 'attendee_name'}, 
+                                {'name': '{{attendee.email}}', 'value': 'email'},
+                                {'name': '{{attendee.timezone}}', 'value': 'timezone'},
+                                {'name': '{{attendee.address}}', 'value': 'address'},
+                                {'name': '{{booking.meeting_date}}', 'value': 'meeting_date'},
+                                {'name': '{{booking.start_time}}', 'value': 'start_time'},
+                                {'name': '{{booking.end_time}}', 'value': 'end_time'},
+                                {'name': '{{booking.duration}}', 'value': 'duration'},
+                                {'name': '{{booking.hash}}', 'value': 'hash'},
+                                {'name': '{{host.name}}', 'value': 'host_name'},
+                                {'name': '{{host.email}}', 'value': 'host_email'},
+                                {'name': '{{host.timezone}}', 'value': 'host_timezone'},
+                                {'name': 'Custom', 'value': 'tfhb_ct'},
+                            ]"
+                            :single_key = "key"
+                        />
                         <HbText  
+                            v-show="body.type=='tfhb_ct'"
                             v-model="body.value"
                             required= "true"   
                             selected = "1"
@@ -398,7 +426,7 @@ const enableWebhookIntegrations = () => {
                 {{ $tfhb_trans('Add New Webhook') }}
             </button>
 
-            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-else  @click="enableWebhookIntegrations">
+            <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8" v-else @click="enableWebhookIntegrations">
                 <Icon name="PlusCircle" :width="20"/>
                 {{ $tfhb_trans('Add New Webhook') }}
             </button>

@@ -8,10 +8,12 @@ import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbRadio from '@/components/form-fields/HbRadio.vue';
 import axios from 'axios'  
 const props = defineProps([
     'IntegrationsValue',  
     'meeting',  
+    'integrations'
 ])
 const router = useRouter();
 const selecte_integrations = ref('')
@@ -25,6 +27,12 @@ const changeIntegrations = (value) => {
         return;
     }
     if(value == 'ZohoCRM' && !props.meeting.zohocrm.status == true){
+        return;
+    }
+    if(value == 'Pabbly' && !props.integrations.pabbly_status == true){
+        return;
+    }
+    if(value == 'Zapier' && !props.integrations.zapier_status == true){
         return;
     }
     
@@ -62,8 +70,8 @@ const moduleFields = async (e) => {
 <template> 
     <div class="tfhb-webhook-title tfhb-flexbox tfhb-full-width">
         <div class="tfhb-admin-title tfhb-m-0">
-            <h2>{{ $tfhb_trans('Mailchimp, FluentCRM & Zoho Integration') }}</h2> 
-            <p>{{ $tfhb_trans('Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.') }}</p>
+            <h2>{{ $tfhb_trans('Integration') }}</h2> 
+            <p>{{ $tfhb_trans('Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.') }}</p> 
         </div>
     </div>
 
@@ -111,6 +119,15 @@ const moduleFields = async (e) => {
                 :label="$tfhb_trans('Integrations Title')"  
                 selected = "1"
                 :placeholder="$tfhb_trans('Type your Integrations Title')" 
+                width="50"
+            /> 
+
+            <HbText  
+                v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
+                v-model="props.IntegrationsValue.integrationsData.url"
+                required= "true"  
+                :label="__('URL', 'hydra-booking')"  
+                :placeholder="__('Type your URL', 'hydra-booking')" 
                 width="50"
             /> 
 
@@ -172,8 +189,80 @@ const moduleFields = async (e) => {
 
             <div class="tfhb-headers tfhb-full-width">
                 <p>{{ $tfhb_trans('Other Fields') }}</p>
+                <HbRadio 
+                    v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
+                    required= "true"
+                    v-model="props.IntegrationsValue.integrationsData.request_body"
+                    name="request_body"
+                    :label="__('Request Body', 'hydra-booking')"
+                    :groups="true"
+                    :options="[
+                        {'label': 'All Data', 'value': 'all'}, 
+                        {'label': 'Selected Data', 'value': 'selected'}
+                    ]" 
+                />
+            </div>
+            <div class="tfhb-headers tfhb-full-width" v-if="'selected'==props.IntegrationsValue.integrationsData.request_body && (props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier') ">
+                <p>{{ __('Other Fields', 'hydra-booking') }}</p>
                 <div class="tfhb-flexbox" v-for="(body, key) in props.IntegrationsValue.integrationsData.bodys">
                     <div class="tfhb-request-header-fields tfhb-flexbox">
+                        <HbText  
+                            v-model="body.name"
+                            required= "true"  
+                            selected = "1"
+                            :placeholder="__('Enter Name', 'hydra-booking')" 
+                            width="50"
+                        />
+                        <HbDropdown  
+                            v-show="body.type!='tfhb_ct'"
+                            v-model="body.type"
+                            required= "true"  
+                            width="50"
+                            selected = "1"
+                            :placeholder="__('Enter Value', 'hydra-booking')" 
+                            :option = "[
+                                {'name': '{{attendee.full_name}}', 'value': 'attendee_name'}, 
+                                {'name': '{{attendee.email}}', 'value': 'email'},
+                                {'name': '{{attendee.timezone}}', 'value': 'timezone'},
+                                {'name': '{{attendee.address}}', 'value': 'address'},
+                                {'name': '{{booking.meeting_date}}', 'value': 'meeting_date'},
+                                {'name': '{{booking.start_time}}', 'value': 'start_time'},
+                                {'name': '{{booking.end_time}}', 'value': 'end_time'},
+                                {'name': '{{booking.duration}}', 'value': 'duration'},
+                                {'name': '{{booking.hash}}', 'value': 'hash'},
+                                {'name': '{{host.name}}', 'value': 'host_name'},
+                                {'name': '{{host.email}}', 'value': 'host_email'},
+                                {'name': '{{host.timezone}}', 'value': 'host_timezone'},
+                                {'name': 'Custom', 'value': 'tfhb_ct'},
+                            ]"
+                            @tfhb_body_value_change="BodyValues"
+                            :single_key = "key"
+                        />
+                        <HbText  
+                            v-show="body.type=='tfhb_ct'"
+                            v-model="body.value"
+                            required= "true"   
+                            selected = "1"
+                            :placeholder="__('Enter Value', 'hydra-booking')" 
+                            width="50"
+                        /> 
+                    </div>
+                    <div class="request-actions">
+                        <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.addBodyField" v-if="key == 0">
+                            <Icon name="Plus" size=20 /> 
+                        </button> 
+                        <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.deleteBodyField(key)" v-else>
+                            <Icon name="X" size=20 /> 
+                        </button> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="tfhb-headers tfhb-full-width" v-if="props.IntegrationsValue.integrationsData.webhook!='Pabbly' && props.IntegrationsValue.integrationsData.webhook!='Zapier'">
+                <p>{{ __('Other Fields', 'hydra-booking') }}</p>
+                <div class="tfhb-flexbox" v-for="(body, key) in props.IntegrationsValue.integrationsData.bodys">
+                    <div class="tfhb-request-header-fields tfhb-flexbox">
+
                         <HbDropdown  
                             v-model="body.name"
                             required= "true"    
@@ -243,7 +332,7 @@ const moduleFields = async (e) => {
                 <Icon name="PlusCircle" :width="20"/>
                 {{ $tfhb_trans('Add New Integrations') }}
             </button>
-            
+
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsListopen"
                 v-model="selecte_integrations"
@@ -256,6 +345,8 @@ const moduleFields = async (e) => {
                     {name: 'Mailchimp', value: 'Mailchimp', icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
                     {name: 'FluentCRM', value: 'FluentCRM', icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
                     {name: 'ZohoCRM', value: 'ZohoCRM', icon: $tfhb_url+'/assets/images/Zoho.svg',},
+                    {name: 'Pabbly', value: 'Pabbly', icon: $tfhb_url+'/assets/images/pabbly-small.svg',},
+                    {name: 'Zapier', value: 'Zapier', icon: $tfhb_url+'/assets/images/zapier-small.png',},
                 ]"
                 @tfhb-onchange="changeIntegrations"
             /> 
@@ -282,9 +373,25 @@ const moduleFields = async (e) => {
                     :buttonText="$tfhb_trans('Please Configure')"
                 />  
             </div>
+           
+            <div  v-if="selecte_integrations == 'Pabbly' && !props.integrations.pabbly_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Pabbly is not connected. 
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div>
+            <div  v-if="selecte_integrations == 'Zapier' && !props.integrations.zapier_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Zapier is not connected. 
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div>
         </div> 
 
     </div>
+    
 
 
 </template>

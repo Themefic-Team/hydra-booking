@@ -9,11 +9,10 @@ import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 const props = defineProps([
     'class', 
     'display', 
-    'zoho_crm_data', 
+    'zapier_data', 
     'ispopup'
 ])
 const emit = defineEmits([ "update-integrations" ]); 
-
 
 </script>
 
@@ -24,22 +23,22 @@ const emit = defineEmits([ "update-integrations" ]);
             'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
         }"
       >
-    <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+    <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
            
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
-                <img :src="$tfhb_url+'/assets/images/zoho.png'" alt="">
+                <img :src="$tfhb_url+'/assets/images/zapier.svg'" alt="">
             </span> 
 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('Zoho CRM') }}</h3>
-                <p>{{ $tfhb_trans('Implement Zoho CRM for comprehensive sales and marketing automation.') }}</p>
+                <h3>{{ __('Zapier', 'hydra-booking') }}</h3>
+                <p>{{ __('Implement Zapier for comprehensive sales and marketing automation.', 'hydra-booking') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <HbSwitch v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true"  @change="emit('update-integrations', 'zoho_crm', zoho_crm_data)" v-model="zoho_crm_data.status"    />
-            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <HbSwitch v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true"  @change="emit('update-integrations', 'zapier', zapier_data)" v-model="zapier_data.status"    />
+            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
 

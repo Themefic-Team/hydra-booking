@@ -24,7 +24,7 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 // Integration Settings
 $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array(); 
-
+$tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integration_settings['stripe'] : array(); 
 
 ?> 
 <div class="tfhb-meeting-booking-form" style="display:none">
@@ -163,6 +163,11 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 				<div class="tfhb-paypal-button-container"></div>
 			<?php
 				endif;
+				if(isset($tfhb_stripe['status']) && $tfhb_stripe['status'] == 1 ):
+			?>
+			<div class="tfhb-stripe-button-container"></div>
+			<?php
+			endif;
 			echo '</form>';
 		}
 		?>

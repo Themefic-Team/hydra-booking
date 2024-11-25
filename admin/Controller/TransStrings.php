@@ -454,7 +454,7 @@ namespace HydraBooking\Admin\Controller;
             'Enter Your App Secret Key' =>  __('Enter Your App Secret Key', 'hydra-booking'), 
 
             // Component : meetings
-            'Mailchimp, FluentCRM & Zoho Integration' =>  __('Mailchimp, FluentCRM & Zoho Integration', 'hydra-booking'), 
+            'Integration' =>  __('Integration', 'hydra-booking'), 
             'Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.' =>  __('Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.', 'hydra-booking'), 
             'Integrations Title' =>  __('Integrations Title', 'hydra-booking'), 
             'Type your Integrations Title' =>  __('Type your Integrations Title', 'hydra-booking'), 

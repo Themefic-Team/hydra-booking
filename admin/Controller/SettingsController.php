@@ -613,16 +613,36 @@ class SettingsController {
 				'message' => 'ZohoCRM Settings Updated Successfully',
 			);
 			return rest_ensure_response( $data );
+		}elseif ( $key == 'pabbly' ) {
+			$_tfhb_integration_settings['pabbly']['status'] = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option,
+				'message' => 'Pabbly Settings Updated Successfully',
+			);
+			return rest_ensure_response( $data );
+		}elseif ( $key == 'zapier' ) {
+			$_tfhb_integration_settings['zapier']['status'] = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option,
+				'message' => 'Zapier Settings Updated Successfully',
+			);
+			return rest_ensure_response( $data );
 		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity') { 
-
-			
-
-			
 
 			$_tfhb_integration_settings[$key]['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings[$key]['status']      = sanitize_text_field( $data['status'] ); 
-
-			 
 
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
