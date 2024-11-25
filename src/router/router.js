@@ -11,6 +11,7 @@ import { AuthData } from '@/store/auth';
 // Event 
 const user = tfhb_core_apps.user || '';
 const user_id = user.id || '';
+const host_id = user.host_id || ''; 
 const user_role = user.role[0] || '';
 
 const routes = [
@@ -312,7 +313,7 @@ router.beforeEach(async (to, from, next) => {
             // Host Route for if use is host 
             if(  user_role == 'tfhb_host' && to.name == 'HostsLists' ){
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
-                next({ name: 'HostsProfile', params: { id: user_id } });
+                next({ name: 'HostsProfile', params: { id: host_id } });
         
                 
             }

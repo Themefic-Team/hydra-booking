@@ -405,7 +405,9 @@ class HostsController {
 
 	// Delete Host
 	public function getTheHostData( $request ) {
+		
 		$id = $request['id'];
+		
 		// Check if user is selected
 		if ( empty( $id ) || $id == 0 ) {
 			return rest_ensure_response(
@@ -417,8 +419,7 @@ class HostsController {
 		}
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $id );
-
+		$HostData = $host->getHostById( $id ); 
 		$_tfhb_host_availability_settings = get_user_meta( $HostData->user_id, '_tfhb_host', true );
 		if ( ! empty( $_tfhb_host_availability_settings['availability'] ) ) {
 			$HostData->availability = $_tfhb_host_availability_settings['availability'];

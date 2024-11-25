@@ -34,6 +34,7 @@ class Enqueue {
 		$user      = new AuthController();
 		$user_auth = array(
 			'id'   => $user->userID(),
+			'host_id'  => $user->userHostID(),
 			'role' => $user->userRole(),
 			'caps' => $user->userAllCaps(),
 		);

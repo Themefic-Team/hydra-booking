@@ -219,7 +219,7 @@ const Tfhb_Host_Filter = async (e) =>{
     <!-- {{ tfhbClass }} -->
     <div :class="{ 'tfhb-skeleton': skeleton }"  class="tfhb-admin-hosts">
         <Header title="Hosts" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
-        <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
+        <div v-if="$user.role != 'tfhb_host'" class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 
                 <span><Icon name="Search" size=20 /></span>
@@ -236,7 +236,7 @@ const Tfhb_Host_Filter = async (e) =>{
             </div> 
         </div>
         <div class="tfhb-hosts-content">  
-            <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
+            <HbPopup v-if="$user.role != 'tfhb_host'" :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
                 <template #header> 
                     <h2>{{ $tfhb_trans('Add New Host') }}</h2>   
                 </template>
@@ -308,6 +308,7 @@ const Tfhb_Host_Filter = async (e) =>{
                     />   
                 </template> 
             </HbPopup>
+
              <router-view :host_list="hosts.data" @update-host-status="updateHostStatus" @delete-host="deleteHost" :host_skeleton="skeleton" /> 
         </div> 
     </div>
