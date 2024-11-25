@@ -502,13 +502,8 @@
 @media only screen and (max-width: 991px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times {
     padding: 0 0 16px 0;
-<<<<<<< HEAD
     width: 100%;
     max-width: auto;
-=======
-    width: auto !important;
-    max-width: auto !important;
->>>>>>> dev
   }
 }
 @media only screen and (max-width: 767px) {
