@@ -177,7 +177,9 @@ const UpdateIntegration = async (key, value) => {
             } 
         } );
 
-        if (response.data.status) {     
+        if (response.data.status) {  
+              
+            Integration.zoom_meeting = response.data.host_integration_settings.zoom_meeting !='' ? response.data.host_integration_settings.zoom_meeting : Integration.zoom_meeting; 
             toast.success(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,

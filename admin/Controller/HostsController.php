@@ -645,13 +645,13 @@ class HostsController {
 
 		// Zoom
 		$zoom_meeting = isset( $_tfhb_host_integration_settings['zoom_meeting'] ) ? $_tfhb_host_integration_settings['zoom_meeting'] : array();
-
+		
 		
 
 		if ( isset($_tfhb_integration_settings['zoom_meeting']['status']) && $_tfhb_integration_settings['zoom_meeting']['status']  ) {
-
+			
 			$zoom_meeting['type']              = 'zoom_meeting';  
-			$zoom_meeting['connection_status'] = $_tfhb_integration_settings['zoom_meeting']['connection_status'];
+			$zoom_meeting['status'] = $_tfhb_integration_settings['zoom_meeting']['connection_status'];
 
 		}else{
 			$zoom_meeting['type']              = 'zoom_meeting';
@@ -741,8 +741,7 @@ class HostsController {
 		$key     = sanitize_text_field( $request['key'] );
 		$data    = $request['value'];
 		$host_id = $request['id'];
-		$user_id = $request['user_id'];
-
+		$user_id = $request['user_id'];  
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
@@ -751,11 +750,12 @@ class HostsController {
 
 			$zoom = new ZoomServices();
 			$response = $zoom->updateHostsZoomSettings( $data, $user_id );
-		
+			$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings', true );
 			if($response['status'] == false){
 				return rest_ensure_response( $response );
 			}
 			$responseData['status'] = true;
+			$responseData['type'] =  'zoom_meeting';
 			$responseData['message'] = $response['message']; 
 		
 
@@ -840,7 +840,7 @@ class HostsController {
 		}
 		// Get Updated Data
 		$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings', true );
-		$responseData['host_integration_settings'] = $_tfhb_host_integration_settings;
+		$responseData['host_integration_settings'] = $_tfhb_host_integration_settings; 
 		return rest_ensure_response( $responseData );
 	}
 
