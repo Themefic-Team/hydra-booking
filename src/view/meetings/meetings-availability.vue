@@ -316,8 +316,8 @@ const isobjectempty = (data) => {
     <div class="meeting-create-details tfhb-gap-24">
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title" >
-                <h2>{{ __('Availability Range for this Booking', 'hydra-booking') }}</h2> 
-                <p>{{ __('How many days can the invitee schedule?', 'hydra-booking') }}</p>
+                <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
+                <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
             </div>
 
             <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
@@ -328,8 +328,8 @@ const isobjectempty = (data) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ __('Indefinitely into the future', 'hydra-booking') }}</h4> 
-                            <p class="tfhb-m-0">{{ __('Meeting will be go for indefinitely into the future', 'hydra-booking') }}</p>
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Indefinitely into the future') }}</h4> 
+                            <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be go for indefinitely into the future') }}</p>
                         </div>
                     </label>
                 </div>
@@ -340,8 +340,8 @@ const isobjectempty = (data) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ __('Specific date range', 'hydra-booking') }}</h4> 
-                            <p class="tfhb-m-0">{{ __('Meeting will be only available on specific dates', 'hydra-booking') }}</p>
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Specific date range') }}</h4> 
+                            <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be only available on specific dates') }}</p>
                         </div>
                     </label>
                     <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between" v-if="meeting.availability_range_type == 'range'">
@@ -352,7 +352,7 @@ const isobjectempty = (data) => {
                             :config="{
                             }"
                             width="45"
-                            :placeholder="__('Start', 'hydra-booking')"
+                            :placeholder="$tfhb_trans('Start')"
                         /> 
                         <Icon name="MoveRight" size=20 /> 
                         <HbDateTime  
@@ -362,7 +362,7 @@ const isobjectempty = (data) => {
                             :config="{
                             }"
                             width="45"
-                            :placeholder="__('End', 'hydra-booking')"   
+                            :placeholder="$tfhb_trans('End')"   
                         /> 
 
                     </div>
@@ -374,9 +374,9 @@ const isobjectempty = (data) => {
             v-if="'tfhb_host' != user_role"
             v-model="meeting.host_id"
             required= "true" 
-            :label="__('Select Host', 'hydra-booking')"  
+            :label="$tfhb_trans('Select Host')"  
             name="host_id"
-            :placeholder="__('Select Host', 'hydra-booking')"  
+            :placeholder="$tfhb_trans('Select Host')"  
             :option = "Host.hosts" 
             :errors="errors.host_id"
             @tfhb-onchange="Host_Avalibility_Callback"
@@ -385,14 +385,14 @@ const isobjectempty = (data) => {
         <div class="tfhb-add-moreinfo tfhb-full-width" v-if="isobjectempty(Host.hosts) && 'tfhb_host' != user_role">
             <router-link :to="'/hosts/list'" exact :class="'tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto'">
                 <Icon name="PlusCircle" :width="20"/>
-                Create Host
+                {{$tfhb_trans('Create Host')}}
             </router-link>
         </div>
 
         <div class="tfhb-availaility-tabs">
             <ul class="tfhb-flexbox tfhb-gap-16">
-                <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==meeting.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'settings')"><Icon name="Heart" :width="20" /> {{ __('Use existing availability', 'hydra-booking') }}</li>
-                <li class="tfhb-flexbox tfhb-gap-8" :class="'custom'==meeting.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'custom')"><Icon name="PencilLine" :width="20" /> {{ __('Custom availability', 'hydra-booking') }}</li>
+                <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==meeting.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'settings')"><Icon name="Heart" :width="20" /> {{ $tfhb_trans('Use existing availability') }}</li>
+                <li class="tfhb-flexbox tfhb-gap-8" :class="'custom'==meeting.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'custom')"><Icon name="PencilLine" :width="20" /> {{ $tfhb_trans('Custom availability') }}</li>
             </ul>
         </div>
         <!-- Choose Schedule -->
@@ -400,9 +400,9 @@ const isobjectempty = (data) => {
         <HbDropdown 
             v-model="meeting.availability_id"
             required= "true" 
-            :label="__('Choose Schedule', 'hydra-booking')"  
+            :label="$tfhb_trans('Choose Schedule')"  
             :selected = "1"
-            :placeholder="__('Choose Schedule', 'hydra-booking')"   
+            :placeholder="$tfhb_trans('Choose Schedule')"   
             :option="HostAvailabilities.value"
             v-if="'settings'==meeting.availability_type && host_availble_type != 'settings'"
             :errors="errors.availability_id"
@@ -412,8 +412,8 @@ const isobjectempty = (data) => {
         <HbText 
             v-model="meeting.availability_custom.title"
             required= "true" 
-            :label="__('Choose Schedule', 'hydra-booking')"  
-            :placeholder="__('Availability title', 'hydra-booking')"   
+            :label="$tfhb_trans('Choose Schedule')"  
+            :placeholder="$tfhb_trans('Availability title')"   
             v-if="'custom'==meeting.availability_type"
             :errors="errors.availability_custom___title"
         /> 
@@ -422,10 +422,10 @@ const isobjectempty = (data) => {
             
             v-model="meeting.availability_custom.time_zone"  
             required= "true"  
-            :label="__('Time zone', 'hydra-booking')"  
+            :label="$tfhb_trans('Time zone')"  
             :filter="true"
             selected = "1"
-            placeholder="Select Time Zone"  
+            :placeholder="$tfhb_trans('Select Time Zone')"  
             :option = "props.timeZone" 
             v-if="'custom'==meeting.availability_type"
             :errors="errors.availability_custom___time_zone"
@@ -436,7 +436,7 @@ const isobjectempty = (data) => {
         <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-full-width tfhb-availability-details-wrap tfhb-m-0" v-if="Settings_avalibility && 'settings'==meeting.availability_type">  
             <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-justify-between">
                 <div class="tfhb-admin-title"> 
-                    <h3> {{ __('Schedule Preview', 'hydra-booking') }} </h3>  
+                    <h3> {{ $tfhb_trans('Schedule Preview') }} </h3>  
                 </div>
                 <div class="thb-admin-btn right"> 
                     <span>{{ Settings_avalibility.availability.time_zone }}</span> 
@@ -482,7 +482,7 @@ const isobjectempty = (data) => {
                     
                 </div>
                 <div v-else class="tfhb-availability-schedule-wrap"> 
-                   <h4 class="tfhb-availability-schedule">Unavailable</h4>
+                   <h4 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h4>
                 </div>
             </div> 
         </div>  
@@ -490,8 +490,8 @@ const isobjectempty = (data) => {
         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility && 'settings'==meeting.availability_type && Settings_avalibility.availability.date_slots.length > 0">  
             <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
                 <div class="tfhb-admin-title tfhb-m-0"> 
-                    <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
-                    <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
+                    <h3>{{ $tfhb_trans('Add date overrides') }} </h3>  
+                    <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
                 </div> 
             </div>
 
@@ -509,7 +509,7 @@ const isobjectempty = (data) => {
         <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0" v-if="'custom'==meeting.availability_type">  
             <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-justify-between">
                 <div class="tfhb-admin-title"> 
-                    <h3> {{ __('Weekly hours', 'hydra-booking') }} </h3>  
+                    <h3> {{ $tfhb_trans('Weekly hours') }} </h3>  
                 </div>
                 <div class="thb-admin-btn right"> 
                     <span>{{ meeting.availability_custom.time_zone }}</span> 
@@ -574,8 +574,8 @@ const isobjectempty = (data) => {
 
             <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
                 <div class="tfhb-admin-title"> 
-                    <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
-                    <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
+                    <h3>{{ $tfhb_trans('Add date overrides') }} </h3>  
+                    <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
                 </div> 
             </div>
 
@@ -616,7 +616,7 @@ const isobjectempty = (data) => {
                         /> 
                     </div>
                     <div class="tfhb-override-times">
-                        <h3>{{ __('Which hours are you free?', 'hydra-booking') }}</h3>
+                        <h3>{{ $tfhb_trans('Which hours are you free?') }}</h3>
 
                         <div class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-16 tfhb-mt-16" v-for="(time, tkey) in OverridesDates.times" :key="tkey" v-if="OverridesDates.available!=1">
                             <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
@@ -651,7 +651,7 @@ const isobjectempty = (data) => {
                         <div class="tfhb-mark-unavailable tfhb-full-width tfhb-mt-16">
                             <HbCheckbox 
                                 v-model="OverridesDates.available"
-                                :label="__('Mark unavailable (All day)', 'hydra-booking')"
+                                :label="$tfhb_trans('Mark unavailable (All day)')"
                                 :name="'mark_unavailable'+key"
                             />
                         </div>
@@ -660,15 +660,15 @@ const isobjectempty = (data) => {
                 </div>
 
                 <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                    <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ __('Cancel', 'hydra-booking') }}</button>
-                    <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ __('Add override', 'hydra-booking') }}</button>
+                    <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ $tfhb_trans('Cancel') }}</button>
+                    <button class="tfhb-btn boxed-btn" @click="addAvailabilityDate(key)">{{ $tfhb_trans('Add override') }}</button>
                 </div>
             </div>
 
 
             <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add an override', 'hydra-booking') }}
+                {{ $tfhb_trans('Add an override') }}
             </button>
 
         </div>  
@@ -679,7 +679,7 @@ const isobjectempty = (data) => {
                 v-if="'settings'==meeting.availability_type"
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting', ['host_id'])"
-                :buttonText="__('Save & Continue', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Save & Continue')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
@@ -688,7 +688,7 @@ const isobjectempty = (data) => {
                 v-if="'custom'==meeting.availability_type"
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting', ['host_id', 'availability_custom___title', 'availability_custom___time_zone'])"
-                :buttonText="__('Save & Continue', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Save & Continue')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :pre_loader="props.update_preloader"

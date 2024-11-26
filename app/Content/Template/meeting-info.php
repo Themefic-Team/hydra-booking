@@ -31,7 +31,10 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 ?> 
 
-<div class="tfhb-meeting-info">
+<div class="tfhb-meeting-info"> 
+	
+	
+	<?php //echo esc_html( __( 'Booking Overview-w', 'hydra-booking' ) ); ?>
 	<div class="hidden-field">
 		<input type="hidden" id="meeting_id" name="meeting_id" value="<?php echo esc_attr($meeting['id']); ?>">
 		<input type="hidden" id="host_id" name="host_id" value="<?php echo esc_attr($host['id']); ?>"> 
@@ -69,7 +72,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		<div class="tfhb-short-description">
             <?php 
             if(strlen($meeting['description']) > 100 ){
-                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 100))) . '<span class="tfhb-see-description">See more</span>';
+                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 100))) . '<span class="tfhb-see-description">'.esc_html(__('See more', 'hydra-booking')).'</span>';
             }else{
                 echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : ''; 
             }

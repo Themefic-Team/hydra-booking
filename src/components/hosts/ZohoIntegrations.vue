@@ -39,20 +39,20 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('Zoho', 'hydra-booking') }}</h3>
-                <p>{{ __('New standard in online payment', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Zoho') }}</h3>
+                <p>{{ $tfhb_trans('New standard in online payment') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+            <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
 
-            <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Get Access Token', 'hydra-booking') }}</a>
+            <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Get Access Token') }}</a>
 
-            <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">Settings<Icon name="ChevronRight" size=18 /></button>
+            <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Settings') }}<Icon name="ChevronRight" size=18 /></button>
 
-            <button v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==1" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Connect', 'hydra-booking') }}<Icon name="ChevronRight" size=18 /></button>
+            <button v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==1" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect') }}<Icon name="ChevronRight" size=18 /></button>
 
-            <router-link v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==0"  to="/settings/integrations#marketing-tools" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <router-link v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==0"  to="/settings/integrations#marketing-tools" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <!-- Checkbox swicher -->
 
@@ -65,37 +65,37 @@ const closePopup = () => {
 
         <HbPopup  v-if="$tfhb_is_pro == true && $tfhb_license_status == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ __('Connect Your Zoho Account', 'hydra-booking') }}</h2>
+                <h2>{{ $tfhb_trans('Connect Your Zoho Account') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Zoho Account', 'hydra-booking') }}
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Zoho Account') }}
                 </p>
                 <HbText  
                     v-model="zoho_data.client_id"  
                     required= "true"  
-                    :label="__('Zoho Client ID', 'hydra-booking')"  
+                    :label="$tfhb_trans('Zoho Client ID')"  
                     selected = "1"
-                    :placeholder="__('Enter Your Client ID', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your Client ID')"  
                 /> 
                 <HbText  
                     v-model="zoho_data.client_secret"  
                     required= "true"  
-                    :label="__('Zoho Client Secret', 'hydra-booking')"  
+                    :label="$tfhb_trans('Zoho Client Secret')"  
                     selected = "1"
-                    :placeholder="__('Enter Your Client Secret', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your Client Secret')"  
                 />
                 <HbText  
                     v-model="zoho_data.redirect_url"  
                     required= "true"  
                     :readonly="true"
-                    :label="__('Zoho Redirect URL', 'hydra-booking')"  
+                    :label="$tfhb_trans('Zoho Redirect URL')"  
                     selected = "1"
-                    :placeholder="__('Enter Your Redirect URL', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your Redirect URL')"  
                 />
-                <button class="tfhb-btn boxed-btn tfhb-hover-effect" @click.stop="emit('update-integrations', 'zoho', zoho_data)">{{ __('Save & Validate', 'hydra-booking') }}</button>
+                <button class="tfhb-btn boxed-btn tfhb-hover-effect" @click.stop="emit('update-integrations', 'zoho', zoho_data)">{{ $tfhb_trans('Save & Validate') }}</button>
             </template> 
         </HbPopup>
 

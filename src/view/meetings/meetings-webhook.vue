@@ -213,23 +213,23 @@ const deleteBodyField = (key) => {
     > 
        <div class="tfhb-admin-title  tfhb-m-0 "  >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                {{ __('Availability Range for this Booking', 'hydra-booking') }}
-                <span v-if="tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+                {{ $tfhb_trans('Availability Range for this Booking') }}
+                <span v-if="tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
             </h2> 
-            <p>{{ __('How many days can the invitee schedule?', 'hydra-booking') }}
+            <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}
                 <br>
             </p> 
-            <a  v-if="tfhb_is_pro == false || $tfhb_license_status == false" href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+            <a  v-if="tfhb_is_pro == false || $tfhb_license_status == false" href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
            
             
         </div>
         <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookList  " @click="addNewWebHook">
             <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add New Webhook', 'hydra-booking') }}
+                {{ $tfhb_trans('Add New Webhook') }}
             </button>
         <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" v-if="webhookcreate && $tfhb_is_pro == true && $tfhb_license_status == true" @click="backtoWebHookList">
             <Icon name="ArrowLeft" :width="20"/>
-            {{ __('Back', 'hydra-booking') }}
+            {{ $tfhb_trans('Back') }}
         </button>
         
     </div>
@@ -266,17 +266,17 @@ const deleteBodyField = (key) => {
         <HbText  
             v-model="webhookData.url"
             required= "true"  
-            :label="__('Webhook URL', 'hydra-booking')"  
+            :label="$tfhb_trans('Webhook URL')"  
             selected = "1"
-            :placeholder="__('Type your Webhook URL', 'hydra-booking')" 
+            :placeholder="$tfhb_trans('Type your Webhook URL')" 
         /> 
 
         <HbDropdown  
             v-model="webhookData.request_method"
-            :label="__('Request Method', 'hydra-booking')"   
+            :label="$tfhb_trans('Request Method')"   
             width="50"
             selected = "1"
-            placeholder="Request Method"  
+            :placeholder="$tfhb_trans('Request Method')"  
             :option = "[
                 {'name': 'GET', 'value': 'GET'}, 
                 {'name': 'POST', 'value': 'POST'},
@@ -287,10 +287,10 @@ const deleteBodyField = (key) => {
 
         <HbDropdown  
             v-model="webhookData.request_format"
-            :label="__('Request Format', 'hydra-booking')"   
+            :label="$tfhb_trans('Request Format')"   
             width="50"
             selected = "1"
-            placeholder="Request Format"  
+            :placeholder="$tfhb_trans('Request Format')"  
             :option = "[
                 {'name': 'FORM', 'value': 'form'}, 
                 {'name': 'JSON', 'value': 'json'}
@@ -301,7 +301,7 @@ const deleteBodyField = (key) => {
             required= "true"
             v-model="webhookData.events"
             name="webhook_events"
-            :label="__('Event Triggers', 'hydra-booking')"
+            :label="$tfhb_trans('Event Triggers')"
             :groups="true"
             :options="['Booking Confirmed', 'Booking Canceled', 'Booking Completed']" 
         />
@@ -311,7 +311,7 @@ const deleteBodyField = (key) => {
             required= "true"
             v-model="webhookData.request_header"
             name="request_header"
-            :label="__('Request Header', 'hydra-booking')"
+            :label="$tfhb_trans('Request Header')"
             :groups="true"
             :options="[
                 {'label': 'No Headers', 'value': 'no'}, 
@@ -320,21 +320,21 @@ const deleteBodyField = (key) => {
         />
         
         <div class="tfhb-headers tfhb-full-width" v-if="'with'==webhookData.request_header && 'Pabbly'!=webhookData.webhook && 'Zapier'!=webhookData.webhook">
-            <p>{{ __('Request Headers', 'hydra-booking') }}</p>
+            <p>{{ $tfhb_trans('Request Headers') }}</p>
             <div class="tfhb-flexbox" v-for="(header, key) in webhookData.headers">
                 <div class="tfhb-request-header-fields tfhb-flexbox">
                     <HbText  
                         v-model="header.key"
                         required= "true"  
                         selected = "1"
-                        :placeholder="__('Header Key', 'hydra-booking')" 
+                        :placeholder="$tfhb_trans('Header Key')" 
                         width="50"
                     /> 
                     <HbText  
                         v-model="header.value"
                         required= "true"   
                         selected = "1"
-                        :placeholder="__('Header Value', 'hydra-booking')" 
+                        :placeholder="$tfhb_trans('Header Value')" 
                         width="50"
                     /> 
                 </div>
@@ -353,7 +353,7 @@ const deleteBodyField = (key) => {
             required= "true"
             v-model="webhookData.request_body"
             name="request_body"
-            :label="__('Request Body', 'hydra-booking')"
+            :label="$tfhb_trans('Request Body')"
             :groups="true"
             :options="[
                 {'label': 'All Data', 'value': 'all'}, 
@@ -362,21 +362,21 @@ const deleteBodyField = (key) => {
         />
 
         <div class="tfhb-headers tfhb-full-width" v-if="'selected'==webhookData.request_body">
-            <p>{{ __('Request Fields', 'hydra-booking') }}</p>
+            <p>{{ $tfhb_trans('Request Fields') }}</p>
             <div class="tfhb-flexbox" v-for="(body, key) in webhookData.bodys">
                 <div class="tfhb-request-header-fields tfhb-flexbox">
                     <HbText  
                         v-model="body.name"
                         required= "true"  
                         selected = "1"
-                        :placeholder="__('Enter Name', 'hydra-booking')" 
+                        :placeholder="$tfhb_trans('Enter Name')" 
                         width="50"
                     /> 
                     <HbText  
                         v-model="body.value"
                         required= "true"   
                         selected = "1"
-                        :placeholder="__('Enter Value', 'hydra-booking')" 
+                        :placeholder="$tfhb_trans('Enter Value')" 
                         width="50"
                     /> 
                 </div>
@@ -393,12 +393,12 @@ const deleteBodyField = (key) => {
 
         <HbCheckbox 
             v-model="webhookData.status"
-            :label="__('Enable this Webhook', 'hydra-booking')"
+            :label="$tfhb_trans('Enable this Webhook')"
             name="enable_webhook"
         />
 
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateWebHook">{{ __('Save Webhook', 'hydra-booking') }} </button>
+            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="updateWebHook">{{ $tfhb_trans('Save Webhook') }} </button>
         </div>
     </div>
 
@@ -407,7 +407,7 @@ const deleteBodyField = (key) => {
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
             :pre_loader="props.update_preloader"
-            :buttonText="__('Save & Continue', 'hydra-booking')"
+            :buttonText="$tfhb_trans('Save & Continue')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

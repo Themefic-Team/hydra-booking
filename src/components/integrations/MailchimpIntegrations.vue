@@ -37,14 +37,14 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('Mailchimp', 'hydra-booking') }}</h3>
-                <p>{{ __('Integrate Mailchimp API to collect attendee emails and info.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Mailchimp') }}</h3>
+                <p>{{ $tfhb_trans('Integrate Mailchimp API to collect attendee emails and info.') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <!-- <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ __('Not Configured', 'hydra-booking') }}  </span> -->
+            <!-- <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span> -->
              
-            <router-link v-if="props.from == 'host' && mail_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <router-link v-if="props.from == 'host' && mail_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <HbButton  
                 v-else @click="emit('popup-open-control')"
@@ -62,22 +62,22 @@ const closePopup = () => {
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
-                <h2>{{ __('Connect Your Mailchimp API', 'hydra-booking') }}</h2>
+                <h2>{{ $tfhb_trans('Connect Your Mailchimp API') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Mailchimp Account', 'hydra-booking') }}
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Mailchimp Account') }}
                 </p>
                 <HbText  
                     v-model="mail_data.key"  
                     required= "true"  
                     name="key"
                     :errors="errors.key"
-                    :label="__('Mailchimp API Key', 'hydra-booking')"  
+                    :label="$tfhb_trans('Mailchimp API Key')"  
                     selected = "1"
-                    :placeholder="__('Enter Your API Key', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Your API Key')"  
                 /> 
                 <HbButton  
                     @click.stop="emit('update-integrations', 'mailchimp', mail_data, ['key'])"
@@ -88,7 +88,7 @@ const closePopup = () => {
                     :hover_animation="true"   
                     :pre_loader="props.pre_loader"
                 /> 
-                <!-- <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'mailchimp', mail_data, ['mailchimp_api_key'])">{{ __('Save & Validate', 'hydra-booking') }}</button> -->
+                <!-- <button class="tfhb-btn boxed-btn" @click.stop="emit('update-integrations', 'mailchimp', mail_data, ['mailchimp_api_key'])">{{ $tfhb_trans('Save & Validate') }}</button> -->
             </template> 
         </HbPopup>
 

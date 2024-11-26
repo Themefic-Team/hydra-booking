@@ -1,7 +1,7 @@
 <?php
 namespace HydraBooking\Admin\Controller;
 
-// use HydraBooking\Admin\Controller\TransStrings;
+use HydraBooking\Admin\Controller\TransStrings;
 use HydraBooking\Admin\Controller\AuthController;
 
 	// exit
@@ -10,7 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 class Enqueue {
 
 	// constaract
-	public function __construct() {
+	public function __construct() { 
+		
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'script_loader_tag', array( $this, 'thb_loadScriptAsModule' ), 10, 3 );
 	}
@@ -40,6 +41,8 @@ class Enqueue {
 		// enqueue styles
 		wp_enqueue_style( 'tfhb-admin-style', THB_URL . 'assets/admin/css/tfhb-admin-style.css', array(), null );
 
+		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
+ 
 		
 		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
@@ -61,7 +64,7 @@ class Enqueue {
 				'tfhb_url'             => THB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),
 				'user'                 => $user_auth, 
-				'trans'                => array(),
+				'trans'				   => TransStrings::getTransStrings(),
 			)
 		);
 

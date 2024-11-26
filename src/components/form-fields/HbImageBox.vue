@@ -40,7 +40,7 @@ const imageChange = (attachment) => {
     <div class="tfhb-single-form-field-wrap tfhb-flexbox">
         <div class="tfhb-field-image" > 
             <img  :class="name+'_display'"  :src="props.modelValue">
-            <button class="tfhb-image-btn" @click="UploadImage">{{ __('Change', 'hydra-booking') }}</button> 
+            <button class="tfhb-image-btn" @click="UploadImage">{{ $tfhb_trans('Change') }}</button> 
             <input  
               :value="props.modelValue" 
               :required= "required"

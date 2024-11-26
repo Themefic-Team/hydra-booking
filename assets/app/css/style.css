@@ -813,6 +813,26 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio .checkmark {
   border-radius: 50%;
 }
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a {
+  text-decoration: none !important;
+  background-color: rgb(25, 37, 82);
+  color: rgb(255, 255, 255);
+  padding: 12px 10px;
+  display: flex;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a .tfhb-submit-preloader svg, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a .tfhb-submit-preloader svg {
+  width: 20px;
+  height: 20px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a.disabled, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-stripe-button-container a.disabled {
+  pointer-events: none !important;
+}
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-confirmation-box {
   flex-wrap: wrap;
   gap: 24px;
@@ -1014,7 +1034,7 @@
   width: 500px;
   margin: 64px 265px 64px;
 }
-@media only screen and (max-width: 991px) {
+@media only screen and (max-width: 1170px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation {
     margin: 16px;
     padding: 0 16px 16px 16px;

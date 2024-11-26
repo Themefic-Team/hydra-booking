@@ -24,7 +24,7 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 // Integration Settings
 $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array(); 
-
+$tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integration_settings['stripe'] : array(); 
 
 ?> 
 <div class="tfhb-meeting-booking-form" style="display:none">
@@ -59,10 +59,7 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 			} elseif ( $questions_form_type == 'forminator' ) {
 					echo do_shortcode( '[forminator_form id="' . $questions_form . '"]' );
 			}
-					// elseif($questions_form_type == 'gravityforms'){
-					// echo do_shortcode('[gravityform id="'.$questions_form.'" title="false" description="false" ajax="true"]');
-
-					// }
+	 
 
 		} else {
 			echo '<form  method="post" action="" class="tfhb-meeting-form ajax-submit"  enctype="multipart/form-data">';
@@ -70,8 +67,7 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
 				foreach ( $questions as $key => $question ) :
-					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']';
-					// $value = !empty($booking_data) ? $booking_data->data[$question['label']] : '';
+					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']'; 
 
 					if ( $name == 'email' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->email : '';
@@ -108,9 +104,9 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 
 					} elseif ( $question['type'] == 'checkbox' ) { 
 						echo '<div class="tfhb-checkbox-group">';
-						foreach ( $question['options'] as $option ) { 
-							echo '<label class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($option) . '">
-                                            <input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($option) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' >
+						foreach ( $question['options'] as $key => $option ) { 
+							echo '<label class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name)  .'_'.$key.'">
+                                            <input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.$key.'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' >
                                             <span class="checkmark"></span> ' . esc_attr($option) . '
                                         </label>';
 						}
@@ -119,9 +115,9 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 
 					}elseif ( $question['type'] == 'radio' ) { 
 						echo '<div class="tfhb-radio-group">';
-						foreach ( $question['options'] as $option ) { 
-							echo '<label  class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($option) . '">
-										<input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($option) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
+						foreach ( $question['options'] as $key => $option ) {  
+							echo '<label  class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name) .'_'.$key.'">
+										<input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.$key.'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
 										<span class="checkmark"></span> ' . esc_attr($option) . '
 									</label>';
 						}
@@ -167,6 +163,11 @@ $tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integrati
 				<div class="tfhb-paypal-button-container"></div>
 			<?php
 				endif;
+				if(isset($tfhb_stripe['status']) && $tfhb_stripe['status'] == 1 ):
+			?>
+			<div class="tfhb-stripe-button-container"></div>
+			<?php
+			endif;
 			echo '</form>';
 		}
 		?>

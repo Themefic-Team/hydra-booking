@@ -75,9 +75,9 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbDropdown 
         v-model="questions_data.type"
         required= "true" 
-        :label="__('Field type', 'hydra-booking')"  
+        :label="$tfhb_trans('Field type')"  
         :selected = "1"  
-        :placeholder="__('Field type', 'hydra-booking')" 
+        :placeholder="$tfhb_trans('Field type')" 
         :option = "[
             {name: 'Text', value: 'text'}, 
             {name: 'Email', value: 'email'}, 
@@ -120,7 +120,7 @@ const UpdateQuestionsData = async (validator_field) => {
         class="tfhb-single-form-field"   :style="{ 'width': '100%' }" 
     > 
         <div class="tfhb-single-form-field-wrap tfhb-field-options"> 
-            <label   for="name">{{ __('Options', 'hydra-booking') }} <span  > *</span> </label>
+            <label   for="name">{{ $tfhb_trans('Options') }} <span  > *</span> </label>
             <div  class="tfhb-options-fields tfhb-flexbox tfhb-gap-16" v-for="(option, index) in questions_data.options" :key="index"> 
                 <input 
                     v-model="questions_data.options[index]"
@@ -133,7 +133,7 @@ const UpdateQuestionsData = async (validator_field) => {
             </div>
             <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" @click="AddNewOptions" >
                 <Icon name="PlusCircle" :width="20"/>
-                {{ __('Add New Option', 'hydra-booking') }}
+                {{ $tfhb_trans('Add New Option') }}
             </button>
         </div> 
     </div>
@@ -142,7 +142,7 @@ const UpdateQuestionsData = async (validator_field) => {
     <HbSwitch  
          v-if=" questions_data.type != 'checkbox'"
         v-model="questions_data.required"
-        :label="__('Required', 'hydra-booking')"  
+        :label="$tfhb_trans('Required')"  
     /> 
 
     <div class="tfhb-action-btn tfhb-full-width tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
@@ -150,12 +150,12 @@ const UpdateQuestionsData = async (validator_field) => {
          <HbButton  
             classValue="tfhb-btn secondary-btn" 
             @click="emit('question-cancel')"
-            :buttonText="__('Cancel', 'hydra-booking')" 
+            :buttonText="$tfhb_trans('Cancel')" 
         />  
         <HbButton  
             classValue="tfhb-btn boxed-btn" 
             @click="UpdateQuestionsData(['type', 'label', 'placeholder'])"
-            :buttonText="__('Save', 'hydra-booking')" 
+            :buttonText="$tfhb_trans('Save')" 
         /> 
     </div>
 </template>

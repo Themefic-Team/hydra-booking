@@ -1,0 +1,315 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Hydra Booking\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-21 08:59+0000\n"
+"PO-Revision-Date: 2024-11-21 09:02+0000\n"
+"Last-Translator: \n"
+"Language-Team: বাংলা\n"
+"Language: bn_BD\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.14; wp-6.7\n"
+"X-Domain: hydra-booking"
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:69
+#, php-format
+msgid "%s Attributes"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:61
+#, php-format
+msgid "%s Image"
+msgstr ""
+
+#. %s: post type name
+#. %s: taxonomy name
+#: includes/post-type/Post_Type.php:75 includes/post-type/Post_Type.php:144
+#, php-format
+msgid "%s list"
+msgstr ""
+
+#. %s: post type singular name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:73 includes/post-type/Post_Type.php:142
+#, php-format
+msgid "%s list navigation"
+msgstr ""
+
+#: app/Content/Template/meeting-times.php:65
+msgid "12h"
+msgstr ""
+
+#: app/Content/Template/meeting-times.php:70
+msgid "24h"
+msgstr ""
+
+#: admin/Controller/AuthController.php:85
+msgid "<strong>ERROR</strong>: Your account is disabled by Admin!"
+msgstr ""
+
+#: includes/post-type/Post_Type.php:39
+msgid "Add New"
+msgstr ""
+
+#. %s: post type singular name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:41 includes/post-type/Post_Type.php:120
+#, php-format
+msgid "Add New %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:134
+#, php-format
+msgid "Add or remove %s"
+msgstr ""
+
+#. %s: post type name
+#. %s: taxonomy name
+#: includes/post-type/Post_Type.php:47 includes/post-type/Post_Type.php:112
+#, php-format
+msgid "All %s"
+msgstr ""
+
+#: includes/services/Integrations/Woocommerce/WooBooking.php:39
+msgid "Appointment "
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:146
+#, php-format
+msgid "Back to %s"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:57
+#: app/Content/Template/meeting-confirmation.php:31
+msgid "Booking"
+msgstr ""
+
+#: admin/Controller/TransStrings.php:12
+msgid "Booking Overview"
+msgstr "বুকিং ওভারভিউ"
+
+#: hydra-booking.php:85
+msgid "Booking Overview-w"
+msgstr "বুকিং ওভারভিউ-w"
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:136
+#, php-format
+msgid "Choose from the most used %s"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Create a booking / Appointment Form using Contact Form 7. You can insert "
+"Calendar, Time on the form and manage your booking. User can pay using "
+"WooCommerce."
+msgstr ""
+
+#: admin/Controller/HostsController.php:183
+msgid "Create new user"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:42 admin/Controller/AdminMenu.php:43
+#: admin/Controller/TransStrings.php:11
+msgid "Dashboard"
+msgstr ""
+
+#: app/Content/Template/meeting-form.php:42
+msgid "Details"
+msgstr ""
+
+#. %s: post type singular name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:43 includes/post-type/Post_Type.php:114
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
+#. %s: post type name
+#: includes/post-type/Post_Type.php:71
+#, php-format
+msgid "Filter %s list"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:62
+msgid "Hosts"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://hydrabooking.com/"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://themefic.com/"
+msgstr ""
+
+#: admin/Controller/ScheduleController.php:44
+#: admin/Controller/ScheduleController.php:50
+msgid "Hydra After booking Completed"
+msgstr ""
+
+#. Name of the plugin
+#: admin/Controller/AdminMenu.php:30 admin/Controller/AdminMenu.php:31
+msgid "Hydra Booking"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:52
+msgid "Meetings"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:45
+#, php-format
+msgid "New %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:122
+#, php-format
+msgid "New %s name"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:140
+#, php-format
+msgid "No %s"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:55
+#, php-format
+msgid "No %s found"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:57
+#, php-format
+msgid "No %s found in Trash"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:138
+#, php-format
+msgid "No %s found."
+msgstr ""
+
+#: app/Content/Template/meeting-times.php:90
+msgid "No time slots are currently available."
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:124
+#, php-format
+msgid "Parent %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:126
+#, php-format
+msgid "Parent : %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:130
+#, php-format
+msgid "Popular %s"
+msgstr ""
+
+#: app/Content/Template/meeting-form.php:148
+#: app/Content/Template/meeting-cencel.php:103
+msgid "Reason for Reschedule"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:65
+#, php-format
+msgid "Remove %s Image"
+msgstr ""
+
+#: admin/Controller/TransStrings.php:13
+msgid "Save"
+msgstr ""
+
+#: admin/Controller/TransStrings.php:14
+msgid "Save & Validate"
+msgstr ""
+
+#. %s: post type name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:53 includes/post-type/Post_Type.php:128
+#, php-format
+msgid "Search %s"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:132
+#, php-format
+msgid "Separate %s with commas"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:63
+#, php-format
+msgid "Set %s Image"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:67
+msgid "Settings"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:72
+msgid "Setup Wizard"
+msgstr ""
+
+#: admin/Controller/TransStrings.php:15
+msgid "Statistics"
+msgstr ""
+
+#. Author of the plugin
+msgid "Themefic"
+msgstr ""
+
+#: admin/Controller/TransStrings.php:16
+msgid "This Week"
+msgstr ""
+
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:118
+#, php-format
+msgid "Update %s name"
+msgstr ""
+
+#. %s: post type singular name
+#: includes/post-type/Post_Type.php:67
+#, php-format
+msgid "Use as %s Image"
+msgstr ""
+
+#. %s: post type singular name
+#. %s: post type name
+#. %s: taxonomy singular name
+#: includes/post-type/Post_Type.php:49 includes/post-type/Post_Type.php:51
+#: includes/post-type/Post_Type.php:116
+#, php-format
+msgid "View %s"
+msgstr ""
+
+#: app/Content/calendar.php:34
+msgid "You are rescheduling the booking:"
+msgstr ""
+
+#: admin/Controller/AdminMenu.php:101
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: app/Content/Template/meeting-cencel.php:30
+msgid "Your meeting has been "
+msgstr ""

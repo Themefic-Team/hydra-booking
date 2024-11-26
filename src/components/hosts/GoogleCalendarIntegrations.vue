@@ -62,8 +62,8 @@ const disconnectIntegration = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('Google Calendar/Meet', 'hydra-booking') }}</h3> 
-                <p>{{ __('Connect your Google Calendar/Meet to sync your booked events.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Google Calendar/Meet') }}</h3> 
+                <p>{{ $tfhb_trans('Connect your Google Calendar/Meet to sync your booked events.') }}</p>
 
             </div>
         </div> 
@@ -73,25 +73,25 @@ const disconnectIntegration = () => {
             <!-- <button @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ google_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button> -->
              <!-- a tag for get access token  -->
             <!-- <a   :href="'https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar&redirect_uri='+google_calendar.redirect_url+'&response_type=code&client_id='+google_calendar.client_id+'&access_type=online'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">Get Access Token</a> -->
-            <router-link  v-if="google_calendar.status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ __('Go To Settings', 'hydra-booking') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <router-link  v-if="google_calendar.status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
-            <button  v-else-if="google_calendar.connection_status == 1 && google_calendar.tfhb_google_calendar !== undefined && google_calendar.tfhb_google_calendar != null "  @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Settings', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></button>
+            <button  v-else-if="google_calendar.connection_status == 1 && google_calendar.tfhb_google_calendar !== undefined && google_calendar.tfhb_google_calendar != null "  @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Settings') }}  <Icon name="ChevronRight" size=18 /></button>
              
-            <a v-else :href="google_calendar.access_url" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Get Access Token', 'hydra-booking') }}</a>
+            <a v-else :href="google_calendar.access_url" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Get Access Token') }}</a>
 
         </div>
 
         <HbPopup v-if="google_calendar.tfhb_google_calendar !== undefined " :isOpen="gCalPopup" @modal-close="gCalPopup = false" max_width="800px" name="first-modal">
             <template #header> 
                 <!-- {{ google_calendar }} -->
-                <h3>{{ __('Google Calendar', 'hydra-booking') }}</h3>
+                <h3>{{ $tfhb_trans('Google Calendar') }}</h3>
                 <p v-if="google_calendar.tfhb_google_calendar.email">{{ google_calendar.tfhb_google_calendar.email }}</p>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Enable the calendars you want to check for conflicts to prevent double bookings.', 'hydra-booking') }}
+                    {{ $tfhb_trans('Enable the calendars you want to check for conflicts to prevent double bookings.') }}
                 </p> 
                 <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-16  tfhb-m-0"  >    
                     <HbRadio 

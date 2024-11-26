@@ -80,7 +80,7 @@ const closePopup = () => {
 
         </div>
 
-        <button class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ __('Edit', 'hydra-booking') }} </button>
+        <button class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }} </button>
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="700px" name="first-modal">
             <template #header> 
@@ -95,10 +95,10 @@ const closePopup = () => {
                     
                     v-model="data.template"  
                     required= "true" 
-                    :label="__('Select Template', 'hydra-booking')"  
+                    :label="$tfhb_trans('Select Template')"  
                     width="50"
                     :selected = "1"
-                    placeholder="Select Template"   
+                    :placeholder="$tfhb_trans('Select Template')"   
                     :option = "[
                         {'name': 'Default', 'value': 'default'},  
                     ]"  
@@ -108,28 +108,28 @@ const closePopup = () => {
                     v-model="props.data.from"   
                     type="email"
                     width="50"
-                    :label="__('From', 'hydra-booking')"  
+                    :label="$tfhb_trans('From')"  
                     selected = "1"
-                    :placeholder="__('Enter From Email', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter From Email')"  
                 /> 
 
                 <HbText  
                     v-model="props.data.subject"  
                     required= "true"  
-                    :label="__('Subject', 'hydra-booking')"  
+                    :label="$tfhb_trans('Subject')"  
                     selected = "1"
                     type = "text"
-                    :placeholder="__('Enter Mail Subject', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Mail Subject')"  
                 /> 
  
                 
                 <div class="tfhb-single-form-field" style="width: 100%;"  >
                     <div class="tfhb-single-form-field-wrap tfhb-field-input">
                         <!--if has label show label with tag else remove tags  --> 
-                        <label for="">{{ __('Mail Body', 'hydra-booking') }}</label>  
+                        <label for="">{{ $tfhb_trans('Mail Body') }}</label>  
                         <Editor 
                             v-model="props.data.body"  
-                            :placeholder="__('Mail Body', 'hydra-booking')"    
+                            :placeholder="$tfhb_trans('Mail Body')"    
                             editorStyle="height: 250px" 
                         />
                     </div> 
@@ -142,7 +142,7 @@ const closePopup = () => {
                 <HbButton  
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                     @click="emit('update-notification')"
-                    :buttonText="__('Update', 'hydra-booking')" 
+                    :buttonText="$tfhb_trans('Update')" 
                     icon="ChevronRight"
                     hover_icon="ArrowRight"
                     :hover_animation="true"

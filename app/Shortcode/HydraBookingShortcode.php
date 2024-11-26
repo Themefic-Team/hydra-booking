@@ -307,7 +307,7 @@ class HydraBookingShortcode {
 
 		if($meta_data['meeting_type'] == 'one-to-group' && tfhb_is_pro_active() == false ){
 			 
-			wp_send_json_error( array( 'message' => 'Please upgrade to pro version for group meeting' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Please upgrade to pro version for group meeting', 'hydra-booking')) ) );
 			wp_die();
 		}
 
@@ -511,7 +511,7 @@ class HydraBookingShortcode {
 				wp_send_json_error( array( 'message' => 'Already Booked' ) );
 			}
 		} elseif ( $check_booking ) {
-				wp_send_json_error( array( 'message' => 'Already Booked' ) );
+				wp_send_json_error( array( 'message' => esc_html(__('Already Booked', 'hydra-booking')) ) );
 		}
 
 		// Get booking Data using Hash
@@ -550,7 +550,7 @@ class HydraBookingShortcode {
 		$result          = $booking->add( $data );  // add booking data into booking table
 
 		if ( $result === false ) {
-			wp_send_json_error( array( 'message' => 'Booking Failed' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Booking Failed', 'hydra-booking')) ) );
 		}
 
 		
@@ -566,10 +566,6 @@ class HydraBookingShortcode {
 			$woo_booking->add_to_cart( $product_id, $data );
 			$response['redirect'] = wc_get_checkout_url();
 		}
-		
-		// payment methood check and process the payment
-		$this->tfhb_booking_payment_method( $meta_data, $MeetingData, $result );
-
 
 
 		$single_booking_meta = $booking->get(
@@ -598,7 +594,7 @@ class HydraBookingShortcode {
 		$response['message']               = 'Booking Successful';
 		$response['action']                = 'create';
 		
-		if('paypal_payment' == $meta_data['payment_method']){
+		if('paypal_payment' == $meta_data['payment_method'] || 'stripe_payment' == $meta_data['payment_method']){
 			$response['data']                = array( 
 				'hash' 	  => $data['hash'], 
 				'booking_id' => $result['insert_id'],
@@ -649,7 +645,7 @@ class HydraBookingShortcode {
 					continue;
 				}
 				if ( $total_booking >= $limit ) {
-					wp_send_json_error( array( 'message' => ' Meeting Frequency Limit Reached' ) );
+					wp_send_json_error( array( 'message' => esc_html(__(' Meeting Frequency Limit Reached', 'hydra-booking')) ) );
 
 				}
 			}
@@ -679,35 +675,6 @@ class HydraBookingShortcode {
 		return $meeting_post_id;
 	}
 
-	/* payment methood check and process the payment
-	 * @param $meta_data
-	 * @param $MeetingData
-	 * @param $result
-	 * @return void
-	 */
-	public function tfhb_booking_payment_method( $meta_data, $MeetingData, $result ) {
-
-		if ( true == $meta_data['payment_status'] && 'stripe_payment' == $meta_data['payment_method'] ) {
-			$data['tokenId']  = ! empty( $_POST['tokenId'] ) ? $_POST['tokenId'] : '';
-			$data['price']    = ! empty( $MeetingData->meeting_price ) ? $MeetingData->meeting_price : '';
-			$data['currency'] = ! empty( $MeetingData->payment_currency ) ? $MeetingData->payment_currency : 'USD';
-			if ( empty( $_POST['action_type'] ) ) {
-				do_action( 'hydra_booking/stripe_payment_method', $data, $result['insert_id'] );
-			}
-		}
-		if ( true == $meta_data['payment_status'] && 'paypal_payment' == $meta_data['payment_method'] ) {
-			$data['paymentID']    = ! empty( $_POST['paymentID'] ) ? $_POST['paymentID'] : '';
-			$data['paymentToken'] = ! empty( $_POST['paymentToken'] ) ? $_POST['paymentToken'] : '';
-			$data['payerID']      = ! empty( $_POST['payerID'] ) ? $_POST['payerID'] : '';
-			$data['price']        = ! empty( $MeetingData->meeting_price ) ? $MeetingData->meeting_price : '';
-			$data['currency']     = ! empty( $MeetingData->payment_currency ) ? $MeetingData->payment_currency : 'USD';
-			if ( empty( $_POST['action_type'] ) ) {
-				do_action( 'hydra_booking/paypal_payment_method', $data, $result['insert_id'] );
-			}
-		}
-	}
-
-	
 
 	/* Reschedule Booking
 	 * @param $data
@@ -741,7 +708,7 @@ class HydraBookingShortcode {
 				$time_diff    = $time_diff / 60; // convert to minutes
 
 				if ( $time_diff < $allowed_reschedule_before_meeting_start ) {
-					wp_send_json_error( array( 'message' => 'You can not reschedule the meeting before ' . $allowed_reschedule_before_meeting_start . ' minutes' ) );
+					wp_send_json_error( array( 'message' => esc_html(__('You can not reschedule the meeting before ', 'hydra-booking')) . $allowed_reschedule_before_meeting_start . esc_html(__(' minutes', 'hydra-booking')) ) );
 				}
 			}
 		}
@@ -776,48 +743,48 @@ class HydraBookingShortcode {
 
 		// Meeting Location Check
 		$meeting_locations = json_decode( $single_booking_meta->meeting_location );
-		$zoom_exists       = false;
-		if ( is_array( $meeting_locations ) ) {
-			foreach ( $meeting_locations as $location ) {
-				if ( isset( $location->location ) && $location->location === 'zoom' ) {
-					$zoom_exists = true;
-					break;
-				}
-			}
-		}
+		// $zoom_exists       = false;
+		// if ( is_array( $meeting_locations ) ) {
+		// 	foreach ( $meeting_locations as $location ) {
+		// 		if ( isset( $location->location ) && $location->location === 'zoom' ) {
+		// 			$zoom_exists = true;
+		// 			break;
+		// 		}
+		// 	}
+		// }
 
-		$meeting_schedule_id = ! empty( $meeting_location_data['zoom']['address']['id'] ) ? $meeting_location_data['zoom']['address']['id'] : '';
-		// Global Integration
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
-		if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
-			$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
-			$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
-			$app_secret_key = $_tfhb_integration_settings['zoom_meeting']['app_secret_key'];
-		}
+		// $meeting_schedule_id = ! empty( $meeting_location_data['zoom']['address']['id'] ) ? $meeting_location_data['zoom']['address']['id'] : '';
+		// // Global Integration
+		// $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		// if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) ) {
+		// 	$account_id     = $_tfhb_integration_settings['zoom_meeting']['account_id'];
+		// 	$app_client_id  = $_tfhb_integration_settings['zoom_meeting']['app_client_id'];
+		// 	$app_secret_key = $_tfhb_integration_settings['zoom_meeting']['app_secret_key'];
+		// }
 
-		// Host Integration
-		if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
-			$account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
-			$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
-			$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
-		}
+		// // Host Integration
+		// if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
+		// 	$account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
+		// 	$app_client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
+		// 	$app_secret_key = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
+		// }
 
-		if ( $zoom_exists && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) {
-			$zoom                                     = new ZoomServices( );
-			$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
-			$meeting_creation                         = $zoom->update_zoom_meeting( $meeting_schedule_id, $single_booking_meta, $meta_data, $host_meta );
-			$meeting_location_data['zoom']['address'] = $meeting_creation;
+		// if ( $zoom_exists && ! empty( $account_id ) && ! empty( $app_client_id ) && ! empty( $app_secret_key ) ) {
+		// 	$zoom                                     = new ZoomServices( );
+		// 	$zoom->setApiDetails( $account_id, $app_client_id, $app_secret_key );
+		// 	$meeting_creation                         = $zoom->update_zoom_meeting( $meeting_schedule_id, $single_booking_meta, $meta_data, $host_meta );
+		// 	$meeting_location_data['zoom']['address'] = $meeting_creation;
 
-			// Get Post Meta
-			$meeting_address_data = array(
-				'id'                => $single_booking_meta->id,
-				'meeting_locations' => wp_json_encode( $meeting_location_data ),
-			);
-			$booking->update( $meeting_address_data );
+		// 	// Get Post Meta
+		// 	$meeting_address_data = array(
+		// 		'id'                => $single_booking_meta->id,
+		// 		'meeting_locations' => wp_json_encode( $meeting_location_data ),
+		// 	);
+		// 	$booking->update( $meeting_address_data );
 
-		}
+		// }
 
-		$response['message']               = 'Rescheduled Successfully';
+		$response['message']               = esc_html(__('Rescheduled Successfully', 'hydra-booking'));
 		$response['action']                = 'rescheduled';
 		$response['confirmation_template'] = $confirmation_template;
 		// $booking_meta, $MeetingData, $host_meta
@@ -859,17 +826,17 @@ class HydraBookingShortcode {
 	public function tfhb_already_booked_times_callback() {
 		// Checked Nonce validation.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
-			wp_send_json_error( array( 'message' => 'Nonce verification failed' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed' , 'hydra-booking'))) );
 		}
 
 		// Check if the request is POST.
 		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
-			wp_send_json_error( array( 'message' => 'Invalid request method' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid request method', 'hydra-booking')) ) );
 		}
 
 		// Check if the request is not empty.
 		if ( empty( $_POST ) ) {
-			wp_send_json_error( array( 'message' => 'Invalid request' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid request', 'hydra-booking')) ) );
 		} 
 
 		$meeting = new Meeting();
@@ -877,7 +844,7 @@ class HydraBookingShortcode {
 		$meeting_type =  $meetingData->meeting_type;
 		if($meeting_type == 'one-to-group' && tfhb_is_pro_active() == false ){
 			 
-			wp_send_json_error( array( 'message' => 'Please upgrade to pro version for group meeting' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Please upgrade to pro version for group meeting', 'hydra-booking')) ) );
 			wp_die();
 		}
 
@@ -892,7 +859,7 @@ class HydraBookingShortcode {
 
 		
 		if ( empty( $data ) ) {
-			wp_send_json_error( array( 'message' => 'No time slots are currently available.' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('No time slots are currently available.', 'hydra-booking')) ) );
 		}
 		wp_send_json_success( $data );
 		wp_die();
@@ -903,17 +870,17 @@ class HydraBookingShortcode {
 	public function tfhb_meeting_form_cencel_callback() {
 		// Checked Nonce validation.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
-			wp_send_json_error( array( 'message' => 'Nonce verification failed' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed', 'hydra-booking')) ) );
 		}
 
 		// Check if the request is POST.
 		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
-			wp_send_json_error( array( 'message' => 'Invalid request method' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid request method' , 'hydra-booking'))) );
 		}
 
 		// Check if the request is not empty.
 		if ( empty( $_POST ) ) {
-			wp_send_json_error( array( 'message' => 'Invalid request' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid request' , 'hydra-booking'))) );
 		}
 
 		$data     = array();
@@ -930,7 +897,7 @@ class HydraBookingShortcode {
 		);
 
 		if ( ! $get_booking ) {
-			wp_send_json_error( array( 'message' => 'Invalid Booking ID' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid Booking ID', 'hydra-booking')) ) );
 		}
 
 		$booking_data = array(
@@ -942,7 +909,7 @@ class HydraBookingShortcode {
 
 		$booking->update( $booking_data );
 
-		$response['message'] = 'Booking Cancelled Successfully';
+		$response['message'] = esc_html(__('Booking Cancelled Successfully', 'hydra-booking'));
 
 		wp_send_json_success( $response );
 
@@ -957,17 +924,17 @@ class HydraBookingShortcode {
 	public function tfhb_meeting_paypal_payment_confirmation_callback(){
 		// Checked Nonce validation.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
-			wp_send_json_error( array( 'message' => 'Nonce verification failed' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed', 'hydra-booking')) ) );
 		}
 
 		// Check if the request is POST.
 		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
-			wp_send_json_error( array( 'message' => 'Invalid request method' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid request method', 'hydra-booking')) ) );
 		}
 
 		// Check if the request is not empty.
 		if ( empty( $_POST ) ) {
-			wp_send_json_error( array( 'message' => 'Invalid request' ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid request', 'hydra-booking')) ) );
 		}
 		$payment_details = isset( $_POST['payment_details'] ) ? $_POST['payment_details'] : array();
 		$responseData = isset( $_POST['responseData'] ) ? $_POST['responseData'] : array();
@@ -1016,7 +983,7 @@ class HydraBookingShortcode {
 		do_action( 'hydra_booking/after_booking_payment_complete', $bookingdata );
 
 		// return success message
-		$response['message'] = 'Payment Completed Successfully';
+		$response['message'] = esc_html(__('Payment Completed Successfully', 'hydra-booking'));
 		wp_send_json_success( $response );
 		
 	}
