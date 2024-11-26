@@ -36,6 +36,19 @@ class ZoomServices {
 		}
 	}
 
+	// setHostApiDetails
+	public function setHostApiDetails( $host_id ) {
+		$host = new Host();
+		$host_meta = $host->get( $host_id );
+		$_tfhb_host_integration_settings = get_user_meta( $host_meta->user_id, '_tfhb_host_integration_settings', true );
+		tfhb_print_r($_tfhb_host_integration_settings);
+		if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
+			$this->account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
+			$this->client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
+			$this->client_secret = $_tfhb_host_integration_settings['zoom_meeting']['app_secret_key'];
+		}
+	}
+
 	// Set Client Data for Zoom API.
 	public function setClientData(  ) {
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
@@ -429,7 +442,7 @@ class ZoomServices {
 			$_tfhb_host_integration_settings['zoom_meeting'] = $zoom_meeting;
 
 			// update user meta
-			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings, true );
 
 			$data = array(
 				'status'  => true,
@@ -441,6 +454,8 @@ class ZoomServices {
 
 	public function create_zoom_meeting( $booking_meta, $meeting_meta, $host_meta  ) {
 
+		$this->setHostApiDetails( $booking_meta->host_id );
+		
  
 		$access_response = $this->generateAccessToken();
 		$event_data = $this->zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta );
