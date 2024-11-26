@@ -194,6 +194,7 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 - Added: An option for hosts to disconnect Google Calendar.
 - Added: Updated currency support.
 - Fixed: Resolved availability issue.
+- Fixed: Multi-language translation issue.
 - Fixed: Addressed Google Calendar integration issue.
 - Fixed: Resolved the issue with host email updates after user information changes.
 - Fixed: Multiple bugs and general issues addressed for improved stability.
