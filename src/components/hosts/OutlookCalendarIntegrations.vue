@@ -47,13 +47,13 @@ const storedOptionData = (data) => {
             </span> 
 
             <div class="cartbox-text"> 
-                <h3>{{ __('Outlook Calendar', 'hydra-booking') }}</h3> 
-                <p>{{ __('Connect your Google Outlook Calendar to sync your booked events.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Outlook Calendar') }}</h3> 
+                <p>{{ $tfhb_trans('Connect your Google Outlook Calendar to sync your booked events.') }}</p>
 
             </div>
         </div> 
         <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-integrations-single-block-btn tfhb-flexbox"> 
-            <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+            <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
            
         </div>
 
@@ -62,24 +62,24 @@ const storedOptionData = (data) => {
             <!-- <button @click="gCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect'  }} <Icon name="ChevronRight" size=18 /></button> -->
              <!-- a tag for get access token  -->
             <!-- <a   :href="'https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar&redirect_uri='+outlook_calendar.redirect_url+'&response_type=code&client_id='+outlook_calendar.client_id+'&access_type=online'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">Get Access Token</a> -->
-            <button   v-if="outlook_calendar.connection_status == 1 && outlook_calendar.tfhb_outlook_calendar !== undefined "  @click="outlookCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Settings', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></button>
+            <button   v-if="outlook_calendar.connection_status == 1 && outlook_calendar.tfhb_outlook_calendar !== undefined "  @click="outlookCalPopup = true" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Settings') }}  <Icon name="ChevronRight" size=18 /></button>
              
-            <a v-else href="#" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upcoming', 'hydra-booking') }}</a>
-            <!-- <a v-else :href="outlook_calendar.access_url" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Get Access Token', 'hydra-booking') }}</a> -->
+            <a v-else href="#" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upcoming') }}</a>
+            <!-- <a v-else :href="outlook_calendar.access_url" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Get Access Token') }}</a> -->
 
         </div>
 
         <HbPopup v-if="outlook_calendar.tfhb_outlook_calendar !== undefined && $tfhb_is_pro == true" :isOpen="outlookCalPopup" @modal-close="outlookCalPopup = false" max_width="800px" name="first-modal">
             <template #header> 
                 <!-- {{ outlook_calendar }} -->
-                <h3>{{ __('Google Calendar', 'hydra-booking') }}</h3>
+                <h3>{{ $tfhb_trans('Google Calendar') }}</h3>
                 <p v-if="outlook_calendar.tfhb_outlook_calendar.email">{{ outlook_calendar.tfhb_outlook_calendar.email }}</p>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Enable the calendars you want to check for conflicts to prevent double bookings.', 'hydra-booking') }}
+                    {{ $tfhb_trans('Enable the calendars you want to check for conflicts to prevent double bookings.') }}
                 </p> 
                 <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-16  tfhb-m-0"  >   
                   
@@ -92,7 +92,7 @@ const storedOptionData = (data) => {
                     />  
                 </div>
                 <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8">
-                    <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect"   @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar)">{{ __('Update Host Settings', 'hydra-booking') }} </button>
+                    <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-hover-effect"   @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar)">{{ $tfhb_trans('Update Host Settings') }} </button>
                 </div> 
             </template> 
         </HbPopup>

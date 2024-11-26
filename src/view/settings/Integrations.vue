@@ -21,7 +21,8 @@ import GravityFormsIntegrations from '@/components/integrations/GravityFormsInte
 import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
-
+import PabblyIntegrations from '@/components/integrations/PabblyIntegrations.vue'; 
+import ZapierIntegrations from '@/components/integrations/ZapierIntegrations.vue';
 
 // import Form Field 
 import Icon from '@/components/icon/LucideIcon.vue' 
@@ -181,6 +182,14 @@ const Integration = reactive( {
     zoho_crm : {
         type: 'marketing-tools', 
         status: 0, 
+    },
+    pabbly : {
+        type: 'marketing-tools', 
+        status: 0, 
+    },
+    zapier : {
+        type: 'marketing-tools', 
+        status: 0, 
     }
 });
 
@@ -207,6 +216,8 @@ const fetchIntegration = async () => {
             Integration.webhook= response.data.integration_settings.webhook ? response.data.integration_settings.webhook : Integration.webhook;
             Integration.fluent_crm= response.data.integration_settings.fluent_crm ? response.data.integration_settings.fluent_crm : Integration.fluent_crm;
             Integration.zoho_crm= response.data.integration_settings.zoho_crm ? response.data.integration_settings.zoho_crm : Integration.zoho_crm;
+            Integration.pabbly= response.data.integration_settings.pabbly ? response.data.integration_settings.pabbly : Integration.pabbly;
+            Integration.zapier= response.data.integration_settings.zapier ? response.data.integration_settings.zapier : Integration.zapier;
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
@@ -287,11 +298,11 @@ onBeforeMount(() => {
     <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard "> 
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ __('Integrations', 'hydra-booking') }}</h1> 
-                <p>{{ __('Configure integration for conferencing, calendar and payment', 'hydra-booking') }}</p>
+                <h1 >{{ $tfhb_trans('Integrations') }}</h1> 
+                <p>{{ $tfhb_trans('Configure integration for conferencing, calendar and payment') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ __('View Documentation', 'hydra-booking') }}<Icon name="ArrowUpRight" size=20 /></a>
+                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap"> 
@@ -437,6 +448,22 @@ onBeforeMount(() => {
                 v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Zoho CRM -->
+
+                <!-- Pabbly -->
+                <PabblyIntegrations 
+                :pabbly_data="Integration.pabbly" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- Pabbly -->
+
+                <!-- Zapier -->
+                <ZapierIntegrations 
+                :zapier_data="Integration.zapier" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- Zapier -->
           
 
             </div> 

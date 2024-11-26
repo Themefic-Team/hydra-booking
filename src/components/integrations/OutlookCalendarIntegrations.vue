@@ -32,7 +32,7 @@ const closePopup = () => {
         'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
       }"
       >
-        <span v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+        <span v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
          
         <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
@@ -40,17 +40,17 @@ const closePopup = () => {
             </span> 
 
             <div class="cartbox-text">
-                <h3>{{ __('Outlook Calendar', 'hydra-booking') }}</h3> 
-                <p>{{ __('Connect Outlook Calendar/Teams API for event creation.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Outlook Calendar') }}</h3> 
+                <p>{{ $tfhb_trans('Connect Outlook Calendar/Teams API for event creation.') }}</p>
 
             </div>
         </div>
         <div v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
         <div v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upcoming', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upcoming') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
 
@@ -73,13 +73,13 @@ const closePopup = () => {
         <HbPopup  v-if="$tfhb_is_pro == true ||  $tfhb_license_status == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header> 
                 <!-- {{ outlook_calendar }} -->
-                <h2>{{ __('Add Outlook Calendar', 'hydra-booking') }}</h2>
+                <h2>{{ $tfhb_trans('Add Outlook Calendar') }}</h2>
                 
             </template>
 
             <template #content>  
                 <p>
-                    {{ __('Please read the documentation here for step by step guide to know how you can get api credentials from Outlook Calendar', 'hydra-booking') }}
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Outlook Calendar') }}
                     
                 </p>
                 <HbText  
@@ -87,27 +87,27 @@ const closePopup = () => {
                     required= "true"  
                     name="client_id"
                     :errors="errors.client_id"  
-                    :label="__('Client ID', 'hydra-booking')"  
+                    :label="$tfhb_trans('Client ID')"  
                     selected = "1"
-                    :placeholder="__('Enter Client ID', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Client ID')"  
                 /> 
                 <HbText  
                     v-model="outlook_calendar.secret_key"  
                     required= "true"  
                     name="secret_key"
                     :errors="errors.secret_key"  
-                    :label="__('Secret Key', 'hydra-booking')"  
+                    :label="$tfhb_trans('Secret Key')"  
                     selected = "1"
-                    :placeholder="__('Enter Secret Key', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Secret Key')"  
                 /> 
                 <HbText  
                     v-model="outlook_calendar.redirect_url"  
                     required= "true"  
                     name="redirect_url"
                     :errors="errors.redirect_url"  
-                    :label="__('Redirect Url', 'hydra-booking')"  
+                    :label="$tfhb_trans('Redirect Url')"  
                     selected = "1" 
-                    :placeholder="__('Enter Redirect Url', 'hydra-booking')"  
+                    :placeholder="$tfhb_trans('Enter Redirect Url')"  
                 /> 
                 <HbButton  
                     @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar, ['client_id', 'secret_key', 'redirect_url'])"

@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	use HydraBooking\DB\Booking;
 	use HydraBooking\DB\Meeting;
+	use HydraBooking\DB\Host;
 
 
 class DateTimeController extends \DateTimeZone {
@@ -107,7 +108,12 @@ class DateTimeController extends \DateTimeZone {
 
 		
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
-			$_tfhb_availability_settings = get_user_meta( $MeetingsData->host_id, '_tfhb_host', true );
+
+			$host = new Host();
+			$host = $host->getHostById( $MeetingsData->host_id );
+
+			
+			$_tfhb_availability_settings = get_user_meta( $host->user_id, '_tfhb_host', true );
 			if ( in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
 				$availability_data = $_tfhb_availability_settings['availability'][ $data['availability_id'] ];
 			} else {

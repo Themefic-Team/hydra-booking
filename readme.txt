@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -186,6 +186,19 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.7 - 27/11/2024 =  
+
+- Added: Integration with Pabbly and Zapier Webhooks (Pro).
+- Added: One-to-one recurring Zoom meeting feature (Pro).
+- Added: An option for hosts to disconnect Google Calendar.
+- Added: Updated currency support.
+- Fixed: Resolved availability issue.
+- Fixed: Multi-language translation issue.
+- Fixed: Addressed Google Calendar integration issue.
+- Fixed: Resolved the issue with host email updates after user information changes.
+- Fixed: Multiple bugs and general issues addressed for improved stability.
+- Improvement: Enhanced Stripe integration functionality.
 
 = 1.0.6 - 20/11/2024 =  
 

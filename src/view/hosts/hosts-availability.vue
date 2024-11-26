@@ -288,8 +288,8 @@ const formatTimeSlots = (timeSlots) =>  {
     <!-- {{host}} -->
     <div class="tfhb-availaility-tabs tfhb-mb-24">
         <ul class="tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">
-            <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'settings')"><Icon name="Heart" :width="20" /> {{ __('Use existing availability', 'hydra-booking') }}</li>
-            <li v-if="true == $user.caps.tfhb_manage_custom_availability" class="tfhb-flexbox tfhb-gap-8" :class="'custom'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'custom')"><Icon name="PencilLine" :width="20" />  {{ __('Custom availability', 'hydra-booking') }}</li>
+            <li class="tfhb-flexbox tfhb-gap-8" :class="'settings'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'settings')"><Icon name="Heart" :width="20" /> {{ $tfhb_trans('Use existing availability') }}</li>
+            <li v-if="true == $user.caps.tfhb_manage_custom_availability" class="tfhb-flexbox tfhb-gap-8" :class="'custom'==host.availability_type ? 'active' : ''" @click="emit('availability-tabs', 'custom')"><Icon name="PencilLine" :width="20" />  {{ $tfhb_trans('Custom availability') }}</li>
         </ul>
     </div>
 
@@ -298,8 +298,8 @@ const formatTimeSlots = (timeSlots) =>  {
     <HbDropdown 
         v-model="props.host.availability_id" 
         required= "true" 
-        :label="__('Choose Schedule', 'hydra-booking')"    
-        :placeholder="__('Choose Schedule', 'hydra-booking')"   
+        :label="$tfhb_trans('Choose Schedule')"    
+        :placeholder="$tfhb_trans('Choose Schedule')"   
         :option = "settingsAvailabilityData" 
         v-if="'settings'==host.availability_type"
         @tfhb-onchange="Settings_Avalibility_Callback"
@@ -311,7 +311,7 @@ const formatTimeSlots = (timeSlots) =>  {
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24 tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==host.availability_type">  
         <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-full-width tfhb-justify-between">
             <div class="tfhb-admin-title"> 
-                <h3> {{ __('Weekly hours', 'hydra-booking') }} </h3>  
+                <h3> {{ $tfhb_trans('Weekly hours') }} </h3>  
             </div>
             <div class="thb-admin-btn right"> 
                 <span>{{ Settings_avalibility.availability.time_zone }}</span> 
@@ -366,8 +366,8 @@ const formatTimeSlots = (timeSlots) =>  {
     <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility && 'settings'==host.availability_type && Settings_avalibility.availability.date_slots > 0">  
         <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h3>{{ __('Add date overrides', 'hydra-booking') }} </h3>  
-                <p>{{ __('Add dates when your availability changes from your daily hours', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Add date overrides') }} </h3>  
+                <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
             </div> 
         </div>
 
@@ -382,14 +382,14 @@ const formatTimeSlots = (timeSlots) =>  {
     </div>
     <div class="tfhb-dashboard-heading" v-if="'custom'==host.availability_type && true == $user.caps.tfhb_manage_custom_availability">
         <div class="tfhb-admin-title"> 
-            <h3 >{{ __('Availability', 'hydra-booking') }}</h3> 
-            <p>{{ __('Set up booking times when you are available', 'hydra-booking') }}</p>
+            <h3 >{{ $tfhb_trans('Availability') }}</h3> 
+            <p>{{ $tfhb_trans('Set up booking times when you are available') }}</p>
         </div>
         <div class="thb-admin-btn right">  
             <HbButton 
                 classValue="tfhb-btn boxed-btn flex-btn" 
                 @click="openModal"
-                :buttonText="__('Add New Availability', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Add New Availability')"
                 icon="PlusCircle"  
                 icon_position="left"
                 
@@ -409,7 +409,7 @@ const formatTimeSlots = (timeSlots) =>  {
         <HbButton 
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('save-host-info')"
-            :buttonText="__('Save & Continue', 'hydra-booking')"
+            :buttonText="$tfhb_trans('Save & Continue')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

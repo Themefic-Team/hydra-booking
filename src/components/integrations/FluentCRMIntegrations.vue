@@ -25,7 +25,7 @@ const closePopup = () => {
             'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
         }"
       >
-    <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+    <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
            
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
@@ -34,14 +34,14 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ __('Fluent CRM', 'hydra-booking') }}</h3>
-                <p>{{ __('Integrate FluentCRM to manage and track customer data easily.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Fluent CRM') }}</h3>
+                <p>{{ $tfhb_trans('Integrate FluentCRM to manage and track customer data easily.') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbSwitch v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" @change="emit('update-integrations', 'fluent_crm', fluent_crm_data)" v-model="fluent_crm_data.status"    />
             
-            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ __('Upgrade to Pro', 'hydra-booking') }}  <Icon name="ChevronRight" size=18 /></a>
+            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
 

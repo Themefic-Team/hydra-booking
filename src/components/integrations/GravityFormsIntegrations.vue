@@ -32,8 +32,8 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ __('Gravity Forms', 'hydra-booking') }}</h3>
-                <p>{{ __('Install and enable Gravity Forms for meeting forms.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Gravity Forms') }}</h3>
+                <p>{{ $tfhb_trans('Install and enable Gravity Forms for meeting forms.') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">

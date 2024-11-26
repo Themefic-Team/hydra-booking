@@ -47,7 +47,7 @@ onBeforeMount(() => {
     <!-- Integrations  -->
     <div class="tfhb-meeting-integrations-wrap tfhb-full-width tfhb-flexbox tfhb-gap-16 ">
 
-        <Integrations :IntegrationsValue="IntegrationsValue" :meeting="meeting" />
+        <Integrations :IntegrationsValue="IntegrationsValue" :meeting="meeting" :integrations="integrations" />
 
     </div>
 
@@ -59,18 +59,18 @@ onBeforeMount(() => {
         <div class="tfhb-webhook-title tfhb-flexbox">
             <div class="tfhb-admin-title tfhb-m-0">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{ __('Webhook Integration ', 'hydra-booking') }}
-                    <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ __('Pro', 'hydra-booking') }}</span>
+                    {{ $tfhb_trans('Webhook Integration') }}
+                    <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
                 </h2> 
                 <h2></h2> 
-                <p>{{ __('Webhook integration enables automated data transfer between apps, allowing real-time communication and custom API interactions.', 'hydra-booking') }}</p>
+                <p>{{ $tfhb_trans('Webhook integration enables automated data transfer between apps, allowing real-time communication and custom API interactions.') }}</p>
             </div>
         </div>
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width tfhb-pro">
             <div class="tfhb-integration-box">
                 <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8">
                     <Icon name="PlusCircle" :width="20"/>
-                    {{ __('Add New Integrations', 'hydra-booking') }}
+                    {{ $tfhb_trans('Add New Integrations') }}
                 </button>  
             </div> 
         </div>
@@ -82,7 +82,7 @@ onBeforeMount(() => {
         <HbButton  
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="emit('update-meeting')"
-            :buttonText="__('Save & Continue', 'hydra-booking')"
+            :buttonText="$tfhb_trans('Save & Continue')"
             icon="ChevronRight" 
             hover_icon="ArrowRight" 
             :hover_animation="true"

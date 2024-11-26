@@ -22,6 +22,10 @@
         @media #{$max991}{
             flex-wrap: wrap;
         }
+        @media #{$max570}{ 
+            width: 100%;
+        }
+        
 
         // .tfhb-preloader {
         //     position: absolute;
@@ -215,6 +219,9 @@
                             color: $secondary-default;
                             padding: 0px !important;
                             line-height: normal;
+                            font-size: 15px !important;
+                            font-weight: 400;
+                            line-height: 24px; /* 160% */
                         }
                         .select2-selection__arrow{
                             top: 50%;
@@ -517,12 +524,13 @@
             }
             @media #{$max991}{
                 padding: 0 0 16px 0;
-                width: auto !important;
-                max-width: auto !important;
+                width: 100% ;
+                max-width: auto;
                 // width: calc(100% - 536px);
             }
             @media #{$max767}{
-                width: 100%;
+                width: 100% !important;
+                max-width: 100% !important;
             }
             .tfhb-timezone-tabs-warp{
                 display: flex;
@@ -668,6 +676,15 @@
                                 background-color: $primary-hover ;
                             }
                         }
+
+                        p{
+                            color: $secondary-default;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 24px; /* 160% */
+                            margin: 0;
+                        }
                     }
                 }
             }
@@ -796,6 +813,30 @@
                         .tfhb-field-radio{
                             .checkmark {
                                 border-radius: 50%;
+                            }
+                        }
+                    }
+                    .tfhb-stripe-button-container{
+                        a{
+                            text-decoration: none !important;
+                            background-color: rgb(25, 37, 82);
+                            color: rgb(255, 255, 255);
+                            padding: 12px 10px;
+                            display: flex;
+                            text-align: center;
+                            border-radius: 8px;
+                            font-size: 14px;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 8px;
+                            .tfhb-submit-preloader{
+                                svg{
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            }
+                            &.disabled{
+                                pointer-events: none !important;
                             }
                         }
                     }
@@ -976,7 +1017,7 @@
         .tfhb-meeting-confirmation{
             width: 500px;
             margin: 64px 265px 64px;
-            @media #{$max991}{
+            @media #{$max1170}{
                 margin: 16px;
                 padding: 0 16px 16px 16px;
                 width: 100% !important;
@@ -1089,6 +1130,9 @@
             .tfhb-meeting-confirmation-action{
                 justify-content: center;
                 margin-top: 24px;
+                @media #{$max570}{ 
+                    flex-wrap: wrap;
+                }
                 button, a{
                     border-radius: 8px;
                     border: 1px solid $surface-background;

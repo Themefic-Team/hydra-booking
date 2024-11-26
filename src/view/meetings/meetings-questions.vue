@@ -121,12 +121,12 @@ const GetFormsData = async (value) => {
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title   tfhb-full-width">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{ __('Meeting Questions for Attendee', 'hydra-booking') }}
+                    {{ $tfhb_trans('Meeting Questions for Attendee') }}
                     <!-- <HbSwitch 
                         v-model="meeting.questions_type" 
                     /> --> 
                 </h2> 
-                <p>{{ __('Create your own booking page questions', 'hydra-booking') }}</p>
+                <p>{{ $tfhb_trans('Create your own booking page questions') }}</p>
             </div>
 
             <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
@@ -137,8 +137,8 @@ const GetFormsData = async (value) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ __('Create custom form', 'hydra-booking') }}</h4> 
-                            <!-- <p class="tfhb-m-0">{{ __('Meeting will be go for indefinitely into the future', 'hydra-booking') }}</p> -->
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Create custom form') }}</h4> 
+                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be go for indefinitely into the future') }}</p> -->
                         </div>
                     </label>
                 </div>
@@ -149,8 +149,8 @@ const GetFormsData = async (value) => {
                             <span class="checkmark"></span> 
                         </div>
                         <div class="tfhb-range-title">
-                            <h4 class="tfhb-m-0">{{ __('Use existing form', 'hydra-booking') }}</h4> 
-                            <!-- <p class="tfhb-m-0">{{ __('Meeting will be only available on specific dates', 'hydra-booking') }}</p> -->
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Use existing form') }}</h4> 
+                            <!-- <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be only available on specific dates') }}</p> -->
                         </div>
                     </label> 
                 </div>
@@ -171,7 +171,7 @@ const GetFormsData = async (value) => {
             <HbButton  
                 classValue="tfhb-btn flex-btn" 
                 @click="QuestionPopupAdd()"
-                :buttonText="__('Add more questions', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Add more questions')"
                 icon="PlusCircle"  
                 :hover_animation="false" 
                 icon_position="left"
@@ -179,7 +179,7 @@ const GetFormsData = async (value) => {
 
             <HbPopup :isOpen="QuestionPopup" @modal-close="QuestionPopup = false" max_width="400px" name="first-modal">
                 <template #header> 
-                    <h3>{{ __('Add Question for Attendee', 'hydra-booking') }}</h3>
+                    <h3>{{ $tfhb_trans('Add Question for Attendee') }}</h3>
                 </template>
 
                 <template #content>  
@@ -201,10 +201,10 @@ const GetFormsData = async (value) => {
                     
                     v-model="meeting.questions_form_type"  
                     required= "true" 
-                    :label="__('Select Form Types', 'hydra-booking')"  
+                    :label="$tfhb_trans('Select Form Types')"  
                     width="50"
                     :selected = "1"
-                    placeholder="Select Form Types"   
+                    :placeholder="$tfhb_trans('Select Form Types')"   
                     :option = "[
                         {'name': 'Contact Form 7', 'value': 'wpcf7' },  
                         {'name': 'Fluent Forms', 'value': 'fluent-forms', disable:  integrations.fluent_status},  
@@ -221,31 +221,31 @@ const GetFormsData = async (value) => {
                     v-if = "meeting.questions_form_type != ''"
                     v-model="meeting.questions_form"  
                     required= "true" 
-                    :label="__('Select Form Types', 'hydra-booking')"  
+                    :label="$tfhb_trans('Select Form')"  
                     width="50" 
-                    placeholder="Select Form Types"   
+                    :placeholder="$tfhb_trans('Select Form')"   
                     :option = "props.formsList.value" 
                    
                 /> 
-                <div  v-if="meeting.questions_form_type == 'wpcf7' && integrations.cf7_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Contact Form 7 is not connected. 
+                <div  v-if="meeting.questions_form_type == 'wpcf7' && integrations.cf7_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4"> {{ $tfhb_trans('Contact Form 7 is not connected.') }}  
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                        :buttonText="__('Please Configure', 'hydra-booking')"
+                        :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
-                <div  v-if="meeting.questions_form_type == 'fluent-forms' && integrations.fluent_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Fluent Forms is not connected. 
+                <div  v-if="meeting.questions_form_type == 'fluent-forms' && integrations.fluent_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Fluent Forms is not connected.') }}  
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                        :buttonText="__('Please Configure', 'hydra-booking')"
+                        :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
-                <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">Gravity Forms is not connected. 
+                <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Gravity Forms is not connected.') }} 
                     <HbButton 
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
-                        :buttonText="__('Please Configure', 'hydra-booking')"
+                        :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
 
@@ -255,7 +255,7 @@ const GetFormsData = async (value) => {
             <HbButton  
                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                 @click="emit('update-meeting')"
-                :buttonText="__('Save & Continue', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Save & Continue')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"

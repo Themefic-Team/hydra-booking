@@ -69,7 +69,7 @@ const showData = ref(false);
                 </div> 
             </div>
             <div class="tfhb-content-wrap tfhb-flexbox" :style="{ 'gap': gap }">  
-                <slot name="content"> default content </slot>
+                <slot name="content"> {{$tfhb_trans('default content')}} </slot>
             </div> 
           </div>
           

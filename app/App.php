@@ -40,10 +40,7 @@ class App {
 
 		add_filter( 'template_include', array( $this, 'tfhb_single_page_template' ) );
 
-		// add booking_id to order meta
-		if ( file_exists( THB_PATH . '/app/tfhb-public-class.php' ) ) {
-			require_once THB_PATH . '/app/tfhb-public-class.php';
-		}
+	 
 
 		add_rewrite_rule(
 			'^meeting/([0-9]+)/?$',

@@ -317,6 +317,32 @@ const deleteItemConfirm = () => {
     selected_items.value = [];
 }
 
+const MakeMeetingLink = (link) => {
+   
+    // link like https://meet.google.com/jpu-oxfr-uuc | https://zoom.us/j/1234567890 
+    // mamake <a href="https://meet.google.com/jpu-oxfr-uuc">https://meet.google.com/jpu-oxfr-uuc</a> | <a href="https://zoom.us/j/1234567890">https://zoom.us/j/1234567890</a>
+    if(link == ''){
+        return link;
+    } 
+    if (typeof link !== 'string') { 
+        return link;
+    }
+    // make array based on | 
+    let links = link.split('|');
+   
+    let linkHtml = '';
+    links.forEach((link) => {
+        
+        let linkParts = link.split(','); 
+        linkHtml += '<a href="'+linkParts+'" target="_blank">'+linkParts+'</a> <br>';
+    });
+    return linkHtml;
+
+
+
+
+}
+
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -357,7 +383,7 @@ const deleteItemConfirm = () => {
             v-if="selected_items.length > 0" 
             classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
             @click="deletePopup = true"
-            :buttonText="__('Delete', 'hydra-booking')"
+            :buttonText="$tfhb_trans('Delete')"
             icon="Trash2"   
             :hover_animation="false" 
             icon_position = 'left'
@@ -366,7 +392,7 @@ const deleteItemConfirm = () => {
         <HbButton 
             classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
             @click="ExportAsCSV = true"
-            :buttonText="__('Export as CSV', 'hydra-booking')"
+            :buttonText="$tfhb_trans('Export as CSV')"
             icon="FileDown"   
             :hover_animation="false" 
             icon_position = 'left'
@@ -374,7 +400,7 @@ const deleteItemConfirm = () => {
         <HbButton 
             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
             @click="router.push({ name: 'BookingCreate' })"
-            :buttonText="__('Add New Booking', 'hydra-booking')"
+            :buttonText="$tfhb_trans('Add New Booking')"
             icon="PlusCircle"   
             :hover_animation="false" 
             icon_position = 'left'
@@ -392,19 +418,19 @@ const deleteItemConfirm = () => {
                 <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
             </div>
             <div class="tfhb-close-content">
-                <h3>{{ __('Are you absolutely sure?', 'hydra-booking') }}  </h3>  
-                <p>{{ __('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.', 'hydra-booking') }}</p>
+                <h3>{{ $tfhb_trans('Are you absolutely sure?') }}  </h3>  
+                <p>{{ $tfhb_trans('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.') }}</p>
             </div>
             <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16">  
                 <HbButton 
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                     @click=" deletePopup = !deletePopup"
-                    :buttonText="__('Cancel', 'hydra-booking')" 
+                    :buttonText="$tfhb_trans('Cancel')" 
                 />  
                 <HbButton  
                     classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                     @click="deleteItemConfirm"
-                    :buttonText="__('Delete', 'hydra-booking')"
+                    :buttonText="$tfhb_trans('Delete')"
                     icon="Trash2"   
                     :hover_animation="false" 
                     icon_position = 'left'
@@ -417,7 +443,7 @@ const deleteItemConfirm = () => {
 <!-- Export CSV POPup -->
 <HbPopup  :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
     <template #header>  
-        <h3>Export Bookings as CSV</h3>
+        <h3>{{$tfhb_trans('Export Bookings as CSV')}}</h3>
     </template>
 
     <template #content> 
@@ -426,7 +452,7 @@ const deleteItemConfirm = () => {
             required= "true"
             v-model="exportData.date_range"
             name="request_header"
-            :label="__('Date Range', 'hydra-booking')"
+            :label="$tfhb_trans('Date Range')"
             :groups="true" 
             :options="[
                 {'label': 'Today', 'value': 'days'},  
@@ -438,7 +464,7 @@ const deleteItemConfirm = () => {
             ]" 
         />
       <div v-if="exportData.date_range == 'custom'" class="custom-date-range" >
-        <label for="">{{ __('Select Date Range', 'hydra-booking') }}</label>
+        <label for="">{{ $tfhb_trans('Select Date Range') }}</label>
         <div class="tfhb-filter-dates tfhb-flexbox">
             
             <div class="tfhb-filter-start-end-date">
@@ -447,7 +473,7 @@ const deleteItemConfirm = () => {
                     :label="''" 
                     enableTime='true'
                     icon="CalendarDays"
-                    placeholder="From"   
+                    :placeholder="$tfhb_trans('From')"   
                 />  
             </div>
             <div class="tfhb-calender-move-icon">
@@ -459,7 +485,7 @@ const deleteItemConfirm = () => {
                     :label="''" 
                     icon="CalendarDays"
                     enableTime='true'
-                    placeholder="To"   
+                    :placeholder="$tfhb_trans('To')"  
                 />  
             </div>
         </div> 
@@ -469,7 +495,7 @@ const deleteItemConfirm = () => {
         <HbButton 
             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
             @click="ExportBookingAsCSV"
-            :buttonText="__('Export Booking', 'hydra-booking')"
+            :buttonText="$tfhb_trans('Export Booking')"
             icon="ChevronRight"   
             hover_icon="ArrowRight"
             :pre_loader="exportAsPreloader"
@@ -493,7 +519,7 @@ const deleteItemConfirm = () => {
         <div class="tfhb-booking-info tfhb-full-width  tfhb-flexbox tfhb-gap-16">
             <!-- Host Info -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
-                <h3>{{ __('Host', 'hydra-booking') }}  </h3>
+                <h3>{{ $tfhb_trans('Host') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
                     <div v-if="singleBookingData.host_first_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="User" size=20 /> 
@@ -512,7 +538,7 @@ const deleteItemConfirm = () => {
 
             <!-- Attendee Info -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
-                <h3>{{ __('Attendee', 'hydra-booking') }}  </h3>
+                <h3>{{ $tfhb_trans('Attendee') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
                     <div v-if="singleBookingData.attendee_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="User" size=20 /> 
@@ -535,7 +561,7 @@ const deleteItemConfirm = () => {
 
             <!-- Meeting -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
-                <h3>{{ __('Meeting', 'hydra-booking') }}  </h3>
+                <h3>{{ $tfhb_trans('Meeting') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
                     <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="Clock" size=20 /> 
@@ -550,15 +576,19 @@ const deleteItemConfirm = () => {
 
             <!-- Location -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
-                <h3>{{ __('Meeting Location', 'hydra-booking') }}  </h3>
+                <h3>{{ $tfhb_trans('Meeting Location') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-16">  
                     <!-- [ { "location": "In Person (Organizer Address)", "address": "Address" }, { "location": "Organizer Phone Number", "address": "9098080" } ]  -->
                     <div v-for=" (address, index) in meeting_address.value" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
-                       <span class="tfhb-flexbox tfhb-gap-8" v-if="address.location == 'zoom'" >
+                       <span class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal" v-if="address.location == 'zoom'" >
                         <Icon name="MapPin" size=20 /> 
-                        Location : {{address.location}} - {{address.address.link}}
+                        Location : {{address.location}} - <div v-html="MakeMeetingLink(address.address.link)"></div>  
                        </span>
-                       <span class="tfhb-flexbox tfhb-gap-8" v-else  >
+                       <span class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal" v-else-if="address.location == 'meet'" >
+                        <Icon name="MapPin" size=20 /> 
+                        Location : {{address.location}} - <div v-html="MakeMeetingLink(address.address)"></div> 
+                       </span>
+                       <span class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal" v-else  >
                         <Icon name="MapPin" size=20 /> 
                         Location : {{address.location}} - {{address.address}}
                        </span>
@@ -599,9 +629,9 @@ const deleteItemConfirm = () => {
 
         <HbDropdown  
             v-model="singleCalendarBookingData.status"
-            :label="__('Status', 'hydra-booking')" 
+            :label="$tfhb_trans('Status')" 
             :selected = "1"
-            placeholder="Select Booking status"   
+            :placeholder="$tfhb_trans('Select Booking status')"   
             :option = "[
                 {'name': 'Pending', 'value': 'pending'},  
                 {'name': 'Confirmed', 'value': 'confirmed'},   
@@ -613,7 +643,7 @@ const deleteItemConfirm = () => {
 
         <div class="tfhb-single-form-field" style="width: 100%;">
             <div class="tfhb-single-form-field-wrap tfhb-field-input">
-                <label>Date</label>
+                <label>{{$tfhb_trans('Date')}}</label>
                 <div class="tfhb-time-date-view tfhb-flexbox">
                     <Icon name="CalendarDays" size=20 />
                     <input type="text" readonly :value="singleCalendarBookingData.booking_date">
@@ -623,7 +653,7 @@ const deleteItemConfirm = () => {
 
         <div class="tfhb-single-form-field" style="width: 100%;">
             <div class="tfhb-single-form-field-wrap tfhb-field-input">
-                <label>Time</label>
+                <label>{{$tfhb_trans('Time')}}</label>
                 <div class="tfhb-time-date-view tfhb-flexbox">
                     <Icon name="Clock4" size=20 />
                     <input type="text" readonly :value="singleCalendarBookingData.booking_time">
@@ -632,12 +662,12 @@ const deleteItemConfirm = () => {
         </div>
 
         <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width">
-            <!-- <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size=20 /> {{ __('Join Meet', 'hydra-booking') }}</a> -->
+            <!-- <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size=20 /> {{ $tfhb_trans('Join Meet') }}</a> -->
 
             <HbButton  
                 classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                 @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)"
-                :buttonText="__('Delete', 'hydra-booking')"
+                :buttonText="$tfhb_trans('Delete')"
                 icon="Trash2"   
                 :hover_animation="false" 
                 icon_position = 'left'
@@ -661,13 +691,13 @@ const deleteItemConfirm = () => {
                         </label>
                     </div>
                 </th>
-                <th>{{ __('Date & Time', 'hydra-booking') }}</th>
-                <th>{{ __('Title', 'hydra-booking') }}</th>
-                <th>{{ __('Host', 'hydra-booking') }}</th>
-                <th>{{ __('Attendee', 'hydra-booking') }}</th>
-                <th>{{ __('Duration', 'hydra-booking') }}</th>
-                <th>{{ __('Status', 'hydra-booking') }}</th>
-                <th>{{ __('Action', 'hydra-booking') }}</th>
+                <th>{{ $tfhb_trans('Date & Time') }}</th>
+                <th>{{ $tfhb_trans('Title') }}</th>
+                <th>{{ $tfhb_trans('Host') }}</th>
+                <th>{{ $tfhb_trans('Attendee') }}</th>
+                <th>{{ $tfhb_trans('Duration') }}</th>
+                <th>{{ $tfhb_trans('Status') }}</th>
+                <th>{{ $tfhb_trans('Action') }}</th>
             </tr>
         </thead>
 
@@ -697,7 +727,7 @@ const deleteItemConfirm = () => {
                     <span>{{ book.attendee_email }}</span>
                 </td>
                 <td>
-                    {{ book.duration }} {{ __('minutes', 'hydra-booking') }}
+                    {{ book.duration }} {{ $tfhb_trans('minutes') }}
                 </td>
                 <td>
                     <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
@@ -710,10 +740,10 @@ const deleteItemConfirm = () => {
                             </svg>
                             <div class="tfhb-status-popup">
                                 <ul class="tfhb-flexbox tfhb-gap-2">
-                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ __('Confirmed', 'hydra-booking') }}</li>
-                                    <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ __('Pending', 'hydra-booking') }}</li>
-                                    <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ __('Re-schedule', 'hydra-booking') }}</li>
-                                    <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ __('Canceled', 'hydra-booking') }}</li>
+                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ $tfhb_trans('Confirmed') }}</li>
+                                    <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li>
+                                    <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ $tfhb_trans('Re-schedule') }}</li>
+                                    <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -736,7 +766,7 @@ const deleteItemConfirm = () => {
 
     <div class="tfhb-booking-details-pagination tfhb-flexbox tfhb-mt-32" v-if="totalPages > 1">
         <div class="tfhb-prev-next-button">
-            <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === 1"><Icon name="ArrowLeft" width="20" />Previous</a>
+            <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === 1"><Icon name="ArrowLeft" width="20" />{{ $tfhb_trans('Previous') }}</a>
         </div>
         <div class="tfhb-pagination">
             <ul class="tfhb-flexbox tfhb-gap-0 tfhb-justify-normal">
@@ -746,13 +776,13 @@ const deleteItemConfirm = () => {
             </ul>
         </div>
         <div class="tfhb-prev-next-button">
-            <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === totalPages">Next<Icon name="ArrowRight" width="20" /></a>
+            <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === totalPages">{{ $tfhb_trans('Next') }}<Icon name="ArrowRight" width="20" /></a>
         </div>
     </div>
 </div>
 <div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
     <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-    <p>{{ __('No Booking Created', 'hydra-booking') }}</p> 
+    <p>{{ $tfhb_trans('No Booking Created') }}</p> 
 </div>
 </template>
 

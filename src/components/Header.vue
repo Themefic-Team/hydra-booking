@@ -96,8 +96,8 @@ onBeforeRouteLeave((to, from, next) => {
             <transition name="tfhb-dropdown-transition">
                 <div v-show="displayNotification" class="tfhb-dropdown-wrap " >   <!-- active class-->
                     <div class="tfhb-flexbox tfhb-justify-between">
-                        <h3>{{ __('Notifications', 'hydra-booking') }}</h3>
-                        <button @click="MarkAsRead" class="tfhb-btn">{{ __('Mark as read', 'hydra-booking') }}</button>
+                        <h3>{{ $tfhb_trans('Notifications') }}</h3>
+                        <button @click="MarkAsRead" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</button>
                         <!-- {{ notifications }} -->
                     </div>
 

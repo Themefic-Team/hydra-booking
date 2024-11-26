@@ -20,6 +20,8 @@ class HostsController {
 
 	// constaract
 	public function __construct() { 
+
+
 	}
 
 	public function init() {
@@ -1056,4 +1058,34 @@ class HostsController {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		echo 'fetch';
 	}
+
+
+	/**
+	 * Update Host Mail 
+	 * 
+	 */
+
+	public function update_host_email($user_id, $old_user_data) {
+		// Get the updated user data
+		$user = get_userdata($user_id);
+	
+		// Check if the email has changed
+		if ($old_user_data->user_email !== $user->user_email) {
+			 // Get
+			 $host = new Host();
+			 $HostData = $host->getHostByUserId( $user_id );
+
+			 if($HostData == false){
+				 return false;
+			 }
+
+			 $HostData->email = $user->user_email;
+			 $host->update( (array) $HostData );
+
+			 // Update user Option
+			 return true;
+
+		}
+	}
+
 }

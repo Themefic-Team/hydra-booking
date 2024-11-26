@@ -31,7 +31,10 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 ?> 
 
-<div class="tfhb-meeting-info">
+<div class="tfhb-meeting-info"> 
+	
+	
+	<?php //echo esc_html( __( 'Booking Overview-w', 'hydra-booking' ) ); ?>
 	<div class="hidden-field">
 		<input type="hidden" id="meeting_id" name="meeting_id" value="<?php echo esc_attr($meeting['id']); ?>">
 		<input type="hidden" id="host_id" name="host_id" value="<?php echo esc_attr($host['id']); ?>"> 
@@ -69,7 +72,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		<div class="tfhb-short-description">
             <?php 
             if(strlen($meeting['description']) > 100 ){
-                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 100))) . '<span class="tfhb-see-description">See more</span>';
+                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 100))) . '<span class="tfhb-see-description">'.esc_html(__('See more', 'hydra-booking')).'</span>';
             }else{
                 echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : ''; 
             }
@@ -145,6 +148,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 
 				$price = ! empty( $meeting['meeting_price'] ) ? $meeting['meeting_price'] : 'Free';
+				$currency = ! empty( $meeting['payment_currency'] ) && $price !='Free' ? $meeting['payment_currency'] : '';
 				echo '<li class="tfhb-flexbox tfhb-gap-8">
                             <input type="hidden" id="meeting_price" name="meeting_price" value="' . esc_attr( $price ) . '">
                             <div class="tfhb-icon">
@@ -154,27 +158,14 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
                                 <path d="M4 8H4.00667M12 8H12.0067" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </div> 
-                            ' . esc_html( $price ) . '
+                            ' . esc_html( $price ) . ' ' . esc_html( $currency ) . '
                         </li>';
 			}
 			?>
 			<?php
 			if ( ! empty( $meeting['recurring_status'] ) && true == $meeting['recurring_status'] ) {
 
-			// 	echo '<li class="tfhb-flexbox tfhb-gap-8">
-			//     <input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
-			//     <div class="tfhb-icon">  
-			//         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-			//         <path d="M2 8C2 6.4087 2.63214 4.88258 3.75736 3.75736C4.88258 2.63214 6.4087 2 8 2C9.67737 2.00631 11.2874 2.66082 12.4933 3.82667L14 5.33333" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-			//         <path d="M13.9993 2V5.33333H10.666" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-			//         <path d="M14 8C14 9.5913 13.3679 11.1174 12.2426 12.2426C11.1174 13.3679 9.5913 14 8 14C6.32263 13.9937 4.71265 13.3392 3.50667 12.1733L2 10.6667" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-			//         <path d="M5.33333 10.6667H2V14" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-			//         </svg>
-			//     </div> 
-			//     <div>
-			//         Recurring every  <span>' . esc_attr( $meeting['recurring_repeat'][0]['limit'] ) . '</span> ' . esc_attr( $meeting['recurring_repeat'][0]['times'] ) . ' for  <span>' . esc_attr( $meeting['recurring_maximum'] ) . '</span>  Bookings
-			//     </div>
-			// </li>';
+			 
 			}
 			?>
  

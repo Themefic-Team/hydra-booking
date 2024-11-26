@@ -75,6 +75,16 @@ class MeetingController {
 
 		register_rest_route(
 			'hydra-booking/v1',
+			'/meetings/clone',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'cloneMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
+		register_rest_route(
+			'hydra-booking/v1',
 			'/meetings/webhook/update',
 			array(
 				'methods'  => 'POST',
@@ -481,12 +491,14 @@ class MeetingController {
 			'webhook'  => ! empty( $request['webhook'] ) ? $request['webhook'] : '',
 			'bodys'    => ! empty( $request['bodys'] ) ? $request['bodys'] : '',
 			'events'   => ! empty( $request['events'] ) ? $request['events'] : '',
+			'url'      => ! empty( $request['url'] ) ? $request['url'] : '',
 			'audience' => 'Mailchimp' == $request['webhook'] && ! empty( $request['audience'] ) ? $request['audience'] : '',
 			'tags'     => 'FluentCRM' == $request['webhook'] && ! empty( $request['tags'] ) ? $request['tags'] : '',
 			'lists'    => 'FluentCRM' == $request['webhook'] && ! empty( $request['lists'] ) ? $request['lists'] : '',
 			'modules'  => 'ZohoCRM' == $request['webhook'] && ! empty( $request['modules'] ) ? $request['modules'] : '',
 			'fields'   => ! empty( $request['fields'] ) ? $request['fields'] : '',
 			'status'   => ! empty( $request['status'] ) ? $request['status'] : '',
+			'request_body'   => ! empty( $request['request_body'] ) ? $request['request_body'] : '',
 		);
 
 		if ( $key !== '' && isset( $Integrationsdata[ $key ] ) ) {
@@ -831,6 +843,8 @@ class MeetingController {
 		$integrations['webhook_status'] = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
 		$integrations['fluent_crm_status'] = isset( $_tfhb_integration_settings['fluent_crm']['status'] ) ? $_tfhb_integration_settings['fluent_crm']['status'] : 0;
 		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
+		$integrations['pabbly_status'] = isset( $_tfhb_integration_settings['pabbly']['status'] ) ? $_tfhb_integration_settings['pabbly']['status'] : 0;
+		$integrations['zapier_status'] = isset( $_tfhb_integration_settings['zapier']['status'] ) ? $_tfhb_integration_settings['zapier']['status'] : 0;
 		 
 
 		// Meeting Category
@@ -1045,11 +1059,17 @@ class MeetingController {
 			'updated_at'               => gmdate( 'Y-m-d' ),
 			'updated_by'               => $current_user_id,
 		);
+		$host = new Host ();
+		$host_data = $host->getHostById( $data['host_id'] );
+		if($host_data){ 
+			$data['user_id'] = $host_data->user_id;
+		}
 
 		// if Payment Methood is woo_payment
-		if ( 'woo_payment' == $data['payment_method'] ) {
-			$products              = wc_get_product( $data['payment_meta']['product_id'] );
+		if ( 'woo_payment' == $data['payment_method'] &&  class_exists( 'WooCommerce' ) ) {
+			$products              = wc_get_product( $data['payment_meta']['product_id'] ); 
 			$data['meeting_price'] = $products->price;
+			$data['payment_currency'] = get_woocommerce_currency();
 
 		}
 
@@ -1082,17 +1102,84 @@ class MeetingController {
 			update_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', $data );
 
 		}
-		$MeetingData = $meeting->get( $meeting_id );
+		$GetMeeting =  (array) $meeting->get( $meeting_id ); 
+
+		
+		$GetMeeting['permalink'] = get_permalink($GetMeeting['post_id']); 
 		// Return response
 		$data = array(
 			'status'  => true,
 			'message' => 'Meeting Updated Successfully',
 			'data'    => $data,
-			'meeting' => $MeetingData,
+			'meeting' => $GetMeeting,
 		);
 		return rest_ensure_response( $data );
 	}
 
+	/*
+	 *  Clone Meeting
+	 */
+	public function cloneMeeting( ){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+
+		$current_user = wp_get_current_user();
+		// get user id
+		$current_user_id = $current_user->ID;
+
+		$get_meeting_id = $request['id'];
+		$meeting = new Meeting();
+		$meeting_data = (array) $meeting->getWithID( $get_meeting_id );
+		unset($meeting_data['id']);
+		$meeting_data['created_by'] = $current_user_id;
+		$meeting_data['updated_by'] = $current_user_id;
+		$meeting_data['created_at'] = gmdate( 'Y-m-d' );
+		$meeting_data['updated_at'] = gmdate( 'Y-m-d' );
+
+
+		// Create an array to store the post data for meeting the current row
+		$meeting_post_data = array(
+			'post_type'   => 'tfhb_meeting',
+			'post_title'  => $meeting_data['title'] . esc_html( '( Clone )' ),
+			'post_status' => 'publish',
+			'post_author' => $current_user_id,
+		);
+		$meeting_post_id   = wp_insert_post( $meeting_post_data ); 
+
+		$meeting_data['post_id'] = $meeting_post_id;
+		$meeting_data['slug'] = get_post_field( 'post_name', $meeting_post_id );
+		$meeting_data['title'] =  $meeting_data['title'] . esc_html( '( Clone )' );
+	
+		$meetingInsert = $meeting->add( $meeting_data ); 
+		$meetings_id = $meetingInsert['insert_id'];
+			// Meetings Id into Post Meta
+		update_post_meta( $meeting_post_id, '__tfhb_meeting_id', $meetings_id );
+ 
+		// Updated post meta
+		$meeting_data['id'] = $meetings_id;
+
+		// Set the meeting data
+		$meeting_data['meeting_locations'] = !is_array($meeting_data['meeting_locations']) ? json_decode($meeting_data['meeting_locations'], true) : $meeting_data['meeting_locations'];
+		$meeting_data['availability_range'] =  !is_array($meeting_data['availability_range']) ? json_decode($meeting_data['availability_range'] , true) : $meeting_data['availability_range'];
+		$meeting_data['availability_custom'] =  !is_array($meeting_data['availability_custom']) ? json_decode($meeting_data['availability_custom'], true) : $meeting_data['availability_custom'];
+		$meeting_data['booking_frequency'] = !is_array($meeting_data['booking_frequency']) ? json_decode($meeting_data['booking_frequency'], true) : $meeting_data['booking_frequency'];
+		$meeting_data['recurring_repeat'] = !is_array($meeting_data['recurring_repeat']) ? json_decode($meeting_data['recurring_repeat'], true) : $meeting_data['recurring_repeat'];
+		$meeting_data['questions'] = !is_array($meeting_data['questions']) ? json_decode($meeting_data['questions'], true) : $meeting_data['questions'];
+		$meeting_data['notification'] =  !is_array($meeting_data['notification']) ? json_decode($meeting_data['notification'], true) : $meeting_data['notification'];
+		$meeting_data['payment_meta'] =  !is_array($meeting_data['payment_meta']) ? json_decode($meeting_data['payment_meta'], true) : $meeting_data['payment_meta'];
+
+		update_post_meta( $meeting_post_id, '__tfhb_meeting_opt', $meeting_data );
+
+		$MeetingsList = $this->getMeetingList(); 
+
+		// Return response
+		$data = array(
+			'status'   => true,
+			'meetings' => $MeetingsList,
+			'message'  => 'Meeting Cloned Successfully',
+		);
+
+		return rest_ensure_response( $data );
+	} 
 	// Host availability
 	public function getTheHostAvailabilityData( $request ) {
 
@@ -1424,11 +1511,14 @@ class MeetingController {
 		$integrations['paypal'] = isset( $_tfhb_integration_settings['paypal']['status'] ) && !empty($_tfhb_integration_settings['paypal']['client_id'] ) && $_tfhb_integration_settings['paypal']['status'] == true ? false : true;
 		$integrations['stripe'] = isset( $_tfhb_integration_settings['stripe']['status'] ) && !empty($_tfhb_integration_settings['stripe']['public_key'] ) && $_tfhb_integration_settings['stripe']['status'] == true ? false : true;
 		
+		$country = new CountryController();
+		$currency_list = $country->currency_list();
 
 		$data = array(
 			'status'        => true,
 			'integrations' => $integrations, 
 			'_tfhb_integration_settings' => $_tfhb_integration_settings, 
+			'currency_list' => $currency_list, 
 		);
 		return rest_ensure_response( $data );
 

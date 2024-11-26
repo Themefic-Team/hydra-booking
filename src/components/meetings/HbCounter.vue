@@ -46,7 +46,10 @@ function CounterDec(key){
                             <Icon name="Minus" />
                         </div>
 
-                        <span>{{ counter.limit = counter.limit}} {{ counterLabel }}</span>
+                        <span>
+                            <input type="text" v-model=" counter.limit" >
+                            <!-- {{ counter.limit = counter.limit}}  -->
+                            {{ counterLabel }}</span>
                         <div class="tfhb-inc" @click="CounterInc(key)">
                             <Icon name="Plus" />
                         </div>
