@@ -3,8 +3,7 @@
     $(document).ready(function () { 
         // Cencel Booking If .tfhb-meeting-cencel-form form submit using ajax
 		
-        $(document).on('submit', '.tfhb-meeting-cencel-form', function (e) { 
-            alert(1);
+        $(document).on('submit', '.tfhb-meeting-cencel-form', function (e) {  
             e.preventDefault();  
             $this = $(this);
             var data  = new FormData(this); 
