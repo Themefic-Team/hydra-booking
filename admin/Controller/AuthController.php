@@ -59,7 +59,11 @@ class AuthController {
 
 		$host = new Host();
 		$host = $host->getHostByUserID( $this->userID() );
-		return $host->id;
+		if( empty($host) ) {
+			return false;
+		}else{ 
+			return $host->id;
+		}
 	}
 
 	public function userData() {
