@@ -57,6 +57,7 @@ class Enqueue {
 				'tfhb_app_booking',
 				array(
 					'ajax_url'         => admin_url( 'admin-ajax.php' ),
+					'site_url'         => site_url(),
 					'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
 					'general_settings' => $general_settings,
 				)
