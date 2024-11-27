@@ -34,6 +34,7 @@ class Enqueue {
 		$user      = new AuthController();
 		$user_auth = array(
 			'id'   => $user->userID(),
+			'host_id'  => $user->userHostID(),
 			'role' => $user->userRole(),
 			'caps' => $user->userAllCaps(),
 		);
@@ -50,6 +51,10 @@ class Enqueue {
 		wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
 		wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
  
+		// Localize the script
+		// shareData.embed = `<div id="hydra-booking-embad-container" data-meeting-id="64"></div> `
+
+		$embed_script_link = esc_html('<script src="' .THB_URL . 'assets/app/js/widget.js"></script>');
  
 		wp_localize_script(
 			'tfhb-admin-core',
@@ -57,9 +62,10 @@ class Enqueue {
 			array(
 				// 'url' => THB_URL,
 				'rest_nonce'           => wp_create_nonce( 'wp_rest' ),
-				'tfhb_is_pro'           => wp_create_nonce( 'wp_rest' ),
+				'tfhb_is_pro'          => wp_create_nonce( 'wp_rest' ),
 				'admin_url'            => site_url(),
-				'rest_route'            => get_rest_url(),
+				'rest_route'           => get_rest_url(),
+				'embed_script_link'    => esc_html( $embed_script_link ),
 				'ajax_url'             => admin_url( 'admin-ajax.php' ),
 				'tfhb_url'             => THB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),

@@ -34,6 +34,7 @@ const time_zones = reactive({});
 const hosts_settings = reactive({});
 const settingsAvailabilityData = reactive({});
 const hostId = route.params.id;
+ 
 const integration = reactive({
     zoho_crm_status : 0,
 });
@@ -133,8 +134,7 @@ const UpdateHostsInformation = async (validator_field) => {
 
 
  // Fetch generalSettings
- const fetchHost = async () => {
-
+ const fetchHost = async () => { 
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/'+hostId , {
             headers: {

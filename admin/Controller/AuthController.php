@@ -5,6 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Namespace
 use HydraBooking\Admin\Controller\RouteController;
+
+use HydraBooking\DB\Host;
+
 class AuthController {
 
 	// constaract.
@@ -49,6 +52,14 @@ class AuthController {
 	public function userID() {
 		$user = wp_get_current_user();
 		return $user->ID;
+	}
+
+	// Get Current User Host ID 
+	public function userHostID() { 
+
+		$host = new Host();
+		$host = $host->getHostByUserID( $this->userID() );
+		return $host->id;
 	}
 
 	public function userData() {

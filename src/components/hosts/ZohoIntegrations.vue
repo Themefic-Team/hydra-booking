@@ -44,14 +44,18 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+            
+
             <span v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
 
+            
             <a v-if="zoho_data.client_id && !zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" :href="' https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id='+zoho_data.client_id+'&scope=ZohoCRM.modules.ALL%20ZohoCRM.settings.ALL&redirect_uri='+zoho_data.redirect_url+'&state='+host_id+'&access_type=offline'" target="_blank"class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Get Access Token') }}</a>
 
             <button v-else-if="zoho_data.client_id && zoho_data.access_token && $tfhb_is_pro == true && $tfhb_license_status == true" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Settings') }}<Icon name="ChevronRight" size=18 /></button>
 
             <button v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==1" @click="emit('popup-open-control')" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect') }}<Icon name="ChevronRight" size=18 /></button>
 
+            <button  v-else-if=" $tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==0 && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Connected') }} </button>
             <router-link v-else-if="$tfhb_is_pro == true && $tfhb_license_status == true && zoho_crm_status==0"  to="/settings/integrations#marketing-tools" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <!-- Checkbox swicher -->

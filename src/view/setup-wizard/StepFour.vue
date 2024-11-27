@@ -54,8 +54,7 @@ const sharePopupData = (data) => {
     shareData.meeting_type = data.meeting_type
     shareData.shortcode = '[hydra_booking id="'+data.id+'"]'
     shareData.link = tfhb_core_apps.admin_url + '/' + data.slug
-    shareData.embed = '<iframe src="'+ tfhb_core_apps.admin_url +'/?hydra-booking=meeting&meeting-id='+data.id+'&type=iframe" title="description"  height="600" width="100%" ></iframe>'
-
+    shareData.embed = ' <div id="hydra-booking-embed-container" data-meeting-id="'+data.id+'"></div> '+tfhb_core_apps.embed_script_link+''
     // Popup open
     sharePopup.value = true;
 }
