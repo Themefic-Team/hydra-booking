@@ -639,9 +639,7 @@ const shareData = reactive({
     shortcode: '',
     embed: ''
 })
-const sharePopupData = () => { 
-
-    alert(tfhb_core_apps.embed_script_link);
+const sharePopupData = () => {  
     shareData.share_type = 'link'
     shareData.title = meetingData.title
     shareData.time = meetingData.duration

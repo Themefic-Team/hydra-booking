@@ -12,8 +12,7 @@ defined( 'ABSPATH' ) || exit;
  
  global $wp_query;
 if ( isset( $wp_query->query_vars['hydra-booking'] ) ) {
-	$meeting_id = intval( $wp_query->query_vars['meetingId'] );
-	$type       = esc_attr( $wp_query->query_vars['type'] );
+	$meeting_id = intval( $wp_query->query_vars['meetingId'] ); 
 	if ( ! empty( $meeting_id ) ) {
 		?>
 		<div class="tfhb-single-meeting-section tfhb-meeting-embed-section">

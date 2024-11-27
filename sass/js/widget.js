@@ -17,9 +17,10 @@
                 console.error('No meeting ID found in the data-meeting-id attribute.');
                 return;
             }
-
+            
+ 
             // Define the URL of the widget page
-            const url = `http://hydra-booking.local/?hydra-booking=meeting&meetingId=${meetingId}`;
+            const url = ``+tfhb_app_booking.site_url+`/?hydra-booking=meeting&meetingId=${meetingId}`;
             // Get The the height of the iframe 
 
 
