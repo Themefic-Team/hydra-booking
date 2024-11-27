@@ -111,6 +111,7 @@ class App {
 		$query_vars[] = 'hydra-booking';
 		$query_vars[] = 'meeting';
 		$query_vars[] = 'meeting-id';
+		$query_vars[] = 'meetingId';
 		$query_vars[] = 'hash';
 		$query_vars[] = 'type';
 		return $query_vars;
@@ -118,6 +119,12 @@ class App {
 
 	public function tfhb_single_page_template( $template ) {
 
+		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meetingId' )) {
+			 
+
+			$custom_template = load_template( THB_PATH . '/app/Content/Template/embed.php', true );
+			return $custom_template;
+		}
 		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meeting' ) ) {
 			// echo "hello";
 			// exit;
@@ -129,6 +136,7 @@ class App {
 			$custom_template = load_template( THB_PATH . '/app/Content/Template/Iframe.php', true );
 			return $custom_template;
 		}
+	
 
 		// Reschedule Page
 		if ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'reschedule' ) {

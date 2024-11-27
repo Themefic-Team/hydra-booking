@@ -12,6 +12,7 @@
         "index.html",
         "phpcs.xml",
         "sass",
+        "config",
         "src",
         "assets/app/css/style.css.map"
     ]

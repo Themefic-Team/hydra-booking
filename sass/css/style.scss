@@ -1174,3 +1174,17 @@
     padding: 60px 0px;
     width: 100%;
 }
+.hydra-booking-embad-container{
+    height: 100%;
+    min-height: 650px;
+}
+.tfhb-meeting-embed-section{
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+    body {
+        visibility: hidden;
+        opacity: 0;
+    }
+   
+}

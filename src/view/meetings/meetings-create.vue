@@ -640,13 +640,15 @@ const shareData = reactive({
     embed: ''
 })
 const sharePopupData = () => { 
+
+    alert(tfhb_core_apps.embed_script_link);
     shareData.share_type = 'link'
     shareData.title = meetingData.title
     shareData.time = meetingData.duration
     shareData.meeting_type = meetingData.meeting_type
     shareData.shortcode = '[hydra_booking id="'+meetingData.id+'"]'
     shareData.link = meetingData.permalink
-    shareData.embed = '<iframe src="'+ tfhb_core_apps.admin_url +'/?hydra-booking=meeting&meeting-id='+meetingData.id+'&type=iframe" title="description"  height="600" width="100%" ></iframe>'
+    shareData.embed = ' <div id="hydra-booking-embed-container" data-meeting-id="'+meetingData.id+'"></div> '+tfhb_core_apps.embed_script_link+''
 
     // Popup open
     sharePopup.value = true; 
