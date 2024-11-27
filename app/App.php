@@ -126,17 +126,10 @@ class App {
 			return $custom_template;
 		}
 		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meeting' ) ) {
-			// echo "hello";
-			// exit;
+			 
 			$custom_template = load_template( THB_PATH . '/app/Content/Template/single-meeting.php', false );
 			return $custom_template;
-		}
-		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meeting-id' ) && get_query_var( 'type' ) ) {
-
-			$custom_template = load_template( THB_PATH . '/app/Content/Template/Iframe.php', true );
-			return $custom_template;
-		}
-	
+		} 
 
 		// Reschedule Page
 		if ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'reschedule' ) {

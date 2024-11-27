@@ -80,7 +80,7 @@ class HydraBookingShortcode {
 		$MeetingData = $meeting->get( $calendar_id );
 
 		if ( ! $MeetingData ) {
-			return 'Invalid Meeting ID';
+			return 'Invalid Meeting';
 		}
 
 		$meta_data        = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
