@@ -17,6 +17,7 @@ class MailHooks {
 		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 10, 1 );
+		add_action( 'hydra_booking/send_booking_reminder', array( $this, 'send_booking_reminder' ), 10, 1 );
 	}
 
 	// Get Meeting Data
@@ -309,6 +310,79 @@ class MailHooks {
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] : '';
+
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+
+				// Result after Shortcode replce
+				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+				// Attendee Email
+				$mailto = ! empty( $booking->email ) ? $booking->email : '';
+
+				$headers = array(
+					'Reply-To: ' . $replyTo,
+				);
+
+				Mailer::send( $mailto, $subject, $body, $headers );
+			}
+		}
+	}
+
+
+		// If booking Status is ReSchedule
+	public function send_booking_reminder( $booking ) {
+
+		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $booking->host_id );
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+
+			// Host ReSchedule Email, If Settings Enable for Host ReSchedule
+			if ( ! empty( $_tfhb_notification_settings['host']['booking_reminder']['status'] ) ) {
+				// From Email
+				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_reminder']['form'] ) ? $_tfhb_notification_settings['host']['booking_reminder']['form'] : get_option( 'admin_email' );
+	
+				// Email Subject
+				$subject = ! empty( $_tfhb_notification_settings['host']['booking_reminder']['subject'] ) ? $_tfhb_notification_settings['host']['booking_reminder']['subject'] : 'Booking ReSchedule';
+				
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+
+
+				// Setting Body
+				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_reminder']['body'] ) ? $_tfhb_notification_settings['host']['booking_reminder']['body'] : '';
+
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+
+				// Result after Shortcode replce
+				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+				// Host Email
+				$mailto = ! empty( $hostData->host_email ) ? $hostData->host_email : '';
+
+				$headers = array(
+					'Reply-To: ' . $replyTo,
+				);
+
+				Mailer::send( $mailto, $subject, $body, $headers );
+			}
+
+			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['status'] ) ) {
+				// From Email
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['form'] : get_option( 'admin_email' );
+
+				// Email Subject
+				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['subject'] : 'Booking ReSchedule';
+
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $booking->id );
+
+				// Setting Body
+				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['body'] : '';
 
 				// Replace Shortcode to Values
 				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );

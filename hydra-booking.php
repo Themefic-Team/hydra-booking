@@ -26,6 +26,8 @@ class THB_INIT {
 
 
 		
+	
+		
 
 
 		// Load Vendor Auto Load
@@ -49,7 +51,13 @@ class THB_INIT {
 
 		
 		add_action('plugins_loaded', array($this, 'tfhb_load_textdomain'));
+
+			// // display all cron jobs list 
+			// tfhb_print_r(wp_get_schedules());
+			// exit;
 	}
+
+
 	function tfhb_load_textdomain() {
 		load_plugin_textdomain('hydra-booking', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 	}

@@ -342,6 +342,39 @@ const MakeMeetingLink = (link) => {
 
 
 }
+const bookingReminder  = async (booking) => { 
+
+    let data = {
+        booking_id: booking.id
+    } 
+    try { 
+        // axisos sent dataHeader Nonce Data
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/send-reminder', data, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+
+        if (response.data.status) {  
+              
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+
+        }else{
+
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+}
 
 </script>
 <template>
@@ -753,6 +786,9 @@ const MakeMeetingLink = (link) => {
                     <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
                         <span @click.stop="Tfhb_Booking_View(book)">
                             <Icon name="Eye" width="20" />
+                        </span>
+                        <span @click.stop="bookingReminder(book)">
+                            <Icon name="AlarmClock" width="20" />
                         </span>
                         <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
                             <Icon name="FilePenLine" width="20" />

@@ -81,6 +81,17 @@ class BookingController {
 			)
 		);
 
+		// booking reminder email.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/send-reminder',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'sendReminderEmail' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
 		// Pre Booking Data
 		register_rest_route(
 			'hydra-booking/v1',
@@ -582,6 +593,55 @@ class BookingController {
 			'bookings'         => $bookingsList,
 			'booking_calendar' => $booking_array,
 			'message'          => 'Booking Data Successfully Deleted!',
+		);
+		return rest_ensure_response( $data );
+	}
+
+	// Send Reminder Email
+	public function sendReminderEmail(){
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+
+		$booking_id =  isset( $request['booking_id'] ) ? $request['booking_id'] : 0;
+		if( empty( $booking_id ) && $booking_id == 0 ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Booking',
+				)
+			);
+		}
+
+		// Get Booking Data
+		$booking = new Booking(); 
+		$single_booking_meta = $booking->get(
+			array( 'id' => $booking_id ),
+			false,
+		);
+
+		if( empty( $single_booking_meta ) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Booking',
+				)
+			);
+		}
+
+		if( 'confirmed' != $single_booking_meta->booking_status ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'This Booking is not Confirmed',
+				)
+			);
+		}
+
+		do_action( 'hydra_booking/send_booking_reminder', $single_booking_meta );
+
+		// Return response
+		$data = array(
+			'status'  => true,
+			'message' => 'Reminder Email Sent Successfully!',
 		);
 		return rest_ensure_response( $data );
 	}
