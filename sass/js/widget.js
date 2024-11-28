@@ -53,9 +53,7 @@
                         iframe.style.height = iframeMeetingEmbedSection.offsetHeight + 'px';
                     } 
                 };
-             
-
-                console.log(`Hydra Booking widget initialized for Meeting ID: ${meetingId}`);
+              
             });
         },
     };

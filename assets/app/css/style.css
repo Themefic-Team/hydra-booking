@@ -1206,7 +1206,7 @@
   min-height: 650px;
 }
 
-.tfhb-meeting-embed-section {
+.tfhb-meeting-embed-section.tfhb-meeting-embed-section {
   padding: 70px 0 !important;
   box-sizing: border-box;
   width: 100%;

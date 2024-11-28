@@ -646,7 +646,7 @@ const sharePopupData = () => {
     shareData.meeting_type = meetingData.meeting_type
     shareData.shortcode = '[hydra_booking id="'+meetingData.id+'"]'
     shareData.link = meetingData.permalink
-    shareData.embed = ' <div class="hydra-booking-embed-container" data-url="'+tfhb_core_apps.admin_url+'" data-meeting-id="'+meetingData.id+'""></div> '+tfhb_core_apps.embed_script_link+''
+    shareData.embed = ' <div class="hydra-booking-embed-container" data-url="'+tfhb_core_apps.admin_url+'" data-meeting-id="'+meetingData.id+'"></div> '+tfhb_core_apps.embed_script_link+''
  
 
     // Popup open
