@@ -639,14 +639,15 @@ const shareData = reactive({
     shortcode: '',
     embed: ''
 })
-const sharePopupData = () => {  
+const sharePopupData = () => {   
     shareData.share_type = 'link'
     shareData.title = meetingData.title
     shareData.time = meetingData.duration
     shareData.meeting_type = meetingData.meeting_type
     shareData.shortcode = '[hydra_booking id="'+meetingData.id+'"]'
     shareData.link = meetingData.permalink
-    shareData.embed = ' <div id="hydra-booking-embed-container" data-meeting-id="'+meetingData.id+'"></div> '+tfhb_core_apps.embed_script_link+''
+    shareData.embed = ' <div class="hydra-booking-embed-container" data-url="'+tfhb_core_apps.admin_url+'" data-meeting-id="'+meetingData.id+'""></div> '+tfhb_core_apps.embed_script_link+''
+ 
 
     // Popup open
     sharePopup.value = true; 
