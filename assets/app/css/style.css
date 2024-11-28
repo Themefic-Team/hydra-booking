@@ -356,12 +356,7 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover svg path, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span:hover svg path {
   stroke: #fff;
 }
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span#tfhb-calendar-next, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span#tfhb-calendar-next {
-  position: relative;
-}
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span#tfhb-calendar-next::before, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation span#tfhb-calendar-next::before {
-  position: absolute;
-  content: "";
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation .tfhb-calendar-navigation-dots, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-container header .tfhb-calendar-navigation .tfhb-calendar-navigation-dots {
   width: 8px;
   height: 8px;
   background-color: #56765B;

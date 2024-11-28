@@ -363,6 +363,7 @@ class MailHooks {
             $tfhb_booking_table.meeting_locations AS booking_locations,
             $tfhb_booking_table.meeting_dates,
             $tfhb_booking_table.others_info,
+            $tfhb_booking_table.reason,
             $tfhb_booking_table.start_time,
             $tfhb_booking_table.end_time,
             $tfhb_booking_table.duration AS meeting_duration,
@@ -414,6 +415,7 @@ class MailHooks {
 			$others_info_html .= '</ul>';
 			$replacements['{{attendee.additional_data}}'] = $others_info_html;
 		}
+		 
 		// reason
 		if( !empty($booking_data->reason) && $booking_data->reason != NULL ){
 			$replacements['{{booking.cancel_reason}}'] = $booking_data->reason;

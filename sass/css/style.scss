@@ -370,17 +370,12 @@
                             }
                         }
                     }
-                    span#tfhb-calendar-next{
-                        position: relative;
-                        &::before{
-                            position: absolute;
-                            content: "";
-                            width: 8px;
-                            height: 8px;
-                            background-color: $surface-input-field;
-                            border-radius: 50%;
-                            left: -24px;
-                        }
+                    .tfhb-calendar-navigation-dots{ 
+                        width: 8px;
+                        height: 8px;
+                        background-color: $surface-input-field;
+                        border-radius: 50%;
+                        left: -24px;
                     }
                 }
             }

@@ -900,6 +900,7 @@ class HydraBookingShortcode {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid Booking ID', 'hydra-booking')) ) );
 		}
 
+
 		$booking_data = array(
 			'id'           => $get_booking->id,
 			'reason'       => $reason,
@@ -908,6 +909,10 @@ class HydraBookingShortcode {
 		);
 
 		$booking->update( $booking_data );
+
+
+		// Before Booking After Cancel
+		do_action( 'hydra_booking/after_booking_canceled', $get_booking );
 
 		$response['message'] = esc_html(__('Booking Cancelled Successfully', 'hydra-booking'));
 
