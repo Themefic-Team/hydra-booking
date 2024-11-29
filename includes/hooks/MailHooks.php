@@ -437,6 +437,7 @@ class MailHooks {
             $tfhb_booking_table.meeting_locations AS booking_locations,
             $tfhb_booking_table.meeting_dates,
             $tfhb_booking_table.others_info,
+            $tfhb_booking_table.hash,
             $tfhb_booking_table.reason,
             $tfhb_booking_table.start_time,
             $tfhb_booking_table.end_time,
@@ -446,6 +447,8 @@ class MailHooks {
             $host_table.last_name AS host_last_name,
             $host_table.time_zone AS host_time_zone,
             $meeting_table.title AS meeting_title,
+            $meeting_table.attendee_can_cancel AS attendee_can_cancel,
+            $meeting_table.attendee_can_reschedule AS attendee_can_reschedule,
             $meeting_table.meeting_locations AS meeting_location
             FROM $tfhb_booking_table
             INNER JOIN $host_table ON $tfhb_booking_table.host_id = $host_table.id
@@ -495,6 +498,17 @@ class MailHooks {
 			$replacements['{{booking.cancel_reason}}'] = $booking_data->reason;
 			$replacements['{{booking.rescheduled_reason}}'] = $booking_data->reason;
 		}
+		
+		
+		if($booking_data->attendee_can_cancel == 1){ 
+		
+			$cancel_link = home_url( '?hydra-booking=booking&hash=' . $booking_data->hash . '&meeting-id=' . $booking_id . '&type=cancel' );
+			$replacements['{{booking.cancel_link}}'] = $cancel_link;
+		}
+		if( $booking_data->attendee_can_cancel == 1){ 
+			$rescheduled_link = home_url( '?hydra-booking=booking&hash=' . $booking_data->hash . '&meeting-id=' . $booking_id . '&type=reschedule' );
+			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
+		}
 		// Full start end time with timezone for attendee 
 		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $booking_data->start_time.' - '.$booking_data->end_time.' ('.$booking_data->attendee_time_zone.')';
 		$replacements['{{booking.start_date_time_for_attendee}}'] = $booking_data->start_time. ' ('.$booking_data->attendee_time_zone.')';
@@ -533,8 +547,7 @@ class MailHooks {
 			}
 			$booking_locations_html .= '</ul>';
 			$replacements['{{booking.location_details_html}}'] = $booking_locations_html;
-		} 
-
+		}  
 		$tags   = array_keys( $replacements );
 		$values = array_values( $replacements ); 
 

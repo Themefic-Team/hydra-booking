@@ -229,6 +229,7 @@ const GetFormsData = async (value) => {
                 /> 
                 <div  v-if="meeting.questions_form_type == 'wpcf7' && integrations.cf7_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4"> {{ $tfhb_trans('Contact Form 7 is not connected.') }}  
                     <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
@@ -236,6 +237,7 @@ const GetFormsData = async (value) => {
                 </div>
                 <div  v-if="meeting.questions_form_type == 'fluent-forms' && integrations.fluent_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Fluent Forms is not connected.') }}  
                     <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
@@ -243,6 +245,7 @@ const GetFormsData = async (value) => {
                 </div>
                 <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Gravity Forms is not connected.') }} 
                     <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"

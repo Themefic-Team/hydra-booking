@@ -471,9 +471,13 @@ const AvailabilityTabs = (type) => {
                             <div class="tfhb-meeting-location-removed" v-if="Meeting.singleMeeting.MeetingData.meeting_locations.length>1" @click="removeLocations(index)">
                                 <Icon name="Trash" :width="16" />
                             </div>
-  
+                            <div  v-if="slocation.location == 'Attendee Phone Number' " class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
+                                {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Phone"')}}  
+                            
+                            </div>
                             <div  v-if="slocation.location == 'zoom' && Meeting.singleMeeting.integrations.zoom_meeting_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Zoom is not connected.')}} 
                                 <HbButton 
+                                    v-if="$user.role != 'tfhb_host'"
                                     classValue="tfhb-btn flex-btn" 
                                     @click="() => router.push({ name: 'SettingsAntegrations' })" 
                                     :buttonText="$tfhb_trans('Please Configure')"
@@ -481,6 +485,7 @@ const AvailabilityTabs = (type) => {
                             </div>
                             <div  v-if="slocation.location == 'meet' && Meeting.singleMeeting.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Google Meet is not connected.')}} 
                                 <HbButton 
+                                    v-if="$user.role != 'tfhb_host'"
                                     classValue="tfhb-btn flex-btn" 
                                     @click="() => router.push({ name: 'SettingsAntegrations' })" 
                                     :buttonText="$tfhb_trans('Please Configure')"

@@ -111,13 +111,13 @@ class Meta {
 
 			 
 
-		} else {
-			$sql .= ' ORDER BY id DESC';
-		}
+		} 
+		
+		$sql .= ' ORDER BY id DESC';
 		// limit
 		if ( $limit != false ) {
 			$sql .= ' LIMIT ' . $limit;
-		} 
+		}  
 		$data = $wpdb->get_results( $sql );
 		return $data;
 	}

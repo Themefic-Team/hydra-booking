@@ -208,12 +208,11 @@ onBeforeMount(() => {
 </script>
 
 <template>
-
-{{ integration }} 
-    <HbInfoBox name="first-modal">
+ 
+    <HbInfoBox v-if="$user.role != 'tfhb_host'" name="first-modal">
         
         <template #content>
-            <span>Before connecting make sure you provide the necessary credentials to 
+            <span>{{$tfhb_trans('Before connecting make sure you provide the necessary credentials to')}} 
                 <HbButton 
                         classValue="tfhb-btn" 
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 

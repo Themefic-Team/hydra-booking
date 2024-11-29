@@ -496,14 +496,17 @@ class HydraBookingShortcode {
 		$host_id   = isset( $meta_data['host_id'] ) ? $meta_data['host_id'] : 0;
 		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
 
-		$check_booking = $booking->get(
-			array(
-				'meeting_id'    => $data['meeting_id'],
-				'meeting_dates' => $data['meeting_dates'],
-				'start_time'    => $data['start_time'],
-				'end_time'      => $data['end_time'],
-			)
-		);
+		// $check_booking = $booking->get(
+		// 	array(
+		// 		'meeting_id'    => $data['meeting_id'],
+		// 		'meeting_dates' => $data['meeting_dates'],
+		// 		'start_time'    => $data['start_time'],
+		// 		'end_time'      => $data['end_time'],
+		// 	)
+		// );
+		
+		$check_booking = $booking->getCheckBooking( $data['meeting_id'], $data['meeting_dates'], $data['start_time'], $data['end_time'] );
+		
 
 		if ( 'one-to-group' == $meta_data['meeting_type'] ) {
 			$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
@@ -514,9 +517,10 @@ class HydraBookingShortcode {
 				wp_send_json_error( array( 'message' => esc_html(__('Already Booked', 'hydra-booking')) ) );
 		}
 
+	
 		// Get booking Data using Hash
 		if ( isset( $_POST['action_type'] ) && 'reschedule' == $_POST['action_type'] ) {
-
+			
 			// if general_settings['allowed_reschedule_before_meeting_start'] is available exp 100 then check the time before reschedule
 			$this->tfhb_reschedule_booking( $meeting_hash, $meta_data,  $general_settings, $MeetingData, $host_meta ); 
 		}
@@ -624,6 +628,7 @@ class HydraBookingShortcode {
 			$current_date = gmdate( 'Y-m-d H:i:s' );
 
 			$last_created_date = gmdate( 'Y-m-d', strtotime( $created_date ) );
+			
 			foreach ( $booking_frequency as $key => $value ) {
 				$times  = isset( $value['times'] ) ? $value['times'] : 'days';
 				$limit = isset( $value['limit'] ) ? $value['limit'] : 5;
@@ -639,13 +644,14 @@ class HydraBookingShortcode {
 						}
 					)
 				);
-
+				
+				// tfhb_print_r($booking_frequency_date);
 				// if currentdate is greater than booking_frequency_date then you can book the meeting
 				if ( strtotime( $current_date ) > strtotime( $booking_frequency_date ) ) {
 					continue;
 				}
 				if ( $total_booking >= $limit ) {
-					wp_send_json_error( array( 'message' => esc_html(__(' Meeting Frequency Limit Reached', 'hydra-booking')) ) );
+					wp_send_json_error( array( 'message' => esc_html(__(' Meeting frequency limit reached. Try  another Date', 'hydra-booking')) ) );
 
 				}
 			}
@@ -689,7 +695,19 @@ class HydraBookingShortcode {
 			array( 'hash' => $meeting_hash ),
 			false,
 			true
-		);
+		); 
+		if(!$get_booking){
+			wp_send_json_error( array( 'message' => esc_html(__('Invalid Booking ID', 'hydra-booking')) ) );
+		}
+		if($get_booking->status == 'completed'){
+			wp_send_json_error( array( 'message' => esc_html(__('Booking is already completed', 'hydra-booking')) ) );
+		}
+		if($get_booking->status == 'cancelled'){
+			wp_send_json_error( array( 'message' => esc_html(__('Booking is already cancelled', 'hydra-booking')) ) );
+		}
+		if($get_booking->status == 'rescheduled'){
+			wp_send_json_error( array( 'message' => esc_html(__('Booking is already rescheduled', 'hydra-booking')) ) );
+		}
 		// Get Post Meta
 		$booking_meta = get_post_meta( $get_booking->post_id, '_tfhb_booking_opt', true );
 		
@@ -722,7 +740,7 @@ class HydraBookingShortcode {
 			'reason'             => isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '',
 			'status'             => isset( $general_settings['reschedule_status'] ) && $general_settings['reschedule_status'] == 1 ? 'rescheduled' : 'pending',
 		);
-
+ 
 		$booking_meta = array_merge( $booking_meta, $reschedule_data );
 
 		// Update Post Meta
@@ -853,6 +871,14 @@ class HydraBookingShortcode {
 		$selected_time_format = isset( $_POST['time_format'] ) ? sanitize_text_field( $_POST['time_format'] ) : '12';
 		$selected_time_zone   = isset( $_POST['time_zone'] ) ? sanitize_text_field( $_POST['time_zone'] ) : 'UTC';
 
+		$booking = new Booking();
+		$current_user_booking = $booking->get( array( 'meeting_id' => $meeting_id, 'meeting_dates' => $selected_date ) );
+		if ( $current_user_booking ) {
+			$meta_data = get_post_meta( $meetingData->post_id, '__tfhb_meeting_opt', true );
+			
+			$this->tfhb_checked_booking_frequency_limit( $current_user_booking, $meta_data,);
+		}
+
 		$date_time = new DateTimeController( $selected_time_zone );
 		$data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format );
 
@@ -904,7 +930,7 @@ class HydraBookingShortcode {
 		$booking_data = array(
 			'id'           => $get_booking->id,
 			'reason'       => $reason,
-			'status'       => 'cancelled',
+			'status'       => 'canceled',
 			'cancelled_by' => 'attendee',
 		);
 

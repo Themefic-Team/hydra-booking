@@ -673,7 +673,7 @@ class BookingController {
 
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
 			$_tfhb_availability_settings = get_user_meta( $MeetingsData->host_id, '_tfhb_host', true );
-			if ( in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+			if ( isset($_tfhb_availability_settings['availability']) && in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
 				$availability_data = $_tfhb_availability_settings['availability'][ $data['availability_id'] ];
 			} else {
 				$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
@@ -921,9 +921,13 @@ class BookingController {
 		$data = array(
 			'status'           => true,
 			'booking'          => $bookingsList,
-			'booking_calendar' => $booking_array,
-			'message'          => 'Booking Updated Successfully',
+			'booking_calendar' => $booking_array, 
 		);
+		if($status == 'delete'){
+			$data['message'] = 'Booking Deleted Successfully';
+		}else{
+			$data['message'] = 'Booking Updated Successfully';
+		}
 		return rest_ensure_response( $data );
 	}
 

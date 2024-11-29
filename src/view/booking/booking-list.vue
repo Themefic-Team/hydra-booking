@@ -27,7 +27,7 @@ const BookingEditPopup = ref(false);
 const ExportAsCSV = ref(false);
 const itemsPerPage = ref(10);
 const currentPage = ref(1);
-const bookingView = ref('calendar');
+const bookingView = ref('list');
 const exportData = reactive({
     date_range: 'days',
     start_date: '',

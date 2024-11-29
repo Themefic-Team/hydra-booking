@@ -48,6 +48,7 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info {
   padding: 38px 16px 16px 16px;
   border-radius: 16px 0 0 0;
+  background-size: cover;
 }
 @media only screen and (max-width: 991px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info {
