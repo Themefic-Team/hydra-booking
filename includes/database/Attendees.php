@@ -1,9 +1,9 @@
 <?php
 namespace HydraBooking\DB;
 
-class Booking {
+class Attendees {
 
-	public $table = 'tfhb_bookings';
+	public $table = 'tfhb_attendees';
 	public function __construct() {
 	}
 
@@ -21,22 +21,23 @@ class Booking {
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT, 
+                booking_id INT(11) NULL,
                 meeting_id INT(11) NULL,
-                host_id INT(11) NULL,
-                attendee_id INT(11) NULL, 
-                post_id INT(11) NULL, 
-                hash text NULL,   
-                meeting_dates LONGTEXT NULL, 
-                start_time VARCHAR(20) NULL,
-                end_time VARCHAR(20) NULL,
-                slot_minutes LONGTEXT NULL, 
-                duration LONGTEXT NULL,    
-                meeting_locations LONGTEXT NOT NULL,
-                meeting_calendar LONGTEXT NULL,
+                host_id INT(11) NULL,  
+                hash text NULL,  
+                attendee_time_zone VARCHAR(20) NULL,     
+                attendee_name VARCHAR(50) NULL, 
+                email VARCHAR(100) NOT NULL, 
+                address LONGTEXT NULL,
+                others_info LONGTEXT NULL,
+                country VARCHAR(20) NULL,
+                ip_address VARCHAR(50) NULL, 
+                device VARCHAR(50) NULL,   
                 cancelled_by VARCHAR(255) NULL,
                 status VARCHAR(50) NOT NULL, 
-                reason VARCHAR(255) NULL, 
-                booking_type VARCHAR(20) NULL, 
+                reason VARCHAR(255) NULL,  
+                payment_method VARCHAR(20) NOT NULL,
+                payment_status VARCHAR(20) NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)
@@ -47,7 +48,6 @@ class Booking {
 		}
 	}
 
-
 	/**
 	 * Rollback the database migration.
 	 */
@@ -55,8 +55,6 @@ class Booking {
 		global $wpdb;
 		$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_bookings");
 	}
-
-	// 
 
 	/**
 	 * Create the database Booking.
@@ -68,8 +66,7 @@ class Booking {
 		$table_name = $wpdb->prefix . $this->table;
 
 		// json encode meeting locations
-		$request['others_info']       = wp_json_encode( $request['others_info'] );
-		$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] ); 
+		$request['others_info']       = wp_json_encode( $request['others_info'] );  
 
 		// insert Booking
 		$result = $wpdb->insert(

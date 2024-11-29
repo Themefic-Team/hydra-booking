@@ -22,6 +22,7 @@ class Transactions {
 			$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT,
                 booking_id INT(11) NOT NULL,
+                attendees_id INT(11) NOT NULL,
                 meeting_id INT(11) NOT NULL,
 				host_id INT(11) NOT NULL,
                 customer_id VARCHAR(100) NULL,
