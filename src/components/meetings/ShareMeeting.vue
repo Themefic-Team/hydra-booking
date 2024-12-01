@@ -26,7 +26,7 @@ const copyMeeting = (link) => {
     
     // Show a toast notification or perform any other action 
     // success mess into bottom right
-    toast.success( link + ' is Copied' , {
+    toast.success( 'Copied' , {
         position: 'bottom-right', // Set the desired position
         duration: 2000 // Set the desired duration
     });
@@ -93,7 +93,7 @@ const ShareTabs = (tab) => {
                 <div class="tfhb-share-type tfhb-full-width">
                     <ul class="tfhb-flexbox tfhb-gap-8">
                         <li :class="'link'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
-                        <li :class="'short'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Short code') }}</li>
+                        <li :class="'short'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Shortcode') }}</li>
                         <li :class="'embed'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">{{ $tfhb_trans('Embed code') }}</li>
                     </ul>
                 </div>

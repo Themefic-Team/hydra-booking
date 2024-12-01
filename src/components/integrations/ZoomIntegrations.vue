@@ -42,7 +42,7 @@ const closePopup = () => {
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/Zoom.png'" alt="">
             </span>  
-            <div class="cartbox-text">
+            <div class="cartbox-text"> 
                 <h3>{{ $tfhb_trans('Zoom') }}</h3>
                 <p>{{ $tfhb_trans('Connect Zoom API to configure virtual meetings.') }}</p>
             </div>

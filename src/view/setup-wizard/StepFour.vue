@@ -291,7 +291,7 @@ window.addEventListener('click', function(e) {
                             <div class="tfhb-share-type tfhb-full-width">
                                 <ul class="tfhb-flexbox tfhb-gap-8">
                                     <li :class="'link'==shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
-                                    <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Short code') }}</li>
+                                    <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Shortcode') }}</li>
                                     <li :class="'embed'==shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">Embed code</li>
                                 </ul>
                             </div>

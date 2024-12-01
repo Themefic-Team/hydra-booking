@@ -17,6 +17,7 @@ const { errors, isEmpty } = useValidators();
 
 const user = tfhb_core_apps.user || '';
 const user_id = user.id || '';
+const host_id = user.host_id || '';
 const user_role = user.role[0] || '';
 
 const emit = defineEmits(["availability-time", "availability-time-del", "availability-date", "availability-date-del", "availability-tabs", "update-meeting", "add-overrides-time", "remove-overrides-time"]); 
@@ -166,7 +167,7 @@ onBeforeMount(() => {
     Host.fetchHosts().then(() => {
         if('tfhb_host' == user_role && props.meeting.host_id == ''){
            
-            props.meeting.host_id = user_id 
+            props.meeting.host_id = host_id 
         } 
         if(props.meeting.host_id!=0){
             fetchHostAvailability(props.meeting.host_id);

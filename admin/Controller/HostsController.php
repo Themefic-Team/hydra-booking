@@ -647,11 +647,11 @@ class HostsController {
 		$zoom_meeting = isset( $_tfhb_host_integration_settings['zoom_meeting'] ) ? $_tfhb_host_integration_settings['zoom_meeting'] : array();
 		
 		
-
+		
 		if ( isset($_tfhb_integration_settings['zoom_meeting']['status']) && $_tfhb_integration_settings['zoom_meeting']['status']  ) {
-			
+		
 			$zoom_meeting['type']              = 'zoom_meeting';  
-			$zoom_meeting['status'] = $_tfhb_integration_settings['zoom_meeting']['connection_status'];
+			$zoom_meeting['connection_status'] = $_tfhb_integration_settings['zoom_meeting']['connection_status'];
 
 		}else{
 			$zoom_meeting['type']              = 'zoom_meeting';
