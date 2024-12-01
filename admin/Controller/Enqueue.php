@@ -45,15 +45,14 @@ class Enqueue {
 		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
  
 		
-		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
+		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		//  Build the core script
-		// wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		// wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
+		wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', THB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', THB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
  
 		// Localize the script
-		// shareData.embed = `<div id="hydra-booking-embad-container" data-meeting-id="64"></div> `
-
+		 
 		$embed_script_link = esc_html('<script src="' .THB_URL . 'assets/app/js/widget.js"></script>');
  
 		wp_localize_script(
