@@ -277,6 +277,52 @@ class Booking {
 
 	}
 
+	// Get Booking with all attendees in one query
+	public function getBookingWithAttendees(){
+ 
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+		$attendee_table = $wpdb->prefix . 'tfhb_attendees';
+
+		// Define the SQL query
+		$sql = "
+		SELECT 
+		booking.*, 
+			COALESCE(
+				JSON_ARRAYAGG(
+					JSON_OBJECT(
+						'attendee_id', attendee.id,
+						'booking_id', attendee.booking_id,
+						'attendee_name', attendee.attendee_name,
+						'email', attendee.email,
+						'address', attendee.address,
+						'status', attendee.status
+					)
+				), 
+				JSON_ARRAY()
+			) AS attendees
+		FROM 
+			{$table_name} AS booking
+		LEFT JOIN 
+			{$attendee_table} AS attendee 
+		ON 
+			booking.id = attendee.booking_id
+		GROUP BY 
+			booking.id
+		ORDER BY 
+			booking.id;
+		";
+// echo $sql;
+		// Use wpdb to prepare and execute the query
+		$results = $wpdb->get_results($wpdb->prepare($sql));
+
+		// Return the results
+		return $results;
+
+
+	}
+
 
 
 	public function getFilter( $filterData = '' ) {

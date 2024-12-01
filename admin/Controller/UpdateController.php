@@ -18,6 +18,10 @@ class UpdateController {
 
         // update version 1.0.8 to 1.0.9.
         // $this->update_1_0_9();
+
+        $booking = new Booking();
+        $get_booking = $booking->getBookingWithAttendees();
+        // tfhb_print_r($get_booking);
 		 
 	} 
 
@@ -38,12 +42,37 @@ class UpdateController {
             // $Attendees->migrate();
 
             // get all booking data
-            $Booking = new Booking(); 
-            $bookings = $Booking->get(); 
+            $Booking_data = new Booking(); 
+            $bookings = $Booking_data->get(); 
             // add data to attendees table
-            foreach( $bookings as $key => $booking ) { 
+            foreach( $bookings as $key => $booking ) {  
+                $booking_id = $booking->id;
+                $check_booking = $Booking_data->get(
+					array(
+						'meeting_id'    => $booking->meeting_id,
+						'meeting_dates' => $booking->meeting_dates,
+						'start_time'    => $booking->start_time,
+						'end_time'      => $booking->end_time,
+					)
+				); 
+                if( !empty($check_booking) ) { 
+                    if(count($check_booking) > 1) {
+                        
+                        $get_last_booking = end( $check_booking);
+                        
+                        if( $get_last_booking->id != $booking->id ) { 
+
+                            $booking_id = $get_last_booking->id;
+                            $Booking_data->delete($booking->id);
+                        }
+
+                        // $booking->delete($booking->id);
+                    }
+                }
+                
+
                 $data = array(
-                    'booking_id' => $booking->id,
+                    'booking_id' => $booking_id,
                     'meeting_id' => $booking->meeting_id,
                     'host_id' => $booking->host_id,
                     'hash' => $booking->hash,
@@ -64,28 +93,41 @@ class UpdateController {
                     'updated_at' => $booking->updated_at,
                 );
 
-                // $Attendees->add($data);
+                $Attendees->add($data);
 
-            }
+                if( !empty($check_booking) ) { 
+                    if(count($check_booking) > 1) {
+                        
+                        $get_last_booking = end( $check_booking);
+                        
+                        if( $get_last_booking->id != $booking->id ) { 
+ 
+                            $Booking_data->delete($booking->id);
+                        }
+ 
+                    }
+                }
+ 
 
+            }  
 
             // Delete Column from booking table
             global $wpdb;
             $table_name = $wpdb->prefix . 'tfhb_bookings';
             // drop column in one query
-            // $wpdb->query("ALTER TABLE $table_name 
-            //     DROP COLUMN order_id, 
-            //     DROP COLUMN attendee_time_zone, 
-            //     DROP COLUMN attendee_name, 
-            //     DROP COLUMN email, 
-            //     DROP COLUMN address, 
-            //     DROP COLUMN others_info, 
-            //     DROP COLUMN country, 
-            //     DROP COLUMN ip_address, 
-            //     DROP COLUMN device, 
-            //     DROP COLUMN payment_method,
-            //     DROP COLUMN payment_status"
-            // );
+            $wpdb->query("ALTER TABLE $table_name 
+                DROP COLUMN order_id, 
+                DROP COLUMN attendee_time_zone, 
+                DROP COLUMN attendee_name, 
+                DROP COLUMN email, 
+                DROP COLUMN address, 
+                DROP COLUMN others_info, 
+                DROP COLUMN country, 
+                DROP COLUMN ip_address, 
+                DROP COLUMN device, 
+                DROP COLUMN payment_method,
+                DROP COLUMN payment_status"
+            );
             // tfhb_print_r($wpdb->last_query);
 
             // update version
