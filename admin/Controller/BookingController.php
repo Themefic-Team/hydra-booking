@@ -81,6 +81,17 @@ class BookingController {
 			)
 		);
 
+		// booking reminder email.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/send-reminder',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'sendReminderEmail' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
 		// Pre Booking Data
 		register_rest_route(
 			'hydra-booking/v1',
@@ -586,6 +597,55 @@ class BookingController {
 		return rest_ensure_response( $data );
 	}
 
+	// Send Reminder Email
+	public function sendReminderEmail(){
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+
+		$booking_id =  isset( $request['booking_id'] ) ? $request['booking_id'] : 0;
+		if( empty( $booking_id ) && $booking_id == 0 ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Booking',
+				)
+			);
+		}
+
+		// Get Booking Data
+		$booking = new Booking(); 
+		$single_booking_meta = $booking->get(
+			array( 'id' => $booking_id ),
+			false,
+		);
+
+		if( empty( $single_booking_meta ) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Booking',
+				)
+			);
+		}
+
+		if( 'confirmed' != $single_booking_meta->booking_status ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'This Booking is not Confirmed',
+				)
+			);
+		}
+
+		do_action( 'hydra_booking/send_booking_reminder', $single_booking_meta );
+
+		// Return response
+		$data = array(
+			'status'  => true,
+			'message' => 'Reminder Email Sent Successfully!',
+		);
+		return rest_ensure_response( $data );
+	}
+
 	// Get Single Booking
 	public function getBookingData( $request ) {
 		$booking_id = $request['id'];
@@ -613,7 +673,7 @@ class BookingController {
 
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
 			$_tfhb_availability_settings = get_user_meta( $MeetingsData->host_id, '_tfhb_host', true );
-			if ( in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+			if ( isset($_tfhb_availability_settings['availability']) && in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
 				$availability_data = $_tfhb_availability_settings['availability'][ $data['availability_id'] ];
 			} else {
 				$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
@@ -861,9 +921,13 @@ class BookingController {
 		$data = array(
 			'status'           => true,
 			'booking'          => $bookingsList,
-			'booking_calendar' => $booking_array,
-			'message'          => 'Booking Updated Successfully',
+			'booking_calendar' => $booking_array, 
 		);
+		if($status == 'delete'){
+			$data['message'] = 'Booking Deleted Successfully';
+		}else{
+			$data['message'] = 'Booking Updated Successfully';
+		}
 		return rest_ensure_response( $data );
 	}
 

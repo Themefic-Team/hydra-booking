@@ -24,6 +24,7 @@ const router = useRouter();
 const route = useRoute();
 const user = tfhb_core_apps.user || '';
 const user_id = user.id || '';
+const host_id = user.host_id || '';
 const user_role = user.role[0] || '';
 const HostAvailabilities = reactive([]);
 const host_availble_type = ref('settings');
@@ -52,12 +53,16 @@ onBeforeMount(() => {
     // Meeting.singleMeeting.MeetingData.id = meetingId; 
 
     Host.fetchHosts().then(() => {
-        if('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == ''){
+
+        if(('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == '') || ('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == null)){
            
-            Meeting.singleMeeting.MeetingData.host_id = user_id 
+            Meeting.singleMeeting.MeetingData.host_id = host_id  
         } 
+
+       
+
         if(Meeting.singleMeeting.MeetingData.host_id!=0){
-            
+                 
             fetchHostAvailability(Meeting.singleMeeting.MeetingData.host_id);
             fetchSingleAvailabilitySettings( Meeting.singleMeeting.MeetingData.host_id, Meeting.singleMeeting.MeetingData.availability_id);
         }
@@ -135,7 +140,12 @@ function updateMeetingData(validator_field){
     if(validator_field){
         validator_field.forEach(field => {
 
-        const fieldParts = field.split('___'); // Split the field into parts
+        const fieldParts = field.split('___'); // Split the field into parts 
+
+        if('tfhb_host' == user_role && fieldParts == 'host_id'){
+            return;
+        }
+        
         if(fieldParts[0] && !fieldParts[1]){
             if(!Meeting.singleMeeting.MeetingData[fieldParts[0]]){
                 errors[fieldParts[0]] = 'Required this field';
@@ -192,7 +202,7 @@ const Host_Avalibility_Callback = (value) => {
 
 const fetchAvailabilitySettings = async (availability_id) => {
     
-    if('tfhb_host' == user_role &&Meeting.singleMeeting.MeetingData.host_id == ''){
+    if('tfhb_host' == user_role && Meeting.singleMeeting.MeetingData.host_id == ''){
        Meeting.singleMeeting.MeetingData.host_id = user_id
     }
     
@@ -471,9 +481,13 @@ const AvailabilityTabs = (type) => {
                             <div class="tfhb-meeting-location-removed" v-if="Meeting.singleMeeting.MeetingData.meeting_locations.length>1" @click="removeLocations(index)">
                                 <Icon name="Trash" :width="16" />
                             </div>
-  
+                            <div  v-if="slocation.location == 'Attendee Phone Number' " class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
+                                {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Phone"')}}  
+                            
+                            </div>
                             <div  v-if="slocation.location == 'zoom' && Meeting.singleMeeting.integrations.zoom_meeting_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Zoom is not connected.')}} 
                                 <HbButton 
+                                    v-if="$user.role != 'tfhb_host'"
                                     classValue="tfhb-btn flex-btn" 
                                     @click="() => router.push({ name: 'SettingsAntegrations' })" 
                                     :buttonText="$tfhb_trans('Please Configure')"
@@ -481,6 +495,7 @@ const AvailabilityTabs = (type) => {
                             </div>
                             <div  v-if="slocation.location == 'meet' && Meeting.singleMeeting.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Google Meet is not connected.')}} 
                                 <HbButton 
+                                    v-if="$user.role != 'tfhb_host'"
                                     classValue="tfhb-btn flex-btn" 
                                     @click="() => router.push({ name: 'SettingsAntegrations' })" 
                                     :buttonText="$tfhb_trans('Please Configure')"

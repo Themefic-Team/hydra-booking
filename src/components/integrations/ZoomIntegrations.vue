@@ -41,9 +41,8 @@ const closePopup = () => {
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/Zoom.png'" alt="">
-            </span> 
-
-            <div class="cartbox-text">
+            </span>  
+            <div class="cartbox-text"> 
                 <h3>{{ $tfhb_trans('Zoom') }}</h3>
                 <p>{{ $tfhb_trans('Connect Zoom API to configure virtual meetings.') }}</p>
             </div>
@@ -51,19 +50,20 @@ const closePopup = () => {
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <!-- <span  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span> -->
             
-            <router-link  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <button  v-if=" props.from == 'host' && zoom_meeting.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Configured') }} </button>
+            <router-link  v-else-if=" props.from == 'host' && zoom_meeting.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
            
 
             <HbButton 
                 v-else @click="emit('popup-open-control')" 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="zoom_meeting.connection_status == 1 ? 'Connected' : 'Connect'" 
+                :buttonText="zoom_meeting.status == 1 ? 'Connected' : 'Connect'" 
                 hover_icon="ArrowRight" 
                 :hover_animation="false"    
             /> 
       
             <!-- Checkbox swicher --> 
-            <HbSwitch v-if="zoom_meeting.connection_status" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
+            <HbSwitch v-if="zoom_meeting.connection_status && zoom_meeting.account_id !=''" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->

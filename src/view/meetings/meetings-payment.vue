@@ -77,6 +77,7 @@ onBeforeMount(() => {
 
                     <div  v-if="meeting.payment_method == 'woo_payment' && Meeting.meetingPaymentIntegration.woo_payment == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('Woocommerce is not connected.') }} 
                         <HbButton 
+                            v-if="$user.role != 'tfhb_host'"
                             classValue="tfhb-btn flex-btn" 
                             @click="() => router.push({ name: 'SettingsAntegrations' })" 
                             :buttonText="$tfhb_trans('Please Configure')"
@@ -84,13 +85,15 @@ onBeforeMount(() => {
                     </div>
                     <div  v-if="meeting.payment_method == 'paypal_payment' && Meeting.meetingPaymentIntegration.paypal == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">{{ $tfhb_trans('Paypal is not connected.') }}  
                         <HbButton 
+                            v-if="$user.role != 'tfhb_host'"
                             classValue="tfhb-btn flex-btn" 
                             @click="() => router.push({ name: 'SettingsAntegrations' })" 
                             :buttonText="$tfhb_trans('Please Configure')"
                         />  
                     </div>
                     <div  v-if="meeting.payment_method == 'stripe_payment' && Meeting.meetingPaymentIntegration.stripe == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('Stripe is not connected.') }}  
-                        <HbButton 
+                        <HbButton  
+                            v-if="$user.role != 'tfhb_host'"
                             classValue="tfhb-btn flex-btn" 
                             @click="() => router.push({ name: 'SettingsAntegrations' })" 
                             :buttonText="$tfhb_trans('Please Configure')"

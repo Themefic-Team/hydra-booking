@@ -43,11 +43,13 @@ const meetingShortcode = ref([
     '{{attendee.additional_data}}',
     '{{wp.admin_email}}',
     "{{booking.cancel_reason}}",
+    "{{booking.cancel_link}}",
     "{{booking.full_start_end_host_timezone}}",
     "{{booking.start_date_time_for_host}}",
     "{{booking.start_date_time_for_attendee}}",
     "{{booking.full_start_end_attendee_timezone}}",
     "{{booking.rescheduled_reason}}",
+    "{{booking.rescheduled_link}}",
     "{{booking.location_details_html}}",
 ])
 const copyShortcode = (value) => { 

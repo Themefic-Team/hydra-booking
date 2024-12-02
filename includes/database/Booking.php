@@ -264,6 +264,8 @@ class Booking {
 		return $data;
 	}
 
+	// 
+
 
 	/**
 	 * Get Booking ID and Dates 
@@ -274,13 +276,15 @@ class Booking {
 
 		$table_name = $wpdb->prefix . $this->table;
  
-		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s";
+		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s"; 
+		$sql .= " AND status != 'canceled'";
 		$data = $wpdb->get_results(
 			$wpdb->prepare( $sql, $meeting_id, $dates )
 		);
 		return $data;
 
 	}
+
 
 
 	public function getFilter( $filterData = '' ) {
@@ -360,6 +364,9 @@ class Booking {
 		$table_name = $wpdb->prefix . $this->table;
 
 		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s AND start_time = %s AND end_time = %s";
+
+		// stats != canceled
+		$sql .= " AND status != 'canceled'";
 
 		$data = $wpdb->get_results(
 			$wpdb->prepare( $sql, $meeting_id, $meeting_dates, $start_time, $end_time )

@@ -17,6 +17,7 @@ const { errors, isEmpty } = useValidators();
 
 const user = tfhb_core_apps.user || '';
 const user_id = user.id || '';
+const host_id = user.host_id || '';
 const user_role = user.role[0] || '';
 
 const emit = defineEmits(["availability-time", "availability-time-del", "availability-date", "availability-date-del", "availability-tabs", "update-meeting", "add-overrides-time", "remove-overrides-time"]); 
@@ -166,7 +167,7 @@ onBeforeMount(() => {
     Host.fetchHosts().then(() => {
         if('tfhb_host' == user_role && props.meeting.host_id == ''){
            
-            props.meeting.host_id = user_id 
+            props.meeting.host_id = host_id 
         } 
         if(props.meeting.host_id!=0){
             fetchHostAvailability(props.meeting.host_id);
@@ -344,24 +345,24 @@ const isobjectempty = (data) => {
                             <p class="tfhb-m-0">{{ $tfhb_trans('Meeting will be only available on specific dates') }}</p>
                         </div>
                     </label>
-                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between" v-if="meeting.availability_range_type == 'range'">
+                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-4 tfhb-justify-between" v-if="meeting.availability_range_type == 'range'">
                         <HbDateTime   
                             v-model="meeting.availability_range.start"
                             icon="CalendarDays"
                             selected = "1" 
                             :config="{
                             }"
-                            width="45"
+                            width="48"
                             :placeholder="$tfhb_trans('Start')"
                         /> 
-                        <Icon name="MoveRight" size=20 /> 
+                        <Icon name="MoveRight" size=15 /> 
                         <HbDateTime  
                             v-model="meeting.availability_range.end"
                             icon="CalendarDays" 
                             selected = "1"
                             :config="{
                             }"
-                            width="45"
+                            width="48"
                             :placeholder="$tfhb_trans('End')"   
                         /> 
 
