@@ -189,6 +189,7 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 
 = 1.0.8 - 02/12/2024 =  
 
+- Introduced: Added a backend host profile feature for enhanced host management.
 - Improvement: Enhanced cancellation handling for a smoother user experience.
 - Improvement: Improved the rescheduling feature for better flexibility.
 - Improvement: Optimized notification order for clarity and effectiveness.
