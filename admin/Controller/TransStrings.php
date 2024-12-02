@@ -133,6 +133,7 @@ namespace HydraBooking\Admin\Controller;
             'Password' =>  __('Password', 'hydra-booking'), 
             'Type User Password' =>  __('Type User Password', 'hydra-booking'), 
             'Create Hosts' =>  __('Create Hosts', 'hydra-booking'), 
+            'Not Connected' =>  __('Not Connected', 'hydra-booking'), 
 
             // Meetings
             'Availability Range for this Booking' =>  __('Availability Range for this Booking', 'hydra-booking'), 

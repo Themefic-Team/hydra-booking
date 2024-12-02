@@ -197,7 +197,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <HbInfoBox name="first-modal">
+    <HbInfoBox v-if="$user.role != 'tfhb_host'" name="first-modal">
         
         <template #content>
             <span>{{$tfhb_trans('Before connecting make sure you provide the necessary credentials to')}}

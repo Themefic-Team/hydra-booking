@@ -1195,7 +1195,7 @@ class MeetingController {
 		}
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $id );
+		$HostData = $host->getHostById( $id ); 
 
 		if ( 'settings' == $HostData->availability_type ) {
 			if ( ! empty( $HostData->availability_id ) ) {
@@ -1215,10 +1215,14 @@ class MeetingController {
 				$HostData->availability = '';
 			}
 		} else {
+			
 			$_tfhb_host_availability_settings = get_user_meta( $HostData->user_id, '_tfhb_host', true );
+			
 			if ( ! empty( $_tfhb_host_availability_settings['availability'] ) ) {
 				$HostData->availability = $_tfhb_host_availability_settings['availability'];
+
 			}
+			
 			if ( empty( $HostData ) ) {
 				return rest_ensure_response(
 					array(
@@ -1231,7 +1235,7 @@ class MeetingController {
 
 		$DateTimeZone = new DateTimeController( 'UTC' );
 		$time_zone    = $DateTimeZone->TimeZone();
-
+	
 		// Return response
 		$data = array(
 			'status'        => true,

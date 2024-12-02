@@ -109,10 +109,7 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 					</div> 
 
 					<div class="tfhb-confirmation-button tfhb-flexbox tfhb-gap-8">
-				 
-						<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
-							<?php echo esc_attr( 'Back' ); ?>
-						 </button>
+				  
 						<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
 							<?php echo esc_attr( 'Cancel Booking' ); ?>
 							<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
