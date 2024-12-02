@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -186,6 +186,20 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.8 - 02/12/2024 =  
+
+- Improvement: Enhanced cancellation handling for a smoother user experience.
+- Improvement: Improved the rescheduling feature for better flexibility.
+- Improvement: Optimized notification order for clarity and effectiveness.
+- Improvement: Added improvements for using attendee phone numbers as meeting locations.
+- Improvement: Refined booking frequency options for better control.
+- Improved overall system stability for a seamless experience.
+- Improvement: Improved cancellation email formatting and delivery.
+- Improvement: Enhanced functionality for sharing embed codes.
+- Fixed: Resolved issues related to booking status updates.
+- Fixed: Fixed PayPal payment processing issues.
+- Fixed: Fixed various design issues and improved overall user interface.
 
 = 1.0.7 - 27/11/2024 =  
 
