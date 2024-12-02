@@ -44,7 +44,7 @@ if ( 'settings' === $meeting['availability_type'] ) {
 	}
 }
 
-$selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
+// $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
 
 $date_time = new DateTimeController( $selected_timezone );
 $data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_timezone, $time_format );

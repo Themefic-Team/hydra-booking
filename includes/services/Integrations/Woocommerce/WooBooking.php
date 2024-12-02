@@ -21,11 +21,12 @@ class WooBooking {
 	public function __construct() {
 	}
 
-	public function add_to_cart( $product_id, $data ) { 
+	public function add_to_cart( $product_id, $data, $attendee_data ) { 
 		$product                                      = wc_get_product( $product_id );
 		$order_meta                                   = array();
 		$order_meta['tfhb_order_meta']['booking_id']  = $data['booking_id'];
-		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $data['attendee_time_zone'] . ' )';
+		$order_meta['tfhb_order_meta']['attendee_id']  = $attendee_data['id'];
+		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_data['attendee_time_zone'] . ' )';
 		$cart = WC()->cart;
 		$cart->add_to_cart( $product_id, 1, 0, array(), $order_meta );
 
@@ -48,10 +49,14 @@ class WooBooking {
 
 		// Assigning data into variables.
 		$booking_id  = ! empty( $values['tfhb_order_meta']['booking_id'] ) ? $values['tfhb_order_meta']['booking_id'] : '';
+		$attendee_id  = ! empty( $values['tfhb_order_meta']['attendee_id'] ) ? $values['tfhb_order_meta']['attendee_id'] : '';
 		$appointment = ! empty( $values['tfhb_order_meta']['Appointment'] ) ? $values['tfhb_order_meta']['Appointment'] : '';
 
 		if ( $booking_id ) {
 			$item->update_meta_data( '_tfhb_booking_id', $booking_id, true );
+		}
+		if ( $attendee_id ) {
+			$item->update_meta_data( '_tfhb_attendee_id', $attendee_id, true );
 		}
 
 		if ( $appointment ) {
@@ -73,11 +78,13 @@ class WooBooking {
 
 				
 				$booking_id  = $item->get_meta( '_tfhb_booking_id' );
+				$attendee_id  = $item->get_meta( '_tfhb_attendee_id' );
 				$appointment = $item->get_meta( 'tfhb_appointment' );
 				$order->update_meta_data(
 					'tfhb_order_meta',
 					array(
 						'booking_id'  => $booking_id,
+						'attendee_id'  => $attendee_id,
 						'Appointment' => $appointment,
 					)
 				);

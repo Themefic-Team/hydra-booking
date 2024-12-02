@@ -196,7 +196,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 						}
 						 
 					}
-					$selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
+					// $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
 
 					foreach ( $time_zone as $key => $zone ) {
 						$selected = ( $zone['value'] == $selected_timezone ) ? 'selected' : '';

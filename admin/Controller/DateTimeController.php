@@ -161,22 +161,27 @@ class DateTimeController extends \DateTimeZone {
 			$meeting_dates = $booking->meeting_dates;
 			$start_time    = $booking->start_time;
 			$end_time      = $booking->end_time;
-			$time_zone     = $booking->attendee_time_zone;
+			// $time_zone     = $booking->attendee_time_zone;
 
 			if ( 'one-to-group' == $meeting_type ) {
 
 				// Get All Booking Data.
 				$booking       = new Booking();
-				$check_booking = $booking->get(
-					array(
-						'meeting_id'    => $meeting_id,
-						'meeting_dates' => $meeting_dates,
-						'start_time'    => $start_time,
-						'end_time'      => $end_time,
-					)
+				 
+				$where = array(
+					array('meeting_id', '=', $meeting_id),
+					array('meeting_dates', '=', $meeting_dates),
+					array('start_time', '=', $start_time),
+					array('end_time', '=', $end_time),
 				);
+				$check_booking = $booking->getBookingWithAttendees( 
+					$where,
+					1,
+					'DESC' 
+				); 
+				$attendees = json_decode($check_booking->attendees); 
 
-				if ( count( $check_booking ) != $max_book_per_slot ) {
+				if ( count( $attendees ) != $max_book_per_slot ) {
 					continue;
 				}
 			} 

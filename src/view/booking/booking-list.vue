@@ -727,7 +727,7 @@ const bookingReminder  = async (booking) => {
                 <th>{{ $tfhb_trans('Date & Time') }}</th>
                 <th>{{ $tfhb_trans('Title') }}</th>
                 <th>{{ $tfhb_trans('Host') }}</th>
-                <th>{{ $tfhb_trans('Attendee') }}</th>
+                <!-- <th>{{ $tfhb_trans('Attendee') }}</th> -->
                 <th>{{ $tfhb_trans('Duration') }}</th>
                 <th>{{ $tfhb_trans('Status') }}</th>
                 <th>{{ $tfhb_trans('Action') }}</th>
@@ -755,17 +755,14 @@ const bookingReminder  = async (booking) => {
                     {{ book.host_first_name }} {{ book.host_last_name }}
                     <span>{{ book.host_email }}</span>
                 </td>
-                <td>
-                    {{ book.attendee_name }}
-                    <span>{{ book.attendee_email }}</span>
-                </td>
+               
                 <td>
                     {{ book.duration }} {{ $tfhb_trans('minutes') }}
                 </td>
                 <td>
                     <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
-                        <div class="status" :class="book.booking_status">
-                            {{ book.booking_status }}
+                        <div class="status" :class="book.status">
+                            {{ book.status }}
                         </div>
                         <div class="tfhb-status-bar">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

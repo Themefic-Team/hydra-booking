@@ -162,7 +162,7 @@ class BookingController {
 		$booking = new Booking();
 
 		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
-			$bookingsList = $booking->get( null, true );
+			$bookingsList = $booking->getBookingWithAttendees(  );  
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host     = new Host();
