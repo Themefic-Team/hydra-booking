@@ -59,7 +59,7 @@ $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
                     <?php
                     // Load Meeting Info Template
                     load_template(
-                        THB_PATH . '/app/Content/Template/meeting-info.php',
+                        TFHB_PATH . '/app/Content/Template/meeting-info.php',
                         false,
                         array(
                             'meeting'      => $meeting,
@@ -72,11 +72,11 @@ $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
                     <div class="tfhb-calander-times tfhb-flexbox"> 
                         <?php
                         // Load Meeting Calendar Template
-                        load_template( THB_PATH . '/app/Content/Template/meeting-calendar.php', false, $meeting );
+                        load_template( TFHB_PATH . '/app/Content/Template/meeting-calendar.php', false, $meeting );
 
                         // Load Meeting Time Template
                         load_template(
-                            THB_PATH . '/app/Content/Template/meeting-times.php',
+                            TFHB_PATH . '/app/Content/Template/meeting-times.php',
                             false,
                             array(
                                 'meeting'          => $meeting,
@@ -89,7 +89,7 @@ $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
                     <?php
                     // Load Meeting Form Template
                     load_template(
-                        THB_PATH . '/app/Content/Template/meeting-form.php',
+                        TFHB_PATH . '/app/Content/Template/meeting-form.php',
                         false,
                         array(
                             'meeting'      => $meeting,

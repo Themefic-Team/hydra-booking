@@ -14,8 +14,8 @@ class Enqueue {
 	} 
 
     public function tfhb_enqueue_scripts() {
-		wp_enqueue_style( 'tfhb-style', THB_URL . 'assets/app/css/style.css', '', THB_VERSION );
-		wp_register_style( 'tfhb-select2-style', THB_URL . 'assets/lib/select2/select2.min.css', array(), THB_VERSION );
+		wp_enqueue_style( 'tfhb-style', TFHB_URL . 'assets/app/css/style.css', '', TFHB_VERSION );
+		wp_register_style( 'tfhb-select2-style', TFHB_URL . 'assets/lib/select2/select2.min.css', array(), TFHB_VERSION );
 
 		// Global General Settings
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
@@ -50,8 +50,8 @@ class Enqueue {
 			wp_register_script( 'tfhb-paypal-sdk', esc_url($sdk_url), array(), null, true );
 		}
 		wp_register_script( 'tfhb-paypal-script', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
-		wp_register_script( 'tfhb-select2-script', THB_URL . 'assets/lib/select2/select2.min.js', array( 'jquery', 'tfhb-app-script' ), THB_VERSION, true );
-		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/app/js/main.js', array( 'jquery' ), THB_VERSION, true );
+		wp_register_script( 'tfhb-select2-script', TFHB_URL . 'assets/lib/select2/select2.min.js', array( 'jquery', 'tfhb-app-script' ), TFHB_VERSION, true );
+		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/app/js/main.js', array( 'jquery' ), TFHB_VERSION, true );
 			wp_localize_script(
 				'tfhb-app-script',
 				'tfhb_app_booking',

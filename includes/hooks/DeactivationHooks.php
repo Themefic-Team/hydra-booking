@@ -5,7 +5,7 @@ class DeactivationHooks {
 
 	public function __construct() {
 
-		register_deactivation_hook( THB_PATH . 'hydra-booking.php', array( $this, 'tfhb_deactivation' ) );
+		register_deactivation_hook( TFHB_PATH . 'hydra-booking.php', array( $this, 'tfhb_deactivation' ) );
 	}
 
 	public function tfhb_deactivation() {
@@ -51,6 +51,6 @@ class DeactivationHooks {
 	public function tfhb_options_deactivation_hooks() {
 
 		// Delete Quick Setup Option
-		delete_option( 'tfhb_hydra_quick_setup' );
+		// delete_option( 'tfhb_hydra_quick_setup' );
 	}
 }

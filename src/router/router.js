@@ -20,31 +20,32 @@ const routes = [
     {
         path: '/',
         name: 'dashboard', 
+        meta: { Capabilities: 'tfhb_manage_dashboard' },
         component: Dashboard
     },  
     {
         path: '/booking',
         name: 'booking', 
-        meta: { Capabilities: 'tfhb_manage_options' },
+        meta: { Capabilities: 'tfhb_manage_booking' },
         component: Booking, 
         redirect: { name: 'BookingLists' },
         children: [ 
             {
                 path: 'list',
                 name: 'BookingLists',
-                meta: { Capabilities: 'tfhb_manage_options' },
+                meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-list.vue')
             }, 
             {
                 path: 'create-new',
                 name: 'BookingCreate',
-                meta: { Capabilities: 'tfhb_manage_settings' },
+                meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-create.vue')
             },
             {
                 path: 'update/:id',
                 name: 'bookingUpdate',
-                meta: { Capabilities: 'tfhb_manage_options' },
+                meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-update.vue')
             }, 
         ]
@@ -54,19 +55,19 @@ const routes = [
         path: '/hosts',
         name: 'hosts',
         component: Hosts,
-        meta: { Capabilities: 'tfhb_manage_options' },
+        meta: { Capabilities: 'tfhb_manage_hosts' },
         redirect: { name: 'HostsLists' },
         children: [ 
             {
                 path: 'list',
                 name: 'HostsLists',
-                meta: { Capabilities: 'tfhb_manage_options' },
+                meta: { Capabilities: 'tfhb_manage_hosts' },
                 component: () => import('../view/hosts/hosts-list.vue')
             }, 
             {
                 path: 'profile/:id',
                 name: 'HostsProfile',
-                meta: { Capabilities: 'tfhb_manage_options' },
+                meta: { Capabilities: 'tfhb_manage_hosts' },
                 props: true,
                 component: () => import('../view/hosts/hosts-profile.vue'),
                 redirect: { name: 'HostsProfileInformation' },
@@ -74,14 +75,14 @@ const routes = [
                     {
                         path: 'information',
                         name: 'HostsProfileInformation',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_hosts' },
                         props: true,
                         component: () => import('../view/hosts/hosts-information.vue')
                     }, 
                     {
                         path: 'availability',
                         name: 'HostsAvailability',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_hosts' },
                         props: true,
                         component: () => import('../view/hosts/hosts-availability.vue')
                     }, 
@@ -107,27 +108,27 @@ const routes = [
         path: '/meetings',
         name: 'meetings',
         component: Meetings,
-        meta: { Capabilities: 'tfhb_manage_options' },
+        meta: { Capabilities: 'tfhb_manage_meetings' },
         redirect: { name: 'MeetingsLists' },
         children: [ 
             {
                 path: 'create-meeting-single/:id',
                 props: true,
                 name: 'MeetingsCreateSingle',
-                meta: { Capabilities: 'tfhb_manage_options' },
+                meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-create-single.vue')
             },
             {
                 path: 'list',
                 name: 'MeetingsLists',
-                meta: { Capabilities: 'tfhb_manage_options' },
+                meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-list.vue')
             }, 
             
             {
                 path: 'single/:id',
                 name: 'MeetingsCreate',
-                meta: { Capabilities: 'tfhb_manage_options' },
+                meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-create.vue'),
                 props: true,
                 redirect: { name: 'MeetingsCreateDetails' },
@@ -137,49 +138,49 @@ const routes = [
                         path: 'details',
                         props: true,
                         name: 'MeetingsCreateDetails',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-details.vue')
                     },
                     {
                         path: 'availability',
                         name: 'MeetingsCreateAvailability',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-availability.vue')
                     },
                     {
                         path: 'limits',
                         name: 'MeetingsCreateLimits',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-limits.vue')
                     },
                     {
                         path: 'questions',
                         name: 'MeetingsCreateQuestions',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-questions.vue')
                     },
                     {
                         path: 'notifications',
                         name: 'MeetingsCreateNotifications',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-notifications.vue')
                     },
                     {
                         path: 'payment',
                         name: 'MeetingsCreatePayment',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-payment.vue')
                     },
                     {
                         path: 'webhook',
                         name: 'MeetingsCreateWebhook',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-webhook.vue')
                     },
                     {
                         path: 'integrations',
                         name: 'MeetingsCreateIntegrations',
-                        meta: { Capabilities: 'tfhb_manage_options' },
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-integrations.vue')
                     }
                 ]

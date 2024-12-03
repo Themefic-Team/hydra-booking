@@ -20,6 +20,7 @@ global $wp_query;
 $host    = isset( $args['host'] ) ? $args['host'] : array();
 $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 
+ 
 ?>
 <div class=" tfhb-booking-cencel tfhb-meeting-<?php echo esc_attr( $booking->meeting_id ); ?>" data-calendar="<?php echo esc_attr( $booking->meeting_id ); ?>">
 	<form method="post" action="" class="tfhb-meeting-cencel-form ajax-submit"  enctype="multipart/form-data">
@@ -35,14 +36,14 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 					<ul>
 						<li class="tfhb-flexbox tfhb-gap-8">
 							<div class="tfhb-icon">
-								<img src="<?php echo esc_url(THB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
+								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
 							</div>
 							<?php echo ! empty( $host['first_name'] ) ? '' . esc_html( $host['first_name'] ) . '  ' . esc_html( $host['last_name'] ) . '' : ''; ?>
 							<span>Host</span>
 						</li>
 						<li class="tfhb-flexbox tfhb-gap-8">
 							<div class="tfhb-icon">
-								<img src="<?php echo esc_url(THB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
+								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
 							</div>
 							<!--date stored in this format  2024-05-24  9:00pm-9:45pm, Saturday, April 25 -->
 							<?php
@@ -61,7 +62,7 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 						</li>
 						<li class="tfhb-flexbox tfhb-gap-8">
 							<div class="tfhb-icon">
-								<img src="<?php echo esc_url(THB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
+								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
 							</div>
 							<!-- Asia/Dhaka  -->
 							<?php echo ! empty( $booking->attendee_time_zone ) ? '' . esc_html( $booking->attendee_time_zone ) . '' : ''; ?>
@@ -78,7 +79,7 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 								}
 								echo '<li class="tfhb-flexbox tfhb-gap-8">
                                             <div class="tfhb-icon">
-                                                <img src="' . esc_url( THB_URL . 'assets/app/images/location.svg' ) . '" alt="location">   
+                                                <img src="' . esc_url( TFHB_URL . 'assets/app/images/location.svg' ) . '" alt="location">   
                                             </div> 
                                             ' . esc_html( $location->location ) . '
                                         </li>';
@@ -100,7 +101,7 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 				<div class="tfhb-forms">
 					<div  class="tfhb-single-form">
 						<br>
-						<label for="attendee_name"> <?php echo esc_html__( 'Reason for Reschedule', 'hydra-booking' ); ?> </label>
+						<label for="attendee_name"> <?php echo esc_html__( 'Reason for Cancellation', 'hydra-booking' ); ?> </label>
 						<br>
 
 						<textarea name="reason" required id="reason"></textarea>
@@ -109,10 +110,10 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 					</div> 
 
 					<div class="tfhb-confirmation-button tfhb-flexbox tfhb-gap-8">
-				  
+				   
 						<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
 							<?php echo esc_attr( 'Cancel Booking' ); ?>
-							<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
+							<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
 						</button>
 					</div>
 

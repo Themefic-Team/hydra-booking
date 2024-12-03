@@ -9,9 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
      */
 
     // Helper Functions file
-    if ( file_exists( THB_PATH . '/includes/helper/helper-functions.php' ) ) {
+    if ( file_exists( TFHB_PATH . '/includes/helper/helper-functions.php' ) ) {
 
-        require_once THB_PATH . '/includes/helper/helper-functions.php';
+        require_once TFHB_PATH . '/includes/helper/helper-functions.php';
     }
 
     /**

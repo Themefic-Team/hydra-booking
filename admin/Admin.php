@@ -34,11 +34,14 @@ class Admin {
 		// new Notification();
 
 		// activation hooks
-		register_activation_hook( THB_URL, array( $this, 'activate' ) );
+		register_activation_hook( TFHB_URL, array( $this, 'activate' ) );
 
 		Migration::instance();
 
 		add_action( 'admin_init', array( $this, 'tfhb_hydra_activation_redirect' ) );
+
+		// Update Existing User Role
+		add_action( 'admin_init', array( $this, 'plugins_update_v_1_0_10' ) );
 	}
 
 	public function activate() {
@@ -54,5 +57,28 @@ class Admin {
 
 			// exit;
 		}
+	}
+
+	public function plugins_update_v_1_0_10(){
+
+ 
+		if( TFHB_VERSION == '1.0.10' && get_option( 'tfhb_update_status' ) != '1.0.10' ) {
+			$role = get_role( 'tfhb_host' );
+			// remove capabilities
+			$role->remove_cap( 'edit_posts' );
+			$role->remove_cap( 'edit_pages' );
+			$role->remove_cap( 'edit_others_posts' );
+			$role->remove_cap( 'create_posts' );
+			$role->remove_cap( 'manage_categories' );
+			$role->remove_cap( 'publish_posts' );
+			$role->remove_cap( 'edit_themes' );
+			$role->remove_cap( 'install_plugins' );
+			$role->remove_cap( 'update_plugin' );
+			$role->remove_cap( 'update_core' );
+			$role->remove_cap( 'manage_options' );
+
+			// Tfhb Update Status
+			update_option( 'tfhb_update_status', '1.0.10' );
+		} 
 	}
 }
