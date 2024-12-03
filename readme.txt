@@ -1,10 +1,10 @@
 === Hydra Booking - All in One Appointment Scheduling and Booking Calendar Solution | WooCommerce Bookings ===  
-Contributors: themefic, hasanet, mdrejon, kamrul0424, jahidcse
+Contributors: themefic, hasanet, mdrejon, kamrul0424, jahidcse, akanda22
 Tags: appointments, booking, booking system, scheduling, appointment booking 
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -124,6 +124,12 @@ Effortlessly set and manage your availability for appointments, so you can focus
 * Add custom questions to gather details about attendee needs.
 * Automatically adjust time zones for attendees, ensuring accuracy.
 
+= 🎉 ADVANCED SETTINGS AND MANAGEMENTS =
+Easily manage hosts and accessibility settings
+
+* Hosts can easily manage meetings, bookings, availability, integrations, and much more
+* Admins now have full control over host access permissions.
+
 To summarize, this appointment plugin is the all-in-one solution to streamline your scheduling process and take your booking system to the next level which makes it the best WordPress reservation plugin.
 
 ### Join our Community to stay updated
@@ -187,17 +193,22 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 
 == Changelog ==
 
+= 1.0.9 - 03/12/2024 =  
+
+- Updated: Updated the readme.txt file for better clarity.
+- Fixed: Mintor bugs and design issues resolved.
+
 = 1.0.8 - 02/12/2024 =  
 
-- Introduced: Added a backend host profile feature for enhanced host management.
-- Improvement: Enhanced cancellation handling for a smoother user experience.
-- Improvement: Improved the rescheduling feature for better flexibility.
+- Introduced: Script based meeting sharing option for external websites.
+- Introduced: Added a backend host profile feature for host management.
+- Improvement: Cancellation handling for a smoother user experience.
+- Improvement: Rescheduling feature for better flexibility.
 - Improvement: Optimized notification order for clarity and effectiveness.
 - Improvement: Added improvements for using attendee phone numbers as meeting locations.
 - Improvement: Refined booking frequency options for better control.
 - Improved overall system stability for a seamless experience.
 - Improvement: Improved cancellation email formatting and delivery.
-- Improvement: Enhanced functionality for sharing embed codes.
 - Fixed: Resolved issues related to booking status updates.
 - Fixed: Fixed PayPal payment processing issues.
 - Fixed: Fixed various design issues and improved overall user interface.
