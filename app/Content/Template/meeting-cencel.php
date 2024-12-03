@@ -20,6 +20,7 @@ global $wp_query;
 $host    = isset( $args['host'] ) ? $args['host'] : array();
 $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 
+ 
 ?>
 <div class=" tfhb-booking-cencel tfhb-meeting-<?php echo esc_attr( $booking->meeting_id ); ?>" data-calendar="<?php echo esc_attr( $booking->meeting_id ); ?>">
 	<form method="post" action="" class="tfhb-meeting-cencel-form ajax-submit"  enctype="multipart/form-data">
@@ -100,7 +101,7 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 				<div class="tfhb-forms">
 					<div  class="tfhb-single-form">
 						<br>
-						<label for="attendee_name"> <?php echo esc_html__( 'Reason for Reschedule', 'hydra-booking' ); ?> </label>
+						<label for="attendee_name"> <?php echo esc_html__( 'Reason for Cancellation', 'hydra-booking' ); ?> </label>
 						<br>
 
 						<textarea name="reason" required id="reason"></textarea>
@@ -109,7 +110,7 @@ $booking = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 					</div> 
 
 					<div class="tfhb-confirmation-button tfhb-flexbox tfhb-gap-8">
-				  
+				   
 						<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
 							<?php echo esc_attr( 'Cancel Booking' ); ?>
 							<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
