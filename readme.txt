@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.9
+Stable tag: 1.0.10
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -193,6 +193,11 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 
 == Changelog ==
 
+= 1.0.10 - 03/12/2024 =  
+
+- Improved: System stability for better performance.
+- Improved: Accessibility control for host profile.
+
 = 1.0.9 - 03/12/2024 =  
 
 - Updated: Updated the readme.txt file for better clarity.
@@ -201,7 +206,7 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 = 1.0.8 - 02/12/2024 =  
 
 - Introduced: Script based meeting sharing option for external websites.
-- Introduced: Added a backend host profile feature for host management.
+- Introduced: Host profiles, allowing hosts to manage bookings, availability, meetings, and more directly from their profile.
 - Improvement: Cancellation handling for a smoother user experience.
 - Improvement: Rescheduling feature for better flexibility.
 - Improvement: Optimized notification order for clarity and effectiveness.
