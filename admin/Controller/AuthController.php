@@ -105,4 +105,13 @@ class AuthController {
 
 		return $user;
 	}
+
+ 
+
+	function tfhb_woocommerce_prevent_admin_access($prevent_access) {
+		if (current_user_can('tfhb_host')) {
+				$prevent_access = false;
+		} 
+		return $prevent_access;
+	}
 }

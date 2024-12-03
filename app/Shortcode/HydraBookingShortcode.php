@@ -121,7 +121,7 @@ class HydraBookingShortcode {
 		ob_start();
 
 		load_template(
-			THB_PATH . '/app/Content/calendar.php',
+			TFHB_PATH . '/app/Content/calendar.php',
 			false,
 			array(
 				'meeting'      => $meta_data,
@@ -228,7 +228,7 @@ class HydraBookingShortcode {
 		}
 		
 		// Enqueue Scripts scripts 
-		wp_enqueue_script( 'tfhb-app-script-app', THB_URL . 'assets/app/js/app.js', array( 'jquery', 'tfhb-app-script' ), THB_VERSION, true );
+		wp_enqueue_script( 'tfhb-app-script-app', TFHB_URL . 'assets/app/js/app.js', array( 'jquery', 'tfhb-app-script' ), TFHB_VERSION, true );
 		
 		
 		
@@ -823,7 +823,7 @@ class HydraBookingShortcode {
 		ob_start();
 
 		load_template(
-			THB_PATH . '/app/Content/Template/meeting-confirmation.php',
+			TFHB_PATH . '/app/Content/Template/meeting-confirmation.php',
 			false,
 			array(
 				'meeting' => $meta_data,
