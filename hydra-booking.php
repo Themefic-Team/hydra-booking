@@ -3,7 +3,7 @@
  * Plugin Name: Hydra Booking
  * Plugin URI: https://hydrabooking.com/
  * Description: Create a booking / Appointment Form using Contact Form 7. You can insert Calendar, Time on the form and manage your booking. User can pay using WooCommerce.
- * Version: 1.0.5
+ * Version: 1.0.9
  * Author: Themefic
  * Author URI: https://themefic.com/
  * License: GPL-2.0+
@@ -20,16 +20,12 @@ class THB_INIT {
 	// CONSTARACT
 	public function __construct() {
 		// DEFINE PATH
+    
 		define( 'TFHB_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'TFHB_URL', plugin_dir_url( __FILE__ ) );
-		define( 'TFHB_VERSION', '1.0.4' );
-
+		define( 'TFHB_VERSION', '1.0.10' );
 
 		
-	
-		
-
-
 		// Load Vendor Auto Load
 		if ( file_exists( TFHB_PATH . '/vendor/autoload.php' ) ) {
 
