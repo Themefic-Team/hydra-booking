@@ -77,7 +77,7 @@ class App {
 		 * single-meeting.php
 		 */
 		if ( 'tfhb_meeting' === $post->post_type ) {
-			return THB_PATH . '/app/Content/Template/single-meeting.php';
+			return TFHB_PATH . '/app/Content/Template/single-meeting.php';
 		}
 
 		return $single_template;
@@ -122,18 +122,18 @@ class App {
 		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meetingId' )) {
 			 
 
-			$custom_template = load_template( THB_PATH . '/app/Content/Template/embed.php', true );
+			$custom_template = load_template( TFHB_PATH . '/app/Content/Template/embed.php', true );
 			return $custom_template;
 		}
 		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meeting' ) ) {
 			 
-			$custom_template = load_template( THB_PATH . '/app/Content/Template/single-meeting.php', false );
+			$custom_template = load_template( TFHB_PATH . '/app/Content/Template/single-meeting.php', false );
 			return $custom_template;
 		} 
 
 		// Reschedule Page
 		if ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'reschedule' ) {
-			$custom_template = load_template( THB_PATH . '/app/Content/Template/reschedule.php', false );
+			$custom_template = load_template( TFHB_PATH . '/app/Content/Template/reschedule.php', false );
 			return $custom_template;
 
 		}
@@ -155,7 +155,7 @@ class App {
 			}
 			$host_meta       = get_user_meta( $get_booking->host_id, '_tfhb_host', true );
 			$custom_template = load_template(
-				THB_PATH . '/app/Content/Template/meeting-cencel.php',
+				TFHB_PATH . '/app/Content/Template/meeting-cencel.php',
 				false,
 				array(
 					'host'         => $host_meta,

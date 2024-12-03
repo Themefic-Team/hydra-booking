@@ -26,6 +26,8 @@ class AdminMenu {
 		// Get User Role
 		// $userRole = $this->auth->userAllCaps();
 
+		 
+
 		add_menu_page(
 			esc_html__( 'Hydra Booking', 'hydra-booking' ),
 			esc_html__( 'Hydra Booking', 'hydra-booking' ),
