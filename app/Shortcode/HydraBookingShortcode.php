@@ -330,6 +330,7 @@ class HydraBookingShortcode {
 		
 
 		// Attendee Data
+		$attendee_data['hash'] =  md5( $data['meeting_id'] . $data['meeting_dates'] . $data['start_time'] . $data['end_time'] . wp_rand( 1000, 9999 ) );
 		$attendee_data['meeting_id'] = isset( $data['meeting_id'] ) ? sanitize_text_field( $data['meeting_id'] ) : 0;
 		$attendee_data['host_id']            = isset( $data['host_id'] ) ? sanitize_text_field( $data['host_id'] ) : 0;
 		$attendee_data['attendee_time_zone'] = isset( $_POST['attendee_time_zone'] ) ? sanitize_text_field( $_POST['attendee_time_zone'] ) : 0;
@@ -468,7 +469,7 @@ class HydraBookingShortcode {
 		
 		$data['cancelled_by'] = '';
 		$data['reason']       = '';
-		$data['booking_type'] = 'one-to-one';
+		$data['booking_type'] = $meta_data['meeting_type'];
 
 		// Payment Method
 		if ( true == $meta_data['payment_status'] ) {
@@ -508,16 +509,9 @@ class HydraBookingShortcode {
 		$host_id   = isset( $meta_data['host_id'] ) ? $meta_data['host_id'] : 0;
 		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
 
-		// $check_booking = $booking->get(
-		// 	array(
-		// 		'meeting_id'    => $data['meeting_id'],
-		// 		'meeting_dates' => $data['meeting_dates'],
-		// 		'start_time'    => $data['start_time'],
-		// 		'end_time'      => $data['end_time'],
-		// 	)
-		// );
+ 
 		
-		$check_booking = $booking->getCheckBooking( $data['meeting_id'], $data['meeting_dates'], $data['start_time'], $data['end_time'] );
+		// $check_booking = $booking->getCheckBooking( $data['meeting_id'], $data['meeting_dates'], $data['start_time'], $data['end_time'] );
  
 		$where = array(
 			array('meeting_id', '=', $data['meeting_id']),
@@ -612,22 +606,21 @@ class HydraBookingShortcode {
 		}
 
 
-		$single_booking_meta = $booking->get(
-			array( 'id' => $attendee_data['booking_id'] ),
-			false,
-			true
-		);
-		
-	
-		if($single_booking_meta->status == 'confirmed'){
+		// After Booking Hooks Action 
+		$booking = new Booking();
+		$single_booking = $booking->getBookingWithAttendees( 
+			array(
+				array('id', '=', $attendee_data['booking_id']),
+			),
+			1,
+		 );
+		// tfhb_print_r( $attendee ); 
+		if($single_booking->status == 'confirmed'){
 			// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
-			do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
-
-			
-		}
-
-		if($single_booking_meta->status == 'pending'){  
-			do_action( 'hydra_booking/after_booking_pending', $single_booking_meta );
+			do_action( 'hydra_booking/after_booking_confirmed', $single_booking ); 
+		} 
+		if($single_booking->status == 'pending'){  
+			do_action( 'hydra_booking/after_booking_pending', $single_booking );
 		}
 		
 		

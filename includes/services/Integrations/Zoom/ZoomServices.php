@@ -95,63 +95,76 @@ class ZoomServices {
 	 * @param $host_meta
 	 * @return void
 	 */
-	public function tfhb_create_zoom_meeting( $single_booking_meta) { 
+	public function tfhb_create_zoom_meeting( $booking) { 
 
 		
 		$BookingMeta = new BookingMeta();
 		// check if the meeting id is available
-		$get_booking_meta = $BookingMeta->getWithIdKey( $single_booking_meta->id, 'zoom_meeting' );
-
-		if ( $get_booking_meta ) {
-			return false;
-		}
-		
-
+		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->id, 'zoom_meeting' ); 
 	
-		$meeting = new Meeting();
-		$MeetingData = $meeting->get( $single_booking_meta->meeting_id );
 
-		$meeting_type = isset( $MeetingData->meeting_type ) ? $MeetingData->meeting_type : 'one-to-one';
-		$recurring_status = isset( $MeetingData->recurring_status ) ? $MeetingData->recurring_status : false;
-
-		if($meeting_type == 'one-to-group'){
+		if ( $get_booking_meta ) { 
+			// if the meeting id is available then update the meeting and add the attendees data
+			$this->tfhb_add_attendee_to_zoom_meeting( $booking, $get_booking_meta );
 			return false;
-		} 
-		$meta_data = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
 
-		$host_id   = isset( $meta_data['user_id'] ) ? $meta_data['user_id'] : 0;
-		$host_meta = get_user_meta( $host_id, '_tfhb_host', true );
-
-		$booking = new Booking();
-		// Host Meta by Booking Id
-		$_tfhb_host_integration_settings = get_user_meta( $single_booking_meta->host_id, '_tfhb_host_integration_settings', true );
-
-		// Booking Table Meeting Location Data
-		// $meeting_location_data = json_decode( $single_booking_meta->meeting_locations, true );
-		$meeting_location_data = $single_booking_meta->meeting_locations;
-
-
-		// Meeting Location Check
-		$meeting_locations = $meta_data['meeting_locations'];
-		
-		
-		$zoom_exists = false;
-		if ( is_array( $meeting_locations ) ) {
+		}else{
 			
-			// if in array location value is meet then set google meet using array filter
-			$meeting_location = array_filter(
-				$meeting_locations,
-				function ( $location ) {
-					return $location['location'] == 'zoom';
-				}
-			);
-
-			$zoom_exists = count( $meeting_location ) > 0 ? true : false;
-		} 
-		if($zoom_exists == true){
-
-			$this->create_zoom_meeting( $single_booking_meta, $meta_data, $host_meta );
+			$location =  $this->create_zoom_meeting( $booking);
+			
+			return $location;
 		}
+		
+ 
+	}
+
+	// Add new Attendee to Zoom Meeting
+	public function tfhb_add_attendee_to_zoom_meeting( $booking, $get_booking_meta ) {
+
+		$this->setHostApiDetails( $booking->host_id ); 
+		$access_response = $this->generateAccessToken();
+
+		$BookingMeta = new BookingMeta();
+		$events = json_decode( $get_booking_meta->value, true );
+
+		$new_events_data = array();
+		foreach ($events as $key => $event) { 
+			$attendees = json_decode( $booking->attendees, true );
+			$attendees_data = array();
+			foreach ( $attendees as $attendee ) {
+				$attendees_data[] = array(
+					'email' => $attendee['email'],
+					'name'  => $attendee['name'],
+				);
+			}
+			$event['settings']['meeting_invitees'] = $attendees_data;
+			$response = wp_remote_request(
+				'https://api.zoom.us/v2/meetings/' . $event['id'],
+				array(
+					'method'  => 'PATCH',
+					'body'    => wp_json_encode( $event ),
+					'headers' => array(
+						'Authorization' => 'Bearer ' . $this->access_token,
+						'Content-Type'  => 'application/json',
+					),
+				)
+			);
+			// Handle the response
+			if ( is_wp_error( $response ) ) {
+				return $response; // Return the WP_Error object
+			}
+			$response_body = wp_remote_retrieve_body( $response );
+			$new_events_data[$key] = json_decode( $response_body, true );
+		} 
+
+		$bookingMetaData = array(
+			'id' => $get_booking_meta->id,
+			'value'      => wp_json_encode( $events, true ),
+		);
+
+		$BookingMeta->update( $bookingMetaData );
+
+
 	}
 
 	// Cancel Zoom Meeting
@@ -456,12 +469,13 @@ class ZoomServices {
 		}
 	}
 
-	public function create_zoom_meeting( $booking_meta, $meeting_meta, $host_meta  ) {
+	public function create_zoom_meeting( $booking ) {
 
-		$this->setHostApiDetails( $booking_meta->host_id ); 
+		$this->setHostApiDetails( $booking->host_id ); 
 		$access_response = $this->generateAccessToken();
-		$event_data = $this->zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta );
+		$event_data = $this->zoomMeetingBody( $booking);
  
+		
 		$zoom_event_body = array();
 		foreach($event_data as $data){
 			$response = wp_remote_post(
@@ -486,45 +500,27 @@ class ZoomServices {
 			
 		}
 		$bookingMetaData = array(
-			'booking_id' => $booking_meta->id,
-			'meta_key'   => 'zoom_calendar',
+			'booking_id' => $booking->id,
+			'meta_key'   => 'zoom_meeting',
 			'value'      => wp_json_encode( $zoom_event_body, true ),
 		);
-
+ 
 		$BookingMeta = new BookingMeta(); 
 		$BookingMeta->add( $bookingMetaData );
-
-		$booking = new Booking();
-
-		$getBookingData = $booking->get( $booking_meta->id );
-			
-		$meeting_locations =  json_decode( $getBookingData->meeting_locations );
-		 
-	 
+ 
 		$zoom_link = '';
 		$password = '';
 		foreach ( $zoom_event_body as $key => $mvalue ) {
 			$zoom_link .=  $mvalue['join_url'] . ' | ';
 			$password .=  $mvalue['password'] . ' | ';
 		} 
-
-		$meeting_locations->zoom->address = array(
+		$address = array(
 			'link' => $zoom_link,
 			'password' => $password,
 		);
-
-	 
-		$meeting_locations = is_array($meeting_locations) ?  json_decode($meeting_locations)  :  $meeting_locations;
 		
-	 
-		$update                     = array();
-		$update['id']               = $booking_meta->id;
-		$update['meeting_locations'] = $meeting_locations;
-
-
-		$booking->update( $update ); 
-
-		return  true;
+		return $address;
+ 
 	}
 
 	public function update_zoom_meeting( $meeting_schedule_id, $booking_meta, $meeting_meta, $host_meta ) {
@@ -553,50 +549,54 @@ class ZoomServices {
 
 		$response_body = wp_remote_retrieve_body( $response );
 
-		return json_decode( $response_body, true );
+		return $response_body;
 	}
 
 
  
 
-	public function zoomMeetingBody( $booking_meta, $meeting_meta, $host_meta ) {
-		$meeting_dates = explode( ',', $booking_meta->meeting_dates );
+	public function zoomMeetingBody( $booking) {
+		$meeting_dates = explode( ',', $booking->meeting_dates );
 
+		$attendees = json_decode( $booking->attendees, true );
 		$event_data = array();
+
+		$attendees_data = array();
+		foreach ( $attendees as $attendee ) {
+			$attendees_data[] = array(
+				'email' => $attendee['email'],
+				'name'  => $attendee['name'],
+			);
+		}
+
 		foreach($meeting_dates as $meeting_date){ 
-			$start_time_combined = $meeting_date . ' ' . $booking_meta->start_time;
+			$start_time_combined = $meeting_date . ' ' . $booking->start_time;
 		
-			$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $booking_meta->attendee_time_zone ) ? $booking_meta->attendee_time_zone : '') );
+			$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $booking->host_time_zone ) ? $booking->host_time_zone : '') );
 			$date->setTimezone( new \DateTimeZone('UTC') );
 			$time_in_24_hour_format = $date->format('H:i:s');
 
-			$attendee_data = array(
-				array(
-					'email' => $booking_meta->email,
-					'name'  => $booking_meta->attendee_name,
-				),
-			);
-
+			
 			$data = array(
-				'topic'      => ! empty( $meeting_meta['title'] ) ? $meeting_meta['title'] : '',
+				'topic'      => ! empty( $booking->title ) ? $booking->title : '',
 				'type'       => 2, // Scheduled Meeting
 				'start_time' => $meeting_date . 'T' . $time_in_24_hour_format . 'Z',
-				'timezone'   => ! empty( $booking_meta->attendee_time_zone ) ? $booking_meta->attendee_time_zone : '',
-				'duration'   => $meeting_meta['duration'],
+				'timezone'   => ! empty( $booking->host_time_zone ) ? $booking->host_time_zone : '',
+				'duration'   => $booking->duration,
 				'password'   => '123456',
 				'settings'   => array(
 					'join_before_host' => true,
 					'mute_upon_entry'  => true,
-					'waiting_room'     => false,
+					'waiting_room'     => false, 
+					'meeting_invitees' => $attendees_data,
 				),
-				'contact_email' => $host_meta['email'],
-				'contact_name'  => $host_meta['email'],
+				'contact_email' => $booking->host_email,
+				'contact_name'  => $booking->host_email,   
 			);
 
 			$event_data[] = $data;
 		}
 		
-
 		return $event_data;
 	}
 

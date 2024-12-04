@@ -4,6 +4,7 @@ namespace HydraBooking\App;
 // Use Classes
 use HydraBooking\App\Shortcode\HydraBookingShortcode;
 use HydraBooking\App\Enqueue;
+use HydraBooking\App\BookingLocation;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\DB\Booking;
 
@@ -20,6 +21,7 @@ class App {
 
 		// Load Shortcode Class
 		new HydraBookingShortcode();
+ 
 
 
 

@@ -338,9 +338,6 @@ class Booking {
 					$data[] = $value;
 				} 
 			}
- 
-
-
 
 			$sql .= "GROUP BY booking.id ";
 			
@@ -350,21 +347,22 @@ class Booking {
 				$sql .= " ORDER BY booking.id DESC";
 			}
 
-			if($limit != null) {
+			if($limit != null && $limit > 1) {
 				$sql .= " LIMIT $limit";
 			}   
  
 			
 		// Prepare the SQL query 
 		$query = $wpdb->prepare($sql, $data);
- 
-
+  
 		// Get the results
 		if($limit == 1) {
-			$results = $wpdb->get_row($query);
+			$results = $wpdb->get_row($query); 
+			
 		} else {
 			$results = $wpdb->get_results($query);
 		} 
+ 
 
 		// Return the results
 		return $results;

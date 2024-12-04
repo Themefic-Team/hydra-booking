@@ -156,8 +156,11 @@ class Attendees {
 			booking.start_time,
 			booking.end_time,
 			booking.duration as duration,
-			booking.meeting_locations as meeting_locations,
-			booking.booking_type as booking_type,
+			booking.meeting_locations as booking_locations,
+			booking.meeting_dates as meeting_dates,
+			booking.start_time as start_time,
+			booking.end_time as end_time,
+			booking.booking_type as booking_type, 
 			meeting.title as meeting_title 
 			FROM $table_name as attendees
 			LEFT JOIN $booking_table as booking ON attendees.booking_id = booking.id

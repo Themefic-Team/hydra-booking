@@ -397,7 +397,7 @@ const AvailabilityTabs = (type) => {
                         <div class="tfhb-flexbox  tfhb-mb-24"  style="gap:4px 16px"  v-for="(slocation, index) in Meeting.singleMeeting.MeetingData.meeting_locations" :key="index">
                             <div class="tfhb-meeting-location tfhb-gap-16 tfhb-flexbox" :style="Meeting.singleMeeting.MeetingData.meeting_locations.length<2 ?'width:100%' : '' ">
                                 <!-- Location --> 
-                                <HbDropdown v-if ="Meeting.singleMeeting.MeetingData.meeting_type == 'one-to-one'"
+                                <HbDropdown
                                     v-model="slocation.location" 
                                     required= "true" 
                                     :label="$tfhb_trans('Location')"  
@@ -417,27 +417,7 @@ const AvailabilityTabs = (type) => {
                                     slocation.location ==  'In Person (Organizer Address)' ||
                                     slocation.location ==  'Organizer Phone Number' 
                                     ? 50 : 100"
-                                />
-                                <HbDropdown v-if ="Meeting.singleMeeting.MeetingData.meeting_type == 'one-to-group'"
-                                    v-model="slocation.location" 
-                                    required= "true" 
-                                    :label="$tfhb_trans('Location')"  
-                                    :selected = "1"
-                                    :placeholder="$tfhb_trans('Location')" 
-                                    :option = "[ 
-                                        {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
-                                        {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
-                                        {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
-                                        {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},
-                                        {name: 'Organizer Phone Number', value: 'Organizer Phone Number'},
-                                        {name: 'Add Custom', value: 'Custom'}
-                                    ]" 
-                                    :width= "
-                                    slocation.location ==  'Custom' ||
-                                    slocation.location ==  'In Person (Organizer Address)' ||
-                                    slocation.location ==  'Organizer Phone Number' 
-                                    ? 50 : 100"
-                                />
+                                /> 
                                 <!-- Address -->
                                 <HbText  
                                     v-model="slocation.address" 
