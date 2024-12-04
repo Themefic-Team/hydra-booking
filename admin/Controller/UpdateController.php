@@ -37,6 +37,14 @@ class UpdateController {
         $tfhb_update_status = get_option('tfhb_update_status', false); 
           
         if( $this->version == '1.0.4' && $tfhb_update_status != '1.0.4' ) { 
+
+            // Add column in transaction table
+            global $wpdb;
+            $table_name = $wpdb->prefix . 'tfhb_transactions';
+            // add column in one query
+            if( $wpdb->get_var("SHOW COLUMNS FROM $table_name LIKE 'booking_id'") != 'attendees_id' ) {
+                $wpdb->query("ALTER TABLE $table_name ADD attendee_id INT(11) NOT NULL AFTER id");
+            }
             // tfhb_print_r('Update 1.0.5 to 1.0.6');
             $Attendees = new Attendees();
             // $Attendees->migrate();

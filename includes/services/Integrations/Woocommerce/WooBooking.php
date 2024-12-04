@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\Meeting;
 
@@ -78,7 +79,7 @@ class WooBooking {
 
 				
 				$booking_id  = $item->get_meta( '_tfhb_booking_id' );
-				$attendee_id  = $item->get_meta( '_tfhb_attendee_id' );
+				$attendee_id = $item->get_meta( '_tfhb_attendee_id' );
 				$appointment = $item->get_meta( 'tfhb_appointment' );
 				$order->update_meta_data(
 					'tfhb_order_meta',
@@ -91,25 +92,9 @@ class WooBooking {
 
 				
 				// Update Transaction ID Data 
-				$booking = new Booking();
-				$get_booking = $booking->get( 
-					array(
-						'id' => $booking_id,
-					),
-					false,
-					true
-				);
-				// Get_meetingData
-				$meeting = new Meeting();
-				$meetingData = $meeting->get( 
-					array(
-						'id' => $get_booking->meeting_id,
-					),
-					false,
-					true
-				);
-
-				
+				$Attendees = new Attendees();
+				$get_attendee = $Attendees->getAttendeeWithBooking( $attendee_id  ); 
+								
 				$transactions = new Transactions();
 				$transation_history = array(
 					'wc_order_id' => $order_id, 
@@ -118,14 +103,17 @@ class WooBooking {
 				// add transaction
 				$transactionData = array(
 					'booking_id' 	   => $booking_id,
-					'meeting_id' 	   => $get_booking->meeting_id,
-					'host_id' 	   => $meetingData->host_id,
-					'customer_id' 	   => $get_booking->attendee_id,
-					'payment_method' 	   => $get_booking->payment_method,
+					'attendee_id' 	   => $attendee_id,
+					'meeting_id' 	   => $get_attendee->meeting_id,
+					'host_id' 	   => $get_attendee->host_id,
+					'customer_id' 	   => $attendee_id,
+					'payment_method' 	   => $get_attendee->payment_method,
 					'total' 	   => $items_price,
 					'status' 	   => $order->get_status(),
 					'transation_history' => json_encode($transation_history, true),
 				); 
+
+		
 
 				// add transaction
 				$transactions->add( $transactionData );  
@@ -149,17 +137,16 @@ class WooBooking {
 			if ( ! empty( $item->get_meta( '_tfhb_booking_id' ) ) ) { 
 
 				$booking_id = $item->get_meta( '_tfhb_booking_id' );
-				$booking    = new Booking();
+				$attendee_id = $item->get_meta( '_tfhb_attendee_id' );
+				$Attendees    = new Attendees();
 				$updateData = array(
-					'id'             => $booking_id,
-					'order_id'       => $order->get_id(),
-					'attendee_id'    => $order->get_user_id(),
+					'id'             => $attendee_id,  
 					'payment_status' => $order->get_status(),
 				);
 				// update booking
 
 				// update booking
-				$booking->update( $updateData );
+				$Attendees->update( $updateData );
 
 			}
 		}

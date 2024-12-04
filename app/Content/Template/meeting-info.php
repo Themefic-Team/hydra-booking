@@ -19,6 +19,8 @@ $time_zone    = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
 $booking_data = isset( $args['booking_data'] ) ? $args['booking_data'] : array(); 
 // Stripe Public api Key
 $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+$currency = ! empty( $_tfhb_general_settings['currency'] ) ? $_tfhb_general_settings['currency'] : 'USD';
 $stripePublicKey            = ! empty( $_tfhb_integration_settings['stripe']['public_key'] ) ? $_tfhb_integration_settings['stripe']['public_key'] : '';
 $paypalPublicKey            = ! empty( $_tfhb_integration_settings['paypal']['client_id'] ) ? $_tfhb_integration_settings['paypal']['client_id'] : '';
 
@@ -148,7 +150,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 
 				$price = ! empty( $meeting['meeting_price'] ) ? $meeting['meeting_price'] : 'Free';
-				$currency = ! empty( $meeting['payment_currency'] ) && $price !='Free' ? $meeting['payment_currency'] : '';
+				$currency = ! empty( $currency ) && $price !='Free' ? $currency : '';
 				echo '<li class="tfhb-flexbox tfhb-gap-8">
                             <input type="hidden" id="meeting_price" name="meeting_price" value="' . esc_attr( $price ) . '">
                             <div class="tfhb-icon">

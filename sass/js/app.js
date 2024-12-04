@@ -370,6 +370,8 @@
 			var confirmation_template = responseData.confirmation_template;
 			// hide the form .tfhb-confirmation-button
 			$this.find('.tfhb-confirmation-button').hide(); 
+			let currency = typeof tfhb_app_booking.general_settings.currency !== 'undefined' && tfhb_app_booking.general_settings.currency != '' ? tfhb_app_booking.general_settings.currency : 'USD';
+		 
 			// Render PayPal button into the container
 			paypal.Buttons({
 				// Create an order
@@ -378,11 +380,11 @@
 					return actions.order.create({
 						
 						purchase_units: [{
-							reference_id : responseData.data.hash,
+							reference_id : responseData.data.attendee_data.id,
 							description: responseData.data.meeting.title + ' - ' + responseData.data.meeting.duration + ' Minutes | ' + responseData.data.booking.start_time + ' - ' + responseData.data.booking.end_time + ' | ' + responseData.data.booking.meeting_dates,
-							custom_id: responseData.data.booking.attendee_id,
+							custom_id: responseData.data.attendee_data.id,
 							amount: {
-								currency_code: responseData.data.meeting.payment_currency,
+								currency_code: currency,
 								value: responseData.data.meeting.meeting_price,// Set the transaction amount
 							}
 						}]
@@ -442,7 +444,8 @@
 			stripeButtonContainer.html("<a href='#' class='tfhb-stripe-payment-btn'>Pay With Stripe</a>");
 			stripeButtonContainer.show();
 			var confirmation_template = responseData.confirmation_template;
-		
+			// if tfhb_app_booking.general_settings.currency is not undefined then set the currency
+			
 			// Configure Stripe Checkout
 			const handler = StripeCheckout.configure({
 				key: stripe_public_key,
@@ -598,6 +601,7 @@
 						   
 						   // Render Paypal Payment System
 						   if(payment_status == 1 && "paypal_payment" == payment_type && response.data.data){
+								console.log(response.data);
 								tfhb_render_paypal_payment($this, response.data);
 								return
 							}

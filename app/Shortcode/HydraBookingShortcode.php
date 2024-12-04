@@ -642,7 +642,9 @@ class HydraBookingShortcode {
 			$response['data']                = array( 
 				'hash' 	  => $data['hash'], 
 				'booking_id' => $attendee_data['booking_id'],
+				'attendee_id' => $attendee_data['id'],
 				'booking' => $data,
+				'attendee_data' => $attendee_data,
 				'meeting' => $MeetingData,
 			);
 		}
@@ -1015,32 +1017,36 @@ class HydraBookingShortcode {
 		$payer_id = isset( $payment_details['payer']['payer_id'] ) ? sanitize_text_field( $payment_details['payer']['payer_id'] ) : '';
 		$hash = isset( $responseData['data']['hash'] ) ? sanitize_text_field( $responseData['data']['hash'] ) : '';
 		$booking_id = isset( $responseData['data']['booking_id'] ) ? sanitize_text_field( $responseData['data']['booking_id'] ) : '';
+		$attendee_id = isset( $responseData['data']['attendee_id'] ) ? sanitize_text_field( $responseData['data']['attendee_id'] ) : '';
 		$meeting_id = isset( $responseData['data']['booking']['meeting_id'] ) ? sanitize_text_field( $responseData['data']['booking']['meeting_id'] ) : '';	
 		$host_id = isset( $responseData['data']['booking']['host_id'] ) ? sanitize_text_field( $responseData['data']['booking']['host_id'] ) : '';	
 		$customer_id = isset( $responseData['data']['booking']['attendee_id'] ) ? sanitize_text_field( $responseData['data']['booking']['attendee_id'] ) : '';	
 		$payment_method = isset( $responseData['data']['booking']['payment_method'] ) ? sanitize_text_field( $responseData['data']['booking']['payment_method'] ) : '';	
 		$total =  isset($payment_details['purchase_units'][0]['amount']['value']) ? sanitize_text_field( $payment_details['purchase_units'][0]['amount']['value'] ) : '';
-		$booking     = new Booking();
+		
+		$attendee     = new  Attendees();
 
-		$bookingdata = array(
-			'id'             => $booking_id,
+		$attendeedata = array(
+			'id'             => $attendee_id,
 			'payment_status' => 'Completed',
 		);
 		
-		// Booking Update
-		$bookingUpdate = $booking->update( $bookingdata );
+		// attendee Update
+		$attendeeUpdate = $attendee->update( $attendeedata );
 
 		$charge = array(
 			'payment_id'    => ! empty( $payment_id ) ? $payment_id : '', 
 			'payer_id'      => ! empty( $payer_id  ) ? $payer_id  : '',
-			'hash'      => ! empty( $hash  ) ? $hash  : '', 
+			'booking_id'      => ! empty( $booking_id  ) ? $booking_id  : '', 
+			'attendee_id'      => ! empty( $attendee_id  ) ? $attendee_id  : '', 
 		);
 		// Data for Transactions Table
 		$tdata        = array(
 			'booking_id'         => $booking_id,
+			'attendee_id'         => $attendee_id,
 			'meeting_id'         => $meeting_id,
 			'host_id'         => $host_id,
-			'customer_id'         => $customer_id,
+			'customer_id'         => $booking_id,
 			'payment_method'         => $payment_method, 
 			'total'         => $total,
 			'transation_history' => wp_json_encode( $charge ),
@@ -1051,7 +1057,7 @@ class HydraBookingShortcode {
 		$Transactions = $Transactions->add( $tdata );
 
 		// After Booking Hooks
-		do_action( 'hydra_booking/after_booking_payment_complete', $bookingdata );
+		do_action( 'hydra_booking/after_booking_payment_complete', $attendeedata );
 
 		// return success message
 		$response['message'] = esc_html(__('Payment Completed Successfully', 'hydra-booking'));

@@ -121,8 +121,53 @@ class Attendees {
 		}
 	}
 	/**
-	 * Get all  Booking Data.
+	 * Get Attendees Data with booking
 	 */
+	public function getAttendeeWithBooking( $id = null, ) {
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+		$booking_table = $wpdb->prefix . 'tfhb_bookings';  
+		$meeting_table = $wpdb->prefix . 'tfhb_meetings';  
+
+		if( $id != null ) {
+			$sql = "SELECT attendees.*,
+			booking.meeting_dates,
+			booking.start_time,
+			booking.end_time,
+			booking.duration as duration,
+			booking.meeting_locations as meeting_locations,
+			booking.booking_type as booking_type,
+			meeting.title as meeting_title 
+			FROM $table_name as attendees
+			LEFT JOIN $booking_table as booking ON attendees.booking_id = booking.id
+			LEFT JOIN $meeting_table as meeting ON booking.meeting_id = meeting.id
+			WHERE attendees.id = %d ";
+
+			$data = $wpdb->get_row(
+				$wpdb->prepare( $sql, $id )
+			);
+ 
+ 
+		} else { 
+			$sql = "SELECT attendees.*,
+			booking.meeting_dates,
+			booking.start_time,
+			booking.end_time,
+			booking.duration as duration,
+			booking.meeting_locations as meeting_locations,
+			booking.booking_type as booking_type,
+			meeting.title as meeting_title 
+			FROM $table_name as attendees
+			LEFT JOIN $booking_table as booking ON attendees.booking_id = booking.id
+			LEFT JOIN $meeting_table as meeting ON booking.meeting_id = meeting.id";
+
+			$data = $wpdb->get_results( $sql );
+		}
+
+		return $data;
+	}
 	
 
 	//  Count available dates attendees based on booking id
