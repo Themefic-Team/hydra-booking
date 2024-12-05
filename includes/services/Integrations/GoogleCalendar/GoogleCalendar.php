@@ -5,6 +5,7 @@ namespace HydraBooking\Services\Integrations\GoogleCalendar;
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 use HydraBooking\Admin\Controller\RouteController;
+use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\BookingMeta;
 use HydraBooking\DB\Host;
@@ -142,7 +143,11 @@ class GoogleCalendar {
 
 
 	// if Access token is experired
-	public function refreshToken( $user_id ) {
+	public function refreshToken( $host_id ) {
+		$host     = new Host();
+		$hostData = $host->get( $host_id );
+		$user_id  = $hostData->user_id;
+
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 		$refreshToken                    = isset( $_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar']['refresh_token'] ) ? $_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar']['refresh_token'] : '';
 
@@ -252,13 +257,15 @@ class GoogleCalendar {
 
 
 	// Insert Booking to Google Calendar
-	public function InsertGoogleCalender($data ) {
+	public function InsertGoogleCalender($booking ) {
 		
 		$value = array();
 	
-		if ( ! isset( $data->id ) ) {
+		if ( ! isset( $booking->id ) ) {
 			return;
 		}
+		
+
 
 		$settings        = get_option( '_tfhb_integration_settings' );
 		$google_calender = isset( $settings['google_calendar'] ) ? $settings['google_calendar'] : array();
@@ -271,73 +278,70 @@ class GoogleCalendar {
 		}
 		
 		
-		if($data->meeting_calendar){ 
+		if($booking->meeting_calendar){ 
 			return; 
 		}
 		// set event data google meet shedule
-		$start_time    = strtotime( $data->start_time ); // 03:45 AM
-		$end_time      = strtotime( $data->end_time ); // 04:30 AM
-		$meeting_dates = $data->meeting_dates; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
-
 		
-
-		$host     = new Host();
-		$hostData = $host->get( $data->host_id );
+		$meeting_dates = $booking->meeting_dates; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
+		 
+		if($booking->booking_type == 'one-to-group'){ 
+			$event_title =  $booking->title;
+		}else{
+			$event_title = 'Meeting with ' . $booking->attendee_name;
+		}
 
 		// Set the Access Token
-		$this->refreshToken( $hostData->user_id );
+		$this->refreshToken( $booking->host_id );
 
 		$meeting_dates = explode( ',', $meeting_dates );
+ 
+		$google_calendar_body = array(); 
 
-		// if is pro is not active and array items more then 1 and requrring is not on then return false
-
-	
-
-		$meeting           = new Meeting();
-		$meetingData       = $meeting->get( $data->meeting_id );
-		
-		if ( (count( $meeting_dates ) > 1 && $meetingData->recurring_status != true ) || ( tfhb_is_pro_active() == false  && $meetingData->recurring_status != true && count( $meeting_dates ) > 1 )) {
-			return false;
+		$attendees = json_decode($booking->attendees); 
+		$attendees_data = array();
+		$attendees_data[] = array('email' => $booking->host_email);
+		foreach($attendees as $attendee){
+			$attendees_data[] = array('email' => $attendee->email);
 		}
-		
-		$meeting_locations = json_decode( $meetingData->meeting_locations, true );
+		$get_last_attendee = end($attendees);
+		$attendees_time_zone = $get_last_attendee->attendee_time_zone;
+
+		// Check if meeting location is meet
+		$meeting_loaction = json_decode( $booking->meeting_locations, true );
 		$enable_meeting_location = false;
 		// if in array location value is meet then set google meet using array filter
-		$meeting_location        = array_filter(
-			$meeting_locations,
+		$meeting_location = array_filter(
+			$meeting_loaction,
 			function ( $location ) {
 				return $location['location'] == 'meet';
 			}
-		); 
-		
+		);
 		$enable_meeting_location = count( $meeting_location ) > 0 ? true : false;
-
-		$google_calendar_body = array(); 
-
-	
-		
+ 
+		$start_time    = strtotime( $booking->start_time ); // 03:45 AM
+		$end_time      = strtotime( $booking->end_time ); // 04:30 AM
 		foreach ( $meeting_dates as $meeting_date ) {
+			// Co
 			$start_date = gmdate( 'Y-m-d', strtotime( $meeting_date ) ) . 'T' . gmdate( 'H:i:s', $start_time );
 			$end_date   = gmdate( 'Y-m-d', strtotime( $meeting_date ) ) . 'T' . gmdate( 'H:i:s', $end_time );
 
+
 			// Meeting location google meeting
 			$setData = array(
-				'title'          => 'Meeting with ' . $data->attendee_name,
-				'summary'        => 'Title: ' . $meetingData->title,
+				'title'          => $event_title,
+				'summary'        => 'Title: ' . $booking->title,
 				// 'location' => 'Location: ' . $data->meeting_location,
 				'description'    => 'Description: ',
 				'start'          => array(
 					'dateTime' => $start_date,
-					'timeZone' => $data->attendee_time_zone,
+					'timeZone' => $attendees_time_zone,
 				),
 				'end'            => array(
 					'dateTime' => $end_date,
-					'timeZone' => $data->attendee_time_zone,
+					'timeZone' => $attendees_time_zone,
 				),
-				'attendees'      => array(
-					array( 'email' => $data->email ),
-					array( 'email' => $hostData->email ),
-				),
+				'attendees'      => $attendees_data,
 				'reminders'      => array(
 					'useDefault' => false,
 					'overrides'  => array(
@@ -371,6 +375,8 @@ class GoogleCalendar {
 				);
 			}
 
+			$host = new Host();
+			$hostData = $host->get( $booking->host_id );
 			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 	
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
@@ -404,15 +410,16 @@ class GoogleCalendar {
 				$google_calendar_body[ ] = json_decode( $body, true );
  
 			}
-			
 		}
+
+	
 		 
 		$value = array(
 			'google_calendar' => $google_calendar_body,
 		);
 
 		$booking_meta = array(
-			'booking_id' => $data->id,
+			'booking_id' => $booking->id,
 			'meta_key'   => 'booking_calendar',
 			'value'      => wp_json_encode( $value, true ),
 		);
@@ -424,6 +431,7 @@ class GoogleCalendar {
 		if ( $insert_id === false ) {
 			return false;
 		} 
+		
 
 		$meet_link = '';
 		foreach ( $google_calendar_body as $key => $mvalue ) {
@@ -434,9 +442,9 @@ class GoogleCalendar {
 		} 
  
 		
+		$getBooking = new Booking();
 		if($meet_link != '' && $enable_meeting_location == true ){
-			$booking = new Booking();
-			$getBookingData = $booking->get( $data->id ); 
+			$getBookingData = $getBooking->get( $booking->id ); 
 			$meeting_loaction  = json_decode($getBookingData->meeting_locations); 
 			
 			// remove the last pipe
@@ -446,126 +454,139 @@ class GoogleCalendar {
 				$meeting_loaction->meet->address = $meet_link;
 			} 
 
-			$data->meeting_locations = $meeting_loaction;
+			$booking->meeting_locations = $meeting_loaction;
 		
 			
 		}
-		$meeting_loaction =   $data->meeting_locations; 
+		$meeting_loaction =   $booking->meeting_locations; 
 		$meeting_locations = is_array($meeting_loaction) ?  json_decode($meeting_loaction)  :  $meeting_loaction;
 	 
-		
-		$booking = new Booking();
-		$update['id']               = $data->id;
-		$update['meeting_calendar'] = $insert_id;
-		$update['meeting_locations'] = $meeting_locations; 
+		$updateData = array();
+		$updateData['id']               = $booking->id; 
+		$updateData['meeting_locations'] = $meeting_locations; 
 
-		$booking->update( $update );
+		$getBooking->update( $updateData );
+ 
  
 		return true;
 	}
 
 
 	// Insert Calender After Booking Schedule
-	public function insert_calender_after_booking_completed( $data ) {
+	public function insert_calender_after_booking_confirmed( $booking ) {
 		
 		
+
 		if($this->checkConnectionStatus() == false){
 			return;
 		}
-
-
-		$booking     = new Booking();
-		$meeting     = new Meeting();
-		$BookingMeta = new BookingMeta(); 
-		$get_booking_meta = $BookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
-		 
-
-		 
-		$MeetingData = $meeting->get( $data->meeting_id );
-		
-		$meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
-		
-		if ( $get_booking_meta && 'one-to-one' == $meta_data['meeting_type']) {
-			$booking_meta_value = json_decode($get_booking_meta->value);
-			if(isset($booking_meta_value->google_calendar)){
-				return;
-			} 
-		}
-		if ( 'one-to-group' == $meta_data['meeting_type'] ) {
-		
-			$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
- 
- 
-			$check_booking = $booking->getCheckBooking( $data->meeting_id, $data->meeting_dates, $data->start_time, $data->end_time );
- 
-			// unset if check_booking has current booking data->id without loop and array maps or filter
-			$check_booking = array_filter(
-				$check_booking,
-				function ( $booking ) use ( $data ) {
-					return $booking->id !== $data->id;
-				}
-			); 
- 
-
-			// insert first booking
-			if(count($check_booking) == 0){ 
-				$this->InsertGoogleCalender($data);
-				return;
-			}else{
-				// Get First Items form the array
-				// $first_item = reset( $check_booking );
-
-				$booking_ids = array_map(
-					function ( $booking ) {
-						return $booking->id;
-					},
-					$check_booking
-				);
-				
-				$booking_calendar           = $BookingMeta->getFirstDataOfMultipleIds( $booking_ids, 'booking_calendar' );
-			
-				if ( $booking_calendar ) { 
-					 
-					$booking_calendar_value = json_decode( $booking_calendar->value );
-
-					$booking_calendar_value = $this->addAttendeeGoogleCalender($booking_calendar->id, $booking_calendar_value, $data);
-					// $booking_calendar_value = apply_filters( 'hydra_booking_calendar_add_new_attendee', $booking_calendar_value, $data );
- 
-					return;
-
-				}else{
-					$this->InsertGoogleCalender($data);
-					return ;
-				}
-			}
-
-			
-		} else {
+		$BookingMeta = new BookingMeta();
+		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->id, 'booking_calendar' );  
+		if($get_booking_meta){
+			$this->addAttendeeGoogleCalender($booking, $get_booking_meta);	
+		}else{
 			
 			// Update the Booking
-			$this->InsertGoogleCalender($data);
-			
+			$this->InsertGoogleCalender($booking);
 		}
+
+		// $booking     = new Booking();
+		// $meeting     = new Meeting();
+		// $BookingMeta = new BookingMeta(); 
+		// $get_booking_meta = $BookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
+		 
+
+		 
+		// $MeetingData = $meeting->get( $data->meeting_id );
+		
+		// $meta_data   = get_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', true );
+		
+		// if ( $get_booking_meta && 'one-to-one' == $meta_data['meeting_type']) {
+		// 	$booking_meta_value = json_decode($get_booking_meta->value);
+		// 	if(isset($booking_meta_value->google_calendar)){
+		// 		return;
+		// 	} 
+		// }
+		// if ( 'one-to-group' == $meta_data['meeting_type'] ) {
+		
+		// 	$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
+ 
+ 
+		// 	$check_booking = $booking->getCheckBooking( $data->meeting_id, $data->meeting_dates, $data->start_time, $data->end_time );
+ 
+		// 	// unset if check_booking has current booking data->id without loop and array maps or filter
+		// 	$check_booking = array_filter(
+		// 		$check_booking,
+		// 		function ( $booking ) use ( $data ) {
+		// 			return $booking->id !== $data->id;
+		// 		}
+		// 	); 
+ 
+
+		// 	// insert first booking
+		// 	if(count($check_booking) == 0){ 
+		// 		$this->InsertGoogleCalender($data);
+		// 		return;
+		// 	}else{
+		// 		// Get First Items form the array
+		// 		// $first_item = reset( $check_booking );
+
+		// 		$booking_ids = array_map(
+		// 			function ( $booking ) {
+		// 				return $booking->id;
+		// 			},
+		// 			$check_booking
+		// 		);
+				
+		// 		$booking_calendar           = $BookingMeta->getFirstDataOfMultipleIds( $booking_ids, 'booking_calendar' );
+			
+		// 		if ( $booking_calendar ) { 
+					 
+		// 			$booking_calendar_value = json_decode( $booking_calendar->value );
+
+		// 			$booking_calendar_value = $this->addAttendeeGoogleCalender($booking_calendar->id, $booking_calendar_value, $data);
+		// 			// $booking_calendar_value = apply_filters( 'hydra_booking_calendar_add_new_attendee', $booking_calendar_value, $data );
+ 
+		// 			return;
+
+		// 		}else{
+		// 			$this->InsertGoogleCalender($data);
+		// 			return ;
+		// 		}
+		// 	}
+
+			
+		// } else {
+			
+		
+			
+		// }
 
 		return true;
 	}
 
 	// add new attendee existing Booking to Google Calendar
-	public function addAttendeeGoogleCalender( $meta_data_id, $data, $booking ) {
-
-		$host    = new Host();
-		$hostData = $host->get( $booking->host_id );
+	public function addAttendeeGoogleCalender( $booking, $BookingMeta) {
+ 
 		// Set the Access Token
-		$this->refreshToken( $hostData->user_id );
-		$events = $data->google_calendar;
+		$this->refreshToken( $booking->host_id );
+		$events =  json_decode($BookingMeta->value);
+		$events = $events->google_calendar; 
+		$host = new Host();
+		$hostData = $host->get( $booking->host_id );
+		$new_attendees = array();
+		$attendees = json_decode($booking->attendees);
+		$new_attendees[] = array('email' => $booking->host_email);
+		foreach($attendees as $attendee){
+			$new_attendees[] = array('email' => $attendee->email);
+		}
+
 
 		$google_calendar_body = array();
 		foreach ( $events as $event ) {
 			$event_id = $event->id;
-
-			$new_attendees = array( 'email' => $booking->email );
-			// add new attendee also remaing existing attendee
-			$event->attendees[] = $new_attendees;
+ 
+			$event->attendees = $new_attendees;
 
 			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
@@ -585,80 +606,77 @@ class GoogleCalendar {
 				);
 				$body     = wp_remote_retrieve_body( $response );
 
-				$google_calendar_body[] = json_decode( $body, true );
-
-			}
-
-			
+				$google_calendar_body[] = json_decode( $body, true ); 
+			} 
 		} 
 		
 		$value = array(
 			'google_calendar' => $google_calendar_body,
 		);
-		$BookingMeta = new BookingMeta(); 
+		$UpdateBookingMeta = new BookingMeta(); 
 		
 		// Update the Booking meta
 		$booking_meta = array(
-			'id'    => $meta_data_id,
+			'id'    => $BookingMeta->id,
 			'value' => wp_json_encode( $value ),
 		);  
-		$BookingMeta->update( $booking_meta );
+		$UpdateBookingMeta->update( $booking_meta );
 		 
  
 		// update meeting location
-		$meeting           = new Meeting();
-		$meetingData       = $meeting->get( $booking->meeting_id );
+		// $meeting           = new Meeting();
+		// $meetingData       = $meeting->get( $booking->meeting_id );
 
-		$meeting_locations = json_decode( $meetingData->meeting_locations, true );
+		// $meeting_locations = json_decode( $meetingData->meeting_locations, true );
 	 
-		$enable_meeting_location = false;
-		// if in array location value is meet then set google meet using array filter
-		$meeting_location        = array_filter(
-			$meeting_locations,
-			function ( $location ) {
-				return $location['location'] == 'meet';
-			}
-		); 
+		// $enable_meeting_location = false;
+		// // if in array location value is meet then set google meet using array filter
+		// $meeting_location        = array_filter(
+		// 	$meeting_locations,
+		// 	function ( $location ) {
+		// 		return $location['location'] == 'meet';
+		// 	}
+		// ); 
 		
-		$enable_meeting_location = count( $meeting_location ) > 0 ? true : false;
+		// $enable_meeting_location = count( $meeting_location ) > 0 ? true : false;
 
 	
-		$meet_link = '';
-		foreach ( $google_calendar_body as $key => $mvalue ) {
-			$hangoutLink = isset( $mvalue['hangoutLink'] ) ? $mvalue['hangoutLink'] : '';
-			if ( $hangoutLink != '' ) {
-				$meet_link .= $hangoutLink . ' | ';
-			}
-		}  
+		// $meet_link = '';
+		// foreach ( $google_calendar_body as $key => $mvalue ) {
+		// 	$hangoutLink = isset( $mvalue['hangoutLink'] ) ? $mvalue['hangoutLink'] : '';
+		// 	if ( $hangoutLink != '' ) {
+		// 		$meet_link .= $hangoutLink . ' | ';
+		// 	}
+		// }  
 		
-		if($meet_link != '' && $enable_meeting_location == true ){
-			$bookingGet = new Booking();
-			$getBookingData = $bookingGet->get( $booking->id ); 
-			$meeting_loaction  = json_decode($getBookingData->meeting_locations); 
+		// if($meet_link != '' && $enable_meeting_location == true ){
+		// 	$bookingGet = new Booking();
+		// 	$getBookingData = $bookingGet->get( $booking->id ); 
+		// 	$meeting_loaction  = json_decode($getBookingData->meeting_locations); 
 			
-			// remove the last pipe
-			$meet_link = rtrim($meet_link, '|');
+		// 	// remove the last pipe
+		// 	$meet_link = rtrim($meet_link, '|');
 
-			if(isset($meeting_loaction->meet)){
-				$meeting_loaction->meet->address = $meet_link;
-			} 
+		// 	if(isset($meeting_loaction->meet)){
+		// 		$meeting_loaction->meet->address = $meet_link;
+		// 	} 
 
-			$booking->meeting_locations = $meeting_loaction;
+		// 	$booking->meeting_locations = $meeting_loaction;
 		
 			
-		}
+		// }
 
-		$meeting_loaction = (array) $booking->meeting_locations;
-		$meeting_locations = is_array($meeting_loaction) ? $meeting_loaction  : wp_json_decode($meeting_loaction);
+		// $meeting_loaction = (array) $booking->meeting_locations;
+		// $meeting_locations = is_array($meeting_loaction) ? $meeting_loaction  : wp_json_decode($meeting_loaction);
  
 
-		$bookingUpdate = new Booking();
-		$update                     = array();
-		$update['id']               = $booking->id;
-		$update['meeting_calendar'] = $meta_data_id;
-		$update['meeting_locations'] = $meeting_locations; 
+		// $bookingUpdate = new Booking();
+		// $update                     = array();
+		// $update['id']               = $booking->id;
+		// $update['meeting_calendar'] = $meta_data_id;
+		// $update['meeting_locations'] = $meeting_locations; 
 
-		$bookingUpdate->update( $update );
+		// $bookingUpdate->update( $update );
 
 	}
 
@@ -747,7 +765,7 @@ class GoogleCalendar {
  
 
 		// Set the Access Token
-		$this->refreshToken( $hostData->user_id );
+		$this->refreshToken( $data->host_id );
 
 		
 		$value = json_decode($booking_calendarData->value);
@@ -806,11 +824,9 @@ class GoogleCalendar {
 	// remove attendee existing Booking to Google Calendar
 	public function removeAttendeeGoogleCalender($meta_data_id, $booking_calendar_value, $data){
 		
-		
-		$host = new Host();
-		$hostData = $host->get( $data->host_id );
+		 
 		// Set the Access Token
-		$this->refreshToken( $hostData->user_id );
+		$this->refreshToken( $data->host_id );
 		$events = $booking_calendar_value->google_calendar;
 
 		$google_calendar_body = array();
@@ -985,12 +1001,10 @@ class GoogleCalendar {
 		
 		if ( ! $booking_calendarData ) {
 			return false;
-		}
-		$host = new Host();
-		$hostData = $host->get( $data->host_id );
+		} 
 
 		// Set the Access Token
-		$this->refreshToken( $hostData->user_id );
+		$this->refreshToken( $data->host_id );
 
 		$bookingMeta = new BookingMeta();
 		$value = json_decode($booking_calendarData->value);

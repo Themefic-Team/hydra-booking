@@ -133,9 +133,17 @@ class UpdateController {
                 DROP COLUMN country, 
                 DROP COLUMN ip_address, 
                 DROP COLUMN device, 
+                DROP COLUMN meeting_calendar,
                 DROP COLUMN payment_method,
-                DROP COLUMN payment_status"
+                DROP COLUMN payment_status,
+                -- add column
+                ADD COLUMN availability_time_zone  VARCHAR(255) NOT NULL AFTER meeting_dates,
+                ",
+                
             );
+
+            // Add column in booking table
+            
             // tfhb_print_r($wpdb->last_query);
 
             // update version

@@ -6,6 +6,7 @@ namespace HydraBooking\Hooks;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
+use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
 use HydraBooking\DB\Booking;
 class BookingLocation {
 	public function __construct() {
@@ -30,8 +31,9 @@ class BookingLocation {
 		// tfhb_print_r( $attendee );
 		$booking_id = $booking->id;
 		$locations = json_decode( $booking->meeting_locations, true ); 
+	
 
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' ); 
 		foreach($locations as $key => $location){ 
 			if($key == 'zoom'){ // Booking Location is Zoom
 				if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) && $_tfhb_integration_settings['zoom_meeting']['status'] == true ) {
@@ -42,16 +44,7 @@ class BookingLocation {
 					}
 				}
 			}
-
-			if($key == 'zoom'){ // Booking Location is Zoom
-				if ( ! empty( $_tfhb_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_integration_settings['zoom_meeting']['connection_status'] ) && $_tfhb_integration_settings['zoom_meeting']['status'] == true ) {
-					$zoom = new ZoomServices();
-					$address = $zoom->tfhb_create_zoom_meeting($booking);  
-					if($address){
-						$locations['zoom']['address'] = $address;
-					}
-				}
-			}
+ 
 		} 
 		
 

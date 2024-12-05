@@ -302,6 +302,7 @@ class HydraBookingShortcode {
 		// sanitize the data
 		$data['meeting_id'] = isset( $_POST['meeting_id'] ) ? sanitize_text_field( $_POST['meeting_id'] ) : 0;
 
+		$data['meeting_dates']      = isset( $_POST['meeting_dates'] ) ? sanitize_text_field( $_POST['meeting_dates'] ) : '';
 		$meeting     = new Meeting();
 		$MeetingData = $meeting->get( $data['meeting_id'] );
  
@@ -312,19 +313,35 @@ class HydraBookingShortcode {
 			 
 			wp_send_json_error( array( 'message' => esc_html(__('Please upgrade to pro version for group meeting', 'hydra-booking')) ) );
 			wp_die();
-		}
+		} 
+		// data shuld a  '2024-12-06, 2024-12-06, 2024-12-06'
+		$meeting_dates = explode( ',', $data['meeting_dates'] );
+		// get the first date
+		$meeting_date = $meeting_dates[0];
+		$date_time = new DateTimeController( 'UTC' );
+		$availability_data = $date_time->GetAvailabilityData($MeetingData);  
+		$availability_time_zone = $availability_data['time_zone'];
+		
+
+
+		$start_time = isset( $_POST['meeting_time_start'] ) ? sanitize_text_field( $_POST['meeting_time_start'] ) : '';
+		$end_time = isset( $_POST['meeting_time_end'] ) ? sanitize_text_field( $_POST['meeting_time_end'] ) : '';
+
+		$start_time = $date_time->convert_time_based_on_timezone( $meeting_date, $start_time, $_POST['attendee_time_zone'], $availability_time_zone , '24' );
+		$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $_POST['attendee_time_zone'], $availability_time_zone , '24' );
+		tfhb_print_r($start_time);
+
 
 	 
 
 		
 		$data['host_id']            = isset( $_POST['host_id'] ) ? sanitize_text_field( $_POST['host_id'] ) : 0;
 		$data['attendee_id']        = isset( $_POST['attendee_id'] ) ? sanitize_text_field( $_POST['attendee_id'] ) : 0;
-		$data['hash']               = $meeting_hash;
-		// $data['order_id']           = isset( $_POST['order_id'] ) ? sanitize_text_field( $_POST['order_id'] ) : 0;
+		$data['hash']               = $meeting_hash; 
 	
-		$data['meeting_dates']      = isset( $_POST['meeting_dates'] ) ? sanitize_text_field( $_POST['meeting_dates'] ) : '';
-		$data['start_time']         = isset( $_POST['meeting_time_start'] ) ? sanitize_text_field( $_POST['meeting_time_start'] ) : '';
-		$data['end_time']           = isset( $_POST['meeting_time_end'] ) ? sanitize_text_field( $_POST['meeting_time_end'] ) : '';
+		$data['availability_time_zone']      = isset( $availability_time_zone ) ? sanitize_text_field( $availability_time_zone ) : '';
+		$data['start_time']         = isset( $start_time ) ? sanitize_text_field( $start_time ) : '';
+		$data['end_time']           = isset( $end_time ) ? sanitize_text_field( $end_time ) : '';
 		$data['slot_minutes']       = isset( $_POST['slot_minutes'] ) ? sanitize_text_field( $_POST['slot_minutes'] ) : '';
 		$data['duration']           = isset( $_POST['duration'] ) ? sanitize_text_field( $_POST['duration'] ) : 0;
 		
