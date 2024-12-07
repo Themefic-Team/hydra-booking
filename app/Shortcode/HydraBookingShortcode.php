@@ -241,6 +241,7 @@ class HydraBookingShortcode {
 			array(
 				'meeting_id'              => $id,
 				'host_id'                 => $host_id,
+				'calander_available_time_slot'                 => array(),
 				'duration'                => $duration,
 				'payment_status'          => $payment_status,
 				'meeting_interval'        => $meeting_interval,
@@ -314,24 +315,28 @@ class HydraBookingShortcode {
 			wp_send_json_error( array( 'message' => esc_html(__('Please upgrade to pro version for group meeting', 'hydra-booking')) ) );
 			wp_die();
 		} 
-		// data shuld a  '2024-12-06, 2024-12-06, 2024-12-06'
-		$meeting_dates = explode( ',', $data['meeting_dates'] );
+		// data shuld a  '2024-12-06, 2024-12-06, 2024-12-06' 
 		// get the first date
-		$meeting_date = $meeting_dates[0];
+		$meeting_date = $data['meeting_dates'];
 		$date_time = new DateTimeController( 'UTC' );
 		$availability_data = $date_time->GetAvailabilityData($MeetingData);  
 		$availability_time_zone = $availability_data['time_zone'];
 		
 
-
+		
 		$start_time = isset( $_POST['meeting_time_start'] ) ? sanitize_text_field( $_POST['meeting_time_start'] ) : '';
 		$end_time = isset( $_POST['meeting_time_end'] ) ? sanitize_text_field( $_POST['meeting_time_end'] ) : '';
+	
+		$start_time = $date_time->convert_time_based_on_timezone( $meeting_date, $start_time, $_POST['attendee_time_zone'], $availability_time_zone , '' );
+		
+		$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $_POST['attendee_time_zone'], $availability_time_zone , '' );
+	 
+		$data['meeting_dates'] = $start_time->format('Y-m-d');
+		 
+		$start_time =  $start_time->format( 'h:i A' );
+		$end_time =  $end_time->format( 'h:i A' );
 
-		$start_time = $date_time->convert_time_based_on_timezone( $meeting_date, $start_time, $_POST['attendee_time_zone'], $availability_time_zone , '24' );
-		$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $_POST['attendee_time_zone'], $availability_time_zone , '24' );
-		tfhb_print_r($start_time);
-
-
+		
 	 
 
 		
@@ -581,6 +586,8 @@ class HydraBookingShortcode {
 
 		// Booking Frequency
 		$current_user_booking = $booking->get( array( 'meeting_id' => $data['meeting_id'], 'meeting_dates' => $data['meeting_dates'] ) );
+		
+		 
 		if ( $current_user_booking ) {
 			$this->tfhb_checked_booking_frequency_limit( $current_user_booking, $meta_data,);
 		}
@@ -600,7 +607,6 @@ class HydraBookingShortcode {
 
 		}
 		
-
 		// Attendees
 		$attendees = new Attendees(); 
 		$add_attendee = $attendees->add( $attendee_data ); 
@@ -631,14 +637,16 @@ class HydraBookingShortcode {
 			),
 			1,
 		 );
-		// tfhb_print_r( $attendee ); 
+		 
 		if($single_booking->status == 'confirmed'){
 			// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
 			do_action( 'hydra_booking/after_booking_confirmed', $single_booking ); 
-		} 
+		}  
 		if($single_booking->status == 'pending'){  
-			do_action( 'hydra_booking/after_booking_pending', $single_booking );
+			// do_action( 'hydra_booking/after_booking_pending', $single_booking );
 		}
+		
+
 		
 		
   
@@ -930,16 +938,32 @@ class HydraBookingShortcode {
 			
 			$this->tfhb_checked_booking_frequency_limit( $current_user_booking, $meta_data,);
 		}
-
-		$date_time = new DateTimeController( $selected_time_zone );
-		$data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format );
-
-
+		// get current date time to this month end in array
+		$this_month_all_dates = array();
+		$current_date = $selected_date;
 		
-		if ( empty( $data ) ) {
+		$end_date = date('Y-m-t', strtotime($selected_date)); 
+		// now get all dates between current date and this month end
+		$begin = new \DateTime($current_date);
+		$end = new \DateTime($end_date);
+		$end = $end->modify( '+1 day' );
+		$interval = new \DateInterval('P1D');
+		$daterange = new \DatePeriod($begin, $interval ,$end);
+		foreach($daterange as $date){
+			$this_month_all_dates[] = $date->format("Y-m-d");
+		} 
+		
+		$all_month_data = array();
+		$date_time = new DateTimeController( $selected_time_zone );
+		foreach ( $this_month_all_dates as $date ) {
+			$all_month_data[ $date ] = $date_time->getAvailableTimeData( $meeting_id, $date, $selected_time_zone, $selected_time_format );
+		} 
+		// tfhb_print_r($all_month_data);
+		
+		if ( empty( $all_month_data ) ) {
 			wp_send_json_error( array( 'message' => esc_html(__('No time slots are currently available.', 'hydra-booking')) ) );
 		}
-		wp_send_json_success( $data );
+		wp_send_json_success( $all_month_data );
 		wp_die();
 	}
 

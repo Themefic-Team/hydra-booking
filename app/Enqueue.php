@@ -52,7 +52,7 @@ class Enqueue {
 			wp_register_script( 'tfhb-paypal-sdk', esc_url($sdk_url), array(), null, true );
 		}
 		wp_register_script( 'tfhb-paypal-script', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
-		wp_register_script( 'tfhb-select2-script', THB_URL . 'assets/lib/select2/select2.min.js', array( 'jquery', 'tfhb-app-script' ), THB_VERSION, true );
+		wp_register_script( 'tfhb-select2-script', THB_URL . 'assets/lib/select2/select2.min.js', array( 'jquery', 'tfhb-app-script', 'tfhb-app-script-app' ), THB_VERSION, true );
 		wp_enqueue_script( 'tfhb-app-script', THB_URL . 'assets/app/js/main.js', array( 'jquery' ), THB_VERSION, true );
 			wp_localize_script(
 				'tfhb-app-script',

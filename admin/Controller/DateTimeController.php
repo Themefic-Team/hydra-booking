@@ -39,38 +39,27 @@ class DateTimeController extends \DateTimeZone {
 		echo $timeZoneName;
 	}
 
-	public function convert_time_based_on_timezone( $meeting_date, $time, $time_zone, $selected_time_zone, $time_format ) {
-		  
-		
-		// Combine meeting date and start time into a single string
-		$date_str = $meeting_date . ' ' . $time;
+	public function convert_time_based_on_timezone(  $meeting_date,  $time, $time_zone, $selected_time_zone, $time_format = '' ) {
+		   
+		$time = new \DateTime(  $meeting_date. ' ' .$time, new \DateTimeZone( $time_zone ) );
 
-		// Create DateTime object for the given time in the availability timezone
-		$date = new \DateTime($date_str, new \DateTimeZone($selected_time_zone));
-	
-		// Get the timezone offset for both timezones
-		$attendeeTimeZoneObj = new \DateTimeZone($time_zone);
-		$attendeeOffset = $attendeeTimeZoneObj->getOffset(new \DateTime()); // Offset in seconds for attendee timezone
-		$availabilityOffset = $date->getOffset(); // Offset in seconds for availability timezone
-	
-		// Calculate the time difference in seconds
-		$offsetDifference = $attendeeOffset - $availabilityOffset;
-	
-		// Modify the DateTime object by the offset difference
-		$date->modify(($offsetDifference > 0 ? "+" : "-") . abs($offsetDifference) . " seconds");
-		// $time = $date->format('H:i'); 
-		//  time format meanse 12hr or 24hr
+		$time->setTimezone( new \DateTimeZone( $selected_time_zone ) );
+
 		if ( $time_format == '12' ) {
-			// Return in this format: 2024-09-24 11:30 AM - 12:00 PM (America/New_York)
-			 $date->format('h:i A');
-		} else {
-			// Return in this format: 2024-09-24 11:30 - 12:00 (America/New_York)
-			 $date->format('H:i ');
-		}
+			return $time->format( 'h:i A' );
+
+		} 
+		if ( $time_format == '24' ) {
+			return $time->format( 'H:i' );
+
+		} 
 
 	
-		return $date;
+		return $time;
 	}
+
+ 
+	 
 	 
 	public function convert_full_start_end_host_timezone_with_date( $start_time, $end_time, $time_zone, $selected_time_zone,  $selected_date, $type ) {
 	
@@ -195,10 +184,10 @@ class DateTimeController extends \DateTimeZone {
 			$start_time = $this->convert_time_based_on_timezone( $meeting_date, $start_time, $time_zone, $selected_time_zone, $selected_time_format );
 			$end_time   = $this->convert_time_based_on_timezone( $meeting_date, $end_time, $time_zone, $selected_time_zone, $selected_time_format );
 
-			$disabled_times[] = array(
-				'start' => $start_time,
-				'end'   => $end_time,
-			);
+			// $disabled_times[] = array(
+			// 	'start' => $start_time,
+			// 	'end'   => $end_time,
+			// );
 
 		}
 	 
@@ -224,7 +213,7 @@ class DateTimeController extends \DateTimeZone {
 
 				$times = $value['times'];
 			}
-		}
+		} 
 
 		foreach ( $times as $key => $value ) {
 
@@ -258,42 +247,55 @@ class DateTimeController extends \DateTimeZone {
 
 	public function generateTimeSlots( $startTime, $endTime, $duration, $meeting_interval, $buffer_time_before, $buffer_time_after, $selected_date, $time_format, $time_zone, $selected_time_zone ) {
 		$timeSlots = array();
-
-		$skip_before_meeting_start = 100; // Example value, replace with your actual setting
-		$start                     = new \DateTime( $selected_date . ' ' . $startTime, new \DateTimeZone( $selected_time_zone ) );
-		$end                       = new \DateTime( $selected_date . ' ' . $endTime, new \DateTimeZone( $selected_time_zone ) );
-		$current                   = clone $start;
-		$before                    = clone $start;
-		$after                     = clone $start;
-
-		$diff             = $duration * 60; // Convert to seconds
-		$before_diff      = $buffer_time_before * 60; // Convert to seconds
-		$after_diff       = $buffer_time_after * 60; // Convert to seconds
+	
+		// Example value for buffer time before meeting start (replace with your actual setting)
+		$skip_before_meeting_start = 100; 
+	
+		// Convert start and end times based on the selected timezone
+		$start = $this->convert_time_based_on_timezone($selected_date, $startTime, $time_zone, $selected_time_zone, '');
+		$end = $this->convert_time_based_on_timezone($selected_date, $endTime, $time_zone, $selected_time_zone, '');
+	
+		// Clone the start time for manipulation
+		$current = clone $start;
+		$before = clone $start;
+		$after = clone $start;
+	
+		// Convert to seconds for easier manipulation
+		$diff = $duration * 60; // Convert to seconds
+		$before_diff = $buffer_time_before * 60; // Convert to seconds
+		$after_diff = $buffer_time_after * 60; // Convert to seconds
 		$meeting_interval = $meeting_interval * 60; // Convert to seconds
-		$total_diff       = $diff + $before_diff + $after_diff;
-
-		while ( $current < $end ) {
-
-			$start_time = $this->formatTime( $current, $time_format, $time_zone );
-			$end_time   = $this->formatTime( ( clone $current )->modify( "+$total_diff seconds" ), $time_format, $time_zone );
-
-			// if current time is passed then skip skip_before_meeting_start
-			$current_minus_skip = ( clone $current )->modify( "-$skip_before_meeting_start minutes" );
-			if ( new \DateTime( 'now', new \DateTimeZone( $time_zone ) ) > $current_minus_skip ) {
-				$current->modify( "+$total_diff seconds" )->modify( "+$meeting_interval seconds" );
-
-				continue;
+		$total_diff = $diff + $before_diff + $after_diff;
+	
+		// Loop through the time range
+		while ($current < $end) {
+			// Check if the current time is within the meeting time range
+			if ($current >= $start && $current < $end) {
+				// Check if the current time is within the buffer time before the meeting
+				if ($current >= $before && $current < $start) {
+					$before = $before->modify("+{$before_diff} seconds");
+					$current = $before;
+				} else {
+					// Check if the current time is within the buffer time after the meeting
+					if ($current >= $end) {
+						$after = $after->modify("+{$after_diff} seconds");
+						$current = $after;
+					} else {
+						// Add the current time to the time slots
+						$timeSlots[] = array(
+							'start' => $this->formatTime($current, $time_format, $selected_time_zone),
+							'end'   => $this->formatTime($current->modify("+{$diff} seconds"), $time_format, $selected_time_zone),
+						);
+						// Move the current time forward by the meeting interval
+						$current = $current->modify("+{$meeting_interval} seconds");
+					}
+				}
+			} else {
+				// Skip to the next meeting start time
+				$current = $current->modify("+{$skip_before_meeting_start} seconds");
 			}
-
-			$timeSlots[] = array(
-				'start' => $start_time,
-				'end'   => $end_time,
-			);
-
-			$current->modify( "+$total_diff seconds" )->modify( "+$meeting_interval seconds" );
-
 		}
-
+	
 		return $timeSlots;
 	}
 
