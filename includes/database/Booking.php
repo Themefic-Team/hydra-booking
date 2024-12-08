@@ -338,7 +338,7 @@ class Booking {
 					$sql .= " AND $field $operator %s";
 					$data[] = $value;
 				} 
-			}
+			} 
 
 			$sql .= "GROUP BY booking.id ";
 			
@@ -353,16 +353,16 @@ class Booking {
 			}   
  
 			
-		// Prepare the SQL query 
-		$query = $wpdb->prepare($sql, $data);
-  
-		// Get the results
-		if($limit == 1) {
-			$results = $wpdb->get_row($query); 
-			
-		} else {
-			$results = $wpdb->get_results($query);
-		} 
+			// Prepare the SQL query 
+			$query = $wpdb->prepare($sql, $data);
+	
+			// Get the results
+			if($limit == 1) {
+				$results = $wpdb->get_row($query); 
+				
+			} else {
+				$results = $wpdb->get_results($query);
+			} 
  
 
 		// Return the results

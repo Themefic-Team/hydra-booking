@@ -6,7 +6,7 @@ global $wp_query;
 
 
 if ( isset( $wp_query->query_vars['hydra-booking'] ) ) {
-	$meeting_id = intval( $wp_query->query_vars['meeting-id'] );
+	$meeting_id = intval( $wp_query->query_vars['meetingId'] );
 	$hash       = esc_attr( $wp_query->query_vars['hash'] );
 	$type       = esc_attr( $wp_query->query_vars['type'] );
 	if ( ! empty( $meeting_id ) ) { ?>

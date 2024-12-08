@@ -92,18 +92,19 @@ class HydraBookingShortcode {
 
 		if ( ! empty( $atts['hash'] ) && 'reschedule' == $atts['type'] ) {
 
-			$booking     = new Booking();
-			$get_booking = $booking->get(
-				array( 'hash' => $atts['hash'] ),
-				false,
-				true
+			$Attendee = new Attendees();
+			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+				array(
+					array('hash', '=',get_query_var( 'hash' )),
+				),
+				1,
 			);
 
-			if ( ! $get_booking ) {
+			if ( ! $attendeeBooking ) {
 				return 'Invalid Booking ID';
 			}
 
-			$booking_data = $get_booking;
+			$booking_data = $attendeeBooking;
 		}
  
 		// GetHost meta Data
@@ -559,7 +560,7 @@ class HydraBookingShortcode {
 			}
 			
 		} elseif ( $check_booking ) {
-				wp_send_json_error( array( 'message' => esc_html(__('Already Booked', 'hydra-booking')) ) );
+			wp_send_json_error( array( 'message' => esc_html(__('Already Booked', 'hydra-booking')) ) );
 		}
 
 	
@@ -651,7 +652,7 @@ class HydraBookingShortcode {
 		
   
 		// Load Meeting Confirmation Template
-		$confirmation_template = $this->tfhb_booking_confirmation( $attendee_data['booking_id'], $MeetingData, $host_meta );
+		$confirmation_template = $this->tfhb_booking_confirmation( $attendee_data['id']);
 
 		$response['message']               = 'Booking Successful';
 		$response['action']                = 'create';
@@ -871,14 +872,16 @@ class HydraBookingShortcode {
 	}
 
 
-	public function tfhb_booking_confirmation( $insert_id, $meta_data, $host_meta ) {
+	public function tfhb_booking_confirmation( $attendee_id) {
 
-		$booking = new Booking();
-		$single_booking_meta = (array) $booking->get(
-			array( 'id' => $insert_id ),
-			false,
-			true
-		);
+		$Attendee = new Attendees();
+		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+			array(
+				array('id', '=', $attendee_id),
+			),
+			1,
+			'DESC'
+		 ); 
 		// Load Meeting Confirmation Template
 		ob_start();
 
@@ -886,9 +889,7 @@ class HydraBookingShortcode {
 			THB_PATH . '/app/Content/Template/meeting-confirmation.php',
 			false,
 			array(
-				'meeting' => $meta_data,
-				'host'    => $host_meta,
-				'booking' => $single_booking_meta,
+				'attendeeBooking' => $attendeeBooking, 
 			)
 		);
 
@@ -988,33 +989,36 @@ class HydraBookingShortcode {
 		$data     = array();
 		$response = array();
 
-		$booking_hash = isset( $_POST['booking_hash'] ) ? sanitize_text_field( $_POST['booking_hash'] ) : '';
+		$attendee_hash = isset( $_POST['attendee_hash'] ) ? sanitize_text_field( $_POST['attendee_hash'] ) : '';
 		$reason       = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
 
-		$booking     = new Booking();
-		$get_booking = $booking->get(
-			array( 'hash' => $booking_hash ),
-			false,
-			true
-		);
-
-		if ( ! $get_booking ) {
+		$Attendee = new Attendees();
+		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+			array(
+				array('hash', '=',get_query_var( 'hash' )),
+			),
+			1,
+			'DESC'
+		); 
+ 
+		if ( ! $attendeeBooking ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid Booking ID', 'hydra-booking')) ) );
 		}
 
 
-		$booking_data = array(
-			'id'           => $get_booking->id,
+		$attendee_data = array(
+			'id'           => $attendeeBooking->id,
 			'reason'       => $reason,
 			'status'       => 'canceled',
 			'cancelled_by' => 'attendee',
-		);
+		); 
 
-		$booking->update( $booking_data );
+		$Attendee->update( $attendee_data );
+
 
 
 		// Before Booking After Cancel
-		do_action( 'hydra_booking/after_booking_canceled', $get_booking );
+		do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
 
 		$response['message'] = esc_html(__('Booking Cancelled Successfully', 'hydra-booking'));
 

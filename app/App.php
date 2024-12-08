@@ -7,6 +7,7 @@ use HydraBooking\App\Enqueue;
 use HydraBooking\App\BookingLocation;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Attendees;
 
 class App {
 	public function __construct() {
@@ -126,29 +127,30 @@ class App {
 			return $custom_template;
 
 		}
-
 		// Cenceled Page
 		if ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'cancel' ) {
+			 
 			if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {
 				wp_enqueue_script( 'tfhb-app-script' );
 			}
-
-			$booking     = new Booking();
-			$get_booking = $booking->get(
-				array( 'hash' => get_query_var( 'hash' ) ),
-				false,
-				true
-			);
-			if ( ! $get_booking ) {
+		 
+			
+			$Attendee = new Attendees();
+			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+				array(
+					array('hash', '=',get_query_var( 'hash' )),
+				),
+				1,
+				'DESC'
+			); 
+			if ( ! $attendeeBooking ) {
 				return $template;
-			}
-			$host_meta       = get_user_meta( $get_booking->host_id, '_tfhb_host', true );
+			} 
 			$custom_template = load_template(
 				THB_PATH . '/app/Content/Template/meeting-cencel.php',
 				false,
 				array(
-					'host'         => $host_meta,
-					'booking_data' => $get_booking,
+					'attendeeBooking'         => $attendeeBooking, 
 				)
 			);
 			return $custom_template;
