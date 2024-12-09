@@ -100,8 +100,8 @@ class ZoomServices {
 		
 		$BookingMeta = new BookingMeta();
 		// check if the meeting id is available
-		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->id, 'zoom_meeting' ); 
-	
+		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'zoom_meeting' ); 
+		
 
 		if ( $get_booking_meta ) { 
 			// if the meeting id is available then update the meeting and add the attendees data
@@ -130,14 +130,15 @@ class ZoomServices {
 		$new_events_data = array();
 		foreach ($events as $key => $event) { 
 			$attendees = json_decode( $booking->attendees, true );
-			$attendees_data = array();
-			foreach ( $attendees as $attendee ) {
-				$attendees_data[] = array(
-					'email' => $attendee['email'],
-					'name'  => $attendee['name'],
-				);
-			}
+			$attendees_data = $event['settings']['meeting_invitees']; 
+			
+			$attendees_data[] = array(
+				'email' => $booking->email,
+				'name'  => $booking->attendee_name,
+			);
+			
 			$event['settings']['meeting_invitees'] = $attendees_data;
+			
 			$response = wp_remote_request(
 				'https://api.zoom.us/v2/meetings/' . $event['id'],
 				array(
@@ -153,9 +154,11 @@ class ZoomServices {
 			if ( is_wp_error( $response ) ) {
 				return $response; // Return the WP_Error object
 			}
+
+		
 			$response_body = wp_remote_retrieve_body( $response );
-			$new_events_data[$key] = json_decode( $response_body, true );
-		} 
+			$events[$key] = $event;
+		}  
 
 		$bookingMetaData = array(
 			'id' => $get_booking_meta->id,
@@ -500,7 +503,7 @@ class ZoomServices {
 			
 		}
 		$bookingMetaData = array(
-			'booking_id' => $booking->id,
+			'booking_id' => $booking->booking_id,
 			'meta_key'   => 'zoom_meeting',
 			'value'      => wp_json_encode( $zoom_event_body, true ),
 		);
@@ -557,22 +560,23 @@ class ZoomServices {
 
 	public function zoomMeetingBody( $booking) {
 		$meeting_dates = explode( ',', $booking->meeting_dates );
-
-		$attendees = json_decode( $booking->attendees, true );
+ 
 		$event_data = array();
 
 		$attendees_data = array();
-		foreach ( $attendees as $attendee ) {
-			$attendees_data[] = array(
-				'email' => $attendee['email'],
-				'name'  => $attendee['name'],
-			);
-		}
+		$attendees_data[] = array(
+			'email' => $booking->host_email,
+			'name'  => $booking->host_first_name,
+		);
+		$attendees_data[] = array(
+			'email' => $booking->email,
+			'name'  => $booking->attendee_name,
+		);
 
 		foreach($meeting_dates as $meeting_date){ 
 			$start_time_combined = $meeting_date . ' ' . $booking->start_time;
 		
-			$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $booking->host_time_zone ) ? $booking->host_time_zone : '') );
+			$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $booking->availability_time_zone ) ? $booking->availability_time_zone : '') );
 			$date->setTimezone( new \DateTimeZone('UTC') );
 			$time_in_24_hour_format = $date->format('H:i:s');
 

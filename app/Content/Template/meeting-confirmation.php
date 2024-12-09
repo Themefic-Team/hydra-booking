@@ -66,9 +66,9 @@ $availability_data = $date_time->GetAvailabilityData($data);
 					$date_strings .= $formate_date->format('l, F j');
 					$date_strings .= '| ';
 				}
-				$date_strings = rtrim( $date_strings, '| ' );
+				$date_strings = rtrim( $date_strings, '| ' ); 
 
-					echo ! empty( $start_time->format('h:i A') ) ? '' . esc_html( $start_time->format('h:i A') ) . ' - ' . esc_html( $start_time->format('h:i A') ) . ', ' . esc_html( $date_strings ) . '' : ''
+					echo ! empty( $start_time->format('h:i A') ) ? '' . esc_html( $start_time->format('h:i A') ) . ' - ' . esc_html( $end_time->format('h:i A') ) . ', ' . esc_html( $date_strings ) . '' : ''
 				?>
 			</li>
 			<?php } ?>

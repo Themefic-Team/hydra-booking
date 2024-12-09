@@ -107,13 +107,13 @@ class Attendees {
 			$request,
 			array( 'id' => $id )
 		);
-
+ 
 		if ( $result === false ) {
 			return false;
 		} else {
 			return array(
 				'status'    => true,
-				'update_id' => $wpdb->insert_id,
+				'update_id' =>  $id,
 			);
 		}
 	}
@@ -129,6 +129,7 @@ class Attendees {
 		$meeting_table = $wpdb->prefix . 'tfhb_meetings';  
 		$host_table =  $wpdb->prefix . 'tfhb_hosts';
 		$sql = "SELECT attendees.*,
+			booking.post_id as post_id,
 			booking.meeting_dates,
 			booking.start_time,
 			booking.end_time,
@@ -143,11 +144,12 @@ class Attendees {
 			meeting.availability_id as availability_id, 
 			meeting.availability_type as availability_type, 
 			host.first_name as host_first_name,
-			host.last_name as host_last_name
+			host.last_name as host_last_name,
+			host.email as host_email
 			FROM $table_name as attendees
 			LEFT JOIN $booking_table as booking ON attendees.booking_id = booking.id
 			LEFT JOIN $meeting_table as meeting ON booking.meeting_id = meeting.id
-			LEFT JOIN $host_table as host ON booking.host_id = host.id ";
+			LEFT JOIN $host_table as host ON attendees.host_id = host.id ";
 			
 			$data = [];
 			if($where != null) {
@@ -155,13 +157,21 @@ class Attendees {
 				foreach ($where as $condition) {
 					$field = 'attendees.'.$condition[0];
 					$operator = $condition[1];
-					$value = $condition[2];
-					$sql .= " AND $field $operator %s";
+					$value = $condition[2]; 
+					// first time where clause and others are and 
+					if($condition === reset($where)) {
+						$sql .= " WHERE $field $operator %s";
+					} else {
+						$sql .= " AND $field $operator %s";
+					}
 					$data[] = $value;
+
 				} 
 			} 
 
-			$sql .= "GROUP BY booking.id ";
+			
+
+			// $sql .= " GROUP BY booking.id ";
 			
 			if($orderBy != null) {
 				$sql .= " ORDER BY booking.id $orderBy";
@@ -183,8 +193,7 @@ class Attendees {
 				
 			} else {
 				$results = $wpdb->get_results($query);
-			} 
-
+			}  
 		return $results;
 	}
 	

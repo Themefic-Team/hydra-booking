@@ -259,6 +259,7 @@ class GoogleCalendar {
 	// Insert Booking to Google Calendar
 	public function InsertGoogleCalender($booking ) {
 		
+		
 		$value = array();
 	
 		if ( ! isset( $booking->id ) ) {
@@ -297,15 +298,11 @@ class GoogleCalendar {
 		$meeting_dates = explode( ',', $meeting_dates );
  
 		$google_calendar_body = array(); 
-
-		$attendees = json_decode($booking->attendees); 
+ 
 		$attendees_data = array();
 		$attendees_data[] = array('email' => $booking->host_email);
-		foreach($attendees as $attendee){
-			$attendees_data[] = array('email' => $attendee->email);
-		}
-		$get_last_attendee = end($attendees);
-		$attendees_time_zone = $get_last_attendee->attendee_time_zone;
+		$attendees_data[] = array('email' => $booking->email); 
+		$attendees_time_zone = $booking->attendee_time_zone;
 
 		// Check if meeting location is meet
 		$meeting_loaction = json_decode( $booking->meeting_locations, true );
@@ -419,7 +416,7 @@ class GoogleCalendar {
 		);
 
 		$booking_meta = array(
-			'booking_id' => $booking->id,
+			'booking_id' => $booking->booking_id,
 			'meta_key'   => 'booking_calendar',
 			'value'      => wp_json_encode( $value, true ),
 		);
@@ -440,11 +437,12 @@ class GoogleCalendar {
 				$meet_link .= $hangoutLink . ' | ';
 			}
 		} 
+		
  
 		
 		$getBooking = new Booking();
 		if($meet_link != '' && $enable_meeting_location == true ){
-			$getBookingData = $getBooking->get( $booking->id ); 
+			$getBookingData = $getBooking->get( $booking->booking_id ); 
 			$meeting_loaction  = json_decode($getBookingData->meeting_locations); 
 			
 			// remove the last pipe
@@ -460,9 +458,9 @@ class GoogleCalendar {
 		}
 		$meeting_loaction =   $booking->meeting_locations; 
 		$meeting_locations = is_array($meeting_loaction) ?  json_decode($meeting_loaction)  :  $meeting_loaction;
-	 
+		 
 		$updateData = array();
-		$updateData['id']               = $booking->id; 
+		$updateData['id']               = $booking->booking_id; 
 		$updateData['meeting_locations'] = $meeting_locations; 
 
 		$getBooking->update( $updateData );
@@ -481,7 +479,8 @@ class GoogleCalendar {
 			return;
 		}
 		$BookingMeta = new BookingMeta();
-		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->id, 'booking_calendar' );  
+		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'booking_calendar' );  
+		 
 		if($get_booking_meta){
 			$this->addAttendeeGoogleCalender($booking, $get_booking_meta);	
 		}else{
@@ -567,26 +566,18 @@ class GoogleCalendar {
 
 	// add new attendee existing Booking to Google Calendar
 	public function addAttendeeGoogleCalender( $booking, $BookingMeta) {
- 
 		// Set the Access Token
 		$this->refreshToken( $booking->host_id );
 		$events =  json_decode($BookingMeta->value);
 		$events = $events->google_calendar; 
 		$host = new Host();
-		$hostData = $host->get( $booking->host_id );
-		$new_attendees = array();
-		$attendees = json_decode($booking->attendees);
-		$new_attendees[] = array('email' => $booking->host_email);
-		foreach($attendees as $attendee){
-			$new_attendees[] = array('email' => $attendee->email);
-		}
-
+		$hostData = $host->get( $booking->host_id ); 
 
 		$google_calendar_body = array();
 		foreach ( $events as $event ) {
 			$event_id = $event->id;
  
-			$event->attendees = $new_attendees;
+			$event->attendees[] = array('email' => $booking->email);; 
 
 			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
@@ -609,7 +600,7 @@ class GoogleCalendar {
 				$google_calendar_body[] = json_decode( $body, true ); 
 			} 
 		} 
-		
+		 
 		$value = array(
 			'google_calendar' => $google_calendar_body,
 		);
