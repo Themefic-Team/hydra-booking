@@ -363,6 +363,21 @@ class Booking {
 			} else {
 				$results = $wpdb->get_results($query);
 			} 
+
+			
+			if($results){
+				// if its not row
+				if($limit > 1 ||  $limit == null) {
+					foreach ($results as $key => $result) {
+						$attendees = json_decode($result->attendees);
+						$results[$key]->attendees = $attendees;
+					}
+				} 
+				if($limit == 1 && $limit != null) {
+					$attendees = json_decode($results->attendees);
+					$results->attendees = $attendees;
+				}
+			}
  
 
 		// Return the results

@@ -20,7 +20,7 @@ class UpdateController {
         // $this->update_1_0_9();
 
         $booking = new Booking();
-        $get_booking = $booking->getBookingWithAttendees();
+        // $get_booking = $booking->getBookingWithAttendees();
         // tfhb_print_r($get_booking);
 		 
 	} 

@@ -344,6 +344,7 @@ class MailHooks {
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $attendees->host_id );
 
+
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
 			// Host ReSchedule Email, If Settings Enable for Host ReSchedule
@@ -354,9 +355,10 @@ class MailHooks {
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_reminder']['subject'] ) ? $_tfhb_notification_settings['host']['booking_reminder']['subject'] : 'Booking ReSchedule';
 				
+		
 				// Replace Shortcode to Values
 				$subject = $this->replace_mail_tags( $subject, $attendees->id );
-
+				// tfhb_print_r($subject);
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_reminder']['body'] ) ? $_tfhb_notification_settings['host']['booking_reminder']['body'] : '';
@@ -379,6 +381,7 @@ class MailHooks {
 
 			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['status'] ) ) {
+				
 				// From Email
 				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['form'] : get_option( 'admin_email' );
 
@@ -398,8 +401,7 @@ class MailHooks {
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
 
 				// Attendee Email
-				$mailto = ! empty( $attendees->email ) ? $attendees->email : '';
-
+				$mailto = ! empty( $attendees->email ) ? $attendees->email : ''; 
 				$headers = array(
 					'Reply-To: ' . $replyTo,
 				);

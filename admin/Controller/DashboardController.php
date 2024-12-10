@@ -173,6 +173,8 @@ class DashboardController {
 		$previous_earning = $transactions->totalEarning($previous_date_before,  $previous_date, ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false);
 		// tfhb_print_r($earning);
 		$total_earning['total']      = !empty($earning) ? $earning : 0;
+		// make only 2 decimal after dots exp 10.00
+		$total_earning['total'] = number_format( $total_earning['total'], 2 );
 		$total_earning_previous      = $previous_earning;
 		$total_earning['percentage'] = $total_earning_previous != 0 ? 100 * ( $total_earning['total'] - $total_earning_previous ) / $total_earning_previous : 100;
 		// make only 2 decimal after dots exp 10.00
