@@ -46,7 +46,7 @@ $availability_time_zone = $availability_data['time_zone'];
         
             $start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone, '' );
             
-            $end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone, '' );
+            $end_time   = $date_time->convert_time_based_on_timezone($date, $end_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone, '' );
             
          
 

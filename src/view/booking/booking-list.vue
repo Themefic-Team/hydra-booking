@@ -461,6 +461,11 @@ const activeSingleAttendeeAction = (id) => {
     activeAttendeeAction.value = id; 
 
 }
+const goForReschedule = (attendee) => {
+  
+    let url = tfhb_core_apps.admin_url+'/?hydra-booking=booking&hash='+attendee.hash+'&meetingId='+attendee.meeting_id+'&type=reschedule';
+    window.open(url, '_blank');
+}
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -688,7 +693,7 @@ const activeSingleAttendeeAction = (id) => {
                                             <span @click.stop="SendAttendeeReminder(attendee)">
                                                 <Icon name="AlarmClock" width="20" />
                                             </span>
-                                            <span @click.stop="bookingReminder(attendee)">
+                                            <span @click.stop="goForReschedule(attendee)">
                                                 <Icon name="RefreshCcw" width="20" />
                                             </span>
                                             <div  @click="activeSingleAttendeeAction(attendee.id)" class="tfhb-single-hosts-action tfhb-dropdown">

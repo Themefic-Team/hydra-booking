@@ -674,16 +674,7 @@ class BookingController {
 			);
 		}
 
-		foreach( $single_booking->attendees as $attendee_items ){
-			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
-			array(
-				array('id', '=', $attendee_items->id),
-			),
-			1,
-			'DESC'
-			); 
-			do_action( 'hydra_booking/send_booking_reminder', $attendeeBooking );
-		}
+		do_action( 'hydra_booking/send_booking_reminder', $single_booking );
 
 
 		// Return response
@@ -877,6 +868,7 @@ class BookingController {
 
 	// Update Booking Information
 	public function updateBooking() {
+		
 		$request       = json_decode( file_get_contents( 'php://input' ), true );
 		$booking_id    = $request['id'];
 		$booking_owner = $request['host'];
@@ -964,6 +956,7 @@ class BookingController {
 			);
 		}
 
+		
 		// Single Booking
 		// $single_booking_meta = $booking->get(['id'=>$request['id']],false, true);
 		// $single_booking_meta = $booking->get($request['id'], false, true);
@@ -973,32 +966,24 @@ class BookingController {
 		);
 		 $single_booking_meta = $booking->getBookingWithAttendees(  
 			$where,
-			null,
+			1,
 			'DESC',
 		); 
-		foreach ($single_booking_meta->attendees as $attendee_items) { 
-			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
-			array(
-				array('id', '=', $attendee_items->id),
-			),
-			1,
-			'DESC'
-			); 
-			if ( 'confirmed' == $request['status'] ) {
-		 
-				do_action( 'hydra_booking/after_booking_completed', $attendeeBooking );
-			}
-	
-			if ( 'pending' == $request['status'] ) {
-				do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
-			}
-			if ( 'canceled' == $request['status'] ) { 
-				do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
-			}
-	
-			if ( 'schedule' == $request['status'] ) {
-				do_action( 'hydra_booking/after_booking_schedule', $attendeeBooking );
-			}
+
+		
+		if ( 'confirmed' == $request['status'] ) {
+			do_action( 'hydra_booking/send_booking_with_all_attendees_confirmed', $single_booking_meta );
+		}
+
+		if ( 'pending' == $request['status'] ) {
+			do_action( 'hydra_booking/send_booking_with_all_attendees_pending', $single_booking_meta );
+		}
+		if ( 'canceled' == $request['status'] ) { 
+			do_action( 'hydra_booking/send_booking_with_all_attendees_canceled', $single_booking_meta );
+		}
+
+		if ( 'schedule' == $request['status'] ) {
+			do_action( 'hydra_booking/send_booking_with_all_attendees_schedule', $single_booking_meta );
 		}
 	
 

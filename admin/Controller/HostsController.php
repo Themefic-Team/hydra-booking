@@ -829,17 +829,19 @@ class HostsController {
 			$_tfhb_host_integration_settings['zoho']['access_token']  = sanitize_text_field( $data['access_token'] );
 			$_tfhb_host_integration_settings['zoho']['refresh_token'] = sanitize_text_field( $data['refresh_token'] );
 			$_tfhb_host_integration_settings['zoho']['modules']       = wp_json_encode( $data['modules'] );
-
+			
 			// update User Meta
-			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings, true );
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
 
 			 
 			$responseData['status'] = true;
 			$responseData['message'] = esc_html(__('Zoho Settings Updated Successfully', 'hydra-booking')); 
 			 
 		}
+		
 		// Get Updated Data
 		$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings', true );
+		 
 		$responseData['host_integration_settings'] = $_tfhb_host_integration_settings; 
 		return rest_ensure_response( $responseData );
 	}

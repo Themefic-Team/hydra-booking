@@ -295,6 +295,8 @@ class Booking {
 				JSON_ARRAYAGG(
 					JSON_OBJECT(
 						'id', attendee.id,
+						'booking_id', attendee.booking_id,
+						'meeting_id', attendee.meeting_id,
 						'hash', attendee.hash,
 						'attendee_time_zone', attendee.attendee_time_zone,
 						'attendee_name', attendee.attendee_name,

@@ -473,13 +473,14 @@
 		}
 
 
-		function tfhb_render_stripe_payment($this, responseData, stripe_public_key, payment_currency, meeting_title) {
+		function tfhb_render_stripe_payment($this, responseData, stripe_public_key, meeting_title) {
 			$this.find('.tfhb-confirmation-button').hide();
 		
 			// Add Stripe Payment Button
 			const stripeButtonContainer = $this.find('.tfhb-stripe-button-container');
 			stripeButtonContainer.html("<a href='#' class='tfhb-stripe-payment-btn'>Pay With Stripe</a>");
 			stripeButtonContainer.show();
+		
 			var confirmation_template = responseData.confirmation_template;
 			// if tfhb_app_booking.general_settings.currency is not undefined then set the currency
 			
@@ -534,7 +535,7 @@
 				handler.open({
 					name: meeting_title,
 					amount: responseData.data.meeting.meeting_price * 100,
-					currency: payment_currency,
+					currency: currency,
 				});
 			});
 		
@@ -579,7 +580,7 @@
 		   var payment_amount = $this.find("#payment_amount").val();
 		   var stripe_public_key = $this.find("#stpublic_key").val();
 		   var paypal_public_key = $this.find("#paypal_public_key").val();
-		   var payment_currency = $this.find("#payment_currency").val();
+		   var payment_currency = $this.find("#payment_currency").val(); 
 
 		//    Payment Status
 		   var payment_status = calenderData.payment_status;
@@ -643,7 +644,7 @@
 								return
 							}
 							if(payment_status == 1 && "stripe_payment" == payment_type && response.data.data){
-								tfhb_render_stripe_payment($this, response.data, stripe_public_key, payment_currency, meeting_title);
+								tfhb_render_stripe_payment($this, response.data, stripe_public_key, meeting_title);
 								return
 							}
 						   if(response.data.redirect){

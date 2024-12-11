@@ -171,7 +171,7 @@ class DateTimeController extends \DateTimeZone {
 					1,
 					'DESC' 
 				); 
-				$attendees = json_decode($check_booking->attendees); 
+				$attendees = $check_booking->attendees;
 
 				if ( count( $attendees ) != $max_book_per_slot ) {
 					continue;
