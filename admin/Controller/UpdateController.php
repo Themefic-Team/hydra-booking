@@ -18,10 +18,7 @@ class UpdateController {
 
         // update version 1.0.8 to 1.0.9.
         // $this->update_1_0_9();
-
-        $booking = new Booking();
-        // $get_booking = $booking->getBookingWithAttendees();
-        // tfhb_print_r($get_booking);
+ 
 		 
 	} 
 
@@ -47,7 +44,7 @@ class UpdateController {
             }
             // tfhb_print_r('Update 1.0.5 to 1.0.6');
             $Attendees = new Attendees();
-            // $Attendees->migrate();
+            $Attendees->migrate();
 
             // get all booking data
             $Booking_data = new Booking(); 
@@ -74,7 +71,7 @@ class UpdateController {
                             $Booking_data->delete($booking->id);
                         }
 
-                        // $booking->delete($booking->id);
+                        $booking->delete($booking->id);
                     }
                 }
                 
@@ -147,7 +144,7 @@ class UpdateController {
             // tfhb_print_r($wpdb->last_query);
 
             // update version
-            // update_option('tfhb__update_status', '1.0.4');
+            update_option('tfhb__update_status', '1.0.4');
 
             
             

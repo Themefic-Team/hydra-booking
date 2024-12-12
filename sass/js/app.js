@@ -138,8 +138,6 @@
 						// Add with animation when data available
 						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + '</span> </li>');
 
-
-						
 					}
 				}else{
 					$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span>No time slot available in this date ! Try another date.</span> </li>');
