@@ -128,14 +128,21 @@
 				$this.find('.tfhb-meeting-times .tfhb-select-date').html(selected_date_format); 
 				// get selected date calenderData.calander_available_time_slot
 				var selected_date_time_slot = calenderData.calander_available_time_slot[selected_date]; 
-				for (var i = 0; i < selected_date_time_slot.length; i++) { 
+				// if selected_date_time_slot is not empty
+				// then append the time slot
+				// else show the message
+				if(selected_date_time_slot.length > 0){
+					for (var i = 0; i < selected_date_time_slot.length; i++) { 
 
-					// Remove 
-					// Add with animation when data available
-					$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + '</span> </li>');
+						// Remove 
+						// Add with animation when data available
+						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + '</span> </li>');
 
 
-					
+						
+					}
+				}else{
+					$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span>No time slot available in this date ! Try another date.</span> </li>');
 				}
 
 				$this.find('.tfhb-calendar-dates li').removeClass('active');  

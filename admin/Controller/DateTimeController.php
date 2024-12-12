@@ -184,10 +184,10 @@ class DateTimeController extends \DateTimeZone {
 			$start_time = $this->convert_time_based_on_timezone( $meeting_date, $start_time, $time_zone, $selected_time_zone, $selected_time_format );
 			$end_time   = $this->convert_time_based_on_timezone( $meeting_date, $end_time, $time_zone, $selected_time_zone, $selected_time_format );
 
-			// $disabled_times[] = array(
-			// 	'start' => $start_time,
-			// 	'end'   => $end_time,
-			// );
+			$disabled_times[] = array(
+				'start' => $start_time,
+				'end'   => $end_time,
+			);
 
 		}
 	 
@@ -266,6 +266,13 @@ class DateTimeController extends \DateTimeZone {
 		$after_diff = $buffer_time_after * 60; // Convert to seconds
 		$meeting_interval = $meeting_interval * 60; // Convert to seconds
 		$total_diff = $diff + $before_diff + $after_diff;
+
+		// if selected date is same as current then skip the time which is less than current time
+		if ( $selected_date == date( 'Y-m-d' ) ) {
+			$current = new \DateTime();
+			$current->setTimezone( new \DateTimeZone( $selected_time_zone ) );
+			$current = $current->modify("+{$skip_before_meeting_start} seconds");
+		}
 	
 		// Loop through the time range
 		while ($current < $end) {

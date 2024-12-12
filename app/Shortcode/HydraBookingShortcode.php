@@ -44,16 +44,7 @@ class HydraBookingShortcode {
 		
 	}
 
-	// Test Wp Mail Sent
-	public function tfhdb_wp_mail_sent() {
-		$to          = 'sydurrahmant1@gmail.com';
-		$subject     = 'Hello World';
-		$body        = 'Allah Mohan';
-		$headers     = array();
-		$attachments = array();
-
-		wp_mail( $to, $subject, $body, $headers, $attachments );
-	}
+ 
 
 	public function hydra_booking_shortcode( $atts ) {
 
@@ -337,10 +328,7 @@ class HydraBookingShortcode {
 		$start_time =  $start_time->format( 'h:i A' );
 		$end_time =  $end_time->format( 'h:i A' );
 
-		
-	 
-
-		
+ 
 		$data['host_id']            = isset( $_POST['host_id'] ) ? sanitize_text_field( $_POST['host_id'] ) : 0;
 		$data['attendee_id']        = isset( $_POST['attendee_id'] ) ? sanitize_text_field( $_POST['attendee_id'] ) : 0;
 		$data['hash']               = $meeting_hash; 
@@ -467,7 +455,6 @@ class HydraBookingShortcode {
 
 			$data['meeting_dates'] = apply_filters( 'hydra_booking/calculate_recurring_meeting_dates', $meeting_dates, $meta_data );
  
-
 		}
 
 		
@@ -762,6 +749,11 @@ class HydraBookingShortcode {
 			'DESC'
 		); 
 		
+		$old_booking_id = 0;
+
+		if($attendeeBooking){
+			$old_booking_id = $attendeeBooking->booking_id;
+		}
  
 		
 		if(!$attendeeBooking){
@@ -773,9 +765,9 @@ class HydraBookingShortcode {
 		if($attendeeBooking->status == 'cancelled'){
 			wp_send_json_error( array( 'message' => esc_html(__('Booking is already cancelled', 'hydra-booking')) ) );
 		}
-		if($attendeeBooking->status == 'rescheduled'){
-			wp_send_json_error( array( 'message' => esc_html(__('Booking is already rescheduled', 'hydra-booking')) ) );
-		}
+		// if($attendeeBooking->status == 'rescheduled'){
+		// 	wp_send_json_error( array( 'message' => esc_html(__('Booking is already rescheduled', 'hydra-booking')) ) );
+		// }
 		// Get Post Meta
 		$booking_meta = get_post_meta( $attendeeBooking->post_id, '_tfhb_booking_opt', true );
 		
@@ -800,12 +792,11 @@ class HydraBookingShortcode {
 				}
 			}
 		}
-
+	
 		$attendee_update = array();
 		if($check_booking){
 			// update attende booking id
 			$attendee_update['booking_id'] = $check_booking->id;
-
 			// update booking id into attendee
 
 		}else{
@@ -830,15 +821,17 @@ class HydraBookingShortcode {
 	 
 		$confirmation_template = $this->tfhb_booking_confirmation( $attendeeBooking->id);
 
-		$single_booking = $booking->getBookingWithAttendees( 
+		 
+		 $attendeeBooking =  $Attendee->getAttendeeWithBooking( 
 			array(
-				array('id', '=', $attendeeBooking->booking_id),
+				array('id', '=', $attendeeBooking->id),
 			),
 			1,
-		 );
+			'DESC'
+		); 
 
  
-		do_action( 'hydra_booking/after_booking_schedule', $single_booking );
+		do_action( 'hydra_booking/after_booking_schedule', $old_booking_id, $attendeeBooking );
 
 	 
 

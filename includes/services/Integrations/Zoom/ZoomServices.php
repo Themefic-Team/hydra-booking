@@ -57,8 +57,7 @@ class ZoomServices {
 
 	}
 
-	// Generate Access Token.
-
+	// Generate Access Token. 
 	public function generateAccessToken() {
 		// Fetch the access token
 		$body    = array(
@@ -118,7 +117,7 @@ class ZoomServices {
  
 	}
 
-	// Add new Attendee to Zoom Meeting
+	// Add new Attendee to Zoom Meeting.
 	public function tfhb_add_attendee_to_zoom_meeting( $booking, $get_booking_meta ) {
 
 		$this->setHostApiDetails( $booking->host_id ); 
@@ -170,7 +169,54 @@ class ZoomServices {
 
 	}
 
-	// Cancel Zoom Meeting
+	// Remove Attendee from Zoom Meeting.
+	public function remove_attendde_location_from_existing_booking($booking_data, $attendee){
+
+		$this->setHostApiDetails( $booking_data->host_id );
+		$access_response = $this->generateAccessToken();
+		$BookingMeta = new BookingMeta();
+		$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'zoom_meeting' );
+		$events = json_decode( $booking_meta->value, true );
+
+		$new_events_data = array();
+		foreach ($events as $key => $event) { 
+			$attendees = json_decode( $booking_data->attendees, true );
+			$attendees_data = $event['settings']['meeting_invitees']; 
+			
+			$attendees_data = array_filter($attendees_data, function($value) use ($attendee) {
+				return $value['email'] != $attendee->email;
+			});
+			$event['settings']['meeting_invitees'] = $attendees_data; 
+			$response = wp_remote_request(
+				'https://api.zoom.us/v2/meetings/' . $event['id'],
+				array(
+					'method'  => 'PATCH',
+					'body'    => wp_json_encode( $event ),
+					'headers' => array(
+						'Authorization' => 'Bearer ' . $access_response['access_token'],
+						'Content-Type'  => 'application/json',
+					),
+				)
+			);
+			// Handle the response
+			if ( is_wp_error( $response ) ) {
+				return $response; // Return the WP_Error object
+			}
+
+			$response_body = wp_remote_retrieve_body( $response );
+			$events[$key] = $event;
+		}  
+
+		$bookingMetaData = array(
+			'id' => $booking_meta->id,
+			'value'      => wp_json_encode( $events, true ),
+		);
+
+		$BookingMeta->update( $bookingMetaData );
+ 
+	}
+
+	// Cancel Zoom Meeting.
 	public function tfhb_cancel_zoom_meeting( $single_booking_meta ) {
 
 		$this->setHostApiDetails( $single_booking_meta->host_id );
@@ -214,14 +260,14 @@ class ZoomServices {
 		$booking = new Booking();
 		$getBookingData = $booking->get( $single_booking_meta->id );
 
-		$meeting_locations = json_decode( $getBookingData->meeting_locations );
+		$meeting_locations = $getBookingData->meeting_locations;
 
 		$meeting_locations->zoom->address = array(
 			'link' => '',
 			'password' => '',
 		);
 
-		$meeting_locations = is_array($meeting_locations) ?  json_decode($meeting_locations)  :  $meeting_locations;
+		$meeting_locations = !is_array($meeting_locations) ?  json_decode($meeting_locations)  :  $meeting_locations;
 
 		$update                     = array();
 		$update['id']               = $single_booking_meta->id;
@@ -233,7 +279,7 @@ class ZoomServices {
 	}
 
 
-	// reshedule Zoom Meeting
+	// reshedule Zoom Meeting.
 	public function tfhb_reshedule_zoom_meeting( $single_booking_meta ) {
 		
 
@@ -322,7 +368,7 @@ class ZoomServices {
 
 		$getBookingData = $booking->get( $single_booking_meta->id );
 			
-		$meeting_locations =  json_decode( $getBookingData->meeting_locations );
+		$meeting_locations =  $getBookingData->meeting_locations;
 		 
 	 
 		$zoom_link = '';
@@ -338,7 +384,7 @@ class ZoomServices {
 		);
 
 	 
-		$meeting_locations = is_array($meeting_locations) ?  json_decode($meeting_locations)  :  $meeting_locations;
+		$meeting_locations = !is_array($meeting_locations) ?  json_decode($meeting_locations)  :  $meeting_locations;
 		
 	 
 		$update                     = array();
@@ -556,9 +602,10 @@ class ZoomServices {
 	}
 
 
+
  
 
-	public function zoomMeetingBody( $booking) {
+	public function zoomMeetingBody( $booking) { 
 		$meeting_dates = explode( ',', $booking->meeting_dates );
  
 		$event_data = array();
@@ -573,20 +620,25 @@ class ZoomServices {
 			'name'  => $booking->attendee_name,
 		);
 
+		// Calculate duration
+		$duration = $booking->duration + $booking->buffer_time_before + $booking->buffer_time_after + $booking->meeting_interval;
+		 
+
+
 		foreach($meeting_dates as $meeting_date){ 
 			$start_time_combined = $meeting_date . ' ' . $booking->start_time;
 		
 			$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $booking->availability_time_zone ) ? $booking->availability_time_zone : '') );
 			$date->setTimezone( new \DateTimeZone('UTC') );
 			$time_in_24_hour_format = $date->format('H:i:s');
-
+		
 			
 			$data = array(
 				'topic'      => ! empty( $booking->title ) ? $booking->title : '',
 				'type'       => 2, // Scheduled Meeting
 				'start_time' => $meeting_date . 'T' . $time_in_24_hour_format . 'Z',
 				'timezone'   => ! empty( $booking->host_time_zone ) ? $booking->host_time_zone : '',
-				'duration'   => $booking->duration,
+				'duration'   => $duration,
 				'password'   => '123456',
 				'settings'   => array(
 					'join_before_host' => true,
