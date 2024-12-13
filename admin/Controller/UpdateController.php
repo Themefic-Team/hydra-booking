@@ -17,7 +17,7 @@ class UpdateController {
 	public function __construct() {  
 
         // update version 1.0.8 to 1.0.9.
-        // $this->update_1_0_9();
+        $this->update_1_0_11();
  
 		 
 	} 
@@ -29,11 +29,11 @@ class UpdateController {
      * @since 1.0.9
      */
 
-     public function update_1_0_9() { 
+     public function update_1_0_11() { 
 
         $tfhb_update_status = get_option('tfhb_update_status', false); 
           
-        if( $this->version == '1.0.4' && $tfhb_update_status != '1.0.4' ) { 
+        if( $this->version == '1.0.11' && $tfhb_update_status != '1.0.11' ) { 
 
             // Add column in transaction table
             global $wpdb;
@@ -71,7 +71,7 @@ class UpdateController {
                             $Booking_data->delete($booking->id);
                         }
 
-                        $booking->delete($booking->id);
+                        // $booking->delete($booking->id);
                     }
                 }
                 
@@ -144,7 +144,7 @@ class UpdateController {
             // tfhb_print_r($wpdb->last_query);
 
             // update version
-            update_option('tfhb__update_status', '1.0.4');
+            update_option('tfhb_update_status', '1.0.11');
 
             
             
