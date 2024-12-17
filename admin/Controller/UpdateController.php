@@ -134,10 +134,13 @@ class UpdateController {
                 DROP COLUMN payment_method,
                 DROP COLUMN payment_status,
                 -- add column
-                ADD COLUMN availability_time_zone  VARCHAR(255) NOT NULL AFTER meeting_dates,
+                ADD COLUMN availability_time_zone  VARCHAR(255) NOT NULL AFTER meeting_dates
                 ",
                 
             );
+
+          
+ 
 
             // Add column in booking table
             

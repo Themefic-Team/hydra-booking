@@ -699,6 +699,7 @@ class BookingController {
 			);
 		}
 
+	
 		// Get Booking Data
 		$Attendee =  new Attendees();
 		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
@@ -707,8 +708,7 @@ class BookingController {
 			),
 			1,
 			'DESC'
-		 ); 
-
+		 );  
 		if( empty( $attendeeBooking ) ){
 			return rest_ensure_response(
 				array(

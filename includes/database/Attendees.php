@@ -197,6 +197,7 @@ class Attendees {
 			} else {
 				$results = $wpdb->get_results($query);
 			}  
+ 
 		return $results;
 	}
 	
