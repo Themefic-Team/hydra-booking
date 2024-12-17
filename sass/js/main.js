@@ -10,6 +10,7 @@
             
             data.append('action', 'tfhb_meeting_form_cencel'); 
             data.append('nonce', tfhb_app_booking.nonce); 
+            $this.find('.tfhb-notice').remove();
             $.ajax({
                 url: tfhb_app_booking.ajax_url, 
                 type: 'POST',

@@ -5,6 +5,7 @@ use HydraBooking\Admin\Controller\Enqueue;
 use HydraBooking\Admin\Controller\AdminMenu;
 use HydraBooking\Admin\Controller\AvailabilityController;
 use HydraBooking\Admin\Controller\Notification;
+use HydraBooking\Admin\Controller\UpdateController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Migration\Migration;
 
@@ -29,6 +30,9 @@ class Admin {
 
 		// availability controller
 		new AvailabilityController();
+
+		// update controller
+		new UpdateController();
 
 		// Notification controller
 		// new Notification();

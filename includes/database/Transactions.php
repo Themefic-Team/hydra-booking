@@ -22,6 +22,7 @@ class Transactions {
 			$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT,
                 booking_id INT(11) NOT NULL,
+                attendee_id INT(11) NOT NULL,
                 meeting_id INT(11) NOT NULL,
 				host_id INT(11) NOT NULL,
                 customer_id VARCHAR(100) NULL,
@@ -53,16 +54,16 @@ class Transactions {
 	public function add( $request ) {
 
 		global $wpdb;
-
+ 
 		$table_name                    = $wpdb->prefix . $this->table;
-		$request['transation_history'] = wp_json_encode( $request['transation_history'] );
+		$request['transation_history'] = is_array( $request['transation_history'] ) ? json_encode( $request['transation_history'], true ) : $request['transation_history'];
 
 		// insert transactions
 		$result = $wpdb->insert(
 			$table_name,
 			$request
 		);
-
+ 
 		if ( $result === false ) {
 			return false;
 		} else {

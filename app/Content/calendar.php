@@ -12,6 +12,9 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */ 
+
+use HydraBooking\Admin\Controller\DateTimeController;
+ 
 $atts          = isset( $args['atts'] ) ? $args['atts'] : array();
 $meeting          = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host 		   = isset( $args['host'] ) ? $args['host'] : array();
@@ -19,6 +22,11 @@ $time_zone = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
 $booking_data = isset( $args['booking_data'] ) ? $args['booking_data'] : array();  
 $general_settings = isset( $args['general_settings'] ) ? $args['general_settings'] : array();  
 $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
+
+
+$date_time = new DateTimeController( 'UTC' );
+$availability_data = $date_time->GetAvailabilityData($booking_data);  
+$availability_time_zone = $availability_data['time_zone']; 
 
 	// Before Load the Calendar.
     do_action( 'hydra_booking/before_meeting_render', $meeting );
@@ -29,18 +37,30 @@ $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
         <?php
 
         if ( ! empty( $booking_data ) && 'reschedule' == $atts['type'] ) {
-            // Load Reschedule Template
+           
+            
+            $meeting_dates = explode( ',', $booking_data->meeting_dates );
+            $start_time = $booking_data->start_time;
+            $end_time = $booking_data->end_time;
+            $date = $meeting_dates[0]; 
+        
+            $start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone, '' );
+            
+            $end_time   = $date_time->convert_time_based_on_timezone($date, $end_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone, '' );
+            
+         
+
+             // Load Reschedule Template
             // You are rescheduling the booking: 3:15 pm - 3:30 pm, May 27, 2024 (Asia/Dhaka)
             echo '<div class="tfhb-reschedule-box">';
-            echo '<p>' . esc_html__( 'You are rescheduling the booking:', 'hydra-booking' ) . ' ' . esc_html( $booking_data->start_time ) . ' - ' . esc_html( $booking_data->end_time ) . ', ';
-
-            $meeting_dates = explode( ',', $booking_data->meeting_dates );
-   
+            echo '<p>' . esc_html__( 'You are rescheduling the booking:', 'hydra-booking' ) . ' ' . esc_html( $start_time->format('h:i A') ) . ' - ' . esc_html( $end_time->format('h:i A') ) . ', ';
+            
 
             $date_strings = '';
                 foreach ( $meeting_dates as $key => $date ) {
+                    $formate_date = $date_time->convert_time_based_on_timezone( $date, $booking_data->start_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone , '' );
 
-                    $date_strings .= gmdate( 'l, F j', strtotime( $date ) );
+                    $date_strings .= $formate_date->format('l, F j');
                     $date_strings .= '| ';
                 } 
                 $date_strings = rtrim( $date_strings, '| ' );
@@ -49,6 +69,7 @@ $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
               
              echo ' (' . esc_html( $booking_data->attendee_time_zone ) . ')</p>';
             echo '</div>';
+ 
 
         }
 

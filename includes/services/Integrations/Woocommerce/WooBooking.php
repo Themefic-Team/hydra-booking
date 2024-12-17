@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\Meeting;
 
@@ -21,11 +22,12 @@ class WooBooking {
 	public function __construct() {
 	}
 
-	public function add_to_cart( $product_id, $data ) { 
+	public function add_to_cart( $product_id, $data, $attendee_data ) { 
 		$product                                      = wc_get_product( $product_id );
 		$order_meta                                   = array();
 		$order_meta['tfhb_order_meta']['booking_id']  = $data['booking_id'];
-		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $data['attendee_time_zone'] . ' )';
+		$order_meta['tfhb_order_meta']['attendee_id']  = $attendee_data['id'];
+		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_data['attendee_time_zone'] . ' )';
 		$cart = WC()->cart;
 		$cart->add_to_cart( $product_id, 1, 0, array(), $order_meta );
 
@@ -48,10 +50,14 @@ class WooBooking {
 
 		// Assigning data into variables.
 		$booking_id  = ! empty( $values['tfhb_order_meta']['booking_id'] ) ? $values['tfhb_order_meta']['booking_id'] : '';
+		$attendee_id  = ! empty( $values['tfhb_order_meta']['attendee_id'] ) ? $values['tfhb_order_meta']['attendee_id'] : '';
 		$appointment = ! empty( $values['tfhb_order_meta']['Appointment'] ) ? $values['tfhb_order_meta']['Appointment'] : '';
 
 		if ( $booking_id ) {
 			$item->update_meta_data( '_tfhb_booking_id', $booking_id, true );
+		}
+		if ( $attendee_id ) {
+			$item->update_meta_data( '_tfhb_attendee_id', $attendee_id, true );
 		}
 
 		if ( $appointment ) {
@@ -73,36 +79,22 @@ class WooBooking {
 
 				
 				$booking_id  = $item->get_meta( '_tfhb_booking_id' );
+				$attendee_id = $item->get_meta( '_tfhb_attendee_id' );
 				$appointment = $item->get_meta( 'tfhb_appointment' );
 				$order->update_meta_data(
 					'tfhb_order_meta',
 					array(
 						'booking_id'  => $booking_id,
+						'attendee_id'  => $attendee_id,
 						'Appointment' => $appointment,
 					)
 				);
 
 				
 				// Update Transaction ID Data 
-				$booking = new Booking();
-				$get_booking = $booking->get( 
-					array(
-						'id' => $booking_id,
-					),
-					false,
-					true
-				);
-				// Get_meetingData
-				$meeting = new Meeting();
-				$meetingData = $meeting->get( 
-					array(
-						'id' => $get_booking->meeting_id,
-					),
-					false,
-					true
-				);
-
-				
+				$Attendees = new Attendees();
+				$get_attendee = $Attendees->getAttendeeWithBooking( $attendee_id  ); 
+								
 				$transactions = new Transactions();
 				$transation_history = array(
 					'wc_order_id' => $order_id, 
@@ -111,14 +103,17 @@ class WooBooking {
 				// add transaction
 				$transactionData = array(
 					'booking_id' 	   => $booking_id,
-					'meeting_id' 	   => $get_booking->meeting_id,
-					'host_id' 	   => $meetingData->host_id,
-					'customer_id' 	   => $get_booking->attendee_id,
-					'payment_method' 	   => $get_booking->payment_method,
+					'attendee_id' 	   => $attendee_id,
+					'meeting_id' 	   => $get_attendee->meeting_id,
+					'host_id' 	   => $get_attendee->host_id,
+					'customer_id' 	   => $attendee_id,
+					'payment_method' 	   => $get_attendee->payment_method,
 					'total' 	   => $items_price,
 					'status' 	   => $order->get_status(),
 					'transation_history' => json_encode($transation_history, true),
 				); 
+
+		
 
 				// add transaction
 				$transactions->add( $transactionData );  
@@ -142,17 +137,16 @@ class WooBooking {
 			if ( ! empty( $item->get_meta( '_tfhb_booking_id' ) ) ) { 
 
 				$booking_id = $item->get_meta( '_tfhb_booking_id' );
-				$booking    = new Booking();
+				$attendee_id = $item->get_meta( '_tfhb_attendee_id' );
+				$Attendees    = new Attendees();
 				$updateData = array(
-					'id'             => $booking_id,
-					'order_id'       => $order->get_id(),
-					'attendee_id'    => $order->get_user_id(),
+					'id'             => $attendee_id,  
 					'payment_status' => $order->get_status(),
 				);
 				// update booking
 
 				// update booking
-				$booking->update( $updateData );
+				$Attendees->update( $updateData );
 
 			}
 		}

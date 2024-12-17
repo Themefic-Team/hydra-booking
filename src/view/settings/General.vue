@@ -23,6 +23,7 @@ const generalSettings = reactive({
   week_start_from: 'Sunday',
   date_format: '',
   country: '',
+  currency: 'USD',
   after_booking_completed: '10',
   booking_status: 1,
   reschedule_status: '',
@@ -49,6 +50,7 @@ const tfhbValidateInput = (fieldName) => {
 //  Load Time Zone
 const timeZone = reactive({});
 const  countryList = reactive({});
+const  currencyList = reactive({});
 const router = useRouter(); 
 const skeleton = ref(true);
 
@@ -67,6 +69,7 @@ const fetchGeneralSettings = async () => {
         if (response.data.status) { 
             timeZone.value = response.data.time_zone; 
             countryList.value = response.data.country_list;  
+            currencyList.value = response.data.currency_list;  
             // Set General Settings
             if(response.data.general_settings != false){
                 generalSettings.time_zone = response.data.general_settings.time_zone;
@@ -74,6 +77,7 @@ const fetchGeneralSettings = async () => {
                 generalSettings.week_start_from = response.data.general_settings.week_start_from != '' ? response.data.general_settings.week_start_from : 'Sunday';
                 generalSettings.date_format = response.data.general_settings.date_format;
                 generalSettings.country = response.data.general_settings.country;
+                generalSettings.currency = response.data.general_settings.currency;
                 generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
                 generalSettings.booking_status = response.data.general_settings.booking_status;
                 generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
@@ -97,7 +101,7 @@ const UpdateGeneralSettings = async () => {
     });
     
     // Errors Added
-    let validator_field = ['admin_email', 'time_zone', 'time_format', 'week_start_from', 'country']
+    let validator_field = ['admin_email', 'time_zone', 'time_format', 'week_start_from', 'country', 'currency']
     if(validator_field){
         validator_field.forEach(field => {
 
@@ -277,6 +281,20 @@ onBeforeMount(() => {
                     :placeholder="$tfhb_trans('Select Country')"  
                     :option = "countryList.value"
                     :errors="errors.country"
+                />
+                <!-- Select countr --> 
+                <!-- Select countr -->
+                <HbDropdown 
+                    
+                    v-model="generalSettings.currency" 
+                    required= "true"
+                    width="50"
+                    :filter="true" 
+                    :label="$tfhb_trans('Select Currency')"   
+                    selected = "1"
+                    :placeholder="$tfhb_trans('Select Currency')"  
+                    :option = "currencyList.value"
+                    :errors="errors.currency"
                 />
                 <!-- Select countr --> 
             </div>  
