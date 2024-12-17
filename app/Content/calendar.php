@@ -43,10 +43,11 @@ $availability_time_zone = $availability_data['time_zone'];
             $start_time = $booking_data->start_time;
             $end_time = $booking_data->end_time;
             $date = $meeting_dates[0]; 
+            $meeting_availability_time_zone =  !empty($booking_data->availability_time_zone) ? $booking_data->availability_time_zone : $availability_time_zone;
         
-            $start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone, '' );
+            $start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $meeting_availability_time_zone, $booking_data->attendee_time_zone, '' );
             
-            $end_time   = $date_time->convert_time_based_on_timezone($date, $end_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone, '' );
+            $end_time   = $date_time->convert_time_based_on_timezone($date, $end_time, $meeting_availability_time_zone, $booking_data->attendee_time_zone, '' );
             
          
 
@@ -58,7 +59,7 @@ $availability_time_zone = $availability_data['time_zone'];
 
             $date_strings = '';
                 foreach ( $meeting_dates as $key => $date ) {
-                    $formate_date = $date_time->convert_time_based_on_timezone( $date, $booking_data->start_time, $booking_data->availability_time_zone, $booking_data->attendee_time_zone , '' );
+                    $formate_date = $date_time->convert_time_based_on_timezone( $date, $booking_data->start_time, $meeting_availability_time_zone, $booking_data->attendee_time_zone , '' );
 
                     $date_strings .= $formate_date->format('l, F j');
                     $date_strings .= '| ';
