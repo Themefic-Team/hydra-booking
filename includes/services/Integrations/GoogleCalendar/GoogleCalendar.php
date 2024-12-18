@@ -23,9 +23,9 @@ class GoogleCalendar {
 	private $refreshTokenUrl = 'https://www.googleapis.com/oauth2/v3/token';
 	public $authUrl          = 'https://accounts.google.com/o/oauth2/auth';
 
-	public $calendarEvent = 'https://www.googleapis.com/calendar/v3/calendars/';
+	public $calendarEvent 	= 'https://www.googleapis.com/calendar/v3/calendars/';
 
-	public $authScope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events';
+	public $authScope 		= 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events';
 
 
 

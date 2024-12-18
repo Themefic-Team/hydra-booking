@@ -659,18 +659,7 @@ class HostsController {
 			$zoom_meeting['connection_status'] = false;
 		}
 
-		// Outlook Calendar API
-		$outlook_calendar = isset( $_tfhb_host_integration_settings['outlook_calendar'] ) ? $_tfhb_host_integration_settings['outlook_calendar'] : array();
-
-		if ( isset($_tfhb_integration_settings['outlook_calendar']['status']) &&  $_tfhb_integration_settings['outlook_calendar']['status'] == true ) {
-
-			$outlook_calendar['type']              = 'outlook_calendar';
-			$OutlookCalendar                       = new OutlookCalendar();
-			$outlook_calendar['access_url']        = $OutlookCalendar->GetAccessTokenUrl( $user_id );
-			$outlook_calendar['status']            = $_tfhb_integration_settings['outlook_calendar']['status'];
-			$outlook_calendar['connection_status'] = $_tfhb_integration_settings['outlook_calendar']['connection_status'];
-
-		}
+		
 
 		// Apple Calendar
 		$apple_calendar = isset( $_tfhb_host_integration_settings['apple_calendar'] ) ? $_tfhb_host_integration_settings['apple_calendar'] : array();
@@ -724,13 +713,14 @@ class HostsController {
 			'status'                     => true,
 			'integration_settings'       => $_tfhb_host_integration_settings,
 			'google_calendar'            => $google_calendar,
-			'zoom_meeting'            => $zoom_meeting,
-			'outlook_calendar'           => $outlook_calendar,
+			'zoom_meeting'            => $zoom_meeting, 
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
 			'zoho'                       => $zoho,
 			'_tfhb_integration_settings' => $_tfhb_integration_settings,
 		);
+
+		$data = apply_filters( 'tfhb_get_host_integration_settings', $data, $user_id);
 		return rest_ensure_response( $data );
 	}
 

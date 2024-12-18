@@ -49,25 +49,24 @@ const closePopup = () => {
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
-        <div v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <!-- <div v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upcoming') }}  <Icon name="ChevronRight" size=18 /></a>
  
-        </div>
-
-        <!-- <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+        </div> --> 
+        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+            
             <HbButton  
                 @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
-                :buttonText="props.outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect' "
-                icon="ChevronRight" 
-                hover_icon="ArrowRight" 
-                :hover_animation="true"   
-                width="80px"
-            />   
-            <HbSwitch v-if="outlook_calendar.connection_status" @change="emit('update-integrations', 'outlook_calendar', outlook_calendar)" v-model="outlook_calendar.status"    />
+                :buttonText="props.outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect' " 
+                :hover_animation="true"    
+            />
+            
+            <HbSwitch v-if="outlook_calendar.connection_status" @change="emit('update-integrations', 'outlook_calendar', outlook_calendar)" v-model="outlook_calendar.status" />
+
              
  
-        </div> -->
+        </div>
 
 
         <HbPopup  v-if="$tfhb_is_pro == true ||  $tfhb_license_status == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
