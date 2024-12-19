@@ -663,7 +663,7 @@ const goForReschedule = (attendee) => {
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
                 <h3>{{ $tfhb_trans('Attendee') }}  </h3>
                 <div class="tfhb-booking-info-inner tfhb-attendee-details tfhb-flexbox tfhb-gap-12">
-                    <div   class="tfhb-booking-details tfhb-mt-32 tfhb-full-width" >
+                    <div   class="tfhb-booking-details tfhb-full-width" >
    
                         <table class="table" cellpadding="0" :cellspacing="0">
                             <thead>

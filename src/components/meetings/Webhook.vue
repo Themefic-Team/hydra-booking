@@ -435,7 +435,7 @@ const enableWebhookIntegrations = () => {
         <div  v-if="webhook_integrations" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Webhook is not connected. 
             <HbButton 
                 classValue="tfhb-btn flex-btn" 
-                @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                @click="() => router.push({ name: 'SettingsIntegrations' })" 
                 :buttonText="$tfhb_trans('Please Configure')"
             />  
         </div>

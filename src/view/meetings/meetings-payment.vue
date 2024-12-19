@@ -104,7 +104,7 @@ onBeforeMount(() => {
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
@@ -112,7 +112,7 @@ onBeforeMount(() => {
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
@@ -120,7 +120,7 @@ onBeforeMount(() => {
                     <HbButton  
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>

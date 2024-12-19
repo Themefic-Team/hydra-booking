@@ -230,13 +230,13 @@ const routes = [
             }, 
             {
                 path: 'notifications',
-                name: 'SettingsAotifications',
+                name: 'SettingsNotifications',
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/Notifications.vue')
             },
             {
                 path: 'integrations',
-                name: 'SettingsAntegrations',
+                name: 'SettingsIntegrations',
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/Integrations.vue')
             },  

@@ -707,9 +707,9 @@ class MailHooks {
 
 			$replacements['{{booking.start_date_time_for_host}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
 		}
-
-		if( !empty($attendeeBooking->booking_locations) && $attendeeBooking->booking_locations != NULL  ){
-			$booking_locations = json_decode($attendeeBooking->booking_locations);
+ 
+		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
+			$booking_locations = json_decode($attendeeBooking->meeting_locations);
 			
 
 			

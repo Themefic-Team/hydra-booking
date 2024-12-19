@@ -762,6 +762,9 @@
 						isToday = "";
 					}
 				}
+				if('active' == isToday){
+					availabilityClass = " "; 
+				}
  
 				lit += `<li data-date="${dateKey}" data-available="${dataAvailable}" class="${isToday} current ${availabilityClass}">${i}</li>`;
 		   }
@@ -809,7 +812,7 @@
 						let data = response.data; 
 						calenderData.calander_available_time_slot = response.data;
 						 
-						$this.find('.tfhb-calendar-dates li.active').trigger('click');
+						// $this.find('.tfhb-calendar-dates li.active').trigger('click');
 						
 
 					}
@@ -818,7 +821,7 @@
 						$this.find('.tfhb-available-times').html('');
 						$this.find('.tfhb-available-times').append('<ul></ul>');
 						$this.find('.tfhb-available-times ul').append('<li > <p>'+response.data.message+'</p></li>');
-						$this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", opacity: 1, width: 224}, 400 );
+						// $this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", opacity: 1, width: 224}, 400 );
 					}
 				},
 				error: function (error) {

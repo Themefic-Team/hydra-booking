@@ -215,7 +215,7 @@ onBeforeMount(() => {
             <span>{{$tfhb_trans('Before connecting make sure you provide the necessary credentials to')}} 
                 <HbButton 
                         classValue="tfhb-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         buttonText="Settings  Integrations"
                     />  
             </span>

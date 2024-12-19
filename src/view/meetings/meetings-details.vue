@@ -1,9 +1,10 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { onBeforeMount, onMounted, ref } from 'vue'; 
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbText from '@/components/form-fields/HbText.vue'
-import HbTextarea from '@/components/form-fields/HbTextarea.vue'
+import { useRouter} from 'vue-router' 
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import HbText from '@/components/form-fields/HbText.vue';
+import HbTextarea from '@/components/form-fields/HbTextarea.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -42,6 +43,11 @@ const props = defineProps({
 
 });
 const createMeetingPopup = ref(false);
+
+
+// Router
+const router = useRouter();
+
 
 const tfhbValidateInput = (fieldName) => {
     
@@ -231,7 +237,7 @@ onMounted(() => {
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
@@ -243,7 +249,7 @@ onMounted(() => {
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
