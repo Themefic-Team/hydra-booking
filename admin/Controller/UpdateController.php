@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class UpdateController {
 
-    public $version  = THB_VERSION; 
+    public $version  = TFHB_VERSION; 
 
 	// constaract
 	public function __construct() {  
