@@ -328,22 +328,24 @@ class DateTimeController extends \DateTimeZone {
 
 	//Get availability_data
 	public function GetAvailabilityData ($MeetingsData){
+		// if $MeetingsData is object make it array
+		$meeting_data =  !empty($MeetingsData) && is_array($MeetingsData) ? $MeetingsData : (array) $MeetingsData;
+		$availability_data = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
 		
-		$availability_data = isset( $MeetingsData->availability_custom ) ? $MeetingsData->availability_custom : array();
-		if ( isset( $MeetingsData->availability_type ) && 'settings' === $MeetingsData->availability_type ) {
+		if ( isset( $meeting_data['availability_type'] ) && 'settings' === $meeting_data['availability_type'] ) {
 
 			$host = new Host();
-			$host = $host->getHostById( $MeetingsData->host_id );
+			$host = $host->getHostById( $meeting_data['host_id'] );
 
 			
 			$_tfhb_availability_settings = get_user_meta( $host->user_id, '_tfhb_host', true );
-			if ( isset($_tfhb_availability_settings['availability']) && in_array( $MeetingsData->availability_id, array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
-				$availability_data = $_tfhb_availability_settings['availability'][ $MeetingsData->availability_id ];
+			if ( isset($_tfhb_availability_settings['availability']) && in_array( $meeting_data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+				$availability_data = $_tfhb_availability_settings['availability'][ $meeting_data['availability_id'] ];
 			} 
 		}  
 
 		$availability_data = !is_array($availability_data) ? json_decode($availability_data, true) : $availability_data;
-
+		
 		return $availability_data;
 	}
 }
