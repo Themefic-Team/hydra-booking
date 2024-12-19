@@ -1,9 +1,10 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { onBeforeMount, onMounted, ref } from 'vue'; 
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbText from '@/components/form-fields/HbText.vue'
-import HbTextarea from '@/components/form-fields/HbTextarea.vue'
+import { useRouter} from 'vue-router' 
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import HbText from '@/components/form-fields/HbText.vue';
+import HbTextarea from '@/components/form-fields/HbTextarea.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -42,6 +43,11 @@ const props = defineProps({
 
 });
 const createMeetingPopup = ref(false);
+
+
+// Router
+const router = useRouter();
+
 
 const tfhbValidateInput = (fieldName) => {
     
@@ -172,8 +178,7 @@ onMounted(() => {
             <div class="tfhb-flexbox  tfhb-mb-24" style="gap:4px 16px"  v-for="(slocation, index) in meeting.meeting_locations" :key="index">
                 <div class="tfhb-meeting-location tfhb-flexbox tfhb-gap-16" :style="meeting.meeting_locations.length<2 ?'width:100%' : '' ">
                   
-                    <HbDropdown 
-                        v-if="props.meeting.meeting_type ==  'one-to-one'"
+                    <HbDropdown  
                         v-model="slocation.location" 
                         required= "true" 
                         :label="$tfhb_trans('Location')"  
@@ -194,28 +199,7 @@ onMounted(() => {
                         slocation.location ==  'Organizer Phone Number' 
                         ? 50 : 100"
                     />
-
-                    <HbDropdown 
-                        v-if="props.meeting.meeting_type ==  'one-to-group'"
-                        v-model="slocation.location" 
-                        required= "true" 
-                        :label="$tfhb_trans('Location')"  
-                        :selected = "1"
-                        :placeholder="$tfhb_trans('Location')" 
-                        :option = "[ 
-                            {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
-                            {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
-                            {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
-                            {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},
-                            {name: 'Organizer Phone Number', value: 'Organizer Phone Number'},
-                            {name: 'Add Custom', value: 'Custom'}
-                        ]" 
-                        :width= "
-                        slocation.location ==  'Custom' ||
-                        slocation.location ==  'In Person (Organizer Address)' ||
-                        slocation.location ==  'Organizer Phone Number' 
-                        ? 50 : 100"
-                    />
+ 
                     <!-- Address -->
                     <HbText  
                         v-model="slocation.address" 
@@ -253,7 +237,7 @@ onMounted(() => {
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
@@ -265,7 +249,7 @@ onMounted(() => {
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>

@@ -8,6 +8,7 @@ use HydraBooking\Admin\Controller\RouteController;
 
 // Use DB
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
@@ -91,6 +92,26 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		// booking reminder email Attendee.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/send-attendee-reminder',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'sendReminderAttendeeEmail' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		// booking reminder email Attendee.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/change-attendee-status',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'changeAttendeeStatus' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 
 		// Pre Booking Data
 		register_rest_route(
@@ -160,16 +181,28 @@ class BookingController {
 
 		// Booking Lists
 		$booking = new Booking();
-
+		
+		
 		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
-			$bookingsList = $booking->get( null, true );
+			$bookingsList = $booking->getBookingWithAttendees(  
+				null,
+				null,
+				'DESC',
+			); 
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host     = new Host();
 			$HostData = $host->getHostByUserId( $current_user_id );
-
-			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->user_id );
+			$where = array(
+				array('host_id', '=', $HostData->id),
+			);
+ 			$bookingsList = $booking->getBookingWithAttendees(  
+				$where,
+				null,
+				'DESC',
+			); 
 		}
+		 
 
 		$extractedBookings = array_map(
 			function ( $booking ) {
@@ -612,22 +645,27 @@ class BookingController {
 		}
 
 		// Get Booking Data
-		$booking = new Booking(); 
-		$single_booking_meta = $booking->get(
-			array( 'id' => $booking_id ),
-			false,
+		$booking = new Booking();  
+		$Attendee =  new Attendees();
+		$where = array(
+			array('id', '=', $booking_id),
 		);
+		 $single_booking = $booking->getBookingWithAttendees(  
+			$where,
+			1,
+			'DESC',
+		);  
 
-		if( empty( $single_booking_meta ) ){
+		if( empty( $single_booking ) ){
 			return rest_ensure_response(
 				array(
 					'status'  => false,
 					'message' => 'Invalid Booking',
 				)
 			);
-		}
+		} 
 
-		if( 'confirmed' != $single_booking_meta->booking_status ){
+		if( 'confirmed' != $single_booking->status ){
 			return rest_ensure_response(
 				array(
 					'status'  => false,
@@ -636,7 +674,8 @@ class BookingController {
 			);
 		}
 
-		do_action( 'hydra_booking/send_booking_reminder', $single_booking_meta );
+		do_action( 'hydra_booking/send_booking_reminder', $single_booking );
+
 
 		// Return response
 		$data = array(
@@ -644,6 +683,110 @@ class BookingController {
 			'message' => 'Reminder Email Sent Successfully!',
 		);
 		return rest_ensure_response( $data );
+	}
+
+	// Send Reminder Email
+	public function sendReminderAttendeeEmail(){
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+
+		$attendee_id =  isset( $request['attendee_id'] ) ? $request['attendee_id'] : 0;
+		if( empty( $attendee_id ) && $attendee_id == 0 ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Attendee',
+				)
+			);
+		}
+
+	
+		// Get Booking Data
+		$Attendee =  new Attendees();
+		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+			array(
+				array('id', '=', $attendee_id),
+			),
+			1,
+			'DESC'
+		 );  
+		if( empty( $attendeeBooking ) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Attendee',
+				)
+			);
+		}
+
+		if( 'confirmed' != $attendeeBooking->status ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => ' This Attendee Booking is not Confirmed',
+				)
+			);
+		}
+
+		do_action( 'hydra_booking/send_booking_reminder', $attendeeBooking );
+
+		// Return response
+		$data = array(
+			'status'  => true,
+			'message' => 'Reminder Email Sent Successfully!',
+		);
+		return rest_ensure_response( $data );
+	}
+
+	// Send Attendee Status
+	public function changeAttendeeStatus(){
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+
+		$attendee_id =  isset( $request['attendee_id'] ) ? $request['attendee_id'] : 0;
+		$status =  isset( $request['status'] ) ? $request['status'] : '';
+		
+		if( empty( $attendee_id ) && $attendee_id == 0 ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Attendee',
+				)
+			);
+		}
+
+		// Get Booking Data
+		$Attendee =  new Attendees();
+		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+			array(
+				array('id', '=', $attendee_id),
+			),
+			1,
+			'DESC'
+		 );
+
+
+		if( empty( $attendeeBooking ) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Invalid Attendee',
+				)
+			);
+		}
+		$attendee_update = array();
+		$status = strtolower( $status );
+		$attendee_update['status'] = $status; 
+		$attendee_update['id'] = $attendee_id;
+
+		$attendeeUpdate = $Attendee->update( $attendee_update );
+
+		if( $attendeeUpdate ){ 
+			// Return response
+			$data = array(
+				'status'  => true,
+				'message' => 'Attendee Status Updated Successfully!', 
+			);
+			return rest_ensure_response( $data );
+		}
 	}
 
 	// Get Single Booking
@@ -725,6 +868,7 @@ class BookingController {
 
 	// Update Booking Information
 	public function updateBooking() {
+		
 		$request       = json_decode( file_get_contents( 'php://input' ), true );
 		$booking_id    = $request['id'];
 		$booking_owner = $request['host'];
@@ -743,6 +887,7 @@ class BookingController {
 			'status' => isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '',
 		);
 
+		$Attendee = new Attendees();
 		$booking = new Booking();
 		// Booking Update
 		$bookingUpdate = $booking->update( $data );
@@ -757,13 +902,23 @@ class BookingController {
 		$current_user_id   = $current_user->ID;
 
 		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
-			$bookingsList = $booking->get( null, true );
+			$bookingsList = $booking->getBookingWithAttendees(  
+				null,
+				null,
+				'DESC',
+			); 
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host         = new Host();
-			$HostData     = $host->getHostByUserId( $current_user_id );
-			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->host_id ); 
-
+			$HostData     = $host->getHostByUserId( $current_user_id ); 
+			$where = array(
+				array('host_id', '=', $HostData->id),
+			);
+ 			$bookingsList = $booking->getBookingWithAttendees(  
+				$where,
+				null,
+				'DESC',
+			); 
 		} 
 		$extractedBookings = array_map(
 			function ( $booking ) {
@@ -801,29 +956,36 @@ class BookingController {
 			);
 		}
 
+		
 		// Single Booking
 		// $single_booking_meta = $booking->get(['id'=>$request['id']],false, true);
 		// $single_booking_meta = $booking->get($request['id'], false, true);
-		$single_booking_meta = $booking->get(
-			array( 'id' => $request['id'] ),
-			false,
-		);
-
-		if ( 'confirmed' == $request['status'] ) {
 		 
-			do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
+		$where = array(
+			array('id', '=', $request['id']),
+		);
+		 $single_booking_meta = $booking->getBookingWithAttendees(  
+			$where,
+			1,
+			'DESC',
+		); 
+
+		
+		if ( 'confirmed' == $request['status'] ) {
+			do_action( 'hydra_booking/send_booking_with_all_attendees_confirmed', $single_booking_meta );
 		}
 
 		if ( 'pending' == $request['status'] ) {
-			do_action( 'hydra_booking/after_booking_pending', $single_booking_meta );
+			do_action( 'hydra_booking/send_booking_with_all_attendees_pending', $single_booking_meta );
 		}
 		if ( 'canceled' == $request['status'] ) { 
-			do_action( 'hydra_booking/after_booking_canceled', $single_booking_meta );
+			do_action( 'hydra_booking/send_booking_with_all_attendees_canceled', $single_booking_meta );
 		}
 
 		if ( 'schedule' == $request['status'] ) {
-			do_action( 'hydra_booking/after_booking_schedule', $single_booking_meta );
+			do_action( 'hydra_booking/send_booking_with_all_attendees_schedule', $single_booking_meta );
 		}
+	
 
 		// Return response
 		$data = array(
@@ -834,6 +996,8 @@ class BookingController {
 		);
 		return rest_ensure_response( $data );
 	}
+
+	// Change attendee Status
 
 	// Update Booking Bulk Option
 	public function updateBulkStatus() {
