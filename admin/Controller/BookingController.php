@@ -772,12 +772,35 @@ class BookingController {
 				)
 			);
 		}
+		if($attendeeBooking->status == $status){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => 'Attendee Status Already Updated!',
+				)
+			);
+		}
+
 		$attendee_update = array();
 		$status = strtolower( $status );
 		$attendee_update['status'] = $status; 
 		$attendee_update['id'] = $attendee_id;
 
-		$attendeeUpdate = $Attendee->update( $attendee_update );
+		$attendeeUpdate = $Attendee->update( $attendee_update ); 
+		
+		if ( 'canceled' == $status ) { 
+			
+			do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
+		}
+		if ( 'confirmed' == $status ) { 
+			
+			do_action( 'hydra_booking/after_booking_confirmed', $attendeeBooking );
+		}
+		if ( 'pending' == $status ) { 
+			
+			do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
+		}
+		
 
 		if( $attendeeUpdate ){ 
 			// Return response

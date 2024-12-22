@@ -287,7 +287,7 @@ class GoogleCalendar {
 		$meeting_dates = $booking->meeting_dates; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
 		 
 		if($booking->booking_type == 'one-to-group'){ 
-			$event_title =  $booking->title;
+			$event_title =  $booking->meeting_title;
 		}else{
 			$event_title = 'Meeting with ' . $booking->attendee_name;
 		}
@@ -498,6 +498,7 @@ class GoogleCalendar {
 	 * @return mixed
 	 */
 	public function remove_attendde_event_from_existing_booking( $old_booking_id, $attendee){ 
+		
 		 
 		if($old_booking_id !=0 ){
 			$booking_id = $old_booking_id; 
