@@ -181,6 +181,7 @@ onMounted(() => {
                         :option = "[
                             {name: 'Zoom', value: 'zoom',  icon: $tfhb_url+'/assets/images/zoom-icon-small.svg', }, 
                             {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
+                            {name: 'MS Teams / Outlook', value: 'MS Teams',  icon: $tfhb_url+'/assets/images/ms_teams-logo.svg', }, 
                             {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
                             {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                             {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},

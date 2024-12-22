@@ -314,7 +314,15 @@ class GoogleCalendar {
 				return $location['location'] == 'meet';
 			}
 		);
+
 		$enable_meeting_location = count( $meeting_location ) > 0 ? true : false;
+		
+		$locations = !empty($booking->meeting_locations) ? $booking->meeting_locations : array();
+        $booking_locations = json_decode($locations);
+        $booking_locations_data ='';
+        foreach ($booking_locations as $key => $value) { 
+            $booking_locations_data .= ''.$value->location.', ';
+        }
  
 		$start_time    = strtotime( $booking->start_time ); // 03:45 AM
 		$end_time      = strtotime( $booking->end_time ); // 04:30 AM
@@ -328,7 +336,7 @@ class GoogleCalendar {
 			$setData = array(
 				'title'          => $event_title,
 				'summary'        => 'Title: ' . $booking->title,
-				// 'location' => 'Location: ' . $data->meeting_location,
+				'location' => $booking_locations_data,
 				'description'    => 'Description: ',
 				'start'          => array(
 					'dateTime' => $start_date,
