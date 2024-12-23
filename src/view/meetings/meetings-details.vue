@@ -247,6 +247,14 @@ onMounted(() => {
                         @click="() => router.push({ name: 'SettingsAntegrations' })" 
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
+                </div> 
+                <div  v-if="slocation.location == 'MS Teams' && props.integrations.outlook_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Outlook Calendar is not connected.')}}  
+                    <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        :buttonText="$tfhb_trans('Please Configure')"
+                    />  
                 </div>
             </div>
             <div class="tfhb-add-new-question">
