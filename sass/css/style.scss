@@ -634,7 +634,7 @@
                     li{
                         gap: 12px;
                         width: 100%;
-                        span{
+                        .time, .next{
                             border-radius: 8px;
                             border: 0.5px solid $primary-default;
                             background: $surface-secondary;
@@ -660,6 +660,20 @@
                                 border: 0.5px solid $primary-default;
                                 background: $surface-border;
                             }
+                            .tfhb-time-slot-remaining {
+                                justify-content: center;
+                                font-size: 10px;
+                                line-height: 16px;
+                                span {
+                                    display: inline-block;
+                                    height: 4px;
+                                    width: 4px;
+                                    border-radius: 50%;
+                                    background-color: #2E6B38;
+                                    margin-right: 4px;
+                                    line-height: 0 !important;
+                                  }
+                              } 
                         }
                         span.next{
                             border-radius: 8px;

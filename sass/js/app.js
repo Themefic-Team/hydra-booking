@@ -133,14 +133,18 @@
 				// else show the message
 				if(selected_date_time_slot.length > 0){
 					for (var i = 0; i < selected_date_time_slot.length; i++) { 
-
+						var remaining = '';
+						// if selected_date_time_slot[i].remaining is not undefined then show the time slot
+ 						if(selected_date_time_slot[i].remaining != undefined){
+							 remaining = '<span class="tfhb-time-slot-remaining tfhb-flexbox"><span></span>'+selected_date_time_slot[i].remaining+' seats left</span>';
+						}
 						// Remove 
 						// Add with animation when data available
-						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + '</span> </li>');
+						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + remaining + ' </div> </li>');
 
 					}
 				}else{
-					$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span>No time slot available in this date ! Try another date.</span> </li>');
+					$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div>No time slot available in this date ! Try another date.</span> </div>');
 				}
 
 				$this.find('.tfhb-calendar-dates li').removeClass('active');  
