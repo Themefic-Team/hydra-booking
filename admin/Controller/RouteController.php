@@ -9,7 +9,6 @@ use HydraBooking\Admin\Controller\BookingController;
 use HydraBooking\Admin\Controller\AuthController;
 use HydraBooking\Admin\Controller\DashboardController;
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
-use HydraBooking\Services\Integrations\OutlookCalendar\OutlookCalendar;
 use HydraBooking\Admin\Controller\SetupWizard;
 use HydraBooking\Admin\Controller\ImportExport;
 use HydraBooking\Admin\Controller\Notification;
@@ -33,7 +32,6 @@ class RouteController {
 		$this->create( new BookingController(), 'create_endpoint' );
 		$this->create( new AuthController(), 'create_endpoint' );
 		$this->create( new GoogleCalendar(), 'create_endpoint' );
-		$this->create( new OutlookCalendar(), 'create_endpoint' );
 		$this->create( new DashboardController(), 'create_endpoint' );
 		$this->create( new SetupWizard(), 'create_endpoint' );
 		$this->create( new ImportExport(), 'create_endpoint' );

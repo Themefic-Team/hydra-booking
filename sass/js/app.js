@@ -82,22 +82,25 @@
 						date = new Date();
 					}
 		
+					// Hide the time slot with animation
+					$this.find('.tfhb-meeting-times').animate({left: "-50%", width: 0, opacity: 0 }, 300,
+					function() {
+						$(this).css("display", "none");
+
+						
+					});
+
+					
 					// Call the tfhb_date_manipulate function to 
 					// update the tfhb-calendar display
 					tfhb_date_manipulate( $this, calenderData, year, month, date, months );
 				
 					// first date of the month exp: 
 					// 2021-04-01
-					let current_date = new Date(year, month, 2).toISOString().split('T')[0]; 
-
-					var $this_li = $this.find('.tfhb-calendar-dates li.active');   
-					// $this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", opacity: 1, width: 224}, 400 );
-					$this.find('.tfhb-available-times').addClass('inactive');
-					// Get the first day of the month 
-					var meeting_id = $this.find("input[name='meeting_id']").val();
+					var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
 					setTimeout(function(){
 						// Your code here 
-						tfhb_times_manipulate( $this, meeting_id, $this_li, calenderData, current_date );  
+						tfhb_times_manipulate( $this, current_date, calenderData);  
 					}, 1000); // 2000 milliseconds = 2 seconds
  
 
@@ -133,14 +136,18 @@
 				// else show the message
 				if(selected_date_time_slot.length > 0){
 					for (var i = 0; i < selected_date_time_slot.length; i++) { 
-
+						var remaining = '';
+						// if selected_date_time_slot[i].remaining is not undefined then show the time slot
+ 						if(selected_date_time_slot[i].remaining != undefined){
+							 remaining = '<span class="tfhb-time-slot-remaining tfhb-flexbox"><span></span>'+selected_date_time_slot[i].remaining+' seats left</span>';
+						}
 						// Remove 
 						// Add with animation when data available
-						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + '</span> </li>');
+						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + remaining + ' </div> </li>');
 
 					}
 				}else{
-					$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <span>No time slot available in this date ! Try another date.</span> </li>');
+					$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div>No time slot available in this date ! Try another date.</span> </div>');
 				}
 
 				$this.find('.tfhb-calendar-dates li').removeClass('active');  
@@ -149,18 +156,33 @@
  
 			});
  
-            $this.find('input[name="tfhb_time_format"], #attendee_time_zone_' + calenderId+'').on('change', function (e) {  
-				var $this_li = $this.find('.tfhb-calendar-dates li.active');  
-				var current_date = $this_li.attr('data-date');
-				// $this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", opacity: 1, width: 224}, 400 );
-				$this.find('.tfhb-available-times').addClass('inactive');
-				// Get the first day of the month 
-				var meeting_id = $this.find("input[name='meeting_id']").val();
+            $this.find('#attendee_time_zone_' + calenderId+'').on('change', function (e) {  
+			 
+				// Hide the time slot with animation 
+				$this.find('.tfhb-meeting-times').animate({left: "-50%", width: 0, opacity: 0 }, 300,
+				function() { 
+					$(this).css("display", "none");
+
+					
+				});
+
+				var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
+			 
+				// Get the first day of the month
 				setTimeout(function(){
 					// Your code here 
-					tfhb_times_manipulate( $this, meeting_id, $this_li, calenderData, current_date );  
+					tfhb_times_manipulate( $this, current_date, calenderData);   
 				}, 1000); // 2000 milliseconds = 2 seconds
-
+				
+			});
+            $this.find('input[name="tfhb_time_format"]').on('change', function (e) { 
+				
+				var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
+			  
+				tfhb_times_manipulate($this, current_date, calenderData, function() { 
+					$this.find('.tfhb-calendar-dates li.active').trigger('click');    
+					// Your logic here
+				});
 				
 			});
 
@@ -740,7 +762,7 @@
 				let dateKey = year + "-" + (month + 1).toString().padStart(2, '0') + "-" + i.toString().padStart(2, '0'); 
 				let dateSlot = typeof date_slots !== 'undefined'  ? date_slots.find(slot => slot.date.match(dateKey) ) : "";
 				let availabilityClass = typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available == true   ? "inactive " : " ";
-				let dataAvailable = typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available != true   ? "available" : "";
+				let dataAvailable = "available";
 				
 				// Before today Days Disable 
 				if(new Date() > new Date(year, month, i) && i !== date.getDate() ){
@@ -784,9 +806,15 @@
 		}
 
 		// Function to generate the tfhb-calendar
-		function tfhb_times_manipulate($this, meeting_id, $this_li, calenderData, current_date) {
-			 
- 
+		function tfhb_times_manipulate($this, current_date, calenderData, callback = null) {
+			  
+
+			var $this_li = $this.find('.tfhb-calendar-dates li.active');   
+			// $this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", opacity: 1, width: 224}, 400 );
+			$this.find('.tfhb-available-times').addClass('inactive');
+			$this.find('.tfhb-calendar-body').addClass('inactive');
+			// Get the first day of the month 
+			var meeting_id = $this.find("input[name='meeting_id']").val();
 			var selected_date = current_date; 
 			// Selectedate date format Saturday, 11 April 
 			
@@ -809,19 +837,22 @@
 				success: function (response) {  
 					if(response.success == true){  
  
+						$this.find('.tfhb-calendar-body').removeClass('inactive');  
 						let data = response.data; 
 						calenderData.calander_available_time_slot = response.data;
 						 
-						// $this.find('.tfhb-calendar-dates li.active').trigger('click');
-						
-
+						if (typeof callback === "function") {
+							callback(); // Execute the callback function
+						}
 					}
 					if(response.success == false){ 
 						$this.find('.tfhb-available-times').removeClass('inactive');
+						$this.find('.tfhb-calendar-body').removeClass('inactive');
 						$this.find('.tfhb-available-times').html('');
 						$this.find('.tfhb-available-times').append('<ul></ul>');
 						$this.find('.tfhb-available-times ul').append('<li > <p>'+response.data.message+'</p></li>');
-						// $this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", opacity: 1, width: 224}, 400 );
+						$this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0", opacity: 1, width: 224}, 400 );
+						
 					}
 				},
 				error: function (error) {

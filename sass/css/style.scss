@@ -389,22 +389,39 @@
                 line-height: 150%; /* 33px */
                 margin: 0;
             }
-            .tfhb-calendar-body ul.tfhb-calendar-weekdays {
-                list-style: none;
-                flex-wrap: wrap;
-                display: flex;
-                text-align: center;
-                gap: 0;
-                margin: 12px 0 16px 0;
-                padding: 0;
-                li{
-                    color: $secondary-default;
+            .tfhb-calendar-body {
+                &.inactive {
+                    position: relative !important;
+                    z-index: 1;
+                    &::before {
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        content: '';
+                        background-color: #fff;
+                        z-index: 3;
+                        opacity: 0.3;
+                        cursor: wait;
+                    }
+                }
+                ul.tfhb-calendar-weekdays {
+                    list-style: none;
+                    flex-wrap: wrap;
+                    display: flex;
                     text-align: center;
-                    font-size: 15px;
-                    font-style: normal;
-                    font-weight: 600;
-                    line-height: 24px; /* 160% */
-                    width: calc(100% / 7);
+                    gap: 0;
+                    margin: 12px 0 16px 0;
+                    padding: 0;
+                
+                    li{
+                        color: $secondary-default;
+                        text-align: center;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 24px; /* 160% */
+                        width: calc(100% / 7);
+                    }
                 }
             }
             .tfhb-calendar-body ul.tfhb-calendar-dates {
@@ -634,7 +651,7 @@
                     li{
                         gap: 12px;
                         width: 100%;
-                        span{
+                        .time, .next{
                             border-radius: 8px;
                             border: 0.5px solid $primary-default;
                             background: $surface-secondary;
@@ -660,6 +677,20 @@
                                 border: 0.5px solid $primary-default;
                                 background: $surface-border;
                             }
+                            .tfhb-time-slot-remaining {
+                                justify-content: center;
+                                font-size: 10px;
+                                line-height: 16px;
+                                span {
+                                    display: inline-block;
+                                    height: 4px;
+                                    width: 4px;
+                                    border-radius: 50%;
+                                    background-color: #2E6B38;
+                                    margin-right: 4px;
+                                    line-height: 0 !important;
+                                  }
+                              } 
                         }
                         span.next{
                             border-radius: 8px;
