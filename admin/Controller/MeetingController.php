@@ -833,6 +833,7 @@ class MeetingController {
 
 		// google  Meeting 
 		$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
+		$integrations['outlook_calendar_status'] = isset( $_tfhb_integration_settings['outlook_calendar']['status'] ) ? $_tfhb_integration_settings['outlook_calendar']['status'] : 0;
 		
 		// Zoom Meeting
 		$integrations['zoom_meeting_status'] = isset( $_tfhb_integration_settings['zoom_meeting']['status'] ) ? $_tfhb_integration_settings['zoom_meeting']['status'] : 0;

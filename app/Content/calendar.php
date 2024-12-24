@@ -24,7 +24,7 @@ $general_settings = isset( $args['general_settings'] ) ? $args['general_settings
 $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
 
 
-$date_time = new DateTimeController( 'UTC' ); 
+$date_time = new DateTimeController( 'UTC' );
 $availability_data = $date_time->GetAvailabilityData($meeting);  
  
 $availability_time_zone = $availability_data['time_zone'];  

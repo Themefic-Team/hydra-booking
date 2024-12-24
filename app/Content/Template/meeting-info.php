@@ -117,13 +117,16 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 						$location_value = 'Zoom';
 					}elseif($location['location'] == 'meet'){
 						$location_value = 'Google Meet';
-					}elseif($location['location'] == 'Attendee Phone Number'){
+					}
+					elseif($location['location'] == 'Attendee Phone Number'){
 						$location_value = 'Attendee Phone Number';
 					}elseif($location['location'] == 'Organizer Phone Number'){
 						$location_value = 'Organizer Phone Number';
 					
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
 						$location_value = 'In Person (Attendee Address) ';
+					}else{
+						$location_value = $location['location'];
 					}
 
 					 if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
@@ -131,7 +134,9 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 					 }elseif($location['location'] == 'zoom'){
 						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
 					 }elseif($location['location'] == 'meet'){
-						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">';
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">'; 
+					 }elseif($location['location'] == 'MS Teams'){
+						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/ms_teams-logo.svg').'" alt="MS Teams">';
 					 }else{
 						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/location.svg').'" alt="Location">';
 					 }

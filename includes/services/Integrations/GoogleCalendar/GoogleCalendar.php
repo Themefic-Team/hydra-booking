@@ -23,9 +23,9 @@ class GoogleCalendar {
 	private $refreshTokenUrl = 'https://www.googleapis.com/oauth2/v3/token';
 	public $authUrl          = 'https://accounts.google.com/o/oauth2/auth';
 
-	public $calendarEvent = 'https://www.googleapis.com/calendar/v3/calendars/';
+	public $calendarEvent 	= 'https://www.googleapis.com/calendar/v3/calendars/';
 
-	public $authScope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events';
+	public $authScope 		= 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events';
 
 
 
@@ -287,7 +287,7 @@ class GoogleCalendar {
 		$meeting_dates = $booking->meeting_dates; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
 		 
 		if($booking->booking_type == 'one-to-group'){ 
-			$event_title =  $booking->title;
+			$event_title =  $booking->meeting_title;
 		}else{
 			$event_title = 'Meeting with ' . $booking->attendee_name;
 		}
@@ -314,7 +314,15 @@ class GoogleCalendar {
 				return $location['location'] == 'meet';
 			}
 		);
+
 		$enable_meeting_location = count( $meeting_location ) > 0 ? true : false;
+		
+		$locations = !empty($booking->meeting_locations) ? $booking->meeting_locations : array();
+        $booking_locations = json_decode($locations);
+        $booking_locations_data ='';
+        foreach ($booking_locations as $key => $value) { 
+            $booking_locations_data .= ''.$value->location.', ';
+        }
  
 		$start_time    = strtotime( $booking->start_time ); // 03:45 AM
 		$end_time      = strtotime( $booking->end_time ); // 04:30 AM
@@ -328,7 +336,7 @@ class GoogleCalendar {
 			$setData = array(
 				'title'          => $event_title,
 				'summary'        => 'Title: ' . $booking->title,
-				// 'location' => 'Location: ' . $data->meeting_location,
+				'location' => $booking_locations_data,
 				'description'    => 'Description: ',
 				'start'          => array(
 					'dateTime' => $start_date,
@@ -498,6 +506,7 @@ class GoogleCalendar {
 	 * @return mixed
 	 */
 	public function remove_attendde_event_from_existing_booking( $old_booking_id, $attendee){ 
+		
 		 
 		if($old_booking_id !=0 ){
 			$booking_id = $old_booking_id; 

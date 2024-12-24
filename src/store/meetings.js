@@ -322,6 +322,7 @@ const Meeting = reactive({
                 this.singleMeeting.MeetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
 
                 this.singleMeeting.integrations.google_calendar_status = response.data.integrations.google_calendar_status && response.data.integrations.google_calendar_status == 1 ? false : true;  
+                this.singleMeeting.integrations.outlook_calendar_status = response.data.integrations.outlook_calendar_status && response.data.integrations.outlook_calendar_status == 1 ? false : true;  
                 this.singleMeeting.integrations.zoom_meeting_status = response.data.integrations.zoom_meeting_status && response.data.integrations.zoom_meeting_status == 1  ? false : true;  
                 this.singleMeeting.integrations.cf7_status = response.data.integrations.cf7_status && response.data.integrations.cf7_status == 1  ? false : true;  
                 this.singleMeeting.integrations.fluent_status = response.data.integrations.fluent_status && response.data.integrations.fluent_status == 1  ? false : true;  
