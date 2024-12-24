@@ -372,6 +372,20 @@
   line-height: 150%; /* 33px */
   margin: 0;
 }
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive {
+  position: relative !important;
+  z-index: 1;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive::before, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive::before {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  content: "";
+  background-color: #fff;
+  z-index: 3;
+  opacity: 0.3;
+  cursor: wait;
+}
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-weekdays, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-weekdays {
   list-style: none;
   flex-wrap: wrap;

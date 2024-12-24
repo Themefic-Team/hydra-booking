@@ -389,22 +389,39 @@
                 line-height: 150%; /* 33px */
                 margin: 0;
             }
-            .tfhb-calendar-body ul.tfhb-calendar-weekdays {
-                list-style: none;
-                flex-wrap: wrap;
-                display: flex;
-                text-align: center;
-                gap: 0;
-                margin: 12px 0 16px 0;
-                padding: 0;
-                li{
-                    color: $secondary-default;
+            .tfhb-calendar-body {
+                &.inactive {
+                    position: relative !important;
+                    z-index: 1;
+                    &::before {
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        content: '';
+                        background-color: #fff;
+                        z-index: 3;
+                        opacity: 0.3;
+                        cursor: wait;
+                    }
+                }
+                ul.tfhb-calendar-weekdays {
+                    list-style: none;
+                    flex-wrap: wrap;
+                    display: flex;
                     text-align: center;
-                    font-size: 15px;
-                    font-style: normal;
-                    font-weight: 600;
-                    line-height: 24px; /* 160% */
-                    width: calc(100% / 7);
+                    gap: 0;
+                    margin: 12px 0 16px 0;
+                    padding: 0;
+                
+                    li{
+                        color: $secondary-default;
+                        text-align: center;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 24px; /* 160% */
+                        width: calc(100% / 7);
+                    }
                 }
             }
             .tfhb-calendar-body ul.tfhb-calendar-dates {

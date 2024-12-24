@@ -154,7 +154,7 @@ class DateTimeController extends \DateTimeZone {
 		$bookings = $booking->getBookingWithAttendees( 
 			$where,
 			null,
-			'DESC' 
+			'ASC' 
 		); 
 		
 		 
@@ -168,7 +168,8 @@ class DateTimeController extends \DateTimeZone {
 
 			if ( 'one-to-group' == $meeting_type ) { 
 				$attendees = $booking->attendees;  
-				if ( count( $attendees ) != $max_book_per_slot ) {
+				
+				if ( count( $attendees ) != $max_book_per_slot ) { 
 					continue;
 				}
 			} 
@@ -178,12 +179,14 @@ class DateTimeController extends \DateTimeZone {
 
 			$start_time = $this->convert_time_based_on_timezone( $meeting_date, $start_time, $time_zone, $selected_time_zone, $selected_time_format );
 			$end_time   = $this->convert_time_based_on_timezone( $meeting_date, $end_time, $time_zone, $selected_time_zone, $selected_time_format );
-
+			 
 			$disabled_times[] = array(
 				'start' => $start_time,
 				'end'   => $end_time,
 			);
+			// echo $meeting_date;
 
+			// tfhb_print_r($disabled_times);
 		}
 	 
 		// Time Slot
@@ -226,7 +229,14 @@ class DateTimeController extends \DateTimeZone {
 		$time_slots_data = array_filter(
 			$time_slots_data,
 			function ( $slot ) use ( $disabled_times ) {
-				return ! in_array( $slot, $disabled_times );
+				 
+				$flag = true;
+				foreach ( $disabled_times as $key => $value ) {
+					if ( $slot['start'] == $value['start'] && $slot['end'] == $value['end'] ) {
+						$flag = false;
+					}
+				}
+				return $flag;
 			}
 		);
 		// return $time_slots_data;
@@ -262,11 +272,12 @@ class DateTimeController extends \DateTimeZone {
 		$meeting_interval = $meeting_interval * 60; // Convert to seconds
 		$total_diff = $diff + $before_diff + $after_diff;
 
-		
+		// Loop through the time range
+	 
 		while ( $current < $end ) {
 
-			$start_time = $this->formatTime( $current, $time_format, $time_zone );
-			$end_time   = $this->formatTime( ( clone $current )->modify( "+$total_diff seconds" ), $time_format, $time_zone );
+			$start_time = $this->formatTime( $current, $time_format, $selected_time_zone );
+			$end_time   = $this->formatTime( ( clone $current )->modify( "+$total_diff seconds" ), $time_format, $selected_time_zone );
 
 			// if current time is passed then skip skip_before_meeting_start
 			$current_minus_skip = ( clone $current )->modify( "-$skip_before_meeting_start minutes" );
@@ -281,7 +292,8 @@ class DateTimeController extends \DateTimeZone {
 				'is_display_max_book_slot' => $is_display_max_book_slot,
 				'selected_date' => $selected_date,
 				'start_time' => $start_time,
-				'time_zone' => $time_zone
+				'end_time' => $end_time,
+				'selected_time_zone' => $selected_time_zone
 			); 
 			$timeSlots[] = apply_filters( 'hydra_booking/generate_time_slots_with_remaining_slots',
 				array(
@@ -291,21 +303,6 @@ class DateTimeController extends \DateTimeZone {
 				$arg
 			);
 			
-
-			// if($is_display_max_book_slot == true){
-			// 	$timeSlots[] = array(
-			// 		'start' => $start_time,
-			// 		'end'   => $end_time,
-			// 		'remaining'   => $remaining_bookings,
-			// 	);
-			// }else{
-			// 	$timeSlots[] = array(
-			// 		'start' => $start_time,
-			// 		'end'   => $end_time,
-			// 	);
-			// }
-			
-
 			$current->modify( "+$total_diff seconds" )->modify( "+$meeting_interval seconds" );
 
 		}
