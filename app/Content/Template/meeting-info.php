@@ -134,9 +134,9 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 					 }elseif($location['location'] == 'zoom'){
 						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
 					 }elseif($location['location'] == 'meet'){
-						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">'; 
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">'; 
 					 }elseif($location['location'] == 'MS Teams'){
-						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/ms_teams-logo.svg').'" alt="MS Teams">';
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/ms_teams-logo.svg').'" alt="MS Teams">';
 					 }else{
 						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/location.svg').'" alt="Location">';
 					 }
