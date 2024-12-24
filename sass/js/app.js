@@ -168,11 +168,8 @@
 
 				var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
 			 
-				// Get the first day of the month
-				setTimeout(function(){
-					// Your code here 
-					tfhb_times_manipulate( $this, current_date, calenderData);   
-				}, 1000); // 2000 milliseconds = 2 seconds
+				// Get the first day of the month 
+				tfhb_times_manipulate( $this, current_date, calenderData);    
 				
 			});
             $this.find('input[name="tfhb_time_format"]').on('change', function (e) { 
