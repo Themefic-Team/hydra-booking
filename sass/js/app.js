@@ -2,7 +2,7 @@
 
     $(document).ready(function () { 
 		const tfhb_local_timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
+		const { __, _x } = wp.i18n;
         /**
          * Time Zone Change
          * @author Jahid
@@ -34,9 +34,36 @@
 			let date = new Date();
 			let year = date.getFullYear();
 			let month = date.getMonth();
-		
+		 
 			const tfhb_calendar_navs = $this.find(".tfhb-calendar-navigation span") 
 
+			const calendarLabels = {
+				months: {
+					'January' :__('January', 'hydra-booking'), 
+					'February' :__('February', 'hydra-booking'),
+					'March' :__('March', 'hydra-booking'),
+					'April' :__('April', 'hydra-booking'),
+					'May' :__('May', 'hydra-booking'),
+					'June' :__('June', 'hydra-booking'),
+					'July' :__('July', 'hydra-booking'),
+					'August' :__('August', 'hydra-booking'),
+					'September' :__('September', 'hydra-booking'),
+					'October' :__('October', 'hydra-booking'),
+					'November' :__('November', 'hydra-booking'),
+					'December' :__('December', 'hydra-booking'),
+
+				},
+				weekdays: {
+					'Sunday' :	__('Sunday', 'hydra-booking'), 
+					'Monday' :	__('Monday', 'hydra-booking'),
+					'Tuesday' :	__('Tuesday', 'hydra-booking'),
+					'Wednesday' :	__('Wednesday', 'hydra-booking'),
+					'Thursday' :	__('Thursday', 'hydra-booking'),
+					'Friday' :	__('Friday', 'hydra-booking'),
+					'Saturday' :	__('Saturday', 'hydra-booking'),
+
+				}
+			}
 			// Array of month names
 			const months = [
 				"January",
@@ -54,7 +81,7 @@
 			]; 
 
 
-			tfhb_date_manipulate( $this, calenderData, year, month, date, months );
+			tfhb_date_manipulate( $this, calenderData, year, month, date, months, calendarLabels );
 
 
 			// Attach a click event listener to each icon
@@ -93,7 +120,7 @@
 					
 					// Call the tfhb_date_manipulate function to 
 					// update the tfhb-calendar display
-					tfhb_date_manipulate( $this, calenderData, year, month, date, months );
+					tfhb_date_manipulate( $this, calenderData, year, month, date, months, tfhb_date_manipulate );
 				
 					// first date of the month exp: 
 					// 2021-04-01
@@ -635,7 +662,7 @@
 			if(payment_status == 1 && ""==payment_type){
 				//   5 seconds
 				setTimeout(function(){ 
-					$this.find('.tfhb-notice').append('Payment Method Required');
+					$this.find('.tfhb-notice').append( __('Payment Method Required', 'hydra-booking'));
 					$this.find('.tfhb-notice').show();
 					$this.find('.tfhb-booking-submit .tfhb-submit-preloader').remove();  
 				},  2000); // 2000 milliseconds = 2 seconds
@@ -703,7 +730,7 @@
 		}
 
 		// Function to generate the tfhb-calendar
-		function tfhb_date_manipulate($this, calenderData, year, month, date, months) {
+		function tfhb_date_manipulate($this, calenderData, year, month, date, months, calendarLabels) {
 
 			const day = $this.find(".tfhb-calendar-dates");
 			const currdate = $this.find(".tfhb-calendar-current-date");
@@ -792,9 +819,7 @@
 			for (let i = dayend; i < 6; i++) {
 				lit += `<li class="inactive">${i - dayend + 1}</li>`;
 			}
-	
-			// Update the text of the current date element 
-			// with the formatted current month and year
+	 
 			currdate.text(`${months[month]} ${year}`);
 	
 			// update the HTML of the dates element 

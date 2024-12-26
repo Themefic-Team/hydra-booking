@@ -53,17 +53,19 @@ class Enqueue {
 		}
 		wp_register_script( 'tfhb-paypal-script', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
 		wp_register_script( 'tfhb-select2-script', TFHB_URL . 'assets/lib/select2/select2.min.js', array( 'jquery', 'tfhb-app-script' ), TFHB_VERSION, true );
-		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/app/js/main.js', array( 'jquery' ), TFHB_VERSION, true );
-			wp_localize_script(
-				'tfhb-app-script',
-				'tfhb_app_booking',
-				array(
-					'ajax_url'         => admin_url( 'admin-ajax.php' ),
-					'site_url'         => site_url(),
-					'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
-					'general_settings' => $general_settings,
-				)
-			);
+		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/app/js/main.js', array( 'jquery', 'wp-i18n' ), TFHB_VERSION, true );
+		// pass data to script 
+		wp_set_script_translations( 'tfhb-app-script', 'hydra-booking'  );
+		wp_localize_script(
+			'tfhb-app-script',
+			'tfhb_app_booking',
+			array(
+				'ajax_url'         => admin_url( 'admin-ajax.php' ),
+				'site_url'         => site_url(),
+				'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
+				'general_settings' => $general_settings,
+			)
+		);
 	}
 
 

@@ -41,13 +41,13 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="tfhb-calendar-body">
 			<ul class="tfhb-calendar-weekdays">
-				<li>Sun</li>
-				<li>Mon</li>
-				<li>Tue</li>
-				<li>Wed</li>
-				<li>Thu</li>
-				<li>Fri</li>
-				<li>Sat</li>
+				<li><?php echo esc_html(__('Sun', 'hydra-booking')) ?></li> 
+				<li><?php echo esc_html(__('Mon', 'hydra-booking')) ?></li>
+				<li><?php echo esc_html(__('Tue', 'hydra-booking')) ?></li>
+				<li><?php echo esc_html(__('Wed', 'hydra-booking')) ?></li>
+				<li><?php echo esc_html(__('Thu', 'hydra-booking')) ?></li>
+				<li><?php echo esc_html(__('Fri', 'hydra-booking')) ?></li>
+				<li><?php echo esc_html(__('Sat', 'hydra-booking')) ?></li>
 			</ul>
 			<ul class="tfhb-calendar-dates"></ul>
 		</div>
