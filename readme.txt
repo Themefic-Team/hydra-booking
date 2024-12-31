@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.11
+Stable tag: 1.0.12
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -14,12 +14,13 @@ Automated Scheduling & Appointment booking plugin with unlimited appointments, b
 
 ## The Best WordPress Appointment Booking Plugin with Booking Calendar - HYDRA BOOKING
 
-👉 Our Official Website: [Click Here](https://hydrabooking.com/)
-👉 Live Demo Link: [Click Here](https://demo.hydrabooking.com/)
-👉 Explore Backend: [Click Here](https://themefic.site/hydrabooking/wp-admin)
-👉 Buy Pro Version: [Click Here](https://hydrabooking.com/#pricing)
-👉 Our [Documentation](https://themefic.com/docs/hydrabooking/).
-👉 Join Our [Facebook Group](https://www.facebook.com/groups/hydra-booking).
+👉 Our Official Website: [Click Here](https://hydrabooking.com/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=website)
+👉 Live Demo Link: [Click Here](https://demo.hydrabooking.com/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=demo_link)
+👉 Explore Pro: [Play with Backend Options](https://hydrabooking.com/backend-demo/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=pro_backend)
+👉 Buy Pro Version: [Click Here](https://hydrabooking.com/#pricing/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=pro_link)
+👉 Our [Documentation](https://themefic.com/docs/hydrabooking/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=plugin_docs)
+👉 Get Support: [Click Here](https://portal.themefic.com/support/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=plugin_support)
+👉 Join Our [Facebook Group](https://www.facebook.com/groups/hydra-booking)
 
 Hydra Booking is a powerful WordPress booking plugin for creating an advanced appointment booking and calendar management system. This WordPress scheduling plugin supports unlimited appointments and integrates with WooCommerce to build a robust booking system for WordPress. With a user-friendly WordPress booking calendar, Hydra Booking ensures an intuitive experience for your clients. Perfect for businesses of all sizes, it’s the ideal choice for WordPress appointment booking. 
 
@@ -146,7 +147,12 @@ Hydra Booking uses [Appsero](https://appsero.com/) SDK to collect some telemetry
 * [Travel and Hotel Booking Solution - Tourfic](https://wordpress.org/plugins/tourfic)
 * [Ultimate Before After Image Slider & Gallery - BEAF](https://wordpress.org/plugins/beaf-before-and-after-gallery)
 * [Ultimate Addons For Contact Form 7](https://wordpress.org/plugins/ultimate-addons-for-contact-form-7/)
-* [Onepage / Direct Checkout for WooCommerce - Instantio](https://wordpress.org/plugins/instantio)
+* [Instantio – WooCommerce Quick Checkout | Floating Cart, Side Cart & Popup Cart](https://wordpress.org/plugins/instantio)
+
+###  Our Themes
+
+* [Travelfic – Ultimate Travel Booking WordPress Theme](https://wordpress.org/themes/travelfic/)
+* [Ultimate Hotel Booking WordPress Theme](https://wordpress.org/themes/ultimate-hotel-booking/)
 
 == Installation ==
 
@@ -192,6 +198,11 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.12 - 31/12/2024 =  
+
+- Updated: Refreshed the readme.txt file and plugin details.
+- Fixed: Resolved minor compatibility issues with Contact Form 7.
 
 = 1.0.11 - 19/12/2024 =  
 
