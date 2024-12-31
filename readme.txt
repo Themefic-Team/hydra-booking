@@ -201,7 +201,7 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 
 = 1.0.12 - 31/12/2024 =  
 
-- Updated: Refreshed the readme.txt file and plugin details.
+- Updated: Readme.txt file and plugin information.
 - Fixed: Resolved minor compatibility issues with Contact Form 7.
 
 = 1.0.11 - 19/12/2024 =  
