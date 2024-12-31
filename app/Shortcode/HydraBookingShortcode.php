@@ -221,8 +221,8 @@ class HydraBookingShortcode {
 		}
 		
 		// Enqueue Scripts scripts 
-		wp_enqueue_script( 'tfhb-app-script-app', TFHB_URL . 'assets/app/js/app.js', array( 'jquery', 'tfhb-app-script' ), TFHB_VERSION, true );
-		
+		wp_enqueue_script( 'tfhb-app-script-app', TFHB_URL . 'assets/app/js/app.js', array( 'jquery', 'tfhb-app-script', 'wp-i18n' ), TFHB_VERSION, true );
+		wp_set_script_translations( 'tfhb-app-script-app', 'hydra-booking'  );
 		
 		
 

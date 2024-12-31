@@ -1,8 +1,8 @@
 (function ($) {
-
+	const { __, _x } = wp.i18n;
     $(document).ready(function () { 
 		const tfhb_local_timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		const { __, _x } = wp.i18n;
+		
         /**
          * Time Zone Change
          * @author Jahid
@@ -52,18 +52,8 @@
 					'November' :__('November', 'hydra-booking'),
 					'December' :__('December', 'hydra-booking'),
 
-				},
-				weekdays: {
-					'Sunday' :	__('Sunday', 'hydra-booking'), 
-					'Monday' :	__('Monday', 'hydra-booking'),
-					'Tuesday' :	__('Tuesday', 'hydra-booking'),
-					'Wednesday' :	__('Wednesday', 'hydra-booking'),
-					'Thursday' :	__('Thursday', 'hydra-booking'),
-					'Friday' :	__('Friday', 'hydra-booking'),
-					'Saturday' :	__('Saturday', 'hydra-booking'),
-
-				}
-			}
+				}, 
+			} 
 			// Array of month names
 			const months = [
 				"January",
@@ -114,13 +104,12 @@
 					function() {
 						$(this).css("display", "none");
 
-						
 					});
 
 					
 					// Call the tfhb_date_manipulate function to 
 					// update the tfhb-calendar display
-					tfhb_date_manipulate( $this, calenderData, year, month, date, months, tfhb_date_manipulate );
+					tfhb_date_manipulate( $this, calenderData, year, month, date, months, calendarLabels );
 				
 					// first date of the month exp: 
 					// 2021-04-01
@@ -689,8 +678,7 @@
 						   $this.find('.tfhb-booking-submit').removeAttr('disabled');
 						   
 						   // Render Paypal Payment System
-						   if(payment_status == 1 && "paypal_payment" == payment_type && response.data.data){
-								console.log(response.data);
+						   if(payment_status == 1 && "paypal_payment" == payment_type && response.data.data){ 
 								tfhb_render_paypal_payment($this, response.data);
 								return
 							}
@@ -820,7 +808,8 @@
 				lit += `<li class="inactive">${i - dayend + 1}</li>`;
 			}
 	 
-			currdate.text(`${months[month]} ${year}`);
+			currdate.text(`${calendarLabels.months[months[month]]} ${year}`);
+			// currdate.text(`${months[month]} ${year}`);
 	
 			// update the HTML of the dates element 
 			// with the generated tfhb-calendar
