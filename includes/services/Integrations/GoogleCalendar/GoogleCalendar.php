@@ -77,7 +77,7 @@ class GoogleCalendar {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAccessData' ),
-				'permission_callback' =>  array($this, 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 	}
