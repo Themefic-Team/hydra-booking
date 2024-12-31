@@ -77,16 +77,12 @@ class GoogleCalendar {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAccessData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array( $this , 'permission_callback'),
 			)
 		);
 	}
-	public function permission_callback() {
-		// get header data form request "capability' 
-
-		 return true;
-		// check current user have capability
-		return current_user_can( 'tfhb_manage_hosts' );
+	public function permission_callback() { 
+		return true;
 	}
 
 	public function GetAccessData() {
@@ -132,7 +128,7 @@ class GoogleCalendar {
 				$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $user_id . '/calendars';
 
 				wp_redirect( $redirect_url );
-				// wp_die();
+				 
 
 			} catch ( Exception $e ) {
 				echo esc_html($e->getMessage());
@@ -410,8 +406,6 @@ class GoogleCalendar {
 
 				$body = wp_remote_retrieve_body( $response );
 				
-				
-
 				$google_calendar_body[ ] = json_decode( $body, true );
  
 			}
@@ -461,8 +455,7 @@ class GoogleCalendar {
 			} 
 
 			$booking->meeting_locations = $meeting_loaction;
-		
-			
+
 		}
 		$meeting_loaction =   $booking->meeting_locations; 
 		$meeting_locations = is_array($meeting_loaction) ?  json_decode($meeting_loaction)  :  $meeting_loaction;
