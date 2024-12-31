@@ -17,7 +17,7 @@ class UpdateController {
 	public function __construct() {  
 
         // update version 1.0.8 to 1.0.9.
-        // $this->update_1_0_12();
+        $this->update_1_0_12();
  
 		 
 	} 

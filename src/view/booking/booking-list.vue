@@ -520,14 +520,14 @@ const goForReschedule = (attendee) => {
             :hover_animation="false" 
             icon_position = 'left'
         /> 
-        <HbButton 
+        <!-- <HbButton 
             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
             @click="router.push({ name: 'BookingCreate' })"
             :buttonText="$tfhb_trans('Add New Booking')"
             icon="PlusCircle"   
             :hover_animation="false" 
             icon_position = 'left'
-        /> 
+        />  -->
     </div> 
 </div>
 
@@ -914,9 +914,9 @@ const goForReschedule = (attendee) => {
                         <span @click.stop="bookingReminder(book)">
                             <Icon name="AlarmClock" width="20" />
                         </span>
-                        <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
+                        <!-- <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
                             <Icon name="FilePenLine" width="20" />
-                        </router-link>
+                        </router-link> -->
                     </div>
                 </td>
             </tr>

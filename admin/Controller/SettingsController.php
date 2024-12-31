@@ -221,7 +221,7 @@ class SettingsController {
 
 		$data = array(
 			'status'  => true,
-			'message' => 'General Settings Updated Successfully',
+			'message' =>  __('General Settings Updated Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
 	}
@@ -273,7 +273,7 @@ class SettingsController {
 			// response
 			$data = array(
 				'status'  => false,
-				'message' => 'Something Went Wrong, Please Try Again Later.',
+				'message' =>  __('Something Went Wrong, Please Try Again Later.', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}
@@ -323,7 +323,7 @@ class SettingsController {
 			} else {
 				$data = array(
 					'status'  => false,
-					'message' => 'Availability Not Updated',
+					'message' =>  __('Availability Not Inserted', 'hydra-booking')
 				);
 				return rest_ensure_response( $data );
 			}
@@ -338,7 +338,7 @@ class SettingsController {
 			if ( $update['status'] != true ) {
 				$data = array(
 					'status'  => false,
-					'message' => 'Availability Not Updated',
+					'message' =>  __('Availability Not Updated', 'hydra-booking')
 				);
 				return rest_ensure_response( $data );
 			}
@@ -358,7 +358,7 @@ class SettingsController {
 			'status'       => true,
 			'availability' => $availability,
 			// 'update'       => $update,
-			'message'      => 'Availability Updated Successfully',
+			'message'      => __('Availability Updated Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
 	}
@@ -384,7 +384,7 @@ class SettingsController {
 		$data         = array(
 			'status'       => true,
 			'availability' => $availability,
-			'message'      => 'Availability Deleted Successfully',
+			'message'      =>  __('Availability Deleted Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
 	}
@@ -506,7 +506,7 @@ class SettingsController {
 			// woocommerce payment
 			$data = array(
 				'status'  => true,
-				'message' => 'Integration Settings Updated Successfully',
+				'message' =>  __('Integration Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'google_calendar' ) {
@@ -525,7 +525,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Google Calendar Settings Updated Successfully',
+				'message' =>  __('Google Calendar Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'apple_calendar' ) {
@@ -539,7 +539,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Apple Calendar Settings Updated Successfully',
+				'message' => __('Apple Calendar Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'mailchimp' ) {
@@ -554,7 +554,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Mailchimp Settings Updated Successfully',
+				'message' => __('Mailchimp Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'paypal' ) {
@@ -571,7 +571,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Paypal Settings Updated Successfully',
+				'message' =>  __('Paypal Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'webhook' ) {
@@ -585,7 +585,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Webhook Settings Updated Successfully',
+				'message' =>  __('Webhook Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'fluent_crm' ) {
@@ -599,7 +599,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'FluentCRM Settings Updated Successfully',
+				'message' => __('FluentCRM Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'zoho_crm' ) {
@@ -613,7 +613,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'ZohoCRM Settings Updated Successfully',
+				'message' =>  __('Zoho CRM Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'pabbly' ) {
@@ -625,8 +625,8 @@ class SettingsController {
 
 			$data = array(
 				'status'  => true,
-				'integration_settings'  => $option,
-				'message' => 'Pabbly Settings Updated Successfully',
+				'integration_settings'  => $option, 
+				'message' =>  __('Pabbly Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'zapier' ) {
@@ -638,8 +638,8 @@ class SettingsController {
 
 			$data = array(
 				'status'  => true,
-				'integration_settings'  => $option,
-				'message' => 'Zapier Settings Updated Successfully',
+				'integration_settings'  => $option, 
+				'message' =>  __('Zapier Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity') { 
@@ -659,7 +659,7 @@ class SettingsController {
 			);
 
 			if($key == 'gravity' && !empty($data['status'])){
-				$data['message'] = 'Install and activate the Gravity Forms plugin if it is not already installed or active.';
+				$data['message'] =  __('Install and activate the Gravity Forms plugin if it is not already installed or active.', 'hydra-booking');
 			}
 			if($key == 'cf7' && !empty($data['status']) && $_tfhb_integration_settings[$key]['status'] == true){
 				if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
@@ -670,7 +670,7 @@ class SettingsController {
 			
 			if($key == 'fluent' && !empty($data['status'] ) && $_tfhb_integration_settings[$key]['status'] == true){
 				if (!is_plugin_active('fluentform/fluentform.php')) {
-					$data['message'] = 'Install and activate the Fluent Form plugin if it is not already installed or active.';
+					$data['message'] =  __('Install and activate the Fluent Forms plugin if it is not already installed or active.', 'hydra-booking');
 			
 				}
 			}
@@ -681,7 +681,7 @@ class SettingsController {
 		 	$data =  apply_filters( 'tfhb_update_integration_settings', // Hook for update integration settings
 				array(
 					'status'  => true, 
-					'message' => 'Integration Settings Updated Successfully',
+					'message' =>  __('Integration Settings Updated Successfully', 'hydra-booking')
 				), 
 				$_tfhb_integration_settings,
 				$key, 

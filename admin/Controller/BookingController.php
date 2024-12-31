@@ -513,7 +513,7 @@ class BookingController {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Error while creating Booking',
+						'message' => __('Error while creating Booking', 'hydra-booking'),
 					)
 				);
 			}
@@ -543,7 +543,7 @@ class BookingController {
 		$data = array(
 			'status'  => true,
 			'booking' => $booking_List,
-			'message' => ! empty( $request['id'] ) ? 'Booking Updated Successfully' : 'Booking Created Successfully',
+			'message' => ! empty( $request['id'] ) ? __('Booking Updated Successfully', 'hydra-booking') : __('Booking Created Successfully', 'hydra-booking'),
 		);
 
 		return rest_ensure_response( $data );
@@ -560,7 +560,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Booking',
+					'message' => __('Invalid Booking', 'hydra-booking'),
 				)
 			);
 		}
@@ -625,7 +625,7 @@ class BookingController {
 			'status'           => true,
 			'bookings'         => $bookingsList,
 			'booking_calendar' => $booking_array,
-			'message'          => 'Booking Data Successfully Deleted!',
+			'message'          =>  __('Booking Data Successfully Deleted!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -639,7 +639,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Booking',
+					'message' => __('Invalid Booking', 'hydra-booking'),
 				)
 			);
 		}
@@ -660,7 +660,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Booking',
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
 				)
 			);
 		} 
@@ -669,7 +669,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'This Booking is not Confirmed',
+					'message' =>  __('This Booking is not Confirmed', 'hydra-booking'),
 				)
 			);
 		}
@@ -680,7 +680,7 @@ class BookingController {
 		// Return response
 		$data = array(
 			'status'  => true,
-			'message' => 'Reminder Email Sent Successfully!',
+			'message' =>  __('Reminder Email Sent Successfully!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -694,7 +694,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Attendee',
+					'message' =>  __('Invalid Attendee', 'hydra-booking'),
 				)
 			);
 		}
@@ -713,7 +713,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Attendee',
+					'message' =>  __('Invalid Attendee', 'hydra-booking'),
 				)
 			);
 		}
@@ -722,7 +722,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => ' This Attendee Booking is not Confirmed',
+					'message' =>  __('This Booking is not Confirmed', 'hydra-booking'),
 				)
 			);
 		}
@@ -732,7 +732,7 @@ class BookingController {
 		// Return response
 		$data = array(
 			'status'  => true,
-			'message' => 'Reminder Email Sent Successfully!',
+			'message' =>  __('Reminder Email Sent Successfully!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -748,7 +748,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Attendee',
+					'message' =>  __('Invalid Attendee', 'hydra-booking'),
 				)
 			);
 		}
@@ -768,7 +768,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Attendee',
+					'message' => __('Invalid Attendee', 'hydra-booking'),
 				)
 			);
 		}
@@ -776,7 +776,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Attendee Status Already Updated!',
+					'message' =>  __('Attendee Status Already Updated!', 'hydra-booking'),
 				)
 			);
 		}
@@ -806,7 +806,7 @@ class BookingController {
 			// Return response
 			$data = array(
 				'status'  => true,
-				'message' => 'Attendee Status Updated Successfully!', 
+				'message' =>  __('Attendee Status Updated Successfully!', 'hydra-booking'), 
 			);
 			return rest_ensure_response( $data );
 		}
@@ -884,7 +884,7 @@ class BookingController {
 			'status'  => true,
 			'booking' => $singlebooking,
 			'times'   => $data_time,
-			'message' => 'Booking Data',
+			'message' =>  __('Booking Data Successfully Retrieve!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -900,7 +900,7 @@ class BookingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Booking',
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
 				)
 			);
 		}
@@ -1015,7 +1015,7 @@ class BookingController {
 			'status'           => true,
 			'booking'          => $bookingsList,
 			'booking_calendar' => $booking_array,
-			'message'          => 'Booking Updated Successfully',
+			'message'          =>  __('Booking Updated Successfully!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -1111,9 +1111,9 @@ class BookingController {
 			'booking_calendar' => $booking_array, 
 		);
 		if($status == 'delete'){
-			$data['message'] = 'Booking Deleted Successfully';
+			$data['message'] =  __('Booking Deleted Successfully!', 'hydra-booking');
 		}else{
-			$data['message'] = 'Booking Updated Successfully';
+			$data['message'] =  __('Booking Updated Successfully!', 'hydra-booking');
 		}
 		return rest_ensure_response( $data );
 	}
@@ -1198,7 +1198,7 @@ class BookingController {
 			'status'    => true,
 			'data'      => $data,
 			'file_name' => $file_name,
-			'message'   => 'Booking Data Exported Successfully',
+			'message'   =>  __('Booking Data Exported Successfully!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );
 	}

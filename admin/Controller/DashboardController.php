@@ -19,10 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class DashboardController {
 
-	public function __construct() {
-		// add_action('admin_init', array($this, 'init'));
-
-		// add_action('rest_api_init', array($this, 'create_endpoint'));
+	public function __construct() { 
+		
 	}
 	public function create_endpoint() {
 		register_rest_route(

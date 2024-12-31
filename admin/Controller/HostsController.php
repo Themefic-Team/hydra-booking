@@ -201,7 +201,7 @@ class HostsController {
 			'status'  => true,
 			'users'   => $userData,
 			'hosts'   => $HostsList,
-			'message' => 'General Settings Updated Successfully',
+			'message' =>  __( 'General Settings Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -217,7 +217,7 @@ class HostsController {
 		$data = array(
 			'status'  => true,
 			'hosts'   => $HostsList,
-			'message' => 'Host Data Successfully Retrieve!',
+			'message' =>  __( 'General Settings Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -231,7 +231,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Select User',
+					'message' =>  __( 'Select User', 'hydra-booking' ),
 				)
 			);
 		}
@@ -242,7 +242,7 @@ class HostsController {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Please fill all fields',
+						'message' =>  __( 'Please fill all the fields', 'hydra-booking' ),
 					)
 				);
 			}
@@ -271,7 +271,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid User',
+					'message' =>  __( 'Invalid User', 'hydra-booking' ),
 				)
 			);
 		}
@@ -284,7 +284,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'This User is already a host',
+					'message' =>  __( 'This User is already a host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -325,7 +325,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while creating host',
+					'message' =>  __( 'Error while creating host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -350,7 +350,7 @@ class HostsController {
 			'status'  => true,
 			'hosts'   => $HostsList,
 			'id'      => $hosts_id,
-			'message' => 'General Settings Updated Successfully',
+			'message' => __( 'General Settings Updated Successfully', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -366,7 +366,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -377,7 +377,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while deleting host',
+					'message' => __( 'Error while deleting host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -398,7 +398,7 @@ class HostsController {
 		$data = array(
 			'status'  => true,
 			'hosts'   => $HostsList,
-			'message' => 'Host Deleted Successfully',
+			'message' => __( 'Host Deleted Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -413,7 +413,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -428,7 +428,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' => __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -466,7 +466,7 @@ class HostsController {
 			'settingsAvailabilityData'      => $availabilityData,
 			'hosts_settings' => $_tfhb_hosts_settings,
 			'integrations' => $integrations,
-			'message'        => 'Host Data',
+			'message'        =>  __( 'Host Data', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -482,7 +482,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -494,7 +494,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' => __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -520,7 +520,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while updating host',
+					'message' =>  __( 'Error while updating host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -533,7 +533,7 @@ class HostsController {
 		// Return response
 		$data = array(
 			'status'  => true,
-			'message' => 'Host Updated Successfully',
+			'message' =>  __( 'Host Information Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -553,7 +553,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -566,7 +566,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -581,7 +581,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while updating host',
+					'message' =>  __( 'Error while updating host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -600,7 +600,7 @@ class HostsController {
 		$data = array(
 			'status'  => true,
 			'hosts'   => $HostsList,
-			'message' => 'Host Status Updated Successfully',
+			'message' =>  __( 'Host Status Updated Successfully', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -863,7 +863,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Host id is Empty',
+					'message' =>  __( 'Host id is Empty', 'hydra-booking' ),
 				)
 			);
 		}
@@ -930,7 +930,7 @@ class HostsController {
 			// response
 			$data = array(
 				'status'  => false,
-				'message' => 'Something Went Wrong, Please Try Again Later.',
+				'message' =>  __( 'Something Went Wrong, Please Try Again Later.', 'hydra-booking' ),
 			);
 			return rest_ensure_response( $data );
 		}
@@ -1011,7 +1011,7 @@ class HostsController {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Error while creating host',
+						'message' =>  __( 'Error while creating host', 'hydra-booking' ),
 					)
 				);
 			}
@@ -1049,7 +1049,7 @@ class HostsController {
 		$data = array(
 			'status'       => true,
 			'availability' => $_tfhb_host_info['availability'],
-			'message'      => 'Availability Updated Successfully',
+			'message'      =>  __( 'Availability Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}

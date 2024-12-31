@@ -51,7 +51,7 @@ class HydraBookingShortcode {
 		// Country List form josn file
 
 		if ( ! isset( $atts['id'] ) || $atts['id'] == 0 ) {
-			return 'Please provide a valid Meeting id';
+			return  __( 'Please provide a valid Meeting id', 'hydra-booking' );
 		}
 
 		// Attributes
@@ -92,7 +92,7 @@ class HydraBookingShortcode {
 			);
 
 			if ( ! $attendeeBooking ) {
-				return 'Invalid Booking ID';
+				return  __( 'Invalid Booking', 'hydra-booking' );
 			}
 
 			$booking_data = $attendeeBooking;
@@ -252,21 +252,21 @@ class HydraBookingShortcode {
 
 		// Checked Nonce validation
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
-			wp_send_json_error( array( 'message' => 'Nonce verification failed' ) );
+			wp_send_json_error( array( 'message' => __('Nonce verification failed', 'hydra-booking') ) );
 		}
 
 		// Check if the request is POST
 		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
-			wp_send_json_error( array( 'message' => 'Invalid request method' ) );
+			wp_send_json_error( array( 'message' => __('Invalid request method', 'hydra-booking') ) );
 		}
 
 		// Check if the request is not empty
 		if ( empty( $_POST ) ) {
-			wp_send_json_error( array( 'message' => 'Invalid request' ) );
+			wp_send_json_error( array( 'message' => __('Invalid request', 'hydra-booking') ) );
 		}
 
 		if ( $_POST['meeting_id'] == 0 ) {
-			wp_send_json_error( array( 'message' => 'Invalid Meeting ID' ) );
+			wp_send_json_error( array( 'message' => __('Invalid Meeting ID', 'hydra-booking') ) );
 		}
 
 		$data     = array();
@@ -813,7 +813,7 @@ class HydraBookingShortcode {
 		}  
 		$attendee_update['id'] = $attendeeBooking->id; 
 		$attendee_update['status'] = 'rescheduled'; 
-		$attendee_update['reason'] = 'Rescheduled by Attendee';
+		$attendee_update['reason'] =  __('Rescheduled by Attendee', 'hydra-booking');
 		
 		$Attendee->update( $attendee_update );
 		

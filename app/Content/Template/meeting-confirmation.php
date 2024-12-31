@@ -21,6 +21,7 @@ $data = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array();
 
 $date_time = new DateTimeController( 'UTC' );
 $availability_data = $date_time->GetAvailabilityData($data);    
+$availability_time_zone = $availability_data['time_zone'];  
 ?> 
 <div class="tfhb-meeting-confirmation" >
 	<?php
@@ -56,13 +57,13 @@ $availability_data = $date_time->GetAvailabilityData($data);
 					$start_time = $data->start_time;
 					$end_time = $data->end_time;
 					$date = $meeting_dates[0]; 
-				
-					$start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $data->availability_time_zone,  $data->attendee_time_zone, '' );
+					$booking_availability_time_zone = !empty($data->availability_time_zone) ? $data->availability_time_zone : $availability_time_zone;
+					$start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $booking_availability_time_zone,  $data->attendee_time_zone, '' );
 					
-					$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $data->availability_time_zone, $data->attendee_time_zone , '' ); 
+					$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $booking_availability_time_zone, $data->attendee_time_zone , '' ); 
 					$date_strings = '';
 				foreach ( $meeting_dates as $key => $date ) {
-					$formate_date = $date_time->convert_time_based_on_timezone( $date, $data->start_time, $data->availability_time_zone, $data->attendee_time_zone , '' );
+					$formate_date = $date_time->convert_time_based_on_timezone( $date, $data->start_time, $booking_availability_time_zone, $data->attendee_time_zone , '' );
 					$date_strings .= $formate_date->format('l, F j');
 					$date_strings .= '| ';
 				}
