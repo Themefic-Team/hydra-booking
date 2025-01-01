@@ -255,7 +255,6 @@ class GoogleCalendar {
 	// Insert Booking to Google Calendar
 	public function InsertGoogleCalender($booking ) {
 		
-		
 		$value = array();
 	
 		if ( ! isset( $booking->id ) ) {
@@ -285,7 +284,7 @@ class GoogleCalendar {
 		if($booking->booking_type == 'one-to-group'){ 
 			$event_title =  $booking->meeting_title;
 		}else{
-			$event_title = 'Meeting with ' . $booking->attendee_name;
+			$event_title = $booking->meeting_title . ' ( Meeting with ' . $booking->attendee_name .' )';
 		}
 
 		// Set the Access Token
@@ -331,7 +330,7 @@ class GoogleCalendar {
 			// Meeting location google meeting
 			$setData = array(
 				'title'          => $event_title,
-				'summary'        => 'Title: ' . $booking->title,
+				'summary'        => 'Title: ' . $event_title,
 				'location' => $booking_locations_data,
 				'description'    => 'Description: ',
 				'start'          => array(
@@ -466,7 +465,7 @@ class GoogleCalendar {
 
 		$getBooking->update( $updateData );
  
- 
+  
 		return true;
 	}
 
