@@ -363,14 +363,14 @@ const truncateString = (str, num) => {
                             >
                                 <span > {{ data.start_time}} </span>
                                 <div class="tfhb-admin-card-box tfhb-p-16">
-                                    <p>{{data.attendee_name}} ({{data.attendee_email}})  </p>
+                                    <p>{{data.title}}   </p>
                                     <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
                                         <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
                                             <!-- convert 2024-05-29 to 25 Sep, 24 -->   
 
                                             {{ FormatDate(data.meeting_dates) }}
                                         </span> 
-                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.attendee_time_zone}}</span>
+                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.availability_time_zone}}</span>
                                         <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}}</span>
                                     </div>
                                 </div> 
