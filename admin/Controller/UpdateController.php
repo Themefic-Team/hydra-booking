@@ -33,7 +33,7 @@ class UpdateController {
 
         $tfhb_update_status = get_option('tfhb_update_status', false); 
           
-        if( $this->version == '1.0.13' && $tfhb_update_status != '1.0.13' ) { 
+        if( $this->version == '1.0.14' && $tfhb_update_status != '1.0.14' ) { 
 
             // Add column in transaction table
             global $wpdb;
@@ -141,7 +141,7 @@ class UpdateController {
 
            
             // update version
-            update_option('tfhb_update_status', '1.0.13');
+            update_option('tfhb_update_status', '1.0.14');
 
             
             
