@@ -20,6 +20,7 @@ const meetingCategory = reactive({});
 const wcProduct = reactive({});
 const integrations = reactive({
     google_calendar_status : 1,
+    outlook_calendar_status : 1,
     zoom_meeting_status : 1,
     cf7_status : 1,
     fluent_status : 1,
@@ -362,6 +363,7 @@ const fetchMeeting = async () => {
             // Time Zone = 
             timeZone.value = response.data.time_zone;   
             integrations.google_calendar_status = response.data.integrations.google_calendar_status && response.data.integrations.google_calendar_status == 1 ? false : true;  
+            integrations.outlook_calendar_status = response.data.integrations.outlook_calendar_status && response.data.integrations.outlook_calendar_status == 1 ? false : true;  
             integrations.zoom_meeting_status = response.data.integrations.zoom_meeting_status && response.data.integrations.zoom_meeting_status == 1  ? false : true;  
             integrations.cf7_status = response.data.integrations.cf7_status && response.data.integrations.cf7_status == 1  ? false : true;  
             integrations.fluent_status = response.data.integrations.fluent_status && response.data.integrations.fluent_status == 1  ? false : true;  

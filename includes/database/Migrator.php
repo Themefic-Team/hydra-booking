@@ -2,6 +2,7 @@
 namespace HydraBooking\DB;
 
 use HydraBooking\DB\Availability;
+use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Meeting;
@@ -22,6 +23,10 @@ class Migrator {
 		// availability migration
 		$Availability = new Availability();
 		$Availability->migrate();
+
+		// Availability migration
+		$Attendees = new Attendees();
+        $Attendees->migrate();
 
 		// Host migration
 		$Host = new Host();
@@ -46,6 +51,7 @@ class Migrator {
 		// BookingMeta migration
 		$BookingMeta = new BookingMeta();
 		$BookingMeta->migrate();
+		
 	}
 
 	/**

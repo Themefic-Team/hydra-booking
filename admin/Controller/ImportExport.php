@@ -15,8 +15,7 @@ class ImportExport {
 
 	// constaract
 	public function __construct() {
-
-		// add_action('rest_api_init', array($this, 'create_endpoint'));
+ 
 	}
 
 	public function create_endpoint() {
@@ -98,7 +97,7 @@ class ImportExport {
 		$data = array(
 			'status'  => true,
 			'data'    => true,
-			'message' => 'Booking Imported Successfully',
+			'message' =>  __( 'Booking Data Imported Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}

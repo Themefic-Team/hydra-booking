@@ -89,7 +89,7 @@ class Notification {
             'meeting_id' =>  $data->meeting_id, 
             'attendee_id' =>  $data->attendee_id,
             'attendee_name' =>  $data->attendee_name,
-            'message' => 'Has booked a meeting', 
+            'message' =>  __('Has booked a meeting', 'hydra-booking'),
             'status' => 'unread', 
         );
         $data = array(
@@ -118,7 +118,7 @@ class Notification {
         }
         $data = array(
             'status'     => true, 
-            'message'     => 'Notification marked as read', 
+            'message'     =>  __('Notification Marked as Read', 'hydra-booking'),
         );
 
         return rest_ensure_response( $data );

@@ -20,6 +20,8 @@ class Enqueue {
 		// Global General Settings
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
 
+		$currency = ! empty( $general_settings['currency'] ) ? $general_settings['currency'] : 'USD';
+
 		$_tfhb_appearance_settings = get_option( '_tfhb_appearance_settings' );
 
 		// Integration Settings
@@ -42,26 +44,28 @@ class Enqueue {
 		wp_register_script( 'tfhb-stripe-script', '//checkout.stripe.com/checkout.js', array( 'jquery' ), '1.0.0' );
 		if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1){
 			if($tfhb_paypal['environment'] == 'live'){
-				$sdk_url = 'https://www.paypal.com/sdk/js?client-id='.$tfhb_paypal['client_id'].'';
+				$sdk_url = 'https://www.paypal.com/sdk/js?client-id='.esc_attr($tfhb_paypal['client_id']).'&currency='.esc_attr($currency).'';
 			}else{ 
-				$sdk_url = 'https://www.sandbox.paypal.com/sdk/js?client-id='.$tfhb_paypal['client_id'].'';
+				$sdk_url = 'https://www.sandbox.paypal.com/sdk/js?client-id='.esc_attr($tfhb_paypal['client_id']).'&currency='.esc_attr($currency).'';
 			}
 			// if
 			wp_register_script( 'tfhb-paypal-sdk', esc_url($sdk_url), array(), null, true );
 		}
 		wp_register_script( 'tfhb-paypal-script', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
 		wp_register_script( 'tfhb-select2-script', TFHB_URL . 'assets/lib/select2/select2.min.js', array( 'jquery', 'tfhb-app-script' ), TFHB_VERSION, true );
-		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/app/js/main.js', array( 'jquery' ), TFHB_VERSION, true );
-			wp_localize_script(
-				'tfhb-app-script',
-				'tfhb_app_booking',
-				array(
-					'ajax_url'         => admin_url( 'admin-ajax.php' ),
-					'site_url'         => site_url(),
-					'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
-					'general_settings' => $general_settings,
-				)
-			);
+		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/app/js/main.js', array( 'jquery', 'wp-i18n' ), TFHB_VERSION, true );
+		// pass data to script 
+		
+		wp_localize_script(
+			'tfhb-app-script',
+			'tfhb_app_booking',
+			array(
+				'ajax_url'         => admin_url( 'admin-ajax.php' ),
+				'site_url'         => site_url(),
+				'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
+				'general_settings' => $general_settings,
+			)
+		);
 	}
 
 

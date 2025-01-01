@@ -375,7 +375,97 @@ const bookingReminder  = async (booking) => {
         console.log(error);
     } 
 }
+const SendAttendeeReminder  = async (attendee) => { 
 
+    let data = {
+        attendee_id: attendee.id
+    } 
+    try { 
+        // axisos sent dataHeader Nonce Data
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/send-attendee-reminder', data, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+
+        if (response.data.status) {  
+              
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+
+        }else{
+
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+}
+const ChangeAttendeeStatus  = async (attendee_id, booking_id, status) => { 
+    
+    let data = {
+        attendee_id: attendee_id,
+        status: status
+    }
+    try { 
+        // axisos sent dataHeader Nonce Data
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/change-attendee-status', data, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+
+        if (response.data.status) {  
+            //   update booking data using booking id and attendee id form paginatedBooking
+            let index = paginatedBooking.value.findIndex(booking => booking.id == booking_id);
+            let attendeeIndex = paginatedBooking.value[index].attendees.findIndex(attendee => attendee.id == attendee_id); 
+            paginatedBooking.value[index].attendees[attendeeIndex].status = status;
+
+
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+
+        }else{
+
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+}
+
+// const
+
+
+const activeAttendeeAction = ref(0);
+// on click add class active
+const activeSingleAttendeeAction = (id) => {
+    if(activeAttendeeAction.value == id) {
+        activeAttendeeAction.value = 0;
+        return;
+    }
+    activeAttendeeAction.value = id; 
+
+}
+const goForReschedule = (attendee) => {
+  
+    let url = tfhb_core_apps.admin_url+'/?hydra-booking=booking&hash='+attendee.hash+'&meetingId='+attendee.meeting_id+'&type=reschedule';
+    window.open(url, '_blank');
+}
 </script>
 <template>
 <!-- {{ tfhbClass }} -->
@@ -430,14 +520,14 @@ const bookingReminder  = async (booking) => {
             :hover_animation="false" 
             icon_position = 'left'
         /> 
-        <HbButton 
+        <!-- <HbButton 
             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
             @click="router.push({ name: 'BookingCreate' })"
             :buttonText="$tfhb_trans('Add New Booking')"
             icon="PlusCircle"   
             :hover_animation="false" 
             icon_position = 'left'
-        /> 
+        />  -->
     </div> 
 </div>
 
@@ -572,22 +662,59 @@ const bookingReminder  = async (booking) => {
             <!-- Attendee Info -->
             <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width ">
                 <h3>{{ $tfhb_trans('Attendee') }}  </h3>
-                <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
-                    <div v-if="singleBookingData.attendee_name" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
-                        <Icon name="User" size=20 /> 
-                        {{ singleBookingData.attendee_name }}
-                    </div>  
-                    <div v-if="singleBookingData.attendee_email"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" >
-                        <Icon name="Mail" size=20 /> 
-                        {{ singleBookingData.attendee_email }}
-                    </div>  
-                    <div v-if="singleBookingData.attendee_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
-                        <Icon name="Globe" size=20 /> 
-                        {{singleBookingData.attendee_time_zone}}
-                    </div>  
-                    <div v-if="singleBookingData.address" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: 100%">
-                        <Icon name="MapPin" size=20 /> 
-                        {{singleBookingData.address}}
+                <div class="tfhb-booking-info-inner tfhb-attendee-details tfhb-flexbox tfhb-gap-12">
+                    <div   class="tfhb-booking-details tfhb-full-width" >
+   
+                        <table class="table" cellpadding="0" :cellspacing="0">
+                            <thead>
+                                <tr> 
+                                    <th>{{ $tfhb_trans('Name & Email') }}</th>
+                                    <th>{{ $tfhb_trans('Time Zone') }}</th> 
+                                    <th>{{ $tfhb_trans('Status') }}</th> 
+                                    <th>{{ $tfhb_trans('Action') }}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody v-if="singleBookingData.attendees">
+                                <tr v-for="(attendee, key) in singleBookingData.attendees" :key="key"> 
+                                   <td> 
+                                        {{ attendee.attendee_name }} 
+                                        <span>{{attendee.email}}</span>
+                                    </td>
+                                   
+                                   <td>
+                                        {{attendee.attendee_time_zone }}
+                                    </td> 
+                                    <td>
+                                        {{attendee.status }}
+                                    </td> 
+                                    <td> 
+                                        <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
+                                            <span @click.stop="SendAttendeeReminder(attendee)">
+                                                <Icon name="AlarmClock" width="20" />
+                                            </span>
+                                            <span @click.stop="goForReschedule(attendee)">
+                                                <Icon name="RefreshCcw" width="20" />
+                                            </span>
+                                            <div  @click="activeSingleAttendeeAction(attendee.id)" class="tfhb-single-hosts-action tfhb-dropdown">
+                                                <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
+                                                <transition name="tfhb-dropdown-transition">
+                                                    <div v-show="attendee.id == activeAttendeeAction" class="tfhb-dropdown-wrap ">  
+                                                        
+                                                        <span class="tfhb-dropdown-single" @click="ChangeAttendeeStatus(attendee.id, singleBookingData.id, 'confirmed')"><Icon name="CalendarCheck2" size=16   /> {{ $tfhb_trans('Confirm') }} </span>
+                                                        <span class="tfhb-dropdown-single " @click="ChangeAttendeeStatus(attendee.id, singleBookingData.id, 'pending')" ><Icon name="CalendarClock" size=16  /> {{ $tfhb_trans('Pending') }} </span>
+                                                        <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="ChangeAttendeeStatus(attendee.id, singleBookingData.id, 'canceled')" ><Icon name="X"  size=16 /> {{ $tfhb_trans('Cancel') }} </span>
+                                                      
+                                                    </div>
+                                                </transition>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+ 
                     </div>   
                 </div>
             </div>
@@ -727,7 +854,7 @@ const bookingReminder  = async (booking) => {
                 <th>{{ $tfhb_trans('Date & Time') }}</th>
                 <th>{{ $tfhb_trans('Title') }}</th>
                 <th>{{ $tfhb_trans('Host') }}</th>
-                <th>{{ $tfhb_trans('Attendee') }}</th>
+                <!-- <th>{{ $tfhb_trans('Attendee') }}</th> -->
                 <th>{{ $tfhb_trans('Duration') }}</th>
                 <th>{{ $tfhb_trans('Status') }}</th>
                 <th>{{ $tfhb_trans('Action') }}</th>
@@ -755,17 +882,14 @@ const bookingReminder  = async (booking) => {
                     {{ book.host_first_name }} {{ book.host_last_name }}
                     <span>{{ book.host_email }}</span>
                 </td>
-                <td>
-                    {{ book.attendee_name }}
-                    <span>{{ book.attendee_email }}</span>
-                </td>
+               
                 <td>
                     {{ book.duration }} {{ $tfhb_trans('minutes') }}
                 </td>
                 <td>
                     <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
-                        <div class="status" :class="book.booking_status">
-                            {{ book.booking_status }}
+                        <div class="status" :class="book.status">
+                            {{ book.status }}
                         </div>
                         <div class="tfhb-status-bar">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -790,9 +914,9 @@ const bookingReminder  = async (booking) => {
                         <span @click.stop="bookingReminder(book)">
                             <Icon name="AlarmClock" width="20" />
                         </span>
-                        <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
+                        <!-- <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
                             <Icon name="FilePenLine" width="20" />
-                        </router-link>
+                        </router-link> -->
                     </div>
                 </td>
             </tr>

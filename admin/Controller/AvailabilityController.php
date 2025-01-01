@@ -98,7 +98,7 @@ class AvailabilityController {
 
 		$data = array(
 			'status'  => true,
-			'message' => 'Availability Deleted',
+			'message' => __('Availability Deleted Successfully', 'hydra-booking'),
 
 		);
 		return rest_ensure_response( $data );
