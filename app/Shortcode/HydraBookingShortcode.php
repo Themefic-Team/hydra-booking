@@ -963,15 +963,16 @@ class HydraBookingShortcode {
 
 		$attendee_hash = isset( $_POST['attendee_hash'] ) ? sanitize_text_field( $_POST['attendee_hash'] ) : '';
 		$reason       = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
-
+		$hash       = isset( $_POST['hash'] ) ? sanitize_text_field( $_POST['hash'] ) : '';
+		
 		$Attendee = new Attendees();
 		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
 			array(
-				array('hash', '=',get_query_var( 'hash' )),
+				array('hash', '=',$hash),
 			),
 			1,
 			'DESC'
-		); 
+		);  
  
 		if ( ! $attendeeBooking ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid Booking ID', 'hydra-booking')) ) );

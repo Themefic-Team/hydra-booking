@@ -105,6 +105,7 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 						<br>
 
 						<textarea name="reason" required id="reason"></textarea>
+						<input type="hidden" name="hash" value="<?php echo esc_attr($data->hash) ?>">
 						<br>
 						<br>
 					</div> 

@@ -121,7 +121,7 @@ class Attendees {
 	 * Get Attendees Data with booking
 	 */
 	public function getAttendeeWithBooking( $where = null, $limit = null, $orderBy = null) {
-
+		
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . $this->table;
@@ -189,7 +189,7 @@ class Attendees {
 			
 			// Prepare the SQL query 
 			$query = $wpdb->prepare($sql, $data);
-	
+			
 			// Get the results
 			if($limit == 1) {
 				$results = $wpdb->get_row($query); 

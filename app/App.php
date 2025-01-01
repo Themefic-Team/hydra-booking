@@ -108,7 +108,7 @@ class App {
 	}
 
 	public function tfhb_single_page_template( $template ) {
-
+		
 		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meetingId' )) {
 			 
 
@@ -142,7 +142,7 @@ class App {
 				),
 				1,
 				'DESC'
-			); 
+			);  
 			if ( ! $attendeeBooking ) {
 				return $template;
 			} 
