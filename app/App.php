@@ -4,8 +4,10 @@ namespace HydraBooking\App;
 // Use Classes
 use HydraBooking\App\Shortcode\HydraBookingShortcode;
 use HydraBooking\App\Enqueue;
+use HydraBooking\App\BookingLocation;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\DB\Booking;
+use HydraBooking\DB\Attendees;
 
 class App {
 	public function __construct() {
@@ -20,21 +22,9 @@ class App {
 
 		// Load Shortcode Class
 		new HydraBookingShortcode();
+ 
 
 
-		// display booking_id  into checkout page
-		add_filter( 'woocommerce_get_item_data', array( new WooBooking(), 'tfhb_woocommerce_get_item_data' ), 10, 2 );
-
-		// Show custom data in order details.
-		add_action( 'woocommerce_checkout_create_order_line_item', array( new WooBooking(), 'tfhb_apartment_custom_order_data' ), 10, 4 );
-
-		// add booking_id to order meta
-		add_action( 'woocommerce_checkout_order_processed', array( new WooBooking(), 'tfhb_add_apartment_data_checkout_order_processed' ), 10, 4 );
-
-		// add_action( 'woocommerce_store_api_checkout_order_processed', array(new WooBooking(), 'tfhb_add_apartment_data_checkout_order_processed_block_checkout') );
-		add_action( 'woocommerce_thankyou', array( new WooBooking(), 'tfhb_woocommerce_thankyou' ) );
-
-		add_action( 'woocommerce_store_api_checkout_order_processed', array( new WooBooking(), 'tfhb_add_apartment_data_checkout_order_processed_block_checkout' ) );
 
 		add_filter( 'query_vars', array( $this, 'tfhb_single_query_vars' ) );
 
@@ -118,7 +108,7 @@ class App {
 	}
 
 	public function tfhb_single_page_template( $template ) {
-
+		
 		if ( get_query_var( 'hydra-booking' ) === 'meeting' && get_query_var( 'meetingId' )) {
 			 
 
@@ -137,29 +127,30 @@ class App {
 			return $custom_template;
 
 		}
-
 		// Cenceled Page
 		if ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'cancel' ) {
+			 
 			if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {
 				wp_enqueue_script( 'tfhb-app-script' );
 			}
-
-			$booking     = new Booking();
-			$get_booking = $booking->get(
-				array( 'hash' => get_query_var( 'hash' ) ),
-				false,
-				true
-			);
-			if ( ! $get_booking ) {
+		 
+			
+			$Attendee = new Attendees();
+			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+				array(
+					array('hash', '=',get_query_var( 'hash' )),
+				),
+				1,
+				'DESC'
+			);  
+			if ( ! $attendeeBooking ) {
 				return $template;
-			}
-			$host_meta       = get_user_meta( $get_booking->host_id, '_tfhb_host', true );
+			} 
 			$custom_template = load_template(
 				TFHB_PATH . '/app/Content/Template/meeting-cencel.php',
 				false,
 				array(
-					'host'         => $host_meta,
-					'booking_data' => $get_booking,
+					'attendeeBooking'         => $attendeeBooking, 
 				)
 			);
 			return $custom_template;

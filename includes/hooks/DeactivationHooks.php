@@ -19,6 +19,9 @@ class DeactivationHooks {
 
 		// Deactivate Options
 		$this->tfhb_options_deactivation_hooks();
+
+		// remove option
+		delete_option( 'tfhb_update_status' );
 	}
 
 	public function tfhb_remove_host_role() {

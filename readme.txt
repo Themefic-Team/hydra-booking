@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.12
+Stable tag: 1.0.13
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -198,6 +198,18 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.13 - 01/01/2025 =  
+
+- Introduced: Added Display Remaining Slot for group bookings (PRO).
+- Introduced: Added Outlook Calendar and Team features (PRO).
+- Improved: Revamped the booking database.
+- Improved: Added new attendee table for group bookings.
+- Fixed: Timezone and date/time functionality in the booking form.
+- Fixed: Resolved front-page translation compatibility.
+- Fixed: Updated reason for cancellation functionality.
+- Fixed: Addressed Hydra Booking host role issue.
+- Improved: System stability for better performance.
 
 = 1.0.12 - 31/12/2024 =  
 

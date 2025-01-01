@@ -10,6 +10,7 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbButton from '@/components/form-fields/HbButton.vue';
+import { toast } from "vue3-toastify"; 
 
 const props = defineProps([
     'outlook_calendar', 
@@ -22,6 +23,26 @@ const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-c
 
 const closePopup = () => { 
     emit('popup-close-control', false)
+}
+
+const copyRedirectionURL = () => {
+    //  copy to clipboard without navigator 
+    const textarea = document.createElement('textarea');
+    textarea.value = props.outlook_calendar.redirect_url;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Show a toast notification or perform any other action 
+    // success mess into bottom right
+    toast.success( props.outlook_calendar.redirect_url + ' is Copied' , {
+        position: 'bottom-right', // Set the desired position
+        duration: 2000 // Set the desired duration
+    });
 }
 </script>
  
@@ -49,25 +70,24 @@ const closePopup = () => {
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
  
         </div>
-        <div v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <!-- <div v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">
             <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upcoming') }}  <Icon name="ChevronRight" size=18 /></a>
  
-        </div>
-
-        <!-- <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+        </div> --> 
+        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+            
             <HbButton  
                 @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
-                :buttonText="props.outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect' "
-                icon="ChevronRight" 
-                hover_icon="ArrowRight" 
-                :hover_animation="true"   
-                width="80px"
-            />   
-            <HbSwitch v-if="outlook_calendar.connection_status" @change="emit('update-integrations', 'outlook_calendar', outlook_calendar)" v-model="outlook_calendar.status"    />
+                :buttonText="props.outlook_calendar.connection_status == 1 ? 'Connected' : 'Connect' " 
+                :hover_animation="true"    
+            />
+            
+            <HbSwitch v-if="outlook_calendar.connection_status" @change="emit('update-integrations', 'outlook_calendar', outlook_calendar)" v-model="outlook_calendar.status" />
+
              
  
-        </div> -->
+        </div>
 
 
         <HbPopup  v-if="$tfhb_is_pro == true ||  $tfhb_license_status == true"  :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
@@ -100,15 +120,22 @@ const closePopup = () => {
                     selected = "1"
                     :placeholder="$tfhb_trans('Enter Secret Key')"  
                 /> 
-                <HbText  
-                    v-model="outlook_calendar.redirect_url"  
-                    required= "true"  
-                    name="redirect_url"
-                    :errors="errors.redirect_url"  
-                    :label="$tfhb_trans('Redirect Url')"  
-                    selected = "1" 
-                    :placeholder="$tfhb_trans('Enter Redirect Url')"  
-                /> 
+                <div class="tfhb-google-calender-redirection-url tfhb-full-width"  >
+                    <HbText  
+                        v-model="outlook_calendar.redirect_url"  
+                        required= "true"  
+                        name="redirect_url"
+                        :errors="errors.redirect_url"  
+                        :label="$tfhb_trans('Redirect Url')"  
+                        selected = "1" 
+                        :placeholder="$tfhb_trans('Enter Redirect Url')"  
+                    /> 
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                        @click="copyRedirectionURL()" 
+                        :buttonText="$tfhb_trans('Copy URL')" 
+                    /> 
+                </div>
                 <HbButton  
                     @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar, ['client_id', 'secret_key', 'redirect_url'])"
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  

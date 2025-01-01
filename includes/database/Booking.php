@@ -25,29 +25,19 @@ class Booking {
                 host_id INT(11) NULL,
                 attendee_id INT(11) NULL, 
                 post_id INT(11) NULL, 
-                hash text NULL, 
-                order_id INT(11) NULL, 
-                attendee_time_zone VARCHAR(20) NULL,
-                meeting_dates LONGTEXT NULL, 
+                hash text NULL,   
+                meeting_dates VARCHAR(255) NULL, 
+                availability_time_zone LONGTEXT NULL, 
                 start_time VARCHAR(20) NULL,
                 end_time VARCHAR(20) NULL,
                 slot_minutes LONGTEXT NULL, 
-                duration LONGTEXT NULL, 
-                attendee_name VARCHAR(50) NULL, 
-                email VARCHAR(100) NOT NULL, 
-                address LONGTEXT NULL,
-                others_info LONGTEXT NULL,
-                country VARCHAR(20) NULL,
-                ip_address VARCHAR(50) NULL, 
-                device VARCHAR(50) NULL, 
+                duration LONGTEXT NULL,    
                 meeting_locations LONGTEXT NOT NULL,
                 meeting_calendar LONGTEXT NULL,
                 cancelled_by VARCHAR(255) NULL,
                 status VARCHAR(50) NOT NULL, 
                 reason VARCHAR(255) NULL, 
-                booking_type VARCHAR(20) NULL,
-                payment_method VARCHAR(20) NOT NULL,
-                payment_status VARCHAR(20) NOT NULL,
+                booking_type VARCHAR(20) NULL, 
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)
@@ -58,6 +48,7 @@ class Booking {
 		}
 	}
 
+
 	/**
 	 * Rollback the database migration.
 	 */
@@ -66,25 +57,28 @@ class Booking {
 		$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_bookings");
 	}
 
+	// 
+
 	/**
 	 * Create the database Booking.
 	 */
 	public function add( $request ) {
+	
 
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . $this->table;
 
 		// json encode meeting locations
-		$request['others_info']       = wp_json_encode( $request['others_info'] );
+		// $request['others_info']       = wp_json_encode( $request['others_info'] );
 		$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] ); 
 
 		// insert Booking
 		$result = $wpdb->insert(
 			$table_name,
 			$request
-		);
-
+		); 
+ 
 		if ( $result === false ) {
 			return false;
 		} else {
@@ -285,6 +279,115 @@ class Booking {
 
 	}
 
+	// Get Booking with all attendees in one query
+	public function getBookingWithAttendees($where = null, $limit = null, $orderBy = null) {
+ 
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+		$attendee_table = $wpdb->prefix . 'tfhb_attendees';
+		$meeting_table = $wpdb->prefix . 'tfhb_meetings';
+		$host_table    = $wpdb->prefix . 'tfhb_hosts';
+		// echo $where;
+		// Define the SQL query
+		$sql = "SELECT booking.*, 
+			COALESCE(
+				JSON_ARRAYAGG(
+					JSON_OBJECT(
+						'id', attendee.id,
+						'booking_id', attendee.booking_id,
+						'meeting_id', attendee.meeting_id,
+						'hash', attendee.hash,
+						'attendee_time_zone', attendee.attendee_time_zone,
+						'attendee_name', attendee.attendee_name,
+						'email', attendee.email,
+						'others_info', attendee.others_info,
+						'country', attendee.country,
+						'ip_address', attendee.ip_address,
+						'device', attendee.device,
+						'cancelled_by', attendee.cancelled_by,
+						'status', attendee.status,
+						'reason', attendee.reason,
+						'payment_method', attendee.payment_method,
+						'payment_status', attendee.payment_status
+					)
+				), 
+				JSON_ARRAY()
+			) AS attendees,
+			meeting.host_id,
+			meeting.title,
+			meeting.duration, 
+			meeting.meeting_price,
+			meeting.payment_currency,
+			meeting.payment_status AS meeting_payment_status,
+			meeting.meeting_type,
+			host.first_name AS host_first_name,
+			host.last_name AS host_last_name,
+			host.email AS host_email,
+			host.time_zone AS host_time_zone
+			FROM  {$table_name} AS booking
+			LEFT JOIN  {$attendee_table} AS attendee  ON booking.id = attendee.booking_id
+			INNER JOIN {$meeting_table} As meeting ON meeting.id = booking.meeting_id 
+			INNER JOIN {$host_table} AS host  ON host.id = booking.host_id ";
+
+			$data = [];
+			if($where != null) {
+				
+				foreach ($where as $condition) {
+					$field = 'booking.'.$condition[0];
+					$operator = $condition[1];
+					$value = $condition[2];
+					$sql .= " AND $field $operator %s";
+					$data[] = $value;
+				} 
+			} 
+
+			$sql .= "GROUP BY booking.id ";
+			
+			if($orderBy != null) {
+				$sql .= " ORDER BY booking.id $orderBy";
+			} else {
+				$sql .= " ORDER BY booking.id DESC";
+			}
+
+			if($limit != null && $limit > 1) {
+				$sql .= " LIMIT $limit";
+			}   
+ 
+			
+			// Prepare the SQL query 
+			$query = $wpdb->prepare($sql, $data);
+	
+			// Get the results
+			if($limit == 1) {
+				$results = $wpdb->get_row($query); 
+				
+			} else {
+				$results = $wpdb->get_results($query);
+			} 
+
+			
+			if($results){
+				// if its not row
+				if($limit > 1 ||  $limit == null) {
+					foreach ($results as $key => $result) {
+						$attendees = json_decode($result->attendees);
+						$results[$key]->attendees = $attendees;
+					}
+				} 
+				if($limit == 1 && $limit != null) {
+					$attendees = json_decode($results->attendees);
+					$results->attendees = $attendees;
+				}
+			}
+ 
+
+		// Return the results
+		return $results;
+
+
+	}
+
 
 
 	public function getFilter( $filterData = '' ) {
@@ -368,7 +471,7 @@ class Booking {
 		// stats != canceled
 		$sql .= " AND status != 'canceled'";
 
-		$data = $wpdb->get_results(
+		$data = $wpdb->get_row(
 			$wpdb->prepare( $sql, $meeting_id, $meeting_dates, $start_time, $end_time )
 		);
 

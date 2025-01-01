@@ -35,6 +35,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
     // Filter Hooks
     new HydraBooking\Hooks\FilterHooks();
 
+    // Booking Location
+    new HydraBooking\Hooks\BookingLocation();
+
 
     /**
      *  Class Include

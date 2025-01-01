@@ -21,8 +21,7 @@ class SetupWizard {
 
 	// constaract
 	public function __construct() {
-
-		// add_action( 'rest_api_init', array( $this, 'create_endpoint' ) );
+ 
 	}
 
 
@@ -193,7 +192,7 @@ class SetupWizard {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Error while creating host',
+						'message' =>  __( 'Error while creating host', 'hydra-booking' ),
 					)
 				);
 			}
@@ -279,7 +278,7 @@ class SetupWizard {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while creating meeting',
+					'message' => __( 'Error while creating meeting', 'hydra-booking' ),
 				)
 			);
 		}

@@ -243,7 +243,7 @@ class MeetingController {
 		$data = array(
 			'status'   => true,
 			'meetings' => $MeetingsList,
-			'message'  => 'Meeting Data Successfully Retrieve!',
+			'message'  => __( 'Meeting Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -272,7 +272,7 @@ class MeetingController {
 		$data = array(
 			'status'   => true,
 			'category' => $term_array,
-			'message'  => 'Meeting Category Data Successfully Retrieve!',
+			'message'  =>  __( 'Meeting Category Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -290,7 +290,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid taxonomy.',
+					'message' => __( 'Invalid taxonomy.', 'hydra-booking' ),
 				)
 			);
 		}
@@ -361,7 +361,7 @@ class MeetingController {
 			array(
 				'status'   => true,
 				'category' => $term_array,
-				'message'  => empty( $request['id'] ) ? 'Meeting Category Successfully Added!' : 'Meeting Category Successfully Updated!',
+				'message'  => empty( $request['id'] ) ? __('Meeting Category Successfully Added!', 'hydra-booking') : __('Meeting Category Successfully Updated!', 'hydra-booking'),
 			)
 		);
 	}
@@ -419,7 +419,7 @@ class MeetingController {
 			array(
 				'status'  => true,
 				'webhook' => $updateMeetingData->webhook,
-				'message' => 'Webhook Successfully Updated!',
+				'message' =>  __( 'Webhook Successfully Updated!', 'hydra-booking' ),
 			)
 		);
 	}
@@ -458,14 +458,14 @@ class MeetingController {
 				array(
 					'status'  => true,
 					'webhook' => $updateMeetingData->webhook,
-					'message' => 'Webhook Successfully Deleted!',
+					'message' =>  __( 'Webhook Successfully Deleted!', 'hydra-booking' ),
 				)
 			);
 		} else {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Webhook key does not exist!',
+					'message' =>  __( 'Webhook key does not exist!', 'hydra-booking' ),
 				)
 			);
 		}
@@ -527,7 +527,7 @@ class MeetingController {
 			array(
 				'status'       => true,
 				'integrations' => $updateMeetingData->integrations,
-				'message'      => 'Integrations Successfully Updated!',
+				'message'      =>  __( 'Integrations Successfully Updated!', 'hydra-booking' ),
 			)
 		);
 	}
@@ -566,14 +566,14 @@ class MeetingController {
 				array(
 					'status'       => true,
 					'integrations' => $updateMeetingData->integrations,
-					'message'      => 'Integrations Successfully Deleted!',
+					'message'      =>  __( 'Integrations Successfully Deleted!', 'hydra-booking' ),
 				)
 			);
 		} else {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Integrations key does not exist!',
+					'message' =>  __( 'Integrations key does not exist!', 'hydra-booking' ),
 				)
 			);
 		}
@@ -587,7 +587,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Term ID is required.',
+					'message' =>  __( 'Term ID is required.', 'hydra-booking' ),
 				)
 			);
 		}
@@ -615,7 +615,7 @@ class MeetingController {
 			array(
 				'status'   => true,
 				'category' => $term_array,
-				'message'  => 'Meeting Category Successfully Deleted!',
+				'message'  =>  __( 'Meeting Category Successfully Deleted!', 'hydra-booking' ),
 			)
 		);
 	}
@@ -631,7 +631,7 @@ class MeetingController {
 		$data = array(
 			'status'   => true,
 			'meetings' => $MeetingsList,
-			'message'  => 'Meeting Data Successfully Retrieve!',
+			'message'  =>  __( 'Meeting Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -649,7 +649,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Please activate the pro version to use this feature',
+					'message' =>  __( 'Please activate the pro version to create one to group meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -683,7 +683,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while creating meeting',
+					'message' =>  __( 'Error while creating meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -700,7 +700,7 @@ class MeetingController {
 			'status'   => true,
 			'meetings' => $meetingsList,
 			'id'       => $meetings_id,
-			'message'  => 'Meeting Created Successfully',
+			'message'  => __( 'Meeting Created Successfully!', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -716,7 +716,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -734,7 +734,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false, 
-					'message' => 'Error while deleting meeting',
+					'message' =>  __( 'Error while deleting meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -754,7 +754,7 @@ class MeetingController {
 			'status'   => true,
 			'meetings' => $MeetingsList,
 			'data'     => $current_user_id,
-			'message'  => 'Meeting Deleted Successfully',
+			'message'  => __( 'Meeting Deleted Successfully!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -767,7 +767,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -782,7 +782,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -833,6 +833,7 @@ class MeetingController {
 
 		// google  Meeting 
 		$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
+		$integrations['outlook_calendar_status'] = isset( $_tfhb_integration_settings['outlook_calendar']['status'] ) ? $_tfhb_integration_settings['outlook_calendar']['status'] : 0;
 		
 		// Zoom Meeting
 		$integrations['zoom_meeting_status'] = isset( $_tfhb_integration_settings['zoom_meeting']['status'] ) ? $_tfhb_integration_settings['zoom_meeting']['status'] : 0;
@@ -996,7 +997,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -1008,7 +1009,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' => __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -1090,7 +1091,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while updating Meeting',
+					'message' =>  __( 'Error while updating meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -1109,7 +1110,7 @@ class MeetingController {
 		// Return response
 		$data = array(
 			'status'  => true,
-			'message' => 'Meeting Updated Successfully',
+			'message' =>  __( 'Meeting Updated Successfully', 'hydra-booking' ),
 			'data'    => $data,
 			'meeting' => $GetMeeting,
 		);
@@ -1175,7 +1176,7 @@ class MeetingController {
 		$data = array(
 			'status'   => true,
 			'meetings' => $MeetingsList,
-			'message'  => 'Meeting Cloned Successfully',
+			'message'  =>  __( 'Meeting Cloned Successfully', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -1189,7 +1190,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -1227,7 +1228,7 @@ class MeetingController {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Invalid Host',
+						'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 					)
 				);
 			}
@@ -1242,7 +1243,7 @@ class MeetingController {
 			'host'          => $HostData,
 			'host_availble' => $HostData->availability_type,
 			'time_zone'     => $time_zone,
-			'message'       => 'Host Data',
+			'message'       =>  __( 'Host Availability Data', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}

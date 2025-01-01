@@ -19,6 +19,8 @@ $time_zone    = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
 $booking_data = isset( $args['booking_data'] ) ? $args['booking_data'] : array(); 
 // Stripe Public api Key
 $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+$currency = ! empty( $_tfhb_general_settings['currency'] ) ? $_tfhb_general_settings['currency'] : 'USD';
 $stripePublicKey            = ! empty( $_tfhb_integration_settings['stripe']['public_key'] ) ? $_tfhb_integration_settings['stripe']['public_key'] : '';
 $paypalPublicKey            = ! empty( $_tfhb_integration_settings['paypal']['client_id'] ) ? $_tfhb_integration_settings['paypal']['client_id'] : '';
 
@@ -44,7 +46,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		<input type="hidden" id="meeting_time_end" name="meeting_time_end" value="">
 		<input type="hidden" id="payment_method" name="payment_method" value="<?php echo esc_attr($meeting['payment_method']); ?>">
 		<input type="hidden" id="payment_amount" name="payment_amount" value="<?php echo ! empty( $meeting['meeting_price'] ) ? esc_attr($meeting['meeting_price']) : ''; ?>">
-		<input type="hidden" id="payment_currency" name="payment_currency" value="<?php echo ! empty( $meeting['payment_currency'] ) ? esc_attr($meeting['payment_currency']) : esc_attr('USD'); ?>">
+		<input type="hidden" id="payment_currency" name="payment_currency" value="<?php echo ! empty( $currency ) ? esc_attr($currency) : esc_attr('USD'); ?>">
 		<input type="hidden" id="stpublic_key" name="public_key" value="<?php echo esc_attr($stripePublicKey); ?>">
 		<input type="hidden" id="paypal_public_key" name="public_key" value="<?php echo esc_attr($paypalPublicKey); ?>">
 		<?php
@@ -115,13 +117,16 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 						$location_value = 'Zoom';
 					}elseif($location['location'] == 'meet'){
 						$location_value = 'Google Meet';
-					}elseif($location['location'] == 'Attendee Phone Number'){
+					}
+					elseif($location['location'] == 'Attendee Phone Number'){
 						$location_value = 'Attendee Phone Number';
 					}elseif($location['location'] == 'Organizer Phone Number'){
 						$location_value = 'Organizer Phone Number';
 					
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
 						$location_value = 'In Person (Attendee Address) ';
+					}else{
+						$location_value = $location['location'];
 					}
 
 					 if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
@@ -129,7 +134,9 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 					 }elseif($location['location'] == 'zoom'){
 						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
 					 }elseif($location['location'] == 'meet'){
-						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">';
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">'; 
+					 }elseif($location['location'] == 'MS Teams'){
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/ms_teams-logo.svg').'" alt="MS Teams">';
 					 }else{
 						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/location.svg').'" alt="Location">';
 					 }
@@ -148,7 +155,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 
 				$price = ! empty( $meeting['meeting_price'] ) ? $meeting['meeting_price'] : 'Free';
-				$currency = ! empty( $meeting['payment_currency'] ) && $price !='Free' ? $meeting['payment_currency'] : '';
+				$currency = ! empty( $currency ) && $price !='Free' ? $currency : '';
 				echo '<li class="tfhb-flexbox tfhb-gap-8">
                             <input type="hidden" id="meeting_price" name="meeting_price" value="' . esc_attr( $price ) . '">
                             <div class="tfhb-icon">
@@ -196,7 +203,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 						}
 						 
 					}
-					$selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
+					// $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
 
 					foreach ( $time_zone as $key => $zone ) {
 						$selected = ( $zone['value'] == $selected_timezone ) ? 'selected' : '';

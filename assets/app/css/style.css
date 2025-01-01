@@ -372,6 +372,20 @@
   line-height: 150%; /* 33px */
   margin: 0;
 }
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive {
+  position: relative !important;
+  z-index: 1;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive::before, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body.inactive::before {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  content: "";
+  background-color: #fff;
+  z-index: 3;
+  opacity: 0.3;
+  cursor: wait;
+}
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-weekdays, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-calendar .tfhb-calendar-body ul.tfhb-calendar-weekdays {
   list-style: none;
   flex-wrap: wrap;
@@ -621,7 +635,7 @@
   gap: 12px;
   width: 100%;
 }
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span {
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next {
   border-radius: 8px;
   border: 0.5px solid var(--tfhb-primary-color);
   background: #FFFFFF;
@@ -638,17 +652,31 @@
   transition: 0.3s all ease;
 }
 @media only screen and (max-width: 991px) {
-  .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span {
+  .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next {
     padding: 16px 1px;
   }
 }
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span:hover, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span:hover {
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time:hover, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next:hover, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time:hover, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next:hover {
   border: 0.5px solid var(--tfhb-primary-color);
   background: #C0D8C4;
 }
-.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.time.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.time.active {
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time.time.active, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next.time.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time.time.active, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next.time.active {
   border: 0.5px solid var(--tfhb-primary-color);
   background: #C0D8C4;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time .tfhb-time-slot-remaining, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next .tfhb-time-slot-remaining, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time .tfhb-time-slot-remaining, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next .tfhb-time-slot-remaining {
+  justify-content: center;
+  font-size: 10px;
+  line-height: 16px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time .tfhb-time-slot-remaining span, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next .tfhb-time-slot-remaining span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .time .tfhb-time-slot-remaining span, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li .next .tfhb-time-slot-remaining span {
+  display: inline-block;
+  height: 4px;
+  width: 4px;
+  border-radius: 50%;
+  background-color: #2E6B38;
+  margin-right: 4px;
+  line-height: 0 !important;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.next, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-times .tfhb-available-times ul li span.next {
   border-radius: 8px;

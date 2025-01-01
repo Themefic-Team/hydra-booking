@@ -353,7 +353,7 @@ const moduleFields = async (e) => {
             <div  v-if="selecte_integrations == 'Mailchimp' && !props.meeting.mailchimp.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('Mailchimp is not connected.') }}  
                 <HbButton 
                     classValue="tfhb-btn flex-btn" 
-                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
                     :buttonText="$tfhb_trans('Please Configure')"
                 />  
             </div>
@@ -362,14 +362,14 @@ const moduleFields = async (e) => {
                 <HbButton 
                     v-if="props.meeting.fluentcrm.error_msg==''"
                     classValue="tfhb-btn flex-btn" 
-                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
                     :buttonText="$tfhb_trans('Please Configure')"
                 />  
             </div>
             <div  v-if="selecte_integrations == 'ZohoCRM' && !props.meeting.zohocrm.status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('ZohoCRM is not connected.') }}   
                 <HbButton 
                     classValue="tfhb-btn flex-btn" 
-                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
                     :buttonText="$tfhb_trans('Please Configure')"
                 />  
             </div>
@@ -377,14 +377,14 @@ const moduleFields = async (e) => {
             <div  v-if="selecte_integrations == 'Pabbly' && !props.integrations.pabbly_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Pabbly is not connected. 
                 <HbButton 
                     classValue="tfhb-btn flex-btn" 
-                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
                     :buttonText="__('Please Configure', 'hydra-booking')"
                 />  
             </div>
             <div  v-if="selecte_integrations == 'Zapier' && !props.integrations.zapier_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4">Zapier is not connected. 
                 <HbButton 
                     classValue="tfhb-btn flex-btn" 
-                    @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
                     :buttonText="__('Please Configure', 'hydra-booking')"
                 />  
             </div>

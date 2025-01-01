@@ -179,7 +179,7 @@ const UpdateIntegration = async (key, value) => {
 
         if (response.data.status) {  
               
-            Integration.zoom_meeting = response.data.host_integration_settings.zoom_meeting !='' ? response.data.host_integration_settings.zoom_meeting : Integration.zoom_meeting; 
+            Integration.zoom_meeting = response.data.host_integration_settings.zoom_meeting  ? response.data.host_integration_settings.zoom_meeting : Integration.zoom_meeting; 
             toast.success(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
@@ -215,7 +215,7 @@ onBeforeMount(() => {
             <span>{{$tfhb_trans('Before connecting make sure you provide the necessary credentials to')}} 
                 <HbButton 
                         classValue="tfhb-btn" 
-                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
                         buttonText="Settings  Integrations"
                     />  
             </span>
