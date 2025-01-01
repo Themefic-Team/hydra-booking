@@ -31,7 +31,7 @@ class ActivationHooks {
 		$this->tfhb_options_activation_hooks();
 
 		// update option 
-		update_option('tfhb_update_status', '1.0.12');
+		update_option('tfhb_update_status', TFHB_VERSION);
 	}
 
 	public function tfhb_create_host_role() {

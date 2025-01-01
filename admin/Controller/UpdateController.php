@@ -16,8 +16,8 @@ class UpdateController {
 	// constaract
 	public function __construct() {  
 
-        // update version 1.0.8 to 1.0.9.
-        $this->update_1_0_12();
+        // update version 1.0.12 to 1.0.13.
+        $this->update_1_0_13();
  
 		 
 	} 
@@ -29,11 +29,11 @@ class UpdateController {
      * @since 1.0.9
      */
 
-     public function update_1_0_12() { 
+     public function update_1_0_13() { 
 
         $tfhb_update_status = get_option('tfhb_update_status', false); 
           
-        if( $this->version == '1.0.12' && $tfhb_update_status != '1.0.12' ) { 
+        if( $this->version == '1.0.13' && $tfhb_update_status != '1.0.13' ) { 
 
             // Add column in transaction table
             global $wpdb;
@@ -141,7 +141,7 @@ class UpdateController {
 
            
             // update version
-            update_option('tfhb_update_status', '1.0.12');
+            update_option('tfhb_update_status', '1.0.13');
 
             
             
