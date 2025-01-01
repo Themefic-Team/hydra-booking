@@ -25,7 +25,6 @@ class THB_INIT {
 		define( 'TFHB_URL', plugin_dir_url( __FILE__ ) );
 		define( 'TFHB_VERSION', '1.0.13' );
 
-		
 		// Load Vendor Auto Load
 		if ( file_exists( TFHB_PATH . '/vendor/autoload.php' ) ) {
 
