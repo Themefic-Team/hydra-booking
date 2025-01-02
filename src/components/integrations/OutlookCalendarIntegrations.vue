@@ -124,6 +124,7 @@ const copyRedirectionURL = () => {
                     <HbText  
                         v-model="outlook_calendar.redirect_url"  
                         required= "true"  
+                        :readonly="true"
                         name="redirect_url"
                         :errors="errors.redirect_url"  
                         :label="$tfhb_trans('Redirect Url')"  
