@@ -981,8 +981,6 @@ class BookingController {
 
 		
 		// Single Booking
-		// $single_booking_meta = $booking->get(['id'=>$request['id']],false, true);
-		// $single_booking_meta = $booking->get($request['id'], false, true);
 		 
 		$where = array(
 			array('id', '=', $request['id']),

@@ -14,7 +14,7 @@ onMounted(() => {
 <template>
     <!-- {{ tfhbClass }} -->
     <div class="tfhb-hydra-dasboard">
-        <Header title="Meetings" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
+        <Header :title="$tfhb_trans('Settings')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
         <div class="tfhb-hydra-wrap ">    
             <nav class="tfhb-hydra-admin-tabs tfhb-hydra-settings">  
                 <ul>

@@ -89,6 +89,7 @@ namespace HydraBooking\Admin\Controller;
             'Booking' =>  __('Booking', 'hydra-booking'), 
 
             // Host
+            'Hosts' =>  __('Hosts', 'hydra-booking'), 
             'Use existing availability' =>  __('Use existing availability', 'hydra-booking'), 
             'Custom availability' =>  __('Custom availability', 'hydra-booking'), 
             'Choose Schedule' =>  __('Choose Schedule', 'hydra-booking'),  
@@ -136,6 +137,7 @@ namespace HydraBooking\Admin\Controller;
             'Not Connected' =>  __('Not Connected', 'hydra-booking'), 
 
             // Meetings
+            'Meetings' =>  __('Meetings', 'hydra-booking'), 
             'Availability Range for this Booking' =>  __('Availability Range for this Booking', 'hydra-booking'), 
             'How many days can the invitee schedule?' =>  __('How many days can the invitee schedule?', 'hydra-booking'), 
             'Indefinitely into the future' =>  __('Indefinitely into the future', 'hydra-booking'), 
@@ -264,6 +266,7 @@ namespace HydraBooking\Admin\Controller;
             'Save Webhook' =>  __('Save Webhook', 'hydra-booking'), 
 
             // Settings
+            'Settings' =>  __('Settings', 'hydra-booking'), 
             'Appearance' =>  __('Appearance', 'hydra-booking'), 
             'Set up your appearance settings for bookings' =>  __('Set up your appearance settings for bookings', 'hydra-booking'), 
             'View Documentation' =>  __('View Documentation', 'hydra-booking'), 
