@@ -284,6 +284,7 @@ class Booking {
 		$attendee_table = $wpdb->prefix . 'tfhb_attendees';
 		$meeting_table = $wpdb->prefix . 'tfhb_meetings';
 		$host_table    = $wpdb->prefix . 'tfhb_hosts';
+
 		// echo $where;
 		// Define the SQL query
 		$sql = "SELECT booking.*, 
@@ -332,12 +333,20 @@ class Booking {
 				foreach ($where as $condition) {
 					$field = 'booking.'.$condition[0];
 					$operator = $condition[1];
-					$value = $condition[2];
-					$sql .= " AND $field $operator %s";
-					$data[] = $value;
+					$value = $condition[2]; 
+					if($operator == 'BETWEEN'){  
+						$sql .= " AND $field $operator %s AND %s";
+						$data[] = $value[0];
+						$data[] = $value[1]; 
+					}else{
+
+						$sql .= " AND $field $operator %s";
+						$data[] = $value;
+					}
 				} 
 			} 
 
+			
 			$sql .= "GROUP BY booking.id ";
 			
 			if($orderBy != null) {
@@ -353,7 +362,7 @@ class Booking {
 			
 			// Prepare the SQL query 
 			$query = $wpdb->prepare($sql, $data);
-	
+		
 			// Get the results
 			if($limit == 1) {
 				$results = $wpdb->get_row($query); 

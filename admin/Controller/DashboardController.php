@@ -75,42 +75,59 @@ class DashboardController {
 		$host              = new Host();
 		$HostData          = $host->getHostByUserId( $current_user_id );
 
-		$bookings               = $booking->get(
-			"created_at BETWEEN '$previous_date' AND '$current_date'",
-			false,
-			false,
-			true,
-			false,
-			false,
-			! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false
+		$bookings_where = array(
+			array('created_at', 'BETWEEN',  array($previous_date, $current_date)), 
 		);
-		$previous_date_bookings = $booking->get(
-			"created_at BETWEEN '$previous_date_before' AND '$previous_date'",
-			false,
-			false,
-			true,
-			false,
-			false,
-			! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false
-		);
-		$upcoming_booking       = $booking->get(
-			"meeting_dates >= '$current_date'",
-			true,
-			false,
-			true,
-			'meeting_dates ASC',
-			5,
-			! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false
-		);
-		$recent_booking         = $booking->get(
+		if(!empty($current_user_role) && 'tfhb_host' == $current_user_role){
+			$bookings_where[] = array('host_id', '=', $HostData->id);
+		}
+		$bookings = $booking->getBookingWithAttendees( 
+			$bookings_where,
 			null,
-			true,
-			false,
-			false,
-			'booking_created_at DESC',
-			5,
-			! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false
+			'DESC' 
+		); 
+
+		 
+
+		// Previous Date Booking
+		$previous_date_bookings_where = array(
+			array('created_at', 'BETWEEN',  array($previous_date_before, $previous_date)), 
 		);
+		if(!empty($current_user_role) && 'tfhb_host' == $current_user_role){
+			$previous_date_bookings_where[] = array('host_id', '=', $HostData->id);
+		}
+		$previous_date_bookings = $booking->getBookingWithAttendees( 
+			$previous_date_bookings_where,
+			null,
+			'DESC' 
+		); 
+ 
+
+		// Upcoming Booking
+		$upcoming_booking_where = array(
+			array('meeting_dates', '>=', $current_date), 
+		);
+		if(!empty($current_user_role) && 'tfhb_host' == $current_user_role){
+			$upcoming_booking_where[] = array('host_id', '=', $HostData->id);
+		}
+		$upcoming_booking = $booking->getBookingWithAttendees( 
+			$upcoming_booking_where,
+			5,
+			'DESC' 
+		); 
+
+
+		 
+		// Recent Booking
+		$recent_booking_where = array();
+		if(!empty($current_user_role) && 'tfhb_host' == $current_user_role){
+			$recent_booking_where[] = array('host_id', '=', $HostData->id);
+		}
+		$recent_booking = $booking->getBookingWithAttendees( 
+			$recent_booking_where,
+			5,
+			'DESC' 
+		); 
 		// count total Booking and collect percentage
 		$total_bookings['total']      = count( $bookings );
 		$total_bookings_previous      = count( $previous_date_bookings );
@@ -121,11 +138,12 @@ class DashboardController {
 		$total_bookings['growth']     = $total_bookings['percentage'] < 0 ? 'decrease' : 'increase';
 
 		// total cancelled Booking and collect percentage
+		
 		$cancelled['total']      = count(
 			array_filter(
 				$bookings,
 				function ( $booking ) {
-					return $booking->status == 'cancelled';
+					return $booking->status == 'canceled';
 				}
 			)
 		);
@@ -133,7 +151,7 @@ class DashboardController {
 			array_filter(
 				$previous_date_bookings,
 				function ( $booking ) {
-					return $booking->status == 'cancelled';
+					return $booking->status == 'canceled';
 				}
 			)
 		);
@@ -262,21 +280,25 @@ class DashboardController {
 				$date      =  $value;
 				$next_date =  $value;
 			} 
-			$bookings                           = $booking->get(
-				"created_at BETWEEN '$date 00:00:00' AND '$next_date 23:59:59'",
-				false,
-				false,
-				true,
-				null,
-				null,
-				! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ? $HostData->id : false
+			// Get booking
+			$bookings_where = array(
+				array('created_at', 'BETWEEN',  array($date . ' 00:00:00', $next_date . ' 23:59:59')), 
 			);
+			if(!empty($current_user_role) && 'tfhb_host' == $current_user_role){
+				$bookings_where[] = array('host_id', '=', $HostData->id);
+			}
+			$bookings = $booking->getBookingWithAttendees( 
+				$bookings_where,
+				null,
+				'DESC' 
+			); 
+	
 			$statistics['total_bookings'][]     = count( $bookings );
 			$statistics['cancelled_bookings'][] = count(
 				array_filter(
 					$bookings,
 					function ( $booking ) {
-						return $booking->status == 'cancelled';
+						return $booking->status == 'canceled';
 					}
 				)
 			);
