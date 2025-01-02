@@ -44,7 +44,7 @@ const  ChangeStatisticData = (day) => {
     Dashboard.skeleton_chart = true;
     datachart_dropdown.value = false;
     // selected attribute data-name
-    const dropdown = document.getElementById('tfhb-chart-filter');
+    const dropdown = document.getElementById('datachart-dropdown-filter');
     dropdown.querySelector('span').innerText = event.target.getAttribute('data-name');
     
     Dashboard.fetcDashboardStatistics(); 
@@ -89,6 +89,15 @@ const truncateString = (str, num) => {
         return str
     }
     return str.slice(0, num) + '...'
+}
+
+const upCommingBookingTitle = (data) => { 
+    if(data.meeting_type == 'one-to-one' && data.attendees.length == 1) {
+        const attendee = data.attendees[0];
+        return `${data.title} with ${attendee.attendee_name}`;
+    } else {
+        return `${data.title} with ${data.attendees.length} Attendees`;
+    }
 }
 </script>
 <template>
@@ -363,7 +372,7 @@ const truncateString = (str, num) => {
                             >
                                 <span > {{ data.start_time}} </span>
                                 <div class="tfhb-admin-card-box tfhb-p-16">
-                                    <p>{{data.title}}   </p>
+                                    <p>  {{ upCommingBookingTitle(data)}}   </p>
                                     <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
                                         <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
                                             <!-- convert 2024-05-29 to 25 Sep, 24 -->   
@@ -397,7 +406,7 @@ const truncateString = (str, num) => {
                         <h3 >{{ $tfhb_trans('Booking Statistics') }}</h3>  
                     </div>
                     <div class="thb-admin-btn right"> 
-                        <div class="tfhb-dropdown datachart-dropdown  ">
+                        <div class="tfhb-dropdown datachart-dropdown  " id="datachart-dropdown-filter">
                             <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" >  {{ $tfhb_trans('Last 7 Days') }} 
                                 <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-if="datachart_dropdown == false" name="ChevronDown" size=20 /> 
                                 <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-else name="ChevronUp" size=20 /> 
@@ -405,7 +414,7 @@ const truncateString = (str, num) => {
                             <transition name="tfhb-dropdown-transition">
                                 <div   
                                 v-show="datachart_dropdown"
-                                    class="tfhb-dropdown-wrap "
+                                    class="tfhb-dropdown-wrap"
                                 > 
                                     <!-- route link --> 
                                     <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans('Last 7 Days') }}</span> 
