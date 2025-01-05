@@ -240,11 +240,21 @@ class BookingController {
 				'host_id'      => $book['host_id'],
 			);
 		}
-
+		// make list based on date
+		$booking_list = array_values(array_reduce($bookingsList , function($carry, $item) {
+			$dates = explode(',', $item->meeting_dates);
+			
+			foreach ($dates as $kye => $date) {
+				
+				$carry[$date]['date'] = $date;
+				$carry[$date]['bookings'][] = $item;
+			}
+			return $carry;
+		}, [])); 
 		// Return response
 		$data = array(
 			'status'           => true,
-			'bookings'         => $bookingsList,
+			'bookings'         => $booking_list,
 			'booking_calendar' => $booking_array,
 			'message'          => 'Booking Data Successfully Retrieve!',
 		);

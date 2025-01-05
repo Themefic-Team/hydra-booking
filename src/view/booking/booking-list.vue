@@ -260,9 +260,11 @@ const totalPages = computed(() => {
 });
 
 const paginatedBooking = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return Booking.bookings.slice(start, end);
+  
+    const bookingsArray = Booking.bookings;  
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return bookingsArray.slice(start, end);
 });
 
 const changePage = (page) => {
@@ -461,6 +463,26 @@ const activeSingleAttendeeAction = (id) => {
     activeAttendeeAction.value = id; 
 
 }
+// 
+const displayTotalAttendeesWithCount = (attendees) => {
+    let totalAttendees = attendees.length;
+    let displayAttendees = ''; 
+
+    if (totalAttendees > 0) {
+        // Limit to first two attendees
+        displayAttendees = attendees
+            .slice(0, 2) // Only take the first two attendees
+            .map(attendee => attendee.attendee_name) // Map to names
+            .join(', '); // Join with a comma and space
+
+        // Add "+X More" if there are more than 2 attendees
+        if (totalAttendees > 2) {
+            displayAttendees += ` <b>+${totalAttendees - 2} More</b>`;
+        }
+    }
+
+    return displayAttendees;
+};
 const goForReschedule = (attendee) => {
   
     let url = tfhb_core_apps.admin_url+'/?hydra-booking=booking&hash='+attendee.hash+'&meetingId='+attendee.meeting_id+'&type=reschedule';
@@ -470,65 +492,98 @@ const goForReschedule = (attendee) => {
 <template>
 <!-- {{ tfhbClass }} -->
 <!-- :class="{ 'tfhb-skeleton': Booking.skeleton }" -->
-<div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
-    <div class="tfhb-filter-box tfhb-flexbox">
-        <div class="tfhb-booking-view">
-            <div class="tfhb-list-calendar">
-                <ul class="tfhb-flexbox tfhb-gap-8">
-                    <li :class="'list'==bookingView ? 'active' : ''" @click="bookingView='list'">
-                        <Icon name="List" size=20 />
-                    </li>
-                    <li :class="'calendar'==bookingView ? 'active' : ''" @click="bookingView='calendar'">
-                        <Icon name="CalendarDays" size=20 />
-                    </li>
-                </ul>
+<div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24">
+    <!-- Dashboard Heading Wrap -->
+    <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
+        <div class="tfhb-filter-box tfhb-flexbox">
+            
+            <div class="tfhb-header-filters">
+                <input type="text" placeholder="Host name or meeting title" @keyup="Tfhb_Booking_Filter" /> 
+                <span><Icon name="Search" size=20 /></span>
             </div>
         </div>
-        <div class="tfhb-header-filters">
-            <input type="text" placeholder="Host name or meeting title" @keyup="Tfhb_Booking_Filter" /> 
-            <span><Icon name="Search" size=20 /></span>
-        </div>
-    </div>
-    <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
-       
-        <HbDropdown   
-            v-if="selected_items.length > 0"
-            placeholder="Status"   
-            :option = "[
-                {'name': 'Pending', 'value': 'pending'},  
-                {'name': 'Confirmed', 'value': 'confirmed'},   
-                {'name': 'Canceled', 'value': 'canceled'}
-            ]"
-            @tfhb-onchange="Bulk_Status_Callback" 
-        />  
+        <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
         
-        <HbButton 
-            v-if="selected_items.length > 0" 
-            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
-            @click="deletePopup = true"
-            :buttonText="$tfhb_trans('Delete')"
-            icon="Trash2"   
-            :hover_animation="false" 
-            icon_position = 'left'
-        /> 
-  
-        <HbButton 
-            classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
-            @click="ExportAsCSV = true"
-            :buttonText="$tfhb_trans('Export as CSV')"
-            icon="FileDown"   
-            :hover_animation="false" 
-            icon_position = 'left'
-        /> 
-        <!-- <HbButton 
-            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-            @click="router.push({ name: 'BookingCreate' })"
-            :buttonText="$tfhb_trans('Add New Booking')"
-            icon="PlusCircle"   
-            :hover_animation="false" 
-            icon_position = 'left'
-        />  -->
+            <HbDropdown   
+                v-if="selected_items.length > 0"
+                placeholder="Status"   
+                :option = "[
+                    {'name': 'Pending', 'value': 'pending'},  
+                    {'name': 'Confirmed', 'value': 'confirmed'},   
+                    {'name': 'Canceled', 'value': 'canceled'}
+                ]"
+                @tfhb-onchange="Bulk_Status_Callback" 
+            />  
+            
+            <HbButton 
+                v-if="selected_items.length > 0" 
+                classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                @click="deletePopup = true"
+                :buttonText="$tfhb_trans('Delete')"
+                icon="Trash2"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            /> 
+    
+            <HbButton 
+                classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
+                @click="ExportAsCSV = true"
+                :buttonText="$tfhb_trans('Export as CSV')"
+                icon="FileDown"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            /> 
+            <!-- <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                @click="router.push({ name: 'BookingCreate' })"
+                :buttonText="$tfhb_trans('Add New Booking')"
+                icon="PlusCircle"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />  -->
+        </div> 
     </div> 
+    <!-- Dashboard Heading Wrap -->
+    <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
+        <div class="tfhb-filter-box tfhb-flexbox tfhb-gap-8">  
+            <HbButton 
+                classValue="tfhb-btn secondary-btn " 
+                @click="alert(1)"
+                :buttonText="$tfhb_trans('Upcoming')" 
+            /> 
+            <HbButton 
+                classValue="tfhb-btn secondary-btn " 
+                @click="alert(1)"
+                :buttonText="$tfhb_trans('Pending')" 
+            /> 
+            <HbButton 
+                classValue="tfhb-btn secondary-btn " 
+                @click="alert(1)"
+                :buttonText="$tfhb_trans('Past')" 
+            /> 
+            <HbButton 
+                classValue="tfhb-btn secondary-btn " 
+                @click="alert(1)"
+                :buttonText="$tfhb_trans('Canceled')" 
+            /> 
+        </div>
+        <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
+        
+            <div class="tfhb-booking-view">
+                <div class="tfhb-list-calendar">
+                    <ul class="tfhb-flexbox tfhb-gap-8">
+                        <li :class="'list'==bookingView ? 'active' : ''" @click="bookingView='list'">
+                            <Icon name="List" size=20 />
+                        </li>
+                        <li :class="'calendar'==bookingView ? 'active' : ''" @click="bookingView='calendar'">
+                            <Icon name="CalendarDays" size=20 />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div> 
+    </div> 
+
 </div>
 
 <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal"> 
@@ -843,83 +898,102 @@ const goForReschedule = (attendee) => {
     <table class="table" cellpadding="0" :cellspacing="0">
         <thead>
             <tr>
-                <th> 
+                <!-- <th> 
                     <div class="select-checkbox-lists">
                         <label>
                             <input type="checkbox" v-model="select_all" @change="toggleSelectAll">   
                             <span class="checkmark"></span>
                         </label>
                     </div>
-                </th>
+                </th> -->
                 <th>{{ $tfhb_trans('Date & Time') }}</th>
-                <th>{{ $tfhb_trans('Title') }}</th>
-                <th>{{ $tfhb_trans('Host') }}</th>
+                <th>{{ $tfhb_trans('Events') }}</th>
+                <th>{{ $tfhb_trans('Attendees') }}</th>
                 <!-- <th>{{ $tfhb_trans('Attendee') }}</th> -->
-                <th>{{ $tfhb_trans('Duration') }}</th>
+                <th>{{ $tfhb_trans('Type') }}</th>
                 <th>{{ $tfhb_trans('Status') }}</th>
                 <th>{{ $tfhb_trans('Action') }}</th>
             </tr>
         </thead>
 
         <tbody v-if="paginatedBooking">
-            <tr v-for="(book, key) in paginatedBooking" :key="key">
-                <td>
-                    <div class="checkbox-lists">
-                        <label>
-                            <input type="checkbox" v-model="selected_items" :value="book.id" :checked="select_all == true ? true : false">   
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
-                </td>
-                <td>
-                    {{ Tfhb_Date(book.meeting_dates) }}
-                    <span>{{ book.start_time }} - {{ book.end_time }}</span>
-                </td>
-                <td>
-                    {{ truncateString(book.title, 50) }}
-                </td>
-                <td>
-                    {{ book.host_first_name }} {{ book.host_last_name }}
-                    <span>{{ book.host_email }}</span>
-                </td>
-               
-                <td>
-                    {{ book.duration }} {{ $tfhb_trans('minutes') }}
-                </td>
-                <td>
-                    <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
-                        <div class="status" :class="book.status">
-                            {{ book.status }}
-                        </div>
-                        <div class="tfhb-status-bar">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 13.334L5 8.33398H15L10 13.334Z" fill="#765664"/>
-                            </svg>
-                            <div class="tfhb-status-popup">
-                                <ul class="tfhb-flexbox tfhb-gap-2">
-                                    <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ $tfhb_trans('Confirmed') }}</li>
-                                    <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li>
-                                    <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ $tfhb_trans('Re-schedule') }}</li>
-                                    <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
-                                </ul>
+            <template v-for="(bookData, key) in paginatedBooking" :key="key">
+                <tr  class="tfhb-list-date-tr">
+                    <td colspan="6" >
+                        <div class="tfhb-date-title">{{ Tfhb_Date(bookData.date) }}</div>
+                    </td>
+                </tr>
+                <tr v-for="(book, key) in bookData.bookings" :key="key" :class="{ last: key === bookData.bookings.length - 1 }">
+                     
+                    <td> 
+                        <span>{{ book.start_time }} - {{ book.end_time }}</span>
+                    </td>
+                    <td style="width: 25%;">
+                        <span class="tfhb-list-data-event-title">{{ book.title }}</span>
+                    </td>
+                    <td style="width: 25%;">  
+                        <span class="tfhb-list-data-event-title" v-html="displayTotalAttendeesWithCount(book.attendees)"></span>
+                    </td>
+                
+                    <td>
+                        
+                        <div class="tfhb-flexbox" v-if="'one-to-one'==book.meeting_type">
+                            <div class="user-info-icon">
+                                <Icon name="UserRound" size=16 /> 
+                                <Icon name="ArrowRight" size=16 /> 
+                                <Icon name="UserRound" size=16 /> 
+                            </div>
+                            <div class="user-info-title">
+                                {{ $tfhb_trans('One to One') }}
                             </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
-                        <span @click.stop="Tfhb_Booking_View(book)">
-                            <Icon name="Eye" width="20" />
-                        </span>
-                        <span @click.stop="bookingReminder(book)">
-                            <Icon name="AlarmClock" width="20" />
-                        </span>
-                        <!-- <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
-                            <Icon name="FilePenLine" width="20" />
-                        </router-link> -->
-                    </div>
-                </td>
-            </tr>
+                        <div class="tfhb-flexbox" v-if="'one-to-group'==book.meeting_type">
+                            <div class="user-info-icon">
+                                <Icon name="UserRound" size=16 /> 
+                                <Icon name="ArrowRight" size=16 /> 
+                                <Icon name="UsersRound" size=16 /> 
+                            </div>
+                            <div class="user-info-title">
+                                {{ $tfhb_trans('One to Group') }}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
+                            <div class="status" :class="book.status">
+                                {{ book.status }}
+                            </div>
+                            <div class="tfhb-status-bar">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 13.334L5 8.33398H15L10 13.334Z" fill="#765664"/>
+                                </svg>
+                                <div class="tfhb-status-popup">
+                                    <ul class="tfhb-flexbox tfhb-gap-2">
+                                        <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ $tfhb_trans('Confirmed') }}</li>
+                                        <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li>
+                                        <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ $tfhb_trans('Re-schedule') }}</li>
+                                        <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
+                            <span @click.stop="Tfhb_Booking_View(book)">
+                                <Icon name="Eye" width="20" />
+                            </span>
+                            <span @click.stop="bookingReminder(book)">
+                                <Icon name="AlarmClock" width="20" />
+                            </span>
+                            <!-- <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
+                                <Icon name="FilePenLine" width="20" />
+                            </router-link>  -->
+                        </div>
+                    </td>
+                </tr>
+
+            </template>  
             
         </tbody>
     </table>

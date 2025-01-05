@@ -1,6 +1,8 @@
 .tfhb-admin-booking{
-    >.tfhb-dashboard-heading {
-        margin-right: 16px !important;
+    >.tfhb-booking-heading {
+        margin: 0 16px !important;
+        flex-direction: column !important;
+        align-items: normal !important;
     }
     .tfhb-content-wrap{
         .tfhb-meeting-title{
@@ -524,7 +526,21 @@
         }
         tbody{
             tr{
-                background-color: $surface-secondary;
+                background-color: #FFFEFA;
+                
+                &.tfhb-list-date-tr{
+
+                    background-color: $surface-secondary;
+                    td{
+                        border-bottom: 0 !important;
+                        .tfhb-date-title{
+                            color: $text-title;
+                            font-size: 15px;
+                            font-weight: 600;
+                            line-height: 1.6;
+                        }
+                    }
+                }
                 td{
                     padding: 16px;
                     color: $text-paragraph;
@@ -533,7 +549,14 @@
                     font-weight: $font-weight-reguler;
                     line-height: 24px;
                     border: 0px $border-type;
-                    border-bottom: 1px $border-type $surface-border;
+                    border-bottom: 1px $border-type #EEF6F0;
+                    .tfhb-list-data-event-title{
+                        font-weight: 600 !important;
+                        line-height: 1.53 !important;
+                        b{
+                            color: $primary-default;
+                        }
+                    }
                     .checkbox-lists{
                         label{
                             
@@ -667,6 +690,12 @@
                         }
                     }
                 }
+                &.last{
+                    td{
+                        border-bottom: 1px $border-type $surface-border;
+                    }
+                }
+
             }
         }
     }
