@@ -306,7 +306,8 @@ class Booking {
 						'status', attendee.status,
 						'reason', attendee.reason,
 						'payment_method', attendee.payment_method,
-						'payment_status', attendee.payment_status
+						'payment_status', attendee.payment_status,
+						'created_at', attendee.created_at
 					)
 				), 
 				JSON_ARRAY()

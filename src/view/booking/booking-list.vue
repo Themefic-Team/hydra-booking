@@ -134,10 +134,13 @@ const UpdateMeetingStatus = async (id, host, status) => {
 }
 
 const singleBookingData = ref('');
-const Tfhb_Booking_View = async (data) => {   
-    singleBookingData.value = data;
-    BookingDetailsPopup.value = true;
-    TfhbFormatMeetingLocation(data.meeting_locations);
+const Tfhb_Booking_View = async (id) => {  
+    //  go to booking details page
+    router.push({ name: 'bookingDetails', params: { id: id } });
+
+    // singleBookingData.value = data;
+    // BookingDetailsPopup.value = true;
+    // TfhbFormatMeetingLocation(data.meeting_locations);
 }
 
 
@@ -928,7 +931,7 @@ const goForReschedule = (attendee) => {
                     <td> 
                         <span>{{ book.start_time }} - {{ book.end_time }}</span>
                     </td>
-                    <td style="width: 25%;">
+                    <td>
                         <span class="tfhb-list-data-event-title">{{ book.title }}</span>
                     </td>
                     <td style="width: 25%;">  
@@ -937,7 +940,7 @@ const goForReschedule = (attendee) => {
                 
                     <td>
                         
-                        <div class="tfhb-flexbox" v-if="'one-to-one'==book.meeting_type">
+                        <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-one'==book.meeting_type">
                             <div class="user-info-icon">
                                 <Icon name="UserRound" size=16 /> 
                                 <Icon name="ArrowRight" size=16 /> 
@@ -947,7 +950,7 @@ const goForReschedule = (attendee) => {
                                 {{ $tfhb_trans('One to One') }}
                             </div>
                         </div>
-                        <div class="tfhb-flexbox" v-if="'one-to-group'==book.meeting_type">
+                        <div class="tfhb-flexbox tfhb-gap-8" v-if="'one-to-group'==book.meeting_type">
                             <div class="user-info-icon">
                                 <Icon name="UserRound" size=16 /> 
                                 <Icon name="ArrowRight" size=16 /> 
@@ -980,7 +983,7 @@ const goForReschedule = (attendee) => {
                     </td>
                     <td>
                         <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
-                            <span @click.stop="Tfhb_Booking_View(book)">
+                            <span @click.stop="Tfhb_Booking_View(book.id)">
                                 <Icon name="Eye" width="20" />
                             </span>
                             <span @click.stop="bookingReminder(book)">

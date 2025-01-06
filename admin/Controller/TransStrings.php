@@ -86,7 +86,13 @@ namespace HydraBooking\Admin\Controller;
  
             'Your Previous Booking Time:' =>  __('Your Previous Booking Time:', 'hydra-booking'), 
             'Update Booking' =>  __('Update Booking', 'hydra-booking'), 
+            'Meeting Details' =>  __('Meeting Details', 'hydra-booking'),   
+            'Timezone' =>  __('Timezone', 'hydra-booking'), 
+            'Durations' =>  __('Durations', 'hydra-booking'), 
+            'Attendee Details' =>  __('Attendee Details', 'hydra-booking'), 
+            'Booked At' =>  __('Booked At', 'hydra-booking'), 
             'Booking' =>  __('Booking', 'hydra-booking'), 
+            'Timeframe:' =>  __('Timeframe:', 'hydra-booking'),  
 
             // Host
             'Hosts' =>  __('Hosts', 'hydra-booking'), 

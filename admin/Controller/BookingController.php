@@ -63,6 +63,16 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		// Get Single Booking based on id
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/details/(?P<id>[0-9]+)',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'getBookingDetails' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 		register_rest_route(
 			'hydra-booking/v1',
 			'/booking/update',
@@ -824,8 +834,7 @@ class BookingController {
 
 	// Get Single Booking
 	public function getBookingData( $request ) {
-		$booking_id = $request['id'];
-
+		$booking_id = $request['id']; 
 		// Check if user is already a booking
 		$booking = new Booking();
 		// Insert booking
@@ -898,6 +907,57 @@ class BookingController {
 		);
 		return rest_ensure_response( $data );
 	}
+
+	/**
+	 * Get Booking Details
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * @Author: Sydur Rahman
+	 * 
+	 */
+	public function getBookingDetails( $request ) {
+		$booking_id = $request['id']; 
+
+		if(empty($booking_id)){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+		$booking = new Booking();
+		
+		$where = array(
+			array('id', '=', $booking_id),
+		);
+		 $bookingsList = $booking->getBookingWithAttendees(  
+			$where,
+			1,
+			'DESC',
+		); 
+
+		if( empty( $bookingsList ) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+
+		 $data = array(
+			'status'  => true,
+			'booking' => $bookingsList,
+			'message' =>  __('Booking Data Successfully Retrieve!', 'hydra-booking'),
+		);
+		return rest_ensure_response( $data );
+	}
+
+
 
 	// Update Booking Information
 	public function updateBooking() {

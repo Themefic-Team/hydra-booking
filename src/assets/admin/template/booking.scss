@@ -465,6 +465,83 @@
         }
     }
 }
+.tfhb-details-status{
+    .status{
+        border-radius: $border-radius-large;
+        background: $warning-background-secondary;
+        padding: 2px 8px;
+        color: $warning-text;
+        text-align: center;
+        font-size: $text-font-size-small;
+        
+        font-weight: $font-weight-reguler;
+        line-height: 16px; /* 145.455% */
+        text-transform: capitalize;
+        &.confirmed{
+            background: $success-background; 
+            color: $success-text; 
+        }
+        &.canceled{
+            background: $error-background; 
+            color: $error-text; 
+        }
+        &.schedule{
+            background-color: $info-background;
+            color: $info-text;
+        }
+    }
+    .tfhb-status-bar{
+        cursor: pointer;
+        position: relative;
+        svg{
+            fill: $text-paragraph;
+        }
+        .tfhb-status-popup{
+            width: 140px; 
+            border-radius: 6px;
+            background: $surface-border;
+            padding: 2px;
+            position: absolute;
+            right: 0;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            z-index: 99;
+            ul{
+                
+                li{
+                    padding: 8px 12px; 
+                    border-radius: $border-radius-small; 
+                    background: $success-background; 
+                    color: $success-text;
+                    font-size: $heading-font-size-small;
+                    
+                    font-weight: $font-weight-reguler;
+                    line-height: 24px; /* 160% */
+                    width: 100%;
+                    margin: 0 !important;
+                    &.pending{
+                        background-color: $warning-background;
+                        color: $alert-text;
+                    }
+                    &.schedule{
+                        background-color: $info-background;
+                        color: $info-text;
+                    }
+                    &.canceled{
+                        background-color: $error-background;
+                        color: $error-text;
+                    }
+                }
+            }
+        }
+        &:hover .tfhb-status-popup,
+        &:focus .tfhb-status-popup {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+}
 .tfhb-booking-details{
     margin-right: 16px;
    margin-left: 16px;
@@ -699,6 +776,123 @@
             }
         }
     }
+}
+
+
+
+// Booking Details Quick View Design
+.tfhb-booking-single-details {
+    margin-right: 16px;
+    margin-left: 16px;
+
+    .tfhb-booking-heading {
+        margin-bottom: 16px;
+
+        h4 {
+            font-size: 17px;
+            line-height: 1.5;
+        }
+        .status {
+            padding: 4px 8px ;
+            border-radius: 0 ;
+            font-size: 13px ;
+            height: 28px;
+            font-weight: 600  ;
+            line-height: 1.53 ;
+        }
+
+        .booking-details-timeframe {
+            border-left: 2px solid var(--Information-Text, #002AB3);
+            padding: 4px 8px;
+            background-color: #fff;
+            span{
+                margin: 0  !important;
+            }
+        }
+    }
+
+    .tfhb-booking-details-content {
+        width: calc(100% - 316px);
+    }
+
+    .tfhb-booking-details-activity {
+        width: 300px;
+    }
+
+    .tfhb-b-d-wrap {
+        padding: 16px 24px;
+        background-color: $surface-secondary;
+        border-radius: 8px;
+        box-sizing: border-box;
+        width: 100%;
+       
+
+        .tfhb-b-d-icon-box-wrap {
+            padding: 16px;
+            border-top: $border-reguler $border-type $surface-border;
+            &.bg-wrap{
+                background-color: #FFFEFA;
+            }
+            h4 {
+                padding-bottom: 8px;
+            }
+
+            .tfhb-b-d-icon-box {
+                width: calc(33% - 24px);
+
+                .lucide {
+                    margin-top: 6px;
+                }
+                .tfhb-b-d-icon-content{
+                    width: calc(100% - 28px);
+                }
+            }
+        }
+
+         .tfhb-activity-timeline {
+            padding: 16px 0;
+            border-top: $border-reguler $border-type $surface-border;
+            .tfhb-activity-single-timeline {
+                position: relative;
+                padding-left: 24px;
+
+                &:after {
+                    position: absolute;
+                    content: '';
+                    left: 8px;
+                    top: 16px;
+                    width: 1px;
+                    height: calc(100% + 5px);
+                    background-color: #56765B; 
+                  }
+
+                //   last child after remove
+                &:last-child:after {
+                    display: none;
+                }
+              }
+              .tfhb-a-s-t-icon {
+                position: absolute;
+                left: 0;
+                z-index: 1;
+                top: 4px;
+                width: 16px;
+              } 
+
+                .tfhb-a-s-t-content{
+                    h5 {
+                        font-size: 13px; 
+                    }
+                    p,  span {
+                        font-size: 11px !important;
+                    }
+                } 
+               
+
+         }
+
+    }
+
 }
 
 // Booking Details Quick View Design

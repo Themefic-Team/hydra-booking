@@ -48,6 +48,12 @@ const routes = [
                 meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-update.vue')
             }, 
+            {
+                path: 'details/:id',
+                name: 'bookingDetails',
+                meta: { Capabilities: 'tfhb_manage_booking' },
+                component: () => import('../view/booking/booking-details.vue')
+            }, 
         ]
     }, 
     // Hosts routes
