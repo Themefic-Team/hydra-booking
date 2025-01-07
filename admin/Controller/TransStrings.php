@@ -93,6 +93,7 @@ namespace HydraBooking\Admin\Controller;
             'Booked At' =>  __('Booked At', 'hydra-booking'), 
             'Booking' =>  __('Booking', 'hydra-booking'), 
             'Timeframe:' =>  __('Timeframe:', 'hydra-booking'),  
+            'Total Payment' =>  __('Total Payment', 'hydra-booking'),  
 
             // Host
             'Hosts' =>  __('Hosts', 'hydra-booking'), 
@@ -233,6 +234,7 @@ namespace HydraBooking\Admin\Controller;
             'Payment for this Meeting' =>  __('Payment for this Meeting', 'hydra-booking'), 
             'Securely process payment for this meeting using WooCommerce Payments, Stripe, or PayPal for a seamless transaction experience.' =>  __('Securely process payment for this meeting using WooCommerce Payments, Stripe, or PayPal for a seamless transaction experience.', 'hydra-booking'), 
             'Payment Method' =>  __('Payment Method', 'hydra-booking'), 
+            'Payment ID' =>  __('Payment ID', 'hydra-booking'), 
             'Select Payment Method' =>  __('Select Payment Method', 'hydra-booking'), 
             'Woocommerce is not connected.' =>  __('Woocommerce is not connected.', 'hydra-booking'), 
             'Paypal is not connected.' =>  __('Paypal is not connected.', 'hydra-booking'), 

@@ -4,6 +4,7 @@ import axios from 'axios'
 const BookingDetails = reactive({
     booking : [],
     attendees : [],
+    location : [],
     skeleton : ref(true),
 
     // booking List
@@ -20,6 +21,7 @@ const BookingDetails = reactive({
                 // If any available this date 
                 this.booking = response.data.booking;
                 this.attendees = response.data.booking.attendees;
+                this.location = JSON.parse(response.data.booking.meeting_locations);
      
             }
         } catch (error) {

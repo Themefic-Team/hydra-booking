@@ -12,7 +12,7 @@ use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
-
+use HydraBooking\DB\Transactions;
  
 
 class BookingController {
@@ -947,6 +947,20 @@ class BookingController {
 					'message' =>  __('Invalid Booking', 'hydra-booking'),
 				)
 			);
+		}
+
+		$attendeesData = $bookingsList->attendees;
+		$transactions = new Transactions();
+		foreach ($attendeesData as $key => $attendee) {
+
+			$where = array(
+				array('attendee_id', '=', $attendee->id),
+			);
+			$transaction = $transactions->get( $where, 1 );
+			$transaction->transation_history = json_decode($transaction->transation_history);
+
+			$attendeesData[$key]->transaction =  $transaction;
+
 		}
 
 		 $data = array(

@@ -468,9 +468,9 @@
 .tfhb-details-status{
     .status{
         border-radius: $border-radius-large;
-        background: $warning-background-secondary;
+        background: $info-background;
         padding: 2px 8px;
-        color: $warning-text;
+        color: $info-text;
         text-align: center;
         font-size: $text-font-size-small;
         
@@ -802,9 +802,9 @@
         }
 
         .booking-details-timeframe {
-            border-left: 2px solid var(--Information-Text, #002AB3);
+            border-left: 2px $border-type  $info-text;
             padding: 4px 8px;
-            background-color: #fff;
+            background-color: $surface-secondary;
             span{
                 margin: 0  !important;
             }
@@ -825,11 +825,27 @@
         border-radius: 8px;
         box-sizing: border-box;
         width: 100%;
+        .tfhb-b-d-inner-title{
+            .status { 
+                background: $info-text;
+                color: $surface-secondary !important;
+                font-weight: 600 !important;
+                display: inline-block;
+                padding: 2px 8px;
+                border-radius: 16px;
+            }
+        }
        
 
         .tfhb-b-d-icon-box-wrap {
             padding: 16px;
             border-top: $border-reguler $border-type $surface-border;
+            margin-top: 8px;
+            
+            &.no-border{
+                border-top: none;
+            }
+            
             &.bg-wrap{
                 background-color: #FFFEFA;
             }
@@ -840,11 +856,35 @@
             .tfhb-b-d-icon-box {
                 width: calc(33% - 24px);
 
-                .lucide {
+                .lucide, svg {
                     margin-top: 6px;
                 }
                 .tfhb-b-d-icon-content{
                     width: calc(100% - 28px);
+                    h5{
+                        font-size: 13px;
+                        font-weight: 600;
+                        line-height: 1.53;
+                    }
+                    .tfhb-single-booking-info {
+                        span {
+                            color: $primary-default !important;
+                            font-weight: 400 !important;
+                            font-size: 15px !important;
+                            a {
+                                font-size: 13px;
+                                padding: 4px 8px;
+                                background-color: $primary-default;
+                                border-radius: 16px;
+                                color: $surface-secondary;
+                                &:hover { 
+                                    background-color: $primary-hover;
+                                  }
+                              }
+                              
+                          }
+                          
+                    } 
                 }
             }
         }
@@ -890,6 +930,28 @@
                
 
          }
+
+         .tfhb-singlee-attendees {
+            margin: 0 !important;
+            border-top: $border-reguler $border-type #EEF6F0;
+            .accordion-icons{
+                svg{
+                    color: $text-paragraph;
+                    font-size: 20px;
+                    cursor: pointer;
+                }
+            }
+            .tfhb-b-d-inner-title{
+                border-bottom: $border-reguler $border-type $surface-border;
+                margin: 0 16px;
+            }
+            &.active{
+                border: $border-reguler $border-type $surface-border;
+            }
+            .tfhb-b-d-icon-box-wrap {
+                margin: 0 !important; 
+            }
+          } 
 
     }
 
