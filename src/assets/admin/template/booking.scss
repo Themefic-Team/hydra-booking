@@ -784,7 +784,14 @@
 .tfhb-booking-single-details {
     margin-right: 16px;
     margin-left: 16px;
-
+    .tfhb-booking-details-action {
+        .tfhb-dropdown-wrap {
+            width: 185px !important;
+        }
+        svg {
+            margin-top: 0px !important;
+        }
+    }
     .tfhb-booking-heading {
         margin-bottom: 16px;
 
@@ -792,6 +799,7 @@
             font-size: 17px;
             line-height: 1.5;
         }
+       
         .status {
             padding: 4px 8px ;
             border-radius: 0 ;

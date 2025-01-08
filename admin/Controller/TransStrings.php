@@ -94,6 +94,12 @@ namespace HydraBooking\Admin\Controller;
             'Booking' =>  __('Booking', 'hydra-booking'), 
             'Timeframe:' =>  __('Timeframe:', 'hydra-booking'),  
             'Total Payment' =>  __('Total Payment', 'hydra-booking'),  
+            'Mark as Complete' =>  __('Mark as Complete', 'hydra-booking'),  
+            'Re-Schedule' =>  __('Re-Schedule', 'hydra-booking'),  
+            "No, Don't cancel" =>  __("No, Don't cancel", "hydra-booking"),  
+            "Yes, Cancel" =>  __("Yes, Cancel", "hydra-booking"),  
+            'Cancel Meeting' =>  __('Cancel Meeting', 'hydra-booking'),  
+            // 'Delete' =>  __('Delete', 'hydra-booking'),  
 
             // Host
             'Hosts' =>  __('Hosts', 'hydra-booking'), 

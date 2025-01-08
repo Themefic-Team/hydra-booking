@@ -5,6 +5,8 @@ import axios from 'axios'
 import HbText from '@/components/form-fields/HbText.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbTextarea from '@/components/form-fields/HbTextarea.vue';
+import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
@@ -45,17 +47,12 @@ const MakeMeetingLink = (link) => {
    return linkHtml; 
 
 }
-const activeAttendeeAction = ref(0);
-// on click add class active
-const activeSingleAttendeeAction = (id) => {
-    if(activeAttendeeAction.value == id) {
-        activeAttendeeAction.value = 0;
-        return;
-    }
-    activeAttendeeAction.value = id; 
+ 
 
-}
 
+
+// Active Action Dropdwon
+const activeBookingAction = ref(0);
 
 // Single Attendee Details able to show multiple items at a time
 const activeAttendeeDetails = reactive([]);
@@ -72,23 +69,131 @@ const activeSingleAttendeeDetails = (attendee_id) => {
     activeAttendeeDetails.push(attendee_id);
 };
 
-// Single Attendee Details able to hide multiple items at a time
-const hideSingleAttendeeDetails = (attendee_id) => {   
-    // Update the contents of activeAttendeeDetails without reassigning it
-    const index = activeAttendeeDetails.indexOf(attendee_id);
-    if (index !== -1) {
-        activeAttendeeDetails.splice(index, 1); // Removes the attendee_id
+// Single Attendee Details able to show multiple items at a time
+const activeAttendeeAction = reactive([]);
+
+const activeSingleAttendeeAction = (attendee_id) => {  
+    if (activeAttendeeAction.includes(attendee_id)) {
+        // Update the contents of activeAttendeeAction without reassigning it
+        const index = activeAttendeeAction.indexOf(attendee_id);
+        if (index !== -1) {
+            activeAttendeeAction.splice(index, 1); // Removes the attendee_id
+        }
+        return;
     }
+    activeAttendeeAction.push(attendee_id);
 };
 
+// Hide Single Attendee Details
+const goForReschedule = (attendee) => {
+  
+  let url = tfhb_core_apps.admin_url+'/?hydra-booking=booking&hash='+attendee.hash+'&meetingId='+attendee.meeting_id+'&type=reschedule';
+  window.open(url, '_blank');
+}
 
-onBeforeMount(() => { 
-
-    BookingDetails.fetchBookingsDetails(bookingId);
+// Cencel Attendee  
+const cancelAttendee = (attendee) => {    
+    if(attendee.status == 'canceled'){ 
+        toast.error('Already Canceled', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return;
+    } 
+    BookingDetails.cancelAttendee.id = attendee.id;
+    BookingDetails.cancelAttendee.booking_id = attendee.booking_id; 
+    BookingDetails.cancelAttendee.attendee_name = attendee.attendee_name; 
+    BookingDetails.cancelAttendee.cancel_reason = attendee.reason ?? attendee.reason != null ? attendee.reason : ''; 
+    BookingDetails.attendeeCencelPopup = true; 
+}
+// attendeeCencelPopup close
+const attendeeCencelPopupClose = () => {
+    BookingDetails.attendeeCencelPopup = false;
+    BookingDetails.attendeeCancelPreloader = false;
+}
+onBeforeMount(() => {  
+    BookingDetails.fetchBookingsDetails(bookingId, router);
 });
 </script>
 
 <template> 
+<!-- Cencel  POPUP-->
+    <HbPopup   :isOpen="BookingDetails.attendeeCencelPopup" @modal-close="attendeeCencelPopupClose()" max_width="400px" name="first-modal">
+        <template #header> 
+            <h3>{{$tfhb_trans('Cancel Meeting')}}</h3>   
+        </template>  
+
+        <template #content>  
+            <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24"> 
+                <div class="tfhb-close-content">
+                    <h3> {{BookingDetails.booking.host_first_name}} <br> <span> With <b>{{  BookingDetails.cancelAttendee.attendee_name }}</b> </span> </h3>
+                    <b>{{ Tfhb_Date(BookingDetails.booking.meeting_dates) }}, {{ BookingDetails.booking.start_time }} - {{ BookingDetails.booking.end_time }}</b>
+                    <br>    
+                    <br>    
+                    <HbTextarea  
+                        v-model="BookingDetails.cancelAttendee.cancel_reason" 
+                        required= "true"  
+                        name="description"
+                        :label="$tfhb_trans('Please confirm that you would like to cancel this event. A cancellation email will also go out to the invitee')"  
+                        :placeholder="$tfhb_trans('Reason for cancellation')" 
+                    /> 
+                    
+                </div>
+                <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                    <HbButton 
+                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                        @click.stop="attendeeCencelPopupClose()"
+                        :buttonText="$tfhb_trans( `No, Don't cancel`)" 
+                    />
+                    <HbButton  
+                        classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                        @click=" BookingDetails.cancelBookingAttendee()"
+                        :buttonText="$tfhb_trans('Yes, Cancel')" 
+                        icon="X" 
+                        :pre_loader="BookingDetails.attendeeCancelPreloader"
+                        :hover_animation="false" 
+                        icon_position = 'left'
+                    />
+                    
+                </div>
+            </div> 
+        </template> 
+    </HbPopup>
+<!-- Cencel  POPUP-->
+
+<!-- Delete Popup -->
+<HbPopup :isOpen="BookingDetails.deletePopup" @modal-close="BookingDetails.deletePopup = !BookingDetails.deletePopup" max_width="400px" name="first-modal"> 
+    <template #header> 
+        
+    </template>  
+    <template #content>  
+        <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+            <div class="tfhb-close-icon">
+                <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+            </div>
+            <div class="tfhb-close-content">
+                <h3>{{ $tfhb_trans('Are you absolutely sure?') }}  </h3>  
+                <p>{{ $tfhb_trans('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.') }}</p>
+            </div>
+            <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16">  
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                    @click=" deletePopup = !deletePopup"
+                    :buttonText="$tfhb_trans('Cancel')" 
+                />  
+                <HbButton  
+                    classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                    @click="BookingDetails.deleteBooking()"
+                    :buttonText="$tfhb_trans('Delete')"
+                    icon="Trash2"   
+                    :hover_animation="false" 
+                    icon_position = 'left'
+                />
+            </div>
+        </div> 
+    </template> 
+</HbPopup>
+<!-- Delete Popup -->
 
     <div class="tfhb-booking-single-details">
        <div class="tfhb-booking-heading tfhb-flexbox tfhb-gap-4 tfhb-full-width tfhb-justify-between">
@@ -106,18 +211,32 @@ onBeforeMount(() => {
                     <span>{{$tfhb_trans('Timeframe:')}} <b>{{ Tfhb_Date(BookingDetails.booking.meeting_dates) }}, {{ BookingDetails.booking.start_time }} - {{ BookingDetails.booking.end_time }}</b> </span>
                 </div> 
                 <div class="tfhb-details-status" >
-                    <div class="status" :class="BookingDetails.booking.status "  > 
+                    <div v-if="'one-to-one' == BookingDetails.booking.meeting_type" class="status" :class="BookingDetails.attendees[0].status "  > 
+                        {{BookingDetails.attendees[0].status}} 
+                    </div>
+                    <div v-else class="status" :class="BookingDetails.booking.status "  > 
                         {{BookingDetails.booking.status}} 
                     </div>
                 </div>
-            </div>
-            <div class="tfhb-booking-heading-right tfhb-flexbox tfhb-gap-8">
-                <HbButton 
-                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="alert(1)"
-                    :buttonText="$tfhb_trans('More')" 
-                    icon="ChevronRight" 
-                /> 
+            </div> 
+            <div class="tfhb-booking-heading-right tfhb-flexbox tfhb-gap-8"> 
+                <div class="tfhb-booking-details-action tfhb-dropdown ">
+                    <button  @click="activeBookingAction = !activeBookingAction"  class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8">
+                        {{ $tfhb_trans('Action') }} 
+                        <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
+                    </button>
+                    
+                    <transition name="tfhb-dropdown-transition">
+                        <div v-show="activeBookingAction == true" class="tfhb-dropdown-wrap "> 
+                             
+                            <span class="tfhb-dropdown-single " @click="BookingDetails.ChangeBookingStatus('completed')"><Icon name="FileCheck" size=16 />{{ $tfhb_trans('Mark as Complete') }}</span>
+                            <span class="tfhb-dropdown-single "  v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="goForReschedule(BookingDetails.attendees[0])"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
+                            <span class="tfhb-dropdown-single " v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="cancelAttendee(BookingDetails.attendees[0])"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span>
+                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="BookingDetails.deletePopup = true"><Icon name="Trash" size=16 />{{ $tfhb_trans('Delete') }}</span>
+                            
+                        </div>
+                    </transition>
+                </div>
                 <HbButton 
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                     @click="alert(1)"
@@ -128,11 +247,11 @@ onBeforeMount(() => {
             </div>
             
        </div>
-
        <div class="tfhb-booking-details-wrap tfhb-flexbox tfhb-gap-16 tfhb-justify-between tfhb-align-normal">
             <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16">
                 <div class="tfhb-b-d-wrap">
                     <h4>{{ $tfhb_trans('Meeting Details') }}</h4> 
+                    
                     <!-- {{BookingDetails.booking}} -->
                     <div class="tfhb-b-d-icon-box-wrap tfhb-flexbox tfhb-gap-32 tfhb-justify-between tfhb-align-normal">
                         <!-- Booking Details Icon Box -->
@@ -395,14 +514,13 @@ onBeforeMount(() => {
                                  <div class="tfhb-b-d-icon-cta "> 
 
                                     
-                                    <div  @click="activeSingleAttendeeAction(117)" class="tfhb-single-hosts-action tfhb-dropdown">
+                                    <div  @click="activeSingleAttendeeAction(attendees.id)"  class="tfhb-booking-details-action tfhb-dropdown ">
+                                        
                                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                                         <transition name="tfhb-dropdown-transition">
-                                            <div v-show="117 == activeAttendeeAction" class="tfhb-dropdown-wrap ">  
-                                                
-                                                <span class="tfhb-dropdown-single" @click="ChangeAttendeeStatus(117, 1, 'confirmed')"><Icon name="CalendarCheck2" size=16   /> {{ $tfhb_trans('Confirm') }} </span>
-                                                <span class="tfhb-dropdown-single " @click="ChangeAttendeeStatus(117, 1, 'pending')" ><Icon name="CalendarClock" size=16  /> {{ $tfhb_trans('Pending') }} </span>
-                                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="ChangeAttendeeStatus(117, 1, 'canceled')" ><Icon name="X"  size=16 /> {{ $tfhb_trans('Cancel') }} </span>
+                                            <div v-show="activeAttendeeAction.includes(attendees.id)" class="tfhb-dropdown-wrap ">  
+                                                <span class="tfhb-dropdown-single"  @click.stop="goForReschedule(BookingDetails.attendees[0])"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
+                                                <span class="tfhb-dropdown-single " @click="alert(1)"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span> 
                                                 
                                             </div>
                                         </transition>

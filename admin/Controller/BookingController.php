@@ -73,6 +73,27 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		// Change Attendee email Attendee.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/change-booking-status',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'changeBookingDetailsStatus' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		// Cancel Booking Attendee.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/cancel-booking-attendee',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'cancelBookingAttendee' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
 		register_rest_route(
 			'hydra-booking/v1',
 			'/booking/update',
@@ -112,7 +133,7 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
-		// booking reminder email Attendee.
+		// Change Attendee email Attendee.
 		register_rest_route(
 			'hydra-booking/v1',
 			'/booking/change-attendee-status',
@@ -122,6 +143,7 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		
 
 		// Pre Booking Data
 		register_rest_route(
@@ -832,6 +854,9 @@ class BookingController {
 		}
 	}
 
+
+
+
 	// Get Single Booking
 	public function getBookingData( $request ) {
 		$booking_id = $request['id']; 
@@ -908,6 +933,40 @@ class BookingController {
 		return rest_ensure_response( $data );
 	}
 
+	// Get booking Details Data getBookingDetails
+
+	public function getBookingDetailsData($booking_id){
+		$booking = new Booking();
+		
+		$where = array(
+			array('id', '=', $booking_id),
+		);
+		 $bookingsList = $booking->getBookingWithAttendees(  
+			$where,
+			limit: 1,  
+		); 
+		
+		if( empty( $bookingsList ) ){
+			return [];
+		}
+ 
+		$attendeesData = $bookingsList->attendees;
+		$transactions = new Transactions();
+		foreach ($attendeesData as $key => $attendee) {
+
+			$where = array(
+				array('attendee_id', '=', $attendee->id),
+			);
+			$transaction = $transactions->get( $where, 1 );
+			$transaction->transation_history = json_decode($transaction->transation_history);
+
+			$attendeesData[$key]->transaction =  $transaction;
+
+		}
+
+		return  $bookingsList;
+	}
+
 	/**
 	 * Get Booking Details
 	 *
@@ -929,16 +988,8 @@ class BookingController {
 				)
 			);
 		}
-		$booking = new Booking();
 		
-		$where = array(
-			array('id', '=', $booking_id),
-		);
-		 $bookingsList = $booking->getBookingWithAttendees(  
-			$where,
-			1,
-			'DESC',
-		); 
+		$bookingsList = $this->getBookingDetailsData($booking_id);
 
 		if( empty( $bookingsList ) ){
 			return rest_ensure_response(
@@ -949,19 +1000,6 @@ class BookingController {
 			);
 		}
 
-		$attendeesData = $bookingsList->attendees;
-		$transactions = new Transactions();
-		foreach ($attendeesData as $key => $attendee) {
-
-			$where = array(
-				array('attendee_id', '=', $attendee->id),
-			);
-			$transaction = $transactions->get( $where, 1 );
-			$transaction->transation_history = json_decode($transaction->transation_history);
-
-			$attendeesData[$key]->transaction =  $transaction;
-
-		}
 
 		 $data = array(
 			'status'  => true,
@@ -971,6 +1009,124 @@ class BookingController {
 		return rest_ensure_response( $data );
 	}
 
+
+		/**
+	 * Export Booking Data as CSV
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * @author Sydur Rahman 
+	 * 
+	 */
+
+	 public function changeBookingDetailsStatus( $request ) {
+		$booking_id = $request['booking_id'];
+		$status     = $request['status'];
+		if ( empty( $booking_id ) || $booking_id == 0 ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+		 
+
+		// Check if user is already a booking
+		$booking = new Booking();  
+		// Update Booking Status
+		$bookingUpdate = $booking->update( array( 'id' => $booking_id, 'status' => $status ) );
+
+		if( $bookingUpdate ){ 
+
+			if ( 'completed' == $status ) {
+				// do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
+			}
+ 
+		}
+		$bookingsList = $this->getBookingDetailsData($booking_id);
+ 
+		$data = array(
+			'status'  => true,
+			'booking' => $bookingsList,
+			'message' => __('Booking Status Updated Successfully!', 'hydra-booking'),
+		);
+		return rest_ensure_response( $data );
+	}
+
+	/**
+	 * Export Booking Data as CSV
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * @author Sydur Rahman
+	 * 
+	 * 
+	 */
+
+	 public function  cancelBookingAttendee( $request ) {
+
+		$attendee_id = $request['id'];
+		$booking_id = $request['booking_id'];
+		$status     =  $request['status'];
+		$cancel_reason =  $request['cancel_reason']; 
+		if ( empty( $attendee_id ) || $attendee_id == 0 ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('Invalid Attendee', 'hydra-booking'),
+				)
+			);
+		}
+
+		$Attendee = new Attendees();
+
+		 $update_data = array(
+
+			'id' => $attendee_id,
+			'status' => $status,
+			'reason' => $cancel_reason,
+			'cancelled_by' => 'host',
+		);
+
+		$attendeeUpdate = $Attendee->update( $update_data );
+
+		if( $attendeeUpdate ){ 
+			
+			$bookingsList = $this->getBookingDetailsData($booking_id);
+			$data = array(
+				'status'  => true,
+				'booking' => $bookingsList,
+				'message' => __('Attendee Status Updated Successfully!', 'hydra-booking'),
+			);
+
+			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+				array(
+					array('id', '=', $attendee_id),
+				),
+				1,
+				'DESC'
+			 ); 
+			if ( 'canceled' == $status ) {
+				do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
+			}
+
+
+			return rest_ensure_response( $data );
+		}else{
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('Error while updating Attendee Status', 'hydra-booking'),
+				)
+			);
+		}
+
+	 }
 
 
 	// Update Booking Information
