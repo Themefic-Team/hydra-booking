@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.16
+Stable tag: 1.0.17
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -198,6 +198,11 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.17 - 09/01/2025 =  
+
+- Improved: System stability for better performance.
+- Compatibility: Resolved minor compatible issues with Fluent Forms.
 
 = 1.0.16 - 06/01/2025 =  
 
