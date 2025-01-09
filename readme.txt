@@ -202,7 +202,7 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 = 1.0.17 - 09/01/2025 =  
 
 - Improved: System stability for better performance.
-- Updated: Information in readme.txt.
+- Compatibility: Resolved minor compatible issues with Fluent Forms.
 
 = 1.0.16 - 06/01/2025 =  
 
