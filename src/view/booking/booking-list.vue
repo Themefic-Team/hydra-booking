@@ -8,6 +8,7 @@ import HbSelect from '@/components/form-fields/HbSelect.vue';
 import HbRadio from '@/components/form-fields/HbRadio.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbMultiSelect from '@/components/form-fields/HbMultiSelect.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { toast } from "vue3-toastify"; 
@@ -15,6 +16,7 @@ import useDateFormat from '@/store/dateformat'
 const { Tfhb_Date, Tfhb_Time } = useDateFormat();
 import { Meeting } from '@/store/meetings'
 import { Booking } from '@/store/booking'
+import { Host } from '@/store/hosts'
 
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -94,8 +96,9 @@ const TfhbFormatMeetingLocation = (address) => {
 }
 
 onBeforeMount(() => { 
-    Booking.fetchBookings();
+    Booking.fetchBookings('upcoming');
     Meeting.fetchMeetings();
+    Host.fetchHosts();
 });
 
 // Booking Status Changed
@@ -233,28 +236,9 @@ const filterData = reactive({
     name: '',
 })
 const Tfhb_Booking_Filter = async (e) =>{
-    filterData.name=e.target.value;
-    Booking.skeleton = true;
-    try {
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/filter', {
-            params: {
-                filterData
-            },
-            headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_integrations'
-            }
-        });
-        
-        if (response.data.status) { 
-            Booking.bookings = response.data.bookings; 
-            Booking.calendarbooking.events = response.data.booking_calendar;
-            Booking.skeleton = false;
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    Booking.filter_data.filter_search =e.target.value;
+    Booking.filter_data.filter_type ='search';
+    Booking.fetchBookings();
 }
 
 // Pagination
@@ -486,88 +470,183 @@ const displayTotalAttendeesWithCount = (attendees) => {
 
     return displayAttendees;
 };
+
+// Filter  
 const goForReschedule = (attendee) => {
   
     let url = tfhb_core_apps.admin_url+'/?hydra-booking=booking&hash='+attendee.hash+'&meetingId='+attendee.meeting_id+'&type=reschedule';
     window.open(url, '_blank');
 }
+
+const getMeetingList = (meeting) => { 
+
+    let meetingList = [];
+
+    meeting.forEach((item) => {
+        meetingList.push({
+            'name': item.title,
+            'value': item.id
+        });
+    });
+
+    return meetingList;
+}
+
+// Filter Booking By Type
+const filterBookingByType = (type) => {
+    Booking.filter_data.filter_type = type;
+
+    Booking.fetchBookings();
+}
+// reset filter
+const resetFilter = () => {
+    Booking.filter_data.date_range = { from: '', to: '' };
+    Booking.filter_data.host_ids = [];
+    Booking.filter_data.meeting_ids = [];
+    Booking.filter_data.status = [];
+    Booking.fetchBookings();
+}
+
 </script>
 <template>
-<!-- {{ tfhbClass }} -->
-<!-- :class="{ 'tfhb-skeleton': Booking.skeleton }" -->
+
 <div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24">
     <!-- Dashboard Heading Wrap -->
     <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
         <div class="tfhb-filter-box tfhb-flexbox">
-            
+            {{Booking.filter_data}}
             <div class="tfhb-header-filters">
-                <input type="text" placeholder="Host name or meeting title" @keyup="Tfhb_Booking_Filter" /> 
+                <input type="text"  placeholder="Host name or meeting title" @keyup="Tfhb_Booking_Filter" /> 
                 <span><Icon name="Search" size=20 /></span>
             </div>
-        </div>
-        <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
-        
-            <HbDropdown   
-                v-if="selected_items.length > 0"
-                placeholder="Status"   
-                :option = "[
-                    {'name': 'Pending', 'value': 'pending'},  
-                    {'name': 'Confirmed', 'value': 'confirmed'},   
-                    {'name': 'Canceled', 'value': 'canceled'}
-                ]"
-                @tfhb-onchange="Bulk_Status_Callback" 
-            />  
-            
-            <HbButton 
-                v-if="selected_items.length > 0" 
-                classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
-                @click="deletePopup = true"
-                :buttonText="$tfhb_trans('Delete')"
-                icon="Trash2"   
-                :hover_animation="false" 
-                icon_position = 'left'
-            /> 
-    
-            <HbButton 
-                classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
-                @click="ExportAsCSV = true"
-                :buttonText="$tfhb_trans('Export as CSV')"
-                icon="FileDown"   
-                :hover_animation="false" 
-                icon_position = 'left'
-            /> 
-            <!-- <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                @click="router.push({ name: 'BookingCreate' })"
-                :buttonText="$tfhb_trans('Add New Booking')"
-                icon="PlusCircle"   
-                :hover_animation="false" 
-                icon_position = 'left'
-            />  -->
+           
         </div> 
+        <HbButton 
+            classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
+            @click="ExportAsCSV = true"
+            :buttonText="$tfhb_trans('Export as CSV')"
+            icon="FileDown"   
+            :hover_animation="false" 
+            icon_position = 'left'
+        />
     </div> 
     <!-- Dashboard Heading Wrap -->
-    <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
+    <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">  
         <div class="tfhb-filter-box tfhb-flexbox tfhb-gap-8">  
+            <div class="tfhb-filter-box tfhb-flexbox">
+                <div class="tfhb-filter-content-wrap " :class="Booking.FilterPreview ? 'active' : ''"> 
+                    <HbButton 
+                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
+                        :class="Booking.filter_data.filter_type == 'filter' ? 'active' : ''"
+                        @click="Booking.FilterPreview =!Booking.FilterPreview , Booking.filter_data.filter_type='filter'"
+                        :buttonText="$tfhb_trans('Filter')"
+                        icon="Filter"   
+                        width="100"
+                        :hover_animation="false" 
+                        icon_position = 'left'
+                    /> 
+                    <transition name="tfhb-dropdown-transition">
+                        <div class="tfhb-filter-box-content" v-show="Booking.FilterPreview ">
+                           
+                            <div class="tfhb-filter-form tfhb-flexbox tfhb-gap-16" style="padding:24px 16px;">
+                                 <HbButton 
+                                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                                    @click="resetFilter"
+                                    :buttonText="$tfhb_trans('Reset Filter')"
+                                    icon="RefreshCw"   
+                                    width="100"
+                                    :hover_animation="false" 
+                                    icon_position = 'left'
+                                />  
+                                <HbButton 
+                                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                                    @click="Booking.fetchBookings()"
+                                    :buttonText="$tfhb_trans('Apply Filter')"
+                                    icon="Search"   
+                                    width="100"
+                                    :hover_animation="false" 
+                                    icon_position = 'left'
+                                /> 
+                                <div class="tfhb-filter-dates tfhb-flexbox tfhb-gap-8">
+                                    <HbDateTime 
+                                            v-model="Booking.filter_data.date_range.from"
+                                            selected = "1" 
+                                            label="From"
+                                            width="48.5"
+                                            enableTime='true'
+                                            :placeholder="$tfhb_trans('From')"  
+                                            icon="CalendarDays"   
+                                        />
+                                    <div class="tfhb-calender-move-icon" style="margin-top:29px">
+                                        <Icon name="MoveRight" size=15 /> 
+                                    </div>
+                                    <HbDateTime 
+                                            v-model="Booking.filter_data.date_range.to"
+                                            selected = "1" 
+                                            width="48.5"
+                                            label="To"
+                                            enableTime='true'
+                                            :placeholder="$tfhb_trans('To')"   
+                                            icon="CalendarDays"   
+                                        />
+                                </div> 
+
+                               
+                                <HbMultiSelect  
+                                    v-model="Booking.filter_data.host_ids"
+                                    :label="$tfhb_trans('Host')" 
+                                    :selected = "1"
+                                    :placeholder="$tfhb_trans('Select Booking status')"   
+                                    :option = "Host.hosts" 
+                                /> 
+                                <HbMultiSelect  
+                                    v-model="Booking.filter_data.meeting_ids"
+                                    :label="$tfhb_trans('Meeting')" 
+                                    :selected = "1"
+                                    :placeholder="$tfhb_trans('Select Booking status')"   
+                                    :option = "getMeetingList(Meeting.meetings)" 
+                                /> 
+                                <HbMultiSelect  
+                                    v-model="Booking.filter_data.status"
+                                    :label="$tfhb_trans('Status')" 
+                                    :selected = "1"
+                                    :placeholder="$tfhb_trans('Select Booking status')"   
+                                    :option = "[
+                                        {'name': 'Pending', 'value': 'pending'},  
+                                        {'name': 'Confirmed', 'value': 'confirmed'},    
+                                        {'name': 'Canceled', 'value': 'canceled'}
+                                    ]" 
+                                /> 
+
+                               
+                            </div> 
+                        </div>
+                    </transition>
+                </div> 
+            </div>
             <HbButton 
                 classValue="tfhb-btn secondary-btn " 
-                @click="alert(1)"
+                :class="Booking.filter_data.filter_type == 'upcoming' ? 'active' : ''"
+                @click="filterBookingByType('upcoming')"
                 :buttonText="$tfhb_trans('Upcoming')" 
+            />  
+            <HbButton 
+                classValue="tfhb-btn secondary-btn " 
+                :class="Booking.filter_data.filter_type == 'completed' ? 'active' : ''"
+                @click="filterBookingByType('completed')"
+                :buttonText="$tfhb_trans('Completed')" 
+            />  
+            <HbButton 
+                classValue="tfhb-btn secondary-btn " 
+                :class="Booking.filter_data.filter_type == 'latest' ? 'active' : ''"
+                @click="filterBookingByType('latest')"
+                :buttonText="$tfhb_trans('Latest')" 
             /> 
             <HbButton 
                 classValue="tfhb-btn secondary-btn " 
-                @click="alert(1)"
-                :buttonText="$tfhb_trans('Pending')" 
-            /> 
-            <HbButton 
-                classValue="tfhb-btn secondary-btn " 
-                @click="alert(1)"
-                :buttonText="$tfhb_trans('Past')" 
-            /> 
-            <HbButton 
-                classValue="tfhb-btn secondary-btn " 
-                @click="alert(1)"
-                :buttonText="$tfhb_trans('Canceled')" 
+                :class="Booking.filter_data.filter_type == 'all' ? 'active' : ''"
+                @click="filterBookingByType('all')"
+                :buttonText="$tfhb_trans('All')" 
             /> 
         </div>
         <div class="thb-admin-btn right tfhb-flexbox tfhb-action-filter-button"> 
@@ -896,7 +975,7 @@ const goForReschedule = (attendee) => {
 </HbPopup>
 
 <!-- Booking Calendar Edit -->
-<div :class="{ 'tfhb-skeleton': Booking.skeleton }"  class="tfhb-booking-details tfhb-mt-32" v-if="bookingView=='list' && paginatedBooking.length > 0 ">
+<div :class=" {   'tfhb-skeleton': Booking.skeleton, 'tfhb-skeleton': Booking.filter_skeleton } "  class="tfhb-booking-details tfhb-mt-32" v-if="bookingView=='list' && paginatedBooking.length > 0 ">
   
     <table class="table" cellpadding="0" :cellspacing="0">
         <thead>
@@ -923,7 +1002,8 @@ const goForReschedule = (attendee) => {
             <template v-for="(bookData, key) in paginatedBooking" :key="key">
                 <tr  class="tfhb-list-date-tr">
                     <td colspan="6" >
-                        <div class="tfhb-date-title">{{ Tfhb_Date(bookData.date) }}</div>
+                        <div class="tfhb-date-title" v-if="bookData.date == 'Tomorrow' ||  bookData.date == 'Today'">{{ bookData.date }}</div>
+                        <div class="tfhb-date-title" v-else>{{ Tfhb_Date(bookData.date) }}</div>
                     </td>
                 </tr>
                 <tr v-for="(book, key) in bookData.bookings" :key="key" :class="{ last: key === bookData.bookings.length - 1 }">
@@ -966,7 +1046,7 @@ const goForReschedule = (attendee) => {
                             <div class="status" :class="book.status">
                                 {{ book.status }}
                             </div>
-                            <div class="tfhb-status-bar">
+                            <!-- <div class="tfhb-status-bar">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10 13.334L5 8.33398H15L10 13.334Z" fill="#765664"/>
                                 </svg>
@@ -978,7 +1058,7 @@ const goForReschedule = (attendee) => {
                                         <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </td>
                     <td>
@@ -1019,7 +1099,7 @@ const goForReschedule = (attendee) => {
 </div>
 <div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
     <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-    <p>{{ $tfhb_trans('No Booking Created') }}</p> 
+    <p>{{ $tfhb_trans('No Booking Found') }}</p>
 </div>
 </template>
 

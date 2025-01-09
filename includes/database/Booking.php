@@ -339,6 +339,11 @@ class Booking {
 						$sql .= " AND $field $operator %s AND %s";
 						$data[] = $value[0];
 						$data[] = $value[1]; 
+					}elseif($operator == 'IN'){   
+						// value is array 
+						$in = implode(',', array_fill(0, count($value), '%s')); 
+						$sql .= " AND $field $operator ($in)";
+						$data = array_merge($data, $value);
 					}else{
 
 						$sql .= " AND $field $operator %s";
@@ -385,9 +390,8 @@ class Booking {
 					$attendees = json_decode($results->attendees);
 					$results->attendees = $attendees;
 				}
-			}
- 
-
+			} 
+			
 		// Return the results
 		return $results;
 

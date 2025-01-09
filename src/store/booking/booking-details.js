@@ -36,8 +36,17 @@ const BookingDetails = reactive({
                 this.location = JSON.parse(response.data.booking.meeting_locations);
      
             }else{
-               
-                router.push({ name: 'BookingLists' });
+                
+                router.push({ name: 'BookingLists'}).then(() => {
+                    nextTick(() => {
+                         toast.success(response.data.message, {
+                            position: 'bottom-right', // Set the desired position
+                            "autoClose": 1500,
+                        });
+                        // add scrool to top with smooth 
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }); 
             }
         } catch (error) {
             console.log(error);
@@ -126,7 +135,7 @@ const BookingDetails = reactive({
 
     // Delete Booking 
 
-    async deleteBooking () { 
+    async deleteBooking (router) { 
         let deleteBooking = {
             id: this.booking.id,
             host: this.booking.host_id
@@ -143,11 +152,17 @@ const BookingDetails = reactive({
                 // return to booking list page after goign list page showing toast message
                 this.deletePopup = false;
                 this.deletePreloader = false;
-                // toast.success(response.data.message, {
-                //     position: 'bottom-right', // Set the desired position
-                //     "autoClose": 1500,
-                // });
-                router.push({ name: 'BookingLists' });
+                
+                router.push({ name: 'BookingLists'}).then(() => {
+                    nextTick(() => {
+                         toast.success(response.data.message, {
+                            position: 'bottom-right', // Set the desired position
+                            "autoClose": 1500,
+                        });
+                        // add scrool to top with smooth 
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }); 
             }
         } catch (error) {
             console.log(error);

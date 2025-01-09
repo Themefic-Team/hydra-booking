@@ -30,7 +30,7 @@ class BookingController {
 			'hydra-booking/v1',
 			'/booking/lists',
 			array(
-				'methods'  => 'GET',
+				'methods'  => 'POST',
 				'callback' => array( $this, 'getBookingsData' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
@@ -205,6 +205,15 @@ class BookingController {
 
 	// Booking List
 	public function getBookingsData() {
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$filter_data = isset( $request['filter_data'] ) ? $request['filter_data'] : '';
+
+		$filter_type = isset( $filter_data['filter_type'] ) ? $filter_data['filter_type'] : '';
+		$filter_search = isset( $filter_data['filter_search'] ) ? $filter_data['filter_search'] : '';
+		$host_ids = isset( $filter_data['host_ids'] ) ? $filter_data['host_ids'] : '';
+		$meeting_ids = isset( $filter_data['meeting_ids'] ) ? $filter_data['meeting_ids'] : '';
+		$status = isset( $filter_data['status'] ) ? $filter_data['status'] : '';
+		$date_range = isset( $filter_data['date_range'] ) ? $filter_data['date_range'] : ''; 
 
 		$current_user = wp_get_current_user();
 		// get user role
@@ -213,27 +222,71 @@ class BookingController {
 
 		// Booking Lists
 		$booking = new Booking();
+		$where = array();
+
+		if( ! empty( $filter_type ) && $filter_type == 'upcoming' && empty( $date_range['from']) ){ 
+			$where[] = array('meeting_dates', '>=', date('Y-m-d'));
+		}
+		if( ! empty( $filter_type ) && $filter_type == 'completed' &&  empty($status) ){   
+			$where[] = array('status', '=', 'completed');
+		}
+		if( ! empty( $filter_type ) && $filter_type == 'latest' ){  
+			// based on created date 
+			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
+		}
+
+		// Filter type is filter
+		if( ! empty( $filter_type ) && $filter_type == 'filter' ){  
+			// filter by host
+			if( ! empty( $host_ids ) ){ 
+				$where[] = array('host_id', 'IN', $host_ids);
+			}
+
+			// filter by meeting
+			if( ! empty( $meeting_ids ) ){ 
+				$where[] = array('meeting_id', 'IN', $meeting_ids);
+			}
+
+			// filter by status
+			if( ! empty( $status ) ){ 
+				$where[] = array('status', 'IN', $status);
+			}
+
+			// filter by date range
+			if( ! empty( $date_range['from'] ) ){   
+
+				$where[] = array('meeting_dates', '>=', date('Y-m-d', strtotime($date_range['from'])));
+				$where[] = array('meeting_dates', '<=', date('Y-m-d', strtotime($date_range['to'])));
+			}
+		}
+
+		// if( ! empty( $filter_type ) && $filter_type == 'search' ){  
+		// 	// based on created date  
+		// 	$where[] = array('', 'LIKE', '%'.$filter_search.'%');
+		// }
 		
+
+
 		
-		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
-			$bookingsList = $booking->getBookingWithAttendees(  
-				null,
-				null,
-				'DESC',
-			); 
+		if ( 'administrator' != $current_user_role && 'tfhb_host' != $current_user_role ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('You are not allowed to access this page', 'hydra-booking'),
+				)
+			);
+			
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host     = new Host();
 			$HostData = $host->getHostByUserId( $current_user_id );
-			$where = array(
-				array('host_id', '=', $HostData->id),
-			);
- 			$bookingsList = $booking->getBookingWithAttendees(  
-				$where,
-				null,
-				'DESC',
-			); 
+			$where[] = array('host_id', '=', $HostData->id); 
 		}
+		$bookingsList = $booking->getBookingWithAttendees(  
+			$where,
+			null,
+			'DESC',
+		); 
 		 
 
 		$extractedBookings = array_map(
@@ -283,6 +336,48 @@ class BookingController {
 			}
 			return $carry;
 		}, [])); 
+		if( ! empty( $filter_type )  ){
+			// Current date
+			$currentDateTime = new \DateTime( date( 'Y-m-d' ) );
+			
+			if($filter_type == 'upcoming'){
+				// Filter out dates that are before the current date
+				$filteredData = array_filter($booking_list, function ($item) use ($currentDateTime) {
+					$date = new \DateTime($item['date']);
+					return $date >= $currentDateTime;
+				});
+				// Sort the data by date in ascending order
+				usort($filteredData, function ($a, $b) {
+					return strcmp($a['date'], $b['date']);
+				});
+				
+			}else{
+
+				$filteredData = $booking_list;
+			} 
+			// Sort bookings within each date by time
+			foreach ($filteredData as &$dateData) { 
+
+				usort($dateData['bookings'], function ($a, $b) {
+					$timeA = \DateTime::createFromFormat('h:i A', $a->start_time);
+					$timeB = \DateTime::createFromFormat('h:i A', $b->start_time);
+					return $timeA <=> $timeB;
+				});
+
+				if( ! empty( $filter_type ) && $filter_type == 'upcoming' ){ 
+					// current date is today make it today
+					if($dateData['date'] == date('Y-m-d')){
+						$dateData['date'] = 'Today';
+					}
+					// current date is tomorrow make it tomorrow
+					if($dateData['date'] == date('Y-m-d', strtotime('+1 day'))){
+						$dateData['date'] = 'Tomorrow';
+					}
+				}
+				
+			}
+			$booking_list = $filteredData;
+		} 
 		// Return response
 		$data = array(
 			'status'           => true,

@@ -83,6 +83,7 @@ const activeSingleAttendeeAction = (attendee_id) => {
     }
     activeAttendeeAction.push(attendee_id);
 };
+ 
 
 // Hide Single Attendee Details
 const goForReschedule = (attendee) => {
@@ -183,7 +184,7 @@ onBeforeMount(() => {
                 />  
                 <HbButton  
                     classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
-                    @click="BookingDetails.deleteBooking()"
+                    @click="BookingDetails.deleteBooking(router)"
                     :buttonText="$tfhb_trans('Delete')"
                     icon="Trash2"   
                     :hover_animation="false" 
@@ -477,7 +478,7 @@ onBeforeMount(() => {
                                     <span class="accordion-icons">
                                         <!-- activeAttendeeDetails is reactive array -->
                                         <Icon @click.stop="activeSingleAttendeeDetails(attendees.id )" v-if="!activeAttendeeDetails.includes(attendees.id)" name="ChevronRight" size=20 />
-                                        <Icon @click.stop="hideSingleAttendeeDetails(attendees.id )" v-if="activeAttendeeDetails.includes(attendees.id)" name="ChevronDown" size=20 />
+                                        <Icon @click.stop="activeSingleAttendeeDetails(attendees.id )" v-if="activeAttendeeDetails.includes(attendees.id)" name="ChevronDown" size=20 />
                                     </span>
                                      <p> 
                                          {{attendees.attendee_name}}  
@@ -493,35 +494,18 @@ onBeforeMount(() => {
                              </div>   
                              <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
 
-                                <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
-                                    <div class="status" :class="BookingDetails.booking.status">
-                                        {{ BookingDetails.booking.status }}
-                                    </div>
-                                    <div class="tfhb-status-bar">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M10 13.334L5 8.33398H15L10 13.334Z" fill="#765664"/>
-                                        </svg>
-                                        <div class="tfhb-status-popup">
-                                            <ul class="tfhb-flexbox tfhb-gap-2">
-                                                <li @click="UpdateMeetingStatus(BookingDetails.booking.id, BookingDetails.booking.host_id, 'confirmed')">{{ $tfhb_trans('Confirmed') }}</li>
-                                                <li class="pending" @click="UpdateMeetingStatus(BookingDetails.booking.id, BookingDetails.booking.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li>
-                                                <li class="schedule" @click="UpdateMeetingStatus(BookingDetails.booking.id, BookingDetails.booking.host_id, 'schedule')">{{ $tfhb_trans('Re-schedule') }}</li>
-                                                <li class="canceled" @click="UpdateMeetingStatus(BookingDetails.booking.id, BookingDetails.booking.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0"> 
+                                    <div class="status" :class="attendees.status">
+                                        {{ attendees.status }}
+                                    </div> 
                                 </div>
-                                 <div class="tfhb-b-d-icon-cta "> 
-
-                                    
-                                    <div  @click="activeSingleAttendeeAction(attendees.id)"  class="tfhb-booking-details-action tfhb-dropdown ">
-                                        
+                                 <div class="tfhb-b-d-icon-cta ">  
+                                    <div  @click="activeSingleAttendeeAction(attendees.id)"  class="tfhb-booking-details-action tfhb-dropdown "> 
                                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                                         <transition name="tfhb-dropdown-transition">
                                             <div v-show="activeAttendeeAction.includes(attendees.id)" class="tfhb-dropdown-wrap ">  
-                                                <span class="tfhb-dropdown-single"  @click.stop="goForReschedule(BookingDetails.attendees[0])"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
-                                                <span class="tfhb-dropdown-single " @click="alert(1)"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span> 
-                                                
+                                                <span class="tfhb-dropdown-single"  @click.stop="goForReschedule(attendees)"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
+                                                <span class="tfhb-dropdown-single " @click="cancelAttendee(attendees)"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span>  
                                             </div>
                                         </transition>
                                     </div>
