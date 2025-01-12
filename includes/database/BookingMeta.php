@@ -26,8 +26,8 @@ class BookingMeta {
                 booking_id INT(11) NULL,  
                 meta_key VARCHAR(255) NULL,  
                 value LONGTEXT NULL,
-                created_at DATE NULL,
-                updated_at DATE NULL, 
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)
             ) $charset_collate";
 
@@ -50,6 +50,13 @@ class BookingMeta {
 
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->table;
+
+		if($request['booking_id'] == null) {
+			return false;
+		}
+		if($request['value'] && is_array($request['value'])) {
+			$request['value'] = json_encode($request['value']);
+		}
 
 		// insert availability
 		$result = $wpdb->insert(
@@ -77,6 +84,10 @@ class BookingMeta {
 
 		$id = $request['id'];
 		unset( $request['id'] );
+
+		if($request['value'] && is_array($request['value'])) {
+			$request['value'] = json_encode($request['value']);
+		}
 		// Update availability
 		$result = $wpdb->update(
 			$table_name,
@@ -112,7 +123,7 @@ class BookingMeta {
 	/**
 	 * getWithIdKey
 	 */
-	public function getWithIdKey($id, $key) { 
+	public function getWithIdKey($id, $key, $limit = null) { 
 
 		// example 
 	 
@@ -121,9 +132,21 @@ class BookingMeta {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$data = $wpdb->get_row(
-			$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s", $id, $key)
-		);
+		if($limit > 1) { 
+			$data = $wpdb->get_results(
+				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s LIMIT %d", $id, $key, $limit)
+			);
+		} else {
+			if($limit == 1) {
+				$data = $wpdb->get_row(
+					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s LIMIT 1", $id, $key)
+				);
+			} else {
+				$data = $wpdb->get_results(
+					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s", $id, $key)
+				);
+			} 
+		} 
 
 		return $data;
 	}

@@ -13,7 +13,7 @@ use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Transactions;
- 
+use HydraBooking\DB\BookingMeta;
 
 class BookingController {
 
@@ -143,6 +143,17 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+		// update booking internal notes
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/update-internal-note',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'updateInternalNotes' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 		
 
 		// Pre Booking Data
@@ -226,17 +237,12 @@ class BookingController {
 
 		if( ! empty( $filter_type ) && $filter_type == 'upcoming' && empty( $date_range['from']) ){ 
 			$where[] = array('meeting_dates', '>=', date('Y-m-d'));
-		}
-		if( ! empty( $filter_type ) && $filter_type == 'completed' &&  empty($status) ){   
+		}elseif( ! empty( $filter_type ) && $filter_type == 'completed' &&  empty($status) ){   
 			$where[] = array('status', '=', 'completed');
-		}
-		if( ! empty( $filter_type ) && $filter_type == 'latest' ){  
+		}elseif( ! empty( $filter_type ) && $filter_type == 'latest' ){  
 			// based on created date 
 			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
-		}
-
-		// Filter type is filter
-		if( ! empty( $filter_type ) && $filter_type == 'filter' ){  
+		}elseif( ! empty( $filter_type ) && $filter_type == 'filter' ){  
 			// filter by host
 			if( ! empty( $host_ids ) ){ 
 				$where[] = array('host_id', 'IN', $host_ids);
@@ -258,12 +264,14 @@ class BookingController {
 				$where[] = array('meeting_dates', '>=', date('Y-m-d', strtotime($date_range['from'])));
 				$where[] = array('meeting_dates', '<=', date('Y-m-d', strtotime($date_range['to'])));
 			}
+		}elseif( ! empty( $filter_type ) && $filter_type == 'search' && ! empty( $filter_search ) ){  
+			// based on created date  
+			$where[] = array('meeting.title', 'LIKE', '%'.$filter_search.'%');
+			$where[] = array('attendee.attendee_name', 'LIKE', '%'.$filter_search.'%');
+		}else{
+			// based on created date 
+			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
 		}
-
-		// if( ! empty( $filter_type ) && $filter_type == 'search' ){  
-		// 	// based on created date  
-		// 	$where[] = array('', 'LIKE', '%'.$filter_search.'%');
-		// }
 		
 
 
@@ -949,6 +957,65 @@ class BookingController {
 		}
 	}
 
+	/*
+	 * Update booking internal note
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * 
+	 */
+
+	 public function updateInternalNotes(){
+		$bookingMeta = new BookingMeta();
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$booking_id =  isset( $request['booking_id'] ) ? $request['booking_id'] : 0;
+		$internal_note =  isset( $request['internal_note'] ) ? $request['internal_note'] : '';
+
+		if( empty( $booking_id ) && $booking_id == 0 ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+		$get_internal_note = $bookingMeta->getWithIdKey( $booking_id, 'internal_note', 1 );
+		if($get_internal_note){
+			// update
+			$bookingMeta->update( 
+				array(
+					'booking_id' => $get_internal_note->id,
+					'meta_key' => 'internal_note',
+					'value' => $internal_note,
+				)
+			 );
+			 
+			 $data = array(
+				'status'  => true,
+				'message' =>  __('Internal Note Updated Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
+		}else{
+			// insert
+			$bookingMeta->add( 
+				array(
+					'booking_id' => $booking_id,
+					'meta_key' => 'internal_note',
+					'value' => $internal_note,
+				)
+			 );
+			 
+			 $data = array(
+				'status'  => true,
+				'message' =>  __('Internal Note Added Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
+		}
+
+	 }
+
 
 
 
@@ -1053,9 +1120,11 @@ class BookingController {
 				array('attendee_id', '=', $attendee->id),
 			);
 			$transaction = $transactions->get( $where, 1 );
-			$transaction->transation_history = json_decode($transaction->transation_history);
+			if($transaction != null || !empty($transaction)){ 
+				$transaction->transation_history = json_decode($transaction->transation_history);
 
-			$attendeesData[$key]->transaction =  $transaction;
+				$attendeesData[$key]->transaction =  $transaction;
+			}
 
 		}
 
@@ -1085,6 +1154,12 @@ class BookingController {
 		}
 		
 		$bookingsList = $this->getBookingDetailsData($booking_id);
+		$bookingMeta = new BookingMeta();
+		$booking_activity = $bookingMeta->getWithIdKey ( $booking_id, 'booking_activity', null); 
+
+		$get_internal_note = $bookingMeta->getWithIdKey( $booking_id, 'internal_note', 1 );
+		// tfhb_print_r($get_internal_note);
+		$internal_note = $get_internal_note->value;
 
 		if( empty( $bookingsList ) ){
 			return rest_ensure_response(
@@ -1099,6 +1174,8 @@ class BookingController {
 		 $data = array(
 			'status'  => true,
 			'booking' => $bookingsList,
+			'booking_activity' => $booking_activity,
+			'internal_note' => $internal_note,
 			'message' =>  __('Booking Data Successfully Retrieve!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );

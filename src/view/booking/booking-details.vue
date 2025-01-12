@@ -112,6 +112,18 @@ const attendeeCencelPopupClose = () => {
     BookingDetails.attendeeCencelPopup = false;
     BookingDetails.attendeeCancelPreloader = false;
 }
+
+// Get booking Activity 
+const getSingleAttendeeActivity = ($value) => {   
+    $value = JSON.parse($value);
+    let activityHtml = ''; 
+    activityHtml += '<span>'+Tfhb_DateTime($value.datetime)+'</span> <h5>'+$value.title+'</h5> <p>'+$value.description+'</p>';
+ 
+    return activityHtml;
+
+}
+// edit internal note  
+
 onBeforeMount(() => {  
     BookingDetails.fetchBookingsDetails(bookingId, router);
 });
@@ -196,7 +208,7 @@ onBeforeMount(() => {
 </HbPopup>
 <!-- Delete Popup -->
 
-    <div class="tfhb-booking-single-details">
+    <div :class="{   'tfhb-skeleton': BookingDetails.skeleton } "  class="tfhb-booking-single-details">
        <div class="tfhb-booking-heading tfhb-flexbox tfhb-gap-4 tfhb-full-width tfhb-justify-between">
             <div class="tfhb-booking-heading-left tfhb-flexbox tfhb-gap-8">
                 <div class="prev-navigator tfhb-cursor-pointer" @click="TfhbPrevNavigator()">
@@ -238,13 +250,13 @@ onBeforeMount(() => {
                         </div>
                     </transition>
                 </div>
-                <HbButton 
+                <!-- <HbButton 
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                     @click="alert(1)"
                     :buttonText="$tfhb_trans('Print')" 
                     icon="Printer" 
                     icon_position="left"
-                /> 
+                />  -->
             </div>
             
        </div>
@@ -319,9 +331,40 @@ onBeforeMount(() => {
                           <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                             <Icon name="NotepadText" size=20 /> 
                             <div class="tfhb-b-d-icon-content">
-                                <h5>{{ $tfhb_trans('Note') }}</h5> 
-                                <p> 
+                                <div class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+
+                                    <h5>{{ $tfhb_trans('Internal Note ') }}    </h5> 
+                                    <span style="margin-top:0; cursor: pointer" @click="BookingDetails.showinternalNoteEdit = !BookingDetails.showinternalNoteEdit "><Icon name="PencilLine" size=15 /></span> 
+                                </div>
+                                <transition name="accordion">  
+                                    <div v-show="BookingDetails.showinternalNoteEdit == true" class="tfhb-internal-note-input tfhb-flexbox tfhb-gap-8" >
+                                        <HbTextarea  
+                                            v-model="BookingDetails.internal_note" 
+                                            required= "true"  
+                                            name="description"
+
+                                        />
+                                        
+                                        <div class="tfhb-flexbox tfhb-gap-8">
+                                            <HbButton 
+                                                classValue="tfhb-btn boxed-btn "  
+                                                @click="BookingDetails.updateInternalNote()"
+                                                :buttonText="$tfhb_trans('Update')" 
+                                            /> 
+                                            <HbButton 
+                                                classValue="tfhb-btn boxed-btn-danger"  
+                                                @click="BookingDetails.showinternalNoteEdit = !BookingDetails.showinternalNoteEdit"
+                                                :buttonText="$tfhb_trans('Cancel')" 
+                                            /> 
+                                        </div>
+
+                                    </div>
+                                </transition>
+                                <p v-if="BookingDetails.internal_note == '' && BookingDetails.showinternalNoteEdit != true"> 
                                     N/A
+                                </p>
+                                <p v-if="BookingDetails.internal_note != '' && BookingDetails.showinternalNoteEdit != true"> 
+                                    {{BookingDetails.internal_note}}
                                 </p>
                             </div>
                         </div>     
@@ -574,7 +617,7 @@ onBeforeMount(() => {
                                         </div>
                                     </div>  
                                     <!-- Booking Details Icon Box -->
-                                    <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                    <div v-if="attendees.transaction" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                         <Icon name="DollarSign" size=20 /> 
                                         <div class="tfhb-b-d-icon-content">
                                             <h5>{{ $tfhb_trans('Total Payment') }}</h5>
@@ -595,7 +638,7 @@ onBeforeMount(() => {
                                     </div>      
                                             
                                     <!-- Booking Details Icon Box -->
-                                    <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                    <div  v-if="attendees.transaction" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M13.3334 8.33268H15.0001M13.3334 11.666H15.0001M5.14175 12.4993C5.31353 12.011 5.63267 11.5881 6.0551 11.2889C6.47753 10.9897 6.98242 10.829 7.50008 10.829C8.01774 10.829 8.52263 10.9897 8.94507 11.2889C9.3675 11.5881 9.68663 12.011 9.85841 12.4993M9.16675 9.16602C9.16675 10.0865 8.42056 10.8327 7.50008 10.8327C6.57961 10.8327 5.83341 10.0865 5.83341 9.16602C5.83341 8.24554 6.57961 7.49935 7.50008 7.49935C8.42056 7.49935 9.16675 8.24554 9.16675 9.16602ZM3.33341 4.16602H16.6667C17.5872 4.16602 18.3334 4.91221 18.3334 5.83268V14.166C18.3334 15.0865 17.5872 15.8327 16.6667 15.8327H3.33341C2.41294 15.8327 1.66675 15.0865 1.66675 14.166V5.83268C1.66675 4.91221 2.41294 4.16602 3.33341 4.16602Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
@@ -615,38 +658,25 @@ onBeforeMount(() => {
                  <!-- For Group Booking -->
             </div>
             <div class="tfhb-booking-details-activity">
-                <div class="tfhb-b-d-wrap">
-                    <h4>Activity Details</h4>
-
-                    <div class="tfhb-activity-timeline tfhb-flexbox tfhb-gap-16">
-                        <div class="tfhb-activity-single-timeline">
+                <div class="tfhb-b-d-wrap"> 
+                    <h4>{{ $tfhb_trans('Activity Details') }}</h4> 
+                    <div v-if="BookingDetails.booking_activity"  class="tfhb-activity-timeline tfhb-flexbox tfhb-gap-16">
+                        <div v-for=" (activity, index) in BookingDetails.booking_activity" class="tfhb-activity-single-timeline">
                             <div class="tfhb-a-s-t-icon">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7.99992 14.6673C11.6818 14.6673 14.6666 11.6825 14.6666 8.00065C14.6666 4.31875 11.6818 1.33398 7.99992 1.33398C4.31802 1.33398 1.33325 4.31875 1.33325 8.00065C1.33325 11.6825 4.31802 14.6673 7.99992 14.6673Z" fill="#56765B"/>
                                     <path d="M6 7.99935L7.33333 9.33268L10 6.66602" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>  
                             </div>
-                            <div class="tfhb-a-s-t-content">
-                                <span>Jan 24, 2025, 09:01 PM</span>
-                                <h5>Reminder Email Sent</h5>
-                                <p>Reminder email sent to host hosts Reminder email sent to host.</p>
-                            </div>
-                        </div>
-                        <div class="tfhb-activity-single-timeline">
-                            <div class="tfhb-a-s-t-icon">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M7.99992 14.6673C11.6818 14.6673 14.6666 11.6825 14.6666 8.00065C14.6666 4.31875 11.6818 1.33398 7.99992 1.33398C4.31802 1.33398 1.33325 4.31875 1.33325 8.00065C1.33325 11.6825 4.31802 14.6673 7.99992 14.6673Z" fill="#56765B"/>
-                                    <path d="M6 7.99935L7.33333 9.33268L10 6.66602" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>  
-                            </div>
-                            <div class="tfhb-a-s-t-content">
-                                <span>Jan 24, 2025, 09:01 PM</span>
-                                <h5>Reminder Email Sent</h5>
-                                <p>Reminder email sent to host hosts Reminder email sent to host.</p>
-                            </div>
-                        </div>
+                            <div class="tfhb-a-s-t-content" v-html="getSingleAttendeeActivity(activity.value)"></div>
+                        </div> 
                     </div>
-                    
+                    <div v-else class="tfhb-activity-timeline tfhb-flexbox tfhb-gap-16">
+                        <div   class="tfhb-activity-single-timeline">
+                          <h5> {{ $tfhb_trans('No activity found') }}</h5>
+                        </div> 
+                    </div>
+ 
                 </div>
             </div>
        </div> 

@@ -34,10 +34,8 @@ const exportData = reactive({
     date_range: 'days',
     start_date: '',
     end_dates: ''
-});
-const select_all = ref(false);
-const selected_items = ref([]);
-const host_id = ref('');
+}); 
+const selected_items = ref([]); 
 
 const exportAsPreloader = ref(false);
 // Export CSV
@@ -230,11 +228,7 @@ const Bulk_Status_Callback = async (value) => {
         console.log(error);
     } 
 }
-
-// Filtering
-const filterData = reactive({
-    name: '',
-})
+ 
 const Tfhb_Booking_Filter = async (e) =>{
     Booking.filter_data.filter_search =e.target.value;
     Booking.filter_data.filter_type ='search';
@@ -273,23 +267,7 @@ const prevPage = () => {
 };
 
 
-// Select All
-const toggleSelectAll = (e) => {
-    if(e.target.checked){
-        select_all.value = true;
-    }else{
-        select_all.value = false;
-    } 
-
-    if (select_all.value) {
-        // If 'select_all' is true, select all items
-        selected_items.value = paginatedBooking.value.map(item => item.id);
-    } else {
-        // If 'select_all' is false, deselect all items
-        selected_items.value = [];
-    }
-}
-
+ 
 const truncateString = (str, num) => {
     if (str.length <= num) {
         return str
@@ -513,8 +491,7 @@ const resetFilter = () => {
 <div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24">
     <!-- Dashboard Heading Wrap -->
     <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
-        <div class="tfhb-filter-box tfhb-flexbox">
-            {{Booking.filter_data}}
+        <div class="tfhb-filter-box tfhb-flexbox"> 
             <div class="tfhb-header-filters">
                 <input type="text"  placeholder="Host name or meeting title" @keyup="Tfhb_Booking_Filter" /> 
                 <span><Icon name="Search" size=20 /></span>
@@ -902,7 +879,7 @@ const resetFilter = () => {
 <!-- Booking Quick View End -->
 
 <!-- Booking Calendar View -->
-<div :class="{ 'tfhb-skeleton': Booking.skeleton }" class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
+<div :class="{   'tfhb-skeleton': Booking.skeleton, 'tfhb-skeleton': Booking.filter_skeleton } " class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
      
     <FullCalendar class='demo-app-calendar ' :options='Booking.calendarbooking'>
         <template v-slot:eventContent='arg'>
@@ -979,15 +956,7 @@ const resetFilter = () => {
   
     <table class="table" cellpadding="0" :cellspacing="0">
         <thead>
-            <tr>
-                <!-- <th> 
-                    <div class="select-checkbox-lists">
-                        <label>
-                            <input type="checkbox" v-model="select_all" @change="toggleSelectAll">   
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
-                </th> -->
+            <tr> 
                 <th>{{ $tfhb_trans('Date & Time') }}</th>
                 <th>{{ $tfhb_trans('Events') }}</th>
                 <th>{{ $tfhb_trans('Attendees') }}</th>

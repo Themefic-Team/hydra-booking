@@ -5,6 +5,9 @@ const BookingDetails = reactive({
     booking : [],
     attendees : [],
     location : [],
+    booking_activity : {},
+    internal_note : '',
+    showinternalNoteEdit : ref(false),
     attendeeCencelPopup : ref(false),
     attendeeCancelPreloader : ref(false),
     deletePopup : ref(false),
@@ -21,7 +24,7 @@ const BookingDetails = reactive({
 
     // booking List
     async fetchBookingsDetails(bookingId, router) {
-
+        this.skeleton = true;
         try { 
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/details/'+bookingId, {
                 headers: {
@@ -33,10 +36,12 @@ const BookingDetails = reactive({
                 // If any available this date 
                 this.booking = response.data.booking;
                 this.attendees = response.data.booking.attendees;
+                this.booking_activity = response.data.booking_activity; 
+                this.internal_note = response.data.internal_note;
                 this.location = JSON.parse(response.data.booking.meeting_locations);
+                this.skeleton = false;
      
-            }else{
-                
+            }else{ 
                 router.push({ name: 'BookingLists'}).then(() => {
                     nextTick(() => {
                          toast.success(response.data.message, {
@@ -131,6 +136,41 @@ const BookingDetails = reactive({
         } catch (error) {
             console.log(error);
         } 
+    },
+
+    // Update internal note
+    async updateInternalNote() {
+        let data = {
+            booking_id: this.booking.id,
+            internal_note: this.internal_note
+        }
+        try { 
+            // axisos sent dataHeader Nonce Data
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/update-internal-note', data, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {    
+                this.showinternalNoteEdit = false;
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+    
+            }else{
+    
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+    
+            }
+        } catch (error) {
+            console.log(error);
+        }
     },
 
     // Delete Booking 

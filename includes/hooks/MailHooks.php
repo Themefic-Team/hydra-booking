@@ -5,6 +5,7 @@ namespace HydraBooking\Hooks;
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
+use HydraBooking\DB\BookingMeta;
 use HydraBooking\Admin\Controller\DateTimeController;
 
 
@@ -13,6 +14,7 @@ class MailHooks {
 	// Pending
 	// Re-schedule
 	// Canceled
+ 
 	public function __construct() {
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 ); 
 		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 10, 1 );
@@ -49,10 +51,11 @@ class MailHooks {
 
 	// If booking Status is Complted
 	public function pushBookingToConfirmed( $attendees ) {
-
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $attendees->host_id );  
+		
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
 			// Host Confirmation Email, If Settings Enable for Host Confirmation
@@ -89,6 +92,18 @@ class MailHooks {
 
 				
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'), 
+							'title' => esc_html(__( 'Confirmation Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'Confirmation Email Sent to Host', 'hydra-booking')), 
+						)
+					]
+				);
 			}
 
 			// Attendee Confirmation Email, If Settings Enable for Attendee Confirmation
@@ -125,6 +140,20 @@ class MailHooks {
 
 				
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'), 
+							'title' =>  esc_html(__( 'Confirmation Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'Confirmation Email Sent to Attendee', 'hydra-booking')),
+						)
+					]
+				);
 			}
 		}
 	}
@@ -133,7 +162,7 @@ class MailHooks {
 	// If booking Status is Pending
 	public function pushBookingToPending( $attendees ) {
 
-
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $attendees->host_id );  
@@ -169,6 +198,19 @@ class MailHooks {
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),  
+							'title' => esc_html(__( 'Pending Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'Pending Email Sent to Host', 'hydra-booking')),
+						)
+					]
+				);
 			}
 
 			// Attendee Pending Email, If Settings Enable for Attendee Pending
@@ -200,13 +242,26 @@ class MailHooks {
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),   
+							'title' => esc_html(__( 'Pending Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'Pending Email Sent to Attendee', 'hydra-booking')),
+						)
+					]
+				);
 			}
 		}
 	}
 
 	// If booking Status is Cancel
 	public function pushBookingToCanceled( $attendees ) {
-
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $attendees->host_id );
@@ -242,6 +297,19 @@ class MailHooks {
 					'Reply-To: ' . $replyTo,
 				);
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),    
+							'title' => esc_html(__( 'Canceled Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'Canceled Email Sent to Host', 'hydra-booking')),
+						)
+					]
+				);
 			}
 
 			// Attendee Canceled Email, If Settings Enable for Attendee Canceled
@@ -272,13 +340,26 @@ class MailHooks {
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),
+							'title' => esc_html(__( 'Canceled Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'Canceled Email Sent to Attendee', 'hydra-booking')),
+						)
+					]
+				);
 			}
 		}
 	}
 
 	// If booking Status is ReSchedule
 	public function pushBookingToscheduled( $attendees ) {
-
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $attendees->host_id );
@@ -314,6 +395,18 @@ class MailHooks {
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),
+							'title' => esc_html(__( 'ReSchedule Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'ReSchedule Email Sent to Host', 'hydra-booking')),
+						)
+					]
+				);
 			}
 
 			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
@@ -344,6 +437,18 @@ class MailHooks {
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),
+							'title' => esc_html(__( 'ReSchedule Email Sent', 'hydra-booking')),
+							'description' => esc_html(__( 'ReSchedule Email Sent to Attendee', 'hydra-booking')),
+						)
+					]
+				);
 			}
 		}
 	}
@@ -351,7 +456,7 @@ class MailHooks {
 
 		// If booking Status is ReSchedule
 	public function send_booking_reminder( $booking ) {
-
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $booking->host_id );
@@ -388,6 +493,18 @@ class MailHooks {
 					);
 
 					Mailer::send( $mailto, $subject, $body, $headers );
+
+						// Add activity after email sent
+					$bookingMeta->add([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'), 
+								'title' => esc_html(__( 'Reminder Email Sent', 'hydra-booking')),
+								'description' => esc_html(__( 'Reminder Email Sent to Attendee', 'hydra-booking')),
+							)
+						]
+					);
 				}
 			}
 		}
@@ -397,6 +514,7 @@ class MailHooks {
 	 * Send Mail Booking with All attendees
 	 */
 	public function send_booking_with_all_attendees_confirmed( $booking ) {
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $booking->host_id );
@@ -432,6 +550,18 @@ class MailHooks {
 					);
  
 					Mailer::send( $mailto, $subject, $body, $headers );
+
+					// Add activity after email sent
+					$bookingMeta->add([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'),  
+								'title' => esc_html(__( 'Confirmation Email Sent', 'hydra-booking')),
+								'description' => esc_html(__( 'Confirmation Email Sent to Attendee', 'hydra-booking')),
+							)
+						]
+					);
 				}
 				
 			}
@@ -441,6 +571,7 @@ class MailHooks {
 	 * Send Mail Booking with All attendees Pending
 	 */
 	public function send_booking_with_all_attendees_pending( $booking ) {
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $booking->host_id );
@@ -476,6 +607,18 @@ class MailHooks {
 					);
  
 					Mailer::send( $mailto, $subject, $body, $headers );
+
+					// Add activity after email sent
+					$bookingMeta->add([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'),   
+								'title' => esc_html(__( 'Pending Email Sent', 'hydra-booking')),
+								'description' => esc_html(__( 'Pending Email Sent to Attendee', 'hydra-booking')),
+							)
+						]
+					);
 				}
 				
 			}
@@ -485,6 +628,7 @@ class MailHooks {
 	 * Send Mail Booking with All attendees Canceled
 	 */
 	public function send_booking_with_all_attendees_canceled( $booking ) {
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $booking->host_id );
@@ -520,6 +664,18 @@ class MailHooks {
 					);
  
 					Mailer::send( $mailto, $subject, $body, $headers );
+
+					// Add activity after email sent
+					$bookingMeta->add([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'),    
+								'title' => esc_html(__( 'Canceled Email Sent', 'hydra-booking')),
+								'description' => esc_html(__( 'Canceled Email Sent to Attendee', 'hydra-booking')),
+							)
+						]
+					);
 				}
 				
 			}
@@ -530,6 +686,7 @@ class MailHooks {
 	 * Send Mail Booking with All attendees Schedule
 	 */
 	public function send_booking_with_all_attendees_schedule( $booking ) {
+		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
 		$hostData                    = $this->getHostData( $booking->host_id );
@@ -567,6 +724,18 @@ class MailHooks {
 					);
  
 					Mailer::send( $mailto, $subject, $body, $headers );
+
+					// Add activity after email sent
+					$bookingMeta->add([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'),     
+								'title' => esc_html(__( 'ReSchedule Email Sent', 'hydra-booking')),
+								'description' => esc_html(__( 'ReSchedule Email Sent to Attendee', 'hydra-booking')),
+							)
+						]
+					);
 				}
 				
 			}

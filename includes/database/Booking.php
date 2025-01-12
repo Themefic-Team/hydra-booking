@@ -332,7 +332,11 @@ class Booking {
 			if($where != null) {
 				
 				foreach ($where as $condition) {
-					$field = 'booking.'.$condition[0];
+					$field =  $condition[0]; 
+					if(strpos($field, '.') === false){
+						$field = 'booking.'.$condition[0];
+					} 
+
 					$operator = $condition[1];
 					$value = $condition[2]; 
 					if($operator == 'BETWEEN'){  
@@ -344,6 +348,10 @@ class Booking {
 						$in = implode(',', array_fill(0, count($value), '%s')); 
 						$sql .= " AND $field $operator ($in)";
 						$data = array_merge($data, $value);
+					}elseif($operator == 'LIKE'){   
+						// if operator is like 
+						$like_conditions[] = "$field $operator %s";
+						$data[] = $value; 
 					}else{
 
 						$sql .= " AND $field $operator %s";
@@ -352,6 +360,10 @@ class Booking {
 				} 
 			} 
 
+			 // Add grouped `LIKE` conditions
+			 if (!empty($like_conditions)) {
+				$sql .= " AND (" . implode(' OR ', $like_conditions) . ")";
+			}
 			
 			$sql .= "GROUP BY booking.id ";
 			
@@ -391,6 +403,7 @@ class Booking {
 					$results->attendees = $attendees;
 				}
 			} 
+ 
 			
 		// Return the results
 		return $results;

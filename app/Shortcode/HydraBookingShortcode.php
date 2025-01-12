@@ -627,7 +627,7 @@ class HydraBookingShortcode {
 			1,
 			'DESC'
 		); 
-		 
+ 
 		if($attendeeBooking->status == 'confirmed'){
 			// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
 			do_action( 'hydra_booking/after_booking_confirmed', $attendeeBooking ); 
