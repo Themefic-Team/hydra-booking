@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.17
+Stable tag: 1.0.18
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -198,6 +198,11 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.18 - 12/01/2025 =  
+
+- Compatibility: Compatible with Contact Form 7 (v6.0.2).
+- Compatibility: Compatible with WooCommerce version (9.5.2).
 
 = 1.0.17 - 09/01/2025 =  
 
