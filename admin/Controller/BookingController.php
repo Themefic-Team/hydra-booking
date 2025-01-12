@@ -986,8 +986,7 @@ class BookingController {
 			// update
 			$bookingMeta->update( 
 				array(
-					'booking_id' => $get_internal_note->id,
-					'meta_key' => 'internal_note',
+					'id' => $get_internal_note->id, 
 					'value' => $internal_note,
 				)
 			 );
