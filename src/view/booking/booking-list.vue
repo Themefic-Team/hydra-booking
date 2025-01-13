@@ -93,11 +93,7 @@ const TfhbFormatMeetingLocation = (address) => {
      meeting_address.value = JSON.parse(address) 
 }
 
-onBeforeMount(() => { 
-    Booking.fetchBookings('upcoming');
-    Meeting.fetchMeetings();
-    Host.fetchHosts();
-});
+
 
 // Booking Status Changed
 const meeting_status = reactive({});
@@ -486,6 +482,31 @@ const resetFilter = () => {
     Booking.fetchBookings();
 }
 
+// Hide Booking Details Popup
+
+function hideDropdownOutsideClick(e) { 
+    
+    if (!document.querySelector('.tfhb-filter-content-wrap').contains(e.target)) {
+        Booking.FilterPreview = false;
+    }
+    
+}
+
+
+onBeforeMount(() => { 
+    Booking.fetchBookings('upcoming');
+    Meeting.fetchMeetings();
+    Host.fetchHosts();
+    window.addEventListener('click', hideDropdownOutsideClick);
+});
+ 
+const getMinDate = () => { 
+   let form = Booking.filter_data.date_range.from // 2025-01-07
+   alert(form)
+    return new Date();
+
+   
+}
 </script>
 <template>
 
@@ -500,7 +521,7 @@ const resetFilter = () => {
            
         </div> 
         <HbButton 
-            classValue="tfhb-btn boxed-secondary-btn tfhb-flexbox tfhb-gap-8" 
+            classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
             @click="ExportAsCSV = true"
             :buttonText="$tfhb_trans('Export as CSV')"
             icon="FileDown"   
@@ -511,97 +532,98 @@ const resetFilter = () => {
     <!-- Dashboard Heading Wrap -->
     <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">  
         <div class="tfhb-filter-box tfhb-flexbox tfhb-gap-8">  
-            <div class="tfhb-filter-box tfhb-flexbox">
-                <div class="tfhb-filter-content-wrap " :class="Booking.FilterPreview ? 'active' : ''"> 
-                    <HbButton 
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
-                        :class="Booking.filter_data.filter_type == 'filter' ? 'active' : ''"
-                        @click="Booking.FilterPreview =!Booking.FilterPreview , Booking.filter_data.filter_type='filter'"
-                        :buttonText="$tfhb_trans('Filter')"
-                        icon="Filter"   
-                        width="100"
-                        :hover_animation="false" 
-                        icon_position = 'left'
-                    /> 
-                    <transition name="tfhb-dropdown-transition">
-                        <div class="tfhb-filter-box-content" v-show="Booking.FilterPreview ">
-                           
-                            <div class="tfhb-filter-form tfhb-flexbox tfhb-gap-16" style="padding:24px 16px;">
-                                 <HbButton 
-                                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                                    @click="resetFilter"
-                                    :buttonText="$tfhb_trans('Reset Filter')"
-                                    icon="RefreshCw"   
-                                    width="100"
-                                    :hover_animation="false" 
-                                    icon_position = 'left'
-                                />  
-                                <HbButton 
-                                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                                    @click="Booking.fetchBookings()"
-                                    :buttonText="$tfhb_trans('Apply Filter')"
-                                    icon="Search"   
-                                    width="100"
-                                    :hover_animation="false" 
-                                    icon_position = 'left'
-                                /> 
-                                <div class="tfhb-filter-dates tfhb-flexbox tfhb-gap-8">
-                                    <HbDateTime 
-                                            v-model="Booking.filter_data.date_range.from"
-                                            selected = "1" 
-                                            label="From"
-                                            width="48.5"
-                                            enableTime='true'
-                                            :placeholder="$tfhb_trans('From')"  
-                                            icon="CalendarDays"   
-                                        />
-                                    <div class="tfhb-calender-move-icon" style="margin-top:29px">
-                                        <Icon name="MoveRight" size=15 /> 
-                                    </div>
-                                    <HbDateTime 
-                                            v-model="Booking.filter_data.date_range.to"
-                                            selected = "1" 
-                                            width="48.5"
-                                            label="To"
-                                            enableTime='true'
-                                            :placeholder="$tfhb_trans('To')"   
-                                            icon="CalendarDays"   
-                                        />
-                                </div> 
-
-                               
-                                <HbMultiSelect  
-                                    v-model="Booking.filter_data.host_ids"
-                                    :label="$tfhb_trans('Host')" 
-                                    :selected = "1"
-                                    :placeholder="$tfhb_trans('Select Booking status')"   
-                                    :option = "Host.hosts" 
-                                /> 
-                                <HbMultiSelect  
-                                    v-model="Booking.filter_data.meeting_ids"
-                                    :label="$tfhb_trans('Meeting')" 
-                                    :selected = "1"
-                                    :placeholder="$tfhb_trans('Select Booking status')"   
-                                    :option = "getMeetingList(Meeting.meetings)" 
-                                /> 
-                                <HbMultiSelect  
-                                    v-model="Booking.filter_data.status"
-                                    :label="$tfhb_trans('Status')" 
-                                    :selected = "1"
-                                    :placeholder="$tfhb_trans('Select Booking status')"   
-                                    :option = "[
-                                        {'name': 'Pending', 'value': 'pending'},  
-                                        {'name': 'Confirmed', 'value': 'confirmed'},    
-                                        {'name': 'Canceled', 'value': 'canceled'}
-                                    ]" 
-                                /> 
-
-                               
+            <div class="tfhb-filter-content-wrap " :class="Booking.FilterPreview ? 'active' : ''"> 
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
+                    :class="Booking.filter_data.filter_type == 'filter' ? 'active' : ''"
+                    @click="Booking.FilterPreview =!Booking.FilterPreview , Booking.filter_data.filter_type='filter'"
+                    :buttonText="$tfhb_trans('Filter')"
+                    icon="Filter"   
+                    width="100"
+                    :hover_animation="false" 
+                    icon_position = 'left'
+                /> 
+                <transition name="tfhb-dropdown-transition">
+                    <div class="tfhb-filter-box-content" v-show="Booking.FilterPreview "> 
+                        <div class="tfhb-filter-form tfhb-flexbox tfhb-gap-32 tfhb-justify-center" style="padding:24px 16px;">
+                            
+                            <!-- <HbButton 
+                                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                                @click="Booking.fetchBookings()"
+                                :buttonText="$tfhb_trans('Apply Filter')"
+                                icon="Search"   
+                                width="100"
+                                :hover_animation="false" 
+                                icon_position = 'left'
+                            />  -->
+                            <div class="tfhb-filter-dates tfhb-flexbox tfhb-gap-8">
+                                <HbDateTime 
+                                    v-model="Booking.filter_data.date_range.from"
+                                    selected = "1" 
+                                    label="From"
+                                    width="48.5"
+                                    enableTime='true'
+                                    :placeholder="$tfhb_trans('From')"  
+                                    icon="CalendarDays"   
+                                />
+                                 
+                                <!-- {{new Date()}} -->
+                                <div class="tfhb-calender-move-icon" style="margin-top:29px">
+                                    <Icon name="MoveRight" size=15 /> 
+                                </div>
+                                <HbDateTime 
+                                    v-model="Booking.filter_data.date_range.to"
+                                    selected = "1" 
+                                    width="48.5"
+                                    label="To"
+                                    :config="{ minDate: getMinDate(Booking.filter_data.date_range) }"
+                                    enableTime='true'
+                                    :placeholder="$tfhb_trans('To')"   
+                                    icon="CalendarDays"   
+                                />
                             </div> 
-                        </div>
-                    </transition>
-                </div> 
-            </div>
+
+                            
+                            <HbMultiSelect  
+                                v-model="Booking.filter_data.host_ids" 
+                                :selected = "1"
+                                @add-change="Booking.fetchBookings()"
+                                :placeholder="$tfhb_trans('Select Host : All')"   
+                                :option = "Host.hosts" 
+                            /> 
+                            <HbMultiSelect  
+                                v-model="Booking.filter_data.meeting_ids"  
+                                :selected = "1"
+                                @add-change="Booking.fetchBookings()"
+                                :placeholder="$tfhb_trans('Select Meeting : All')"   
+                                :option = "getMeetingList(Meeting.meetings)" 
+                            /> 
+                            <HbMultiSelect  
+                                v-model="Booking.filter_data.status" 
+                                :selected = "1"
+                                @add-change="Booking.fetchBookings()"
+                                :placeholder="$tfhb_trans('Select Status : All')"   
+                                :option = "[
+                                    {'name': 'Pending', 'value': 'pending'},  
+                                    {'name': 'Confirmed', 'value': 'confirmed'},    
+                                    {'name': 'Canceled', 'value': 'canceled'}
+                                ]" 
+                            /> 
+
+                            <HbButton 
+                                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                                @click="resetFilter"
+                                :buttonText="$tfhb_trans('Reset Filter')"
+                                icon="RefreshCw"
+                                width="100"
+                                :hover_animation="false" 
+                                icon_position = 'left'
+                            />  
+                            
+                        </div> 
+                    </div>
+                </transition>
+            </div> 
             <HbButton 
                 classValue="tfhb-btn secondary-btn " 
                 :class="Booking.filter_data.filter_type == 'upcoming' ? 'active' : ''"

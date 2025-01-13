@@ -55,8 +55,7 @@ const Booking = reactive({
         if (response.data.status) { 
             this.bookings = response.data.bookings;
             this.calendarbooking.events = response.data.booking_calendar;
-            this.filter_skeleton = false;
-            this.FilterPreview  = false;
+            this.filter_skeleton = false; 
             this.skeleton = false;
         }
     }

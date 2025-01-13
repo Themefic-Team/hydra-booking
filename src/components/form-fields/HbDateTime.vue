@@ -21,6 +21,7 @@ const props = defineProps([
     'description', 
     'change', 
     'icon',
+    'icon',
     'tooltip',
     'tooltipText'
 ])
