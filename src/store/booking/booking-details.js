@@ -37,7 +37,7 @@ const BookingDetails = reactive({
                 this.booking = response.data.booking;
                 this.attendees = response.data.booking.attendees;
                 this.booking_activity = response.data.booking_activity; 
-                this.internal_note = response.data.internal_note;
+                this.internal_note =  response.data.internal_note == '' || response.data.internal_note == null ? '' : response.data.internal_note;
                 this.location = JSON.parse(response.data.booking.meeting_locations);
                 this.skeleton = false;
      

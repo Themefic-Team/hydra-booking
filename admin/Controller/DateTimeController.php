@@ -40,8 +40,12 @@ class DateTimeController extends \DateTimeZone {
 	}
 
 	public function convert_time_based_on_timezone(  $meeting_date,  $time, $time_zone, $selected_time_zone, $time_format = '' ) {
-		   
-		$time = new \DateTime(  $meeting_date. ' ' .$time, new \DateTimeZone( $time_zone ) );
+		 
+		if($meeting_date != ''){ 
+			$time = new \DateTime(  $meeting_date. ' ' .$time, new \DateTimeZone( $time_zone ) );
+		}else{
+			$time = new \DateTime( $time, new \DateTimeZone( $time_zone ) );
+		}
 
 		$time->setTimezone( new \DateTimeZone( $selected_time_zone ) );
 

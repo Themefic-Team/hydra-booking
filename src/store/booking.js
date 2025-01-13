@@ -39,7 +39,7 @@ const Booking = reactive({
     filter_skeleton : ref(false),
 
     // booking List
-    async fetchBookings(filter_by) {
+    async fetchBookings() {
 
         this.filter_skeleton = true;
         let data = { 

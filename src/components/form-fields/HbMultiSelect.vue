@@ -50,7 +50,7 @@ const focusOnSearch = (e) => {
   <div class="tfhb-single-form-field" :class="name" 
       :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }" 
     >
-      <div class="tfhb-single-form-field-wrap tfhb-field-dropdown"> 
+      <div class="tfhb-single-form-field-wrap tfhb-field-multi-select-dropdown"> 
         <label class="tfhb-flexbox tfhb-gap-4" v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span>  
           <span v-if="tooltip" class="tfhb-tooltip">
             <Icon name="Info" size=15 />

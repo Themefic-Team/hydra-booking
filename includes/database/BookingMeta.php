@@ -134,16 +134,16 @@ class BookingMeta {
 
 		if($limit > 1) { 
 			$data = $wpdb->get_results(
-				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s LIMIT %d", $id, $key, $limit)
+				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s LIMIT %d ORDER BY id DESC", $id, $key, $limit)
 			);
 		} else {
 			if($limit == 1) {
 				$data = $wpdb->get_row(
-					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s LIMIT 1", $id, $key)
+					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s LIMIT 1 ORDER BY id DESC", $id, $key)
 				);
 			} else {
 				$data = $wpdb->get_results(
-					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s", $id, $key)
+					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s ORDER BY id DESC", $id, $key)
 				);
 			} 
 		} 

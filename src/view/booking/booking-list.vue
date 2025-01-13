@@ -115,9 +115,7 @@ const UpdateMeetingStatus = async (id, host, status) => {
         } );
 
         if (response.data.status) {  
-            Booking.bookings = response.data.booking; 
-            Booking.calendarbooking.events = response.data.booking_calendar;
-            BookingEditPopup.value = false;
+            Booking.fetchBookings();
 
             toast.success(response.data.message, {
                 position: 'bottom-right', // Set the desired position
@@ -133,6 +131,9 @@ const UpdateMeetingStatus = async (id, host, status) => {
         console.log(error);
     }   
 }
+ 
+
+ 
 
 const singleBookingData = ref('');
 const Tfhb_Booking_View = async (id) => {  
@@ -1015,19 +1016,18 @@ const resetFilter = () => {
                             <div class="status" :class="book.status">
                                 {{ book.status }}
                             </div>
-                            <!-- <div class="tfhb-status-bar">
+                            <div class="tfhb-status-bar">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10 13.334L5 8.33398H15L10 13.334Z" fill="#765664"/>
                                 </svg>
                                 <div class="tfhb-status-popup">
                                     <ul class="tfhb-flexbox tfhb-gap-2">
                                         <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ $tfhb_trans('Confirmed') }}</li>
-                                        <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li>
-                                        <li class="schedule" @click="UpdateMeetingStatus(book.id, book.host_id, 'schedule')">{{ $tfhb_trans('Re-schedule') }}</li>
+                                        <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li> 
                                         <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
                                     </ul>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </td>
                     <td>

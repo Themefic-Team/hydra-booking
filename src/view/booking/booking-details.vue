@@ -261,7 +261,7 @@ onBeforeMount(() => {
             
        </div>
        <div class="tfhb-booking-details-wrap tfhb-flexbox tfhb-gap-16 tfhb-justify-between tfhb-align-normal">
-            <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16">
+            <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                 <div class="tfhb-b-d-wrap">
                     <h4>{{ $tfhb_trans('Meeting Details') }}</h4> 
                     
@@ -359,7 +359,7 @@ onBeforeMount(() => {
                                         </div>
 
                                     </div>
-                                </transition>
+                                </transition> 
                                 <p v-if="BookingDetails.internal_note == '' && BookingDetails.showinternalNoteEdit != true"> 
                                     N/A
                                 </p>
@@ -431,7 +431,7 @@ onBeforeMount(() => {
                             </div>      
                                     
                             <!-- Booking Details Icon Box -->
-                            <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                            <!-- <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="NotepadText" size=20 /> 
                                 <div class="tfhb-b-d-icon-content">
                                     <h5>{{ $tfhb_trans('Note') }}</h5> 
@@ -439,7 +439,7 @@ onBeforeMount(() => {
                                         N/A
                                     </p>
                                 </div>
-                            </div>     
+                            </div>      -->
                         </div>
                     </div>
                     <div class="tfhb-b-d-inner tfhb-full-width" v-if="'free' != BookingDetails.attendees[0].payment_method">
@@ -658,7 +658,7 @@ onBeforeMount(() => {
                  <!-- For Group Booking -->
             </div>
             <div class="tfhb-booking-details-activity">
-                <div class="tfhb-b-d-wrap"> 
+                <div class="tfhb-b-d-wrap">  
                     <h4>{{ $tfhb_trans('Activity Details') }}</h4> 
                     <div v-if="BookingDetails.booking_activity"  class="tfhb-activity-timeline tfhb-flexbox tfhb-gap-16">
                         <div v-for=" (activity, index) in BookingDetails.booking_activity" class="tfhb-activity-single-timeline">
@@ -671,9 +671,9 @@ onBeforeMount(() => {
                             <div class="tfhb-a-s-t-content" v-html="getSingleAttendeeActivity(activity.value)"></div>
                         </div> 
                     </div>
-                    <div v-else class="tfhb-activity-timeline tfhb-flexbox tfhb-gap-16">
-                        <div   class="tfhb-activity-single-timeline">
-                          <h5> {{ $tfhb_trans('No activity found') }}</h5>
+                    <div v-if="BookingDetails.booking_activity.length === 0" class=" " style="text-align:center;">
+                        <div class="tfhb-activity-single-timeline">
+                          <h5  > {{ $tfhb_trans('No activity found') }}</h5>
                         </div> 
                     </div>
  

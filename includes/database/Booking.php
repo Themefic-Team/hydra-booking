@@ -404,6 +404,7 @@ class Booking {
 				}
 			} 
  
+			// echo $wpdb->last_query;
 			
 		// Return the results
 		return $results;

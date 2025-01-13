@@ -1317,14 +1317,20 @@
 }
 
 // Prime Vue Dropdown
-.p-dropdown-panel {
+.p-dropdown-panel, .p-multiselect-panel {
     z-index: 99999 !important;
     
         
-        .p-dropdown-header {
+        .p-dropdown-header, .p-multiselect-header {
             margin-bottom: 10px !important;
         }
-        .p-dropdown-filter {
+        .p-multiselect-header {
+            element {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+        .p-dropdown-filter, .p-multiselect-header {
             width: 100%;
             border-radius: 4px !important; 
             background: #FFF !important; 
@@ -1336,8 +1342,8 @@
                 color: $primary-color;
             }
         }
-    .p-dropdown-items {
-        .p-dropdown-item{
+    .p-dropdown-items, .p-multiselect-items {
+        .p-dropdown-item, .p-multiselect-item{
             border-radius: $border-radius-small;
             background: $surface-secondary;
             margin: 2px;
@@ -1353,7 +1359,7 @@
                 }
             }
             &.p-focus {
-                background: $surface-primary;
+                background: $surface-primary !important;
                 span {
                     color: $surface-border-hover !important
                     
