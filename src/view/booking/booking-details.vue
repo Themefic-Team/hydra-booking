@@ -261,7 +261,7 @@ onBeforeMount(() => {
             
        </div>
        <div class="tfhb-booking-details-wrap tfhb-flexbox tfhb-gap-16 tfhb-justify-between tfhb-align-normal">
-            <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
+            <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16">
                 <div class="tfhb-b-d-wrap">
                     <h4>{{ $tfhb_trans('Meeting Details') }}</h4> 
                     
@@ -333,7 +333,7 @@ onBeforeMount(() => {
                             <div class="tfhb-b-d-icon-content">
                                 <div class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
 
-                                    <h5>{{ $tfhb_trans('Internal Note ') }}    </h5> 
+                                    <h5>{{ $tfhb_trans('Internal Note') }}    </h5> 
                                     <span style="margin-top:0; cursor: pointer" @click="BookingDetails.showinternalNoteEdit = !BookingDetails.showinternalNoteEdit "><Icon name="PencilLine" size=15 /></span> 
                                 </div>
                                 <transition name="accordion">  
@@ -341,8 +341,7 @@ onBeforeMount(() => {
                                         <HbTextarea  
                                             v-model="BookingDetails.internal_note" 
                                             required= "true"  
-                                            name="description"
-
+                                            name="description" 
                                         />
                                         
                                         <div class="tfhb-flexbox tfhb-gap-8">
@@ -360,8 +359,8 @@ onBeforeMount(() => {
 
                                     </div>
                                 </transition> 
-                                <p v-if="BookingDetails.internal_note == '' && BookingDetails.showinternalNoteEdit != true"> 
-                                    N/A
+                                <p v-if="BookingDetails.internal_note == '' && BookingDetails.showinternalNoteEdit != true">  
+                                    {{ $tfhb_trans('N/A') }}
                                 </p>
                                 <p v-if="BookingDetails.internal_note != '' && BookingDetails.showinternalNoteEdit != true"> 
                                     {{BookingDetails.internal_note}}

@@ -99,6 +99,13 @@ namespace HydraBooking\Admin\Controller;
             "No, Don't cancel" =>  __("No, Don't cancel", "hydra-booking"),  
             "Yes, Cancel" =>  __("Yes, Cancel", "hydra-booking"),  
             'Cancel Meeting' =>  __('Cancel Meeting', 'hydra-booking'),  
+            'Minutes' =>  __('Minutes', 'hydra-booking'),  
+            'Google Meet' =>  __('Google Meet', 'hydra-booking'),  
+            'Zoom' =>  __('Zoom', 'hydra-booking'),  
+            'Internal Note' =>  __('Internal Note', 'hydra-booking'),  
+            'Name' =>  __('Name', 'hydra-booking'),  
+            'Activity Details' =>  __('Activity Details', 'hydra-booking'),  
+            'N/A' =>  __('N/A', 'hydra-booking'),  
             // 'Delete' =>  __('Delete', 'hydra-booking'),  
 
             // Host
