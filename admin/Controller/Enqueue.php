@@ -1,18 +1,28 @@
 <?php
 namespace HydraBooking\Admin\Controller;
 
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 use HydraBooking\Admin\Controller\TransStrings;
 use HydraBooking\Admin\Controller\AuthController;
 
-	// exit
-if ( ! defined( 'ABSPATH' ) ) { exit; }
-
+/**
+ * Enqueue Class
+ * 
+ * @package HydraBooking\Admin\Controller
+ * @since 1.0.0
+ * 
+ * @author Sydur Rahman
+ */ 
 class Enqueue {
 
 	// constaract
 	public function __construct() { 
 		
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) ); 
+		add_action( 'wp_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'script_loader_tag', array( $this, 'thb_loadScriptAsModule' ), 10, 3 );
 	}
 	public function thb_loadScriptAsModule( $tag, $handle, $src ) {
@@ -23,14 +33,15 @@ class Enqueue {
 		return $tag;
 	}
 	public function admin_enqueue_scripts() {
-
+		
 		// if page=hydra-booking then load the script
 		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/admin/js/main.js', array( 'jquery' ),  time(), true );
  
 
-		if ( ! isset( $_GET['page'] ) || 'hydra-booking' !== $_GET['page'] ) {
+		if ( ! isset( $_GET['page'] ) || 'hydra-booking' !== $_GET['page'] ) { 
 			return;
 		}
+
 		$user      = new AuthController();
 		$user_auth = array(
 			'id'   => $user->userID(),
@@ -45,11 +56,11 @@ class Enqueue {
 		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
  
 		
-		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
+		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		//  Build the core script
-		wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
+		// wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		// wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
  
 		// Localize the script
 		 

@@ -1,10 +1,8 @@
 <?php
-namespace HydraBooking\App;
+namespace HydraBooking\App; 
 
-
-	// exit
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class Enqueue {
 	public function __construct() {

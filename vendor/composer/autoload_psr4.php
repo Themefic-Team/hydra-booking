@@ -10,6 +10,7 @@ return array(
     'HydraBooking\\PostType\\' => array($baseDir . '/includes/post-type'),
     'HydraBooking\\Migration\\' => array($baseDir . '/includes/migration'),
     'HydraBooking\\Hooks\\' => array($baseDir . '/includes/hooks'),
+    'HydraBooking\\FdDashboard\\' => array($baseDir . '/app/FrontendDashboard'),
     'HydraBooking\\DB\\' => array($baseDir . '/includes/database'),
     'HydraBooking\\App\\' => array($baseDir . '/app'),
     'HydraBooking\\Admin\\' => array($baseDir . '/admin'),
