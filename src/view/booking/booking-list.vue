@@ -485,9 +485,13 @@ const resetFilter = () => {
 // Hide Booking Details Popup
 
 function hideDropdownOutsideClick(e) { 
-    
-    if (!document.querySelector('.tfhb-filter-content-wrap').contains(e.target)) {
+    const filterContentWrap = document.querySelector('.tfhb-filter-content-wrap');
+    const multiSelectPanel = document.querySelector('.p-multiselect-panel'); // Dynamically check for p-multiselect-panel
+
+    if (!filterContentWrap.contains(e.target) &&
+        (!multiSelectPanel || !multiSelectPanel.contains(e.target)) ) { 
         Booking.FilterPreview = false;
+        
     }
     
 }
@@ -925,7 +929,7 @@ const changeToDate = (value) => {
 <!-- Booking Quick View End -->
 
 <!-- Booking Calendar View -->
-<div :class="{   'tfhb-skeleton': Booking.skeleton, 'tfhb-skeleton': Booking.filter_skeleton } " class="tfhb-booking-calendar tfhb-mt-72" v-if="bookingView=='calendar'"> 
+<div :class="{   'tfhb-skeleton': Booking.skeleton, 'tfhb-skeleton': Booking.filter_skeleton } " class="tfhb-booking-calendar tfhb-mt-24" v-if="bookingView=='calendar'"> 
      
     <FullCalendar class='demo-app-calendar ' :options='Booking.calendarbooking'>
         <template v-slot:eventContent='arg'>

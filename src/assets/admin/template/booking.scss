@@ -132,14 +132,9 @@
                         }
                     }
                 }
-                &:nth-child(3){
-                    position: absolute;
-                    left: 50%;
-                    width: 220px;
-                    margin-left: -117px;
-                    top: -62px;
+                &:nth-child(3){ 
                     .fc-button-group{
-                        border-radius: $border-radius-xlarge;
+                        border-radius: $border-radius-medium;
                         border: $border-reguler $border-type $surface-border;
                         background: #FFF;
                         padding: 4px;
@@ -154,7 +149,7 @@
                             line-height: 24px; /* 160% */
                             border: 0px $border-type;
                             padding: 4px 12px;
-                            border-radius: $border-radius-xlarge;
+                            border-radius: $border-radius-small;
                             text-transform: capitalize;
                             &:focus{
                                 box-shadow: none;
