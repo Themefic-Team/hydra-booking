@@ -127,6 +127,10 @@ const getSingleAttendeeActivity = ($value) => {
 onBeforeMount(() => {  
     BookingDetails.fetchBookingsDetails(bookingId, router);
 });
+
+const TfhbPrevNavigator = () => {
+    router.push({ name: 'BookingLists' });
+}
 </script>
 
 <template> 
@@ -371,7 +375,7 @@ onBeforeMount(() => {
                 </div>
                 <!-- For Single Booking -->
                 <div class="tfhb-b-d-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width" v-if="'one-to-one' == BookingDetails.booking.meeting_type">
-                     
+ 
                     <div class="tfhb-b-d-inner tfhb-full-width">
                         <h4>{{ $tfhb_trans('Attendee Details') }}</h4>
                         <div class="tfhb-b-d-icon-box-wrap bg-wrap tfhb-flexbox tfhb-gap-32  tfhb-align-normal">
@@ -405,6 +409,16 @@ onBeforeMount(() => {
                                     </p>
                                 </div>
                             </div>
+                             <!-- Booking Details Icon Box -->
+                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                <Icon name="MapPin" size=20 /> 
+                                <div class="tfhb-b-d-icon-content">
+                                    <h5>{{ $tfhb_trans('Address') }}</h5>
+                                    <p> 
+                                        {{ BookingDetails.attendees[0].address }}  
+                                    </p>
+                                </div>
+                            </div> 
                             <!-- Booking Details Icon Box -->
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="Clock5" size=20 /> 
@@ -427,8 +441,17 @@ onBeforeMount(() => {
                                         {{BookingDetails.attendees[0].payment_status}}  
                                     </p>
                                 </div>
-                            </div>      
-                                    
+                            </div>       
+                            <div v-show = "Object.keys(BookingDetails.attendees[0].others_info).length > 0" v-for=" (others_info, index) in BookingDetails.attendees[0].others_info" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                <Icon name="Disc" size=20 /> 
+                               
+                                <div class="tfhb-b-d-icon-content">
+                                    <h5>{{index}}</h5>
+                                    <p> 
+                                        {{ others_info }}  
+                                    </p>
+                                </div>
+                            </div>
                             <!-- Booking Details Icon Box -->
                             <!-- <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="NotepadText" size=20 /> 
@@ -469,7 +492,7 @@ onBeforeMount(() => {
                                 </div>
                             </div>  
                             <!-- Booking Details Icon Box -->
-                            <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                            <div v-if="BookingDetails.attendees[0].transaction" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="DollarSign" size=20 /> 
                                 <div class="tfhb-b-d-icon-content">
                                     <h5>{{ $tfhb_trans('Total Payment') }}</h5>
@@ -490,7 +513,7 @@ onBeforeMount(() => {
                             </div>      
                                     
                             <!-- Booking Details Icon Box -->
-                            <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                            <div v-if="BookingDetails.attendees[0].transaction"  class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.3334 8.33268H15.0001M13.3334 11.666H15.0001M5.14175 12.4993C5.31353 12.011 5.63267 11.5881 6.0551 11.2889C6.47753 10.9897 6.98242 10.829 7.50008 10.829C8.01774 10.829 8.52263 10.9897 8.94507 11.2889C9.3675 11.5881 9.68663 12.011 9.85841 12.4993M9.16675 9.16602C9.16675 10.0865 8.42056 10.8327 7.50008 10.8327C6.57961 10.8327 5.83341 10.0865 5.83341 9.16602C5.83341 8.24554 6.57961 7.49935 7.50008 7.49935C8.42056 7.49935 9.16675 8.24554 9.16675 9.16602ZM3.33341 4.16602H16.6667C17.5872 4.16602 18.3334 4.91221 18.3334 5.83268V14.166C18.3334 15.0865 17.5872 15.8327 16.6667 15.8327H3.33341C2.41294 15.8327 1.66675 15.0865 1.66675 14.166V5.83268C1.66675 4.91221 2.41294 4.16602 3.33341 4.16602Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -558,25 +581,16 @@ onBeforeMount(() => {
                             <div v-show="activeAttendeeDetails.includes(attendees.id)"  class="tfhb-singlee-attendees-inner tfhb-full-width" >
                                 <div class="tfhb-b-d-icon-box-wrap no-border tfhb-flexbox tfhb-gap-32  tfhb-align-normal">
                                     <!-- Booking Details Icon Box -->
+                                      
                                     <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
-                                        <Icon name="User" size=20 /> 
+                                        <Icon name="Clock5" size=20 /> 
                                         <div class="tfhb-b-d-icon-content">
-                                            <h5>{{ $tfhb_trans('Name') }}</h5>
+                                            <h5>{{ $tfhb_trans('Booked At') }}</h5>
                                             <p> 
-                                                {{attendees.attendee_name}}  
+                                                {{ Tfhb_DateTime( attendees.created_at ) }}  
                                             </p>
                                         </div>
-                                    </div>     
-                                    <!-- Booking Details Icon Box -->
-                                    <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
-                                        <Icon name="Mail" size=20 /> 
-                                        <div class="tfhb-b-d-icon-content">
-                                            <h5>{{ $tfhb_trans('Email') }}</h5>
-                                            <p> 
-                                                {{attendees.email}}  
-                                            </p>
-                                        </div>
-                                    </div>  
+                                    </div> 
                                     <!-- Booking Details Icon Box -->
                                     <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                         <Icon name="Globe" size=20 /> 
@@ -586,7 +600,27 @@ onBeforeMount(() => {
                                                 {{attendees.attendee_time_zone}}  
                                             </p>
                                         </div>
-                                    </div>     
+                                    </div> 
+                                     <!-- Booking Details Icon Box -->
+                                    <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                        <Icon name="MapPin" size=20 /> 
+                                        <div class="tfhb-b-d-icon-content">
+                                            <h5>{{ $tfhb_trans('Address') }}</h5>
+                                            <p> 
+                                                {{ attendees.address }}  
+                                            </p>
+                                        </div>
+                                    </div> 
+                                    <div v-show = "Object.keys(attendees.others_info).length > 0" v-for=" (others_info, index) in attendees.others_info" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                        <Icon name="Disc" size=20 /> 
+                                    
+                                        <div class="tfhb-b-d-icon-content">
+                                            <h5>{{index}}</h5>
+                                            <p> 
+                                                {{ others_info }}  
+                                            </p>
+                                        </div>
+                                    </div>    
                                 </div>
 
                                 <div class="tfhb-flexbox tfhb-gap-8 tfhb-b-d-inner-title">

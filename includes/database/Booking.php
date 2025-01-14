@@ -298,6 +298,7 @@ class Booking {
 						'attendee_time_zone', attendee.attendee_time_zone,
 						'attendee_name', attendee.attendee_name,
 						'email', attendee.email,
+						'address', attendee.address,
 						'others_info', attendee.others_info,
 						'country', attendee.country,
 						'ip_address', attendee.ip_address,

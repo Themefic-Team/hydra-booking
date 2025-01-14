@@ -3,6 +3,16 @@
         margin: 0 16px !important;
         flex-direction: column !important;
         align-items: normal !important;
+
+        .tfhb-filter-form{
+            > div {
+               padding: 24px 16px;
+               border-bottom: 1px solid #C0D8C4;
+               &:last-child{
+                   border-bottom: none;
+               }
+           }
+       }
     }
     .tfhb-content-wrap{
         .tfhb-meeting-title{
@@ -820,6 +830,7 @@
                 margin: 0  !important;
             }
         }
+        
     }
 
     .tfhb-booking-details-content {

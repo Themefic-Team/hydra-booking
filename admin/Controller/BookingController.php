@@ -1115,6 +1115,11 @@ class BookingController {
 		$transactions = new Transactions();
 		foreach ($attendeesData as $key => $attendee) {
 
+			// json decode others info
+			if($attendeesData[$key]->others_info){
+				$attendeesData[$key]->others_info = json_decode($attendeesData[$key]->others_info);
+			}
+
 			$where = array(
 				array('attendee_id', '=', $attendee->id),
 			);

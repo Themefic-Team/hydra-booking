@@ -499,18 +499,38 @@ onBeforeMount(() => {
     Host.fetchHosts();
     window.addEventListener('click', hideDropdownOutsideClick);
 });
+const ToDateMin = ref(null);
+const getMinDate = (value) => {      
+    ToDateMin.value = new Date(value);  
+    Booking.filter_data.date_range.to ='';
+    
+} 
+const changeToDate = (value) => {  
+    if( Booking.filter_data.date_range.from == ''){
  
-const getMinDate = () => { 
-   let form = Booking.filter_data.date_range.from // 2025-01-07
-   alert(form)
-    return new Date();
+        toast.error('Please select from date first', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+    } 
+    if( Booking.filter_data.date_range.from > value){
+        toast.error('To date should be greater than from date', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+    }
 
-   
+    if(value){
+        // after value updateinto te v model 
+        Booking.filter_data.date_range.to = value;
+        Booking.fetchBookings();
+    }
 }
 </script>
 <template>
 
 <div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24">
+    
     <!-- Dashboard Heading Wrap -->
     <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
         <div class="tfhb-filter-box tfhb-flexbox"> 
@@ -530,8 +550,9 @@ const getMinDate = () => {
         />
     </div> 
     <!-- Dashboard Heading Wrap -->
-    <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">  
+    <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">   
         <div class="tfhb-filter-box tfhb-flexbox tfhb-gap-8">  
+            
             <div class="tfhb-filter-content-wrap " :class="Booking.FilterPreview ? 'active' : ''"> 
                 <HbButton 
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
@@ -545,7 +566,7 @@ const getMinDate = () => {
                 /> 
                 <transition name="tfhb-dropdown-transition">
                     <div class="tfhb-filter-box-content" v-show="Booking.FilterPreview "> 
-                        <div class="tfhb-filter-form tfhb-flexbox tfhb-gap-32 tfhb-justify-center" style="padding:24px 16px;">
+                        <div class="tfhb-filter-form tfhb-justify-center">
                             
                             <!-- <HbButton 
                                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
@@ -559,8 +580,8 @@ const getMinDate = () => {
                             <div class="tfhb-filter-dates tfhb-flexbox tfhb-gap-8">
                                 <HbDateTime 
                                     v-model="Booking.filter_data.date_range.from"
-                                    selected = "1" 
-                                    label="From"
+                                    selected = "1"  
+                                    @dateChange =  "getMinDate" 
                                     width="48.5"
                                     enableTime='true'
                                     :placeholder="$tfhb_trans('From')"  
@@ -568,15 +589,15 @@ const getMinDate = () => {
                                 />
                                  
                                 <!-- {{new Date()}} -->
-                                <div class="tfhb-calender-move-icon" style="margin-top:29px">
+                                <div class="tfhb-calender-move-icon" >
                                     <Icon name="MoveRight" size=15 /> 
                                 </div>
                                 <HbDateTime 
                                     v-model="Booking.filter_data.date_range.to"
                                     selected = "1" 
                                     width="48.5"
-                                    label="To"
-                                    :config="{ minDate: getMinDate(Booking.filter_data.date_range) }"
+                                    @dateChange =  "changeToDate" 
+                                    :config="{ minDate: ToDateMin }"
                                     enableTime='true'
                                     :placeholder="$tfhb_trans('To')"   
                                     icon="CalendarDays"   
@@ -610,15 +631,17 @@ const getMinDate = () => {
                                 ]" 
                             /> 
 
-                            <HbButton 
-                                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                                @click="resetFilter"
-                                :buttonText="$tfhb_trans('Reset Filter')"
-                                icon="RefreshCw"
-                                width="100"
-                                :hover_animation="false" 
-                                icon_position = 'left'
-                            />  
+                            <div class="tfhb-flexbox tfhb-justify-center">
+                                <HbButton 
+                                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                                    @click="resetFilter"
+                                    :buttonText="$tfhb_trans('Reset Filter')"
+                                    icon="RefreshCw"
+                                    width="100"
+                                    :hover_animation="false" 
+                                    icon_position = 'left'
+                                />
+                            </div>   
                             
                         </div> 
                     </div>
