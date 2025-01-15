@@ -176,3 +176,19 @@
   opacity: 1;
 }
 // Accordion animation
+
+
+// Normal Fade in 
+.tfhb-fade-in-enter-active,
+.tfhb-fade-in-leave-active {
+  transition: opacity 0.5s;
+}
+.tfhb-fade-in-enter-from,
+.tfhb-fade-in-leave-to {
+  opacity: 0;
+}
+.tfhb-fade-in-enter-to,
+.tfhb-fade-in-leave-from {
+  opacity: 1;
+}
+// Normal Fade in 

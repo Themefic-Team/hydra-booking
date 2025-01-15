@@ -29,6 +29,8 @@ class FrontendDashboard {
 
         add_filter( 'page_template', array( $this, 'load_page_templates' ) );
 
+        
+
        
     }
 

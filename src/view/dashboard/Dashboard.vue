@@ -104,7 +104,7 @@ const upCommingBookingTitle = (data) => {
 
 <!-- {{ tfhbClass }} -->
 <div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
-    <Header :title="$tfhb_trans('Dashboard')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+    <Header v-if="$front_end_dashboard == false" :title="$tfhb_trans('Dashboard')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
         <div class="thb-admin-title">
             <h2>{{ $tfhb_trans('Booking Overview') }}</h2>

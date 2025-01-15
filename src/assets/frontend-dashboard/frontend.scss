@@ -1,0 +1,84 @@
+html{
+    margin-top: 0 !important;
+    background-color: $surface-primary;
+}
+#tfhb-admin-app{
+    background-color: $surface-primary;
+    .tfhb-frontend-top-header{
+        margin-bottom: 0 !important;
+    }
+    
+    .tfhb-frontend-dashboard{
+        padding: 8px;
+        .tfhb-frontend-main-content {
+            .tfhb-admin-meetings {
+                padding: 16px 0;
+                border-radius: $border-radius-large;
+                box-shadow: 0px 15px 30px 0px rgba(16, 40, 20, 0.10);
+            }
+        }
+       .tfhb-frontend-sidebar{
+            max-width: 272px; 
+            padding: 16px;
+            background-color: $primary-default;
+            border-radius:  $border-radius-large;
+            span, h6, li {
+                color:  $surface-border !important;
+            }
+            svg{
+                color: #fff !important;
+            }
+            .tfhb-sidbar-slide-icon {
+                width: 100% !important;
+                display: inline-block;
+                text-align: right;
+                &.collapsed{ 
+                    text-align: center;
+                }
+            }
+            .divider{
+                border-top: .5px solid $surface-border;
+                margin: 16px 0;
+            }
+            ul{
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                
+                li{
+                   
+                    a{
+                        border-radius: 6px; 
+                        transition: $transition;
+                      
+                        &:hover, &:focus, &.active{
+                            transition: $transition;
+                            background-color: $primary-hover;
+                        }
+                        span {
+                            color: #fff !important;
+                            font-size: 15px !important;
+                            margin: 0 !important;
+                           
+                        }
+                        
+    
+                    }
+                }
+            }
+            .tfhb-sidebar-menu-heading {
+                font-size: 13px;
+                padding: 0 12px;
+                min-height: 20px;
+            }
+    
+            .tfhb-frontend-sidebar-card{
+                padding: 16px;
+                border-radius: 8px;
+                background-color: #FFCB3D;
+            }
+                
+       }
+        
+    }
+}

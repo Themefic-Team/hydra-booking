@@ -6,8 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
  * Template: Hydra - Dashbaord
  *
  */
-
-get_header();
+// Hide Admin Bar
+add_filter( 'show_admin_bar', '__return_false' );
+wp_head();
 
 // get current page and page template 
 
@@ -16,4 +17,4 @@ get_header();
 ?>
 <div id="tfhb-admin-app"></div>
 <?php
-get_footer(); 
+wp_footer(); 
