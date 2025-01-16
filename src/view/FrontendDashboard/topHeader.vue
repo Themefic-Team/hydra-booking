@@ -62,7 +62,12 @@ onBeforeRouteLeave((to, from, next) => {
     displayNotification.value = 0;
     window.removeEventListener('click', hideDropdownOutsideClick);
     next();
-})
+});
+
+const profileDropdown = ref(false);
+
+// Click outside the dropdown
+
 </script>
 
 
@@ -92,46 +97,64 @@ onBeforeRouteLeave((to, from, next) => {
             </div>
         </div>
         
-        <div v-if="props.notifications" class="tfhb-header-notification">
-            <div class="tfhb-dropdown tfhb-mega-dropdown">
-            <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size=24 /> </span>
+        <div  class="tfhb-flexbox tfhb-gap-24 ">
+            <div v-if="props.notifications" class="tfhb-header-notification  tfhb-dropdown tfhb-mega-dropdown">
+                <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size=24 /> </span>
 
-            <span v-if="props.total_unread && props.total_unread != 0" class="tfhb-header-notification-count">
-                {{props.total_unread}}
-            </span>
+                <span v-if="props.total_unread && props.total_unread != 0" class="tfhb-header-notification-count">
+                    {{props.total_unread}}
+                </span>
 
-            <transition name="tfhb-dropdown-transition">
-                <div v-show="displayNotification" class="tfhb-dropdown-wrap " >   <!-- active class-->
-                    <div class="tfhb-flexbox tfhb-justify-between">
-                        <h3>{{ $tfhb_trans('Notifications') }}</h3>
-                        <button @click="MarkAsRead" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</button>
-                        <!-- {{ notifications }} -->
-                    </div>
+                <transition name="tfhb-dropdown-transition">
+                    <div v-show="displayNotification" class="tfhb-dropdown-wrap " >   <!-- active class-->
+                        <div class="tfhb-flexbox tfhb-justify-between">
+                            <h3>{{ $tfhb_trans('Notifications') }}</h3>
+                            <button @click="MarkAsRead" class="tfhb-btn">{{ $tfhb_trans('Mark as read') }}</button>
+                            <!-- {{ notifications }} -->
+                        </div>
 
-                    <div class="tfhb-notification-wrap tfhb-scrollbar">
-                        
-                        <!-- Single Notifaction wrap -->
-                        <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16"
-                            :class="{ 'unread': notification.value.status == 'unread' }"  
-                        > 
-                            <div class="tfhb-single-notification-img">
-                                <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Notification Image">
-                            </div> 
-                            <div class="tfhb-single-notification-content"> 
-                                <h4>{{notification.value.attendee_name}}</h4>
-                                <p> {{notification.value.message}}</p>
-
-                            <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago </span>
-                            </div>
+                        <div class="tfhb-notification-wrap tfhb-scrollbar">
                             
+                            <!-- Single Notifaction wrap -->
+                            <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16"
+                                :class="{ 'unread': notification.value.status == 'unread' }"  
+                            > 
+                                <div class="tfhb-single-notification-img">
+                                    <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Notification Image">
+                                </div> 
+                                <div class="tfhb-single-notification-content"> 
+                                    <h4>{{notification.value.attendee_name}}</h4>
+                                    <p> {{notification.value.message}}</p>
+
+                                <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago </span>
+                                </div>
+                                
 
 
-                        </div> 
+                            </div> 
+                        </div>
                     </div>
+                </transition>
+            </div>
+            <div class="tfhb-dropdown tfhb-header-profile-dropdown">
+                <div @click="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
+                    <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">  Hi, <b>Sydur</b> 
+                    <span  class="tfhb-dropdown-single" >
+                        <Icon  v-if="profileDropdown == false" name="ChevronDown" size=16 /> 
+                        <Icon v-if="profileDropdown == true" name="ChevronUp" size=16 /> 
+                    </span>
                 </div>
-            </transition>
+ 
+                <transition  name="tfhb-dropdown-transition">
+                    <div v-show="profileDropdown == true"  class="tfhb-dropdown-wrap"> 
+                        <span class="tfhb-dropdown-single" ><Icon name="User" size=16 /> My Account </span>
+                
+                        <span class="tfhb-dropdown-single tfhb-dropdown-error"><Icon name="LogOut" size=16 /> Logout</span>
+                    </div>
+                </transition>
+            </div>
         </div>
-        </div>
+        
     </div>
 </template> 
 

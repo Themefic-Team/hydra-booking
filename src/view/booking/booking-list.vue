@@ -563,8 +563,7 @@ const changeToDate = (value) => {
                     :class="Booking.filter_data.filter_type == 'filter' ? 'active' : ''"
                     @click="Booking.FilterPreview =!Booking.FilterPreview , Booking.filter_data.filter_type='filter'"
                     :buttonText="$tfhb_trans('Filter')"
-                    icon="Filter"   
-                    width="100"
+                    icon="Filter"    
                     :hover_animation="false" 
                     icon_position = 'left'
                 /> 
@@ -640,8 +639,7 @@ const changeToDate = (value) => {
                                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                                     @click="resetFilter"
                                     :buttonText="$tfhb_trans('Reset Filter')"
-                                    icon="RefreshCw"
-                                    width="100"
+                                    icon="RefreshCw" 
                                     :hover_animation="false" 
                                     icon_position = 'left'
                                 />

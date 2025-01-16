@@ -14,14 +14,16 @@ onMounted(() => {
 <template>
     <!-- {{ tfhbClass }} -->
     <div class="tfhb-hydra-dasboard">
-        <Header :title="$tfhb_trans('Settings')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
+        <Header v-if="$front_end_dashboard == false"  :title="$tfhb_trans('Settings')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
         <div class="tfhb-hydra-wrap ">    
-            <nav class="tfhb-hydra-admin-tabs tfhb-hydra-settings">  
+            <nav v-if="$front_end_dashboard == false"  class="tfhb-hydra-admin-tabs tfhb-hydra-settings">  
                 <ul>
                     <li><router-link to="/settings/general" exact :class="{ 'active': $route.path === '/settings/general' }"> <Icon name="SlidersHorizontal" /> {{ $tfhb_trans('General') }}</router-link></li> 
                    
                     <li><router-link to="/settings/availability" :class="{ 'active': $route.path === '/settings/availability' }"> <Icon name="Clock" /> {{ $tfhb_trans('Availability') }}</router-link></li> 
                     <li><router-link to="/settings/notifications" :class="{ 'active': $route.path === '/settings/notifications' }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}</router-link></li>
+
+                 
                     <li  :class="{ 'expand': $route.path === '/settings/integrations' }" class="tfhb-integrations-settings-menu"><router-link to="/settings/integrations#all" class="integrations-submenu" data-filter="all" :class="{ 'active': $route.path === '/settings/integrations' }"> <Icon name="Unplug" /> {{ $tfhb_trans('Integrations') }}
                        <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size=20 /> </span>
                     </router-link>
@@ -43,6 +45,11 @@ onMounted(() => {
 
                     <li><router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }"> <Icon name="ClipboardList" /> {{ $tfhb_trans('Meeting Category') }}</router-link></li>
                     <li><router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }"> <Icon name="UserCog" /> {{ $tfhb_trans('Host Settings') }}</router-link></li> 
+                    <li><router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }"> <Icon name="ClipboardList" /> {{ $tfhb_trans('Meeting Category') }}</router-link></li>
+
+                    <li><router-link to="/settings/fd-dashboard" exact :class="{ 'active': $route.path.startsWith('/settings/fd-dashboard') }"> <Icon name="LayoutDashboard" /> {{ $tfhb_trans('Frontend Dashboard') }}</router-link></li> 
+ 
+                    <!-- Frontend Dashbaord -->
                     <li><router-link to="/settings/license" exact :class="{ 'active': $route.path.startsWith('/settings/license') }"> <Icon name="FileLock2" /> {{ $tfhb_trans('License') }}</router-link></li> 
                 </ul>  
             </nav>  
@@ -52,7 +59,7 @@ onMounted(() => {
             </div> 
             
           
-            </div>
+        </div>
     </div>
 </template>
  

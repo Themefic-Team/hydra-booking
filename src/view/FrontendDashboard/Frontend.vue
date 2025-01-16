@@ -8,11 +8,13 @@ import topHeader from './topHeader.vue';
 import { Notification } from '@/store/notification';
 
 const collapsedSideBar = ref(false);
+
+ 
  
 </script>
 
 <template > 
-    <topHeader :title="$tfhb_trans('Dashboard')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+    <topHeader   :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
         
     <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
         <!-- Load Sidebar -->

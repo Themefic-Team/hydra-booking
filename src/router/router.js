@@ -208,6 +208,7 @@ const routes = [
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/General.vue')
             },  
+
             {
                 path: 'hosts-settings',
                 name: 'HostsSettings',
@@ -229,6 +230,34 @@ const routes = [
                     }
                 ]
             },
+            {
+                path: 'fd-dashboard',
+                name: 'FrontendDashboard',
+                meta: { Capabilities: 'tfhb_manage_settings' },
+                component: () => import('../view/settings/FrontendDashboard.vue'),
+                redirect: { name: 'FrontendDashboardGeneral' },
+                children: [ 
+                    {
+                        path: 'general',
+                        name: 'FrontendDashboardGeneral',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/fd-dashboard/General.vue')
+                    },
+                    {
+                        path: 'login',
+                        name: 'FrontendDashboardLogin',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/fd-dashboard/login.vue')
+                    },
+                    {
+                        path: 'signup',
+                        name: 'FrontendDashboardSignup',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/fd-dashboard/Signup.vue')
+                    }
+                ]
+            },
+
             {
                 path: 'availability',
                 name: 'SettingsAvailability',

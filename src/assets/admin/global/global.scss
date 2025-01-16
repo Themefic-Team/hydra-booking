@@ -1346,10 +1346,12 @@
             }
         }
     .p-dropdown-items, .p-multiselect-items {
+        margin: 0;
         .p-dropdown-item, .p-multiselect-item{
             border-radius: $border-radius-small;
             background: $surface-secondary;
             margin: 2px;
+            padding: 8px 12px;
 
             
  
