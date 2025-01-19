@@ -377,7 +377,7 @@ const TfhbPrevNavigator = () => {
                 <div class="tfhb-b-d-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width" v-if="'one-to-one' == BookingDetails.booking.meeting_type">
  
                     <div class="tfhb-b-d-inner tfhb-full-width">
-                        <h4>{{ $tfhb_trans('Attendee Details') }}</h4>
+                        <h4>{{ $tfhb_trans('Attendee Details 1') }}</h4>
                         <div class="tfhb-b-d-icon-box-wrap bg-wrap tfhb-flexbox tfhb-gap-32  tfhb-align-normal">
                             <!-- Booking Details Icon Box -->
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
@@ -418,17 +418,18 @@ const TfhbPrevNavigator = () => {
                                         {{ BookingDetails.attendees[0].address }}  
                                     </p>
                                 </div>
-                            </div> 
+                            </div>  
                             <!-- Booking Details Icon Box -->
-                            <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
-                                <Icon name="Clock5" size=20 /> 
+                            <div v-if="BookingDetails.attendees[0].status == 'canceled' || BookingDetails.attendees[0].status == 'rescheduled'" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                <Icon name="FileQuestion" size=20 /> 
                                 <div class="tfhb-b-d-icon-content">
-                                    <h5>{{ $tfhb_trans('Booked At') }}</h5>
+                                    <h5>{{ $tfhb_trans('Reason') }}</h5>
                                     <p> 
-                                        {{ Tfhb_DateTime( BookingDetails.attendees[0].created_at ) }}  
+                                        {{BookingDetails.attendees[0].reason}}  
                                     </p>
                                 </div>
-                            </div>          
+                            </div> 
+                                     
                             <!-- Booking Details Icon Box -->
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="Banknote" size=20 /> 
@@ -452,6 +453,16 @@ const TfhbPrevNavigator = () => {
                                     </p>
                                 </div>
                             </div>
+                            <!-- Booking Details Icon Box -->
+                            <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                <Icon name="Clock5" size=20 /> 
+                                <div class="tfhb-b-d-icon-content">
+                                    <h5>{{ $tfhb_trans('Booked At') }}</h5>
+                                    <p> 
+                                        {{ Tfhb_DateTime( BookingDetails.attendees[0].created_at ) }}  
+                                    </p>
+                                </div>
+                            </div> 
                             <!-- Booking Details Icon Box -->
                             <!-- <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="NotepadText" size=20 /> 
@@ -491,6 +502,7 @@ const TfhbPrevNavigator = () => {
                                     </p>
                                 </div>
                             </div>  
+                             
                             <!-- Booking Details Icon Box -->
                             <div v-if="BookingDetails.attendees[0].transaction" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="DollarSign" size=20 /> 
@@ -620,7 +632,17 @@ const TfhbPrevNavigator = () => {
                                                 {{ others_info }}  
                                             </p>
                                         </div>
-                                    </div>    
+                                    </div>
+                                    <!-- Booking Details Icon Box -->
+                                    <div v-if="attendees.status == 'canceled' || attendees.status == 'rescheduled'" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                        <Icon name="FileQuestion" size=20 /> 
+                                        <div class="tfhb-b-d-icon-content">
+                                            <h5>{{ $tfhb_trans('Reason') }}</h5>
+                                            <p> 
+                                                {{attendees.reason}}  
+                                            </p>
+                                        </div>
+                                    </div> 
                                 </div>
 
                                 <div class="tfhb-flexbox tfhb-gap-8 tfhb-b-d-inner-title">

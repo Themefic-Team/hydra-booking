@@ -123,7 +123,7 @@ class GoogleCalendar {
 				$_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar'] = $data;
 
 				// save to user metadata
-				update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings, true );
+				update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
 
 				$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $user_id . '/calendars';
 
