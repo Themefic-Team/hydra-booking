@@ -1,0 +1,81 @@
+import { reactive } from 'vue';
+import axios from 'axios'; 
+import { toast } from "vue3-toastify"; 
+
+const FrontendDashboard = reactive({
+    skeleton: true,
+    update_preloader: false, 
+    pages: [],
+    fd_dashboard: {
+        general: {
+            dashboard_logo: '',  
+            mobile_dashboard_logo: '',
+        }, 
+        signup: {
+            registration_page: '',
+            after_registration_redirect_type: '',
+            after_registration_redirect: '',
+            after_registration_redirect_custom: '',
+        },
+        login: {
+            login_page: '',
+            after_login_redirect_type: '',
+            after_login_redirect: '',
+            after_login_redirect_custom: '',
+        },
+    }, 
+    // Other Information 
+    async fetchFrontendDashboardSettings() { 
+
+        try {  
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/fd-dashboard', {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) { 
+                // response.data.settings not empty then set value
+                this.fd_dashboard =  response.data.settings ? response.data.settings : this.fd_dashboard;
+                this.pages = response.data.pages; 
+                this.skeleton = false;
+                 
+            }
+        } catch (error) {
+
+            console.log(error);
+
+        }  
+    },
+    async updateFrontendDashboardSettings() { 
+        this.update_preloader = true;
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/fd-dashboard/update', {
+                fd_dashboard: this.fd_dashboard
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {   
+                
+
+                this.skeleton = false;
+                // responsed message bottom
+                toast.success(response.data.message, {
+                    position: "bottom-right",
+                });
+                this.update_preloader = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.update_preloader = false;
+
+        }  
+    },
+})
+
+export default FrontendDashboard

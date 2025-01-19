@@ -33,6 +33,7 @@ class Admin {
 
 		// update controller
 		new UpdateController();
+		
 
 		// Notification controller
 		// new Notification();
