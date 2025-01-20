@@ -32,7 +32,7 @@ const storedOptionData = (data) => {
     data.forEach((item, index) => {  
         // fist item id auto selected
         if(index == 0 && props.google_calendar.selected_calendar_id == ''){
-            props.google_calendar.selected_calendar_id = item.id;
+            props.google_calendar.selected_calendar_id =  props.google_calendar.tfhb_google_calendar.email;
         }
         options.push({
             value: item.id,
