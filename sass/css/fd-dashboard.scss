@@ -1,0 +1,88 @@
+.tfhb-frontend-from {
+    max-width: 500px;
+    padding: 56px;
+    border-radius: 16px;
+    box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
+    margin: 24px auto;
+
+    &__field-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        &__inner {
+            display: flex;
+            gap: 24px;
+        }
+    }
+
+    &__field-item {
+        width: 100%;
+        &--center {
+            text-align: center;
+            
+        }
+        &--right {
+            text-align: right;
+            
+        }
+        p{
+            font-weight: 600;
+            margin-bottom: 0;
+            a{
+                color: $primary-default !important;
+            }
+        }
+
+        label {
+            font-size: 13px;
+            color: #141915 !important;
+            font-weight: 400;
+            line-height: 1.53;
+            margin-bottom: 4px !important;
+        }
+        button {
+            padding: 8px 24px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            background-color: #2E6B38 !important;
+            font-size: 16px !important;
+            font-weight: 700;
+            align-items: center;
+            border-radius: 8px !important;
+            line-height: 1.6;
+          }
+        &__inner {
+            position: relative;
+
+            span {
+                position: absolute;
+                top: 9px;
+                left: 12px;
+            }
+            
+            input {
+                border: 1px solid #56765B;
+                background-color: #fff;
+                border-radius: 4px;
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 1.6;
+                padding: 8px;
+                padding-left: 40px;
+                &:focus, &:active, &:hover {
+                    outline: none;
+                    box-shadow: none; 
+                    border-color: $surface-border-hover;
+                    color : $primary-color !important;
+                    box-shadow: $input-field-box-shadow;
+                    background-color: $surface-primary;
+                }
+            }
+           
+        }
+
+    }
+}

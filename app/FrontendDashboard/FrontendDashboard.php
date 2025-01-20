@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Namespace
 use HydraBooking\Admin\Controller\Enqueue;
+// use Shortcode\Signup;
+use HydraBooking\FdDashboard\Shortcode\Signup;
+use HydraBooking\FdDashboard\Shortcode\Login;
 
 /**
  * Frontend Dashboard Class
@@ -23,6 +26,12 @@ class FrontendDashboard {
 
         // Define Constants
         $this->define_constants();
+
+        // Load Shortcode
+        new Signup();
+
+        // Load Shortcode
+        new Login();
 
         // Load Frontend Dashboard 
         add_filter( 'theme_page_templates', array( $this, 'set_page_template' ), 10, 4 );
@@ -57,6 +66,8 @@ class FrontendDashboard {
      */
     public function set_page_template($template){
         $template['frontend-dashboard.php'] = 'Hydra - Dashbaord';
+        $template['frontend-signup.php'] = 'Hydra - Registration';
+        $template['frontend-login.php'] = 'Hydra - Login';
         return $template;
     }
 
@@ -73,6 +84,12 @@ class FrontendDashboard {
         if ( $page_template == 'frontend-dashboard.php' ) {
             new Enqueue();
             $template = TFHB_FD_DASHBOARD_TEMPLATE_PATH . 'frontend-dashboard.php';
+        }
+        if ( $page_template == 'frontend-signup.php' ) { 
+            $template = TFHB_FD_DASHBOARD_TEMPLATE_PATH . 'frontend-signup.php';
+        }
+        if ( $page_template == 'frontend-login.php' ) { 
+            $template = TFHB_FD_DASHBOARD_TEMPLATE_PATH . 'frontend-login.php';
         }
         return $template;
     }
