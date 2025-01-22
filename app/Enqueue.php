@@ -53,6 +53,13 @@ class Enqueue {
 		wp_register_script( 'tfhb-select2-script', TFHB_URL . 'assets/lib/select2/select2.min.js', array( 'jquery', 'tfhb-app-script' ), TFHB_VERSION, true );
 		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/app/js/main.js', array( 'jquery', 'wp-i18n' ), TFHB_VERSION, true );
 		// pass data to script 
+
+		// registration
+		wp_register_script( 'tfhb-app-registration', TFHB_URL . 'assets/app/js/registration.js', array( 'jquery' ), TFHB_VERSION, true );
+		
+		// Login
+		wp_register_script( 'tfhb-app-login', TFHB_URL . 'assets/app/js/login.js', array( 'jquery' ), TFHB_VERSION, true );
+		
 		
 		wp_localize_script(
 			'tfhb-app-script',

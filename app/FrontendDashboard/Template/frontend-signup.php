@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
  * Template: Hydra - Registration
  *
  */
-// Hide Admin Bar 
-wp_head();
-
-// get current page and page template 
-
-echo do_shortcode('[hydra_registration_form]');
+get_header();
+while ( have_posts() ) :
+	the_post(); 
+	echo do_shortcode('[hydra_registration_form]');
+	the_content();
+endwhile;
+get_footer();
  
-wp_footer(); 

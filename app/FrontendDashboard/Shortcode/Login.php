@@ -23,6 +23,9 @@ class Login {
        
         // Add Shortcode
         add_shortcode( 'hydra_login_form', array( $this, 'hydra_login_form_shortcode' ) );
+
+        // Sign In section 
+        add_action( 'wp_ajax_nopriv_tfhb_sign_in', array( $this, 'tfhb_sign_in_callback' ) );
  
     }
 

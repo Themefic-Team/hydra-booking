@@ -5,7 +5,8 @@ namespace HydraBooking\FdDashboard\Shortcode;
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Namespace
-use HydraBooking\Admin\Controller\Enqueue;
+use HydraBooking\DB\Host;
+use HydraBooking\DB\Availability;
 
 /**
  * Signup Class
@@ -23,6 +24,10 @@ class Signup {
        
         // Add Shortcode
         add_shortcode( 'hydra_registration_form', array( $this, 'hydra_registration_form_shortcode' ) );
+
+        // write ajax function 
+        add_action( 'wp_ajax_nopriv_tfhb_registration', array( $this, 'tfhb_registration_callback' ) );
+        
  
     }
 
@@ -34,21 +39,41 @@ class Signup {
      */
 
      public function hydra_registration_form_shortcode() {
+
+        // Enqueue Select2
+		if ( ! wp_script_is( 'tfhb-app-registration', 'enqueued' ) ) {
+			wp_enqueue_script( 'tfhb-app-registration' );
+		}
+        
        
 		// Start Buffer
 		ob_start(); 
 
-        ?>
+        if( is_user_logged_in() ) {
+            ?>
+            <div class="tfhb-frontend-from">
+                <div class="tfhb-frontend-from__title">
+                    <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
+                    <!-- go to dashboard button -->
+
+                    <a href="#">Go to dashboard</a>
+                    
+                </div>
+        <?php 
+            return ob_get_clean();
+        }  ?>
+        
         <div class="tfhb-frontend-from">
             <div class="tfhb-frontend-from__title">
-                <h3>Sign up</h3>
-                <p>Please enter your details.</p>
+                <h3><?php echo esc_html(__('Sign up', 'hydra-booking')) ?></h3>
+                <p><?php echo esc_html(__('Please enter your details.', 'hydra-booking')) ?></p>
             </div>
-            <form action="">
+            <form action="" id="tfhb-reg-from">
+            <?php wp_nonce_field( 'tfhb_check_reg_nonce', 'tfhb_reg_nonce' ); ?>
                 <div class="tfhb-frontend-from__field-wrap">
                     <div class="tfhb-frontend-from__field-wrap__inner">
                         <div class="tfhb-frontend-from__field-item">
-                            <label for="first_name">First Name</label> 
+                            <label for="tfhb_first_name"><?php echo esc_html(__('First Name', 'hydra-booking')) ?></label> 
                             <div class="tfhb-frontend-from__field-item__inner">
                                 <span>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -56,11 +81,11 @@ class Signup {
                                         <path d="M16.6666 17.4987C16.6666 15.7306 15.9642 14.0349 14.714 12.7847C13.4637 11.5344 11.768 10.832 9.99992 10.832C8.23181 10.832 6.53612 11.5344 5.28587 12.7847C4.03563 14.0349 3.33325 15.7306 3.33325 17.4987" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </span>
-                                <input type="text" name="first_name" id="first_name" placeholder="First Name">
+                                <input type="text" name="tfhb_first_name" id="tfhb_first_name" placeholder="First Name">
                             </div>
                         </div>
                         <div class="tfhb-frontend-from__field-item">
-                            <label for="first_name">First Name</label> 
+                            <label for="tfhb_last_name"><?php echo esc_html(__('Last Name', 'hydra-booking')) ?></label> 
                             <div class="tfhb-frontend-from__field-item__inner">
                                 <span>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,13 +93,13 @@ class Signup {
                                         <path d="M16.6666 17.4987C16.6666 15.7306 15.9642 14.0349 14.714 12.7847C13.4637 11.5344 11.768 10.832 9.99992 10.832C8.23181 10.832 6.53612 11.5344 5.28587 12.7847C4.03563 14.0349 3.33325 15.7306 3.33325 17.4987" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </span>
-                                <input type="text" name="first_name" id="first_name" placeholder="First Name">
+                                <input type="text" name="tfhb_last_name" id="tfhb_last_name" placeholder="First Name">
                             </div>
                         </div>
                     </div>
 
                     <div class="tfhb-frontend-from__field-item">
-                        <label for="username">Username</label> 
+                        <label for="tfhb_username"><?php echo esc_html(__('Username', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -82,12 +107,12 @@ class Signup {
                                     <path d="M16.6666 17.4987C16.6666 15.7306 15.9642 14.0349 14.714 12.7847C13.4637 11.5344 11.768 10.832 9.99992 10.832C8.23181 10.832 6.53612 11.5344 5.28587 12.7847C4.03563 14.0349 3.33325 15.7306 3.33325 17.4987" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </span>
-                            <input type="text" name="username" id="username" placeholder="First Name">
+                            <input type="text" name="tfhb_username" id="tfhb_username" placeholder="Type Username">
                         </div>
                     </div>
 
                     <div class="tfhb-frontend-from__field-item">
-                        <label for="email">Email</label> 
+                        <label for="tfhb_email"><?php echo esc_html(__('Email', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,12 +120,12 @@ class Signup {
                                     <path d="M18.3334 5.83203L10.8584 10.582C10.6011 10.7432 10.3037 10.8287 10.0001 10.8287C9.69648 10.8287 9.39902 10.7432 9.14175 10.582L1.66675 5.83203" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </span>
-                            <input type="text" name="email" id="email" placeholder="Type your email">
+                            <input type="text" name="tfhb_email" id="tfhb_email" placeholder="Type your email">
                         </div>
                     </div>
 
                     <div class="tfhb-frontend-from__field-item">
-                        <label for="email">Password</label> 
+                        <label for="tfhb_password"><?php echo esc_html(__('Password', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -115,12 +140,12 @@ class Signup {
                                 </defs>
                             </svg>
                             </span>
-                            <input type="password" name="password" id="password" placeholder="Type your password">
+                            <input type="password" name="tfhb_password" id="tfhb_password" placeholder="Type your password">
                         </div>
                     </div>
 
                     <div class="tfhb-frontend-from__field-item">
-                        <label for="email">Confirm Password</label> 
+                        <label for="tfhb_confirm_password"><?php echo esc_html(__('Confirm Password', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -135,13 +160,13 @@ class Signup {
                                 </defs>
                             </svg>
                             </span>
-                            <input type="password" name="confirm-password" id="confirm-password" placeholder="Re-type your password">
+                            <input type="password" name="tfhb_confirm_password" id="tfhb_confirm_password" placeholder="Re-type your password">
                         </div>
                     </div>
 
                     <div class="tfhb-frontend-from__field-item">
                         <button type="submit">
-                            Sign up
+                        <?php echo esc_html(__('Sign up', domain: 'hydra-booking')) ?>
                             <span>
                                 <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_6411_13565)">
@@ -170,6 +195,148 @@ class Signup {
         return ob_get_clean();
      }
 
+     /**
+     * tfhb_registration_callback
+     *
+     * @return void
+     * @author Sydur Rahman
+     */
+
+     public function tfhb_registration_callback(){
+
+        $response = [
+            'success' => false,
+        ];
+
+        $field = [];
+        foreach ( $_POST as $key => $value ) {
+            $field[ $key ] = sanitize_text_field( $value );
+        }
+
+        $user_role = 'tfhb_host';
+
+        $required_fields = array( 'tfhb_first_name', 'tfhb_last_name', 'tfhb_username', 'tfhb_email', 'tfhb_password', 'tfhb_confirm_password' );
+        
+        if ( ! isset( $field['tfhb_reg_nonce'] ) || ! wp_verify_nonce( $field['tfhb_reg_nonce'], 'tfhb_check_reg_nonce' ) ) {
+            $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'hydra-booking' );
+        } else {
+            foreach ( $required_fields as $required_field ) {
+                if ( $required_field === 'tfhb_email' ) {
+                    if ( empty( $field[ $required_field ] ) ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Please enter your email address', 'hydra-booking' );
+                    } elseif ( ! is_email( $field[ $required_field ] ) ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Please enter a valid email address', 'hydra-booking' );
+                    }
+                } elseif ( $required_field === 'tfhb_password' ) {
+                    if ( empty( $field[ $required_field ] ) ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Please enter your password', 'hydra-booking' );
+                    } elseif ( ! preg_match( '@[A-Z]@', $field['tfhb_password'] ) ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one uppercase letter', 'hydra-booking' );
+                    } elseif ( ! preg_match( '@[0-9]@', $field['tfhb_password'] ) ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one number', 'hydra-booking' );
+                    } elseif ( ! preg_match( '@[^\w]@', $field['tfhb_password'] ) ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one special character', 'hydra-booking' );
+                    } elseif ( strlen( $field['tfhb_password'] ) < 8 ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be at least 8 characters', 'hydra-booking' );
+                    }
+                } elseif ( $required_field === 'tfhb_confirm_password' ) {
+                    if ( empty( $field[ $required_field ] ) ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Please re-enter your password', 'hydra-booking' );
+                    } elseif ( $field['tfhb_password'] !== $field['tfhb_confirm_password'] ) {
+                        $response['fieldErrors'][ $required_field] = esc_html__( 'Passwords doesn\'t match', 'hydra-booking' );
+                    }
+                } elseif ( empty( $field[ $required_field ] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'The field is required', 'hydra-booking' );
+                }
+            }
+        }
+
+       // Check if email and username already exist
+       $user = get_user_by( 'email', $field['tfhb_email'] );
+       if ( $user ) {
+           $response['fieldErrors']['tfhb_email'] = esc_html__( 'Email already exist', 'hydra-booking' );
+       } else {
+           $user = get_user_by( 'login', $field['tfhb_username'] );
+           if ( $user ) {
+               $response['fieldErrors']['tfhb_username'] = esc_html__( 'Username already exist', 'hydra-booking' );
+           }
+       }
+
+       if(!$response['fieldErrors']){
+            $host = new Host();
+            $userdata = array(
+                'user_login' => sanitize_user( $field['tfhb_username'] ),
+                'user_email' => sanitize_email( $field['tfhb_email'] ),
+                'user_pass'  => esc_attr( $field['tfhb_password'] ),
+                'role'       => $user_role,
+            );
+
+            $user_id = wp_insert_user( $userdata );
+            if ( is_wp_error( $user_id ) ) {
+                $response['message'] = $user_id->get_error_message();
+            } else {
+                $user = get_user_by( 'ID', $user_id );
+                // update user first name and last name
+                update_user_meta( $user->ID, 'first_name', $field['tfhb_first_name'] );
+                update_user_meta( $user->ID, 'last_name', $field['tfhb_last_name'] );
+
+                // $user->set_role( $user_role );
+                // $response['success'] = true;
+
+                // Check if user is already a host
+                $hostCheck = $host->getHostByUserId( $user_id );
+                if ( ! empty( $hostCheck ) ) {
+                    $response['message'] = esc_html__( 'You are already a host', 'hydra-booking' );
+                    
+                }else{
+                    // insert host
+                    $data = array(
+                        'user_id'        => $user->ID,
+                        'first_name'     => get_user_meta( $user->ID, 'first_name', true ) != '' ? get_user_meta( $user->ID, 'first_name', true ) : $user->display_name,
+                        'last_name'      => get_user_meta( $user->ID, 'last_name', true ) != '' ? get_user_meta( $user->ID, 'last_name', true ) : '',
+                        'email'          => $user->user_email,
+                        'phone_number'   => '',
+                        'time_zone'      => '',
+                        'about'          => '',
+                        'avatar'         => '',
+                        'featured_image' => '',
+                        'status'         => 'activate',
+                    );
+            
+                    // get Default Availability
+                    $Availability = new Availability();
+                    
+                    // get default availability
+                    $getAvailability = $Availability->get(
+                        array(
+                            'default_status' => true,
+                        ),
+                        false,
+                        true,
+                    );
+                    if($getAvailability){
+                         $data['availability_type'] = 'settings';
+                         $data['availability_id'] = $getAvailability->id;
+                    }  
+            
+            
+                    // Insert Host
+                    $hostInsert = $host->add( $data );
+                    if ( $hostInsert ) {
+                        $response['success'] = true;
+                        $response['message'] = esc_html__( 'Your account has been created successfully. You can login now.', 'hydra-booking' );
+                    }
+                }
+
+                
+            }
+       }
+
+ 
+        // return response
+        wp_send_json( $response );
+
+     }
  
 
 }
