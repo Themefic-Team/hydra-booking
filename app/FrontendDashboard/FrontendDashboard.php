@@ -37,9 +37,7 @@ class FrontendDashboard {
         add_filter( 'theme_page_templates', array( $this, 'set_page_template' ), 10, 4 );
 
         add_filter( 'page_template', array( $this, 'load_page_templates' ) );
-
-        
-
+ 
        
     }
 

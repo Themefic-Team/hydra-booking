@@ -38,21 +38,40 @@ class Login {
 
      public function hydra_login_form_shortcode() {
        
+         // Enqueue Login Script
+		if ( ! wp_script_is( 'tfhb-app-login', 'enqueued' ) ) {
+			wp_enqueue_script( 'tfhb-app-login' );
+		}
+        
 		// Start Buffer
 		ob_start(); 
 
-        ?>
+        if( is_user_logged_in() ) {
+            ?>
+            <div class="tfhb-frontend-from">
+                <div class="tfhb-frontend-from__title">
+                    <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
+                    <!-- go to dashboard button -->
+
+                    <a href="#">Go to dashboard</a>
+                    
+                </div>
+        <?php 
+            return ob_get_clean();
+        }  ?>
+
         <div class="tfhb-frontend-from">
             <div class="tfhb-frontend-from__title">
-                <h3>Welcome back</h3>
-                <p>Please enter your details.</p>
+                <h3><?php echo esc_html(__('Welcome back', 'hydra-booking')) ?></h3>
+                <p><?php echo  esc_html(__('Please enter your details.', 'hydra-booking')) ?></p>
             </div>
-            <form action="">
+            <form action="" id="tfhb-login-from">
+                <?php wp_nonce_field( 'tfhb_check_login_nonce', 'tfhb_login_nonce' ); ?>
                 <div class="tfhb-frontend-from__field-wrap">
                  
 
                     <div class="tfhb-frontend-from__field-item">
-                        <label for="username">Username or Email</label> 
+                        <label for="tfhb_login_user"><?php echo  esc_html(__('Username or Email', 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,13 +79,13 @@ class Login {
                                     <path d="M16.6666 17.4987C16.6666 15.7306 15.9642 14.0349 14.714 12.7847C13.4637 11.5344 11.768 10.832 9.99992 10.832C8.23181 10.832 6.53612 11.5344 5.28587 12.7847C4.03563 14.0349 3.33325 15.7306 3.33325 17.4987" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </span>
-                            <input type="text" name="username" id="username" placeholder="First Name">
+                            <input type="text" name="tfhb_login_user" id="tfhb_login_user" placeholder="Enter Username or Email">
                         </div>
                     </div>
  
 
                     <div class="tfhb-frontend-from__field-item">
-                        <label for="email">Password</label> 
+                        <label for="tfhb_password"><?php echo  esc_html(__('Password', 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,11 +100,11 @@ class Login {
                                 </defs>
                             </svg>
                             </span>
-                            <input type="password" name="password" id="password" placeholder="Type your password">
+                            <input type="password" name="tfhb_password" id="tfhb_password" placeholder="Type your password">
                         </div>
                     </div>
                     <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--right">
-                         <p><a href="#">Forget Passwords?</a></p>
+                         <p><a href="#"><?php echo  esc_html(__('Forget Passwords?', 'hydra-booking')) ?></a></p>
                     </div>
   
                     <div class="tfhb-frontend-from__field-item">
@@ -107,17 +126,78 @@ class Login {
                     </div>
 
                     <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
-                         <p>Need an account ? <a href="#">Sign up</a></p>
+                         <p><?php  echo  esc_html(__('Need an account ?', 'hydra-booking')) ?>  <a href="#"><?php esc_html(__('Sign ups', 'hydra-booking')) ?> </a></p>
                     </div>
                    
                 </div>
             </form>
         </div>
-        <?php 
-
-
+        <?php  
         return ob_get_clean();
      }
+
+     /**
+      *  Sign In Callback
+      * 
+      * @return void
+      * @author Sydur Rahman
+      */
+      public function tfhb_sign_in_callback(){
+
+        $response = [
+            'success' => false,
+        ];
+
+        $required_fields = array( 'tfhb_login_user', 'tfhb_password' );
+        // Check nonce security
+        if ( ! isset( $_POST['tfhb_login_nonce'] ) || ! wp_verify_nonce( $_POST['tfhb_login_nonce'], 'tfhb_check_login_nonce' ) ) {
+            $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'tourfic' );
+        } else {
+
+            foreach ( $required_fields as $required_field ) {
+                if ( $required_field === 'tfhb_login_user' && empty( $_POST[ $required_field ] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Username or email is required.', 'tourfic' );
+                } elseif ( $required_field === 'tfhb_password' && empty( $_POST[ $required_field ] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Password is required.', 'tourfic' );
+                }
+            }
+        }
+
+        if ( ! $response['fieldErrors'] ) {
+            // Get data from form
+            $username = sanitize_text_field( $_POST['tfhb_login_user'] );
+            $password = sanitize_text_field( $_POST['tfhb_password'] );
+
+            // Set them in an array
+            $credential = array(
+                'user_login'    => $username,
+                'user_password' => $password,
+                'remember'      => true,
+            );
+
+            require_once( ABSPATH . 'wp-load.php' );
+            // Sending data for login
+            $user = wp_signon( $credential, true );
+
+            // Validation
+            if ( is_wp_error( $user ) ) {
+                $response['message'] = $user->get_error_message();
+            } else {
+                $response['message'] = esc_html__( 'Successfully logged in.', 'tourfic' );
+                $response['success'] = true;
+
+                $response['redirect_url'] = get_permalink( 130 );
+
+                // Set the authentication cookies
+                wp_set_auth_cookie( $user->ID, true );
+            }
+        }
+
+        wp_send_json( $response );
+
+        die();
+
+      }
 
  
 
