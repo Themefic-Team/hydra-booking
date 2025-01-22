@@ -10,7 +10,7 @@ use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
 use HydraBooking\DB\Booking;
 class BookingLocation {
 	public function __construct() {
-		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'addLocation_after_booking_confirmed' ),  20, 1); 
+		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'addLocation_after_booking_confirmed' ),  11, 1); 
 		// add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'addLocation_after_booking_confirmed' ), 10, 1 );
 		// add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 10, 2 );

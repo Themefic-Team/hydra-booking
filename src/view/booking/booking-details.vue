@@ -317,9 +317,10 @@ const TfhbPrevNavigator = () => {
                             <div class="tfhb-b-d-icon-content">
                                 <h5>{{ $tfhb_trans('Location') }}</h5>  
                                 <div v-for=" (address, index) in BookingDetails.location" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: calc(100% - 16px)">
+                                    
                                     <div class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal" v-if="address.location == 'zoom'" >
                                      
-                                        <span>{{ $tfhb_trans('Zoom') }} </span> : {{address.location}} - <div v-html="MakeMeetingLink(address.address.link)"></div>  
+                                        <span>{{ $tfhb_trans('Zoom') }} </span> <span v-html="MakeMeetingLink(address.address.link)"></span>  
                                     </div>
                                     <div class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal meet" v-else-if="address.location == 'meet'" >
                                         
