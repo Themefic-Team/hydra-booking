@@ -102,22 +102,66 @@ class Transactions {
 	/**
 	 * Get all  transactions Data.
 	 */
-	public function get( $id = null ) {
-
+	public function get( $where = null, $limit = null, $orderBy = null ) {
+ 
 		global $wpdb;
-		
-		if ( $id ) {
-			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_transactions WHERE id = %d",$id )
-			);
-		} else {
-			$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_transactions");
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$sql = "SELECT * FROM $table_name";
+
+		$data = [];
+		if($where != null) {
+			
+			foreach ($where as $key => $condition) {
+				$field =  $condition[0];
+				$operator = $condition[1];
+				$value = $condition[2]; 
+				// first lool for USE WHERE after use AND
+				if($operator == 'BETWEEN'){   	
+					if($key == 0){
+						$sql .= " WHERE $field $operator %s AND %s";
+					}else{
+						$sql .= " AND $field $operator %s AND %s";
+					}
+					$data[] = $value[0];
+					$data[] = $value[1]; 
+				}else{
+
+					if($key == 0){
+						$sql .= " WHERE $field $operator %s";
+					}else{
+						$sql .= " AND $field $operator %s";
+					}
+					$data[] = $value;
+				}
+			} 
+		} 
+
+		if($limit != null) {
+			$sql .= " LIMIT %d";
+			$data[] = $limit;
 		}
 
-		// Get all data
+
+		if($orderBy != null) {
+			$sql .= " ORDER BY %s";
+			$data[] = $orderBy;
+		}
+	
+		if($limit == 1){
+			$data = $wpdb->get_row( $wpdb->prepare( $sql, $data ) );
+		}else{ 
+			$data = $wpdb->get_results( $wpdb->prepare( $sql, $data ) );
+		}
+	 
+
 
 		return $data;
+ 
 	}
+
+ 
 
 	public function totalEarning($previous_date, $current_date, $user_id = false) {
 		// where "created_at BETWEEN '$previous_date' AND '$current_date'",  

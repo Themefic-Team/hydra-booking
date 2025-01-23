@@ -12,8 +12,8 @@ use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
-
- 
+use HydraBooking\DB\Transactions;
+use HydraBooking\DB\BookingMeta;
 
 class BookingController {
 
@@ -30,7 +30,7 @@ class BookingController {
 			'hydra-booking/v1',
 			'/booking/lists',
 			array(
-				'methods'  => 'GET',
+				'methods'  => 'POST',
 				'callback' => array( $this, 'getBookingsData' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
@@ -63,6 +63,37 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		// Get Single Booking based on id
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/details/(?P<id>[0-9]+)',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'getBookingDetails' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		// Change Attendee email Attendee.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/change-booking-status',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'changeBookingDetailsStatus' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		// Cancel Booking Attendee.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/cancel-booking-attendee',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'cancelBookingAttendee' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
 		register_rest_route(
 			'hydra-booking/v1',
 			'/booking/update',
@@ -102,7 +133,7 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
-		// booking reminder email Attendee.
+		// Change Attendee email Attendee.
 		register_rest_route(
 			'hydra-booking/v1',
 			'/booking/change-attendee-status',
@@ -112,6 +143,18 @@ class BookingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+		// update booking internal notes
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/update-internal-note',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'updateInternalNotes' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		
 
 		// Pre Booking Data
 		register_rest_route(
@@ -173,6 +216,15 @@ class BookingController {
 
 	// Booking List
 	public function getBookingsData() {
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$filter_data = isset( $request['filter_data'] ) ? $request['filter_data'] : '';
+
+		$filter_type = isset( $filter_data['filter_type'] ) ? $filter_data['filter_type'] : '';
+		$filter_search = isset( $filter_data['filter_search'] ) ? $filter_data['filter_search'] : '';
+		$host_ids = isset( $filter_data['host_ids'] ) ? $filter_data['host_ids'] : '';
+		$meeting_ids = isset( $filter_data['meeting_ids'] ) ? $filter_data['meeting_ids'] : '';
+		$status = isset( $filter_data['status'] ) ? $filter_data['status'] : '';
+		$date_range = isset( $filter_data['date_range'] ) ? $filter_data['date_range'] : ''; 
 
 		$current_user = wp_get_current_user();
 		// get user role
@@ -181,27 +233,68 @@ class BookingController {
 
 		// Booking Lists
 		$booking = new Booking();
+		$where = array();
+
+		if( ! empty( $filter_type ) && $filter_type == 'upcoming' && empty( $date_range['from']) ){ 
+			$where[] = array('meeting_dates', '>=', date('Y-m-d'));
+		}elseif( ! empty( $filter_type ) && $filter_type == 'completed' &&  empty($status) ){   
+			$where[] = array('status', '=', 'completed');
+		}elseif( ! empty( $filter_type ) && $filter_type == 'latest' ){  
+			// based on created date 
+			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
+		}elseif( ! empty( $filter_type ) && $filter_type == 'filter' ){  
+			// filter by host
+			if( ! empty( $host_ids ) ){ 
+				$where[] = array('host_id', 'IN', $host_ids);
+			}
+
+			// filter by meeting
+			if( ! empty( $meeting_ids ) ){ 
+				$where[] = array('meeting_id', 'IN', $meeting_ids);
+			}
+
+			// filter by status
+			if( ! empty( $status ) ){ 
+				$where[] = array('status', 'IN', $status);
+			}
+
+			// filter by date range
+			if( ! empty( $date_range['from'] ) ){   
+
+				$where[] = array('meeting_dates', '>=', date('Y-m-d', strtotime($date_range['from'])));
+				$where[] = array('meeting_dates', '<=', date('Y-m-d', strtotime($date_range['to'])));
+			}
+		}elseif( ! empty( $filter_type ) && $filter_type == 'search' && ! empty( $filter_search ) ){  
+			// based on created date  
+			$where[] = array('meeting.title', 'LIKE', '%'.$filter_search.'%');
+			$where[] = array('attendee.attendee_name', 'LIKE', '%'.$filter_search.'%');
+		}else{
+			// based on created date 
+			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
+		}
 		
+
+
 		
-		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
-			$bookingsList = $booking->getBookingWithAttendees(  
-				null,
-				null,
-				'DESC',
-			); 
+		if ( 'administrator' != $current_user_role && 'tfhb_host' != $current_user_role ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('You are not allowed to access this page', 'hydra-booking'),
+				)
+			);
+			
 		}
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host     = new Host();
 			$HostData = $host->getHostByUserId( $current_user_id );
-			$where = array(
-				array('host_id', '=', $HostData->id),
-			);
- 			$bookingsList = $booking->getBookingWithAttendees(  
-				$where,
-				null,
-				'DESC',
-			); 
+			$where[] = array('host_id', '=', $HostData->id); 
 		}
+		$bookingsList = $booking->getBookingWithAttendees(  
+			$where,
+			null,
+			'DESC',
+		); 
 		 
 
 		$extractedBookings = array_map(
@@ -240,11 +333,63 @@ class BookingController {
 				'host_id'      => $book['host_id'],
 			);
 		}
+		// make list based on date
+		$booking_list = array_values(array_reduce($bookingsList , function($carry, $item) {
+			$dates = explode(',', $item->meeting_dates);
+			
+			foreach ($dates as $kye => $date) {
+				
+				$carry[$date]['date'] = $date;
+				$carry[$date]['bookings'][] = $item;
+			}
+			return $carry;
+		}, [])); 
+		if( ! empty( $filter_type )  ){
+			// Current date
+			$currentDateTime = new \DateTime( date( 'Y-m-d' ) );
+			
+			if($filter_type == 'upcoming'){
+				// Filter out dates that are before the current date
+				$filteredData = array_filter($booking_list, function ($item) use ($currentDateTime) {
+					$date = new \DateTime($item['date']);
+					return $date >= $currentDateTime;
+				});
+				// Sort the data by date in ascending order
+				usort($filteredData, function ($a, $b) {
+					return strcmp($a['date'], $b['date']);
+				});
+				
+			}else{
 
+				$filteredData = $booking_list;
+			} 
+			// Sort bookings within each date by time
+			foreach ($filteredData as &$dateData) { 
+
+				usort($dateData['bookings'], function ($a, $b) {
+					$timeA = \DateTime::createFromFormat('h:i A', $a->start_time);
+					$timeB = \DateTime::createFromFormat('h:i A', $b->start_time);
+					return $timeA <=> $timeB;
+				});
+
+				if( ! empty( $filter_type ) && $filter_type == 'upcoming' ){ 
+					// current date is today make it today
+					if($dateData['date'] == date('Y-m-d')){
+						$dateData['date'] = 'Today';
+					}
+					// current date is tomorrow make it tomorrow
+					if($dateData['date'] == date('Y-m-d', strtotime('+1 day'))){
+						$dateData['date'] = 'Tomorrow';
+					}
+				}
+				
+			}
+			$booking_list = $filteredData;
+		} 
 		// Return response
 		$data = array(
 			'status'           => true,
-			'bookings'         => $bookingsList,
+			'bookings'         => $booking_list,
 			'booking_calendar' => $booking_array,
 			'message'          => 'Booking Data Successfully Retrieve!',
 		);
@@ -812,10 +957,70 @@ class BookingController {
 		}
 	}
 
+	/*
+	 * Update booking internal note
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * 
+	 */
+
+	 public function updateInternalNotes(){
+		$bookingMeta = new BookingMeta();
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$booking_id =  isset( $request['booking_id'] ) ? $request['booking_id'] : 0;
+		$internal_note =  isset( $request['internal_note'] ) ? $request['internal_note'] : '';
+
+		if( empty( $booking_id ) && $booking_id == 0 ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+		$get_internal_note = $bookingMeta->getWithIdKey( $booking_id, 'internal_note', 1 );
+		if($get_internal_note){
+			// update
+			$bookingMeta->update( 
+				array(
+					'id' => $get_internal_note->id, 
+					'value' => $internal_note,
+				)
+			 );
+			 
+			 $data = array(
+				'status'  => true,
+				'message' =>  __('Internal Note Updated Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
+		}else{
+			// insert
+			$bookingMeta->add( 
+				array(
+					'booking_id' => $booking_id,
+					'meta_key' => 'internal_note',
+					'value' => $internal_note,
+				)
+			 );
+			 
+			 $data = array(
+				'status'  => true,
+				'message' =>  __('Internal Note Added Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
+		}
+
+	 }
+
+
+
+
 	// Get Single Booking
 	public function getBookingData( $request ) {
-		$booking_id = $request['id'];
-
+		$booking_id = $request['id']; 
 		// Check if user is already a booking
 		$booking = new Booking();
 		// Insert booking
@@ -889,6 +1094,242 @@ class BookingController {
 		return rest_ensure_response( $data );
 	}
 
+	// Get booking Details Data getBookingDetails
+
+	public function getBookingDetailsData($booking_id){
+		$booking = new Booking();
+		
+		$where = array(
+			array('id', '=', $booking_id),
+		);
+		 $bookingsList = $booking->getBookingWithAttendees(  
+			$where,
+			limit: 1,  
+		); 
+		
+		if( empty( $bookingsList ) ){
+			return [];
+		}
+ 
+		$attendeesData = $bookingsList->attendees;
+		$transactions = new Transactions();
+		foreach ($attendeesData as $key => $attendee) {
+
+			// json decode others info
+			if($attendeesData[$key]->others_info){
+				$attendeesData[$key]->others_info = json_decode($attendeesData[$key]->others_info);
+			}
+
+			$where = array(
+				array('attendee_id', '=', $attendee->id),
+			);
+			$transaction = $transactions->get( $where, 1 );
+			if($transaction != null || !empty($transaction)){ 
+				$transaction->transation_history = json_decode($transaction->transation_history);
+
+				$attendeesData[$key]->transaction =  $transaction;
+			}
+
+		}
+
+		return  $bookingsList;
+	}
+
+	/**
+	 * Get Booking Details
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * @Author: Sydur Rahman
+	 * 
+	 */
+	public function getBookingDetails( $request ) {
+		$booking_id = $request['id']; 
+
+		if(empty($booking_id)){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+		
+		$bookingsList = $this->getBookingDetailsData($booking_id);
+		$bookingMeta = new BookingMeta();
+		$booking_activity = $bookingMeta->getWithIdKey ( $booking_id, 'booking_activity', null); 
+
+		$get_internal_note = $bookingMeta->getWithIdKey( $booking_id, 'internal_note', 1 );
+		// tfhb_print_r($get_internal_note);
+		$internal_note = $get_internal_note->value;
+
+		if( empty( $bookingsList ) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+
+
+		 $data = array(
+			'status'  => true,
+			'booking' => $bookingsList,
+			'booking_activity' => $booking_activity,
+			'internal_note' => $internal_note,
+			'message' =>  __('Booking Data Successfully Retrieve!', 'hydra-booking'),
+		);
+		return rest_ensure_response( $data );
+	}
+
+
+		/**
+	 * Export Booking Data as CSV
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * @author Sydur Rahman 
+	 * 
+	 */
+
+	 public function changeBookingDetailsStatus( $request ) {
+		$booking_id = $request['booking_id'];
+		$status     = $request['status'];
+		if ( empty( $booking_id ) || $booking_id == 0 ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('Invalid Booking', 'hydra-booking'),
+				)
+			);
+		}
+		 
+
+		// Check if user is already a booking
+		$booking = new Booking();  
+		// Update Booking Status
+		$bookingUpdate = $booking->update( array( 'id' => $booking_id, 'status' => $status ) );
+
+		if( $bookingUpdate ){ 
+
+			if ( 'completed' == $status ) {
+				// do_action( 'hydra_booking/after_booking_completed', $single_booking_meta );
+				$bookingMeta = new BookingMeta();
+				$bookingMeta->add([
+					'booking_id' => $booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							
+							'datetime' => date('M d, Y, h:i A'),
+							'title' =>  esc_html(__(  'Booking has been completed', 'hydra-booking')),
+							'description' => '',
+						)
+					]
+				);
+			}
+ 
+		}
+		$bookingsList = $this->getBookingDetailsData($booking_id);
+ 
+		$data = array(
+			'status'  => true,
+			'booking' => $bookingsList,
+			'message' => __('Booking Status Updated Successfully!', 'hydra-booking'),
+		);
+		return rest_ensure_response( $data );
+	}
+
+	/**
+	 * Export Booking Data as CSV
+	 *
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @since 1.0.16
+	 * @author Sydur Rahman
+	 * 
+	 * 
+	 */
+
+	 public function  cancelBookingAttendee( $request ) {
+
+		$attendee_id = $request['id'];
+		$booking_id = $request['booking_id'];
+		$status     =  $request['status'];
+		$cancel_reason =  $request['cancel_reason']; 
+		if ( empty( $attendee_id ) || $attendee_id == 0 ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('Invalid Attendee', 'hydra-booking'),
+				)
+			);
+		}
+
+		$Attendee = new Attendees();
+
+		 $update_data = array(
+
+			'id' => $attendee_id,
+			'status' => $status,
+			'reason' => $cancel_reason,
+			'cancelled_by' => 'host',
+		);
+
+		$attendeeUpdate = $Attendee->update( $update_data );
+
+		if( $attendeeUpdate ){ 
+			
+			$bookingsList = $this->getBookingDetailsData($booking_id);
+			$data = array(
+				'status'  => true,
+				'booking' => $bookingsList,
+				'message' => __('Attendee Status Updated Successfully!', 'hydra-booking'),
+			);
+
+			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+				array(
+					array('id', '=', $attendee_id),
+				),
+				1,
+				'DESC'
+			 ); 
+			 // Add activity 
+			$bookingMeta = new BookingMeta();
+			$bookingMeta->add([
+				'booking_id' => $attendeeBooking->booking_id,
+				'meta_key' => 'booking_activity',
+				'value' => array(
+						 
+						'datetime' => date('M d, Y, h:i A'),
+						'title' => esc_html(__(  'A attendee has been canceled by host', 'hydra-booking')),
+						'description' => $cancel_reason,
+					)
+				]
+			);
+			if ( 'canceled' == $status ) {
+				do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
+			}
+
+
+			return rest_ensure_response( $data );
+		}else{
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('Error while updating Attendee Status', 'hydra-booking'),
+				)
+			);
+		}
+
+	 }
+
+
 	// Update Booking Information
 	public function updateBooking() {
 		
@@ -909,77 +1350,14 @@ class BookingController {
 			'id'     => $request['id'],
 			'status' => isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '',
 		);
-
-		$Attendee = new Attendees();
+ 
 		$booking = new Booking();
 		// Booking Update
-		$bookingUpdate = $booking->update( $data );
-
-		$host = new Host();
-		$hostData = $host->getHostById( $booking_owner );
-
-		$current_user = get_userdata( $hostData->user_id );
+		 $booking->update( $data );
+ 
+ 
 		$booking = new Booking();
-		// get user role
-		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
-		$current_user_id   = $current_user->ID;
-
-		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
-			$bookingsList = $booking->getBookingWithAttendees(  
-				null,
-				null,
-				'DESC',
-			); 
-		}
-		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
-			$host         = new Host();
-			$HostData     = $host->getHostByUserId( $current_user_id ); 
-			$where = array(
-				array('host_id', '=', $HostData->id),
-			);
- 			$bookingsList = $booking->getBookingWithAttendees(  
-				$where,
-				null,
-				'DESC',
-			); 
-		} 
-		$extractedBookings = array_map(
-			function ( $booking ) {
-				return array(
-					'id'            => $booking->id,
-					'title'         => $booking->title,
-					'meeting_dates' => $booking->meeting_dates,
-					'start_time'    => $booking->start_time,
-					'end_time'      => $booking->end_time,
-					'status'        => $booking->booking_status,
-					'host_id'       => $booking->host_id,
-				);
-			},
-			$bookingsList
-		);
-
-		$booking_array = array();
-		foreach ( $extractedBookings as $book ) {
-			// Convert start and end times to 24-hour format
-			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
-			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
-
-			$dates = explode( ',', $book['meeting_dates'] );
-			$first_date = $dates[0];
-
-			$booking_array[] = array(
-				'booking_id'   => $book['id'],
-				'title'        => $book['title'],
-				'start'        => $first_date . 'T' . $start_time_24hr,
-				'end'          => $first_date . 'T' . $end_time_24hr,
-				'status'       => $book['status'],
-				'booking_date' => $first_date,
-				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
-				'host_id'      => $book['host_id'],
-			);
-		}
-
-		
+ 
 		// Single Booking
 		 
 		$where = array(
@@ -1010,9 +1388,7 @@ class BookingController {
 
 		// Return response
 		$data = array(
-			'status'           => true,
-			'booking'          => $bookingsList,
-			'booking_calendar' => $booking_array,
+			'status'           => true, 
 			'message'          =>  __('Booking Updated Successfully!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );

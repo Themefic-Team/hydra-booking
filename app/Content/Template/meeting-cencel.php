@@ -37,14 +37,14 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 					<ul>
 						<li class="tfhb-flexbox tfhb-gap-8">
 							<div class="tfhb-icon">
-								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
+								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/user.svg'); ?>" alt="User">
 							</div>
 							<?php echo ! empty( $data->host_first_name ) ? '' . esc_html( $data->host_first_name ) . '  ' . esc_html( $data->host_last_name ) . '' : ''; ?>
 							<span>Host</span>
 						</li>
 						<li class="tfhb-flexbox tfhb-gap-8">
 							<div class="tfhb-icon">
-								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
+								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/Meeting.svg'); ?>" alt="Meeting">
 							</div>
 							<!--date stored in this format  2024-05-24  9:00pm-9:45pm, Saturday, April 25 -->
 							<?php
@@ -63,7 +63,7 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 						</li>
 						<li class="tfhb-flexbox tfhb-gap-8">
 							<div class="tfhb-icon">
-								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/location.svg'); ?>" alt="User">
+								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/location.svg'); ?>" alt="location">
 							</div>
 							<!-- Asia/Dhaka  -->
 							<?php echo ! empty( $data->attendee_time_zone ) ? '' . esc_html( $data->attendee_time_zone ) . '' : ''; ?>

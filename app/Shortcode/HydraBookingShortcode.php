@@ -627,7 +627,7 @@ class HydraBookingShortcode {
 			1,
 			'DESC'
 		); 
-		 
+ 
 		if($attendeeBooking->status == 'confirmed'){
 			// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
 			do_action( 'hydra_booking/after_booking_confirmed', $attendeeBooking ); 
@@ -972,7 +972,7 @@ class HydraBookingShortcode {
 			),
 			1,
 			'DESC'
-		);  
+		);   
  
 		if ( ! $attendeeBooking ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid Booking ID', 'hydra-booking')) ) );
@@ -986,9 +986,20 @@ class HydraBookingShortcode {
 			'cancelled_by' => 'attendee',
 		); 
 
+		
 		$Attendee->update( $attendee_data );
 
 
+		// if booking type is one-to-one then Cancel booking status
+		if('one-to-one' == $attendeeBooking->booking_type){
+			$booking = new Booking();
+			$booking->update( 
+				array(
+					'id' => $attendeeBooking->booking_id,
+					'status' => 'canceled'
+				) 
+			);
+		}
 
 		// Before Booking After Cancel
 		do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
