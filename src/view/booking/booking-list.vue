@@ -135,10 +135,7 @@ const singleBookingData = ref('');
 const Tfhb_Booking_View = async (id) => {  
     //  go to booking details page
     router.push({ name: 'bookingDetails', params: { id: id } });
-
-    // singleBookingData.value = data;
-    // BookingDetailsPopup.value = true;
-    // TfhbFormatMeetingLocation(data.meeting_locations);
+ 
 }
 
 
@@ -1115,10 +1112,15 @@ const changeToDate = (value) => {
         </div>
     </div>
 </div>
+
 <div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
     <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-    <p>{{ $tfhb_trans('No Booking Found') }}</p>
+    <p v-if="Booking.filter_data.filter_type == 'upcoming'">{{ $tfhb_trans('No upcoming booking found') }} </p>
+    <p v-if="Booking.filter_data.filter_type == 'completed'">{{ $tfhb_trans('No completed booking found') }} </p>
+    <p v-if="Booking.filter_data.filter_type == 'latest'">{{ $tfhb_trans('No latest booking found') }} </p>
+    <p v-else>{{ $tfhb_trans('No booking found') }} </p>
 </div>
+{{Booking.filter_data.filter_type}}
 </template>
 
 <style scoped>

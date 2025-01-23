@@ -269,8 +269,7 @@ class BookingController {
 			$where[] = array('meeting.title', 'LIKE', '%'.$filter_search.'%');
 			$where[] = array('attendee.attendee_name', 'LIKE', '%'.$filter_search.'%');
 		}else{
-			// based on created date 
-			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
+			// Get all order by desc 
 		}
 		
 
