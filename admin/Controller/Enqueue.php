@@ -49,7 +49,7 @@ class Enqueue {
 			// get current page and page template
 			$current_page = get_queried_object();
 			$page_template = get_page_template_slug( $current_page->ID );
-			if ( 'frontend-dashboard.php' !== $page_template ) {
+			if ( 'tfhb-frontend-dashboard.php' !== $page_template ) {
 				return;
 			}
 			$front_end_dashboard = true;

@@ -42,6 +42,12 @@ class Login {
 		if ( ! wp_script_is( 'tfhb-app-login', 'enqueued' ) ) {
 			wp_enqueue_script( 'tfhb-app-login' );
 		}
+        // Get Option
+        $settings = get_option('_tfhb_frontend_dashboard_settings');
+        $registration_page_id = isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
+        $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
+        
+
         
 		// Start Buffer
 		ob_start(); 
@@ -53,7 +59,7 @@ class Login {
                     <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
                     <!-- go to dashboard button -->
 
-                    <a href="#">Go to dashboard</a>
+                    <a href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>">Go to dashboard</a>
                     
                 </div>
         <?php 
@@ -126,7 +132,7 @@ class Login {
                     </div>
 
                     <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
-                         <p><?php  echo  esc_html(__('Need an account ?', 'hydra-booking')) ?>  <a href="#"><?php esc_html(__('Sign ups', 'hydra-booking')) ?> </a></p>
+                         <p><?php  echo  esc_html(__('Need an account ?', 'hydra-booking')) ?>  <a href="<?php echo get_permalink( $registration_page_id ) ?>"><?php echo esc_html(__('Sign up', 'hydra-booking')) ?> </a></p>
                     </div>
                    
                 </div>
@@ -186,7 +192,19 @@ class Login {
                 $response['message'] = esc_html__( 'Successfully logged in.', 'tourfic' );
                 $response['success'] = true;
 
-                $response['redirect_url'] = get_permalink( 130 );
+                $settings = get_option('_tfhb_frontend_dashboard_settings');
+                $after_login_redirect_type = isset($settings['login']['after_login_redirect_type']) && !empty($settings['login']['after_login_redirect_type']) ? $settings['login']['after_login_redirect_type'] :  'page';
+
+                $after_login_redirect = isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
+                $after_login_redirect_custom = isset($settings['login']['after_login_redirect_custom']) && !empty($settings['login']['after_login_redirect_custom']) ? $settings['login']['after_login_redirect_custom'] :  '';
+
+                if('page' == $after_login_redirect_type || empty($after_login_redirect_custom)){
+                    $response['redirect_url'] = get_permalink( $after_login_redirect );
+                }else{ 
+                    $response['redirect_url'] = esc_url($after_login_redirect_custom);
+                }
+                 
+
 
                 // Set the authentication cookies
                 wp_set_auth_cookie( $user->ID, true );

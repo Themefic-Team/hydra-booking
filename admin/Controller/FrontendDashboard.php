@@ -58,20 +58,34 @@ class FrontendDashboard {
         $page_list = [];
         foreach ($pages as $page) {
             $page_list[] = array(
-                'value' => $page->ID,
+                'value' => strval($page->ID),
                 'name' => $page->post_title
             );
         }
 
         // get frontend Dashboard Settings
         $frontend_dashboard_settings = get_option('_tfhb_frontend_dashboard_settings');
-        $frontend_dashboard_settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings : array();
+        $settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings : array();
+        
+        $settings['signup']['registration_page'] =  isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
+
+        $settings['signup']['after_registration_redirect_type'] =  isset($settings['signup']['after_registration_redirect_type']) && !empty($settings['signup']['after_registration_redirect_type']) ? $settings['signup']['after_registration_redirect_type'] :  'page';
+        $settings['signup']['after_registration_redirect'] =  isset($settings['signup']['after_registration_redirect']) && !empty($settings['signup']['after_registration_redirect']) ? $settings['signup']['after_registration_redirect'] :  get_option( 'tfhb_login_page_id' );
+
+        // Login
+        $settings['login']['login_page'] =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
+
+        $settings['login']['after_login_redirect_type'] =  isset($settings['login']['after_login_redirect_type']) && !empty($settings['login']['after_login_redirect_type']) ? $settings['login']['after_login_redirect_type'] :  'page';
+        $settings['login']['after_login_redirect'] =  isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
+ 
+
+        
 
         // return response
         $data = array(
             'status' => true,
             'pages' => $page_list,
-            'settings' => $frontend_dashboard_settings
+            'settings' => $settings
         );
 
         return rest_ensure_response($data);

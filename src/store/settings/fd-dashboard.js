@@ -37,7 +37,9 @@ const FrontendDashboard = reactive({
     
             if (response.data.status) { 
                 // response.data.settings not empty then set value
-                this.fd_dashboard =  response.data.settings ? response.data.settings : this.fd_dashboard;
+                this.fd_dashboard.general =  response.data.settings.general ? response.data.settings.general : this.fd_dashboard.general;
+                this.fd_dashboard.signup =  response.data.settings.signup ? response.data.settings.signup : this.fd_dashboard.signup;
+                this.fd_dashboard.login =  response.data.settings.login ? response.data.settings.login : this.fd_dashboard.login;
                 this.pages = response.data.pages; 
                 this.skeleton = false;
                  

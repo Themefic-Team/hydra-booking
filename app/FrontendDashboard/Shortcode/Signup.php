@@ -182,8 +182,9 @@ class Signup {
                         </button>
                     </div>
 
-                    <div class="tfhb-frontend-from__field-item--center">
+                    <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
                          <p>Already have an account? <a href="#">Login</a></p>
+                         
                     </div>
                    
                 </div>

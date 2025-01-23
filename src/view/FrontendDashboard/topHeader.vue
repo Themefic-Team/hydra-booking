@@ -1,7 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, onBeforeMount } from 'vue'; 
-import { onBeforeRouteLeave  } from 'vue-router' 
+import { ref, onBeforeMount, computed,  watch } from 'vue'; 
+import { onBeforeRouteLeave, useRoute  } from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 const props = defineProps([
     'title',
@@ -66,8 +66,23 @@ onBeforeRouteLeave((to, from, next) => {
 
 const profileDropdown = ref(false);
 
-// Click outside the dropdown
+const route = useRoute();
+const pageTitle = computed(() => {
+  if (route.path === '/') {
+    return 'Dashboard';
+  } 
+  else if (route.path.includes('/meetings')) {
+    return 'Hydra - About Us';
+  }
+  else {
+    return '';
+  }
+});
 
+// Update document title whenever pageTitle changes
+watch(pageTitle, (newTitle) => {
+  document.title = newTitle;
+}, { immediate: true });
 </script>
 
 
@@ -75,7 +90,8 @@ const profileDropdown = ref(false);
     <div class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox tfhb">
             <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16" style="min-width:254px;">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <img :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">
+                <!-- <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="32" height="32" rx="8" fill="url(#paint0_radial_5202_17492)"/>
                     <path d="M17.4872 24.1299L13.0694 19.712L12.0241 18.6668L11.4109 18.0536L8.99991 15.6426V25.7744H17.4872C17.9889 25.7744 18.4767 25.7047 18.9366 25.5793L17.4872 24.1299Z" fill="white"/>
                     <path d="M13.0694 16.3818L8.99991 12.3124V6.25H9.71067L12.5676 9.10698L16.442 12.9953L13.0694 16.3818Z" fill="white"/>
@@ -89,11 +105,11 @@ const profileDropdown = ref(false);
                     </defs>
                 </svg>
 
-                <h2 class="tfhb-admin-header-title">HydraBooking</h2>
+                <h2 class="tfhb-admin-header-title">HydraBooking</h2> -->
             </div>
             <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16">
             
-                <h2 class="tfhb-admin-header-title">{{ props.title }}</h2>
+                <h2 class="tfhb-admin-header-title">{{ pageTitle }}</h2>
             </div>
         </div>
         

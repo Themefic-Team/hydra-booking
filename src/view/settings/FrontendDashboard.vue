@@ -38,8 +38,7 @@ onBeforeMount(() => {
                     
                 </ul>  
             </nav>
-            <div class="tfhb-hydra-content-wrap">      
-             
+            <div class="tfhb-hydra-content-wrap">       
                 <router-view 
                 :FrontendDashboard="FrontendDashboard"
                 />
