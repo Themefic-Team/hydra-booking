@@ -72,7 +72,13 @@ const pageTitle = computed(() => {
     return 'Dashboard';
   } 
   else if (route.path.includes('/meetings')) {
-    return 'Hydra - About Us';
+    return 'Meetings';
+  }
+  else if (route.path.includes('/hosts')) {
+    return 'Hosts';
+  }
+  else if (route.path.includes('/settings')) {
+    return 'Settings';
   }
   else {
     return '';
@@ -91,25 +97,11 @@ watch(pageTitle, (newTitle) => {
         <div class="tfhb-flexbox tfhb">
             <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16" style="min-width:254px;">
                 <img :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">
-                <!-- <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="32" height="32" rx="8" fill="url(#paint0_radial_5202_17492)"/>
-                    <path d="M17.4872 24.1299L13.0694 19.712L12.0241 18.6668L11.4109 18.0536L8.99991 15.6426V25.7744H17.4872C17.9889 25.7744 18.4767 25.7047 18.9366 25.5793L17.4872 24.1299Z" fill="white"/>
-                    <path d="M13.0694 16.3818L8.99991 12.3124V6.25H9.71067L12.5676 9.10698L16.442 12.9953L13.0694 16.3818Z" fill="white"/>
-                    <path d="M23.1176 19.6575L18.1144 14.6543L17.4872 15.2814L15.5501 17.2186L14.7278 18.0409L17.4733 20.7863L21.1107 24.4238C22.3371 23.3925 23.1176 21.8316 23.1176 20.1035C23.1315 19.9641 23.1315 19.8108 23.1176 19.6575Z" fill="white"/>
-                    <path d="M22.797 9.97104C22.5183 9.20453 22.0723 8.50771 21.5009 7.93631C20.4835 6.89108 19.0481 6.25 17.4733 6.25H13.0415L14.1424 7.35098L22.0444 15.253C22.7412 14.3192 23.1454 13.1625 23.1454 11.9082C23.1315 11.2253 23.02 10.5703 22.797 9.97104Z" fill="white"/>
-                    <defs>
-                    <radialGradient id="paint0_radial_5202_17492" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 32) rotate(-90) scale(32)">
-                    <stop stop-color="#2E6B38"/>
-                    <stop offset="1" stop-color="#4C9959"/>
-                    </radialGradient>
-                    </defs>
-                </svg>
-
-                <h2 class="tfhb-admin-header-title">HydraBooking</h2> -->
+                 
             </div>
             <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16">
             
-                <h2 class="tfhb-admin-header-title">{{ pageTitle }}</h2>
+                <h2 class="tfhb-admin-header-title">{{ $tfhb_trans(pageTitle) }}</h2>
             </div>
         </div>
         
