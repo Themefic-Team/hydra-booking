@@ -301,7 +301,7 @@ class Signup {
                         'about'          => '',
                         'avatar'         => '',
                         'featured_image' => '',
-                        'status'         => 'activate',
+                        'status'         => 'deactivate',
                     );
             
                     // get Default Availability
