@@ -44,6 +44,17 @@ class FrontendDashboard {
         // add post state
 		add_filter( 'display_post_states', array( $this, 'tfhb_add_post_state' ), 10, 2 );
 
+        
+        add_filter( 'query_vars', array( $this, 'tfhb_single_query_vars' ) );
+
+        add_rewrite_rule(
+			'^meeting/([0-9]+)/?$',
+			'index.php?hydra-booking=email-verification&tfhb_verification=$matches[1]',
+			'top'
+		);
+        
+
+        add_filter( 'template_include', array( $this, 'tfhb_single_page_template' ) );
  
        
     }
@@ -63,6 +74,20 @@ class FrontendDashboard {
 
     }
 
+    public function tfhb_single_query_vars( $query_vars ) {
+        $query_vars[] = 'tfhb_verification';
+        return $query_vars;
+    }
+
+
+    public function tfhb_single_page_template( $template ) {
+
+        if ( get_query_var( 'hydra-booking' ) === 'email-verification' && get_query_var( 'tfhb_verification' ) ) {
+            $template = TFHB_FD_DASHBOARD_TEMPLATE_PATH . 'email-verification.php';
+        }
+
+        return $template;
+    }
     /**
      * Load Frontend Dashboard
      * 

@@ -59,9 +59,10 @@ class Login {
                     <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
                     <!-- go to dashboard button -->
 
-                    <a href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>">Go to dashboard</a>
+                    <a href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
                     
                 </div>
+            </div>
         <?php 
             return ob_get_clean();
         }  ?>
@@ -89,7 +90,6 @@ class Login {
                         </div>
                     </div>
  
-
                     <div class="tfhb-frontend-from__field-item">
                         <label for="tfhb_password"><?php echo  esc_html(__('Password', 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
@@ -115,7 +115,7 @@ class Login {
   
                     <div class="tfhb-frontend-from__field-item">
                         <button type="submit">
-                            Login
+                            <?php echo esc_html(__('Login', 'hydra-booking')) ?>
                             <span>
                                 <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_6411_13565)">
