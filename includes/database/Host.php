@@ -85,7 +85,9 @@ class Host {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-				$request['others_information'] = wp_json_encode( $request['others_information'] );
+		if(is_array($request['others_information'])){ 
+			$request['others_information'] = wp_json_encode( $request['others_information'] );
+		}
 
 		$id = $request['id'];
 		unset( $request['id'] );
@@ -103,7 +105,7 @@ class Host {
 		} else {
 			return array(
 				'status'    => true,
-				'update_id' => $wpdb->insert_id,
+				'update_id' => $id,
 			);
 		}
 	}

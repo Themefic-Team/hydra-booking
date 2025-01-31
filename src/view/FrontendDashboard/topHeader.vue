@@ -157,8 +157,11 @@ watch(pageTitle, (newTitle) => {
  
                 <transition  name="tfhb-dropdown-transition">
                     <div v-show="profileDropdown == true"  class="tfhb-dropdown-wrap"> 
-                        <span class="tfhb-dropdown-single" ><Icon name="User" size=16 /> {{ $tfhb_trans('My Account') }} </span>
-                
+                        <router-link  class="tfhb-dropdown-single" to="/frontend-dashboard/profile" exact >
+                                <Icon name="User" size=16 /> 
+                                {{ $tfhb_trans('My Account') }}
+                            </router-link>
+                      
                         <span class="tfhb-dropdown-single tfhb-dropdown-error"@click="FdDashboard.logoutUser"><Icon name="LogOut" size=16 />{{ $tfhb_trans('Logout') }}</span>
                     </div>
                 </transition>

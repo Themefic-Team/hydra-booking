@@ -47,7 +47,8 @@ class Login {
         $registration_page_id = isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
         $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
         
-
+        $forget_url = get_site_url() . '/?hydra-booking=forgot-password';
+       
         
 		// Start Buffer
 		ob_start(); 
@@ -110,7 +111,7 @@ class Login {
                         </div>
                     </div>
                     <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--right">
-                         <p><a href="#"><?php echo  esc_html(__('Forget Passwords?', 'hydra-booking')) ?></a></p>
+                         <p><a href="<?php echo esc_url($forget_url); ?>"><?php echo  esc_html(__('Forget Passwords?', 'hydra-booking')) ?></a></p>
                     </div>
   
                     <div class="tfhb-frontend-from__field-item">
