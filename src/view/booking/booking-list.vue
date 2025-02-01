@@ -610,21 +610,21 @@ const changeToDate = (value) => {
                                 v-model="Booking.filter_data.host_ids" 
                                 :selected = "1"
                                 @add-change="Booking.fetchBookings()"
-                                :placeholder="$tfhb_trans('Select Host : All')"   
+                                :placeholder="$tfhb_trans('Host : All')"   
                                 :option = "Host.hosts" 
                             /> 
                             <HbMultiSelect  
                                 v-model="Booking.filter_data.meeting_ids"  
                                 :selected = "1"
                                 @add-change="Booking.fetchBookings()"
-                                :placeholder="$tfhb_trans('Select Meeting : All')"   
+                                :placeholder="$tfhb_trans('Meeting : All')"   
                                 :option = "getMeetingList(Meeting.meetings)" 
                             /> 
                             <HbMultiSelect  
                                 v-model="Booking.filter_data.status" 
                                 :selected = "1"
                                 @add-change="Booking.fetchBookings()"
-                                :placeholder="$tfhb_trans('Select Status : All')"   
+                                :placeholder="$tfhb_trans('Status : All')"   
                                 :option = "[
                                     {'name': 'Pending', 'value': 'pending'},  
                                     {'name': 'Confirmed', 'value': 'confirmed'},    
@@ -1116,11 +1116,11 @@ const changeToDate = (value) => {
 <div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
     <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
     <p v-if="Booking.filter_data.filter_type == 'upcoming'">{{ $tfhb_trans('No upcoming booking found') }} </p>
-    <p v-if="Booking.filter_data.filter_type == 'completed'">{{ $tfhb_trans('No completed booking found') }} </p>
-    <p v-if="Booking.filter_data.filter_type == 'latest'">{{ $tfhb_trans('No latest booking found') }} </p>
+    <p v-else-if="Booking.filter_data.filter_type == 'completed'">{{ $tfhb_trans('No completed booking found') }} </p>
+    <p v-else-if="Booking.filter_data.filter_type == 'latest'">{{ $tfhb_trans('No latest booking found') }} </p>
     <p v-else>{{ $tfhb_trans('No booking found') }} </p>
 </div>
-{{Booking.filter_data.filter_type}}
+ 
 </template>
 
 <style scoped>

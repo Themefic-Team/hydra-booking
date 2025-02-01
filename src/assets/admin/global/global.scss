@@ -44,8 +44,9 @@
     h5,
     h6 {
         font-weight: $font-weight-medium;
-        color: $text-paragraph;
+        color: $text-title;
         margin: 4px 0;
+        line-height: 1.5;
     }
 
     p,
@@ -174,7 +175,7 @@
         justify-content: center !important;
         vertical-align: middle;
         max-height: 600px;
-        min-height: 355px;
+        min-height: 70vh;
         flex-direction: column;
         p {
             font-size: 15px !important; 
@@ -1316,6 +1317,10 @@
     }
 }
 
+.p-multiselect .p-multiselect-label.p-placeholder{
+    color: $text-input !important;
+}
+
 // Prime Vue Dropdown
 .p-dropdown-panel, .p-multiselect-panel {
     z-index: 99999 !important;
@@ -1334,7 +1339,9 @@
             width: 100%;
             border-radius: 4px !important; 
             background: #FFF !important; 
-             
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0 !important;
+            margin: 2px;
             &:focus, &:active {
                 outline: none;
                 box-shadow: none; 
@@ -1342,14 +1349,23 @@
                 color: $primary-color;
             }
         }
+
+        .p-checkbox.p-highlight .p-checkbox-box {
+            border-color: $primary-default !important;
+            background:  $primary-default !important;
+            svg{
+                height:  10px;
+                width:  10px;
+            }
+        }
+        
     .p-dropdown-items, .p-multiselect-items {
         .p-dropdown-item, .p-multiselect-item{
             border-radius: $border-radius-small;
             background: $surface-secondary;
             margin: 2px;
 
-            
- 
+           
             &.p-highlight {
                 color: $primary-default !important;
                 background: $secondary-hover !important;
@@ -1376,6 +1392,19 @@
                 align-items: center;
                 gap: 8px; 
             }
+        }
+    }
+
+    .p-multiselect-filter{
+        border: $fields-border $border-type $surface-input-field ; 
+        box-shadow: none !important; 
+        &:focus, &:active , &:hover{
+            outline: none;
+            box-shadow: none; 
+            border-color: $surface-border-hover;
+            color : $primary-color !important;
+            box-shadow: $input-field-box-shadow;
+            background-color: $surface-primary;
         }
     }
 } 
