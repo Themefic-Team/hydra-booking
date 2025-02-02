@@ -1323,6 +1323,35 @@
   box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
   margin: 24px auto;
 }
+.tfhb-frontend-from * {
+  box-sizing: border-box;
+}
+.tfhb-frontend-from button, .tfhb-frontend-from .tfhb-from-btn {
+  padding: 8px 24px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  vertical-align: middle;
+  background-color: #2E6B38;
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 700;
+  border-radius: 8px !important;
+  line-height: 1.6;
+  align-items: center;
+  cursor: pointer;
+}
+.tfhb-frontend-from button:hover, .tfhb-frontend-from button:focus, .tfhb-frontend-from button:active, .tfhb-frontend-from .tfhb-from-btn:hover, .tfhb-frontend-from .tfhb-from-btn:focus, .tfhb-frontend-from .tfhb-from-btn:active {
+  background-color: #4C9959;
+  color: #FFFFFF;
+}
+.tfhb-frontend-from button span, .tfhb-frontend-from .tfhb-from-btn span {
+  display: inline-block;
+}
+.tfhb-frontend-from button .tfhb-submit-icon, .tfhb-frontend-from .tfhb-from-btn .tfhb-submit-icon {
+  line-height: 0;
+}
 .tfhb-frontend-from .tfhb-notice {
   border-radius: 8px;
   padding: 24px;
@@ -1367,29 +1396,6 @@
   line-height: 1.53;
   margin-bottom: 4px !important;
 }
-.tfhb-frontend-from__field-item button {
-  padding: 8px 24px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  vertical-align: middle;
-  background-color: #2E6B38 !important;
-  font-size: 16px !important;
-  font-weight: 700;
-  border-radius: 8px !important;
-  line-height: 1.6;
-}
-.tfhb-frontend-from__field-item button:hover, .tfhb-frontend-from__field-item button:focus, .tfhb-frontend-from__field-item button:active {
-  background-color: #4C9959;
-  color: #FFFFFF;
-}
-.tfhb-frontend-from__field-item button span {
-  display: inline-block;
-}
-.tfhb-frontend-from__field-item button .tfhb-submit-icon {
-  line-height: 0;
-}
 .tfhb-frontend-from__field-item__inner {
   position: relative;
 }
@@ -1407,6 +1413,7 @@
   line-height: 1.6;
   padding: 8px;
   padding-left: 40px;
+  width: 100%;
 }
 .tfhb-frontend-from__field-item__inner input:focus, .tfhb-frontend-from__field-item__inner input:active, .tfhb-frontend-from__field-item__inner input:hover {
   outline: none;
