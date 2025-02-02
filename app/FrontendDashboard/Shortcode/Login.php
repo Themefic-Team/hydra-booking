@@ -114,9 +114,9 @@ class Login {
                     </div>
   
                     <div class="tfhb-frontend-from__field-item">
-                        <button type="submit">
-                            Login
-                            <span>
+                        <button class="" type="submit">
+                            <span><?php echo  esc_html(__('Login', 'hydra-booking')) ?></span>
+                            <span class="tfhb-submit-icon">
                                 <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_6411_13565)">
                                         <path d="M7.5 4.16797L13.3333 10.0013L7.5 15.8346" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
