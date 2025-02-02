@@ -7,7 +7,7 @@ import 'primevue/resources/themes/aura-light-green/theme.css'
 const tfhb_url =  tfhb_core_apps.tfhb_url || ''; 
 const tfhb_hydra_admin_url =  tfhb_core_apps.tfhb_hydra_admin_url || '';  
 const front_end_dashboard =  tfhb_core_apps.front_end_dashboard || false;  
-const user =  tfhb_core_apps.user || '';      
+const user =  tfhb_core_apps.user || '';    
 // Pro Plugins  checked  first tfhb_core_apps_pro is not defined
 const tfhb_core_apps_pro_data = typeof tfhb_core_apps_pro !== 'undefined' ? tfhb_core_apps_pro : '';
 const tfhb_is_pro = tfhb_core_apps_pro_data.tfhb_is_pro ? true : false;

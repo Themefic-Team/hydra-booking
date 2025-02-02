@@ -3,9 +3,11 @@ import { __ } from '@wordpress/i18n';
 import { ref, onBeforeMount, computed,  watch } from 'vue'; 
 import { onBeforeRouteLeave, useRoute  } from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
+import { FdDashboard } from '@/store/frontend-dashboard.js';
 const props = defineProps([
     'title',
     'notifications',
+    'userAuth',
     'total_unread'
      
 ])
@@ -92,8 +94,8 @@ watch(pageTitle, (newTitle) => {
 </script>
 
 
-<template>
-    <div class="thb-admin-header tfhb-frontend-top-header">
+<template> 
+    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox tfhb">
             <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16" style="min-width:254px;">
                 <img :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">
@@ -146,7 +148,7 @@ watch(pageTitle, (newTitle) => {
             </div>
             <div class="tfhb-dropdown tfhb-header-profile-dropdown">
                 <div @click="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
-                    <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">  Hi, <b>Sydur</b> 
+                    <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">{{ $tfhb_trans('Hi,') }} <b>{{props.userAuth.first_name}}</b> 
                     <span  class="tfhb-dropdown-single" >
                         <Icon  v-if="profileDropdown == false" name="ChevronDown" size=16 /> 
                         <Icon v-if="profileDropdown == true" name="ChevronUp" size=16 /> 
@@ -155,9 +157,12 @@ watch(pageTitle, (newTitle) => {
  
                 <transition  name="tfhb-dropdown-transition">
                     <div v-show="profileDropdown == true"  class="tfhb-dropdown-wrap"> 
-                        <span class="tfhb-dropdown-single" ><Icon name="User" size=16 /> My Account </span>
-                
-                        <span class="tfhb-dropdown-single tfhb-dropdown-error"><Icon name="LogOut" size=16 /> Logout</span>
+                        <router-link  class="tfhb-dropdown-single" to="/frontend-dashboard/profile" exact >
+                                <Icon name="User" size=16 /> 
+                                {{ $tfhb_trans('My Account') }}
+                            </router-link>
+                      
+                        <span class="tfhb-dropdown-single tfhb-dropdown-error"@click="FdDashboard.logoutUser"><Icon name="LogOut" size=16 />{{ $tfhb_trans('Logout') }}</span>
                     </div>
                 </transition>
             </div>

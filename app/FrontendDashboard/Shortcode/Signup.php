@@ -45,7 +45,10 @@ class Signup {
 			wp_enqueue_script( 'tfhb-app-registration' );
 		}
         
-       
+        $frontend_dashboard_settings = get_option('_tfhb_frontend_dashboard_settings');
+        $settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings : array();
+        $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
+        $get_login_page_url = get_permalink( $login_page_id );
 		// Start Buffer
 		ob_start(); 
 
@@ -59,6 +62,7 @@ class Signup {
                     <a href="#">Go to dashboard</a>
                     
                 </div>
+            </div>
         <?php 
             return ob_get_clean();
         }  ?>
@@ -183,7 +187,7 @@ class Signup {
                     </div>
 
                     <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
-                         <p>Already have an account? <a href="#">Login</a></p>
+                         <p><?php echo esc_html(__('Already have an account?', domain: 'hydra-booking')) ?><a href="<?php echo esc_url( $get_login_page_url ); ?>">Login</a></p>
                          
                     </div>
                    
@@ -195,6 +199,39 @@ class Signup {
 
         return ob_get_clean();
      }
+
+     /**
+     * Generate random string for verification url
+     */
+    public function tfhb_generate_random_string( $stringLength ) {
+        //specify characters to be used in generating random string, do not specify any characters that wordpress does not allow in the creation.
+        $characters = "0123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_[]{}!@$%^*().,>=-;|:?";
+
+        //get the total length of specified characters to be used in generating random string
+        $charactersLength = strlen( $characters );
+
+        //declare a string that we will use to create the random string
+        $randomString = '';
+
+        for ( $i = 0; $i < $stringLength; $i ++ ) {
+            //generate random characters
+            $randomCharacter = $characters[ wp_rand( 0, $charactersLength - 1 ) ];
+            //add the random characters to the random string
+            $randomString .= $randomCharacter;
+        };
+
+        //sanitize_user, just in case
+        $sanRandomString = sanitize_user( $randomString );
+
+        //check that random string contains Uppercase/Lowercase/Intergers/Special Char and that it is the correct length
+        if ( ( preg_match( '([a-zA-Z].*[0-9]|[0-9].*[a-zA-Z].*[_\W])', $sanRandomString ) == 1 ) && ( strlen( $sanRandomString ) == $stringLength ) ) {
+            //return the random string if it meets the complexity criteria
+            return $sanRandomString;
+        } else {
+            // if the random string does not meet minimium criteria call function again
+            return call_user_func( "generateRandomString", ( $stringLength ) );
+        }
+    }
 
      /**
      * tfhb_registration_callback
@@ -279,7 +316,13 @@ class Signup {
                 $user = get_user_by( 'ID', $user_id );
                 // update user first name and last name
                 update_user_meta( $user->ID, 'first_name', $field['tfhb_first_name'] );
+
                 update_user_meta( $user->ID, 'last_name', $field['tfhb_last_name'] );
+
+                // update user activation code 
+			    $code = $this->tfhb_generate_random_string( 32 );
+                update_user_meta( $user->ID, 'tfhb_user_activation_code', $code );
+                update_user_meta( $user->ID, 'tfhb_user_is_activated', false );
 
                 // $user->set_role( $user_role );
                 // $response['success'] = true;
@@ -301,7 +344,7 @@ class Signup {
                         'about'          => '',
                         'avatar'         => '',
                         'featured_image' => '',
-                        'status'         => 'activate',
+                        'status'         => 'deactivate',
                     );
             
                     // get Default Availability
@@ -324,20 +367,47 @@ class Signup {
                     // Insert Host
                     $hostInsert = $host->add( $data );
                     if ( $hostInsert ) {
+
+                        // Send activation email 
+                        $this->tfhb_send_activation_code($data, $code);
                         $response['success'] = true;
-                        $response['message'] = esc_html__( 'Your account has been created successfully. You can login now.', 'hydra-booking' );
+                        $response['message'] = esc_html__( 'Your account has been created successfully. A confirmation email has been sent to your email address.', 'hydra-booking' );
                     }
                 }
 
                 
             }
-       }
-
- 
+       } 
         // return response
         wp_send_json( $response );
 
      }
+
+    /**
+     * Send Activation Code
+     *
+     * @param array $data
+     * @param string $activation_code
+     * @return void
+     */
+    public function tfhb_send_activation_code( $data, $code ) {
+
+        $email = $data['email'];
+        $name = $data['first_name'] . ' ' . $data['last_name'];
+        $string = array( 'id' => $data['user_id'], 'code' => $code );
+        $subject = esc_html__( 'Email Verification', 'hydra-booking' );
+        $url = get_site_url() . '/?hydra-booking=email-verification&tfhb_verification=' . base64_encode( json_encode( $string ) );
+        $message = '<p>' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $name . '</p>';
+        $message .= '<p>' . esc_html__( 'Please click the link below to activate your account:', 'hydra-booking' ) . '</p>';
+        $message .= '<p><a href="' . $url . '">' . $url . '</a></p>';
+        $message .= '<p>' . esc_html__( 'Thank you', 'hydra-booking' ) . '</p>';
+
+        $headers = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>' . "\r\n";
+        $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
+
+        wp_mail( $email, $subject, $message, $headers );
+
+    }
  
 
 }

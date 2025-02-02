@@ -385,6 +385,22 @@ namespace HydraBooking\Admin\Controller;
             'Select Login Redirect Option' =>  __('Select Login Redirect Option', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
 
+
+            // Frontend Dashboard : 
+            'Hi,' =>  __('Hi,', 'hydra-booking'),
+            'My Account' =>  __('My Account', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            'Hi' =>  __('Hi', 'hydra-booking'),
+            // 'Hi' =>  __('Hi', 'hydra-booking'),
+
             // Quick Setup
             'Welcome to HydraBooking!' =>  __('Welcome to HydraBooking!', 'hydra-booking'), 
             'Thank you for choosing HydraBooking, the premier solution for effortless appointment and booking scheduling' =>  __('Thank you for choosing HydraBooking, the premier solution for effortless appointment and booking scheduling', 'hydra-booking'), 

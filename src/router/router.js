@@ -308,6 +308,15 @@ const routes = [
         
     },
     // ...
+
+    // frontend dasboard profile
+    {
+        path: '/frontend-dashboard/profile',
+        name: 'FrontendDashboardProfile',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/userProfile.vue')
+    },
 ];
 
 const router = createRouter({

@@ -1,20 +1,27 @@
 <script setup> 
-import { ref, onMounted, defineProps  } from 'vue'; 
+import { ref, onBeforeMount, defineProps  } from 'vue'; 
 import Sidebar from './Sidebar.vue';
 import topHeader from './topHeader.vue';
 
 
 // Store 
 import { Notification } from '@/store/notification';
+import { FdDashboard } from '@/store/frontend-dashboard.js';
 
 const collapsedSideBar = ref(false);
+
+// on before mount 
+
+onBeforeMount(() => {  
+  FdDashboard.FetchUserAuth(); 
+}); 
 
  
  
 </script>
 
 <template > 
-    <topHeader   :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+    <topHeader :notifications="Notification.Data" :userAuth="FdDashboard.userAuth" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
         
     <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
         <!-- Load Sidebar -->
