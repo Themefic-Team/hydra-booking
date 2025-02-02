@@ -565,7 +565,7 @@ const TfhbPrevNavigator = () => {
                  <!-- For Group Booking -->
                  <div class="tfhb-b-d-wrap tfhb-flexbox tfhb-gap-0 tfhb-full-width" v-if="'one-to-group' == BookingDetails.booking.meeting_type">
                      
-                    <h3 class="tfhb-mb-16">{{ $tfhb_trans('Attendee Details') }}</h3>
+                    <h3 class="tfhb-mb-8">{{ $tfhb_trans('Attendee Details') }}</h3>
                     <!-- Single Attendee Content -->
                      <div v-for=" (attendees, index) in BookingDetails.attendees" class="tfhb-b-d-inner tfhb-singlee-attendees tfhb-full-width"
                         :class="activeAttendeeDetails.includes(attendees.id) ? 'active' : ''"
