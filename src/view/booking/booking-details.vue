@@ -399,7 +399,7 @@ const TfhbPrevNavigator = () => {
                 <div class="tfhb-b-d-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width" v-if="'one-to-one' == BookingDetails.booking.meeting_type">
  
                     <div class="tfhb-b-d-inner tfhb-full-width">
-                        <h3>{{ $tfhb_trans('Attendee Details 1') }}</h3>
+                        <h3>{{ $tfhb_trans('Attendee Details') }}</h3>
                         <div class="tfhb-b-d-icon-box-wrap bg-wrap tfhb-flexbox tfhb-gap-24  tfhb-align-normal">
                             <!-- Booking Details Icon Box -->
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
@@ -570,7 +570,7 @@ const TfhbPrevNavigator = () => {
                      <div v-for=" (attendees, index) in BookingDetails.attendees" class="tfhb-b-d-inner tfhb-singlee-attendees tfhb-full-width"
                         :class="activeAttendeeDetails.includes(attendees.id) ? 'active' : ''"
                      >
-                         <div class="tfhb-b-d-icon-box-wrap bg-wrap no-border tfhb-flexbox tfhb-gap-24  tfhb-justify-between">
+                         <div class="tfhb-b-d-icon-box-wrap tfhb-group-accordion-bar bg-wrap no-border tfhb-flexbox tfhb-gap-24  tfhb-justify-between">
                              <!-- Booking Details Icon Box -->
                              
                              <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal"> 
@@ -680,7 +680,7 @@ const TfhbPrevNavigator = () => {
                                     </div> 
                                 </div>
 
-                                <div class="tfhb-flexbox tfhb-gap-8 tfhb-b-d-inner-title">
+                                <div class="tfhb-flexbox tfhb-gap-8 tfhb-b-d-inner-title tfhb-pt-16 tfhb-pb-8">
                                     <h4>{{ $tfhb_trans('Payment Details') }}</h4>
                                     <span class="status" :class="attendees.payment_status"> {{attendees.payment_status}} </span> 
                                 </div>

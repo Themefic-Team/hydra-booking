@@ -556,7 +556,7 @@ const changeToDate = (value) => {
             
             <div class="tfhb-filter-content-wrap " :class="Booking.FilterPreview ? 'active' : ''"> 
                 <HbButton 
-                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 "  
                     :class="Booking.filter_data.filter_type == 'filter' ? 'active' : ''"
                     @click="Booking.FilterPreview =!Booking.FilterPreview , Booking.filter_data.filter_type='filter'"
                     :buttonText="$tfhb_trans('Filter')"
@@ -634,7 +634,7 @@ const changeToDate = (value) => {
 
                             <div class="tfhb-flexbox tfhb-justify-center">
                                 <HbButton 
-                                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-full-width tfhb-justify-center" 
                                     @click="resetFilter"
                                     :buttonText="$tfhb_trans('Reset Filter')"
                                     icon="RefreshCw"
@@ -1113,7 +1113,7 @@ const changeToDate = (value) => {
     </div>
 </div>
 
-<div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+<div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-booking-notice">  
     <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
     <p v-if="Booking.filter_data.filter_type == 'upcoming'">{{ $tfhb_trans('No upcoming booking found') }} </p>
     <p v-else-if="Booking.filter_data.filter_type == 'completed'">{{ $tfhb_trans('No completed booking found') }} </p>

@@ -35,6 +35,7 @@
             .p-dropdown .p-dropdown-trigger, .p-multiselect .p-dropdown-trigger {
                 color: $text-input !important;
             }
+            
             .p-dropdown, .p-multiselect { 
                 border: $fields-border $border-type $surface-input-field ; 
                 box-shadow: none !important;
@@ -46,6 +47,9 @@
                     color : $primary-color !important;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
+                }
+                .p-multiselect-trigger svg path {
+                    fill: $surface-input-field !important;
                 }
                 .p-dropdown-label, .p-multiselect-label{
                     line-height: 24px !important;
@@ -84,17 +88,24 @@
                 height: 40px;
                 margin: 0;
                 box-shadow: none;
-                color: $text-input !important;
+                color: $text-input;
                 font-family: "Inter", sans-serif;
                 &:focus, &:active, &:hover {
                     outline: none;
                     box-shadow: none; 
                     border-color: $surface-border-hover;
-                    color : $primary-color !important;
+                    color : $primary-color;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
+                &::placeholder {
+                    color: $text-input !important;// Define this variable in your SCSS
+                    opacity: 1; // Ensures full visibility
+                }
+                
             }
+             
+            
         }
         &.tfhb-field-options{
             .tfhb-options-fields{
@@ -113,6 +124,7 @@
             }
             .flatpickr-input{
                 max-width: 100%;
+                
             }
         }
         &.tfhb-field-textarea{
@@ -135,6 +147,10 @@
                     color : $primary-color !important;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
+                }
+                &::placeholder {
+                    color: $text-input !important;// Define this variable in your SCSS
+                    opacity: 1; // Ensures full visibility
                 }
             }
         } 
