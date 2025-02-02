@@ -85,7 +85,7 @@ class Host {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		if(is_array($request['others_information'])){ 
+		if( isset($request['others_information']) && is_array($request['others_information'])){ 
 			$request['others_information'] = wp_json_encode( $request['others_information'] );
 		}
 

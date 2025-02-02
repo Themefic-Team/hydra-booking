@@ -123,10 +123,15 @@
             
             $this = $(this);
             var data  = new FormData(this);
+            var old_icon = $this.find('.tfhb-submit-icon').html();
+            // remove html 
+            $this.find('.tfhb-submit-icon svg').remove();
+            $this.find('.tfhb-submit-icon').append(preloader);
 
             // Remove all error dom and class
             $this.find('.tfhb-error').removeClass('tfhb-error');
             $this.find('.tfhb-error-text').remove();
+            $this.find('.tfhb-notice').remove();
             
             data.append('action', 'tfhb_reset_password');   
             $.ajax({
@@ -137,12 +142,15 @@
                 contentType: false,
                 success: function (response) {
                     if(response.success){ 
+                        $this.find('.tfhb-submit-icon svg').remove();
+                        $this.find('.tfhb-submit-icon').append(old_icon);
                         // display message
                         $this.append(`<div class="tfhb-notice tfhb-success">${response.message}</div>`);
                         
                     }else{
                         let fieldErrors = response.fieldErrors;
-                        console.log(response);
+                        $this.find('.tfhb-submit-icon svg').remove();
+                        $this.find('.tfhb-submit-icon').append(old_icon);
                         // make a loop 
                         for (let key in fieldErrors) {
                             let error = fieldErrors[key];

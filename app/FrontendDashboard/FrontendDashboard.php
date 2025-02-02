@@ -147,8 +147,12 @@ class FrontendDashboard {
         }
 
         // Check user exist using username or email or not
-        if ( empty( $response['fieldErrors'] ) ) {
+        if ( empty( $response['fieldErrors'] ) ) { 
             $user = get_user_by( 'login', sanitize_text_field( $_POST['tfhb_forgot_user'] ) );
+            // if user not found then check email
+            if(!$user){ 
+                $user = get_user_by( 'email', sanitize_text_field( $_POST['tfhb_forgot_user'] ) );
+            }
             if ( ! $user ) {
                 $response['fieldErrors'][ 'tfhb_forgot_user' ] = esc_html__( 'User not found.', 'hydra-booking' );
             } else { 
@@ -162,26 +166,24 @@ class FrontendDashboard {
 
                 $link = get_site_url() . '/?hydra-booking=forgot-password&tfhb_verification=' . base64_encode( json_encode( $string ) );
 
-                $subject = esc_html__( 'Password Reset Link', 'hydra-booking' );
+                $subject = '<p>' . esc_html__( 'Password Reset Request', 'hydra-booking' ) . '</p>';
 
-                $message = esc_html__( 'Hi ' . $user->display_name . ',', 'hydra-booking' ) . "\r\n\r\n";
+                $message =  '<p>' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $user->first_name . ' ' . $user->last_name . '</p>';
 
-                $message .= esc_html__( 'You have requested to reset your password.', 'hydra-booking' ) . "\r\n\r\n";
+                $message .= '<p>' . esc_html__( 'You have requested to reset your password.', 'hydra-booking' ) . '</p>';
 
-                $message .= esc_html__( 'Please click the link below to reset your password:', 'hydra-booking' ) . "\r\n\r\n";
+                $message .='<p>' . esc_html__( 'Please click the link below to reset your password:', 'hydra-booking' ) . '</p>';
 
-                $message .= '<a href="' . $link . '">' . $link . '</a>' . "\r\n\r\n";
+                $message .= '<p><a href="' . $link . '">' . $link . '</a></p>';
 
-                $message .= esc_html__( 'If you did not request a password reset, please ignore this email.', 'hydra-booking' ) . "\r\n\r\n";
+                $message .= '<p>' . esc_html__( 'If you did not request this, please ignore this email.', 'hydra-booking' ) . '</p>';
 
-                $message .= esc_html__( 'Thanks,', 'hydra-booking' ) . "\r\n\r\n";
+                $message .= '<p>' . esc_html__( 'Thank you', 'hydra-booking' ) . '</p>';
 
-                $message .= get_bloginfo( 'name' );
+                $message .= '<p>' . esc_html__( 'Hydra Booking', 'hydra-booking' ) . '</p>';
 
-                $headers = array(
-                    'From' => get_bloginfo( 'admin_email' ),
-                    'Reply-To' => $user_email,
-                );
+                $headers = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>' . "\r\n";
+                $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
                 if ( wp_mail( $user_email, $subject, $message, $headers ) ) {
                     $response['success'] = true;

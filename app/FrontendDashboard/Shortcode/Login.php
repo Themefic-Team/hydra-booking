@@ -59,8 +59,8 @@ class Login {
                 <div class="tfhb-frontend-from__title">
                     <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
                     <!-- go to dashboard button -->
-
-                    <a href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
+                    <br>
+                    <a class="tfhb-from-btn" href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
                     
                 </div>
             </div>

@@ -194,7 +194,7 @@ class FrontendDashboard {
             return rest_ensure_response($data);
             
         }
-        $host = new Host();
+        $host = new Host(); 
         $host_data = $host->getHostById( $userAuthData['host_id'] ); 
 
         $data = array(

@@ -15,7 +15,8 @@ $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['l
  
 $registration_page_id = isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
         
-get_header();
+get_header(); 
+ 
 
 if( is_user_logged_in() ) {
     ?>
@@ -23,7 +24,7 @@ if( is_user_logged_in() ) {
         <div class="tfhb-frontend-from__title">
             <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
             <!-- go to dashboard button -->
-
+            <br>
             <a class="tfhb-from-btn" href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
             
         </div>
@@ -37,15 +38,32 @@ if( is_user_logged_in() ) {
     $user_id = $user->ID;
     $code = $data['code']; 
     $check = check_password_reset_key($code, $user->user_login  );
+    
    
     // if code is valid then display password reset form
     if ( is_wp_error( $check ) ) {
-        wp_redirect( get_permalink( $login_page_id ) );
-        exit();
-    }
+        ?>
+        <div class="tfhb-frontend-from">
+            <div class="tfhb-frontend-from__title">
+                <h3 style="text-align: center;"><?php echo $check->get_error_message(); ?></h3>
+                <br>
+                <!-- go to dashboard button -->
+                <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
+                    <p><a href="<?php echo esc_url( get_permalink( $login_page_id ) ); ?>"><?php echo esc_html(__('Login', 'hydra-booking')) ?></a>
+                        |
+                    <a href="<?php echo esc_url( get_permalink( $registration_page_id ) ) ?>"><?php echo esc_html(__('Sign up', 'hydra-booking')) ?> </a></p>
+                    <p></p>
+                        
+                </div>
+                
+            </div>
+        </div>
+        <?php
+        
+    }else{
 
-   ?>
- <div class="tfhb-frontend-from">
+        ?>
+            <div class="tfhb-frontend-from">
             <div class="tfhb-frontend-from__title">
                 <h3><?php echo esc_html(__('Reset Password ?', 'hydra-booking')) ?></h3>
                 <p><?php echo esc_html(__('Please enter your details.', 'hydra-booking')) ?></p>
@@ -54,7 +72,7 @@ if( is_user_logged_in() ) {
             <?php wp_nonce_field( 'tfhb_check_reset_password_nonce', 'tfhb_reset_password_nonce' ); ?>
             <input type="hidden" name="code" value="<?php echo esc_attr($tfhb_verification) ?>">
                 <div class="tfhb-frontend-from__field-wrap">
- 
+
                     <div class="tfhb-frontend-from__field-item">
                         <label for="tfhb_password"><?php echo esc_html(__('Password', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
@@ -98,7 +116,7 @@ if( is_user_logged_in() ) {
                     <div class="tfhb-frontend-from__field-item">
                         <button type="submit">
                             <span><?php echo esc_html(__('Reset Password', 'hydra-booking')) ?></span>
-                            <span>
+                            <span class="tfhb-submit-icon">
                                 <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_6411_13565)">
                                         <path d="M7.5 4.16797L13.3333 10.0013L7.5 15.8346" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -112,13 +130,19 @@ if( is_user_logged_in() ) {
                             </span>
                         </button>
                     </div>
- 
-                   
+                    <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
+                        <p><a href="<?php echo esc_url( get_permalink( $login_page_id ) ); ?>"><?php echo esc_html(__('Login', 'hydra-booking')) ?></a>
+                            |
+                        <a href="<?php echo esc_url( get_permalink( $registration_page_id ) ) ?>"><?php echo esc_html(__('Sign up', 'hydra-booking')) ?> </a></p>
+                        <p></p>
+                            
+                    </div>
+                    
                 </div>
             </form>
         </div>
-   <?php
-  
+    <?php
+    } 
 }else{
 ?>
 <div class="tfhb-frontend-from">

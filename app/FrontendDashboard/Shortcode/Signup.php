@@ -49,6 +49,8 @@ class Signup {
         $settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings : array();
         $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
         $get_login_page_url = get_permalink( $login_page_id );
+        $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
+        
 		// Start Buffer
 		ob_start(); 
 
@@ -59,7 +61,8 @@ class Signup {
                     <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
                     <!-- go to dashboard button -->
 
-                    <a href="#">Go to dashboard</a>
+                    <br>
+                    <a class="tfhb-from-btn" href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
                     
                 </div>
             </div>
@@ -170,8 +173,8 @@ class Signup {
 
                     <div class="tfhb-frontend-from__field-item">
                         <button type="submit">
-                        <?php echo esc_html(__('Sign up', domain: 'hydra-booking')) ?>
-                            <span>
+                            <span class="tfhb-submit-text"><?php echo esc_html(__('Sign up', domain: 'hydra-booking')) ?></span>
+                            <span class="tfhb-submit-icon">
                                 <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_6411_13565)">
                                         <path d="M7.5 4.16797L13.3333 10.0013L7.5 15.8346" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -187,7 +190,7 @@ class Signup {
                     </div>
 
                     <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
-                         <p><?php echo esc_html(__('Already have an account?', domain: 'hydra-booking')) ?><a href="<?php echo esc_url( $get_login_page_url ); ?>">Login</a></p>
+                         <p><?php echo esc_html(__('Already have an account?', domain: 'hydra-booking')) ?><a href="<?php echo esc_url( $get_login_page_url ); ?>"> <?php echo esc_html(__('Login', domain: 'hydra-booking')) ?></a></p>
                          
                     </div>
                    
@@ -399,7 +402,7 @@ class Signup {
         $url = get_site_url() . '/?hydra-booking=email-verification&tfhb_verification=' . base64_encode( json_encode( $string ) );
         $message = '<p>' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $name . '</p>';
         $message .= '<p>' . esc_html__( 'Please click the link below to activate your account:', 'hydra-booking' ) . '</p>';
-        $message .= '<p><a href="' . $url . '">' . $url . '</a></p>';
+        $message .= '<p><a target="_blank" href="' . $url . '">' . $url . '</a></p>';
         $message .= '<p>' . esc_html__( 'Thank you', 'hydra-booking' ) . '</p>';
 
         $headers = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>' . "\r\n";

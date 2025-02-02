@@ -36,19 +36,27 @@ get_header();
                  */
                 if(is_user_logged_in()){
 
-                    printf( esc_html__( '%1$sYou are already logged in. %2$s', 'hydra-booking' ), '<h3>', '</h3>' );
+                 ?>
+                   <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
+                    <!-- go to dashboard button -->
+                    <br>
+                    <a class="tfhb-from-btn" href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
+                    
+                 <?php 
+                    
+                    
                 }
                 elseif(!empty($saved_code) && $saved_code == $data_code) { 
                     $host  = new Host();
                     $getHost = $host->getHostByUserId($user_id);
                     if($getHost) { 
-                        printf( esc_html__( '%1$sYour email has been successfully verified! %2$sLogin here%3$s', 'hydra-booking' ), '<h3>', '</h3><a href="' .esc_url(get_permalink( $login_page_id )). '">', '</a>' );
+                        printf( esc_html__( '%1$sYour email has been successfully verified! %2$sLogin here%3$s', 'hydra-booking' ), '<h3>', '</h3><br><a class="tfhb-from-btn" href="' .esc_url(get_permalink( $login_page_id )). '">', '</a>' );
                         update_user_meta($user_id, 'tfhb_user_is_activated', 1);
                         delete_user_meta($user_id, 'tfhb_user_activation_code');
                         // updatehost status
                         $data = [
                             'id' => $getHost->id,
-                            'host_status' => 'activated'
+                            'status' => 'activated'
                         ];
                         $host->update($data);
 
@@ -67,15 +75,15 @@ get_header();
 
                 } elseif (!empty($saved_code) && $saved_code != $data_code) {
 
-                    printf( esc_html__( '%1$s Invalid email verification url! %2$sResend email%3$', 'hydra-booking' ), '<h3>', '<a href="" class="resend-email-verification" data-id="' .esc_attr($user_id). '">', '</a></h3>' );
+                    printf( esc_html__( '%1$s Invalid email verification url! %2$sResend email%3$', 'hydra-booking' ), '<h3>', '<br><a class="tfhb-from-btn" href="" class="resend-email-verification" data-id="' .esc_attr($user_id). '">', '</a></h3>' );
 
                 } elseif (empty($saved_code) && $tfhb_user_is_activated == '1') {
 
-                    printf( esc_html__( '%1$sYour email is already verified. %2$sLogin here%3$s', 'hydra-booking' ), '<h3>', '</h3> <a href="' .esc_url(get_permalink( $login_page_id )). '">', '</a>' );
+                    printf( esc_html__( '%1$sYour email is already verified. %2$sLogin here%3$s', 'hydra-booking' ), '<h3>', '</h3> <br><a class="tfhb-from-btn" href="' .esc_url(get_permalink( $login_page_id )). '">', '</a>' );
                     
                 } elseif (empty($saved_code) && $tfhb_user_is_activated == '0') {
 
-                    printf( esc_html__( '%1$s No email verification url found! %2$sResend email%3$', 'hydra-booking' ), '<h3>', '<a href="" class="resend-email-verification" data-id="' .esc_attr($user_id). '">', '</a></h3>' );
+                    printf( esc_html__( '%1$s No email verification url found! %2$sResend email%3$', 'hydra-booking' ), '<h3>', '<br><a class="tfhb-from-btn" href="" class="resend-email-verification" data-id="' .esc_attr($user_id). '">', '</a></h3>' );
                     
                 } elseif (empty($saved_code) && empty($tfhb_user_is_activated)) {
 
