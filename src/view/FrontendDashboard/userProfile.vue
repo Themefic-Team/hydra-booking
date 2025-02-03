@@ -36,7 +36,7 @@ const UploadImage = () => {
 <template>
 
   
-    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="tfhbb-fd-user-profile-page tfhb-flexbox tfh-gap-32">   {{ FdDashboard }}
+    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="tfhbb-fd-user-profile-page tfhb-flexbox tfh-gap-32">   
         <div class="tfhb-single-form-field-wrap tfhb-user-profile-image tfhb-flexbox  tfhb-full-width">
             <div class="tfhb-field-image" >  
                 <img v-if="FdDashboard.userAuth.featured_image ==''" class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >

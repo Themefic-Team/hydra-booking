@@ -56,7 +56,7 @@ get_header();
                         // updatehost status
                         $data = [
                             'id' => $getHost->id,
-                            'status' => 'activated'
+                            'status' => 'activate'
                         ];
                         $host->update($data);
 

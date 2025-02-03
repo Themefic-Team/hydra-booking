@@ -34,8 +34,8 @@ class Host {
                 availability_id INT(11) NULL, 
                 others_information text NULL, 
                 status VARCHAR(11) NOT NULL,
-                created_at DATE NOT NULL,
-                updated_at DATE NOT NULL, 
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)
             ) $charset_collate";
 

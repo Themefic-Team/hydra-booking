@@ -14,6 +14,10 @@
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 32px;
+		gap: 8px;
+		> .tfhb-admin-title{
+			max-width: 70%;
+		}
 	}
 	.tfhb-content-wrap{
 		flex-direction: row;

@@ -18,6 +18,52 @@ html{
             .tfhb-dropdown-wrap{
                 width: auto !important;
             }
+
+            @media #{$max450}{  
+                .tfhb-profile-name{
+                    display: none;
+                }
+
+            }
+        }
+
+        .tfhb-admin-header-icon{
+            width:254px; 
+            .tfhb-responsive-menu-trigger{
+                width: 40px;
+                height: 40px;
+                padding: 10px;
+                text-align: center;
+                border-radius: 50%;
+                display: none;
+                background-color: $surface-primary;
+                cursor: pointer;
+                transition: $transition;
+                &:hover{
+                    background-color: $primary-hover;
+                    svg{
+                        color: #fff;
+                    }
+                }
+                @media #{$max767}{
+                    display: block;
+                }
+            }
+            @media #{$max767}{
+                width: auto;
+                .desktop-header-icon {
+                    display: none;
+                } 
+            }
+             
+            @media #{$max450}{
+                .tfhb-admin-header-title{ 
+                    display: none;
+                }
+            }
+            
+            
+            
         }
     }
    
@@ -31,11 +77,12 @@ html{
         h2{
             font-size: 17px;
         }
+       
         .tfhb-frontend-main-content {
             table, th, td{
                 border: none;
             }
-            .tfhb-admin-meetings, .tfhb-admin-booking, .tfhb-admin-hosts, .tfhb-hydra-dasboard {
+            .tfhb-admin-frontend-end-wrap, .tfhb-admin-booking, .tfhb-admin-dashboard {
                 padding: 16px 0;
                 border-radius: $border-radius-large;
                 box-shadow: 0px 15px 30px 0px rgba(16, 40, 20, 0.10);
@@ -52,11 +99,29 @@ html{
                         padding: 0;
                     }
                 }
-                .tfhb-hydra-dasboard-content{
-                    padding: 0;
-                    width: 100%;
-                }
+                
                
+            }
+            .tfhb-meeting-create{
+                margin: 50 auto;
+            }
+            .tfhb-hydra-dasboard{
+                max-width: 100%;
+                margin: 0 auto;
+                margin-bottom: 50px;
+                
+                .tfhb-hydra-wrap{
+                    margin: 0;
+                    .tfhb-hydra-dasboard-content{ 
+                        width: 100%;
+                    }
+                }
+
+                .tfhb-integrations-single-block{
+                    h3{
+                        font-size: 17px !important;
+                    }
+                }
             }
         }
        .tfhb-frontend-sidebar{
@@ -114,7 +179,7 @@ html{
                         width: 100%;
                         border: none;
                         box-shadow: none;
-                        &:hover, &:focus, &.active{
+                        &:hover, &:focus, &.active, &.router-link-active{
                             transition: $transition;
                             background-color: $primary-hover;
                         }
@@ -155,12 +220,36 @@ html{
                 }
             }
 
-                 
+            @media #{$max767}{ 
+                position: fixed;
+                left: -150;
+                visibility: hidden;
+                opacity: 0;  
+                transition: 0.4s;
+                z-index: 999;
+                &.responsive-active{
+                     transition: 0.6s ease-in-out;
+                    left: 8px; 
+                    visibility: visible;
+                    opacity: 1;
+                }
+
+            }                  
+       }
+       .tfhb-single-meeting{
+            @media #{$max767}{ 
+                width: calc(50% - 16px);
+            } 
+       }
+       .tfhb-single-hosts{
+            @media #{$max767}{ 
+                width: calc(50% - 16px);
+            } 
        }
 
        .tfhbb-fd-user-profile-page {
             max-width: 700px;
-            margin: 100px auto;
+            margin: 50px auto;
             background-color: #fff;
             padding: 32px;
             border-radius: 16px;

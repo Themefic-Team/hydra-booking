@@ -50,12 +50,15 @@
 
     p,
     span,
-    label {
+    label, b {
         font-weight: $font-weight-reguler;
         font-size: $text-font-size;
         line-height: 20px;
         color: $secondary-default;
         margin: 4px 0;
+    }
+    b{
+        font-weight: 600;
     }
 
     label {

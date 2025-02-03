@@ -213,12 +213,12 @@ onBeforeMount(() => {
 <template> 
     <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard ">
   
-        <div  class="tfhb-dashboard-heading ">
+        <div  class="tfhb-dashboard-heading  ">
             <div class="tfhb-admin-title tfhb-m-0"> 
                 <h1 >{{ $tfhb_trans('Notifications') }}</h1> 
                 <p>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
             </div>
-            <div class="thb-admin-btn right"> 
+            <div class="thb-admin-btn"> 
                 <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>

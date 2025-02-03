@@ -91,17 +91,26 @@ const pageTitle = computed(() => {
 watch(pageTitle, (newTitle) => {
   document.title = newTitle;
 }, { immediate: true });
+
+// if tfhb-responsive-menu-trigger click add a active class into tfhb-frontend-sidebar  div  using add class not toggle
+const toggleSidebar = () => {
+    document.querySelector('.tfhb-frontend-sidebar').classList.toggle('responsive-active');
+}
 </script>
 
 
 <template> 
     <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
-        <div class="tfhb-flexbox tfhb">
-            <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16" style="min-width:254px;">
-                <img :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">
-                 
+        <div class="tfhb-flexbox">
+            <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >
+                <span class="tfhb-responsive-menu-trigger" @click="toggleSidebar()">
+                    <Icon name="Menu" size=20 /> 
+                </span>
+                <img class="desktop-header-icon" :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">
+
+               
             </div>
-            <div class="thb-admin-header-icon tfhb-flexbox tfhb-gap-16">
+            <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16">
             
                 <h2 class="tfhb-admin-header-title">{{ $tfhb_trans(pageTitle) }}</h2>
             </div>
@@ -148,7 +157,8 @@ watch(pageTitle, (newTitle) => {
             </div>
             <div class="tfhb-dropdown tfhb-header-profile-dropdown">
                 <div @click="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
-                    <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">{{ $tfhb_trans('Hi,') }} <b>{{props.userAuth.first_name}}</b> 
+                    <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">
+                    <span class="tfhb-profile-name">  {{ $tfhb_trans('Hi,') }} <b>{{props.userAuth.first_name}}</b> </span>
                     <span  class="tfhb-dropdown-single" >
                         <Icon  v-if="profileDropdown == false" name="ChevronDown" size=16 /> 
                         <Icon v-if="profileDropdown == true" name="ChevronUp" size=16 /> 
