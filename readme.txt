@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.21
+Stable tag: 1.0.22
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -199,13 +199,16 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 
 == Changelog ==
 
+= 1.0.22 - 03/02/2025 =  
+
+- Updated: Readme.txt file and plugin information.
+- Fixed: Various issues for a smoother experience.
+
 = 1.0.21 - 03/02/2025 =  
 
-- Improved: Revamped booking database for group bookings.
-- Improved: Timezone and date-time functionality in bookings.
-- Added: Display of remaining slots in group bookings (PRO).
-- Added: Outlook Calendar and Teams integration (PRO).
-- Fixed: Various issues were fixed and system stability improved.
+- Added: Booking details page.
+- Added: Filter feature for the booking list page.
+- Improved: Revamped the booking list page design.
 
 = 1.0.20 - 30/01/2025 =  
 
