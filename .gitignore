@@ -8,8 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Git ignore src
-src
-sass
+# src
+# sass
 .vite
 # vendor
 

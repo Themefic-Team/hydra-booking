@@ -108,6 +108,13 @@
                 }
             }
        }
+       &:hover, &:focus, &.active {
+            background: $secondary-hover;
+            color: $primary-default; 
+        }
+        span{
+            color: $secondary-default !important;
+        }
        
     }
     &.flex-btn{

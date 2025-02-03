@@ -31,11 +31,12 @@
             }
         }
         // Dropdown Field
-        &.tfhb-field-dropdown{ 
-            .p-dropdown .p-dropdown-trigger {
+        &.tfhb-field-dropdown, &.tfhb-field-multi-select-dropdown{ 
+            .p-dropdown .p-dropdown-trigger, .p-multiselect .p-dropdown-trigger {
                 color: $text-input !important;
             }
-            .p-dropdown { 
+            
+            .p-dropdown, .p-multiselect { 
                 border: $fields-border $border-type $surface-input-field ; 
                 box-shadow: none !important;
                 height: 40px;
@@ -47,7 +48,10 @@
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
-                .p-dropdown-label{
+                .p-multiselect-trigger svg path {
+                    fill: $surface-input-field !important;
+                }
+                .p-dropdown-label, .p-multiselect-label{
                     line-height: 24px !important;
                     font-size: 15px !important;
                     padding: 8px 8px 8px 12px !important;
@@ -63,6 +67,7 @@
                     
                 // }
             } 
+            .p-multiselect:not(.p-disabled):hover,  .p-multiselect:not(.p-disabled).p-focus,
             .p-dropdown:not(.p-disabled):hover,  .p-dropdown:not(.p-disabled).p-focus {
                 border-color: $surface-border-hover !important;
             }
@@ -83,17 +88,24 @@
                 height: 40px;
                 margin: 0;
                 box-shadow: none;
-                color: $text-input !important;
+                color: $text-input;
                 font-family: "Inter", sans-serif;
                 &:focus, &:active, &:hover {
                     outline: none;
                     box-shadow: none; 
                     border-color: $surface-border-hover;
-                    color : $primary-color !important;
+                    color : $primary-color;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
+                &::placeholder {
+                    color: $text-input !important;// Define this variable in your SCSS
+                    opacity: 1; // Ensures full visibility
+                }
+                
             }
+             
+            
         }
         &.tfhb-field-options{
             .tfhb-options-fields{
@@ -112,6 +124,7 @@
             }
             .flatpickr-input{
                 max-width: 100%;
+                
             }
         }
         &.tfhb-field-textarea{
@@ -134,6 +147,10 @@
                     color : $primary-color !important;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
+                }
+                &::placeholder {
+                    color: $text-input !important;// Define this variable in your SCSS
+                    opacity: 1; // Ensures full visibility
                 }
             }
         } 

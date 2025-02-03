@@ -55,8 +55,8 @@ class AdminMenu {
 				'capability' => 'tfhb_manage_meetings',
 			),
 			array(
-				'id'         => 'booking',
-				'Title'      => esc_html__( 'Booking', 'hydra-booking' ),
+				'id'         => 'bookings',
+				'Title'      => esc_html__( 'Bookings', 'hydra-booking' ),
 				'capability' => 'tfhb_manage_booking',
 			),
 			array(

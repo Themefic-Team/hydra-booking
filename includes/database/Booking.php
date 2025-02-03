@@ -298,6 +298,7 @@ class Booking {
 						'attendee_time_zone', attendee.attendee_time_zone,
 						'attendee_name', attendee.attendee_name,
 						'email', attendee.email,
+						'address', attendee.address,
 						'others_info', attendee.others_info,
 						'country', attendee.country,
 						'ip_address', attendee.ip_address,
@@ -306,7 +307,8 @@ class Booking {
 						'status', attendee.status,
 						'reason', attendee.reason,
 						'payment_method', attendee.payment_method,
-						'payment_status', attendee.payment_status
+						'payment_status', attendee.payment_status,
+						'created_at', attendee.created_at
 					)
 				), 
 				JSON_ARRAY()
@@ -331,13 +333,26 @@ class Booking {
 			if($where != null) {
 				
 				foreach ($where as $condition) {
-					$field = 'booking.'.$condition[0];
+					$field =  $condition[0]; 
+					if(strpos($field, '.') === false){
+						$field = 'booking.'.$condition[0];
+					} 
+
 					$operator = $condition[1];
 					$value = $condition[2]; 
 					if($operator == 'BETWEEN'){  
 						$sql .= " AND $field $operator %s AND %s";
 						$data[] = $value[0];
 						$data[] = $value[1]; 
+					}elseif($operator == 'IN'){   
+						// value is array 
+						$in = implode(',', array_fill(0, count($value), '%s')); 
+						$sql .= " AND $field $operator ($in)";
+						$data = array_merge($data, $value);
+					}elseif($operator == 'LIKE'){   
+						// if operator is like 
+						$like_conditions[] = "$field $operator %s";
+						$data[] = $value; 
 					}else{
 
 						$sql .= " AND $field $operator %s";
@@ -346,6 +361,10 @@ class Booking {
 				} 
 			} 
 
+			 // Add grouped `LIKE` conditions
+			 if (!empty($like_conditions)) {
+				$sql .= " AND (" . implode(' OR ', $like_conditions) . ")";
+			}
 			
 			$sql .= "GROUP BY booking.id ";
 			
@@ -384,9 +403,10 @@ class Booking {
 					$attendees = json_decode($results->attendees);
 					$results->attendees = $attendees;
 				}
-			}
+			} 
  
-
+			// echo $wpdb->last_query;
+			
 		// Return the results
 		return $results;
 

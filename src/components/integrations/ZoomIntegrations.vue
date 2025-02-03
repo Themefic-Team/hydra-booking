@@ -60,10 +60,10 @@ const closePopup = () => {
                 :buttonText="zoom_meeting.status == 1 ? 'Connected' : 'Connect'" 
                 hover_icon="ArrowRight" 
                 :hover_animation="false"    
-            /> 
-      
+            />  
             <!-- Checkbox swicher --> 
-            <HbSwitch v-if="zoom_meeting.connection_status && zoom_meeting.account_id !=''" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
+            <HbSwitch v-if="zoom_meeting.connection_status && zoom_meeting.account_id !='' && display != 'list'" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
+            <HbSwitch v-if="zoom_meeting.account_id && display == 'list'" @change="emit('update-integrations', 'zoom_meeting', zoom_meeting)" v-model="zoom_meeting.status"    /> 
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->

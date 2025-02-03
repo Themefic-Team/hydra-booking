@@ -15,6 +15,7 @@ class ScheduleController {
 		$this->tfhb_create_cron_job();
 
 		add_action( 'tfhb_after_booking_completed_schedule', array( $this, 'tfhb_after_booking_completed_schedule_callback' ) );
+		$this->tfhb_after_booking_completed_schedule_callback();
 	}
 	public function tfhb_create_cron_job() {
 
@@ -58,24 +59,34 @@ class ScheduleController {
 	function tfhb_after_booking_completed_schedule_callback() {
 
 		$general_settings        = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
+
+
+		
 		$after_booking_completed = isset( $general_settings['after_booking_completed'] ) ? $general_settings['after_booking_completed'] : 60; // minutes
 		// Get all bookings current date before 60 minutes of Current Time and status is confirmed
 		$time = gmdate( 'H:i:s', strtotime( '-' . $after_booking_completed . ' minutes', strtotime( gmdate( 'H:i:s' ) ) ) );
 		// meeting_dates 2024-06-06
 		$meeting_dates = gmdate( 'Y-m-d', strtotime( gmdate( 'Y-m-d' ) ) );
 		$booking       = new Booking();
-		$bookings      = $booking->get(
-			array(
-				'status'        => 'confirmed',
-				'meeting_dates' => $meeting_dates,
-			)
+		 
+		$where = array(
+			array('status', '=', 'confirmed'), 
+			array('meeting_dates', '=', $meeting_dates),
 		);
-
+		 $bookings = $booking->getBookingWithAttendees(  
+			$where,
+			 null,
+			'DESC',
+		); 
+	
 		foreach ( $bookings as $key => $value ) {
-			$DateTime = new DateTimeController( $value->attendee_time_zone );
+		
+			
+			$DateTime = new DateTimeController( $value->availability_time_zone );
 					// Time format if has AM and PM into start time
 			$time_format              = strpos( $value->start_time, 'AM' ) || strpos( $value->start_time, 'PM' ) ? '12' : '24';
-			$before_booking_completed = $DateTime->convert_time_based_on_timezone( gmdate( 'Y-m-d H:i:s', strtotime( '-' . $after_booking_completed . ' minutes' ) ), 'UTC', $value->attendee_time_zone, $time_format );
+			$before_booking_completed = $DateTime->convert_time_based_on_timezone( '', gmdate( 'Y-m-d H:i:s', strtotime( '-' . $after_booking_completed . ' minutes' ) ), 'UTC', $value->availability_time_zone, $time_format );
+ 
 
 			if ( $value->end_time < $before_booking_completed ) {
 
