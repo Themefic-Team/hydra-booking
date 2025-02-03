@@ -85,6 +85,10 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 					if($question['type'] == 'phone'){
 						$question['type'] ='tel';
 					}
+
+					if($name == 'address'){
+						$question['required'] = false;
+					}
 					$required_star = $question['required'] == 1 ? '*' : '';
 					$required      = $question['required'] == 1 ? 'required' : '';
 
