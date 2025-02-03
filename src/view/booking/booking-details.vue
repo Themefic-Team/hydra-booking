@@ -66,7 +66,8 @@ const activeSingleAttendeeDetails = (attendee_id) => {
         }
         return;
     }
-    activeAttendeeDetails.push(attendee_id);
+    // remove first all the items 
+    activeAttendeeDetails.push(attendee_id); 
 };
 
 // Single Attendee Details able to show multiple items at a time
@@ -81,6 +82,8 @@ const activeSingleAttendeeAction = (attendee_id) => {
         }
         return;
     }
+    // remove first all the items
+    activeAttendeeAction.splice(0, activeAttendeeAction.length);
     activeAttendeeAction.push(attendee_id);
 };
  
@@ -124,8 +127,23 @@ const getSingleAttendeeActivity = ($value) => {
 }
 // edit internal note  
 
+function hideDropdownOutsideClick(e) {  
+    // const multiSelectPanel = document.querySelector('.p-multiselect-panel'); // Dynamically check for p-multiselect-panel
+    if (!document.querySelector('.tfhb-booking-details-action').contains(e.target)) { 
+        activeBookingAction.value = false;
+    }
+    // if (!document.querySelector('.tfhb-b-d-icon-cta').contains(e.target)) { 
+        
+    //     // activeAttendeeDetails make empty
+    //     console.log(activeAttendeeDetails);
+
+    // }
+    
+    
+}
 onBeforeMount(() => {  
     BookingDetails.fetchBookingsDetails(bookingId, router);
+    window.addEventListener('click', hideDropdownOutsideClick);
 });
 
 const TfhbPrevNavigator = () => {
@@ -217,7 +235,10 @@ const TfhbPrevNavigator = () => {
             <div class="tfhb-booking-heading-left tfhb-flexbox tfhb-gap-8">
                 <div class="prev-navigator tfhb-cursor-pointer" @click="TfhbPrevNavigator()">
                     
-                    <Icon name="ArrowLeft" size=15 /> 
+                    <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.80008 18.3331L3.66675 13.1997L8.80008 8.06641" stroke="#2E6B38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M13.9334 13.1992H3.66675" stroke="#2E6B38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     <!-- <HbPreloader v-else color="#2E6B38" /> -->
                 </div>
                 <h4> {{ BookingDetails.booking.title }}</h4>
@@ -238,8 +259,8 @@ const TfhbPrevNavigator = () => {
             </div> 
             <div class="tfhb-booking-heading-right tfhb-flexbox tfhb-gap-8"> 
                 <div class="tfhb-booking-details-action tfhb-dropdown ">
-                    <button  @click="activeBookingAction = !activeBookingAction"  class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8">
-                        {{ $tfhb_trans('Action') }} 
+                    <button  @click="activeBookingAction = !activeBookingAction"  class="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" style="padding-right: 16px;">
+                        {{ $tfhb_trans('More') }} 
                         <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
                     </button>
                     
@@ -267,10 +288,10 @@ const TfhbPrevNavigator = () => {
        <div class="tfhb-booking-details-wrap tfhb-flexbox tfhb-gap-16 tfhb-justify-between tfhb-align-normal">
             <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16">
                 <div class="tfhb-b-d-wrap">
-                    <h4>{{ $tfhb_trans('Meeting Details') }}</h4> 
+                    <h3>{{ $tfhb_trans('Meeting Details') }}</h3> 
                     
                     <!-- {{BookingDetails.booking}} -->
-                    <div class="tfhb-b-d-icon-box-wrap tfhb-flexbox tfhb-gap-32 tfhb-justify-between tfhb-align-normal">
+                    <div class="tfhb-b-d-icon-box-wrap tfhb-flexbox tfhb-gap-24 tfhb-justify-between tfhb-align-normal">
                         <!-- Booking Details Icon Box -->
                         <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                             <Icon name="User" size=20 /> 
@@ -378,8 +399,8 @@ const TfhbPrevNavigator = () => {
                 <div class="tfhb-b-d-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width" v-if="'one-to-one' == BookingDetails.booking.meeting_type">
  
                     <div class="tfhb-b-d-inner tfhb-full-width">
-                        <h4>{{ $tfhb_trans('Attendee Details 1') }}</h4>
-                        <div class="tfhb-b-d-icon-box-wrap bg-wrap tfhb-flexbox tfhb-gap-32  tfhb-align-normal">
+                        <h3>{{ $tfhb_trans('Attendee Details') }}</h3>
+                        <div class="tfhb-b-d-icon-box-wrap bg-wrap tfhb-flexbox tfhb-gap-24  tfhb-align-normal">
                             <!-- Booking Details Icon Box -->
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="User" size=20 /> 
@@ -482,7 +503,7 @@ const TfhbPrevNavigator = () => {
                             <span class="status" :class="BookingDetails.attendees[0].payment_status"> {{BookingDetails.attendees[0].payment_status}} </span> 
                         </div>
                         
-                        <div class="tfhb-b-d-icon-box-wrap bg-wrap  tfhb-flexbox tfhb-gap-32 tfhb-align-normal">
+                        <div class="tfhb-b-d-icon-box-wrap bg-wrap  tfhb-flexbox tfhb-gap-24 tfhb-align-normal">
                             <!-- Booking Details Icon Box -->
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="User" size=20 /> 
@@ -544,32 +565,29 @@ const TfhbPrevNavigator = () => {
                  <!-- For Group Booking -->
                  <div class="tfhb-b-d-wrap tfhb-flexbox tfhb-gap-0 tfhb-full-width" v-if="'one-to-group' == BookingDetails.booking.meeting_type">
                      
-                    <h4 class="tfhb-mb-16">{{ $tfhb_trans('Attendee Details') }}</h4>
+                    <h3 class="tfhb-mb-8">{{ $tfhb_trans('Attendee Details') }}</h3>
                     <!-- Single Attendee Content -->
                      <div v-for=" (attendees, index) in BookingDetails.attendees" class="tfhb-b-d-inner tfhb-singlee-attendees tfhb-full-width"
                         :class="activeAttendeeDetails.includes(attendees.id) ? 'active' : ''"
                      >
-                         <div class="tfhb-b-d-icon-box-wrap bg-wrap no-border tfhb-flexbox tfhb-gap-32  tfhb-align-normal">
+                         <div class="tfhb-b-d-icon-box-wrap tfhb-group-accordion-bar bg-wrap no-border tfhb-flexbox tfhb-gap-24  tfhb-justify-between">
                              <!-- Booking Details Icon Box -->
+                             
                              <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal"> 
-                                 <div class="tfhb-b-d-icon-content tfhb-flexbox tfhb-gap-8"> 
-                                    <span class="accordion-icons">
-                                        <!-- activeAttendeeDetails is reactive array -->
-                                        <Icon @click.stop="activeSingleAttendeeDetails(attendees.id )" v-if="!activeAttendeeDetails.includes(attendees.id)" name="ChevronRight" size=20 />
-                                        <Icon @click.stop="activeSingleAttendeeDetails(attendees.id )" v-if="activeAttendeeDetails.includes(attendees.id)" name="ChevronDown" size=20 />
-                                    </span>
-                                     <p> 
-                                         {{attendees.attendee_name}}  
-                                     </p>
+                                 <div class="tfhb-b-d-icon-content"> 
+                                    <p> 
+                                        {{attendees.attendee_name}}  
+                                    </p>
                                  </div>
                              </div>  
+                             
                              <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal"> 
                                  <div class="tfhb-b-d-icon-content"> 
                                      <p> 
                                          {{attendees.email}}  
                                      </p>
                                  </div>
-                             </div>   
+                             </div>  
                              <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
 
                                 <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0"> 
@@ -577,9 +595,25 @@ const TfhbPrevNavigator = () => {
                                         {{ attendees.status }}
                                     </div> 
                                 </div>
-                                 <div class="tfhb-b-d-icon-cta ">  
+                                 
+                             </div> 
+                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-16 tfhb-justify-end"> 
+                                <div  @click.stop="activeSingleAttendeeDetails(attendees.id )"  class=" tfhb-flexbox tfhb-gap-4 accordion-content"  > 
+                                    <span>Details</span>
+                                    <span class="accordion-icons">
+                                        <!-- activeAttendeeDetails is reactive array -->
+                                        <Icon v-if="!activeAttendeeDetails.includes(attendees.id)" name="ChevronRight" size=20 />
+                                        <Icon v-if="activeAttendeeDetails.includes(attendees.id)" name="ChevronDown" size=20 />
+                                    </span>
+                                
+                                </div> 
+                                <div class="tfhb-b-d-icon-cta ">  
                                     <div  @click="activeSingleAttendeeAction(attendees.id)"  class="tfhb-booking-details-action tfhb-dropdown "> 
-                                        <img :src="$tfhb_url+'/assets/images/more-vertical.svg'" alt="">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9.99984 10.8327C10.4601 10.8327 10.8332 10.4596 10.8332 9.99935C10.8332 9.53911 10.4601 9.16602 9.99984 9.16602C9.5396 9.16602 9.1665 9.53911 9.1665 9.99935C9.1665 10.4596 9.5396 10.8327 9.99984 10.8327Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M9.99984 5.00065C10.4601 5.00065 10.8332 4.62756 10.8332 4.16732C10.8332 3.70708 10.4601 3.33398 9.99984 3.33398C9.5396 3.33398 9.1665 3.70708 9.1665 4.16732C9.1665 4.62756 9.5396 5.00065 9.99984 5.00065Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M9.99984 16.6667C10.4601 16.6667 10.8332 16.2936 10.8332 15.8333C10.8332 15.3731 10.4601 15 9.99984 15C9.5396 15 9.1665 15.3731 9.1665 15.8333C9.1665 16.2936 9.5396 16.6667 9.99984 16.6667Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
                                         <transition name="tfhb-dropdown-transition">
                                             <div v-show="activeAttendeeAction.includes(attendees.id)" class="tfhb-dropdown-wrap ">  
                                                 <span class="tfhb-dropdown-single"  @click.stop="goForReschedule(attendees)"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
@@ -587,12 +621,12 @@ const TfhbPrevNavigator = () => {
                                             </div>
                                         </transition>
                                     </div>
-                                 </div>
-                             </div>     
+                                </div>
+                                </div>       
                          </div>
                          <transition name="accordion">
                             <div v-show="activeAttendeeDetails.includes(attendees.id)"  class="tfhb-singlee-attendees-inner tfhb-full-width" >
-                                <div class="tfhb-b-d-icon-box-wrap no-border tfhb-flexbox tfhb-gap-32  tfhb-align-normal">
+                                <div class="tfhb-b-d-icon-box-wrap no-border tfhb-flexbox tfhb-gap-24  tfhb-align-normal">
                                     <!-- Booking Details Icon Box -->
                                       
                                     <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
@@ -646,12 +680,12 @@ const TfhbPrevNavigator = () => {
                                     </div> 
                                 </div>
 
-                                <div class="tfhb-flexbox tfhb-gap-8 tfhb-b-d-inner-title">
+                                <div class="tfhb-flexbox tfhb-gap-8 tfhb-b-d-inner-title tfhb-pt-16 tfhb-pb-8">
                                     <h4>{{ $tfhb_trans('Payment Details') }}</h4>
                                     <span class="status" :class="attendees.payment_status"> {{attendees.payment_status}} </span> 
                                 </div>
 
-                                <div class="tfhb-b-d-icon-box-wrap tfhb-flexbox no-border tfhb-gap-32 tfhb-align-normal">
+                                <div class="tfhb-b-d-icon-box-wrap tfhb-flexbox no-border tfhb-gap-24 tfhb-align-normal">
                                     <!-- Booking Details Icon Box -->
                                     <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                         <Icon name="User" size=20 /> 
@@ -715,7 +749,7 @@ const TfhbPrevNavigator = () => {
             </div>
             <div class="tfhb-booking-details-activity">
                 <div class="tfhb-b-d-wrap">  
-                    <h4>{{ $tfhb_trans('Activity Details') }}</h4> 
+                    <h3>{{ $tfhb_trans('Activity Details') }}</h3> 
                     <div v-if="BookingDetails.booking_activity"  class="tfhb-activity-timeline tfhb-flexbox tfhb-gap-16">
                         <div v-for=" (activity, index) in BookingDetails.booking_activity" class="tfhb-activity-single-timeline">
                             <div class="tfhb-a-s-t-icon">

@@ -24,7 +24,7 @@ const routes = [
         component: Dashboard
     },  
     {
-        path: '/booking',
+        path: '/bookings',
         name: 'booking', 
         meta: { Capabilities: 'tfhb_manage_booking' },
         component: Booking, 

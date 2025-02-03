@@ -103,7 +103,7 @@ class HydraBookingShortcode {
 
 	
 		$hostData =  new Host();
-		$host_meta = (array) $hostData->get( $host_id ); 
+		$host_meta = (array) $hostData->getHostByUserId( $host_id ); 
 		 
 		
 		// Time Zone

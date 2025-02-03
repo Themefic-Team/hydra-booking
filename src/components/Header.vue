@@ -87,7 +87,11 @@ onBeforeRouteLeave((to, from, next) => {
         </div>
         <div v-if="props.notifications" class="tfhb-header-notification">
             <div class="tfhb-dropdown tfhb-mega-dropdown">
-            <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size=24 /> </span>
+            <span @click="displayNotification = !displayNotification"> 
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.58333 17.4993C8.72282 17.753 8.92787 17.9646 9.17708 18.112C9.42628 18.2594 9.71048 18.3371 10 18.3371C10.2895 18.3371 10.5737 18.2594 10.8229 18.112C11.0721 17.9646 11.2772 17.753 11.4167 17.4993M5 6.66602C5 5.33993 5.52678 4.06816 6.46447 3.13048C7.40215 2.1928 8.67392 1.66602 10 1.66602C11.3261 1.66602 12.5979 2.1928 13.5355 3.13048C14.4732 4.06816 15 5.33993 15 6.66602C15 12.4993 17.5 14.166 17.5 14.166H2.5C2.5 14.166 5 12.4993 5 6.66602Z" stroke="#141915" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>    
+            </span>
 
             <span v-if="props.total_unread && props.total_unread != 0" class="tfhb-header-notification-count">
                 {{props.total_unread}}

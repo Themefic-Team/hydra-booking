@@ -14,6 +14,13 @@
            }
        }
     }
+    .tfhb-empty-notice-box-wrap.tfhb-booking-notice {
+        background-color: $surface-secondary;
+        margin: 0 16px !important; 
+        border-radius: 12px;
+        border: 1px solid $surface-border;
+        margin-top: 32px !important;
+    }
     .tfhb-content-wrap{
         .tfhb-meeting-title{
             width: 100%;
@@ -499,7 +506,7 @@
         cursor: pointer;
         position: relative;
         svg{
-            fill: $text-paragraph;
+            fill: $text-input;
         }
         .tfhb-status-popup{
             width: 140px; 
@@ -527,7 +534,7 @@
                     margin: 0 !important;
                     &.pending{
                         background-color: $warning-background;
-                        color: $alert-text;
+                        color: $warning-text;
                     }
                     &.schedule{
                         background-color: $info-background;
@@ -615,6 +622,8 @@
                     background-color: $surface-secondary;
                     td{
                         border-bottom: 0 !important;
+                        padding-top: 8px ;
+                        padding-bottom: 4px;
                         .tfhb-date-title{
                             color: $text-title;
                             font-size: 15px;
@@ -624,8 +633,8 @@
                     }
                 }
                 td{
-                    padding: 16px;
-                    color: $text-paragraph;
+                    padding: 12px 16px;
+                    color: $text-title;
                     font-size: $heading-font-size-small;
                     
                     font-weight: $font-weight-reguler;
@@ -635,6 +644,7 @@
                     .tfhb-list-data-event-title{
                         font-weight: 600 !important;
                         line-height: 1.53 !important;
+                        color: $text-title !important;
                         b{
                             color: $primary-default;
                         }
@@ -722,6 +732,8 @@
                         .tfhb-status-bar{
                             cursor: pointer;
                             position: relative;
+                            height: 20px;
+                            width: 20px;
                             svg{
                                 fill: $text-paragraph;
                             }
@@ -751,7 +763,7 @@
                                         margin: 0 !important;
                                         &.pending{
                                             background-color: $warning-background;
-                                            color: $alert-text;
+                                            color: $warning-text;
                                         }
                                         &.schedule{
                                             background-color: $info-background;
@@ -843,6 +855,10 @@
         border-radius: 8px;
         box-sizing: border-box;
         width: 100%;
+        h3{
+            margin: 0 !important;
+        }
+         
         .tfhb-b-d-inner-title{
             .status { 
                 background: $info-text;
@@ -851,6 +867,7 @@
                 display: inline-block;
                 padding: 2px 8px;
                 border-radius: 16px;
+                text-transform: capitalize;
             }
         }
        
@@ -876,13 +893,20 @@
 
                 .lucide, svg {
                     margin-top: 6px;
+                    path, circle {
+                        stroke: $text-paragraph;
+                        stroke-width: 2;
+                    }
                 }
                 .tfhb-b-d-icon-content{
                     width: calc(100% - 28px);
                     h5{
                         font-size: 13px;
                         font-weight: 600;
-                        line-height: 1.53;
+                        line-height: 1.53; 
+                    }
+                    p, span{
+                        font-size: 15px !important; 
                     }
                     .tfhb-single-booking-info {
                         span {
@@ -903,6 +927,27 @@
                           }
                           
                     } 
+                   
+                }
+                .accordion-content{
+                    span{
+                        font-size: 13px !important;
+                        font-weight: 600 !important;
+                        line-height: 1.53 !important;
+                        color: $success-text !important;
+                        cursor: pointer;
+                        svg{
+                            path{
+                                stroke: $success-text !important;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.tfhb-group-accordion-bar{
+                p{
+                    color: $text-title !important;
                 }
             }
         }
@@ -959,12 +1004,21 @@
                     cursor: pointer;
                 }
             }
+            > .tfhb-b-d-icon-box-wrap{
+                 > div{
+                    width: calc(33% - 144px);
+                    &:last-child{
+                        width: 130px;
+                    }
+                 }
+            }
             .tfhb-b-d-inner-title{
                 border-bottom: $border-reguler $border-type $surface-border;
                 margin: 0 16px;
             }
             &.active{
                 border: $border-reguler $border-type $surface-border;
+                border-radius: 0px 0px 8px 8px;
             }
             .tfhb-b-d-icon-box-wrap {
                 margin: 0 !important; 
