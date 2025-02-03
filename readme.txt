@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.19
+Stable tag: 1.0.21
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -198,6 +198,19 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.21 - 03/02/2025 =  
+
+- Improved: Revamped booking database for group bookings.
+- Improved: Timezone and date-time functionality in bookings.
+- Added: Display of remaining slots in group bookings (PRO).
+- Added: Outlook Calendar and Teams integration (PRO).
+- Fixed: Various issues were fixed and system stability improved.
+
+= 1.0.20 - 30/01/2025 =  
+
+- Compatibility: Compatible with WooCommerce (v9.6.0).
+- Improved: Woo Payments integration feature.
 
 = 1.0.19 - 19/01/2025 =  
 
