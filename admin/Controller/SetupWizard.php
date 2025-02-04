@@ -251,7 +251,7 @@ class SetupWizard {
 			'recurring_repeat'         => '[{"limit":1,"times":"days"}]',
 			'questions_type'           => 'custom',
 			'questions'                => '[{"label":"name","type":"Text","placeholder":"Name","options":[],"required":1},{"label":"email","type":"Email","options":[],"placeholder":"Email","required":1},{"label":"address","type":"Text","placeholder":"Address","options":[],"required":1}]',
-			'payment_status'           => 1,
+			'payment_status'           => 0,
 			'payment_method'           => '',
 			'max_book_per_slot'        => 1,
 			'is_display_max_book_slot' => '0',

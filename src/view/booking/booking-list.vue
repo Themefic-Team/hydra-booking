@@ -135,10 +135,7 @@ const singleBookingData = ref('');
 const Tfhb_Booking_View = async (id) => {  
     //  go to booking details page
     router.push({ name: 'bookingDetails', params: { id: id } });
-
-    // singleBookingData.value = data;
-    // BookingDetailsPopup.value = true;
-    // TfhbFormatMeetingLocation(data.meeting_locations);
+ 
 }
 
 
@@ -559,7 +556,7 @@ const changeToDate = (value) => {
             
             <div class="tfhb-filter-content-wrap " :class="Booking.FilterPreview ? 'active' : ''"> 
                 <HbButton 
-                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 "  
                     :class="Booking.filter_data.filter_type == 'filter' ? 'active' : ''"
                     @click="Booking.FilterPreview =!Booking.FilterPreview , Booking.filter_data.filter_type='filter'"
                     :buttonText="$tfhb_trans('Filter')"
@@ -612,21 +609,21 @@ const changeToDate = (value) => {
                                 v-model="Booking.filter_data.host_ids" 
                                 :selected = "1"
                                 @add-change="Booking.fetchBookings()"
-                                :placeholder="$tfhb_trans('Select Host : All')"   
+                                :placeholder="$tfhb_trans('Host : All')"   
                                 :option = "Host.hosts" 
                             /> 
                             <HbMultiSelect  
                                 v-model="Booking.filter_data.meeting_ids"  
                                 :selected = "1"
                                 @add-change="Booking.fetchBookings()"
-                                :placeholder="$tfhb_trans('Select Meeting : All')"   
+                                :placeholder="$tfhb_trans('Meeting : All')"   
                                 :option = "getMeetingList(Meeting.meetings)" 
                             /> 
                             <HbMultiSelect  
                                 v-model="Booking.filter_data.status" 
                                 :selected = "1"
                                 @add-change="Booking.fetchBookings()"
-                                :placeholder="$tfhb_trans('Select Status : All')"   
+                                :placeholder="$tfhb_trans('Status : All')"   
                                 :option = "[
                                     {'name': 'Pending', 'value': 'pending'},  
                                     {'name': 'Confirmed', 'value': 'confirmed'},    
@@ -636,7 +633,7 @@ const changeToDate = (value) => {
 
                             <div class="tfhb-flexbox tfhb-justify-center">
                                 <HbButton 
-                                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 tfhb-full-width tfhb-justify-center" 
                                     @click="resetFilter"
                                     :buttonText="$tfhb_trans('Reset Filter')"
                                     icon="RefreshCw" 
@@ -1113,10 +1110,15 @@ const changeToDate = (value) => {
         </div>
     </div>
 </div>
-<div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+
+<div  v-else-if="bookingView=='list' && paginatedBooking.length == 0" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-booking-notice">  
     <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-    <p>{{ $tfhb_trans('No Booking Found') }}</p>
+    <p v-if="Booking.filter_data.filter_type == 'upcoming'">{{ $tfhb_trans('No upcoming booking found') }} </p>
+    <p v-else-if="Booking.filter_data.filter_type == 'completed'">{{ $tfhb_trans('No completed booking found') }} </p>
+    <p v-else-if="Booking.filter_data.filter_type == 'latest'">{{ $tfhb_trans('No latest booking found') }} </p>
+    <p v-else>{{ $tfhb_trans('No booking found') }} </p>
 </div>
+ 
 </template>
 
 <style scoped>

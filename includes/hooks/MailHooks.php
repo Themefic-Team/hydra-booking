@@ -17,10 +17,10 @@ class MailHooks {
  
 	public function __construct() {
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 ); 
-		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 10, 1 );
-		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 10, 1 );
-		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 10, 1 );
-		add_action( 'hydra_booking/send_booking_reminder', array( $this, 'send_booking_reminder' ), 10, 1 );
+		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 1 );
+		add_action( 'hydra_booking/send_booking_reminder', array( $this, 'send_booking_reminder' ), 20, 1 );
 
 		// Send Mail Booking with All attendees
 		add_action( 'hydra_booking/send_booking_with_all_attendees_confirmed', array( $this, 'send_booking_with_all_attendees_confirmed' ), 10, 1 );
@@ -851,15 +851,13 @@ class MailHooks {
 		}
  
 		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
-			$booking_locations = json_decode($attendeeBooking->meeting_locations);
-			
-
+			$booking_locations = json_decode($attendeeBooking->meeting_locations); 
 			
 			$booking_locations_html = '<ul>';
 			foreach ($booking_locations as $key => $value) { 
 				if($key == 'zoom'){
 					$link = $value->address->link;
-					$password = $value->address->password; 
+					$password = $value->address->password;  
 					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'</li>';
 				}else{
 

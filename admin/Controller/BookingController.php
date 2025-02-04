@@ -269,8 +269,7 @@ class BookingController {
 			$where[] = array('meeting.title', 'LIKE', '%'.$filter_search.'%');
 			$where[] = array('attendee.attendee_name', 'LIKE', '%'.$filter_search.'%');
 		}else{
-			// based on created date 
-			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
+			// Get all order by desc 
 		}
 		
 
@@ -1160,10 +1159,9 @@ class BookingController {
 		$bookingsList = $this->getBookingDetailsData($booking_id);
 		$bookingMeta = new BookingMeta();
 		$booking_activity = $bookingMeta->getWithIdKey ( $booking_id, 'booking_activity', null); 
-
-		$get_internal_note = $bookingMeta->getWithIdKey( $booking_id, 'internal_note', 1 );
-		// tfhb_print_r($get_internal_note);
-		$internal_note = $get_internal_note->value;
+		$get_internal_note = $bookingMeta->getWithIdKey ( $booking_id, 'internal_note', 1);  
+ 
+		$internal_note = isset($get_internal_note->value) ? $get_internal_note->value : '';
 
 		if( empty( $bookingsList ) ){
 			return rest_ensure_response(

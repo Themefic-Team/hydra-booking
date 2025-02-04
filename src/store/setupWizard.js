@@ -18,7 +18,7 @@ const setupWizard = reactive({
         availabilityDataSingle: { 
             id: 0,
             title: '',
-            time_zone: '',
+            time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             date_status: 0,
             default_status: true,
             time_slots: [

@@ -42,7 +42,7 @@ class ZoomServices {
 		$host_meta = $host->get( $host_id );
 		$_tfhb_host_integration_settings = get_user_meta( $host_meta->user_id, '_tfhb_host_integration_settings', true );
 		
-		if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) ) {
+		if ( ! empty( $_tfhb_host_integration_settings['zoom_meeting'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['connection_status'] ) && ! empty( $_tfhb_host_integration_settings['zoom_meeting']['status'] ) && $_tfhb_host_integration_settings['zoom_meeting']['status'] == true ) {
 		 
 			$this->account_id     = $_tfhb_host_integration_settings['zoom_meeting']['account_id'];
 			$this->client_id  = $_tfhb_host_integration_settings['zoom_meeting']['app_client_id'];
