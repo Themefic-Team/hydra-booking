@@ -368,7 +368,7 @@ class FrontendDashboard {
 			if ($page['pro'] == true ) {
 				continue;
 			}
-			$this->create_page( esc_sql( $page['name'] ), 'tfhb_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? $page['parent'] : '', $page['template'] );
+			$this->create_page( esc_sql( $page['name'] ), $page['template'], 'tfhb_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? $page['parent'] : '' );
 		}
         
     }
@@ -384,7 +384,7 @@ class FrontendDashboard {
 	 *
 	 * @return int page ID
 	 */
-	private function create_page( $slug, $template, $option = '', $page_title = '', $page_content = '', $post_parent = 0,  ) {
+	private function create_page( $slug, $template, $option = '', $page_title = '', $page_content = '', $post_parent = 0  ) {
 		global $wpdb;
 
 		$option_value = get_option( $option ); 

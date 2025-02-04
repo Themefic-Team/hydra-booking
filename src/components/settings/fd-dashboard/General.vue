@@ -45,7 +45,7 @@ const UploadChangeMobileDashboardLogo = () => {
         <div class="tfhb-single-form-field-wrap tfhb-flexbox">
             <div class="tfhb-field-image" >  
                 <img v-if="props.FrontendDashboard.fd_dashboard.general.dashboard_logo != ''"  class='dashboard_logo_display'  :src="props.FrontendDashboard.fd_dashboard.general.dashboard_logo">
-                <img v-else class='dashboard_logo_display'  :src="$tfhb_url+'/assets/images/150x50.png'" >
+                <img v-else class='dashboard_logo_display'  :src="$tfhb_url+'/assets/images/images-icon.png'" >
                 <button class="tfhb-image-btn" @click="UploadChangeDashboardLogo">{{ $tfhb_trans('Change') }}</button> 
                 <input  type="text"  :v-model="props.FrontendDashboard.fd_dashboard.general.dashboard_logo"   />  
             </div>
@@ -61,7 +61,7 @@ const UploadChangeMobileDashboardLogo = () => {
             <div class="tfhb-field-image" >  
                 <img v-if="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo != ''"  class='mobile_dashboard_logo_display'  :src="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo">
                 
-                <img v-else class='mobile_dashboard_logo_display'  :src="$tfhb_url+'/assets/images/150x50.png'" >
+                <img v-else class='mobile_dashboard_logo_display'  :src="$tfhb_url+'/assets/images/images-icon.png'" >
                 <button class="tfhb-image-btn" @click="UploadChangeMobileDashboardLogo">{{ $tfhb_trans('Change') }}</button> 
                 <input  type="text"  :v-model="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo"   />  
             </div>
@@ -75,12 +75,13 @@ const UploadChangeMobileDashboardLogo = () => {
 
 <style scoped>
 .tfhb-field-image {
-	width: 100px !important;
+	max-width: 100px !important;
 	border-radius: 18px !important;
 }
 .tfhb-single-form-field-wrap .tfhb-field-image img {
 	height: 100%;
 	width: 100%;
+    padding: 4px;
 	border-radius: 18px;
 }
 </style> 
