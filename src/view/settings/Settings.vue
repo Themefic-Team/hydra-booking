@@ -44,8 +44,7 @@ onMounted(() => {
                     <li><router-link to="/settings/appearance" :class="{ 'active': $route.path === '/settings/appearance' }"> <Icon name="SwatchBook" /> {{ $tfhb_trans('Appearance') }}</router-link></li>
 
                     <li><router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }"> <Icon name="ClipboardList" /> {{ $tfhb_trans('Meeting Category') }}</router-link></li>
-                    <li><router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }"> <Icon name="UserCog" /> {{ $tfhb_trans('Host Settings') }}</router-link></li> 
-                    <li><router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }"> <Icon name="ClipboardList" /> {{ $tfhb_trans('Meeting Category') }}</router-link></li>
+                    <li><router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }"> <Icon name="UserCog" /> {{ $tfhb_trans('Host Settings') }}</router-link></li>  
 
                     <li><router-link to="/settings/fd-dashboard" exact :class="{ 'active': $route.path.startsWith('/settings/fd-dashboard') }"> <Icon name="LayoutDashboard" /> {{ $tfhb_trans('Frontend Dashboard') }}</router-link></li> 
  

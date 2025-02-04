@@ -197,9 +197,14 @@ class FrontendDashboard {
         $host = new Host(); 
         $host_data = $host->getHostById( $userAuthData['host_id'] ); 
 
+        $site_settings = [];
+        $site_settings['blog_title'] = get_bloginfo('title');
+        $site_settings['site_url'] = get_bloginfo('url');
+
         $data = array(
             'status' => true,
             'userAuth' => $host_data, 
+            'site_settings' => $site_settings,
         );
  
         return rest_ensure_response($data);

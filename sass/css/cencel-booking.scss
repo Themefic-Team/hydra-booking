@@ -1,16 +1,18 @@
-.tfhb-booking-cencel{
+.tfhb-booking-cencel {
     margin: 50px 0;
     width: 100%;
-    .tfhb-meeting-card{
+
+    .tfhb-meeting-card {
         margin: 0 auto;
     }
 
 
-    .tfhb-confirmation-button{
+    .tfhb-confirmation-button {
         width: 100%;
         display: flex;
         justify-content: end;
-        button{
+
+        button {
             border-radius: 8px;
             background: $primary-default;
             padding: 10px 24px;
@@ -19,15 +21,18 @@
             font-size: 15px;
             font-style: normal;
             font-weight: 400;
-            line-height: 24px; /* 160% */
+            line-height: 24px;
+            /* 160% */
             cursor: pointer;
             // width: 224px; 
             border: 0px solid;
             transition: .3s all ease;
             position: relative;
-            &:hover{
+
+            &:hover {
                 background-color: $primary-hover;
             }
+
             .tfhb-submit-preloader {
                 position: absolute;
                 left: 0;
@@ -38,7 +43,8 @@
                 padding: 10px;
                 text-align: right;
                 box-sizing: border-box;
-                 svg {
+
+                svg {
                     height: 100%;
                     width: 100%;
                 }

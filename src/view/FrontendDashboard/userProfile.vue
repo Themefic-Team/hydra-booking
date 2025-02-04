@@ -1,21 +1,184 @@
-<script setup>
-import { __ } from '@wordpress/i18n';
+<script setup> 
 import { reactive, onBeforeMount, ref, nextTick } from 'vue';
-import { useRouter, useRoute, RouterView } from 'vue-router' 
-import HbText from '@/components/form-fields/HbText.vue'
-import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
-import HbTextarea from '@/components/form-fields/HbTextarea.vue'
-import HbButton from '@/components/form-fields/HbButton.vue'
-import HbRadio from '@/components/form-fields/HbRadio.vue'
+import { useRouter, useRoute, RouterView } from 'vue-router'
+import axios from 'axios'  
+import { toast } from "vue3-toastify";  
 import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
 const { errors } = useValidators();
 
+
 import { FdDashboard } from '@/store/frontend-dashboard.js';
+ 
+// Get Current Route url 
+const route = useRoute();
+const skeleton = ref(true);
+const router = useRouter();
+const hostData = reactive({
+    id: 0,
+    user_id: 0,
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
+    about: '',
+    avatar: '',
+    featured_image: '',
+    time_zone: '',
+    availability_type: 'settings',
+    availability_id: '',
+    availability: [],
+    others_information: {},
+    status: '',
 
-const disable_personal_info = ref(true);
-const disable_password = ref(true);
+});
+const time_zones = reactive({});
+const hosts_settings = reactive({});
+const settingsAvailabilityData = reactive({});
+const hostId = FdDashboard.userAuth.id;
+ 
+const integration = reactive({
+    zoho_crm_status : 0,
+});
 
+// availability type
+const AvailabilityTabs = (type) => {
+    hostData.availability_type = type
+}
+
+const update_host_preloader = ref(false);
+// Save and Update Host Info
+const UpdateHostsInformation = async (validator_field) => {
+
+    // Clear the errors object
+    Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!hostData[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!hostData[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+        return
+    }
+
+    update_host_preloader.value = true;
+
+    try { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/information/update', hostData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_integrations'
+            } 
+        });
+        if (response.data.status == true) {  
+            
+
+            let nextRouteName = ''; 
+            if("HostsProfileInformation"==route.name){ 
+                nextRouteName = 'HostsAvailability';
+            }
+            if("HostsAvailability"==route.name){ 
+                nextRouteName = 'HostsProfileCalendars';
+            }
+            if("HostsProfileCalendars"==route.name){ 
+                nextRouteName = 'HostsProfileIntegrations';
+            }
+            if (nextRouteName) {
+                router.push({ name: nextRouteName }).then(() => {
+                    nextTick(() => {
+                        toast.success(response.data.message, {
+                            position: 'bottom-right', // Set the desired position
+                            "autoClose": 1500,
+                        });
+                    });
+                });
+            }else{
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+            update_host_preloader.value = false;
+        }else{ 
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+            update_host_preloader.value = false;
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+}
+
+
+ // Fetch generalSettings
+ const fetchHost = async () => { 
+    try { 
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/'+hostId , {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_integrations'
+            } 
+        } );
+        if (response.data.status == true) { 
+            
+            hostData.id = response.data.host.id;
+            hostData.user_id = response.data.host.user_id;
+            hostData.first_name = response.data.host.first_name;
+            hostData.last_name = response.data.host.last_name;
+            hostData.email = response.data.host.email;
+            hostData.phone_number = response.data.host.phone_number;
+            hostData.about = response.data.host.about;
+            hostData.avatar = response.data.host.avatar;
+            hostData.featured_image = response.data.host.featured_image;
+            hostData.status = response.data.host.status;
+            hostData.time_zone = response.data.host.time_zone;
+            hostData.availability = response.data.host.availability;
+            hostData.availability_type = response.data.host.availability_type ? response.data.host.availability_type : 'settings';
+            hostData.availability_id = response.data.host.availability_id;
+            hostData.others_information = response.data.host.others_information != null ? response.data.host.others_information : {};
+            skeleton.value = false;
+            time_zones.data = response.data.time_zone; 
+            hosts_settings.data = response.data.hosts_settings; 
+            settingsAvailabilityData.data = response.data.settingsAvailabilityData; 
+            integration.zoho_crm_status = response.data.integrations.zoho_crm_status;
+        }else{ 
+            // return to redirect back route 
+            router.push({ name: 'HostsLists' });
+        }
+    } catch (error) {
+        
+        console.log(error);
+    } 
+} 
+onBeforeMount(() => { 
+    fetchHost();
+});
+    
 const imageChange = (attachment) => {   
     FdDashboard.userAuth.featured_image = attachment.url; 
     const image = document.querySelector('.avatar_display'); 
@@ -33,16 +196,15 @@ const UploadImage = () => {
     
 </script>
 
-<template>
-
-  
-    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="tfhbb-fd-user-profile-page tfhb-flexbox tfh-gap-32">   
+<template> 
+    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="tfhbb-fd-user-profile-page tfhb-hydra-wrap tfhb-flexbox tfh-gap-32">   
+        
         <div class="tfhb-single-form-field-wrap tfhb-user-profile-image tfhb-flexbox  tfhb-full-width">
             <div class="tfhb-field-image" >  
                 <img v-if="FdDashboard.userAuth.featured_image ==''" class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >
                 <img v-else class='avatar_display'  :src="FdDashboard.userAuth.featured_image" >
                 <button class="tfhb-image-btn" @click="UploadImage"><Icon name="ImagePlus" size=20 /> </button> 
-                <input  type="text"  :v-model="FdDashboard.userAuth.featured_image"   />  
+                <input  type="text"  v-model="FdDashboard.userAuth.featured_image"   />  
             </div>
             <div class="tfhb-image-box-content">  
             <h4 v-if="label !=''" :for="name">{{ FdDashboard.userAuth.first_name }}  {{ FdDashboard.userAuth.last_name }} <span  v-if="required == 'true'"> *</span> </h4>
@@ -50,141 +212,31 @@ const UploadImage = () => {
             </div>
         </div> 
  
+        <nav class="tfhb-booking-tabs tfhb-full-width"> 
+            <ul>
+                <!-- to route example like hosts/profile/13/information -->
+                
+                <li><router-link :to="'/frontend-dashboard/profile/information'" exact :class="{ 'active': $route.path === '/frontend-dashboard/profile/information' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Information') }}</router-link></li> 
+                <li><router-link :to="'/frontend-dashboard/profile/availability'" :class="{ 'active': $route.path === '/frontend-dashboard/profile/availability' }"> <Icon name="Clock" /> {{ $tfhb_trans('Availability') }}</router-link></li>  
+                <li v-if="true == $user.caps.tfhb_manage_integrations"><router-link :to="'/frontend-dashboard/profile/calendars'" :class="{ 'active': $route.path === '/frontend-dashboard/profile/calendars' }"> <Icon name="CalendarDays" /> {{ $tfhb_trans('Calendars') }}</router-link></li>  
+                <li v-if="true == $user.caps.tfhb_manage_integrations"><router-link :to="'/frontend-dashboard/profile/integrations'" :class="{ 'active': $route.path === '/frontend-dashboard/profile/integrations' }"> <Icon name="Unplug" /> {{ $tfhb_trans('Integrations') }}</router-link></li>  
 
-        <div class="tfhb-full-width"> 
-            <div class="tfhb-admin-title tfhb-flexbox tfhb-justify-between" >
-                <div>
-                    <h2>{{ $tfhb_trans('Personal Details') }}    </h2>  
-                    <span>Set up your information</span>
-                </div>
-                <div class="tfhb-flexbox tfhb-gap-8">
-                     
-                    <HbButton 
-                        v-if=" disable_personal_info == true"  
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="disable_personal_info = false"
-                        :buttonText="$tfhb_trans('Edit')"
-                        icon="Pencil" 
-                    />  
-                    <HbButton 
-                        v-if="disable_personal_info == false"  
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="disable_personal_info = true"
-                        :buttonText="$tfhb_trans('Cancel')"  
-                    />   
-                    <HbButton 
-                        v-if=" disable_personal_info == false"  
-                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="FdDashboard.updateUserProfile()"
-                        :buttonText="$tfhb_trans('Save')"
-                        icon="Save"
-                        :pre_loader="FdDashboard.user_info_update_preloader"
-                    /> 
-                </div>
-            </div>
-            <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
-                <HbText  
-                    v-model="FdDashboard.userAuth.first_name"   
-                    :label="$tfhb_trans('First name')"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Type your first name')" 
-                    width="50" 
-                    :disabled="disable_personal_info"
-                /> 
-                <HbText  
-                    v-model="FdDashboard.userAuth.last_name"   
-                    :label="$tfhb_trans('Last name')"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Type your last name')" 
-                    width="50" 
-                    :disabled="disable_personal_info"
-                />  
-                <HbText  
-                    v-model="FdDashboard.userAuth.email"   
-                    :label="$tfhb_trans('Email')"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Type your email')" 
-                    width="50"
-                    :disabled="disable_personal_info"
-                /> 
-                 
-                <HbText  
-                    v-model="FdDashboard.userAuth.phone_number"   
-                    :label="$tfhb_trans('Mobile')"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Type your mobile no')" 
-                    width="50" 
-                    :disabled="disable_personal_info"
-                />  
-                
-            <!-- Time Zone -->
-            </div>
-        </div>
-        <div class="tfhb-full-width"> 
-            <div class="tfhb-admin-title tfhb-flexbox tfhb-justify-between" >
-                <div>
-                    <h2>{{ $tfhb_trans('Password') }}    </h2>  
-                    <span>Update your password and manage account</span>
-                </div>
-                <div class="tfhb-flexbox tfhb-gap-8">
-                    <HbButton 
-                        v-if=" disable_password == true"  
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="disable_password = false"
-                        :buttonText="$tfhb_trans('Edit')"
-                        icon="Pencil" 
-                    />  
-                    <HbButton 
-                        v-if="disable_password == false"  
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="disable_password = true"
-                        :buttonText="$tfhb_trans('Cancel')"  
-                    />   
-                    <HbButton 
-                        v-if=" disable_password == false"  
-                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="FdDashboard.changePassword()"
-                        :buttonText="$tfhb_trans('Save')"
-                        icon="Save"
-                        :pre_loader="FdDashboard.reset_password_preloader"
-                    /> 
-                </div>
-            </div>
-            <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
-                <HbText  
-                    v-model="FdDashboard.pass_data.old_password"  
-                    required= "true"  
-                    :label="$tfhb_trans('Old password')"  
-                    type="password"
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Type your old password')" 
-                    width="100"
-                    :disabled="disable_password"
-                /> 
-                <HbText  
-                    v-model="FdDashboard.pass_data.new_password"  
-                    required= "true"  
-                    type="password"
-                    :label="$tfhb_trans('New password')"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Type your new password')" 
-                    width="50"
-                    :disabled="disable_password"
-                /> 
-                <HbText  
-                    v-model="FdDashboard.pass_data.confirm_password"  
-                    required= "true" 
-                    type="password" 
-                    :label="$tfhb_trans('New password')"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Re-type your new password')" 
-                    width="50"
-                    :disabled="disable_password"
-                /> 
-                
-            <!-- Time Zone -->
-            </div>
-        </div>
+            </ul>  
+        </nav>
+        <div class="tfhb-hydra-dasboard-content">       
+            <router-view 
+            :hostId ="hostId" 
+            :host="hostData" 
+            :update_host_preloader="update_host_preloader" 
+            :time_zone="time_zones.data" 
+            :hosts_settings="hosts_settings.data" 
+            :settings_zoho="integration" 
+            :settingsAvailabilityData="settingsAvailabilityData.data" 
+            @availability-tabs="AvailabilityTabs"
+            @save-host-info="UpdateHostsInformation"
+            />
+            
+        </div> 
         
     </div> 
 </template>

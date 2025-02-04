@@ -99,19 +99,18 @@ const toggleSidebar = () => {
 </script>
 
 
-<template> 
+<template>  
     <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox">
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >
                 <span class="tfhb-responsive-menu-trigger" @click="toggleSidebar()">
                     <Icon name="Menu" size=20 /> 
                 </span>
-                <img class="desktop-header-icon" :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">
-
-               
+                <h2>{{ FdDashboard.site_settings.blog_title }}</h2>
+              
             </div>
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16">
-            
+
                 <h2 class="tfhb-admin-header-title">{{ $tfhb_trans(pageTitle) }}</h2>
             </div>
         </div>

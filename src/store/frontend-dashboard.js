@@ -8,6 +8,7 @@ export const FdDashboard = reactive({
     user_info_update_preloader: false, 
     reset_password_preloader: false,
     userAuth: {},
+    site_settings: {},
     pass_data: {
         old_password: '',
         new_password: '',
@@ -28,6 +29,7 @@ export const FdDashboard = reactive({
     
             if (response.data.status) {  
                 this.userAuth = response.data.userAuth; 
+                this.site_settings = response.data.site_settings; 
                 this.skeleton = false;
                  
             }

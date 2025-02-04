@@ -1,19 +1,21 @@
-.tfhb-single-form-field{
+.tfhb-single-form-field {
 
-    
-    .tfhb-single-form-field-wrap{
+
+    .tfhb-single-form-field-wrap {
 
         width: 100%;
-        
-        > label{
+
+        >label {
             justify-content: start !important;
-            > span{
+
+            >span {
                 margin: 0 !important;
             }
         }
+
         // Select Field
-        &.tfhb-field-select{ 
-            select { 
+        &.tfhb-field-select {
+            select {
                 padding: 0px 8px 0px 12px;
                 min-width: 100%;
                 margin-top: 4px;
@@ -21,63 +23,84 @@
                 height: 40px;
                 border: $fields-border $border-type $surface-input-field;
                 font-family: "Inter", sans-serif;
-                &:focus, &:active, &:hover {
+
+                &:focus,
+                &:active,
+                &:hover {
                     outline: none;
-                    box-shadow: none; 
-                    color : $primary-color !important;
+                    box-shadow: none;
+                    color: $primary-color !important;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
             }
         }
+
         // Dropdown Field
-        &.tfhb-field-dropdown, &.tfhb-field-multi-select-dropdown{ 
-            .p-dropdown .p-dropdown-trigger, .p-multiselect .p-dropdown-trigger {
+        &.tfhb-field-dropdown,
+        &.tfhb-field-multi-select-dropdown {
+
+            .p-dropdown .p-dropdown-trigger,
+            .p-multiselect .p-dropdown-trigger {
                 color: $text-input !important;
             }
-            
-            .p-dropdown, .p-multiselect { 
-                border: $fields-border $border-type $surface-input-field ; 
+
+            .p-dropdown,
+            .p-multiselect {
+                border: $fields-border $border-type $surface-input-field ;
                 box-shadow: none !important;
                 height: 40px;
-                &:focus, &:active , &:hover{
+
+                &:focus,
+                &:active,
+                &:hover {
                     outline: none;
-                    box-shadow: none; 
+                    box-shadow: none;
                     border-color: $surface-border-hover;
-                    color : $primary-color !important;
+                    color: $primary-color !important;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
+
                 .p-multiselect-trigger svg path {
                     fill: $surface-input-field !important;
                 }
-                .p-dropdown-label, .p-multiselect-label{
+
+                .p-dropdown-label,
+                .p-multiselect-label {
                     line-height: 24px !important;
                     font-size: 15px !important;
                     padding: 8px 8px 8px 12px !important;
                 }
-                &.tfhb-required{
+
+                &.tfhb-required {
                     border: $fields-border $border-type red !important;
                 }
 
-                 
+
                 // &:focus, &:active, &:not(.p-disabled):hover {
                 //     outline: none;
                 //     box-shadow: none; 
-                    
+
                 // }
-            } 
-            .p-multiselect:not(.p-disabled):hover,  .p-multiselect:not(.p-disabled).p-focus,
-            .p-dropdown:not(.p-disabled):hover,  .p-dropdown:not(.p-disabled).p-focus {
+            }
+
+            .p-multiselect:not(.p-disabled):hover,
+            .p-multiselect:not(.p-disabled).p-focus,
+            .p-dropdown:not(.p-disabled):hover,
+            .p-dropdown:not(.p-disabled).p-focus {
                 border-color: $surface-border-hover !important;
             }
-            span{
-            margin: 0 !important;
+
+            span {
+                margin: 0 !important;
             }
         }
-     
-        &.tfhb-field-input, &.tfhb-field-date, &.tfhb-field-options{ 
-            input { 
+
+        &.tfhb-field-input,
+        &.tfhb-field-date,
+        &.tfhb-field-options {
+            input {
                 padding: 8px 8px 8px 12px;
                 min-width: 100%;
                 margin-top: 4px;
@@ -90,77 +113,98 @@
                 box-shadow: none;
                 color: $text-input;
                 font-family: "Inter", sans-serif;
-                &:focus, &:active, &:hover {
+
+                &:focus,
+                &:active,
+                &:hover {
                     outline: none;
-                    box-shadow: none; 
+                    box-shadow: none;
                     border-color: $surface-border-hover;
-                    color : $primary-color;
+                    color: $primary-color;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
+
                 &::placeholder {
-                    color: $text-input !important;// Define this variable in your SCSS
+                    color: $text-input !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
-                
+
             }
-             
-            
+
+
         }
-        &.tfhb-field-options{
-            .tfhb-options-fields{
+
+        &.tfhb-field-options {
+            .tfhb-options-fields {
                 margin-bottom: 10px;
             }
-            input { 
+
+            input {
                 min-width: 80% !important;
             }
         }
-        &.tfhb-field-date{
+
+        &.tfhb-field-date {
             position: relative !important;
+
             .tfhb-flat-icon {
                 position: absolute;
                 right: 8px;
                 bottom: 0;
             }
-            .flatpickr-input{
+
+            .flatpickr-input {
                 max-width: 100%;
-                
+
             }
         }
-        &.tfhb-field-textarea{
-            textarea{
+
+        &.tfhb-field-textarea {
+            textarea {
                 height: 96px;
                 border-radius: $border-radius-small;
                 border: $fields-border $border-type $surface-input-field;
                 color: $text-input;
                 font-size: $heading-font-size-small;
-                
+
                 font-weight: $font-weight-reguler;
-                line-height: 24px; /* 160% */
+                line-height: 24px;
+                /* 160% */
                 padding: 8px 8px 8px 12px;
                 width: 100%;
                 font-family: "Inter", sans-serif;
-                &:focus, &:active , &:hover{
+
+                &:focus,
+                &:active,
+                &:hover {
                     outline: none;
-                    box-shadow: none; 
+                    box-shadow: none;
                     border-color: $surface-border-hover;
-                    color : $primary-color !important;
+                    color: $primary-color !important;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
+
                 &::placeholder {
-                    color: $text-input !important;// Define this variable in your SCSS
+                    color: $text-input !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
             }
-        } 
-        &.tfhb-field-checkbox, &.tfhb-field-radio{
-            input[type="checkbox"], input[type="radio"] {
+        }
+
+        &.tfhb-field-checkbox,
+        &.tfhb-field-radio {
+
+            input[type="checkbox"],
+            input[type="radio"] {
                 display: none;
             }
-            .tfhb-checkbox-label{
+
+            .tfhb-checkbox-label {
                 justify-content: start !important;
             }
+
             .checkmark {
                 position: absolute;
                 top: 0px;
@@ -171,6 +215,7 @@
                 border-radius: 3px;
                 border: $fields-border $border-type $primary-default;
                 margin: 0 !important;
+
                 &:after {
                     content: "";
                     position: absolute;
@@ -186,71 +231,82 @@
                     display: none;
                 }
             }
-            
-            label{
+
+            label {
                 color: $text-paragraph !important;
                 font-size: $heading-font-size-small !important;
-                
+
                 font-weight: $font-weight-reguler;
                 // line-height: 24px !important;
                 margin: 0 !important;
                 position: relative;
                 padding-left: 28px;
                 margin-right: 16px !important;
+
                 input:checked~.checkmark {
                     background-color: $primary-default;
                     border: $fields-border $border-type $primary-default;
                 }
+
                 input:checked~.checkmark:after {
                     display: block;
                 }
             }
         }
-        &.tfhb-field-radio{
+
+        &.tfhb-field-radio {
             .checkmark {
                 border-radius: 50%;
             }
-            
-             
+
+
         }
-        .tfhb-swicher-wrap{
+
+        .tfhb-swicher-wrap {
             gap: 8px !important;
             justify-content: normal !important;
-            label{
+
+            label {
                 color: $text-paragraph;
                 font-size: $heading-font-size-small !important;
-                
+
                 font-weight: $font-weight-reguler;
-                line-height: 24px; /* 160% */
+                line-height: 24px;
+                /* 160% */
             }
         }
     }
 }
 
-.tfhb-single-form-field-wrap{
+.tfhb-single-form-field-wrap {
     justify-content: normal !important;
-    .tfhb-field-image{
+
+    .tfhb-field-image {
         position: relative;
         border-radius: 50%;
         height: 72px;
         width: 72px;
         overflow: hidden;
         border: $fields-border $border-type #ddd !important;
-        &:hover{
-            .tfhb-image-btn{
+
+        &:hover {
+            .tfhb-image-btn {
                 opacity: 1;
                 visibility: visible;
                 bottom: 0;
             }
         }
+
         input {
             display: none;
         }
-        img{
+
+        img {
             height: 100%;
             width: 100%;
             border-radius: 50%;
         }
+
         .tfhb-image-btn {
             background-color: #00000057;
             border: none;
@@ -265,22 +321,25 @@
             opacity: 0;
             transition: all 0.3s;
             visibility: hidden;
-            
+
         }
 
     }
 }
 
-.tfhb-imageselect-box{
+.tfhb-imageselect-box {
     width: 100%;
-    ul{
+
+    ul {
         margin: 0;
         padding: 0;
         list-style: none;
         flex-wrap: nowrap !important;
-        li{
+
+        li {
             width: calc(33% - 12px);
-            input[type="radio"]{
+
+            input[type="radio"] {
                 display: none;
             }
 
@@ -289,63 +348,72 @@
                 position: relative;
                 margin: 0px;
                 cursor: pointer;
-                .image-box{
+
+                .image-box {
                     height: 150px;
                     border-radius: 8px;
                     background: $secondary-default;
                 }
-                h3{
+
+                h3 {
                     color: $text-paragraph !important;
                     font-size: $text-font-size;
-                    
+
                     font-weight: $font-weight-reguler !important;
-                    line-height: 20px; /* 153.846% */
+                    line-height: 20px;
+                    /* 153.846% */
                     margin: 8px 0 0 0 !important;
                     text-align: center;
                 }
             }
 
-            :checked + label .image-box {
-                border-bottom: 4px $border-type $primary-default; 
+            :checked+label .image-box {
+                border-bottom: 4px $border-type $primary-default;
             }
         }
     }
 }
 
-.tfhb-single-colorbox{
+.tfhb-single-colorbox {
     border-radius: 6px;
     background: $surface-primary;
-    padding: 12px 16px; 
-    label{
+    padding: 12px 16px;
+
+    label {
         color: $secondary-default !important;
         font-size: $heading-font-size-small !important;
-        
+
         font-weight: $font-weight-reguler !important;
-        line-height: 24px !important; /* 160% */
+        line-height: 24px !important;
+        /* 160% */
         margin: 0 !important;
     }
-    .color-select{
+
+    .color-select {
         background-color: $surface-secondary;
         border-radius: 6px;
-        .lv-colorpicker__colorblock-wrap{
+
+        .lv-colorpicker__colorblock-wrap {
             height: 36px;
             width: 36px;
             border-radius: 6px 0 0 6px !important;
             display: block;
         }
-        span{
+
+        span {
             color: $secondary-default;
             font-size: $text-font-size;
-            
+
             font-weight: $font-weight-reguler;
-            line-height: 20px; /* 153.846% */
+            line-height: 20px;
+            /* 153.846% */
             padding: 6px 8px;
         }
     }
 }
 
-.tfhb-startendtime{
-    .tfhb-times-field{
+.tfhb-startendtime {
+    .tfhb-times-field {
         padding: 8px 8px 8px 12px;
         min-width: 100%;
         margin-top: 4px;
@@ -359,24 +427,28 @@
         font-family: "Inter", sans-serif;
         display: flex;
         cursor: pointer;
-        input{
+
+        input {
             border: 0px $border-type !important;
             color: $text-input !important;
             padding: 0;
             min-height: auto;
             background-color: transparent !important;
             cursor: pointer;
-            &:focus{
+
+            &:focus {
                 outline: none;
                 box-shadow: none;
             }
         }
-        .tfhb-flat-icon{
+
+        .tfhb-flat-icon {
             margin: 0 !important;
         }
     }
-    ul{
-        li{
+
+    ul {
+        li {
             border-radius: 8px;
             color: $text-input;
             font-weight: 500;
@@ -387,7 +459,8 @@
             padding: 4px 16px;
             text-align: left;
             cursor: pointer;
-            &:hover{
+
+            &:hover {
                 background: #f5f6f7;
                 font-weight: 500;
             }

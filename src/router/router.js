@@ -315,7 +315,36 @@ const routes = [
         name: 'FrontendDashboardProfile',
         meta: { Capabilities: 'tfhb_manage_options' },
         props: true,
-        component: () => import('../view/FrontendDashboard/userProfile.vue')
+        component: () => import('../view/FrontendDashboard/userProfile.vue'),
+        redirect: { name: 'FrontendDashboardInformation' },
+        children: [
+            {
+                path: 'information',
+                name: 'FrontendDashboardInformation',
+                meta: { Capabilities: 'tfhb_manage_hosts' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/userInformation.vue')
+            }, 
+            {
+                path: 'availability',
+                name: 'FrontendDashboardAvailability',
+                meta: { Capabilities: 'tfhb_manage_hosts' },
+                props: true,
+                component: () => import('../view/hosts/hosts-availability.vue')
+            }, 
+            {
+                path: 'integrations',
+                name: 'FrontendDashboardIntegrations',
+                meta: { Capabilities: 'tfhb_manage_integrations' },
+                component: () => import('../view/hosts/hosts-integrations.vue')
+            }, 
+            {
+                path: 'calendars',
+                name: 'FrontendDashboardCalendars',
+                meta: { Capabilities: 'tfhb_manage_integrations' },
+                component: () => import('../view/hosts/hosts-calendars.vue')
+            }, 
+        ]
     },
 ];
 

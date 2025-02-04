@@ -935,7 +935,7 @@ class HostsController {
 			return rest_ensure_response( $data );
 		}
 
-		$_tfhb_host_info        = get_user_meta( $request['user_id'], '_tfhb_host', true );
+		$_tfhb_host_info        = !empty(get_user_meta( $request['user_id'], '_tfhb_host', true )) ? get_user_meta( $request['user_id'], '_tfhb_host', true ) : array();
 		$tfhb_host_availability = ! empty( $_tfhb_host_info['availability'] ) ? $_tfhb_host_info['availability'] : array();
 
 		$availability['id']          = isset( $request['id'] ) ? sanitize_text_field( $request['id'] ) : '';
