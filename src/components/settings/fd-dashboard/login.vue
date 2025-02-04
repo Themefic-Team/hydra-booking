@@ -73,7 +73,7 @@ const props = defineProps([
     <HbInfoBox  name="first-modal">
         
         <template #content>
-            <span>{{$tfhb_trans('Use shortcode [tf_login_form] to show login form in post/page/widget.')}}</span> 
+            <span>{{$tfhb_trans('Use shortcode [hydra_login_form] to show login form in post/page/widget.')}}</span> 
         </template>
     </HbInfoBox>
     
