@@ -79,9 +79,7 @@ class Notification {
 
     // Add Notification
     public function AddNotification($data){ 
-        
-       
-
+     
         $meta = new Meta();
 
         $value = array( 
