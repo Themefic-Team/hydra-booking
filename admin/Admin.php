@@ -8,6 +8,7 @@ use HydraBooking\Admin\Controller\Notification;
 use HydraBooking\Admin\Controller\UpdateController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Migration\Migration;
+use HydraBooking\Admin\Controller\NoticeController;
 
 // Load Migrator
 use HydraBooking\DB\Migrator;
@@ -34,6 +35,8 @@ class Admin {
 		// update controller
 		new UpdateController();
 		
+		// notice controller
+		new NoticeController();
 
 		// Notification controller
 		// new Notification();
