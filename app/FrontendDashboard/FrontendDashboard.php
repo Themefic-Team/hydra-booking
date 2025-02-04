@@ -384,7 +384,7 @@ class FrontendDashboard {
 	 *
 	 * @return int page ID
 	 */
-	private function create_page( $slug, $option = '', $page_title = '', $page_content = '', $post_parent = 0, $template ) {
+	private function create_page( $slug, $template, $option = '', $page_title = '', $page_content = '', $post_parent = 0,  ) {
 		global $wpdb;
 
 		$option_value = get_option( $option ); 
