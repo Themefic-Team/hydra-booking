@@ -1054,6 +1054,9 @@
 
                     .tfhb-single-notification-content {
                         width: calc(100% - 75px);
+                        h4{
+                            font-size: 15px;
+                        }
                     }
                 }
             }
@@ -1987,3 +1990,4 @@ button.question-edit-btn {
         }
     }
 }
+

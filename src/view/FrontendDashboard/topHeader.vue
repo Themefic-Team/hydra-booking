@@ -106,8 +106,8 @@ const toggleSidebar = () => {
                 <span class="tfhb-responsive-menu-trigger" @click="toggleSidebar()">
                     <Icon name="Menu" size=20 /> 
                 </span>
-                <h2>{{ FdDashboard.site_settings.blog_title }}</h2>
-              
+                <h2  class="desktop-header-icon" >{{ FdDashboard.site_settings.blog_title }}</h2>
+   <!-- <img class="desktop-header-icon" :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">               -->
             </div>
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16">
 

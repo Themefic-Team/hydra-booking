@@ -75,6 +75,15 @@ html {
 
 
         }
+
+        @media #{$max767} {   
+            position: sticky;
+            top: 0;
+            width: 100%; 
+            color: white; 
+            text-align: center;
+            z-index: 1000; 
+        }
     }
 
     .tfhb-frontend-dashboard {
@@ -163,9 +172,24 @@ html {
             }
 
             &.collapsed {
+                .tfhb-sidebar-menu{
+                 li{
+                    a, button{
+                        justify-content: center;
+                     }
+                     .tfhb-dropdown{
+                        a{
+                            justify-content: start;
+                        }
+                     }
+                 }
+
+                }
+                
                 .tfhb-dropdown-menu {
                     position: relative;
-                    z-index: 10;
+                    z-index: 10; 
+                   
 
                     .tfhb-dropdown {
                         position: absolute !important;
@@ -174,9 +198,11 @@ html {
                         left: calc(100% + 20px);
                         background-color: #2E6B38;
                         border-radius: 8px;
-                        padding: 4px !important;
+                        padding: 4px !important; 
                         min-width: 200px;
+                        
                     }
+ 
                 }
             }
 
@@ -215,6 +241,7 @@ html {
                         width: 100%;
                         border: none;
                         box-shadow: none;
+                        padding:  12px 16px;
 
                         &:hover,
                         &:focus,
@@ -239,7 +266,7 @@ html {
 
                         li {
                             a {
-
+                                padding: 8px 16px;
                                 &:hover,
                                 &:focus,
                                 &.active {
@@ -253,7 +280,7 @@ html {
 
             .tfhb-sidebar-menu-heading {
                 font-size: 13px;
-                padding: 0 12px;
+                padding: 0 16px;
                 min-height: 20px;
             }
 
@@ -285,18 +312,7 @@ html {
 
             }
         }
-
-        .tfhb-single-meeting {
-            @media #{$max767} {
-                width: calc(50% - 16px);
-            }
-        }
-
-        .tfhb-single-hosts {
-            @media #{$max767} {
-                width: calc(50% - 16px);
-            }
-        }
+  
 
         .tfhbb-fd-user-profile-page {
             max-width: 700px;
@@ -339,6 +355,18 @@ html {
                     }
                 }
             }
+        }
+
+        // Dashboard Page 
+        .tfhb-admin-dashboard {
+           .tfhb-dashboard-notice-box-wrap{
+            border: none;
+            .tfhb-dashboard-notice-single-box{
+                .tfhb-admin-card-box{ 
+                    border: none !important;
+                }
+            }
+           }
         }
 
     }

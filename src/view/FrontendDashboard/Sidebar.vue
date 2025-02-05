@@ -34,86 +34,89 @@ const toggleSidebar = () => {
 
             <ul class="tfhb-sidebar-menu">
                 <li>
-                    <router-link   @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12" to="/" exact :class="{ 'active': $route.path === '/' }">
+                    <router-link   @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 " to="/" exact :class="{ 'active': $route.path === '/' }">
                         <Icon name="LayoutDashboard" size="20" /> 
                         <span v-if="!collapsed" >Dashboard</span> 
                     </router-link>
                 </li>
                 <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12"  to="/meetings" exact :class="{ 'active': $route.path === '/meetings' }" >
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/meetings" exact :class="{ 'active': $route.path === '/meetings' }" >
                         <Icon name="Presentation" size="20" /> 
                         <span v-if="!collapsed" > Meetings</span>
                     </router-link>
                 </li>
                 <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12"  to="/bookings" exact :class="{ 'active': $route.path === '/booking' }">
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/bookings" exact :class="{ 'active': $route.path === '/booking' }">
                         <Icon name="CalendarCheck" size="20" /> 
                         <span v-if="!collapsed" > Bookings</span>
                     </router-link>
                 </li>
                 <li v-if="$user.role[0] != 'tfhb_host' ">
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12" to="/hosts" exact :class="{ 'active': $route.path === '/hosts' }">
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 " to="/hosts" exact :class="{ 'active': $route.path === '/hosts' }">
                         <Icon name="User" size="20" /> 
                         <span v-if="!collapsed" > Hosts</span>
                     </router-link>
                 </li>
-                <li v-if="$user.role[0] != 'tfhb_host' " class="tfhb-dropdown-menu">
-                    <router-link  to="/settings" exact :class="{ 'active': $route.path.includes('/settings') }"  @click="showGeneralMenu = !showGeneralMenu" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12" >
-                        <Icon name="Settings" size="20" /> 
-                        <span v-if="!collapsed"  class="tfhb-flexbox tfhb-justify-between " style="width:calc(100% - 38px)"> Settings 
-                            <span class="dropdown-icon">
-                                <Icon  v-if="showGeneralMenu == true" name="ChevronDown" size="20" /> 
-                                <Icon v-if="showGeneralMenu == false" name="ChevronUp" size="20" /> 
+                <li v-if="$user.role[0] != 'tfhb_host' " :class="{ 'active': $route.path.includes('/settings') }" class="tfhb-dropdown-menu">
+                    <!-- <router-link  to="/settings" exact :class="{ 'active': $route.path.includes('/settings') }"  class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12" > -->
+                        <button :class="{ 'active': $route.path.includes('/settings') }" @click="showGeneralMenu = !showGeneralMenu"   class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 ">
+                            <Icon name="Settings" size="20" /> 
+                            <span v-if="!collapsed"  class="tfhb-flexbox tfhb-justify-between " style="width:calc(100% - 38px)"> Settings 
+                                <span class="dropdown-icon">
+                                    <Icon  v-if="showGeneralMenu == true" name="ChevronDown" size="20" /> 
+                                    <Icon v-if="showGeneralMenu == false" name="ChevronRight" size="20" /> 
+                                </span>
                             </span>
-                        </span>
+                        </button>
+                       
                         
-                    </router-link >
+                    <!-- </router-link > -->
                     <transition name="accordion">
                         <ul v-if="showGeneralMenu == true" class="tfhb-dropdown">
                             <li>
-                                <router-link to="/settings/general" exact :class="{ 'active': $route.path === '/settings/general' }  "class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb" >
+                                <router-link to="/settings/general" exact :class="{ 'active': $route.path === '/settings/general' }  "class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" >
                                     <Icon name="SlidersHorizontal" size="20" /> 
                                     <span >{{ $tfhb_trans('General') }}</span>
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link to="/settings/availability" :class="{ 'active': $route.path === '/settings/availability' }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb" exact>
+                                <router-link to="/settings/availability" :class="{ 'active': $route.path === '/settings/availability' }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                                     <Icon name="Clock" size="20" /> 
                                     <span >{{ $tfhb_trans('Availability') }}</span>
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link to="/settings/notifications" :class="{ 'active': $route.path === '/settings/notifications' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb" exact>
+                                <router-link to="/settings/notifications" :class="{ 'active': $route.path === '/settings/notifications' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                                     <Icon name="BellDot" size="20" /> 
                                     <span >{{ $tfhb_trans('Notifications') }}</span>
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link to="/settings/integrations" :class="{ 'active': $route.path === '/settings/integrations' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb" exact>
+                                <router-link to="/settings/integrations" :class="{ 'active': $route.path === '/settings/integrations' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                                     <Icon name="Unplug" size="20" /> 
                                     <span >{{ $tfhb_trans('Integrations') }}</span>
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link  to="/settings/appearance" :class="{ 'active': $route.path === '/settings/appearance' }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb" exact>
+                                <router-link  to="/settings/appearance" :class="{ 'active': $route.path === '/settings/appearance' }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                                     <Icon name="SwatchBook" size="20" /> 
                                     <span >{{ $tfhb_trans('Appearance') }}</span>
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb" exact>
+                                <router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                                     <Icon name="ClipboardList" size="20" /> 
                                     <span >{{ $tfhb_trans('Meeting Category') }}</span>
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb">
+                                <router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
                                     <Icon name="UserCog" size="20" /> 
                                     <span >{{ $tfhb_trans('Host Settings') }}</span>
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link to="/settings/license" exact :class="{ 'active': $route.path.startsWith('/settings/license') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12 tfhb">
+                                <router-link to="/settings/license" exact :class="{ 'active': $route.path.startsWith('/settings/license') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
                                     <Icon name="FileLock2" size="20" /> 
                                     <span >{{ $tfhb_trans('License') }}</span>
                                 </router-link>
