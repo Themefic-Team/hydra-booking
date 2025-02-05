@@ -154,10 +154,10 @@ onBeforeMount(() => {
                 
             </div>
 
-            <div class="tfhb-admin-title" >
+            <!-- <div class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('Typography') }}</h2> 
                 <p>{{ $tfhb_trans('Set your own typography for your brand') }}</p>
-            </div>
+            </div> -->
 
             <!-- <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <HbDropdown 

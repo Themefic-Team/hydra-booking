@@ -392,6 +392,8 @@
     .color-select {
         background-color: $surface-secondary;
         border-radius: 6px;
+        display: inline-block;
+        min-width: 150px;
 
         .lv-colorpicker__colorblock-wrap {
             height: 36px;

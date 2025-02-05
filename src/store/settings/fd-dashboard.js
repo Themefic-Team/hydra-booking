@@ -9,7 +9,13 @@ const FrontendDashboard = reactive({
     fd_dashboard: {
         general: {
             dashboard_logo: '',  
-            mobile_dashboard_logo: '',
+            mobile_dashboard_logo: '', 
+            primery_default: '#2E6B38',
+            primery_hover: '#17030C',
+            secondary_default: '#273F2B',
+            secondary_hover: '#E1F2E4',
+            text_title: '#141915',
+            text_paragraph: '#273F2B',
         }, 
         signup: {
             registration_page: '',

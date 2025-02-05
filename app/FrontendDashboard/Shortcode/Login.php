@@ -158,7 +158,7 @@ class Login {
         $required_fields = array( 'tfhb_login_user', 'tfhb_password' );
         // Check nonce security
         if ( ! isset( $_POST['tfhb_login_nonce'] ) || ! wp_verify_nonce( $_POST['tfhb_login_nonce'], 'tfhb_check_login_nonce' ) ) {
-            $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'tourfic' );
+            $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'hydra-booking' );
         } else {
 
             foreach ( $required_fields as $required_field ) {

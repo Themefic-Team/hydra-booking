@@ -20,6 +20,12 @@ const props = defineProps([
         <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Signup Page Settings') }} </h2>
         <p>{{ $tfhb_trans('Customize the settings for the signup page') }}</p>
     </div>
+     <HbInfoBox  name="first-modal">
+        
+        <template #content>
+            <span>{{$tfhb_trans('Use shortcode [hydra_registration_form] to show registration form in post/page/widget.')}}</span> 
+        </template>
+    </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-flexbox">   
         <!-- Time format -->
         <HbDropdown  
@@ -75,12 +81,7 @@ const props = defineProps([
         <!-- Time format --> 
     </div>
 
-    <HbInfoBox  name="first-modal">
-        
-        <template #content>
-            <span>{{$tfhb_trans('Use shortcode [hydra_registration_form] to show registration form in post/page/widget.')}}</span> 
-        </template>
-    </HbInfoBox>
+   
     
 </template>
 

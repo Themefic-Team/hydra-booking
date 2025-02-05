@@ -3,7 +3,9 @@ import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import HbQuestion from '@/components/widgets/HbQuestion.vue'; 
-
+import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
+import HbColor from '@/components/form-fields/HbColor.vue'; 
+import LvColorpicker from 'lightvue/color-picker';
 const props = defineProps([
     'FrontendDashboard', 
 ])
@@ -50,14 +52,18 @@ const UploadChangeMobileDashboardLogo = () => {
                 <input  type="text"  :v-model="props.FrontendDashboard.fd_dashboard.general.dashboard_logo"   />  
             </div>
             <div class="tfhb-image-box-content">  
-            <h4 >{{ $tfhb_trans('Dashboard Logo') }} <span  v-if="required == 'true'"> *</span> </h4>
+            <h4 >{{ $tfhb_trans('Dashboard Header Logo') }} <span  v-if="required == 'true'"> *</span> </h4>
             <p   class="tfhb-m-0">{{ $tfhb_trans('This logo serves as the main header image of the dashboard') }}</p>
             </div>
         </div> 
  
     </div>
     <div class="tfhb-admin-card-box">
-        <div class="tfhb-single-form-field-wrap tfhb-flexbox">
+         <!-- Default status of bookings -->
+         
+            <!-- Default status of bookings --> 
+                
+        <div class="tfhb-single-form-field-wrap tfhb-flexbox ">
             <div class="tfhb-field-image" >  
                 <img v-if="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo != ''"  class='mobile_dashboard_logo_display'  :src="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo">
                 
@@ -66,16 +72,66 @@ const UploadChangeMobileDashboardLogo = () => {
                 <input  type="text"  :v-model="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo"   />  
             </div>
             <div class="tfhb-image-box-content">  
-            <h4 >{{ $tfhb_trans('Mobile Logo') }} <span  v-if="required == 'true'"> *</span> </h4>
+            <h4 >{{ $tfhb_trans('Responsive Logo') }} <span  v-if="required == 'true'"> *</span> </h4>
+               
             <p class="tfhb-m-0">{{ $tfhb_trans('This logo is used for the mobile version of the dashboard') }}</p>
+
+            
             </div>
         </div> 
     </div>
+
+    <div class="tfhb-admin-title" >
+        <h2>{{ $tfhb_trans('Frontend dashboard custom brand colors') }}</h2> 
+        <p>{{ $tfhb_trans('Customize your own brand color into Frontend Dashboard') }}</p>
+    </div>
+
+    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16">
+        <HbColor  
+            v-model="props.FrontendDashboard.fd_dashboard.general.enable_mobile_dashboard_logo"   
+            :label="$tfhb_trans('Primary Color (Default)')"  
+            selected = "1" 
+            width="50" 
+        />  
+        <HbColor  
+            v-model="props.FrontendDashboard.fd_dashboard.general.enable_mobile_dashboard_logo"   
+            :label="$tfhb_trans('Primary Color (Hover)')"  
+            selected = "1" 
+            width="50" 
+        />  
+        <HbColor  
+            v-model="props.FrontendDashboard.fd_dashboard.general.enable_mobile_dashboard_logo"   
+            :label="$tfhb_trans('Secondary Color (Default)')"  
+            selected = "1" 
+            width="50" 
+        />  
+        <HbColor  
+            v-model="props.FrontendDashboard.fd_dashboard.general.enable_mobile_dashboard_logo"   
+            :label="$tfhb_trans('Secondary Color (Hover)')"  
+            selected = "1" 
+            width="50" 
+        />  
+        <HbColor  
+            v-model="props.FrontendDashboard.fd_dashboard.general.enable_mobile_dashboard_logo"   
+            :label="$tfhb_trans('Text Color (Title)')"  
+            selected = "1" 
+            width="50" 
+        />  
+        <HbColor  
+            v-model="props.FrontendDashboard.fd_dashboard.general.enable_mobile_dashboard_logo"   
+            :label="$tfhb_trans('Text Color (Paragraph)')"  
+            selected = "1" 
+            width="50" 
+        />  
+        
+    </div>
+
 </template>
 
 <style scoped>
 .tfhb-field-image {
-	max-width: 100px !important;
+	max-width: 300px !important;
+    width: auto !important;
 	border-radius: 18px !important;
 }
 .tfhb-single-form-field-wrap .tfhb-field-image img {
