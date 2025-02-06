@@ -100,11 +100,11 @@ class HydraBookingShortcode {
  
 		// GetHost meta Data
 		$host_id   = isset( $meta_data['host_id'] ) ? $meta_data['host_id'] : 0;
+		
 
 	
 		$hostData =  new Host();
-		$host_meta = (array) $hostData->getHostByUserId( $host_id ); 
-		 
+		$host_meta = (array) $hostData->getHostById( $host_id );  
 		
 		// Time Zone
 		$DateTimeZone = new DateTimeController( 'UTC' );
