@@ -634,7 +634,7 @@ const AvailabilityTabs = (type) => {
                         </div>  
                     </div>  
                     <!-- Date Overrides --> 
-                    <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width tfhb-justify-between" v-if=" Settings_avalibility && 'settings'==Meeting.singleMeeting.MeetingData.availability_type && Settings_avalibility.availability.date_slots.length > 0">  
+                    <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width tfhb-justify-between" v-if="Settings_avalibility?.availability?.date_slots?.length > 0 && meeting.availability_type === 'settings'">  
                         <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
                             <div class="tfhb-admin-title tfhb-m-0"> 
                                 <h3>{{ $tfhb_trans('Add date overrides') }} </h3>  
@@ -646,7 +646,7 @@ const AvailabilityTabs = (type) => {
                             <div class="tfhb-flexbox tfhb-full-width">
                                 <div class="tfhb-overrides-date">
                                     <h4>{{ date_slot.date }}</h4>
-                                    <p class="tfhb-m-0">{{ date_slot.available!=1 ? date_slot.times : 'Unavailable' }}</p>
+                                    <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                                 </div>
                             </div>
                         </div>
