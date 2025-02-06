@@ -34,10 +34,10 @@ $availability_time_zone = $availability_data['time_zone'];
 
     if(!$host){
        
-        echo '<div class="tfhb-meeting-box"><div class="tfhb-notice notice-error"><p>' . esc_html__( 'Host is not selected', 'hydra-booking') .'</p></div></div>';
+        echo '<div class="tfhb-meeting-box tfhb-meeting-'.esc_attr( $calendar_id ).'"><div class="tfhb-notice notice-error"><p>' . esc_html__( 'Host is not selected', 'hydra-booking') .'</p></div></div>';
       
     }elseif($availability_time_zone == '' || $availability_time_zone == null){
-        echo '<div class="tfhb-meeting-box"><div class="tfhb-notice notice-error"><p>' . esc_html__( 'Timezone is not valid', 'hydra-booking') .'</p></div></div>';
+        echo '<div class="tfhb-meeting-box tfhb-meeting-'.esc_attr( $calendar_id ).'"><div class="tfhb-notice notice-error"><p>' . esc_html__( 'Timezone is not valid', 'hydra-booking') .'</p></div></div>';
      
     }else{
  
