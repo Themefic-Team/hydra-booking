@@ -28,7 +28,7 @@ $calendar_id  = isset( $meeting['id'] ) ? $meeting['id'] : 0;
 $date_time = new DateTimeController( 'UTC' );
 $availability_data = $date_time->GetAvailabilityData($meeting);  
  
-$availability_time_zone = $availability_data['time_zone'];   
+$availability_time_zone = isset($availability_data['time_zone']) ? $availability_data['time_zone'] : '';
 	// Before Load the Calendar.
     do_action( 'hydra_booking/before_meeting_render', $meeting );
 
