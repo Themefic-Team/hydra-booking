@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Hydra Booking
+ * Plugin Name: Hydra Booking - All in One Appointment Booking System with Automated Appointment Scheduling.
  * Plugin URI: https://hydrabooking.com/
- * Description: Create a booking / Appointment Form using Contact Form 7. You can insert Calendar, Time on the form and manage your booking. User can pay using WooCommerce.
- * Version: 1.0.25
+ * Description: Appointment Booking Plugin with Automated Scheduling - Apple/Outlook/ Google Calendar, WooCommerce, Zoom, Fluent Forms, Zapier, Mailchimp & CRM Integration.
+ * Version: 1.0.26
  * Author: Themefic
  * Author URI: https://themefic.com/
  * License: GPL-2.0+
@@ -23,7 +23,7 @@ class THB_INIT {
     
 		define( 'TFHB_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'TFHB_URL', plugin_dir_url( __FILE__ ) );
-		define( 'TFHB_VERSION', '1.0.25' );
+		define( 'TFHB_VERSION', '1.0.26' );
 
 		// Load Vendor Auto Load
 		if ( file_exists( TFHB_PATH . '/vendor/autoload.php' ) ) {
