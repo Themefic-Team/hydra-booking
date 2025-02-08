@@ -38,14 +38,14 @@ const emit = defineEmits(['update:modelValue'])
         
         </label>
         <h4 v-if="subtitle">{{ subtitle }}</h4>
-        <p v-if="description">{{ description }}</p>
-        
+        <p v-if="description">{{ description }}</p> 
         <div class="tfhb-single-colorbox" >
             <div class="color-select " >
                 <LvColorpicker 
                 :value="props.modelValue"  
                 :name= "name"
                 :id="name"   
+                :key="props.modelValue"
                 :placeholder="placeholder"
                 :disabled="disabled"
                 :readonly="readonly"

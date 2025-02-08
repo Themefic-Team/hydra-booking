@@ -10,6 +10,7 @@ const FrontendDashboard = reactive({
         general: {
             dashboard_logo: '',  
             mobile_dashboard_logo: '', 
+            colors_palette : 'default',
             primery_default: '#2E6B38',
             primery_hover: '#17030C',
             secondary_default: '#273F2B',
