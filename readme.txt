@@ -71,7 +71,8 @@ Choose the best format and location for your appointments:
 = 🎉 FORM INTEGRATION =  
 * **[Contact Form 7 Compatibility](https://demo.hydrabooking.com/meeting-with-contact-form-7/)**: Enable appointment scheduling with the widely-used Contact Form 7 plugin. 
 * **[Fluent Forms Integration](https://demo.hydrabooking.com/meeting-with-fluent-form-integration/)**: Effortlessly connect Hydra Booking with Fluent Forms for smooth booking management.   
-* **Upcoming Integrations**: Support for Gravity Forms and more is coming soon, expanding flexibility and options.
+* **Gravity Forms Integration**: Extend the functionality of your booking forms with easy integration between Hydra Booking and Gravity Forms.
+* **Upcoming Integrations**: Support for Sure Forms Integration, expanding flexibility and options.
 
 = 🎉 AUTOMATED NOTIFICATIONS and REMINDERS =
 Say goodbye to no-shows and cancellations with automated notifications for all bookings.
