@@ -124,7 +124,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 						$location_value = 'Organizer Phone Number';
 					
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
-						$location_value = 'In Person (Attendee Address) ';
+						$location_value = 'In Person (Attendee Address)';
 					}else{
 						$location_value = $location['location'];
 					}
