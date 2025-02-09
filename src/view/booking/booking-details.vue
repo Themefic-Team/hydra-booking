@@ -432,7 +432,7 @@ const TfhbPrevNavigator = () => {
                                 </div>
                             </div>
                              <!-- Booking Details Icon Box -->
-                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                             <div v-if="BookingDetails.attendees[0].address !=''" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="MapPin" size=20 /> 
                                 <div class="tfhb-b-d-icon-content">
                                     <h5>{{ $tfhb_trans('Address') }}</h5>
@@ -649,7 +649,7 @@ const TfhbPrevNavigator = () => {
                                         </div>
                                     </div> 
                                      <!-- Booking Details Icon Box -->
-                                    <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                    <div v-if="attendees.address !=''" class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                         <Icon name="MapPin" size=20 /> 
                                         <div class="tfhb-b-d-icon-content">
                                             <h5>{{ $tfhb_trans('Address') }}</h5>

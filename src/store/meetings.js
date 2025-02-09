@@ -160,11 +160,11 @@ const Meeting = reactive({
                     required: 1
                 },
                 {
-                    label: 'address',
-                    type:'Text', 
-                    placeholder:'Address',
+                    label: 'Comment',
+                    type:'textarea', 
+                    placeholder:'Comment',
                     options: [],
-                    required: 1
+                    required: 0
                 }
             ],
             notification: {
