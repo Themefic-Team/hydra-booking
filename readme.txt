@@ -211,7 +211,7 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 = 1.0.27 - 09/02/2025 =  
 
-- Improved: Removed the mandatory address field from the booking form.
+- Improved: The mandatory address field has been removed from the booking form.
 - Added: A booking comment/message field with flexible control settings.
 
 = 1.0.26 - 08/02/2025 =  
