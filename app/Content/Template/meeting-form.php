@@ -66,14 +66,18 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 			if ( is_array( $questions ) && ! empty( $questions ) ) {
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
-				foreach ( $questions as $key => $question ) :
-					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']'; 
+				foreach ( $questions as $key => $question ) : 
+					$name = 1 >= $key ? $question['label'] : 'question[' . $question['label'] . ']'; 
 
+					if( $question['label'] == 'Address'){
+						$name = 'address';
+					}
+					
 					if ( $name == 'email' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->email : '';
 					} elseif ( $name == 'name' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->attendee_name : '';
-					} elseif ( $name == 'address' ) {
+					} elseif ( $name == 'Address' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->address : '';
 					} else {
 						$value = '';
@@ -85,10 +89,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 					if($question['type'] == 'phone'){
 						$question['type'] ='tel';
 					}
-
-					if($name == 'address'){
-						$question['required'] = false;
-					}
+ 
 					$required_star = $question['required'] == 1 ? '*' : '';
 					$required      = $question['required'] == 1 ? 'required' : '';
 

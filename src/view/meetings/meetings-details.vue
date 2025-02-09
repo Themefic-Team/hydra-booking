@@ -246,6 +246,10 @@ onMounted(() => {
                     {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Phone"')}}  
                    
                 </div>
+                <div  v-if="slocation.location == 'In Person (Attendee Address)' " class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
+                    {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Address"')}}  
+                
+                </div>
                 <div  v-if="slocation.location == 'meet' && props.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Google Meet is not connected.')}}  
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
