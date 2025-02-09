@@ -162,7 +162,7 @@ const GetFormsData = async (value) => {
 
             <HbQuestion 
                 :question_value="meeting.questions"
-                :skip_remove="2"
+                :skip_remove="1"
                 @question-edit="EditExtraQuestion"
                 @question-remove="removeExtraQuestion"
             />

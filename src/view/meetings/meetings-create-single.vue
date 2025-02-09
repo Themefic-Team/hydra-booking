@@ -462,7 +462,11 @@ const AvailabilityTabs = (type) => {
                             <div class="tfhb-meeting-location-removed" v-if="Meeting.singleMeeting.MeetingData.meeting_locations.length>1" @click="removeLocations(index)">
                                 <Icon name="Trash" :width="16" />
                             </div>
-                            <div  v-if="slocation.location == 'Attendee Phone Number' " class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
+                            <div  v-if="slocation.location == 'In Person (Attendee Address)' " class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
+                                {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Address"')}}  
+                            
+                            </div>
+                            <div  v-if="slocation.location == 'Attendee Phone Number'" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
                                 {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Phone"')}}  
                             
                             </div>
