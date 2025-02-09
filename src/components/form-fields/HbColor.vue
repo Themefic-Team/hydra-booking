@@ -41,16 +41,20 @@ const emit = defineEmits(['update:modelValue'])
         <p v-if="description">{{ description }}</p> 
         <div class="tfhb-single-colorbox" >
             <div class="color-select " >
-                <LvColorpicker 
-                :value="props.modelValue"  
+                <!-- <LvColorpicker 
+                :value="props.modelValue" 
+                v-model="props.modelValue" 
                 :name= "name"
                 :id="name"   
-                :key="props.modelValue"
-                :placeholder="placeholder"
-                :disabled="disabled"
-                :readonly="readonly"
+                :key="props.modelValue" 
                 :class="errors ? 'tfhb-required' : ''" 
-                :withoutInput="true"/>
+                :withoutInput="true"/> -->
+                <LvColorpicker 
+                  :value="props.modelValue" 
+                  @input="emit('update:modelValue', $event)"  
+                  :key="props.modelValue"  
+                  :withoutInput="true"
+                />
                 <span v-if="placeholder">{{ placeholder }}</span>
                 <span v-else>{{ $tfhb_trans('Select Color') }}</span>
             </div>

@@ -38,8 +38,7 @@ const UploadChangeMobileDashboardLogo = () => {
 const ChangeColors = (value,  colors) => {
 
     props.FrontendDashboard.fd_dashboard.general.colors_palette = value; 
-    if('custom' != props.FrontendDashboard.fd_dashboard.general.colors_palette){
-        alert(props.FrontendDashboard.fd_dashboard.general.colors_palette)
+    if('custom' != props.FrontendDashboard.fd_dashboard.general.colors_palette){  
         props.FrontendDashboard.fd_dashboard.general.primery_default = colors.primary; 
         props.FrontendDashboard.fd_dashboard.general.primery_hover = colors.primery_hover; 
         props.FrontendDashboard.fd_dashboard.general.secondary_default = colors.secondary; 
@@ -49,6 +48,7 @@ const ChangeColors = (value,  colors) => {
     }
     
 }
+ 
 </script>
 
 <template>   
@@ -74,7 +74,7 @@ const ChangeColors = (value,  colors) => {
     </div>
     <div class="tfhb-admin-card-box"> 
         <!-- Default status of bookings --> 
-                
+        
         <div class="tfhb-single-form-field-wrap tfhb-flexbox ">
             <div class="tfhb-field-image" >  
                 <img v-if="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo != ''"  class='mobile_dashboard_logo_display'  :src="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo">
@@ -90,7 +90,8 @@ const ChangeColors = (value,  colors) => {
 
             
             </div>
-        </div> 
+        </div>
+        
     </div>
 
     <div class="tfhb-admin-title" >
@@ -123,12 +124,13 @@ const ChangeColors = (value,  colors) => {
         />  
         
     </div>
-    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16"> 
+    <div v-if="props.FrontendDashboard.fd_dashboard.general.colors_palette == 'custom'" class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16">
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.primery_default"   
-            :label="$tfhb_trans('Primary Color (Default)')"  
+            :label="$tfhb_trans('Primary Color (Default)')"
+            name="Primary"
             selected = "1" 
-            width="50" 
+            width="50"  
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.primery_hover"   

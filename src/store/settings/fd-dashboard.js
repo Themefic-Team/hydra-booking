@@ -20,11 +20,15 @@ const FrontendDashboard = reactive({
         }, 
         signup: {
             registration_page: '',
+            signup_page_title: '',
+            signup_page_sub_title: '',
             after_registration_redirect_type: '',
             after_registration_redirect: '',
             after_registration_redirect_custom: '',
         },
         login: {
+            login_page_title: '',
+            login_page_sub_title: '',
             login_page: '',
             after_login_redirect_type: '',
             after_login_redirect: '',

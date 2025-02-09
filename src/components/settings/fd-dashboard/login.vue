@@ -26,7 +26,7 @@ const props = defineProps([
     </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-flexbox">   
         <HbText  
-            v-model="props.FrontendDashboard.fd_dashboard.login.login_page"  
+            v-model="props.FrontendDashboard.fd_dashboard.login.login_page_title"  
             required= "true"  
             :label="$tfhb_trans('Login Title')"   
             :subtitle="$tfhb_trans(`Type here custom login title. Default : 'Welcome back'`)" 
@@ -35,7 +35,7 @@ const props = defineProps([
             width="50" 
         /> 
         <HbText  
-            v-model="props.FrontendDashboard.fd_dashboard.login.login_page"  
+            v-model="props.FrontendDashboard.fd_dashboard.login.login_page_sub_title"  
             required= "true"  
             :label="$tfhb_trans('Login Sub-title')"   
             :subtitle="$tfhb_trans(`Type here custom login sub-title. Default : 'Please enter your details.'`)" 
