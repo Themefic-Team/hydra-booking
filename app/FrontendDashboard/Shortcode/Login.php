@@ -4,8 +4,7 @@ namespace HydraBooking\FdDashboard\Shortcode;
 // exit
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-// Use Namespace
-use HydraBooking\Admin\Controller\Enqueue;
+// Use Namespace 
 
 /**
  * Signup Class
@@ -46,6 +45,8 @@ class Login {
         $settings = get_option('_tfhb_frontend_dashboard_settings');
         $registration_page_id = isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
         $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
+        $login_page_title = isset($settings['login']['login_page_title']) && !empty($settings['signup']['login_page_title']) ? $settings['signup']['login_page_title'] :  __('Welcome back', 'hydra-booking');
+        $login_page_sub_title = isset($settings['login']['login_page_sub_title']) && !empty($settings['signup']['login_page_sub_title']) ? $settings['signup']['login_page_sub_title'] :  __('Please enter your details.', 'hydra-booking');
         
         $forget_url = get_site_url() . '/?hydra-booking=forgot-password';
        
@@ -70,8 +71,8 @@ class Login {
 
         <div class="tfhb-frontend-from">
             <div class="tfhb-frontend-from__title">
-                <h3><?php echo esc_html(__('Welcome back', 'hydra-booking')) ?></h3>
-                <p><?php echo  esc_html(__('Please enter your details.', 'hydra-booking')) ?></p>
+                <h3><?php echo esc_html($login_page_title) ?></h3>
+                <p><?php echo  esc_html($login_page_sub_title) ?></p>
             </div>
             <form action="" id="tfhb-login-from">
                 <?php wp_nonce_field( 'tfhb_check_login_nonce', 'tfhb_login_nonce' ); ?>

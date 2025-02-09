@@ -301,7 +301,12 @@ class FrontendDashboard {
         // load frontend dashboard template
         if ( $page_template == 'tfhb-frontend-dashboard.php' ) {
             if( is_user_logged_in() ) {
-                new Enqueue();
+            //     global $post;
+            //     $page_id = $post->ID;
+            //     echo "<pre>";
+            //    print_r($page_id);
+            //     echo '</pre>';
+            //     new Enqueue();
 
                 $template = TFHB_FD_DASHBOARD_TEMPLATE_PATH . 'frontend-dashboard.php';
             }else{

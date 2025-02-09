@@ -1,7 +1,6 @@
 <?php
 namespace HydraBooking\Admin;
 
-use HydraBooking\Admin\Controller\Enqueue;
 use HydraBooking\Admin\Controller\AdminMenu;
 use HydraBooking\Admin\Controller\AvailabilityController;
 use HydraBooking\Admin\Controller\Notification;
@@ -22,8 +21,7 @@ class Admin {
 	public function __construct() { 
 		// run migrator
 		new Migrator();
-		// enqueue
-		new Enqueue();
+	
 
 		// admin menu
 		new AdminMenu();

@@ -50,7 +50,8 @@ class Signup {
         $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
         $get_login_page_url = get_permalink( $login_page_id );
         $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
-        
+        $signup_page_title = isset($settings['signup']['signup_page_title']) && !empty($settings['signup']['signup_page_title']) ? $settings['signup']['signup_page_title'] :  __('Sign up', 'hydra-booking');
+        $signup_page_sub_title = isset($settings['signup']['signup_page_sub_title']) && !empty($settings['signup']['signup_page_sub_title']) ? $settings['signup']['signup_page_sub_title'] :  __('Please enter your details.', 'hydra-booking');
 		// Start Buffer
 		ob_start(); 
 
@@ -72,8 +73,8 @@ class Signup {
         
         <div class="tfhb-frontend-from">
             <div class="tfhb-frontend-from__title">
-                <h3><?php echo esc_html(__('Sign up', 'hydra-booking')) ?></h3>
-                <p><?php echo esc_html(__('Please enter your details.', 'hydra-booking')) ?></p>
+                <h3><?php echo esc_html($signup_page_title) ?></h3>
+                <p><?php echo esc_html($signup_page_sub_title) ?></p>
             </div>
             <form action="" id="tfhb-reg-from">
             <?php wp_nonce_field( 'tfhb_check_reg_nonce', 'tfhb_reg_nonce' ); ?>

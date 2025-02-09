@@ -96,6 +96,37 @@ class Enqueue {
 			)
 		);
 
+		if($front_end_dashboard == true){
+			$settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();
+			$primery_default  = isset($settings['general']['primery_default']) ? $settings['general']['primery_default'] : ''; 
+			$primery_hover  = isset($settings['general']['primery_hover']) ? $settings['general']['primery_hover'] : ''; 
+			$secondary_default  = isset($settings['general']['secondary_default']) ? $settings['general']['secondary_default'] : ''; 
+			$secondary_hover  = isset($settings['general']['secondary_hover']) ? $settings['general']['secondary_hover'] : ''; 
+			$text_title  = isset($settings['general']['text_title']) ? $settings['general']['text_title'] : ''; 
+			$text_paragraph  = isset($settings['general']['text_paragraph']) ? $settings['general']['text_paragraph'] : '';  
+			$surface_primary  = isset($settings['general']['surface_primary']) ? $settings['general']['surface_primary'] : '';  
+			$surface_background  = isset($settings['general']['surface_background']) ? $settings['general']['surface_background'] : '';  
+			$surface_border  = isset($settings['general']['surface_border']) ? $settings['general']['surface_border'] : '';  
+			$surface_border_hover  = isset($settings['general']['surface_border_hover']) ? $settings['general']['surface_border_hover'] : '';  
+			$surface_input_field  = isset($settings['general']['surface_input_field']) ? $settings['general']['surface_input_field'] : '';  
+			$custom_css = "
+				:root {
+					--tfhb-admin-primary-default: $primery_default; 
+					--tfhb-admin-primary-hover: $primery_hover; 
+					--tfhb-admin-secondary-default: $secondary_default; 
+					--tfhb-admin-secondary-hover: $secondary_hover; 
+					--tfhb-admin-text-title: $text_title; 
+					--tfhb-admin-text-paragraph: $text_paragraph; 
+					--tfhb-admin-surface-primary: $surface_primary; 
+					--tfhb-admin-surface-background: $surface_background; 
+					--tfhb-admin-surface_border: $surface_border; 
+					--tfhb-admin-surface-border-hover: $surface_border_hover; 
+					--tfhb-admin-surface-input-field: $surface_input_field; 
+				} 
+			";
+			wp_add_inline_style('tfhb-admin-style', $custom_css);
+		}
+
 		if ( function_exists( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();
 		}

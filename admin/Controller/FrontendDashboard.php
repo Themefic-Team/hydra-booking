@@ -155,6 +155,12 @@ class FrontendDashboard {
         $settings['general']['text_title'] = isset($fd_dashboard['general']['text_title']) ? sanitize_text_field( $fd_dashboard['general']['text_title']) : '';
         $settings['general']['text_paragraph'] = isset($fd_dashboard['general']['text_paragraph']) ? sanitize_text_field( $fd_dashboard['general']['text_paragraph']) : ''; 
 
+        $settings['general']['surface_primary'] = isset($fd_dashboard['general']['surface_primary']) ? sanitize_text_field( $fd_dashboard['general']['surface_primary']) : ''; 
+        $settings['general']['surface_background'] = isset($fd_dashboard['general']['surface_background']) ? sanitize_text_field( $fd_dashboard['general']['surface_background']) : ''; 
+        $settings['general']['surface_border'] = isset($fd_dashboard['general']['surface_border']) ? sanitize_text_field( $fd_dashboard['general']['surface_border']) : ''; 
+        $settings['general']['surface_border_hover'] = isset($fd_dashboard['general']['surface_border_hover']) ? sanitize_text_field( $fd_dashboard['general']['surface_border_hover']) : ''; 
+        $settings['general']['surface_input_field'] = isset($fd_dashboard['general']['surface_input_field']) ? sanitize_text_field( $fd_dashboard['general']['surface_input_field']) : '';  
+
         $settings['signup']['registration_page'] = isset($fd_dashboard['signup']['registration_page']) ? sanitize_text_field($fd_dashboard['signup']['registration_page']) : '';
         $settings['signup']['signup_page_title'] = isset($fd_dashboard['signup']['signup_page_title']) ? sanitize_text_field($fd_dashboard['signup']['signup_page_title']) : '';
         $settings['signup']['signup_page_sub_title'] = isset($fd_dashboard['signup']['signup_page_sub_title']) ? sanitize_text_field($fd_dashboard['signup']['signup_page_sub_title']) : '';
@@ -212,9 +218,12 @@ class FrontendDashboard {
         $host = new Host(); 
         $host_data = $host->getHostById( $userAuthData['host_id'] ); 
 
+        $settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();  
         $site_settings = [];
         $site_settings['blog_title'] = get_bloginfo('title');
         $site_settings['site_url'] = get_bloginfo('url');
+        $site_settings['dashboard_logo'] = isset($settings['general']['dashboard_logo']) ? $settings['general']['dashboard_logo'] : '';
+        $site_settings['mobile_dashboard_logo'] = isset($settings['general']['mobile_dashboard_logo']) ? $settings['general']['mobile_dashboard_logo'] : '';
 
         $data = array(
             'status' => true,

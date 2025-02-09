@@ -16,6 +16,7 @@
 defined( 'ABSPATH' ) || exit;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
+use HydraBooking\Admin\Controller\Enqueue;
 class THB_INIT {
 	// CONSTARACT
 	public function __construct() {
@@ -71,6 +72,9 @@ class THB_INIT {
 		// Post Type
 		new HydraBooking\PostType\Meeting\Meeting_CPT();
 		new HydraBooking\PostType\Booking\Booking_CPT();
+
+		// enqueue
+		new Enqueue();
 
 		// Create a New host Role
 		new HydraBooking\Admin\Controller\RouteController(); 
