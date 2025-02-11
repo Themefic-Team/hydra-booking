@@ -93,6 +93,30 @@ html {
 
     .tfhb-frontend-dashboard {
         padding: 8px;
+        
+        .tfhb-popup-wrap{
+            .tfhb-availability-schedule-single{
+                // align-items: center !important;
+                .tfhb-swicher-wrap{ 
+                        display: block; 
+                        .switch{ 
+                            margin-top: -31px; 
+                        }
+                        .tfhb-schedule-swicher{
+                            padding-left: 8px !important;
+                        }
+                }
+                .tfhb-availability-schedule-btn{
+                    padding: 0;
+                    color:  $text-title;
+                    box-shadow: none;
+                    // &:hover{
+                    //     color: #;
+                    // }
+                }
+            }
+        }
+           
 
         ul {
             margin: 0 !important;
