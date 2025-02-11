@@ -30,7 +30,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 // display short 
 
-
+$host_feature_image_link = isset($host['featured_image']) && !empty($host['featured_image']) ? $host['featured_image'] : TFHB_URL . 'assets/app/images/meeting-cover.png';
 ?> 
 
 <div class="tfhb-meeting-info"> 
@@ -56,7 +56,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		}
 		?>
 	</div>  
-	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_attr(TFHB_URL . 'assets/app/images/meeting-cover.png'); ?>) ;">
+	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_url($host_feature_image_link); ?>) ;">
 		<div class="tfhb-host-profile tfhb-flexbox tfhb-gap-8">
 			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : '<img src="' . TFHB_URL.'assets/images/avator.png' . '" alt="">'; ?>
 			

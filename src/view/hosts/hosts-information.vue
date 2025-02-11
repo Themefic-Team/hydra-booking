@@ -53,6 +53,19 @@ const UploadImage = () => {
     wp.media.editor.open(); 
 }
 
+const imageChangeFeature = (attachment) => {   
+    props.host.featured_image = attachment.url; 
+    const image = document.querySelector('.featured_image_display'); 
+    image.src = attachment.url; 
+}
+const UploadImageFeature  = () => {   
+    wp.media.editor.send.attachment = (props, attachment) => { 
+    // set the image url to the input field
+    imageChangeFeature(attachment);
+    };  
+    wp.media.editor.open(); 
+}
+
 const tfhbValidateInput = (fieldName) => {
     // Clear the errors object
     Object.keys(errors).forEach(key => {
@@ -83,6 +96,21 @@ const tfhbValidateInput = (fieldName) => {
             <div class="tfhb-image-box-content">  
             <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Profile image') }} <span  v-if="required == 'true'"> *</span> </h4>
             <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Recommended Image Size: 400x400px') }}</p>
+            </div>
+        </div> 
+    </div>
+    <div class="tfhb-admin-card-box">   
+
+        <div class="tfhb-single-form-field-wrap tfhb-flexbox featured_image_display-wrap">
+            <div class="tfhb-field-image" > 
+                <img v-if="host.featured_image != ''"  class='featured_image_display'  :src="host.featured_image">
+                <img v-else  class='featured_image_display'  :src="$tfhb_url+'/assets/images/images-icon.png'" >
+                <button class="tfhb-image-btn" @click="UploadImageFeature">{{ $tfhb_trans('Change') }}</button> 
+                <input  type="text"  :v-model="host.featured_image"   />  
+            </div>
+            <div class="tfhb-image-box-content">  
+                <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Featured image') }} <span  v-if="required == 'true'"> *</span> </h4>
+                <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Feature image appearing as the host background image.') }}</p>
             </div>
         </div> 
     </div>
@@ -130,13 +158,11 @@ const tfhbValidateInput = (fieldName) => {
             :errors="errors.time_zone"
         /> 
         <HbText  
-            v-model="host.phone_number"  
-            required= "true"  
+            v-model="host.phone_number"   
             :label="$tfhb_trans('Mobile')"  
             selected = "1"
             :placeholder="$tfhb_trans('Type your mobile no')" 
-            width="50" 
-            :errors="errors.phone_number"
+            width="50"  
         />  
          
     <!-- Time Zone -->
@@ -209,7 +235,7 @@ const tfhbValidateInput = (fieldName) => {
     <!--  Update Hosts Information -->
     <HbButton 
         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-        @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone', 'phone_number'])"
+        @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone'])"
         :buttonText="$tfhb_trans('Save & Continue')"
         icon="ChevronRight" 
         hover_icon="ArrowRight" 
@@ -220,3 +246,17 @@ const tfhbValidateInput = (fieldName) => {
 
 
  
+<style scoped lang="scss">
+/* Your component styles go here */
+
+.featured_image_display-wrap .tfhb-field-image { 
+  max-width: 300px;
+  width: auto;
+  border-radius: 8px;
+}
+.featured_image_display-wrap .tfhb-field-image .featured_image_display {
+  border-radius: 8px;
+  padding: 4px;
+}
+ 
+</style>
