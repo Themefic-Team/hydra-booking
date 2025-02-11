@@ -107,6 +107,12 @@
                 left: 12px;
             }
 
+            &__show-password{
+                left: auto !important;
+                right: 12px;
+                cursor: pointer;
+            }
+
             input {
                 border: 1px solid #56765B;
                 background-color: #fff;
@@ -138,6 +144,14 @@
                 color: #AC0C22;
             }
 
+            
+
+        }
+
+        &.tfhb-password-field{
+            input{
+                padding-right: 40px;
+            }
         }
 
     }

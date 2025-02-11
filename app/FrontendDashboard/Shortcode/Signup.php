@@ -132,7 +132,7 @@ class Signup {
                         </div>
                     </div>
 
-                    <div class="tfhb-frontend-from__field-item">
+                    <div class="tfhb-frontend-from__field-item tfhb-password-field">
                         <label for="tfhb_password"><?php echo esc_html(__('Password', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
@@ -149,10 +149,11 @@ class Signup {
                             </svg>
                             </span>
                             <input type="password" name="tfhb_password" id="tfhb_password" placeholder="Type your password">
+                            <span class="tfhb-frontend-from__field-item__inner__show-password tfhb-show-password">  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
                         </div>
                     </div>
 
-                    <div class="tfhb-frontend-from__field-item">
+                    <div class="tfhb-frontend-from__field-item tfhb-password-field">
                         <label for="tfhb_confirm_password"><?php echo esc_html(__('Confirm Password', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
@@ -169,6 +170,7 @@ class Signup {
                             </svg>
                             </span>
                             <input type="password" name="tfhb_confirm_password" id="tfhb_confirm_password" placeholder="Re-type your password">
+                              <span class="tfhb-frontend-from__field-item__inner__show-password tfhb-show-password">  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
                         </div>
                     </div>
 

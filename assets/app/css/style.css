@@ -1664,6 +1664,11 @@
   top: 9px;
   left: 12px;
 }
+.tfhb-frontend-from__field-item__inner__show-password {
+  left: auto !important;
+  right: 12px;
+  cursor: pointer;
+}
 .tfhb-frontend-from__field-item__inner input {
   border: 1px solid #56765B;
   background-color: #fff;
@@ -1688,6 +1693,9 @@
 }
 .tfhb-frontend-from__field-item__inner .tfhb-error-text {
   color: #AC0C22;
+}
+.tfhb-frontend-from__field-item.tfhb-password-field input {
+  padding-right: 40px;
 }
 
 .tfhb-flexbox {

@@ -17,30 +17,30 @@ const disable_password = ref(true);
 </script>
 
 <template>
-
+{{ FdDashboard }}
     <div class="tfhb-full-width"> 
         <div class="tfhb-admin-title tfhb-flexbox tfhb-justify-between" >
             <div>
                 <h2>{{ $tfhb_trans('Personal Details') }}    </h2>  
-                <span>Set up your information</span>
+                <span>{{ $tfhb_trans('Set up your information') }}</span>
             </div>
-            <div class="tfhb-flexbox tfhb-gap-8">
-                    
+            <div class="tfhb-flexbox tfhb-gap-8"> 
                 <HbButton 
-                    v-if=" disable_personal_info == true"  
+                    v-if=" FdDashboard.disable_personal_info == true"  
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="disable_personal_info = false"
+                    @click="FdDashboard.disable_personal_info = false"
                     :buttonText="$tfhb_trans('Edit')"
                     icon="Pencil" 
+                    icon_size = '15'
                 />  
                 <HbButton 
-                    v-if="disable_personal_info == false"  
+                    v-if="FdDashboard.disable_personal_info == false"  
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="disable_personal_info = true"
+                    @click="FdDashboard.disable_personal_info = true"
                     :buttonText="$tfhb_trans('Cancel')"  
                 />   
                 <HbButton 
-                    v-if=" disable_personal_info == false"  
+                    v-if=" FdDashboard.disable_personal_info == false"  
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                     @click="FdDashboard.updateUserProfile()"
                     :buttonText="$tfhb_trans('Save')"
@@ -56,7 +56,7 @@ const disable_password = ref(true);
                 selected = "1"
                 :placeholder="$tfhb_trans('Type your first name')" 
                 width="50" 
-                :disabled="disable_personal_info"
+                :disabled="FdDashboard.disable_personal_info"
             /> 
             <HbText  
                 v-model="FdDashboard.userAuth.last_name"   
@@ -64,7 +64,7 @@ const disable_password = ref(true);
                 selected = "1"
                 :placeholder="$tfhb_trans('Type your last name')" 
                 width="50" 
-                :disabled="disable_personal_info"
+                :disabled="FdDashboard.disable_personal_info"
             />  
             <HbText  
                 v-model="FdDashboard.userAuth.email"   
@@ -72,7 +72,7 @@ const disable_password = ref(true);
                 selected = "1"
                 :placeholder="$tfhb_trans('Type your email')" 
                 width="50"
-                :disabled="disable_personal_info"
+                :disabled="FdDashboard.disable_personal_info"
             /> 
                 
             <HbText  
@@ -81,7 +81,7 @@ const disable_password = ref(true);
                 selected = "1"
                 :placeholder="$tfhb_trans('Type your mobile no')" 
                 width="50" 
-                :disabled="disable_personal_info"
+                :disabled="FdDashboard.disable_personal_info"
             />  
             
         <!-- Time Zone -->
@@ -91,24 +91,25 @@ const disable_password = ref(true);
         <div class="tfhb-admin-title tfhb-flexbox tfhb-justify-between" >
             <div>
                 <h2>{{ $tfhb_trans('Password') }}    </h2>  
-                <span>Update your password and manage account</span>
+                <span>{{ $tfhb_trans('Update your password and manage account') }} </span>
             </div>
             <div class="tfhb-flexbox tfhb-gap-8">
                 <HbButton 
-                    v-if=" disable_password == true"  
+                    v-if=" FdDashboard.disable_password == true"  
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="disable_password = false"
+                    @click="FdDashboard.disable_password = false"
                     :buttonText="$tfhb_trans('Edit')"
                     icon="Pencil" 
+                    icon_size = '15'
                 />  
                 <HbButton 
-                    v-if="disable_password == false"  
+                    v-if="FdDashboard.disable_password == false"  
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="disable_password = true"
+                    @click="FdDashboard.disable_password = true"
                     :buttonText="$tfhb_trans('Cancel')"  
                 />   
                 <HbButton 
-                    v-if=" disable_password == false"  
+                    v-if=" FdDashboard.disable_password == false"  
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                     @click="FdDashboard.changePassword()"
                     :buttonText="$tfhb_trans('Save')"
