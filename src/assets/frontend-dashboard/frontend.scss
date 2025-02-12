@@ -10,6 +10,8 @@ html {
 
     .tfhb-frontend-top-header {
         margin-bottom: 0 !important;
+        min-height: 60px;
+        height: auto;
 
         .tfhb-header-profile-dropdown {
             img {
@@ -60,6 +62,16 @@ html {
                 }
             }
 
+            img{
+                max-height: 45px;
+            }
+            .desktop-header-icon{
+                font-size: 24px;
+                &:hover{
+                    transition: 0.4s;
+                    text-decoration: underline;
+                }
+            }
             @media #{$max767} {
                 width: auto;
 

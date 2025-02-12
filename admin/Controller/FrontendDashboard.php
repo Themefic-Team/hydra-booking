@@ -220,15 +220,21 @@ class FrontendDashboard {
 
         $settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();  
         $site_settings = [];
+        $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
         $site_settings['blog_title'] = get_bloginfo('title');
         $site_settings['site_url'] = get_bloginfo('url');
+        $site_settings['dashboard_url'] = get_permalink( $tfhb_dashboard_page_id );
         $site_settings['dashboard_logo'] = isset($settings['general']['dashboard_logo']) ? $settings['general']['dashboard_logo'] : '';
         $site_settings['mobile_dashboard_logo'] = isset($settings['general']['mobile_dashboard_logo']) ? $settings['general']['mobile_dashboard_logo'] : '';
+       
+        $DateTimeZone = new DateTimeController( 'UTC' );
+		$time_zone    = $DateTimeZone->TimeZone();
 
         $data = array(
             'status' => true,
             'userAuth' => $host_data, 
             'site_settings' => $site_settings,
+            'time_zone' => $time_zone,
         );
  
         return rest_ensure_response($data);

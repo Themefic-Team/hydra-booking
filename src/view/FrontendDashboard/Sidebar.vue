@@ -28,7 +28,7 @@ const toggleSidebar = () => {
             </span> 
             <h6 class="tfhb-sidebar-menu-heading">
                 <template v-if="!collapsed">
-                    GENERAL
+                    {{ $tfhb_trans('GENERAL') }}
                 </template> 
             </h6>
 
@@ -36,32 +36,32 @@ const toggleSidebar = () => {
                 <li>
                     <router-link   @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 " to="/" exact :class="{ 'active': $route.path === '/' }">
                         <Icon name="LayoutDashboard" size="20" /> 
-                        <span v-if="!collapsed" >Dashboard</span> 
+                        <span v-if="!collapsed" >{{ $tfhb_trans('Dashboard') }}</span> 
                     </router-link>
                 </li>
                 <li>
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/meetings" exact :class="{ 'active': $route.path === '/meetings' }" >
                         <Icon name="Presentation" size="20" /> 
-                        <span v-if="!collapsed" > Meetings</span>
+                        <span v-if="!collapsed" > {{ $tfhb_trans('Meetings') }}</span>
                     </router-link>
                 </li>
                 <li>
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/bookings" exact :class="{ 'active': $route.path === '/booking' }">
                         <Icon name="CalendarCheck" size="20" /> 
-                        <span v-if="!collapsed" > Bookings</span>
+                        <span v-if="!collapsed" > {{ $tfhb_trans('Bookings') }}</span>
                     </router-link>
                 </li>
                 <li v-if="$user.role[0] != 'tfhb_host' ">
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 " to="/hosts" exact :class="{ 'active': $route.path === '/hosts' }">
                         <Icon name="User" size="20" /> 
-                        <span v-if="!collapsed" > Hosts</span>
+                        <span v-if="!collapsed" > {{ $tfhb_trans('Hosts') }}</span>
                     </router-link>
                 </li>
                 <li v-if="$user.role[0] != 'tfhb_host' " :class="{ 'active': $route.path.includes('/settings') }" class="tfhb-dropdown-menu">
                     <!-- <router-link  to="/settings" exact :class="{ 'active': $route.path.includes('/settings') }"  class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12" > -->
                         <button :class="{ 'active': $route.path.includes('/settings') }" @click="showGeneralMenu = !showGeneralMenu"   class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 ">
                             <Icon name="Settings" size="20" /> 
-                            <span v-if="!collapsed"  class="tfhb-flexbox tfhb-justify-between " style="width:calc(100% - 38px)"> Settings 
+                            <span v-if="!collapsed"  class="tfhb-flexbox tfhb-justify-between " style="width:calc(100% - 38px)"> {{ $tfhb_trans('Settings') }} 
                                 <span class="dropdown-icon">
                                     <Icon  v-if="showGeneralMenu == true" name="ChevronDown" size="20" /> 
                                     <Icon v-if="showGeneralMenu == false" name="ChevronRight" size="20" /> 
@@ -92,7 +92,7 @@ const toggleSidebar = () => {
                                 </router-link>
                             </li> 
                             <li>
-                                <router-link to="/settings/integrations" :class="{ 'active': $route.path === '/settings/integrations' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
+                                <router-link to="/settings/integrations/#all" :class="{ 'active': $route.path === '/settings/integrations' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                                     <Icon name="Unplug" size="20" /> 
                                     <span >{{ $tfhb_trans('Integrations') }}</span>
                                 </router-link>

@@ -336,7 +336,7 @@ class HostsController {
 
 		
 
-		$data['host_id'] = $hostInsert['insert_id'];
+		// $data['host_id'] = $hostInsert['insert_id'];
 
 	
 		// Update user Option
@@ -560,7 +560,8 @@ class HostsController {
 
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $host_id );
+		$HostData =  $host->getHostById( $host_id );
+		$user_id = $HostData->user_id;
 
 		if ( empty( $HostData ) ) {
 			return rest_ensure_response(
@@ -587,11 +588,11 @@ class HostsController {
 		}
 
 		// Get User MEta
-		$_tfhb_host           = get_user_meta( $host_id, '_tfhb_host', true );
+		$_tfhb_host           = get_user_meta( $user_id, '_tfhb_host', true );
 		$_tfhb_host['status'] = $status;
 
 		// Update user Option
-		update_user_meta( $host_id, '_tfhb_host', $_tfhb_host );
+		update_user_meta( $user_id, '_tfhb_host', $_tfhb_host );
 
 		// Hosts Lists
 		$HostsList = $host->get();

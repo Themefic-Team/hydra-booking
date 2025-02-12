@@ -372,10 +372,16 @@ class Signup {
             
                     // Insert Host
                     $hostInsert = $host->add( $data );
+                   
                     if ( $hostInsert ) {
-
+                       
                         // Send activation email 
                         $this->tfhb_send_activation_code($data, $code);
+
+                         unset( $data['user_id'] );
+                        $data['host_id'] = $hostInsert['insert_id'];
+                        // Update user Option
+                        update_user_meta( $user_id, '_tfhb_host', $data );
                         $response['success'] = true;
                         $response['message'] = esc_html__( 'Your account has been created successfully. A confirmation email has been sent to your email address.', 'hydra-booking' );
                     }

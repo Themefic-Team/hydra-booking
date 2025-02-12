@@ -46,11 +46,16 @@ class Enqueue {
 		if ( ! is_admin() ) {
 			// get current page and page template
 			$current_page = get_queried_object();
-			$page_template = get_page_template_slug( $current_page->ID );
-			if ( 'tfhb-frontend-dashboard.php' !== $page_template ) {
+			if($current_page){
+				$page_template = get_page_template_slug( $current_page->ID );
+				if ( 'tfhb-frontend-dashboard.php' !== $page_template ) {
+					return;
+				}
+				$front_end_dashboard = true;
+			}else{
 				return;
 			}
-			$front_end_dashboard = true;
+			
 		}
 
 		$user      = new AuthController();

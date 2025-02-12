@@ -102,7 +102,7 @@ const toggleSidebar = () => {
 </script>
 
 
-<template>   
+<template>    
     <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox">
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >
@@ -110,9 +110,14 @@ const toggleSidebar = () => {
                     <Icon name="Menu" size=20 /> 
                 </span>
                
-                <h2 v-if="'' == FdDashboard.site_settings.dashboard_logo" class="desktop-header-icon" >{{ FdDashboard.site_settings.blog_title }}</h2>
-                <img v-else class="desktop-header-icon" :src="FdDashboard.site_settings.dashboard_logo" alt="HydraBooking">
-                <img v-if="'' != FdDashboard.site_settings.mobile_dashboard_logo" class="responsive-header-icon" :src="FdDashboard.site_settings.mobile_dashboard_logo" alt="HydraBooking">
+                <a  v-if="'' == FdDashboard.site_settings.dashboard_logo" :href="FdDashboard.site_settings.dashboard_url" class="desktop-header-icon" >{{ FdDashboard.site_settings.blog_title }}</a>
+                <a  v-else  :href="FdDashboard.site_settings.dashboard_url" >
+                    <img class="desktop-header-icon" :src="FdDashboard.site_settings.dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
+                </a>
+                <a  v-if="'' != FdDashboard.site_settings.mobile_dashboard_logo"   :href="FdDashboard.site_settings.dashboard_url" >
+                    <img class="responsive-header-icon" :src="FdDashboard.site_settings.mobile_dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
+                </a>
+             
 
             </div>
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16">

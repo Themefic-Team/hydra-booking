@@ -11,6 +11,7 @@ export const FdDashboard = reactive({
     disable_password: true,
     userAuth: {},
     site_settings: {},
+    time_zone: {},
     pass_data: {
         old_password: '',
         new_password: '',
@@ -32,6 +33,7 @@ export const FdDashboard = reactive({
             if (response.data.status) {  
                 this.userAuth = response.data.userAuth; 
                 this.site_settings = response.data.site_settings; 
+                this.time_zone = response.data.time_zone; 
                 this.skeleton = false;
                  
             }
