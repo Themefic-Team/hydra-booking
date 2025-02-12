@@ -67,9 +67,16 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
 				foreach ( $questions as $key => $question ) : 
-					$name = 1 >= $key ? $question['label'] : 'question[' . $question['label'] . ']'; 
+					if(isset($question['enable']) && $question['enable'] == 0){
+						continue;
+					}
+					if(!isset($question['name']) || empty($question['name'])){
+						$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
+						$question['name']  = $baseName; 
+					}
+					$name = 1 >= $key ? $question['name'] : 'question[' . $question['name'] . ']'; 
 
-					if( $question['label'] == 'Address'){
+					if( $question['name'] == 'Address'){
 						$name = 'address';
 					}
 					
@@ -77,7 +84,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 						$value = ! empty( $booking_data ) ? $booking_data->email : '';
 					} elseif ( $name == 'name' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->attendee_name : '';
-					} elseif ( $name == 'Address' ) {
+					} elseif ( $name == 'Address' || $name == 'address'  ) {
 						$value = ! empty( $booking_data ) ? $booking_data->address : '';
 					} else {
 						$value = '';
@@ -94,7 +101,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 					$required      = $question['required'] == 1 ? 'required' : '';
 
 					echo '<div class="tfhb-single-form">
-                                <label for="' . esc_attr($name) . '">' . esc_attr($question['placeholder']) . ' ' . esc_attr($required_star) . '</label>';
+                                <label for="' . esc_attr($name) . '">' . esc_attr($question['label']) . ' ' . esc_attr($required_star) . '</label>';
 					if ( $question['type'] == 'select' ) {
 
 						echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>';

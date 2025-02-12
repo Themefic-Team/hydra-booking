@@ -15,15 +15,20 @@ const emit = defineEmits(['update:modelValue', 'question-edit', 'question-remove
 <template>
     <div class="tfhb-question-box"> 
         <div class="tfhb-single-form-field tfhb-flexbox tfhb-gap-24" :style="{ 'width': '100%' }"> 
-            <div class="tfhb-single-form-field-wrap tfhb-full-width" v-for="(question, key)  in question_value" :key="key">
+            <div class="tfhb-single-form-field-wrap tfhb-single-question-box tfhb-full-width" v-for="(question, key)  in question_value" :key="key"
+            :class="{ 'tfhb-disable': question.enable == 0 }"
+            > 
                 <label>{{ question.placeholder }}</label>
                 <div class="tfhb-flexbox tfhb-gap-16 tfhb-field-select">
-                    <HbText  
-                        v-model="question.type"
-                        disabled="disabled"
-                    /> 
+                    <div class="tfhb-question-type tfhb-full-width">
+                        <span v-if="question.enable == 0" class="status disabled">{{ $tfhb_trans('Disabled') }}</span>
+                        <HbText  
+                            v-model="question.type"
+                            disabled="disabled"
+                        /> 
+                    </div>
                     <HbSwitch 
-                        v-model="question.required"
+                        v-model="question.enable"
                         v-if="key > skip_remove"
                     />
                     <button class="question-edit-btn" v-if="key > skip_remove">

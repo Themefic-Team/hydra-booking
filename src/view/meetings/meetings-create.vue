@@ -163,26 +163,31 @@ const meetingData = reactive({
     form_id: '',
     questions: [
         {
-            label: 'name',
+            label: 'Name',
             type:'Text',
+            name: 'name',
             placeholder:'Name',
             options: [],
-            required: 1
+            required: 1,
+            enable: 1,
         },
         {
-            label: 'email',
+            label: 'Email',
             type:'Email',
+            name: 'email',
             options: [],
-            placeholder:'Email',
-            options: [],
-            required: 1
+            placeholder:'Email', 
+            required: 1,
+            enable: 1,
         },
         {
             label: 'Comment',
             type:'textarea', 
+            name: 'comment',
             placeholder:'Comment',
             options: [],
-            required: 0
+            required: 0,
+            enable: 1,
         }
     ],
     notification: {

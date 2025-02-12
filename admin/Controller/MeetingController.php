@@ -1064,7 +1064,23 @@ class MeetingController {
 		$host_data = $host->getHostById( $data['host_id'] );
 		if($host_data){ 
 			$data['user_id'] = $host_data->user_id;
+		} 
+		// Update meeting questions fields
+		foreach($data['questions'] as $key => $question){
+
+			if(!isset($question['name']) || empty($question['name'])){
+				$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
+				$uniqueName = $baseName;
+			 
+			 
+				$data['questions'][$key]['name'] = $uniqueName;
+			}
+			if(!isset($question['enable']) ) {
+				$data['questions'][$key]['enable'] = 1;
+			}
+
 		}
+		// tfhb_print_r($data['questions']);
 
 		// if Payment Methood is woo_payment
 		if ( 'woo_payment' == $data['payment_method'] &&  class_exists( 'WooCommerce' ) ) {

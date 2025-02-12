@@ -1,5 +1,28 @@
 .tfhb-question-box{
     width: 100%;
+    .tfhb-single-question-box{
+        &.tfhb-disable{
+            opacity: 0.7;
+        }
+        .tfhb-question-type{ 
+            position: relative;
+            .status{
+                position: absolute;
+                right: 8px;
+                top: 3px;
+
+                background: $success-background ;
+                color: $success-text !important;
+                padding: 4px 8px;
+                border-radius: 6px;
+                &.disabled{
+                    background-color: $warning-background;
+                    color: $warning-text !important;
+                }
+            }
+        }
+       
+    }
     .tfhb-flexbox{
         flex-wrap: nowrap !important;
         select{
