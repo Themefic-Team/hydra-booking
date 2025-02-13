@@ -165,7 +165,7 @@ const GetFormsData = async (value) => {
      
 
         <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0 tfhb-full-width" v-if="meeting.questions_type == 'custom'">  
- 
+            
             <HbQuestion 
                 :question_value="meeting.questions"
                 :skip_remove="1"

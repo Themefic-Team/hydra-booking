@@ -1070,10 +1070,18 @@ class MeetingController {
 
 			if(!isset($question['name']) || empty($question['name'])){
 				$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
-				$uniqueName = $baseName;
+
+				// if name already exists, append a number to make it unique using array filter or map add rendom two characters
 			 
-			 
-				$data['questions'][$key]['name'] = $uniqueName;
+                $count = count( array_filter( array_map( function($item) use ($baseName) { return $item['name'] == $baseName; }, $data['questions'] ) ) );
+                if ( $count > 0 ) {
+                    $uniqueName = $baseName. '_'. substr( md5( mt_rand() ), 0, 2 );
+                } else {
+                    $uniqueName = $baseName;
+                }
+             
+             
+                $data['questions'][$key]['name'] = $uniqueName; 
 			}
 			if(!isset($question['enable']) ) {
 				$data['questions'][$key]['enable'] = 1;
