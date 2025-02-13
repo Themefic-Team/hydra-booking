@@ -111,8 +111,8 @@ const EmptyImageFeatured  = () => {
                 <input  type="text"  :v-model="host.featured_image"   />  
             </div>
             <div class="tfhb-image-box-content">  
-                <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Featured image') }} <span  v-if="required == 'true'"> *</span> </h4>
-                <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Feature image appearing as the host background image.') }}</p>
+                <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Cover image') }} <span  v-if="required == 'true'"> *</span> </h4>
+                <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Cover image is displayed in the meeting forms.') }}</p>
             </div>
         </div> 
     </div>
