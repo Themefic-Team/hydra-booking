@@ -26,7 +26,7 @@ const capitalizedFirstChar = (value) => {
                 <div class="tfhb-question-label tfhb-flexbox tfhb-gap-4">
                     <label v-if="key <= 1">{{ capitalizedFirstChar(question.label) }} <span v-if="1 == question.required ">*</span> </label>
                     <label v-else>{{question.label}} <span v-if="1 == question.required ">*</span> </label>
-                    <span   class="status info">{{ capitalizedFirstChar(question.type) }} </span>
+                    <span  v-if="question.type != ''"  class="status info">{{ capitalizedFirstChar(question.type) }} </span>
                 </div>
                 <div class="tfhb-flexbox tfhb-gap-16 tfhb-field-select">
                     <div class="tfhb-question-type tfhb-full-width">

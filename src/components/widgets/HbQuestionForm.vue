@@ -102,6 +102,7 @@ const UpdateQuestionsData = async (validator_field) => {
         :errors="errors.label"
     /> 
     <HbText  
+        v-if="questions_data.type != 'radio' &&  questions_data.type != 'checkbox' && questions_data.type != 'select'"  
         v-model="questions_data.placeholder" 
         :label="__('Placeholder', 'hydra-booking')"  
         :placeholder="__('Enter field placeholder ', 'hydra-booking')"  
