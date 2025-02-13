@@ -66,25 +66,21 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 			if ( is_array( $questions ) && ! empty( $questions ) ) {
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
-				foreach ( $questions as $key => $question ) : 
-					// tfhb_print_r($question);
+				foreach ( $questions as $key => $question ) :  
 					if(isset($question['enable']) && $question['enable'] == 0){ 
 						continue;
 					}
-					
 
-					$name = 1 >= $key ? $question['name'] : 'question[' . $question['name'] . ']'; 
-					$placehoder = isset( $question['placeholder'] )? $question['placeholder'] : ''; 
-					$label = ucfirst($question['label']); 
-
-					// this is a temporay fix it will be removed in version 2.0.0 or higher version
-					// if label firs chercerter is not capitalize 
-
+					// this is a temporay fix it will be removed in version 2.0.0 or higher version 
 					if(!isset($question['name']) || empty($question['name'])){
 						$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
 						$question['name']  = $baseName; 
 					}
 					// ******** end of fix
+
+					$name = 1 >= $key ? $question['name'] : 'question[' . $question['name'] . ']'; 
+					$placehoder = isset( $question['placeholder'] )? $question['placeholder'] : ''; 
+					$label = ucfirst($question['label']);  
 
 					if( $question['name'] == 'Address'){
 						$name = 'address';

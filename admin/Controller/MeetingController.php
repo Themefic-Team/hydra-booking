@@ -1065,22 +1065,20 @@ class MeetingController {
 		if($host_data){ 
 			$data['user_id'] = $host_data->user_id;
 		} 
-		// Update meeting questions fields
+
+		// this is a temporay fix it will be removed in version 2.0.0 or higher version
 		foreach($data['questions'] as $key => $question){
 
 			if(!isset($question['name']) || empty($question['name'])){
 				$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
 
-				// if name already exists, append a number to make it unique using array filter or map add rendom two characters
-			 
+				 
                 $count = count( array_filter( array_map( function($item) use ($baseName) { return $item['name'] == $baseName; }, $data['questions'] ) ) );
                 if ( $count > 0 ) {
                     $uniqueName = $baseName. '_'. substr( md5( mt_rand() ), 0, 2 );
                 } else {
                     $uniqueName = $baseName;
-                }
-             
-             
+                } 
                 $data['questions'][$key]['name'] = $uniqueName; 
 			}
 			if(!isset($question['enable']) ) {
@@ -1088,7 +1086,7 @@ class MeetingController {
 			}
 
 		}
-		// tfhb_print_r($data['questions']);
+		// ******** end of fix
 
 		// if Payment Methood is woo_payment
 		if ( 'woo_payment' == $data['payment_method'] &&  class_exists( 'WooCommerce' ) ) {
