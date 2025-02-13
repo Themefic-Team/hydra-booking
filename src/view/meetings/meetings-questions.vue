@@ -80,7 +80,7 @@ function QuestionPopupAdd(){
         name: '',
         placeholder:'',
         options: ['Option 1', 'Option 2'],
-        required: 1,
+        required: 0,
         enable: 1,
     });
     const lastIndexOfQuestion = props.meeting.questions.length - 1;
@@ -90,7 +90,7 @@ function QuestionPopupAdd(){
     questions_data.type = '';
     questions_data.placeholder = '';
     questions_data.options = ['Option 1', 'Option 2'],
-    questions_data.required = '';
+    questions_data.required = 0;
     questions_data.enable = 1;
     QuestionPopup.value = true;
 }
