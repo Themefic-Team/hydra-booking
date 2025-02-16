@@ -14,10 +14,9 @@
                 data: {
                     action: 'tfhb_user_registration_license',
                     nonce: tfhb_admin_notice._nonce,
-                    email: 'joybanglaasd@gmail.com'
+                    email: ''
                 },
                 success: function(response) {
-                    
                     button.prop('disabled', false).text('Register');
                 }
             });

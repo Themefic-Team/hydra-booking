@@ -35,7 +35,7 @@ class NoticeController {
         }
     
         $email = sanitize_email($_POST['email']);
-        $api_url = add_query_arg('email', urlencode($email), 'http://tourfic-development-site.local/wp-json/tourfic-users/v1/user/create');
+        $api_url = add_query_arg('email', urlencode($email), 'https://portaltest.hydrabooking.com/wp-json/tourfic-users/v1/user/create');
     
         $response = wp_remote_get($api_url, [
             'timeout' => 10,
