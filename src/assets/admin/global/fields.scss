@@ -540,3 +540,13 @@
         }
     }
 }
+.tfhb-unlock-box{
+    flex-wrap: nowrap !important;
+    gap: 16px !important;
+    button{
+        width: 190px !important;
+        box-sizing: content-box;
+        align-content: center;
+        justify-content: center;
+    }
+}

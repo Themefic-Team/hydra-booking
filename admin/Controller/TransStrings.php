@@ -421,7 +421,12 @@ namespace HydraBooking\Admin\Controller;
             'Create demo meeting' =>  __('Create demo meeting', 'hydra-booking'), 
             'Take control of your schedule' =>  __('Take control of your schedule', 'hydra-booking'), 
             'Make your appointment booking process even easier by simply setting your availability.' =>  __('Make your appointment booking process even easier by simply setting your availability.', 'hydra-booking'), 
-
+            'You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!' => __('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!', 'hydra-booking'),
+            'Let’s Get Started!' => __('Let’s Get Started!', 'hydra-booking'),
+            'Enter your email address' => __('Enter your email address', 'hydra-booking'),
+            'Unlock this Feature' => __('Unlock this Feature', 'hydra-booking'),
+            'Please provide your email address. We’ll send your key directly to your inbox.' => __('Please provide your email address. We’ll send your key directly to your inbox.', 'hydra-booking'),
+            'Send me the License key' => __('Send me the License key', 'hydra-booking'),
 
             // Component : availability 
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 

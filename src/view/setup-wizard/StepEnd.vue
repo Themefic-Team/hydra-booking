@@ -28,6 +28,8 @@ import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.v
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';  
+
 // Toast
 import { toast } from "vue3-toastify"; 
 //  Load Time Zone 
@@ -367,6 +369,11 @@ window.addEventListener('click', function(e) {
             <p>{{ $tfhb_trans('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.') }}</p> 
        
         </div>
+        <HbInfoBox :isblocked="true">
+            <template #content>
+                {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
+            </template>
+        </HbInfoBox>
         <div class="tfhb-s-w-step-end tfhb-flexbox tfhb-full-width">
 
             <div class="tfhb-s-w-integrations-bar tfhb-flexbox  tfhb-justify-between">
