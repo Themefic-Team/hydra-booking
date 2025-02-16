@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.27
+Stable tag: 1.0.28
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -208,6 +208,12 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 12. Notification Controls
 
 == Changelog ==
+
+= 1.0.28 – February 16, 2025 =
+
+- Fixed: The booking schedule error has now been resolved.
+- Improved: Booking question field control options updated.
+- Improved: The Host banner image control settings added.
 
 = 1.0.27 - 09/02/2025 =  
 
