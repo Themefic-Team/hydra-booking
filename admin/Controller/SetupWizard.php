@@ -250,7 +250,7 @@ class SetupWizard {
 			'recurring_status'         => '0',
 			'recurring_repeat'         => '[{"limit":1,"times":"days"}]',
 			'questions_type'           => 'custom',
-			'questions'                => '[{"label":"name","type":"Text","placeholder":"Name","options":[],"required":1},{"label":"email","type":"Email","options":[],"placeholder":"Email","required":1}]',
+			'questions'                => '[{"label":"Name","type":"Text","name":"name","placeholder":"Name","options":[],"required":1,"enable":1},{"label":"Email","type":"Email","name":"email","options":[],"placeholder":"Email","required":1,"enable":1},{"label":"Comment","type":"textarea","name":"comment","placeholder":"Comment","options":[],"required":0,"enable":1}]',
 			'payment_status'           => 0,
 			'payment_method'           => '',
 			'max_book_per_slot'        => 1,

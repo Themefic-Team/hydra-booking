@@ -48,10 +48,12 @@ function EditExtraQuestion(key){
         if (qkey === key) {
             questions_data.key = key;
             questions_data.label = question.label;
+            questions_data.name = question.name ?? '';
             questions_data.type = question.type;
             questions_data.placeholder = question.placeholder;
             questions_data.options = question.options;
             questions_data.required = question.required;
+            questions_data.enable = question.enable ?? 1;
             QuestionPopup.value = true;
         }
     });
@@ -75,17 +77,21 @@ function QuestionPopupAdd(){
     props.meeting.questions.push({
         label: '',
         type:'',
+        name: '',
         placeholder:'',
         options: ['Option 1', 'Option 2'],
-        required: 1
+        required: 0,
+        enable: 1,
     });
     const lastIndexOfQuestion = props.meeting.questions.length - 1;
     questions_data.key = lastIndexOfQuestion;
     questions_data.label = '';
+    questions_data.name = '';
     questions_data.type = '';
     questions_data.placeholder = '';
     questions_data.options = ['Option 1', 'Option 2'],
-    questions_data.required = '';
+    questions_data.required = 0;
+    questions_data.enable = 1;
     QuestionPopup.value = true;
 }
 // Popup close
@@ -159,7 +165,7 @@ const GetFormsData = async (value) => {
      
 
         <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0 tfhb-full-width" v-if="meeting.questions_type == 'custom'">  
-
+            
             <HbQuestion 
                 :question_value="meeting.questions"
                 :skip_remove="1"
@@ -175,13 +181,12 @@ const GetFormsData = async (value) => {
                 icon="PlusCircle"  
                 :hover_animation="false" 
                 icon_position="left"
-            /> 
+            />  
 
             <HbPopup :isOpen="QuestionPopup" @modal-close="QuestionPopup = false" max_width="400px" name="first-modal">
                 <template #header> 
                     <h3>{{ $tfhb_trans('Add Question for Attendee') }}</h3>
                 </template>
-
                 <template #content>  
                     <HbQuestionForm 
                     :questions_data="questions_data"

@@ -330,7 +330,7 @@ class GoogleCalendar {
 			// Meeting location google meeting
 			$setData = array(
 				'title'          => $event_title,
-				'summary'        => 'Title: ' . $event_title,
+				'summary'        => $event_title,
 				'location' => $booking_locations_data,
 				'description'    => 'Description: ',
 				'start'          => array(

@@ -66,14 +66,31 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 			if ( is_array( $questions ) && ! empty( $questions ) ) {
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
-				foreach ( $questions as $key => $question ) :
-					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']'; 
+				foreach ( $questions as $key => $question ) :  
+					if(isset($question['enable']) && $question['enable'] == 0){ 
+						continue;
+					}
 
+					// this is a temporay fix it will be removed in version 2.0.0 or higher version 
+					if(!isset($question['name']) || empty($question['name'])){
+						$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
+						$question['name']  = $baseName; 
+					}
+					// ******** end of fix
+
+					$name = 1 >= $key ? $question['name'] : 'question[' . $question['name'] . ']'; 
+					$placehoder = isset( $question['placeholder'] )? $question['placeholder'] : ''; 
+					$label = ucfirst($question['label']);  
+
+					if( $question['name'] == 'Address'){
+						$name = 'address';
+					}
+					
 					if ( $name == 'email' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->email : '';
 					} elseif ( $name == 'name' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->attendee_name : '';
-					} elseif ( $name == 'address' ) {
+					} elseif ( $name == 'Address' || $name == 'address'  ) {
 						$value = ! empty( $booking_data ) ? $booking_data->address : '';
 					} else {
 						$value = '';
@@ -85,11 +102,12 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 					if($question['type'] == 'phone'){
 						$question['type'] ='tel';
 					}
+ 
 					$required_star = $question['required'] == 1 ? '*' : '';
 					$required      = $question['required'] == 1 ? 'required' : '';
 
 					echo '<div class="tfhb-single-form">
-                                <label for="' . esc_attr($name) . '">' . esc_attr($question['placeholder']) . ' ' . esc_attr($required_star) . '</label>';
+                                <label for="' . esc_attr($name) . '">' . esc_attr($label) . ' ' . esc_attr($required_star) . '</label>';
 					if ( $question['type'] == 'select' ) {
 
 						echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>';
@@ -100,7 +118,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 
 					} elseif ( $question['type'] == 'textarea' ) {
 
-						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>' . esc_html($value) . '</textarea>';
+						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . 'placeholder="' . esc_attr($placehoder) . '">' . esc_html($value) . '</textarea>';
 
 					} elseif ( $question['type'] == 'checkbox' ) { 
 						echo '<div class="tfhb-checkbox-group">';
@@ -126,7 +144,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 
 					}  else {
 
-						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr($question['placeholder']) . '">';
+						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr($placehoder) . '">';
 					}
 							echo '</div>';
 

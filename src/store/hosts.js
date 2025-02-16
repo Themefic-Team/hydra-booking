@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 const Host = reactive({
     hosts: [],
     hostInfo: "",
+    fatech_host_status: false,
     async fetchHosts() {
         const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/lists';
         try {
@@ -24,6 +25,7 @@ const Host = reactive({
                     value: host.id.toString()
                 };
             });
+            this.fatech_host_status = true; 
         } catch (error) {
             console.error('Error fetching Hosts:', error);
         }

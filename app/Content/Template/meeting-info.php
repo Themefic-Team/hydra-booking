@@ -52,6 +52,7 @@ if ( 'settings' === $meeting['availability_type'] ) {
 		
 }
 
+$host_feature_image_link = isset($host['featured_image']) && !empty($host['featured_image']) ? $host['featured_image'] : TFHB_URL . 'assets/app/images/meeting-cover.png';
 ?> 
 
 <div class="tfhb-meeting-info"> 
@@ -77,7 +78,7 @@ if ( 'settings' === $meeting['availability_type'] ) {
 		}
 		?>
 	</div>  
-	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_attr(TFHB_URL . 'assets/app/images/meeting-cover.png'); ?>) ;">
+	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_url($host_feature_image_link); ?>) ;">
 		<div class="tfhb-host-profile tfhb-flexbox tfhb-gap-8">
 			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : '<img src="' . TFHB_URL.'assets/images/avator.png' . '" alt="">'; ?>
 			
@@ -145,7 +146,7 @@ if ( 'settings' === $meeting['availability_type'] ) {
 						$location_value = 'Organizer Phone Number';
 					
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
-						$location_value = 'In Person (Attendee Address) ';
+						$location_value = 'In Person (Attendee Address)';
 					}else{
 						$location_value = $location['location'];
 					}

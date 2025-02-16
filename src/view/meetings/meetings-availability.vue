@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import {ref, onBeforeMount, reactive} from 'vue'
+import {ref, onBeforeMount, onMounted, reactive} from 'vue'
 import axios from 'axios'  
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -165,16 +165,20 @@ const fetchSingleAvailabilitySettings = async (host_id, availability_id) => {
 onBeforeMount(() => { 
     Availability.getGeneralSettings();
     Host.fetchHosts().then(() => {
-        if('tfhb_host' == user_role && props.meeting.host_id == ''){
+        setTimeout(() => {
+            if('tfhb_host' == user_role && props.meeting.host_id == ''){
            
-            props.meeting.host_id = host_id 
-        } 
-        if(props.meeting.host_id!=0){
-            fetchHostAvailability(props.meeting.host_id);
-            fetchSingleAvailabilitySettings(props.meeting.host_id, props.meeting.availability_id);
-        }
-    });
+                props.meeting.host_id = host_id 
+            } 
+            if(props.meeting.host_id!=0){
+                fetchHostAvailability(props.meeting.host_id);
+                fetchSingleAvailabilitySettings(props.meeting.host_id, props.meeting.availability_id);
+            }
+        }, 2000);
+       
+    });  
 });
+ 
 
 // Overrides Calander Open
 const OverridesOpen = ref(false);
@@ -371,7 +375,7 @@ const isobjectempty = (data) => {
                 </div>
             </div>
         </div>
-        <!-- Select Host -->
+        <!-- Select Host --> 
         <HbDropdown 
             v-if="'tfhb_host' != user_role"
             v-model="meeting.host_id"
@@ -489,11 +493,11 @@ const isobjectempty = (data) => {
             </div> 
         </div>  
         <!-- Date Overrides --> 
-        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility && 'settings'==meeting.availability_type && Settings_avalibility.availability.date_slots.length > 0">  
+        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-flexbox tfhb-full-width" v-if="Settings_avalibility?.availability?.date_slots?.length > 0 && meeting.availability_type === 'settings'">  
             <div  class="tfhb-dashboard-heading tfhb-full-width" :style="{margin: '0 !important'}">
                 <div class="tfhb-admin-title tfhb-m-0"> 
-                    <h3>{{ $tfhb_trans('Add date overrides') }} </h3>  
-                    <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
+                    <h3>{{ $tfhb_trans('Overrides preview') }} </h3>  
+                    <p>{{ $tfhb_trans('Overrides preview for this avalibility') }}</p>
                 </div> 
             </div>
 
@@ -501,7 +505,7 @@ const isobjectempty = (data) => {
                 <div class="tfhb-flexbox tfhb-full-width">
                     <div class="tfhb-overrides-date">
                         <h4>{{ date_slot.date }}</h4>
-                        <p class="tfhb-m-0">{{ date_slot.available!=1 ? date_slot.times : 'Unavailable' }}</p>
+                        <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                     </div>
                 </div>
             </div>

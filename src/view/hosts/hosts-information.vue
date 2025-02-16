@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import { __ } from '@wordpress/i18n';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
@@ -6,6 +7,7 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
+import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
 
@@ -51,30 +53,41 @@ const UploadImage = () => {
     imageChange(attachment);
     };  
     wp.media.editor.open(); 
+} 
+const EmptyImage = () => {   
+    props.host.avatar = ''; 
+}
+    
+
+const imageChangeFeature = (attachment) => {   
+    props.host.featured_image = attachment.url; 
+    const image = document.querySelector('.featured_image_display'); 
+    image.src = attachment.url; 
+}
+const UploadImageFeature  = () => {   
+    wp.media.editor.send.attachment = (props, attachment) => { 
+    // set the image url to the input field
+    imageChangeFeature(attachment);
+    };  
+    wp.media.editor.open(); 
 }
 
-const tfhbValidateInput = (fieldName) => {
-    // Clear the errors object
-    Object.keys(errors).forEach(key => {
-        delete errors[key];
-    });
-    
-    const fieldParts = fieldName.split('.');
-    if(fieldParts[0] && !fieldParts[1]){
-        isEmpty(fieldParts[0], props.host[fieldParts[0]]);
-    }
-    if(fieldParts[0] && fieldParts[1]){
-        isEmpty(fieldParts[0]+'___'+[fieldParts[1]], props.host[fieldParts[0]][fieldParts[1]]);
-    }
-};
+
+const EmptyImageFeatured  = () => {
+    props.host.featured_image = '';
+} 
 
 </script>
 
 <template>  
     <div class="tfhb-admin-card-box">   
 
-        <div class="tfhb-single-form-field-wrap tfhb-flexbox">
-            <div class="tfhb-field-image" > 
+        <div class="tfhb-single-form-field-wrap avatar_display-wrap tfhb-flexbox">
+               <span  v-if="host.avatar != ''" class=" tfhb-image-field-close" @click="EmptyImage">
+                    <Icon name="X" size="13" />
+                </span>
+            <div   class="tfhb-field-image" > 
+             
                 <img v-if="host.avatar != ''"  class='avatar_display'  :src="host.avatar">
                 <img v-else  class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >
                 <button class="tfhb-image-btn" @click="UploadImage">{{ $tfhb_trans('Change') }}</button> 
@@ -82,7 +95,24 @@ const tfhbValidateInput = (fieldName) => {
             </div>
             <div class="tfhb-image-box-content">  
             <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Profile image') }} <span  v-if="required == 'true'"> *</span> </h4>
-            <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Recommended Image Size: 400x400px') }}</p>
+            <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Recommended Image Size: 120x120px') }}</p>
+            </div>
+        </div> 
+    </div>
+    <div class="tfhb-admin-card-box">    
+        <div class="tfhb-single-form-field-wrap tfhb-flexbox featured_image_display-wrap">
+            <div class="tfhb-field-image" > 
+                <span  v-if="host.featured_image != ''" class=" tfhb-image-field-close" @click="EmptyImageFeatured">
+                    <Icon name="X" size="13" />
+                </span>
+                <img v-if="host.featured_image != ''"  class='featured_image_display'  :src="host.featured_image">
+                <img v-else  class='featured_image_display'  :src="$tfhb_url+'/assets/images/images-icon.png'" >
+                <button class="tfhb-image-btn" @click="UploadImageFeature">{{ $tfhb_trans('Change') }}</button> 
+                <input  type="text"  :v-model="host.featured_image"   />  
+            </div>
+            <div class="tfhb-image-box-content">  
+                <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Cover image') }} <span  v-if="required == 'true'"> *</span> </h4>
+                <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Cover image is displayed in the meeting forms.') }}</p>
             </div>
         </div> 
     </div>
@@ -218,3 +248,52 @@ const tfhbValidateInput = (fieldName) => {
 
 
  
+<style scoped lang="scss">
+/* Your component styles go here */ 
+.avatar_display-wrap, .featured_image_display-wrap {
+  position: relative;
+
+  .tfhb-image-field-close {
+    position: absolute;
+    top: 0;
+    left: 54px;
+    padding: 2px;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    background-color: #FEECEE;
+    z-index: 1;
+    text-align: center;
+    color: #AC0C22 !important;
+    cursor: pointer;
+    transition: 0.4s;
+        &:hover {
+            background-color: #AC0C22;
+            color: #fff !important;
+        }
+    }
+
+    .tfhb-field-image{
+        position: relative;
+        .tfhb-image-field-close{
+            left: auto;
+            right: 4px;
+            top: 4px;
+            margin: 0 !important;
+            
+        }
+    }
+}
+
+.featured_image_display-wrap .tfhb-field-image { 
+  max-width: 300px;
+  width: auto;
+  border-radius: 8px;
+}
+.featured_image_display-wrap .tfhb-field-image {
+    .featured_image_display{ 
+        border-radius: 8px;
+    } 
+}
+ 
+</style>

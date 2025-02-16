@@ -62,6 +62,7 @@
 @media only screen and (max-width: 991px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info,
   .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info {
+    background-position: center center;
     border-radius: 16px 16px 0 0;
     width: 100%;
   }
@@ -889,9 +890,9 @@
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px;
-  /* 153.846% */
+  line-height: 20px; /* 153.846% */
   margin: 0 0 4px 0;
+  display: inline-block;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form input[type=text],
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form input[type=email],
@@ -934,6 +935,10 @@
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form textarea,
 .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form textarea {
   min-height: 90px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form select,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form select {
+  line-height: 1.2;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox,
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio,
