@@ -51,7 +51,7 @@ onBeforeMount(() => {
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true"
-                        :pre_loader="false"
+                        :pre_loader="FrontendDashboard.update_preloader"
                     />  
                 </div> 
 

@@ -49,7 +49,7 @@ onBeforeRouteLeave((to, from, next) => {
 </script>
 
 <template> 
-  <div class="tfhb-availability-single-box">
+  <div class="tfhb-availability-single-box tfhb-full-width">
     <div class="tfhb-availability-single-box-wrap">
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-flexbox tfhb-gap-16"> 

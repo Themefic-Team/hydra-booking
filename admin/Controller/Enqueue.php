@@ -56,11 +56,16 @@ class Enqueue {
 		if ( ! is_admin() ) {
 			// get current page and page template
 			$current_page = get_queried_object();
-			$page_template = get_page_template_slug( $current_page->ID );
-			if ( 'tfhb-frontend-dashboard.php' !== $page_template ) {
+			if($current_page){
+				$page_template = get_page_template_slug( $current_page->ID );
+				if ( 'tfhb-frontend-dashboard.php' !== $page_template ) {
+					return;
+				}
+				$front_end_dashboard = true;
+			}else{
 				return;
 			}
-			$front_end_dashboard = true;
+			
 		}
 
 		$user      = new AuthController();
@@ -75,11 +80,11 @@ class Enqueue {
 		wp_enqueue_style( 'tfhb-admin-style', TFHB_URL . 'assets/admin/css/tfhb-admin-style.css', array(), null );
  
 		
-		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
+		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		//  Build the core script
-		wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
+		// wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		// wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
  
 		// Localize the script
 		 
@@ -103,6 +108,37 @@ class Enqueue {
 				'trans'				   => TransStrings::getTransStrings(),
 			)
 		);
+
+		if($front_end_dashboard == true){
+			$settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();
+			$primery_default  = isset($settings['general']['primery_default']) ? $settings['general']['primery_default'] : '#2E6B38'; 
+			$primery_hover  = isset($settings['general']['primery_hover']) ? $settings['general']['primery_hover'] : '#4C9959'; 
+			$secondary_default  = isset($settings['general']['secondary_default']) ? $settings['general']['secondary_default'] : '#273F2B'; 
+			$secondary_hover  = isset($settings['general']['secondary_hover']) ? $settings['general']['secondary_hover'] : '#E1F2E4'; 
+			$text_title  = isset($settings['general']['text_title']) ? $settings['general']['text_title'] : '#141915'; 
+			$text_paragraph  = isset($settings['general']['text_paragraph']) ? $settings['general']['text_paragraph'] : '#273F2B';  
+			$surface_primary  = isset($settings['general']['surface_primary']) ? $settings['general']['surface_primary'] : '#F9FBF9';  
+			$surface_background  = isset($settings['general']['surface_background']) ? $settings['general']['surface_background'] : '#C0D8C4';  
+			$surface_border  = isset($settings['general']['surface_border']) ? $settings['general']['surface_border'] : '#C0D8C4';  
+			$surface_border_hover  = isset($settings['general']['surface_border_hover']) ? $settings['general']['surface_border_hover'] : '#211319';  
+			$surface_input_field  = isset($settings['general']['surface_input_field']) ? $settings['general']['surface_input_field'] : '#56765B';  
+			$custom_css = "
+				:root {
+					--tfhb-admin-primary-default: $primery_default; 
+					--tfhb-admin-primary-hover: $primery_hover; 
+					--tfhb-admin-secondary-default: $secondary_default; 
+					--tfhb-admin-secondary-hover: $secondary_hover; 
+					--tfhb-admin-text-title: $text_title; 
+					--tfhb-admin-text-paragraph: $text_paragraph; 
+					--tfhb-admin-surface-primary: $surface_primary; 
+					--tfhb-admin-surface-background: $surface_background; 
+					--tfhb-admin-surface_border: $surface_border; 
+					--tfhb-admin-surface-border-hover: $surface_border_hover; 
+					--tfhb-admin-surface-input-field: $surface_input_field; 
+				} 
+			";
+			wp_add_inline_style('tfhb-admin-style', $custom_css);
+		}
 
 		if ( function_exists( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();

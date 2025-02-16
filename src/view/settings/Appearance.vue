@@ -126,6 +126,7 @@ onBeforeMount(() => {
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
                             {{ $tfhb_trans('Primary Color') }}
+                            
                         </label>
                         <div class="color-select">
                             <LvColorpicker :value="appearanceSettings.primary_color" v-model="appearanceSettings.primary_color" :withoutInput="true"/>
@@ -137,7 +138,7 @@ onBeforeMount(() => {
                             {{ $tfhb_trans('Secondary Color') }}
                         </label>
                         <div class="color-select">
-                            <LvColorpicker :value="appearanceSettings.secondary_color" v-model="appearanceSettings.secondary_color" :withoutInput="true"/>
+                            <LvColorpicker :value="appearanceSettings.secondary_color" v-model="appearanceSettings.secondary_color" :withoutInput="true" />
                             <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
@@ -146,7 +147,7 @@ onBeforeMount(() => {
                             {{ $tfhb_trans('Paragraph Color') }}
                         </label>
                         <div class="color-select">
-                            <LvColorpicker :value="appearanceSettings.paragraph_color" v-model="appearanceSettings.paragraph_color" :withoutInput="true"/>
+                            <LvColorpicker :value="appearanceSettings.paragraph_color" v-model="appearanceSettings.paragraph_color" :withoutInput="true" />
                             <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
@@ -154,10 +155,10 @@ onBeforeMount(() => {
                 
             </div>
 
-            <div class="tfhb-admin-title" >
+            <!-- <div class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('Typography') }}</h2> 
                 <p>{{ $tfhb_trans('Set your own typography for your brand') }}</p>
-            </div>
+            </div> -->
 
             <!-- <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <HbDropdown 

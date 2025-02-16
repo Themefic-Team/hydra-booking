@@ -1,9 +1,7 @@
 export default function useDateFormat() {
 
     const Tfhb_Date = (dateString) => {
-        // const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        // const date = new Date(dateString);
-        // return date.toLocaleDateString('en-US', options);
+         
  
         if (!dateString) return '';
         const dates = dateString.split(',');  

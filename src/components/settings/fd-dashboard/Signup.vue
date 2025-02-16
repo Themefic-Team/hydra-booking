@@ -20,7 +20,33 @@ const props = defineProps([
         <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Signup Page Settings') }} </h2>
         <p>{{ $tfhb_trans('Customize the settings for the signup page') }}</p>
     </div>
-    <div class="tfhb-admin-card-box tfhb-flexbox">   
+     <HbInfoBox  name="first-modal">
+        
+        <template #content>
+            <span>{{$tfhb_trans('Use shortcode [hydra_registration_form] to show registration form in post/page/widget.')}}</span> 
+        </template>
+    </HbInfoBox>
+    <div class="tfhb-admin-card-box tfhb-flexbox"> 
+        <HbText  
+            v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_title"  
+            required= "true"  
+            :label="$tfhb_trans('Sign up Title')"   
+            :subtitle="$tfhb_trans(`Type here custom Sign up title.`)" 
+            :description="$tfhb_trans(`Default : Sign up`)" 
+            selected = "1"
+            :placeholder="$tfhb_trans('Type Sign up title')" 
+            width="50" 
+        /> 
+        <HbText  
+            v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_sub_title"  
+            required= "true"  
+            :label="$tfhb_trans('Sign up Sub-title')"   
+            :subtitle="$tfhb_trans(`Type here custom Sign up sub-title.`)" 
+            :description="$tfhb_trans(` Default : Please enter your details.`)" 
+            selected = "1"
+            :placeholder="$tfhb_trans('Type Sign up sub-title')" 
+            width="50" 
+        />   
         <!-- Time format -->
         <HbDropdown  
             v-model="props.FrontendDashboard.fd_dashboard.signup.registration_page"  
@@ -75,12 +101,7 @@ const props = defineProps([
         <!-- Time format --> 
     </div>
 
-    <HbInfoBox  name="first-modal">
-        
-        <template #content>
-            <span>{{$tfhb_trans('Use shortcode [hydra_registration_form] to show registration form in post/page/widget.')}}</span> 
-        </template>
-    </HbInfoBox>
+   
     
 </template>
 

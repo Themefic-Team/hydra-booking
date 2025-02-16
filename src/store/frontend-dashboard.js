@@ -7,7 +7,11 @@ export const FdDashboard = reactive({
     update_preloader: true, 
     user_info_update_preloader: false, 
     reset_password_preloader: false,
+    disable_personal_info: true,
+    disable_password: true,
     userAuth: {},
+    site_settings: {},
+    time_zone: {},
     pass_data: {
         old_password: '',
         new_password: '',
@@ -28,6 +32,8 @@ export const FdDashboard = reactive({
     
             if (response.data.status) {  
                 this.userAuth = response.data.userAuth; 
+                this.site_settings = response.data.site_settings; 
+                this.time_zone = response.data.time_zone; 
                 this.skeleton = false;
                  
             }
@@ -79,6 +85,7 @@ export const FdDashboard = reactive({
                 }); 
                 this.skeleton = false;
                 this.user_info_update_preloader = false;
+                this.disable_personal_info = true;
                  
             }else{
                 toast.error(response.data.message, {
@@ -116,6 +123,7 @@ export const FdDashboard = reactive({
                 }); 
                 this.skeleton = false;
                 this.user_info_update_preloader = false;
+                this.disable_personal_info = true;
                  
             }else{
 

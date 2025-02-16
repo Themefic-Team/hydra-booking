@@ -82,6 +82,9 @@ const pageTitle = computed(() => {
   else if (route.path.includes('/settings')) {
     return 'Settings';
   }
+  else if (route.path.includes('/profile')) {
+    return 'Profile';
+  }
   else {
     return '';
   }
@@ -99,19 +102,26 @@ const toggleSidebar = () => {
 </script>
 
 
-<template> 
+<template>    
     <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox">
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >
                 <span class="tfhb-responsive-menu-trigger" @click="toggleSidebar()">
                     <Icon name="Menu" size=20 /> 
                 </span>
-                <img class="desktop-header-icon" :src="$tfhb_url+'assets/app/images/fd-dashboard-logo.png'" alt="HydraBooking">
-
                
+                <a  v-if="'' == FdDashboard.site_settings.dashboard_logo" :href="FdDashboard.site_settings.dashboard_url" class="desktop-header-icon" >{{ FdDashboard.site_settings.blog_title }}</a>
+                <a  v-else  :href="FdDashboard.site_settings.dashboard_url" >
+                    <img class="desktop-header-icon" :src="FdDashboard.site_settings.dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
+                </a>
+                <a  v-if="'' != FdDashboard.site_settings.mobile_dashboard_logo"   :href="FdDashboard.site_settings.dashboard_url" >
+                    <img class="responsive-header-icon" :src="FdDashboard.site_settings.mobile_dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
+                </a>
+             
+
             </div>
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16">
-            
+
                 <h2 class="tfhb-admin-header-title">{{ $tfhb_trans(pageTitle) }}</h2>
             </div>
         </div>

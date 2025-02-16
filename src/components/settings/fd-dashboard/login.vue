@@ -18,7 +18,33 @@ const props = defineProps([
         <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Login Page Settings') }} </h2>
         <p>{{ $tfhb_trans('Customize the settings for the login page') }}</p>
     </div>
+    <HbInfoBox  name="first-modal">
+        
+        <template #content>
+            <span>{{$tfhb_trans('Use shortcode [hydra_login_form] to show login form in post/page/widget.')}}</span> 
+        </template>
+    </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-flexbox">   
+        <HbText  
+            v-model="props.FrontendDashboard.fd_dashboard.login.login_page_title"  
+            required= "true"  
+            :label="$tfhb_trans('Login Title')"   
+            :subtitle="$tfhb_trans(`Type here custom login title.`)" 
+            :description="$tfhb_trans(`Default : Welcome back`)" 
+            selected = "1"
+            :placeholder="$tfhb_trans('Type login title')" 
+            width="50" 
+        /> 
+        <HbText  
+            v-model="props.FrontendDashboard.fd_dashboard.login.login_page_sub_title"  
+            required= "true"  
+            :label="$tfhb_trans('Login Sub-title')"   
+            :subtitle="$tfhb_trans(`Type here custom login sub-title.`)" 
+            :description="$tfhb_trans(`Default : Please enter your details.`)" 
+            selected = "1"
+            :placeholder="$tfhb_trans('Type login sub-title')" 
+            width="50" 
+        /> 
         <!--  Login Page  -->
         <HbDropdown  
             v-model="props.FrontendDashboard.fd_dashboard.login.login_page"  
@@ -44,8 +70,7 @@ const props = defineProps([
                 {'name': 'Custom URL', 'value': 'custom_url'}, 
                 {'name': 'Pages', 'value': 'page'} 
             ]" 
-        />
-        <!-- Time format --> 
+        /> 
         <!-- Time format -->
         <HbDropdown  
             v-model="props.FrontendDashboard.fd_dashboard.login.after_login_redirect"  
@@ -66,16 +91,10 @@ const props = defineProps([
             selected = "1"
             :placeholder="$tfhb_trans('Type your URL')" 
             width="50" 
-        /> 
-        <!-- Time format --> 
+        />  
     </div>
 
-    <HbInfoBox  name="first-modal">
-        
-        <template #content>
-            <span>{{$tfhb_trans('Use shortcode [tf_login_form] to show login form in post/page/widget.')}}</span> 
-        </template>
-    </HbInfoBox>
+    
     
 </template>
 

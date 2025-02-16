@@ -147,14 +147,34 @@ class FrontendDashboard {
         $fd_dashboard = isset($request['fd_dashboard']) ? $request['fd_dashboard'] : array();
         $settings['general']['dashboard_logo'] = isset($fd_dashboard['general']['dashboard_logo']) ? esc_url($fd_dashboard['general']['dashboard_logo']) : '';
         $settings['general']['mobile_dashboard_logo'] = isset($fd_dashboard['general']['mobile_dashboard_logo']) ? esc_url($fd_dashboard['general']['mobile_dashboard_logo']) : '';
-        $settings['signup']['registration_page'] = isset($fd_dashboard['signup']['registration_page']) ? esc_html($fd_dashboard['signup']['registration_page']) : '';
-        $settings['signup']['after_registration_redirect_type'] = isset($fd_dashboard['signup']['after_registration_redirect_type']) ? esc_html($fd_dashboard['signup']['after_registration_redirect_type']) : '';
-        $settings['signup']['after_registration_redirect'] = isset($fd_dashboard['signup']['after_registration_redirect']) ? esc_html($fd_dashboard['signup']['after_registration_redirect']) : '';
-        $settings['signup']['after_registration_redirect_custom'] = isset($fd_dashboard['signup']['after_registration_redirect_custom']) ? esc_html($fd_dashboard['signup']['after_registration_redirect_custom']) : '';
-        $settings['login']['login_page'] = isset($fd_dashboard['login']['login_page']) ? esc_html($fd_dashboard['login']['login_page']) : '';
-        $settings['login']['after_login_redirect_type'] = isset($fd_dashboard['login']['after_login_redirect_type']) ? esc_html($fd_dashboard['login']['after_login_redirect_type']) : '';
-        $settings['login']['after_login_redirect'] = isset($fd_dashboard['login']['after_login_redirect']) ? esc_html($fd_dashboard['login']['after_login_redirect']) : '';
-        $settings['login']['after_login_redirect_custom'] = isset($fd_dashboard['login']['after_login_redirect_custom']) ? esc_html($fd_dashboard['login']['after_login_redirect_custom']) : '';
+        $settings['general']['colors_palette'] = isset($fd_dashboard['general']['colors_palette']) ? sanitize_text_field( $fd_dashboard['general']['colors_palette']) : '';
+        $settings['general']['primery_default'] = isset($fd_dashboard['general']['primery_default']) ? sanitize_text_field( $fd_dashboard['general']['primery_default']) : '';
+        $settings['general']['primery_hover'] = isset($fd_dashboard['general']['primery_hover']) ? sanitize_text_field( $fd_dashboard['general']['primery_hover']) : '';
+        $settings['general']['secondary_default'] = isset($fd_dashboard['general']['secondary_default']) ? sanitize_text_field( $fd_dashboard['general']['secondary_default']) : '';
+        $settings['general']['secondary_hover'] = isset($fd_dashboard['general']['secondary_hover']) ? sanitize_text_field( $fd_dashboard['general']['secondary_hover']) : '';
+        $settings['general']['text_title'] = isset($fd_dashboard['general']['text_title']) ? sanitize_text_field( $fd_dashboard['general']['text_title']) : '';
+        $settings['general']['text_paragraph'] = isset($fd_dashboard['general']['text_paragraph']) ? sanitize_text_field( $fd_dashboard['general']['text_paragraph']) : ''; 
+
+        $settings['general']['surface_primary'] = isset($fd_dashboard['general']['surface_primary']) ? sanitize_text_field( $fd_dashboard['general']['surface_primary']) : ''; 
+        $settings['general']['surface_background'] = isset($fd_dashboard['general']['surface_background']) ? sanitize_text_field( $fd_dashboard['general']['surface_background']) : ''; 
+        $settings['general']['surface_border'] = isset($fd_dashboard['general']['surface_border']) ? sanitize_text_field( $fd_dashboard['general']['surface_border']) : ''; 
+        $settings['general']['surface_border_hover'] = isset($fd_dashboard['general']['surface_border_hover']) ? sanitize_text_field( $fd_dashboard['general']['surface_border_hover']) : ''; 
+        $settings['general']['surface_input_field'] = isset($fd_dashboard['general']['surface_input_field']) ? sanitize_text_field( $fd_dashboard['general']['surface_input_field']) : '';  
+
+        $settings['signup']['registration_page'] = isset($fd_dashboard['signup']['registration_page']) ? sanitize_text_field($fd_dashboard['signup']['registration_page']) : '';
+        $settings['signup']['signup_page_title'] = isset($fd_dashboard['signup']['signup_page_title']) ? sanitize_text_field($fd_dashboard['signup']['signup_page_title']) : '';
+        $settings['signup']['signup_page_sub_title'] = isset($fd_dashboard['signup']['signup_page_sub_title']) ? sanitize_text_field($fd_dashboard['signup']['signup_page_sub_title']) : '';
+        $settings['signup']['after_registration_redirect_type'] = isset($fd_dashboard['signup']['after_registration_redirect_type']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect_type']) : '';
+        $settings['signup']['after_registration_redirect'] = isset($fd_dashboard['signup']['after_registration_redirect']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect']) : '';
+        $settings['signup']['after_registration_redirect_custom'] = isset($fd_dashboard['signup']['after_registration_redirect_custom']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect_custom']) : '';
+
+        
+        $settings['login']['login_page'] = isset($fd_dashboard['login']['login_page']) ? sanitize_text_field($fd_dashboard['login']['login_page']) : '';
+        $settings['login']['login_page_title'] = isset($fd_dashboard['login']['login_page_title']) ? sanitize_text_field($fd_dashboard['login']['login_page_title']) : '';
+        $settings['login']['login_page_sub_title'] = isset($fd_dashboard['login']['login_page_sub_title']) ? sanitize_text_field($fd_dashboard['login']['login_page_sub_title']) : '';
+        $settings['login']['after_login_redirect_type'] = isset($fd_dashboard['login']['after_login_redirect_type']) ? sanitize_text_field($fd_dashboard['login']['after_login_redirect_type']) : '';
+        $settings['login']['after_login_redirect'] = isset($fd_dashboard['login']['after_login_redirect']) ? sanitize_text_field($fd_dashboard['login']['after_login_redirect']) : '';
+        $settings['login']['after_login_redirect_custom'] = isset($fd_dashboard['login']['after_login_redirect_custom']) ? sanitize_text_field($fd_dashboard['login']['after_login_redirect_custom']) : '';
  
      
         update_option('_tfhb_frontend_dashboard_settings', $settings);
@@ -162,6 +182,7 @@ class FrontendDashboard {
         // return response
         $data = array(
             'status' => true,
+            'settings' => $settings,
             'message' => 'Settings Updated Successfully'
         );
 
@@ -197,9 +218,23 @@ class FrontendDashboard {
         $host = new Host(); 
         $host_data = $host->getHostById( $userAuthData['host_id'] ); 
 
+        $settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();  
+        $site_settings = [];
+        $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
+        $site_settings['blog_title'] = get_bloginfo('title');
+        $site_settings['site_url'] = get_bloginfo('url');
+        $site_settings['dashboard_url'] = get_permalink( $tfhb_dashboard_page_id );
+        $site_settings['dashboard_logo'] = isset($settings['general']['dashboard_logo']) ? $settings['general']['dashboard_logo'] : '';
+        $site_settings['mobile_dashboard_logo'] = isset($settings['general']['mobile_dashboard_logo']) ? $settings['general']['mobile_dashboard_logo'] : '';
+       
+        $DateTimeZone = new DateTimeController( 'UTC' );
+		$time_zone    = $DateTimeZone->TimeZone();
+
         $data = array(
             'status' => true,
             'userAuth' => $host_data, 
+            'site_settings' => $site_settings,
+            'time_zone' => $time_zone,
         );
  
         return rest_ensure_response($data);

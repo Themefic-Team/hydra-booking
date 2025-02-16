@@ -6,6 +6,7 @@ const props = defineProps([
     'classValue', 
     'buttonText', 
     'icon', 
+    'icon_size', 
     'hover_icon', 
     'hover_animation',   
     'icon_position',
@@ -48,7 +49,7 @@ const hover_icon_status = ref(false)
             <Icon v-if="hover_icon && props.pre_loader != true" class="tfhb-btn-hover-icon" :name="hover_icon"  size=20 /> 
            
             <HbPreloader  v-if="props.pre_loader == true"  :color="pre_loader_color ?? '#ffffff'" />
-            <Icon v-else class="tfhb-btn-icon"  :name="icon"  size=20 /> 
+            <Icon v-else class="tfhb-btn-icon"  :name="icon"  :size="props.icon_size ? props.icon_size : 20" /> 
         </span>
            
          

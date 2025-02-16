@@ -130,13 +130,11 @@ const tfhbValidateInput = (fieldName) => {
             :errors="errors.time_zone"
         /> 
         <HbText  
-            v-model="host.phone_number"  
-            required= "true"  
+            v-model="host.phone_number"   
             :label="$tfhb_trans('Mobile')"  
             selected = "1"
             :placeholder="$tfhb_trans('Type your mobile no')" 
-            width="50" 
-            :errors="errors.phone_number"
+            width="50"  
         />  
          
     <!-- Time Zone -->
@@ -209,7 +207,7 @@ const tfhbValidateInput = (fieldName) => {
     <!--  Update Hosts Information -->
     <HbButton 
         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-        @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone', 'phone_number'])"
+        @click="emit('save-host-info', ['first_name', 'last_name', 'time_zone'])"
         :buttonText="$tfhb_trans('Save & Continue')"
         icon="ChevronRight" 
         hover_icon="ArrowRight" 

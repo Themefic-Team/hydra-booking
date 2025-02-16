@@ -301,7 +301,12 @@ class FrontendDashboard {
         // load frontend dashboard template
         if ( $page_template == 'tfhb-frontend-dashboard.php' ) {
             if( is_user_logged_in() ) {
-                new Enqueue();
+            //     global $post;
+            //     $page_id = $post->ID;
+            //     echo "<pre>";
+            //    print_r($page_id);
+            //     echo '</pre>';
+            //     new Enqueue();
 
                 $template = TFHB_FD_DASHBOARD_TEMPLATE_PATH . 'frontend-dashboard.php';
             }else{
@@ -368,7 +373,7 @@ class FrontendDashboard {
 			if ($page['pro'] == true ) {
 				continue;
 			}
-			$this->create_page( esc_sql( $page['name'] ), 'tfhb_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? $page['parent'] : '', $page['template'] );
+			$this->create_page( esc_sql( $page['name'] ), $page['template'], 'tfhb_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? $page['parent'] : '' );
 		}
         
     }
@@ -384,7 +389,7 @@ class FrontendDashboard {
 	 *
 	 * @return int page ID
 	 */
-	private function create_page( $slug, $option = '', $page_title = '', $page_content = '', $post_parent = 0, $template ) {
+	private function create_page( $slug, $template, $option = '', $page_title = '', $page_content = '', $post_parent = 0  ) {
 		global $wpdb;
 
 		$option_value = get_option( $option ); 

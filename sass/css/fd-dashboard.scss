@@ -1,7 +1,8 @@
 .tfhb-frontend-from {
-    *{
+    * {
         box-sizing: border-box;
     }
+
     max-width: 100%;
     width: 500px;
     padding: 56px;
@@ -9,42 +10,50 @@
     box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
     margin: 24px auto;
 
-    button, .tfhb-from-btn {
+    button,
+    .tfhb-from-btn {
         padding: 8px 24px;
         width: 100%;
         display: flex;
         justify-content: center;
         gap: 8px;
         vertical-align: middle;
-        background-color: #2E6B38 ; 
+        background-color: #2E6B38;
         color: #fff !important;
         font-size: 16px !important;
-        font-weight: 700; 
+        font-weight: 700;
         border-radius: 8px !important;
         line-height: 1.6;
         align-items: center;
         cursor: pointer;
-        &:hover, &:focus, &:active {
+
+        &:hover,
+        &:focus,
+        &:active {
             background-color: $primary-hover;
             color: $primary-text;
         }
-        span{
+
+        span {
             display: inline-block;
         }
-        .tfhb-submit-icon{
+
+        .tfhb-submit-icon {
             line-height: 0;
         }
-      }
-    .tfhb-notice{
+    }
+
+    .tfhb-notice {
         border-radius: 8px;
         padding: 24px;
         border: 0.5px solid $success-text;
         background: $success-background;
         color: $success-text;
-        &.tfhb-error{
+
+        &.tfhb-error {
             border-color: #AC0C22;
             background: $error-background;
-            color : $error-text;
+            color: $error-text;
         }
     }
 
@@ -61,18 +70,22 @@
 
     &__field-item {
         width: 100%;
+
         &--center {
             text-align: center;
-            
+
         }
+
         &--right {
             text-align: right;
-            
+
         }
-        p{
+
+        p {
             font-weight: 600;
             margin-bottom: 0;
-            a{
+
+            a {
                 color: $primary-default !important;
             }
         }
@@ -84,7 +97,7 @@
             line-height: 1.53;
             margin-bottom: 4px !important;
         }
-      
+
         &__inner {
             position: relative;
 
@@ -93,7 +106,13 @@
                 top: 9px;
                 left: 12px;
             }
-            
+
+            &__show-password{
+                left: auto !important;
+                right: 12px;
+                cursor: pointer;
+            }
+
             input {
                 border: 1px solid #56765B;
                 background-color: #fff;
@@ -104,23 +123,35 @@
                 padding: 8px;
                 padding-left: 40px;
                 width: 100%;
-                &:focus, &:active, &:hover {
+
+                &:focus,
+                &:active,
+                &:hover {
                     outline: none;
-                    box-shadow: none; 
+                    box-shadow: none;
                     border-color: $surface-border-hover;
-                    color : $primary-color !important;
+                    color: $primary-color !important;
                     box-shadow: $input-field-box-shadow;
                     background-color: $surface-primary;
                 }
+
                 &.tfhb-error {
-                    border-color: #AC0C22 ;
-                  }
+                    border-color: #AC0C22;
+                }
             }
-            
+
             .tfhb-error-text {
-            color: #AC0C22;
+                color: #AC0C22;
             }
-           
+
+            
+
+        }
+
+        &.tfhb-password-field{
+            input{
+                padding-right: 40px;
+            }
         }
 
     }

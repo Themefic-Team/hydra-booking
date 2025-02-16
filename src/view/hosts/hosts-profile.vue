@@ -1,5 +1,4 @@
-<script setup>
-import { __ } from '@wordpress/i18n';
+<script setup> 
 import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
@@ -198,7 +197,8 @@ onBeforeMount(() => {
 
             </ul>  
         </nav>
-        <div class="tfhb-hydra-dasboard-content">      
+        <div class="tfhb-hydra-dasboard-content"> 
+              
             <router-view 
             :hostId ="hostId" 
             :host="hostData" 

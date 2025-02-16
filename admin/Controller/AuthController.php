@@ -89,7 +89,10 @@ class AuthController {
 	// Checked Host Role user Status when user login
 	public function tfhb_restrict_unverified_user( $user, $username, $password ) {
 
-		$user_obj      = get_user_by( 'login', $username ); 
+		$user_obj      = get_user_by( 'login', $username );  
+		if(!$user_obj){ 
+			$user_obj = get_user_by( 'email', $username );
+		}
 		$allowed_roles = array( 'tfhb_host' );
 		if ( $username != '' && $user_obj != false ) {
 
@@ -98,7 +101,7 @@ class AuthController {
 				$value = $host->getHostByUserID( $user_obj->ID );
 				if ( $value != '' && $value->status != 'activate' ) {
 					$user = new \WP_Error( 'denied', 
-					'<strong>'.esc_html(__('ERROR', 'hydra-booking')).'</strong>: '.esc_html(__('Your account is disabled by Admin!', 'hydra-booking')).''
+					'<strong>'.esc_html(__('ERROR', 'hydra-booking')).'</strong>: '.esc_html(__('Your account is not Activate !', 'hydra-booking')).''
 				);
 					remove_action( 'authenticate', 'wp_authenticate_username_password', 20 );
 				}

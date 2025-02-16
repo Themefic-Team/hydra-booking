@@ -1,33 +1,39 @@
-.tfhb-admin-booking{
+.tfhb-admin-booking {
     min-height: 700px;
+
     >.tfhb-booking-heading {
         margin: 0 16px !important;
         flex-direction: column !important;
         align-items: normal !important;
 
-        .tfhb-filter-form{
-            > div {
-               padding: 24px 16px;
-               border-bottom: 1px solid #C0D8C4;
-               &:last-child{
-                   border-bottom: none;
-               }
-           }
-       }
+        .tfhb-filter-form {
+            >div {
+                padding: 24px 16px;
+                border-bottom: 1px solid #C0D8C4;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+            }
+        }
     }
+
     .tfhb-empty-notice-box-wrap.tfhb-booking-notice {
         background-color: $surface-secondary;
-        margin: 0 16px !important; 
+        margin: 0 16px !important;
         border-radius: 12px;
         border: 1px solid $surface-border;
         margin-top: 32px !important;
     }
-    .tfhb-content-wrap{
-        .tfhb-meeting-title{
+
+    .tfhb-content-wrap {
+        .tfhb-meeting-title {
             width: 100%;
-            .p-autocomplete{
+
+            .p-autocomplete {
                 width: 100%;
-                input{
+
+                input {
                     padding: 8px 8px 8px 12px;
                     min-width: 100%;
                     border-radius: $border-radius-small;
@@ -39,22 +45,26 @@
                     box-shadow: none;
                     color: $text-input !important;
                     font-size: $heading-font-size-small;
-                    &::placeholder{
-                        color: $text-input !important; 
+
+                    &::placeholder {
+                        color: $text-input !important;
                     }
                 }
             }
         }
     }
-    .tfhb-booking-view{
+
+    .tfhb-booking-view {
         border-radius: $border-radius-medium;
         border: $border-reguler $border-type $surface-border;
         background: #FFF;
         padding: 4px;
-        .tfhb-list-calendar{
-            ul{
+
+        .tfhb-list-calendar {
+            ul {
                 align-items: center;
-                li{
+
+                li {
                     height: 32px;
                     width: 40px;
                     display: flex;
@@ -62,10 +72,12 @@
                     justify-content: center;
                     cursor: pointer;
                     margin-bottom: 0 !important;
-                    &.active{
+
+                    &.active {
                         border-radius: $border-radius-small;
                         background: $secondary-hover;
-                        svg{
+
+                        svg {
                             color: $primary-default;
                         }
                     }
@@ -73,7 +85,8 @@
             }
         }
     }
-    .tfhb-booking-create{
+
+    .tfhb-booking-create {
         border-radius: $border-radius-large;
         background: $surface-secondary;
         padding: 32px;
@@ -82,7 +95,7 @@
     }
 
     // Booking Calendar
-    .tfhb-booking-calendar{
+    .tfhb-booking-calendar {
         margin-left: 16px;
         border-radius: 16px 16px 0px 0px;
         background: #FFF;
@@ -91,38 +104,43 @@
         margin-right: 16px;
         position: relative;
 
-        .fc-header-toolbar{
-            .fc-toolbar-chunk{
-                &:nth-child(2){
+        .fc-header-toolbar {
+            .fc-toolbar-chunk {
+                &:nth-child(2) {
                     position: absolute;
                     left: 50%;
                     width: 320px;
                     margin-left: -150px;
                     text-align: center;
-                    >div{
+
+                    >div {
                         display: flex;
                         align-items: center;
                         gap: 28px;
                         justify-content: center;
-                        button{
+
+                        button {
                             height: 24px;
                             width: 24px;
                             border-radius: $border-radius-medium;
                             border: 0.2px $border-type $surface-background;
                             background: #FFF;
                             padding: 0;
-                            &:focus{
+
+                            &:focus {
                                 box-shadow: none;
                                 outline: none;
                             }
-                            span{
+
+                            span {
                                 margin: 0px !important;
                                 height: 100%;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
                                 width: 100%;
-                                &::before{
+
+                                &::before {
                                     color: $primary-default;
                                     border-color: $surface-background;
                                     border-radius: $border-radius-medium;
@@ -130,52 +148,59 @@
                                 }
                             }
                         }
-                        h2{
+
+                        h2 {
                             color: $text-title !important;
                             font-size: 22px;
-                            
+
                             font-weight: $font-weight-reguler !important;
                             line-height: 112%;
                             margin: 0 !important;
                         }
                     }
                 }
-                &:nth-child(3){ 
-                    .fc-button-group{
+
+                &:nth-child(3) {
+                    .fc-button-group {
                         border-radius: $border-radius-medium;
                         border: $border-reguler $border-type $surface-border;
                         background: #FFF;
                         padding: 4px;
                         display: flex;
                         gap: 8px;
-                        button{
+
+                        button {
                             background: #FFF;
                             color: $text-input;
                             font-size: $heading-font-size-small;
-                            
+
                             font-weight: $font-weight-reguler;
-                            line-height: 24px; /* 160% */
+                            line-height: 24px;
+                            /* 160% */
                             border: 0px $border-type;
                             padding: 4px 12px;
                             border-radius: $border-radius-small;
                             text-transform: capitalize;
-                            &:focus{
+
+                            &:focus {
                                 box-shadow: none;
                                 outline: none;
                             }
-                            &.fc-button-active{
+
+                            &.fc-button-active {
                                 background: $surface-border;
                                 color: $primary-default;
                                 position: relative;
                                 padding-left: 27px;
-                                &::before{
+
+                                &::before {
                                     position: absolute;
                                     content: "";
                                     left: 12px;
                                     height: 7px;
                                     width: 7px;
                                     background: $primary-default;
-                                    border-radius: $border-radius-full; 
+                                    border-radius: $border-radius-full;
                                     top: 50%;
                                     margin-top: -3.5px;
                                 }
@@ -184,89 +209,107 @@
                     }
                 }
             }
-            
+
         }
+
         .fc-popover-header {
-            .fc-popover-close{
+            .fc-popover-close {
                 margin-top: 0px !important;
                 position: relative;
-                &::before{
+
+                &::before {
                     position: absolute;
                     top: -2px;
                     left: 0;
                 }
             }
         }
-        table{
+
+        table {
             border: 0px $border-type;
-            .fc-scrollgrid-section-header{
-                .fc-scroller-harness{
-                    .fc-scroller{
+
+            .fc-scrollgrid-section-header {
+                .fc-scroller-harness {
+                    .fc-scroller {
                         overflow: hidden !important;
-                        thead{
-                            .fc-timegrid-axis{
+
+                        thead {
+                            .fc-timegrid-axis {
                                 display: none;
                             }
                         }
                     }
                 }
-                th{
+
+                th {
                     border: 0px $border-type;
-                    .fc-col-header{
-                        tr{
-                            th{
+
+                    .fc-col-header {
+                        tr {
+                            th {
                                 border: 0px $border-type;
-                                a{
+
+                                a {
                                     color: $secondary-default;
                                     font-size: $heading-font-size-small;
-                                    
+
                                     font-weight: $font-weight-reguler;
-                                    line-height: 24px; /* 160% */
+                                    line-height: 24px;
+                                    /* 160% */
                                     padding: 8px;
                                 }
                             }
                         }
                     }
                 }
-                
+
             }
-            .fc-scrollgrid-section-body{
-                > td{
+
+            .fc-scrollgrid-section-body {
+                >td {
                     border: 0px $border-type;
                 }
-                table{
-                    tr{
-                        td{
+
+                table {
+                    tr {
+                        td {
                             border: $border-reguler $border-type $surface-border;
                             padding: 8px;
                             // height: 150px;
                             background-color: transparent;
-                            .fc-daygrid-day-top{
-                                a{
+
+                            .fc-daygrid-day-top {
+                                a {
                                     color: $surface-border-hover;
                                     font-size: $heading-font-size-small;
-                                    
+
                                     font-weight: $font-weight-medium;
-                                    line-height: 24px; /* 160% */
+                                    line-height: 24px;
+                                    /* 160% */
                                 }
                             }
-                            .fc-daygrid-day-events{
-                                .fc-daygrid-event-harness{
+
+                            .fc-daygrid-day-events {
+                                .fc-daygrid-event-harness {
                                     margin-bottom: 8px;
-                                    &:last-child{
+
+                                    &:last-child {
                                         margin-bottom: 0px;
                                     }
-                                    a{
+
+                                    a {
                                         border: 0px $border-type;
                                         overflow: hidden;
                                         text-overflow: ellipsis;
                                         font-size: $text-font-size;
-                                        
+
                                         font-weight: $font-weight-medium;
-                                        line-height: 20px; /* 153.846% */
+                                        line-height: 20px;
+                                        /* 153.846% */
                                         padding: 0;
                                         background: transparent;
-                                        b{
+
+                                        b {
                                             padding: 6px 8px;
                                             color: $info-text;
                                             width: 100%;
@@ -277,20 +320,22 @@
                                             line-height: 15px;
                                             cursor: pointer;
                                         }
-                                        b.confirmed{
+
+                                        b.confirmed {
                                             color: $success-text;
                                             border-left: 1px $border-type $success-text;
                                             background: $success-background;
                                         }
                                     }
-                
-                                    .tfhb-calendar-popup{
+
+                                    .tfhb-calendar-popup {
                                         cursor: pointer;
                                     }
                                 }
                             }
-                            .fc-daygrid-day-bottom{
-                                a.fc-more-link{
+
+                            .fc-daygrid-day-bottom {
+                                a.fc-more-link {
                                     border-radius: $border-radius-large;
                                     border: $border-reguler $border-type $primary-default;
                                     background: $surface-primary;
@@ -298,62 +343,71 @@
                                     color: $primary-default;
                                     text-overflow: ellipsis;
                                     font-size: $text-font-size;
-                                    
+
                                     font-weight: $font-weight-medium;
-                                    line-height: 20px; /* 153.846% */
+                                    line-height: 20px;
+                                    /* 153.846% */
                                     padding: 6px 8px;
                                 }
                             }
                         }
-                        td.fc-day-other{
-                            .fc-daygrid-day-top{
+
+                        td.fc-day-other {
+                            .fc-daygrid-day-top {
                                 opacity: 1;
-                                a{
+
+                                a {
                                     color: $surface-background;
                                 }
                             }
                         }
                     }
                 }
-                .fc-timegrid-body{
-                    .fc-timegrid-cols{
-                       table{
-                        tbody{
-                            tr{
-                                td{
-                                    .fc-timegrid-col-events{
-                                        .fc-timegrid-event-harness{
-                                            width: 100% !important;
 
-                                            &:last-child{
-                                                margin-bottom: 0px;
-                                            }
-                                            a{
-                                                border: 0px $border-type;
-                                                overflow: hidden;
-                                                text-overflow: ellipsis;
-                                                font-size: $text-font-size;
-                                                
-                                                font-weight: $font-weight-medium;
-                                                line-height: 20px; /* 153.846% */
-                                                padding: 0;
-                                                background: transparent;
-                                                inset: auto;
-                                                b{
-                                                    padding: 6px 8px;
-                                                    color: $info-text;
-                                                    width: 100%;
-                                                    border-left: 1px $border-type $info-text;
-                                                    background: $info-background;
-                                                    border-radius: $border-radius-medium;
-                                                    display: block;
-                                                    line-height: 15px;
-                                                    cursor: pointer;
+                .fc-timegrid-body {
+                    .fc-timegrid-cols {
+                        table {
+                            tbody {
+                                tr {
+                                    td {
+                                        .fc-timegrid-col-events {
+                                            .fc-timegrid-event-harness {
+                                                width: 100% !important;
+
+                                                &:last-child {
+                                                    margin-bottom: 0px;
                                                 }
-                                                b.confirmed{
-                                                    color: $success-text;
-                                                    border-left: 1px $border-type $success-text;
-                                                    background: $success-background;
+
+                                                a {
+                                                    border: 0px $border-type;
+                                                    overflow: hidden;
+                                                    text-overflow: ellipsis;
+                                                    font-size: $text-font-size;
+
+                                                    font-weight: $font-weight-medium;
+                                                    line-height: 20px;
+                                                    /* 153.846% */
+                                                    padding: 0;
+                                                    background: transparent;
+                                                    inset: auto;
+
+                                                    b {
+                                                        padding: 6px 8px;
+                                                        color: $info-text;
+                                                        width: 100%;
+                                                        border-left: 1px $border-type $info-text;
+                                                        background: $info-background;
+                                                        border-radius: $border-radius-medium;
+                                                        display: block;
+                                                        line-height: 15px;
+                                                        cursor: pointer;
+                                                    }
+
+                                                    b.confirmed {
+                                                        color: $success-text;
+                                                        border-left: 1px $border-type $success-text;
+                                                        background: $success-background;
+                                                    }
                                                 }
                                             }
                                         }
@@ -361,31 +415,34 @@
                                 }
                             }
                         }
-                       } 
                     }
                 }
             }
         }
 
-        .fc-theme-standard .fc-popover{
+        .fc-theme-standard .fc-popover {
 
             .fc-popover-body {
-                .fc-daygrid-event-harness{
+                .fc-daygrid-event-harness {
                     margin-bottom: 8px;
-                    &:last-child{
+
+                    &:last-child {
                         margin-bottom: 0px;
                     }
-                    a{
+
+                    a {
                         border: 0px $border-type;
                         overflow: hidden;
                         text-overflow: ellipsis;
                         font-size: $text-font-size;
-                        
+
                         font-weight: $font-weight-medium;
-                        line-height: 20px; /* 153.846% */
+                        line-height: 20px;
+                        /* 153.846% */
                         padding: 0;
                         background: transparent;
-                        b{
+
+                        b {
                             padding: 6px 8px;
                             color: $info-text;
                             width: 100%;
@@ -396,7 +453,8 @@
                             line-height: 15px;
                             cursor: pointer;
                         }
-                        b.confirmed{
+
+                        b.confirmed {
                             color: $success-text;
                             border-left: 1px $border-type $success-text;
                             background: $success-background;
@@ -406,13 +464,15 @@
             }
 
         }
-        .fc-dayGridMonth-view{
-            .fc-scrollgrid-section-body{
-                table{
-                    tr{
-                        td{
+
+        .fc-dayGridMonth-view {
+            .fc-scrollgrid-section-body {
+                table {
+                    tr {
+                        td {
                             height: 150px;
-                            .fc-daygrid-day-events{
+
+                            .fc-daygrid-day-events {
                                 left: 8px;
                                 right: 8px;
                             }
@@ -422,14 +482,17 @@
             }
         }
     }
-    .tfhb-booking-calendar-popup{
-        .tfhb-popup-wrap{
+
+    .tfhb-booking-calendar-popup {
+        .tfhb-popup-wrap {
             padding: 16px 20px 20px 20px !important;
-            .tfhb-dashboard-heading{
+
+            .tfhb-dashboard-heading {
                 flex-wrap: nowrap !important;
             }
-            .tfhb-single-form-field-wrap{
-                .tfhb-time-date-view{
+
+            .tfhb-single-form-field-wrap {
+                .tfhb-time-date-view {
                     border-radius: $border-radius-small;
                     border: $border-reguler $border-type $surface-input-field;
                     background-color: transparent;
@@ -438,19 +501,25 @@
                     justify-content: normal !important;
                     gap: 8px !important;
                     height: 40px;
-                    &:focus, &:active, &:hover {
+
+                    &:focus,
+                    &:active,
+                    &:hover {
                         outline: none;
-                        box-shadow: none; 
-                        color : $primary-color !important;
+                        box-shadow: none;
+                        color: $primary-color !important;
                         box-shadow: $input-field-box-shadow;
                         background-color: $surface-primary;
                     }
-                    input{
+
+                    input {
                         min-width: auto !important;
                         padding: 0;
                         border: 0px;
                         height: auto;
-                        &:focus, &:hover{
+
+                        &:focus,
+                        &:hover {
                             box-shadow: none;
                             outline: none;
                             background-color: transparent;
@@ -458,19 +527,22 @@
                     }
                 }
             }
-            .tfhb-popup-actions{
-                .tfhb-btn{
+
+            .tfhb-popup-actions {
+                .tfhb-btn {
                     padding-left: 16px;
                     padding-right: 16px;
-                    &.tfhb-warning{
+
+                    &.tfhb-warning {
                         border-radius: $border-radius-medium;
                         border: $border-reguler $border-type $error-text;
                         background: $warning-background;
                         color: $error-text;
                         font-size: $heading-font-size-small;
-                        
+
                         font-weight: $font-weight-medium;
-                        line-height: 24px; /* 160% */
+                        line-height: 24px;
+                        /* 160% */
 
                     }
                 }
@@ -478,39 +550,47 @@
         }
     }
 }
-.tfhb-details-status{
-    .status{
+
+.tfhb-details-status {
+    .status {
         border-radius: $border-radius-large;
         background: $info-background;
         padding: 2px 8px;
         color: $info-text;
         text-align: center;
         font-size: $text-font-size-small;
-        
+
         font-weight: $font-weight-reguler;
-        line-height: 16px; /* 145.455% */
+        line-height: 16px;
+        /* 145.455% */
         text-transform: capitalize;
-        &.confirmed{
-            background: $success-background; 
-            color: $success-text; 
+
+        &.confirmed {
+            background: $success-background;
+            color: $success-text;
         }
-        &.canceled{
-            background: $error-background; 
-            color: $error-text; 
+
+        &.canceled {
+            background: $error-background;
+            color: $error-text;
         }
-        &.schedule{
+
+        &.schedule {
             background-color: $info-background;
             color: $info-text;
         }
     }
-    .tfhb-status-bar{
+
+    .tfhb-status-bar {
         cursor: pointer;
         position: relative;
-        svg{
+
+        svg {
             fill: $text-input;
         }
-        .tfhb-status-popup{
-            width: 140px; 
+
+        .tfhb-status-popup {
+            width: 140px;
             border-radius: 6px;
             background: $surface-border;
             padding: 2px;
@@ -520,34 +600,40 @@
             opacity: 0;
             transition: all 0.3s ease-in-out;
             z-index: 99;
-            ul{
-                
-                li{
-                    padding: 8px 12px; 
-                    border-radius: $border-radius-small; 
-                    background: $success-background; 
+
+            ul {
+
+                li {
+                    padding: 8px 12px;
+                    border-radius: $border-radius-small;
+                    background: $success-background;
                     color: $success-text;
                     font-size: $heading-font-size-small;
-                    
+
                     font-weight: $font-weight-reguler;
-                    line-height: 24px; /* 160% */
+                    line-height: 24px;
+                    /* 160% */
                     width: 100%;
                     margin: 0 !important;
-                    &.pending{
+
+                    &.pending {
                         background-color: $warning-background;
                         color: $warning-text;
                     }
-                    &.schedule{
+
+                    &.schedule {
                         background-color: $info-background;
                         color: $info-text;
                     }
-                    &.canceled{
+
+                    &.canceled {
                         background-color: $error-background;
                         color: $error-text;
                     }
                 }
             }
         }
+
         &:hover .tfhb-status-popup,
         &:focus .tfhb-status-popup {
             visibility: visible;
@@ -555,25 +641,31 @@
         }
     }
 }
-.tfhb-booking-details{
+
+.tfhb-booking-details {
     margin-right: 16px;
-   margin-left: 16px;
-    table{
+    margin-left: 16px;
+
+    table {
         width: 100%;
         border-radius: $border-radius-medium;
         background: $secondary-hover;
-        thead{
+
+        thead {
             border-bottom: 1px $border-type $surface-border;
-            th{
+
+            th {
                 padding: 12px 16px;
                 color: $text-paragraph;
                 font-size: $heading-font-size-small;
-                
+
                 font-weight: $font-weight-reguler;
-                line-height: 24px; /* 160% */
+                line-height: 24px;
+                /* 160% */
                 text-align: left;
-                .select-checkbox-lists{
-                    label{
+
+                .select-checkbox-lists {
+                    label {
                         .checkmark {
                             position: relative;
                             top: 0px;
@@ -585,6 +677,7 @@
                             border: $border-reguler $border-type $surface-background;
                             margin: 0 !important;
                             display: block;
+
                             &:after {
                                 content: "";
                                 position: absolute;
@@ -600,32 +693,38 @@
                                 display: none;
                             }
                         }
+
                         input:checked~.checkmark {
                             background-color: $primary-default;
                             border: $border-reguler $border-type $primary-default;
                         }
+
                         input:checked~.checkmark:after {
                             display: block;
                         }
                     }
-                    input[type="checkbox"]{
+
+                    input[type="checkbox"] {
                         display: none;
                     }
                 }
             }
         }
-        tbody{
-            tr{
+
+        tbody {
+            tr {
                 background-color: #FFFEFA;
-                
-                &.tfhb-list-date-tr{
+
+                &.tfhb-list-date-tr {
 
                     background-color: $surface-secondary;
-                    td{
+
+                    td {
                         border-bottom: 0 !important;
-                        padding-top: 8px ;
+                        padding-top: 8px;
                         padding-bottom: 4px;
-                        .tfhb-date-title{
+
+                        .tfhb-date-title {
                             color: $text-title;
                             font-size: 15px;
                             font-weight: 600;
@@ -633,26 +732,30 @@
                         }
                     }
                 }
-                td{
+
+                td {
                     padding: 12px 16px;
                     color: $text-title;
                     font-size: $heading-font-size-small;
-                    
+
                     font-weight: $font-weight-reguler;
                     line-height: 24px;
                     border: 0px $border-type;
                     border-bottom: 1px $border-type #EEF6F0;
-                    .tfhb-list-data-event-title{
+
+                    .tfhb-list-data-event-title {
                         font-weight: 600 !important;
                         line-height: 1.53 !important;
                         color: $text-title !important;
-                        b{
+
+                        b {
                             color: $primary-default;
                         }
                     }
-                    .checkbox-lists{
-                        label{
-                            
+
+                    .checkbox-lists {
+                        label {
+
                             .checkmark {
                                 position: relative;
                                 top: 0px;
@@ -663,6 +766,7 @@
                                 border-radius: 3px;
                                 border: $border-reguler $border-type $surface-border;
                                 margin: 0 !important;
+
                                 &:after {
                                     content: "";
                                     position: absolute;
@@ -678,68 +782,82 @@
                                     display: none;
                                 }
                             }
+
                             input:checked~.checkmark {
                                 background-color: $primary-default;
                                 border: $border-reguler $border-type $primary-default;
                             }
+
                             input:checked~.checkmark:after {
                                 display: block;
                             }
                         }
-                        input[type="checkbox"]{
+
+                        input[type="checkbox"] {
                             display: none;
                         }
                     }
-                    span{
-                        font-size: $text-font-size; 
+
+                    span {
+                        font-size: $text-font-size;
                         display: block;
                         margin: 0 !important;
                     }
-                    .tfhb-details-action{
-                        a{
+
+                    .tfhb-details-action {
+                        a {
                             color: $secondary-default;
                             text-decoration: none;
                         }
-                        span{
+
+                        span {
                             color: $secondary-default;
                             cursor: pointer;
                         }
                     }
-                    .tfhb-details-status{
-                        .status{
+
+                    .tfhb-details-status {
+                        .status {
                             border-radius: $border-radius-large;
                             background: $warning-background-secondary;
                             padding: 2px 8px;
                             color: $warning-text;
                             text-align: center;
                             font-size: $text-font-size-small;
-                            
+
                             font-weight: $font-weight-reguler;
-                            line-height: 16px; /* 145.455% */
+                            line-height: 16px;
+                            /* 145.455% */
                             text-transform: capitalize;
-                            &.confirmed{
-                                background: $success-background; 
-                                color: $success-text; 
+
+                            &.confirmed {
+                                background: $success-background;
+                                color: $success-text;
                             }
-                            &.canceled{
-                                background: $error-background; 
-                                color: $error-text; 
+
+                            &.canceled {
+                                background: $error-background;
+                                color: $error-text;
                             }
-                            &.schedule{
+
+                            &.schedule {
                                 background-color: $info-background;
                                 color: $info-text;
                             }
                         }
-                        .tfhb-status-bar{
+
+                        .tfhb-status-bar {
                             cursor: pointer;
                             position: relative;
                             height: 20px;
                             width: 20px;
-                            svg{
+
+                            svg {
                                 fill: $text-paragraph;
                             }
-                            .tfhb-status-popup{
-                                width: 140px; 
+
+                            .tfhb-status-popup {
+                                width: 140px;
                                 border-radius: 6px;
                                 background: $surface-border;
                                 padding: 2px;
@@ -749,34 +867,40 @@
                                 opacity: 0;
                                 transition: all 0.3s ease-in-out;
                                 z-index: 99;
-                                ul{
-                                    
-                                    li{
-                                        padding: 8px 12px; 
-                                        border-radius: $border-radius-small; 
-                                        background: $success-background; 
+
+                                ul {
+
+                                    li {
+                                        padding: 8px 12px;
+                                        border-radius: $border-radius-small;
+                                        background: $success-background;
                                         color: $success-text;
                                         font-size: $heading-font-size-small;
-                                        
+
                                         font-weight: $font-weight-reguler;
-                                        line-height: 24px; /* 160% */
+                                        line-height: 24px;
+                                        /* 160% */
                                         width: 100%;
                                         margin: 0 !important;
-                                        &.pending{
+
+                                        &.pending {
                                             background-color: $warning-background;
                                             color: $warning-text;
                                         }
-                                        &.schedule{
+
+                                        &.schedule {
                                             background-color: $info-background;
                                             color: $info-text;
                                         }
-                                        &.canceled{
+
+                                        &.canceled {
                                             background-color: $error-background;
                                             color: $error-text;
                                         }
                                     }
                                 }
                             }
+
                             &:hover .tfhb-status-popup,
                             &:focus .tfhb-status-popup {
                                 visibility: visible;
@@ -785,8 +909,9 @@
                         }
                     }
                 }
-                &.last{
-                    td{
+
+                &.last {
+                    td {
                         border-bottom: 1px $border-type $surface-border;
                     }
                 }
@@ -802,51 +927,58 @@
 .tfhb-booking-single-details {
     margin-right: 16px;
     margin-left: 16px;
+
     .tfhb-booking-details-action {
         .tfhb-dropdown-wrap {
             width: 185px !important;
         }
-        button{
+
+        button {
             font-weight: 600;
         }
+
         svg {
             margin-top: 0px !important;
         }
     }
+
     .tfhb-booking-heading {
         margin-bottom: 16px;
 
-        @media #{$max767}{ 
+        @media #{$max767} {
             justify-content: end !important;
+
             .tfhb-booking-heading-left {
                 width: 100%;
             }
-        } 
+        }
+
         h4 {
             font-size: 17px;
             line-height: 1.5;
         }
-       
+
         .status {
-            padding: 4px 8px ;
-            border-radius: 0 ;
-            font-size: 13px ;
+            padding: 4px 8px;
+            border-radius: 0;
+            font-size: 13px;
             height: 28px;
-            font-weight: 600  ;
-            line-height: 1.53 ;
+            font-weight: 600;
+            line-height: 1.53;
         }
 
         .booking-details-timeframe {
-            border-left: 2px $border-type  $info-text;
+            border-left: 2px $border-type $info-text;
             padding: 4px 8px;
             background-color: $surface-secondary;
-            span{
-                margin: 0  !important;
+
+            span {
+                margin: 0 !important;
             }
         }
 
 
-        
+
     }
 
     .tfhb-booking-details-content {
@@ -864,12 +996,13 @@
         border-radius: 8px;
         box-sizing: border-box;
         width: 100%;
-        h3{
+
+        h3 {
             margin: 0 !important;
         }
-         
-        .tfhb-b-d-inner-title{
-            .status { 
+
+        .tfhb-b-d-inner-title {
+            .status {
                 background: $info-text;
                 color: $surface-secondary !important;
                 font-weight: 600 !important;
@@ -879,20 +1012,21 @@
                 text-transform: capitalize;
             }
         }
-       
+
 
         .tfhb-b-d-icon-box-wrap {
             padding: 16px;
             border-top: $border-reguler $border-type $surface-border;
             margin-top: 8px;
-            
-            &.no-border{
+
+            &.no-border {
                 border-top: none;
             }
-            
-            &.bg-wrap{
+
+            &.bg-wrap {
                 background-color: #FFFEFA;
             }
+
             h4 {
                 padding-bottom: 8px;
             }
@@ -900,53 +1034,65 @@
             .tfhb-b-d-icon-box {
                 width: calc(33% - 24px);
 
-                .lucide, svg {
+                .lucide,
+                svg {
                     margin-top: 6px;
-                    path, circle {
+
+                    path,
+                    circle {
                         stroke: $text-paragraph;
                         stroke-width: 2;
                     }
                 }
-                .tfhb-b-d-icon-content{
+
+                .tfhb-b-d-icon-content {
                     width: calc(100% - 28px);
-                    h5{
+
+                    h5 {
                         font-size: 13px;
                         font-weight: 600;
-                        line-height: 1.53; 
+                        line-height: 1.53;
                     }
-                    p, span{
-                        font-size: 15px !important; 
+
+                    p,
+                    span {
+                        font-size: 15px !important;
                     }
+
                     .tfhb-single-booking-info {
                         span {
                             color: $primary-default !important;
                             font-weight: 400 !important;
                             font-size: 15px !important;
+
                             a {
                                 font-size: 13px;
                                 padding: 4px 8px;
                                 background-color: $primary-default;
                                 border-radius: 16px;
                                 color: $surface-secondary;
-                                &:hover { 
+
+                                &:hover {
                                     background-color: $primary-hover;
-                                  }
-                              }
-                              
-                          }
-                          
-                    } 
-                   
+                                }
+                            }
+
+                        }
+
+                    }
+
                 }
-                .accordion-content{
-                    span{
+
+                .accordion-content {
+                    span {
                         font-size: 13px !important;
                         font-weight: 600 !important;
                         line-height: 1.53 !important;
                         color: $success-text !important;
                         cursor: pointer;
-                        svg{
-                            path{
+
+                        svg {
+                            path {
                                 stroke: $success-text !important;
                             }
                         }
@@ -954,16 +1100,17 @@
                 }
             }
 
-            &.tfhb-group-accordion-bar{
-                p{
+            &.tfhb-group-accordion-bar {
+                p {
                     color: $text-title !important;
                 }
             }
         }
 
-         .tfhb-activity-timeline {
+        .tfhb-activity-timeline {
             padding: 16px 0;
             border-top: $border-reguler $border-type $surface-border;
+
             .tfhb-activity-single-timeline {
                 position: relative;
                 padding-left: 24px;
@@ -975,82 +1122,94 @@
                     top: 16px;
                     width: 1px;
                     height: calc(100% + 5px);
-                    background-color: #56765B; 
-                  }
+                    background-color: #56765B;
+                }
 
                 //   last child after remove
                 &:last-child:after {
                     display: none;
                 }
-              }
-              .tfhb-a-s-t-icon {
+            }
+
+            .tfhb-a-s-t-icon {
                 position: absolute;
                 left: 0;
                 z-index: 1;
                 top: 4px;
                 width: 16px;
-              } 
+            }
 
-                .tfhb-a-s-t-content{
-                    h5 {
-                        font-size: 13px; 
-                    }
-                    p,  span {
-                        font-size: 11px !important;
-                    }
-                } 
-               
+            .tfhb-a-s-t-content {
+                h5 {
+                    font-size: 13px;
+                }
 
-         }
+                p,
+                span {
+                    font-size: 11px !important;
+                }
+            }
 
-         .tfhb-singlee-attendees {
+
+        }
+
+        .tfhb-singlee-attendees {
             margin: 0 !important;
             border-top: $border-reguler $border-type #EEF6F0;
-            .accordion-icons{
-                svg{
+
+            .accordion-icons {
+                svg {
                     color: $text-paragraph;
                     font-size: 20px;
                     cursor: pointer;
                 }
             }
-            > .tfhb-b-d-icon-box-wrap{
-                 > div{
+
+            >.tfhb-b-d-icon-box-wrap {
+                >div {
                     width: calc(33% - 144px);
-                    &:last-child{
+
+                    &:last-child {
                         width: 130px;
                     }
-                 }
+                }
             }
-            .tfhb-b-d-inner-title{
+
+            .tfhb-b-d-inner-title {
                 border-bottom: $border-reguler $border-type $surface-border;
                 margin: 0 16px;
             }
-            &.active{
+
+            &.active {
                 border: $border-reguler $border-type $surface-border;
                 border-radius: 0px 0px 8px 8px;
             }
+
             .tfhb-b-d-icon-box-wrap {
-                margin: 0 !important; 
+                margin: 0 !important;
             }
-          } 
+        }
 
     }
 
 }
 
 // Booking Details Quick View Design
-.tfhb-booking-info{
+.tfhb-booking-info {
     .tfhb-booking-info-wrap {
         margin-bottom: 16px !important;
         background-color: $surface-primary;
         border: none !important;
-        h3{
+
+        h3 {
             margin-bottom: 12px !important;
         }
-        .tfhb-booking-info-inner{
+
+        .tfhb-booking-info-inner {
             justify-content: normal !important;
             align-items: normal !important;
-            .tfhb-single-booking-info{ 
+
+            .tfhb-single-booking-info {
                 justify-content: normal !important;
                 background-color: $surface-secondary;
                 min-height: 40px;
@@ -1062,7 +1221,7 @@
                 width: calc(33% - 6px);
             }
 
-            .tfhb-booking-details{
+            .tfhb-booking-details {
                 margin: 0px !important;
             }
         }

@@ -50,7 +50,8 @@ class Signup {
         $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
         $get_login_page_url = get_permalink( $login_page_id );
         $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
-        
+        $signup_page_title = isset($settings['signup']['signup_page_title']) && !empty($settings['signup']['signup_page_title']) ? $settings['signup']['signup_page_title'] :  __('Sign up', 'hydra-booking');
+        $signup_page_sub_title = isset($settings['signup']['signup_page_sub_title']) && !empty($settings['signup']['signup_page_sub_title']) ? $settings['signup']['signup_page_sub_title'] :  __('Please enter your details.', 'hydra-booking');
 		// Start Buffer
 		ob_start(); 
 
@@ -72,8 +73,8 @@ class Signup {
         
         <div class="tfhb-frontend-from">
             <div class="tfhb-frontend-from__title">
-                <h3><?php echo esc_html(__('Sign up', 'hydra-booking')) ?></h3>
-                <p><?php echo esc_html(__('Please enter your details.', 'hydra-booking')) ?></p>
+                <h3><?php echo esc_html($signup_page_title) ?></h3>
+                <p><?php echo esc_html($signup_page_sub_title) ?></p>
             </div>
             <form action="" id="tfhb-reg-from">
             <?php wp_nonce_field( 'tfhb_check_reg_nonce', 'tfhb_reg_nonce' ); ?>
@@ -131,7 +132,7 @@ class Signup {
                         </div>
                     </div>
 
-                    <div class="tfhb-frontend-from__field-item">
+                    <div class="tfhb-frontend-from__field-item tfhb-password-field">
                         <label for="tfhb_password"><?php echo esc_html(__('Password', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
@@ -148,10 +149,11 @@ class Signup {
                             </svg>
                             </span>
                             <input type="password" name="tfhb_password" id="tfhb_password" placeholder="Type your password">
+                            <span class="tfhb-frontend-from__field-item__inner__show-password tfhb-show-password">  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
                         </div>
                     </div>
 
-                    <div class="tfhb-frontend-from__field-item">
+                    <div class="tfhb-frontend-from__field-item tfhb-password-field">
                         <label for="tfhb_confirm_password"><?php echo esc_html(__('Confirm Password', domain: 'hydra-booking')) ?></label> 
                         <div class="tfhb-frontend-from__field-item__inner">
                             <span>
@@ -168,6 +170,7 @@ class Signup {
                             </svg>
                             </span>
                             <input type="password" name="tfhb_confirm_password" id="tfhb_confirm_password" placeholder="Re-type your password">
+                              <span class="tfhb-frontend-from__field-item__inner__show-password tfhb-show-password">  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
                         </div>
                     </div>
 
@@ -369,10 +372,16 @@ class Signup {
             
                     // Insert Host
                     $hostInsert = $host->add( $data );
+                   
                     if ( $hostInsert ) {
-
+                       
                         // Send activation email 
                         $this->tfhb_send_activation_code($data, $code);
+
+                         unset( $data['user_id'] );
+                        $data['host_id'] = $hostInsert['insert_id'];
+                        // Update user Option
+                        update_user_meta( $user_id, '_tfhb_host', $data );
                         $response['success'] = true;
                         $response['message'] = esc_html__( 'Your account has been created successfully. A confirmation email has been sent to your email address.', 'hydra-booking' );
                     }

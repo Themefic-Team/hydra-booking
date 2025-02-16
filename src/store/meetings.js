@@ -158,13 +158,6 @@ const Meeting = reactive({
                     placeholder:'Email',
                     options: [],
                     required: 1
-                },
-                {
-                    label: 'address',
-                    type:'Text', 
-                    placeholder:'Address',
-                    options: [],
-                    required: 1
                 }
             ],
             notification: {
