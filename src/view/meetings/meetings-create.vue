@@ -163,26 +163,31 @@ const meetingData = reactive({
     form_id: '',
     questions: [
         {
-            label: 'name',
+            label: 'Name',
             type:'Text',
+            name: 'name',
             placeholder:'Name',
             options: [],
-            required: 1
+            required: 1,
+            enable: 1,
         },
         {
-            label: 'email',
+            label: 'Email',
             type:'Email',
+            name: 'email',
             options: [],
-            placeholder:'Email',
-            options: [],
-            required: 1
+            placeholder:'Email', 
+            required: 1,
+            enable: 1,
         },
         {
             label: 'Comment',
             type:'textarea', 
+            name: 'comment',
             placeholder:'Comment',
             options: [],
-            required: 0
+            required: 0,
+            enable: 1,
         }
     ],
     notification: {
@@ -441,8 +446,17 @@ const fetchMeeting = async () => {
                 meetingData.questions_form_type = response.data.meeting.questions_form_type
             }
 
+            console.log('questions', meetingData.questions)
             if(response.data.meeting.questions){
-                meetingData.questions = JSON.parse(response.data.meeting.questions)
+                meetingData.questions = JSON.parse(response.data.meeting.questions) 
+                
+                // **** this is a temporay fix it will be removed in version 2.0.0 or higher version
+                meetingData.questions.forEach((question, index) => {
+                    if(!question.enable ){
+                        meetingData.questions[index].enable = 1;
+                    }
+                })
+                // **** end fix *****
             }
             if(response.data.meeting.questions_form){
                 meetingData.questions_form = response.data.meeting.questions_form

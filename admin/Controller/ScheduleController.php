@@ -15,7 +15,7 @@ class ScheduleController {
 		$this->tfhb_create_cron_job();
 
 		add_action( 'tfhb_after_booking_completed_schedule', array( $this, 'tfhb_after_booking_completed_schedule_callback' ) );
-		$this->tfhb_after_booking_completed_schedule_callback();
+		// $this->tfhb_after_booking_completed_schedule_callback();
 	}
 	public function tfhb_create_cron_job() {
 
@@ -81,7 +81,9 @@ class ScheduleController {
 	
 		foreach ( $bookings as $key => $value ) {
 		
-			
+			if(empty($value->availability_time_zone)){ 
+				continue;
+			}
 			$DateTime = new DateTimeController( $value->availability_time_zone );
 					// Time format if has AM and PM into start time
 			$time_format              = strpos( $value->start_time, 'AM' ) || strpos( $value->start_time, 'PM' ) ? '12' : '24';

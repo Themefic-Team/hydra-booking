@@ -102,8 +102,8 @@ const UpdateQuestionsData = async (validator_field) => {
         :errors="errors.label"
     /> 
     <HbText  
-        v-model="questions_data.placeholder"
-        required= "true"  
+        v-if="questions_data.type != 'radio' &&  questions_data.type != 'checkbox' && questions_data.type != 'select'"  
+        v-model="questions_data.placeholder" 
         :label="__('Placeholder', 'hydra-booking')"  
         :placeholder="__('Enter field placeholder ', 'hydra-booking')"  
         :errors="errors.placeholder"
@@ -154,7 +154,7 @@ const UpdateQuestionsData = async (validator_field) => {
         />  
         <HbButton  
             classValue="tfhb-btn boxed-btn" 
-            @click="UpdateQuestionsData(['type', 'label', 'placeholder'])"
+            @click="UpdateQuestionsData(['type', 'label'])"
             :buttonText="$tfhb_trans('Save')" 
         /> 
     </div>
