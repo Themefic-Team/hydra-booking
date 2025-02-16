@@ -49,6 +49,7 @@
   padding: 38px 16px 16px 16px;
   border-radius: 16px 0 0 0;
   background-size: cover;
+  background-position: center center;
 }
 @media only screen and (max-width: 991px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info {
@@ -745,6 +746,7 @@
   font-weight: 400;
   line-height: 20px; /* 153.846% */
   margin: 0 0 4px 0;
+  display: inline-block;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form input[type=text],
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form input[type=email],
@@ -784,6 +786,9 @@
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form textarea, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form textarea {
   min-height: 90px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form select, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form select {
+  line-height: 1.2;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox, .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-checkbox, .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-meeting-form .tfhb-single-form .tfhb-field-radio {
   position: relative;

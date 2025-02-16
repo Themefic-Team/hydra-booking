@@ -68,6 +68,7 @@
                 padding: 38px 16px 16px 16px;
                 border-radius: 16px 0 0 0;
                 background-size: cover;
+                background-position: center center;
                 @media #{$max991}{
                     border-radius: 16px 16px 0 0;
                     width: 100%;
@@ -760,7 +761,8 @@
                             font-style: normal;
                             font-weight: 400;
                             line-height: 20px; /* 153.846% */
-                            margin: 0 0 4px 0;
+                            margin: 0 0 4px 0; 
+                            display: inline-block; 
                         }
                         input[type="text"],
                         input[type="email"],
@@ -782,6 +784,9 @@
                         }
                         textarea{
                             min-height: 90px;
+                        }
+                        select{
+                            line-height: 1.2;
                         }
 
                         .tfhb-field-checkbox, .tfhb-field-radio{
