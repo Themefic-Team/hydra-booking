@@ -128,7 +128,7 @@ namespace HydraBooking\Admin\Controller;
             'Profile image' =>  __('Profile image', 'hydra-booking'), 
             'Cover image' =>  __('Cover image', 'hydra-booking'), 
             'Cover image is displayed in the meeting forms.' =>  __('Cover image is displayed in the meeting forms.', 'hydra-booking'), 
-            'Recommended Image Size: 400x400px' =>  __('Recommended Image Size: 400x400px', 'hydra-booking'), 
+            'Recommended Image Size: 120x120px' =>  __('Recommended Image Size: 120x120px', 'hydra-booking'), 
             'General Information' =>  __('General Information', 'hydra-booking'), 
             'First name' =>  __('First name', 'hydra-booking'), 
             'Type your first name' =>  __('Type your first name', 'hydra-booking'), 
