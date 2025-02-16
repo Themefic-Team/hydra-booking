@@ -315,6 +315,7 @@ const isobjectempty = (data) => {
 <template>
     
     <div class="meeting-create-details tfhb-gap-24">
+        {{meeting.availability_custom}}
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
