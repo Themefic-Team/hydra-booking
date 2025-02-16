@@ -19,6 +19,9 @@ const licenseing = reactive({
 const UnlockPopup = () => {
   licenseing.isOpen = false;
 }
+const GenaratePasswordLink = () => {
+  
+}
 
 </script>
 
@@ -39,7 +42,7 @@ const UnlockPopup = () => {
           />  
           <div class="tfhb-submission-btn tfhb-gap-8">
             <HbButton 
-              @click="licenseing.isOpen=true"
+              @click="GenaratePasswordLink()"
               classValue="tfhb-btn boxed-btn flex-btn" 
               :buttonText="$tfhb_trans('Send me the License key')"
             />  
