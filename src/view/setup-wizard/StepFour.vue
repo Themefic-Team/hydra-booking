@@ -307,7 +307,7 @@ window.addEventListener('click', function(e) {
                                         <HbButton 
                                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                                             @click="copyMeeting(shareData.link)" 
-                                            :buttonText="$tfhb_trans('Copy Code')" 
+                                            :buttonText="$tfhb_trans('Copy Link')" 
                                         />  
                                     </div>
                                 </div>

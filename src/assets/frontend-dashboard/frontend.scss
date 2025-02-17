@@ -7,7 +7,7 @@ html {
 
 #tfhb-admin-app {
     background-color: $surface-primary;
-
+ 
     .tfhb-frontend-top-header {
         margin-bottom: 0 !important;
         min-height: 60px;
@@ -23,6 +23,7 @@ html {
 
             .tfhb-dropdown-wrap {
                 width: auto !important;
+                min-width: 150px;
             }
 
             @media #{$max450} {
@@ -105,7 +106,15 @@ html {
 
     .tfhb-frontend-dashboard {
         padding: 8px;
-        
+        margin-bottom: 32px;
+        .tfhb-single-meeting{
+            border: none;
+        }
+        .user-info-icon{
+            svg{
+                margin-top: 0;
+            }
+        }
         .tfhb-popup-wrap{
             .tfhb-availability-schedule-single{
                 // align-items: center !important;
@@ -152,6 +161,9 @@ html {
                 td {
                     border-bottom: 1px solid $surface-border;
                 }
+            }
+            .tfhb-booking-calendar tr td{
+                border: 1px solid $surface-border;
             }
 
             .tfhb-admin-frontend-end-wrap,

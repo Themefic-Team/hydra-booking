@@ -326,7 +326,7 @@ namespace HydraBooking\Admin\Controller;
             'Host Settings' =>  __('Host Settings', 'hydra-booking'), 
             'Manage the settings and preferences for the hosts' =>  __('Manage the settings and preferences for the hosts', 'hydra-booking'), 
             'Information Builder' =>  __('Information Builder', 'hydra-booking'), 
-            'Permission' =>  __('Permission', 'hydra-booking'), 
+            'Permissions' =>  __('Permissions', 'hydra-booking'), 
             'Update Host Settings' =>  __('Update Host Settings', 'hydra-booking'), 
             'Configure integration for conferencing, calendar and payment' =>  __('Configure integration for conferencing, calendar and payment', 'hydra-booking'), 
             'License Management' =>  __('License Management', 'hydra-booking'), 

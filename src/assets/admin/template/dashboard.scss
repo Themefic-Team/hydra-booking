@@ -212,6 +212,13 @@
           justify-content: normal !important;
           overflow: auto;
           align-items: start !important;
+          .tfhb-dashboard-notice-single-box {
+            p{
+              font-size: $heading-font-size-small !important;
+              font-weight: 400;
+              line-height: 1.6; /* 160% */
+            }
+          }
         }
 
       }

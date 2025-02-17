@@ -56,10 +56,19 @@ const toggleSidebar = () => {
                         <Icon name="User" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('Hosts') }}</span>
                     </router-link>
-                </li>
-                <li v-if="$user.role[0] != 'tfhb_host' " :class="{ 'active': $route.path.includes('/settings') }" class="tfhb-dropdown-menu">
+                </li> 
+                <li v-if="$user.caps.tfhb_manage_settings == true " :class="{ 'active': $route.path.includes('/settings') }" class="tfhb-dropdown-menu">
                     <!-- <router-link  to="/settings" exact :class="{ 'active': $route.path.includes('/settings') }"  class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12" > -->
-                        <button :class="{ 'active': $route.path.includes('/settings') }" @click="showGeneralMenu = !showGeneralMenu"   class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 ">
+                        <router-link  @click="showGeneralMenu = !showGeneralMenu"  v-if="!collapsed" to="/settings/general" exact :class="{ 'active': $route.path === '/settings/general' }  "class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" >
+                            <Icon name="SlidersHorizontal" size="20" />  
+                            <span v-if="!collapsed"  class="tfhb-flexbox tfhb-justify-between " style="width:calc(100% - 38px)"> {{ $tfhb_trans('Settings') }} 
+                                <span class="dropdown-icon">
+                                    <Icon  v-if="showGeneralMenu == true" name="ChevronDown" size="20" /> 
+                                    <Icon v-if="showGeneralMenu == false" name="ChevronRight" size="20" /> 
+                                </span>
+                            </span>
+                        </router-link>
+                        <button v-else :class="{ 'active': $route.path.includes('/settings') }" @click="showGeneralMenu = !showGeneralMenu"   class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 ">
                             <Icon name="Settings" size="20" /> 
                             <span v-if="!collapsed"  class="tfhb-flexbox tfhb-justify-between " style="width:calc(100% - 38px)"> {{ $tfhb_trans('Settings') }} 
                                 <span class="dropdown-icon">

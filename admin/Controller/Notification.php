@@ -7,11 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 // Use Namespace
 use HydraBooking\DB\Meta;
 use HydraBooking\Admin\Controller\RouteController;
+use HydraBooking\DB\Host;
 class Notification {
 
-	public function __construct() {
-		// add_action('admin_init', array($this, 'init')); 
-        add_action('hydra_booking/after_booking_completed', array($this, 'AddNotification'));
+	public function __construct() { 
+
 	}
 	public function create_endpoint() { 
 		register_rest_route(
@@ -43,19 +43,14 @@ class Notification {
 		$current_user_id   = $current_user->ID;
         $data_Query = [];
         if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
-			 $data_Query[] = array(
-                'column'   => 'object_id',
-                'operator' => '=',
-                'value'    => ''.$current_user_id.'',
-             );
+            $host = new Host();  
+            $HostData = $host->getHostByUserId( $current_user_id );
+			 $data_Query[] = array( 'object_id', '=', $HostData->id);
 		}
-        $data_Query[] = array(
-            'column'   => 'meta_key',
-            'operator' => '=',
-            'value'    => "'notification'"
-        );
+        $data_Query[] = array( 'meta_key', '=', 'notification');
+      
         $meta = new Meta();
-        $notifications = $meta->get($data_Query, false, false, 10);
+        $notifications = $meta->get($data_Query, 10);
         // count total unread notification
         $total_unread = 0;
 
@@ -81,11 +76,12 @@ class Notification {
     public function AddNotification($data){ 
      
         $meta = new Meta();
+ 
 
         $value = array( 
-            'booking_id' =>  $data->meeting_id,
+            'booking_id' =>  $data->booking_id,
             'meeting_id' =>  $data->meeting_id, 
-            'attendee_id' =>  $data->attendee_id,
+            'attendee_id' =>  $data->id,
             'attendee_name' =>  $data->attendee_name,
             'message' =>  __('Has booked a meeting', 'hydra-booking'),
             'status' => 'unread', 

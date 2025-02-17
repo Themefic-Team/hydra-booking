@@ -294,7 +294,7 @@ class BookingController {
 			null,
 			'DESC',
 		); 
-		 
+		  
 
 		$extractedBookings = array_map(
 			function ( $booking ) {
@@ -304,7 +304,7 @@ class BookingController {
 					'meeting_dates' => $booking->meeting_dates,
 					'start_time'    => $booking->start_time,
 					'end_time'      => $booking->end_time,
-					'status'        => $booking->booking_status,
+					'status'        => $booking->status,
 					'host_id'       => $booking->host_id,
 				);
 			},
