@@ -13,6 +13,7 @@ use HydraBooking\Admin\Controller\SetupWizard;
 use HydraBooking\Admin\Controller\ImportExport;
 use HydraBooking\Admin\Controller\Notification;
 use HydraBooking\Admin\Controller\FrontendDashboard;
+use HydraBooking\Admin\Controller\licenseController;
 
 
 // Use DB
@@ -38,6 +39,7 @@ class RouteController {
 		$this->create( new ImportExport(), 'create_endpoint' );
 		$this->create( new Notification(), 'create_endpoint' );
 		$this->create( new FrontendDashboard(), 'create_endpoint' );
+		$this->create( new licenseController(), 'create_endpoint' ); 
 	}
 
 	public function create( $class, $function ) {

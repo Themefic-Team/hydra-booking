@@ -137,106 +137,104 @@ const encryptLicense = (license_key) => {
             </HbInfoBox> 
  
             <!-- Date And Time --> 
-                <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == false"  class="tfhb-admin-title" >
-                    <h2>{{ $tfhb_trans('License Info') }}</h2> 
-                    <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
-                </div>
-                <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
+            <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == false"  class="tfhb-admin-title" >
+                <h2>{{ $tfhb_trans('License Info') }}</h2> 
+                <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
+            </div>
+            <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
 
-                    <ul class="el-license-info">
-                        <li>
-                            <div>
-                                <span class="el-license-info-title">{{ $tfhb_trans('Status') }}</span>
-    
-                                    <span v-if="LicenseBase.LicenseData.is_valid == true " class="el-license-valid">{{ $tfhb_trans('Valid') }}</span> 
-                                    <span v-else class="el-license-valid">{{ $tfhb_trans('Invalid') }}</span> 
-                            </div>
-                        </li>
+                <ul class="el-license-info">
+                    <li>
+                        <div>
+                            <span class="el-license-info-title">{{ $tfhb_trans('Status') }}</span>
 
-                        <li>
-                            <div>
-                                <span class="el-license-info-title">{{ $tfhb_trans('License Type') }}</span>
-                                {{ LicenseBase.LicenseData.license_title }} 
-                            </div>
-                        </li>
+                                <span v-if="LicenseBase.LicenseData.is_valid == true " class="el-license-valid">{{ $tfhb_trans('Valid') }}</span> 
+                                <span v-else class="el-license-valid">{{ $tfhb_trans('Invalid') }}</span> 
+                        </div>
+                    </li>
 
                     <li>
                         <div>
-                            <span class="el-license-info-title">{{ $tfhb_trans('License Expired on') }}</span>
-                            {{ LicenseBase.LicenseData.expire_date }} 
+                            <span class="el-license-info-title">{{ $tfhb_trans('License Type') }}</span>
+                            {{ LicenseBase.LicenseData.license_title }} 
+                        </div>
+                    </li>
+
+                <li>
+                    <div>
+                        <span class="el-license-info-title">{{ $tfhb_trans('License Expired on') }}</span>
+                        {{ LicenseBase.LicenseData.expire_date }} 
+                    
+                            <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a>
                         
-                                <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a>
-                            
-                        </div>
-                    </li>
+                    </div>
+                </li>
 
+                <li>
+                    <div>
+                        <span class="el-license-info-title">{{ $tfhb_trans('Support Expired on') }}</span>
+                        {{ LicenseBase.LicenseData.support_end }}
+                        <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a> 
+                    </div>
+                </li>
                     <li>
                         <div>
-                            <span class="el-license-info-title">{{ $tfhb_trans('Support Expired on') }}</span>
-                            {{ LicenseBase.LicenseData.support_end }}
-                            <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a> 
+                            <span class="el-license-info-title">{{ $tfhb_trans('Your License Key') }}</span>
+                            <span class="el-license-key">{{ encryptLicense(LicenseBase.LicenseData.license_key) }}</span>
+                            <!-- <span class="el-license-key"><?php echo esc_attr( substr($this->response_obj->license_key,0,9)."XXXXXXXX-XXXXXXXX".substr($this->response_obj->license_key,-9) ); ?></span> -->
+
+
                         </div>
                     </li>
-                        <li>
-                            <div>
-                                <span class="el-license-info-title">{{ $tfhb_trans('Your License Key') }}</span>
-                                <span class="el-license-key">{{ encryptLicense(LicenseBase.LicenseData.license_key) }}</span>
-                                <!-- <span class="el-license-key"><?php echo esc_attr( substr($this->response_obj->license_key,0,9)."XXXXXXXX-XXXXXXXX".substr($this->response_obj->license_key,-9) ); ?></span> -->
+                </ul>
+
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn-danger flex-btn tfhb-icon-hover-animation tfhb-mt-16" 
+                    @click.stop="deletePopup = true " 
+                    :buttonText="$tfhb_trans('Deactivate')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true" 
+                /> 
 
 
-                            </div>
-                        </li>
-                    </ul>
-  
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn-danger flex-btn tfhb-icon-hover-animation tfhb-mt-16" 
-                        @click.stop="deletePopup = true " 
-                        :buttonText="$tfhb_trans('Deactivate')"
-                        icon="ChevronRight" 
-                        hover_icon="ArrowRight" 
-                        :hover_animation="true" 
-                    /> 
+                <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
+                        <template #header> 
+                            
+                        </template>
 
-
-                    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
-                            <template #header> 
+                        <template #content>  
+                            <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+                                <div class="tfhb-close-icon">
+                                    <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+                                </div>
+                                <div class="tfhb-close-content">
+                                    <h3>{{ $tfhb_trans('Confirm License Deactivation!') }}  </h3>  
+                                    <p>{{ $tfhb_trans('Deactivating the license will remove access to all premium features.') }}</p>
+                                </div>
+                                <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                                    <HbButton 
+                                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                                        @click=" deletePopup = !deletePopup"
+                                        :buttonText="$tfhb_trans('Cancel')" 
+                                    />  
+                                    <HbButton  
+                                        classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                                        @click="deactivateLicense()"
+                                        :buttonText="$tfhb_trans('Deactivate')"
+                                        icon="Trash2"   
+                                        :hover_animation="false" 
+                                        icon_position = 'left'
+                                    />
                                 
-                            </template>
-
-                            <template #content>  
-                                <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
-                                    <div class="tfhb-close-icon">
-                                        <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
-                                    </div>
-                                    <div class="tfhb-close-content">
-                                        <h3>{{ $tfhb_trans('Confirm License Deactivation!') }}  </h3>  
-                                        <p>{{ $tfhb_trans('Deactivating the license will remove access to all premium features.') }}</p>
-                                    </div>
-                                    <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
-                                        <HbButton 
-                                            classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                                            @click=" deletePopup = !deletePopup"
-                                            :buttonText="$tfhb_trans('Cancel')" 
-                                        />  
-                                        <HbButton  
-                                            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
-                                            @click="deactivateLicense()"
-                                            :buttonText="$tfhb_trans('Deactivate')"
-                                            icon="Trash2"   
-                                            :hover_animation="false" 
-                                            icon_position = 'left'
-                                        />
-                                    
-                                    </div>
-                                </div> 
-                            </template> 
-                        </HbPopup>
+                                </div>
+                            </div> 
+                        </template> 
+                </HbPopup>
 
             </div>  
 
-            <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == false && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
-
-                <!-- Time Zone -->
+            <div  v-if="$tfhb_license_status == false && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <HbText  
                     v-model="LicenseBase.license_key"  
                     required= "true"  
@@ -261,21 +259,16 @@ const encryptLicense = (license_key) => {
                     :errors="errors.license_email"
                 /> 
 
-                    <HbButton 
-                        
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click.stop="updateLicense(['license_key', 'license_email'])" 
-                        :buttonText="$tfhb_trans('Activate')"
-                        icon="ChevronRight" 
-                        hover_icon="ArrowRight" 
-                        :hover_animation="true" 
-                    /> 
-                </div>  
-            <!-- Date And Time -->
-
-            
-
-           
+                <HbButton 
+                    
+                    classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                    @click.stop="updateLicense(['license_key', 'license_email'])" 
+                    :buttonText="$tfhb_trans('Activate')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true" 
+                /> 
+            </div>  
         </div>
     </div>
  

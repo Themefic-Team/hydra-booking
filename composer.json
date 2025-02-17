@@ -16,7 +16,8 @@
             "HydraBooking\\Hooks\\": "includes/hooks/",
             "HydraBooking\\Migration\\": "includes/migration/",
             "HydraBooking\\App\\": "app/",
-            "HydraBooking\\FdDashboard\\": "app/FrontendDashboard/"
+            "HydraBooking\\FdDashboard\\": "app/FrontendDashboard/",
+            "HydraBooking\\License\\": "includes/license/"
         }
     },
     "require-dev": {
