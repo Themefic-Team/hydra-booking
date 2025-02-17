@@ -1,5 +1,5 @@
 <script setup>
-import { ref,reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';  
@@ -19,9 +19,44 @@ const licenseing = reactive({
 const UnlockPopup = () => {
   licenseing.isOpen = false;
 }
-const GenaratePasswordLink = () => {
-  
-}
+
+const licenseingData = reactive({
+  email: ''
+});
+const isValidEmail = computed(() => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(licenseingData.email);
+});
+
+const LicenseMessage = reactive({
+  status: '',
+  message: ''
+});
+
+const GenaratePasswordLink = async () => {
+  const formData = new FormData();
+  formData.append("action", "tfhb_user_registration_license");
+  formData.append("email", licenseingData.email);
+  formData.append("nonce", tfhb_core_apps.rest_nonce);
+
+  try {
+    const response = await fetch("/wp-admin/admin-ajax.php", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      LicenseMessage.status = true;
+      LicenseMessage.message = result.data.message;
+    } else {
+      LicenseMessage.status = false;
+      LicenseMessage.message = result.data.message || "Something went wrong.";
+    }
+  } catch (error) {
+    console.error("AJAX Error:", error);
+    LicenseMessage.value = "Failed to connect to the server.";
+  }
+};
 
 </script>
 
@@ -35,12 +70,27 @@ const GenaratePasswordLink = () => {
           <p>
             {{ $tfhb_trans('Please provide your email address. We’ll send your key directly to your inbox.') }}
           </p> 
-          <HbText  
-            required= "true"  
-            selected = "1"
-            placeholder="Enter your email address" 
-          />  
-          <div class="tfhb-submission-btn tfhb-gap-8">
+          <div class="tfhb-license-message" v-if="LicenseMessage.message">
+            <div :class="LicenseMessage.status ? 'success' : 'error'">
+              {{ LicenseMessage.message }}
+            </div>
+          </div>
+          <div class="tfhb-license-email-field" v-if="!LicenseMessage.message">
+            <HbText  
+              type="email"
+              v-model="licenseingData.email"
+              required= "true"  
+              selected = "1"
+              placeholder="Enter your email address" 
+            />
+            <div class="tfhb-validate-notice invalid" v-if="licenseingData.email && !isValidEmail">
+              {{ $tfhb_trans('Please enter a valid email address.') }}
+            </div>
+            <div class="tfhb-validate-notice valid tfhb-flexbox tfhb-gap-4" v-if="licenseingData.email && isValidEmail">
+              <Icon name="Check" :size="20" />{{ $tfhb_trans('Perfect') }}
+            </div>
+          </div>
+          <div class="tfhb-submission-btn tfhb-gap-8" :class="!isValidEmail ? 'tfhb-disable-btn' : ''" v-if="!LicenseMessage.message">
             <HbButton 
               @click="GenaratePasswordLink()"
               classValue="tfhb-btn boxed-btn flex-btn" 
@@ -49,6 +99,7 @@ const GenaratePasswordLink = () => {
           </div> 
       </template> 
   </HbPopup>
+  
   <div class="tfhb-info-box tfhb-flexbox tfhb-gap-16 tfhb-p-24 tfhb-full-width">
     <div class="tfhb-info-box-icon" v-if="!isblocked">
         <Icon :name="icon ?? 'Info'" :size="20" />

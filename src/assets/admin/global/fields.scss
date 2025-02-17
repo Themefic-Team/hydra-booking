@@ -540,6 +540,43 @@
         }
     }
 }
+.tfhb-content-wrap{
+    .tfhb-license-message{
+        width: 100%;
+        text-align: center;
+        .success,
+        .error{
+            width: 100%;
+            text-align: center;
+            color: $success-text;
+            font-size: 17px;
+            line-height: 26px;
+            font-weight: 500;
+        }
+        .error{
+            color: $error-text;
+        }
+    }
+    .tfhb-license-email-field{
+        width: 100%;
+        .tfhb-validate-notice{
+            margin-top: 4px;
+            &.invalid{
+                color: $error-text;
+            }
+            &.valid{
+                color: $success-text;
+            }
+        }
+    }
+    .tfhb-disable-btn{
+        button{
+            opacity: 0.4;
+            background: $primary-default;
+            cursor: not-allowed !important;
+        }
+    }
+}
 .tfhb-unlock-box{
     flex-wrap: nowrap !important;
     gap: 16px !important;

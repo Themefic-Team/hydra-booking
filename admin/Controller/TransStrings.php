@@ -427,6 +427,8 @@ namespace HydraBooking\Admin\Controller;
             'Unlock this Feature' => __('Unlock this Feature', 'hydra-booking'),
             'Please provide your email address. We’ll send your key directly to your inbox.' => __('Please provide your email address. We’ll send your key directly to your inbox.', 'hydra-booking'),
             'Send me the License key' => __('Send me the License key', 'hydra-booking'),
+            'Please enter a valid email address.' => __('Please enter a valid email address.', 'hydra-booking'),
+            'Perfect' => __('Perfect', 'hydra-booking'),
 
             // Component : availability 
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 

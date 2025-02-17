@@ -28,7 +28,7 @@ class NoticeController {
 
     // Register Callback
     function tfhb_user_registration_license_callback(){
-        check_ajax_referer('wp_notice', 'nonce');
+        check_ajax_referer('wp_rest', 'nonce');
 
         if ( ! isset($_POST['email']) || ! is_email($_POST['email']) ) {
             wp_send_json_error(['message' => 'Invalid email address.']);
@@ -48,7 +48,7 @@ class NoticeController {
         $response_body = json_decode(wp_remote_retrieve_body($response), true);
     
         if (!empty($response_body['message'])) {
-            wp_send_json_success(['message' => 'User created successfully!']);
+            wp_send_json_success(['message' => 'Check your inbox and set a password for free licensing!']);
         } else {
             wp_send_json_error(['message' => $response_body['message'] ?? 'Something went wrong.']);
         }
