@@ -132,7 +132,7 @@ class licenseController {
         $message="";
 	    $main_lic_key="HydraBooking_lic_Key";
 	    $lic_key_name =HydraBookingBase::get_lic_key_param($main_lic_key);
-        if(HydraBookingBase::remove_license_key(THB_BASE_FILE_PRO,$message)){
+        if(HydraBookingBase::remove_license_key(TFHB_BASE_FILE,$message)){
             update_option($lic_key_name,"") || add_option($lic_key_name,"");
             update_option($main_lic_key,"") || add_option($main_lic_key,"");
             update_option('_site_transient_update_plugins','');
@@ -174,7 +174,7 @@ class licenseController {
         });
 
 
-        return HydraBookingBase::check_wp_plugin($license_key,$lice_email,$HydraBooking->license_message,$HydraBooking->response_obj,THB_BASE_FILE_PRO);
+        return HydraBookingBase::check_wp_plugin($license_key,$lice_email,$HydraBooking->license_message,$HydraBooking->response_obj,TFHB_BASE_FILE);
  
     }
 }

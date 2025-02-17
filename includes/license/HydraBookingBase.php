@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
   class HydraBookingBase {
 
-	public $key = "0CC7C821159CC578";
+	public $key = "DCC7195F8E59AF87";
 	private $product_id = "2";
 	private $product_base = "hydra-booking-pro";
 	private $server_host = "https://tourfic.site/license/wp-json/licensor/";

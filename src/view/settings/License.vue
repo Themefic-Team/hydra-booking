@@ -27,12 +27,7 @@ const upgradeToPro = () => {
 }
 
 onBeforeMount(async () => {
-    if( typeof tfhb_core_apps_pro !== 'undefined'){
-
-        LicenseBase.GetLicense();
-    }else{
-        LicenseBase.skeleton = false;
-    }
+    LicenseBase.GetLicense();
 });
 
 const updateLicense = async (validator_field) => {
@@ -112,7 +107,7 @@ const encryptLicense = (license_key) => {
             </div> 
         </div>
         <div class="tfhb-content-wrap">
-           
+           <!-- {{ LicenseBase.LicenseData }} -->
             <HbInfoBox v-if="$tfhb_is_pro == false"  icon="Lock" name="first-modal">
                 
                 <template #content>
@@ -137,11 +132,11 @@ const encryptLicense = (license_key) => {
             </HbInfoBox> 
  
             <!-- Date And Time --> 
-            <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == false"  class="tfhb-admin-title" >
+            <div  v-if="$tfhb_license_status == false"  class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('License Info') }}</h2> 
                 <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
             </div>
-            <div  v-if="$tfhb_is_pro == true && $tfhb_license_status == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
+            <div  v-if="$tfhb_license_status == false && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
 
                 <ul class="el-license-info">
                     <li>
