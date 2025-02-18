@@ -5,6 +5,7 @@ const LicenseBase = reactive({
     license_key: '',
     skeleton: true,
     license_email: '',
+    is_free: false,
     LicenseData: {
         is_valid : false,
     }, 
@@ -20,11 +21,13 @@ const LicenseBase = reactive({
             } );
     
             if (response.data.data.status) {  
-
                 this.LicenseData = response.data.data.data;
                 this.license_key = response.data.data.license_key;
                 this.license_email = response.data.data.license_email;
                 this.skeleton = false;
+
+                const licenseTitle = response.data.data.data.license_title || "";
+                this.is_free = licenseTitle.toLowerCase().includes("free");
 
             }else{
                 this.skeleton = false;

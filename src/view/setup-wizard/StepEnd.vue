@@ -369,7 +369,7 @@ window.addEventListener('click', function(e) {
             <p>{{ $tfhb_trans('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.') }}</p> 
        
         </div>
-        <HbInfoBox :isblocked="true">
+        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Unlock this Feature')">
             <template #content>
                 {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
             </template>

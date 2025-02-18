@@ -19,13 +19,6 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 
 const deletePopup = ref(false)
  
-
-const upgradeToPro = () => {
-    // https://themefic.com/docs/hydrabooking redirecto this url in new tab
-
-    window.open('https://hydrabooking.com/#pricing', '_blank');
-}
-
 onBeforeMount(async () => {
     LicenseBase.GetLicense();
 });
@@ -92,6 +85,28 @@ const encryptLicense = (license_key) => {
 }
 
 
+const upgradeToPro = async (key) => {
+  const formData = new FormData();
+  formData.append("action", "tfhb_cart_item_license");
+  formData.append("key", key);
+  formData.append("nonce", tfhb_core_apps.rest_nonce);
+
+  try {
+    const response = await fetch("/wp-admin/admin-ajax.php", {
+      method: "POST",
+      body: formData,
+    });
+    const result = await response.json();
+    if (result.success) {
+        window.open(result.data.url, '_blank');
+    } else {
+      
+    }
+  } catch (error) {
+    console.error("AJAX Error:", error);
+  }
+};
+
 </script>
 <template>
     
@@ -107,8 +122,8 @@ const encryptLicense = (license_key) => {
             </div> 
         </div>
         <div class="tfhb-content-wrap">
-           <!-- {{ LicenseBase.LicenseData }} -->
-            <HbInfoBox v-if="$tfhb_is_pro == false"  icon="Lock" name="first-modal">
+           <!-- {{ LicenseBase.license_key }} -->
+            <HbInfoBox v-if="$tfhb_is_pro == false && LicenseBase.is_free"  icon="Lock" name="first-modal">
                 
                 <template #content>
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
@@ -120,7 +135,7 @@ const encryptLicense = (license_key) => {
                         <div class="thb-admin-btn right"> 
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                                @click="upgradeToPro" 
+                                @click="upgradeToPro(LicenseBase.license_key)" 
                                 :buttonText="$tfhb_trans('Upgrade to Pro')"
                                 icon="ChevronRight" 
                                 hover_icon="ArrowRight" 
@@ -131,6 +146,13 @@ const encryptLicense = (license_key) => {
                 </template>
             </HbInfoBox> 
  
+
+            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-if="!LicenseBase.is_free">
+                <template #content>
+                    {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
+                </template>
+            </HbInfoBox>
+
             <!-- Date And Time --> 
             <div  v-if="$tfhb_license_status == false"  class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('License Info') }}</h2> 

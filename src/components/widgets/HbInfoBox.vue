@@ -9,7 +9,8 @@ const props = defineProps({
   title: String,
   desc: String,
   icon: String,
-  isblocked: Boolean
+  isblocked: Boolean,
+  btntext: String
 });
 
 const licenseing = reactive({
@@ -105,13 +106,15 @@ const GenaratePasswordLink = async () => {
         <Icon :name="icon ?? 'Info'" :size="20" />
     </div>
     <div class="tfhb-info-box-content" :class="isblocked ? 'tfhb-flexbox tfhb-unlock-box' : 'tfhb-full-width'">
-        <h3 v-if="props.title">{{ props.title }}</h3>
-        <slot name="content"> {{$tfhb_trans('default content')}}</slot>
+        <div class="tfhb-info-box-desc">
+          <h3 v-if="props.title">{{ props.title }}</h3>
+          <slot name="content"> {{$tfhb_trans('default content')}}</slot>
+        </div>
         <HbButton 
           v-if="isblocked"
           @click="licenseing.isOpen=true"
           classValue="tfhb-btn boxed-btn flex-btn" 
-          :buttonText="$tfhb_trans('Unlock this Feature')"
+          :buttonText="props.btntext"
         />  
     </div>
   </div>

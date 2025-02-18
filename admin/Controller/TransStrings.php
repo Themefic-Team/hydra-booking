@@ -429,6 +429,7 @@ namespace HydraBooking\Admin\Controller;
             'Send me the License key' => __('Send me the License key', 'hydra-booking'),
             'Please enter a valid email address.' => __('Please enter a valid email address.', 'hydra-booking'),
             'Perfect' => __('Perfect', 'hydra-booking'),
+            'Create a Free License Key' => __('Create a Free License Key', 'hydra-booking'),
 
             // Component : availability 
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 
