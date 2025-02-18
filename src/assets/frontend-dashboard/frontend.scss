@@ -25,6 +25,7 @@ html {
                 width: auto !important;
                 min-width: 150px;
             }
+            
 
             @media #{$max450} {
                 .tfhb-profile-name {
@@ -84,7 +85,7 @@ html {
                 }
             }
 
-            @media #{$max450} {
+            @media #{$max570} {
                 .tfhb-admin-header-title {
                     display: none;
                 }
@@ -113,6 +114,14 @@ html {
         .user-info-icon{
             svg{
                 margin-top: 0;
+            }
+        }
+        .tfhb-field-date { 
+            .tfhb-flat-icon {
+                position: absolute;
+                right: 8px;
+                top: 6px;
+                bottom: auto;
             }
         }
         .tfhb-popup-wrap{
@@ -258,7 +267,7 @@ html {
                         background-color: $primary-default;
                         border-radius: 8px;
                         padding: 4px !important; 
-                        min-width: 200px;
+                        min-width: 250px;
                         
                     }
  
@@ -277,6 +286,34 @@ html {
 
                 &.collapsed {
                     text-align: center;
+                }
+                @media #{$max767} { 
+                    display: none;
+                }
+            }
+            .tfhb-sidbar-responsive-close {
+                display: none;
+                @media #{$max767} { 
+                    display: block;
+                    width: 100%;
+                    text-align: right; 
+                    span{
+                        height: 32px;
+                        width: 32px;
+                        display: inline-block;
+                        background-color: $surface-secondary;
+                        text-align: center;
+                        border-radius: 50%;
+                        padding: 6px;
+                        cursor: pointer;
+                        svg{
+                            color:  $secondary-default !important;
+                        }
+                        &:hover{
+                            background-color: $secondary-hover;
+                            
+                        }
+                    }
                 }
             }
 
@@ -341,6 +378,9 @@ html {
                 font-size: 13px;
                 padding: 0 16px;
                 min-height: 20px;
+                // @media #{$max767} { 
+                //     display: none;
+                // }
             }
 
             .tfhb-frontend-sidebar-card {
@@ -367,8 +407,17 @@ html {
                     left: 8px;
                     visibility: visible;
                     opacity: 1;
+                    max-height: 100vh;
+                    overflow: auto;
                 }
 
+            }
+            @media #{$max767} { 
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 9999;
+                border-radius: 0;
             }
         }
   
@@ -426,6 +475,16 @@ html {
                 }
             }
            }
+           @media #{$max991} {  
+                .tfhb-single-chartbox{
+                    width: calc(50% - 18px);
+                }
+            }
+            @media #{$max570} {  
+                .tfhb-single-chartbox{
+                    width: 100%;
+                }
+            }
         }
 
     }
