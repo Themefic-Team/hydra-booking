@@ -8,6 +8,7 @@ const FrontendDashboard = reactive({
     pages: [],
     fd_dashboard: {
         general: {
+            enable_fd_dashboard: false,  
             dashboard_logo: '',  
             mobile_dashboard_logo: '', 
             colors_palette : 'default',

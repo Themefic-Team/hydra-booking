@@ -145,6 +145,7 @@ class FrontendDashboard {
         $request =  json_decode(file_get_contents('php://input'), true);
         $settings = get_option('_tfhb_frontend_dashboard_settings');
         $fd_dashboard = isset($request['fd_dashboard']) ? $request['fd_dashboard'] : array();
+        $settings['general']['enable_fd_dashboard'] = isset($fd_dashboard['general']['enable_fd_dashboard']) ? sanitize_text_field($fd_dashboard['general']['enable_fd_dashboard']) : '';
         $settings['general']['dashboard_logo'] = isset($fd_dashboard['general']['dashboard_logo']) ? esc_url($fd_dashboard['general']['dashboard_logo']) : '';
         $settings['general']['mobile_dashboard_logo'] = isset($fd_dashboard['general']['mobile_dashboard_logo']) ? esc_url($fd_dashboard['general']['mobile_dashboard_logo']) : '';
         $settings['general']['colors_palette'] = isset($fd_dashboard['general']['colors_palette']) ? sanitize_text_field( $fd_dashboard['general']['colors_palette']) : '';
