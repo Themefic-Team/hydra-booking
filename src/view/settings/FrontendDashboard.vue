@@ -18,7 +18,7 @@ onBeforeMount(() => {
  
 </script>
 <template> 
-    <div :class="{ 'tfhb-skeleton': false }" class="thb-host-dashboard "> 
+    <div :class="{ 'tfhb-skeleton': FrontendDashboard.skeleton }" class="thb-host-dashboard "> 
         <div  class="tfhb-dashboard-heading tfhb-mb-16">
          
             <div class="tfhb-admin-title "> 

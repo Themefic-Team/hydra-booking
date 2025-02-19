@@ -7,6 +7,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbText from '@/components/form-fields/HbText.vue';
 
+import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 
 
 const props = defineProps([
@@ -98,7 +99,20 @@ const props = defineProps([
             :placeholder="$tfhb_trans('Type your URL')" 
             width="50" 
         /> 
-        <!-- Time format --> 
+     
+        
+    </div>
+    <div class="tfhb-admin-title" >
+        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Signup Email Settings') }} </h2>
+        <p>{{ $tfhb_trans('Customize the email settings for the signup page') }}</p>
+    </div>
+    <div class="tfhb-admin-card-box tfhb-flexbox"> 
+        <HbSwitch 
+            v-model="props.FrontendDashboard.fd_dashboard.signup.disable_email_verification"  
+            width="100"
+            :label="$tfhb_trans('Disable Email Verification')" 
+        />
+        
     </div>
 
    

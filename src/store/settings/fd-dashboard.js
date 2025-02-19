@@ -30,6 +30,7 @@ const FrontendDashboard = reactive({
             after_registration_redirect_type: '',
             after_registration_redirect: '',
             after_registration_redirect_custom: '',
+            disable_email_verification: false,
         },
         login: {
             login_page_title: '',

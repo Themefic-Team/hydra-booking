@@ -59,8 +59,7 @@ class FrontendDashboard {
 			'^meeting/([0-9]+)/?$',
 			'index.php?hydra-booking=email-verification&tfhb_verification=$matches[1]',
 			'top'
-		);
-        
+		); 
 
         // Page Template
         add_filter( 'template_include', array( $this, 'tfhb_single_page_template' ) );
