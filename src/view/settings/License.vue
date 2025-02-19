@@ -17,7 +17,8 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue';
 
 
-const deletePopup = ref(false)
+const deletePopup = ref(false);
+const License_pre_loader = ref(false);
  
 onBeforeMount(async () => {
     LicenseBase.GetLicense();
@@ -73,8 +74,6 @@ const updateLicense = async (validator_field) => {
 }
 
 const deactivateLicense = async () => {
- 
-
     LicenseBase.DeactivateLicense();
     deletePopup.value = false;
 }
@@ -91,6 +90,7 @@ const upgradeToPro = async (key) => {
   formData.append("key", key);
   formData.append("nonce", tfhb_core_apps.rest_nonce);
 
+  License_pre_loader.value = true;
   try {
     const response = await fetch("/wp-admin/admin-ajax.php", {
       method: "POST",
@@ -98,11 +98,13 @@ const upgradeToPro = async (key) => {
     });
     const result = await response.json();
     if (result.success) {
+        License_pre_loader.value = false;
         window.open(result.data.url, '_blank');
     } else {
-      
+        License_pre_loader.value = false;
     }
   } catch (error) {
+    License_pre_loader.value = false;
     console.error("AJAX Error:", error);
   }
 };
@@ -140,7 +142,7 @@ const upgradeToPro = async (key) => {
                                 icon="ChevronRight" 
                                 hover_icon="ArrowRight" 
                                 :hover_animation="true" 
-                            />  
+                                :pre_loader="License_pre_loader"                            />  
                         </div> 
                     </div> 
                 </template>
