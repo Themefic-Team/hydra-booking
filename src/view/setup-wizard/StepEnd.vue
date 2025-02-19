@@ -7,6 +7,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
 import useValidators from '@/store/validator';
+import { LicenseBase } from '@/store/license'; 
 const router = useRouter();
 
 const { errors } = useValidators();
@@ -324,7 +325,7 @@ const UpdateIntegration = async (key, value, validator_field) => {
 onBeforeMount(() => {   
     fetchIntegration();
     // if currentHash == all 
-   
+    LicenseBase.GetLicense();
 });
 
 const activeDropdown = ref(false);
@@ -369,7 +370,8 @@ window.addEventListener('click', function(e) {
             <p>{{ $tfhb_trans('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.') }}</p> 
        
         </div>
-        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Unlock this Feature')">
+
+        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Unlock this Feature')" v-if="LicenseBase.license_type=='free' && $tfhb_is_pro != true && LicenseBase.license_active != true">
             <template #content>
                 {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
             </template>
