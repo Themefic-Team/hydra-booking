@@ -12,6 +12,7 @@ export const FdDashboard = reactive({
     userAuth: {},
     site_settings: {},
     time_zone: {},
+    hosts_settings: {},
     pass_data: {
         old_password: '',
         new_password: '',

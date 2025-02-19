@@ -362,6 +362,8 @@ namespace HydraBooking\Admin\Controller;
             'License' =>  __('License', 'hydra-booking'), 
             'Frontend Dashboard' =>  __('Frontend Dashboard', 'hydra-booking'), 
             'Frontend Dashboard Settings' =>  __('Frontend Dashboard Settings', 'hydra-booking'), 
+            'Select Color Palette for Dashboard' =>  __('Select Color Palette for Dashboard', 'hydra-booking'), 
+            'Customize your brand colors for the Frontend Dashboard.' =>  __('Customize your brand colors for the Frontend Dashboard.', 'hydra-booking'), 
             'Manage the settings and preferences for the frontend dashboard' =>  __('Manage the settings and preferences for the frontend dashboard', 'hydra-booking'), 
             'Signup' =>  __('Signup', 'hydra-booking'), 
             'LogIn' =>  __('LogIn', 'hydra-booking'), 

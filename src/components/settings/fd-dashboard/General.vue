@@ -100,8 +100,8 @@ const ChangeColors = (value,  colors) => {
     </div>
 
     <div class="tfhb-admin-title" >
-        <h2>{{ $tfhb_trans('Frontend dashboard custom brand colors') }}</h2> 
-        <p>{{ $tfhb_trans('Customize your own brand color into Frontend Dashboard') }}</p>
+        <h2>{{ $tfhb_trans('Select Color Palette for Dashboard') }}</h2> 
+        <p>{{ $tfhb_trans('Customize your brand colors for the Frontend Dashboard.') }}</p>
     </div>
 
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16"> 

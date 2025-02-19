@@ -359,7 +359,7 @@
         height: 72px;
         width: 72px;
         overflow: hidden;
-        border: $fields-border $border-type #ddd !important;
+        border: $fields-border $border-type #ddd ;
 
         &:hover {
             .tfhb-image-btn {
