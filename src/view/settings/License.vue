@@ -125,15 +125,16 @@ const upgradeToPro = async (key) => {
         </div>
         <div class="tfhb-content-wrap">
            <!-- {{ LicenseBase.license_key }} -->
-            <HbInfoBox v-if="$tfhb_is_pro == false && LicenseBase.is_free"  icon="Lock" name="first-modal">
-                
+             <!-- {{  LicenseBase.license_type }}
+             {{  LicenseBase.license_active }}
+             {{ $tfhb_is_pro }} -->
+            <HbInfoBox v-if="LicenseBase.license_type=='free' && $tfhb_is_pro == false && LicenseBase.license_active == true"  icon="Lock" name="first-modal">
                 <template #content>
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
                         <div class="tfhb-admin-title tfhb-m-0"> 
                             <h2 >{{ $tfhb_trans('Unlock Advanced Capabilities with HydraBooking Pro !') }}</h2>  
                             <p>{{ $tfhb_trans('Please upgrade to get all the advanced features.') }}</p>
                         </div>
-                        
                         <div class="thb-admin-btn right"> 
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
@@ -147,9 +148,19 @@ const upgradeToPro = async (key) => {
                     </div> 
                 </template>
             </HbInfoBox> 
- 
 
-            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-if="!LicenseBase.is_free">
+            <HbInfoBox v-else-if="LicenseBase.license_type=='pro' && $tfhb_is_pro == false && LicenseBase.license_active == true"  icon="Lock" name="first-modal">
+                <template #content>
+                    <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
+                        <div class="tfhb-admin-title tfhb-m-0"> 
+                            <h2 >{{ $tfhb_trans('Please Install the HydraBooking Pro !') }}</h2>  
+                            <p>{{ $tfhb_trans('You already actived the HydraBooking Pro Plugin.') }}</p>
+                        </div>
+                    </div> 
+                </template>
+            </HbInfoBox> 
+
+            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-else-if="LicenseBase.license_type=='free' && $tfhb_is_pro != true">
                 <template #content>
                     {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
                 </template>
