@@ -116,6 +116,33 @@ html {
                 margin-top: 0;
             }
         }
+        button{
+            color: $secondary-default;
+
+        }
+        .tfhbb-host-profile-page{
+            width: 770px !important;
+        }
+        .tfhb-availability-schedule-single{
+            // align-items: center !important;
+            .tfhb-swicher-wrap{ 
+                    display: block; 
+                    .switch{ 
+                        margin-top: -34px; 
+                    }
+                    .tfhb-schedule-swicher{
+                        padding-left: 8px !important;
+                    }
+            }
+            .tfhb-availability-schedule-btn{
+                padding: 0;
+                color:  $text-title;
+                box-shadow: none;
+                // &:hover{
+                //     color: #;
+                // }
+            }
+        }
         .tfhb-hydra-dasboard-content {
             width: 100%;
         }
@@ -128,26 +155,7 @@ html {
             }
         }
         .tfhb-popup-wrap{
-            .tfhb-availability-schedule-single{
-                // align-items: center !important;
-                .tfhb-swicher-wrap{ 
-                        display: block; 
-                        .switch{ 
-                            margin-top: -31px; 
-                        }
-                        .tfhb-schedule-swicher{
-                            padding-left: 8px !important;
-                        }
-                }
-                .tfhb-availability-schedule-btn{
-                    padding: 0;
-                    color:  $text-title;
-                    box-shadow: none;
-                    // &:hover{
-                    //     color: #;
-                    // }
-                }
-            }
+         
         }
            
 
@@ -220,11 +228,7 @@ html {
                    
                 }
 
-                .tfhb-integrations-single-block {
-                    h3 {
-                        font-size: 17px !important;
-                    }
-                }
+                
             }
         }
 
@@ -424,7 +428,7 @@ html {
   
 
         .tfhbb-fd-user-profile-page {
-            max-width: 700px;
+            width: 790px;
             margin: 50px auto;
             background-color: #fff;
             padding: 32px;

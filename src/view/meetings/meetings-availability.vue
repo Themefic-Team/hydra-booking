@@ -318,8 +318,7 @@ const isobjectempty = (data) => {
 
 <template>
     
-    <div class="meeting-create-details tfhb-gap-24">
-        {{meeting.availability_custom}}
+    <div class="meeting-create-details tfhb-gap-24"> 
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
@@ -449,7 +448,7 @@ const isobjectempty = (data) => {
                 </div> 
             </div>
             
-            <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-justify-between">
+            <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox  tfhb-justify-between">
                 <div class="tfhb-swicher-wrap tfhb-gap-8  tfhb-flexbox">
                     <!-- Checkbox swicher -->
                     <label class="switch">
@@ -488,7 +487,7 @@ const isobjectempty = (data) => {
                     
                 </div>
                 <div v-else class="tfhb-availability-schedule-wrap"> 
-                   <h4 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h4>
+                   <h6 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h6>
                 </div>
             </div> 
         </div>  

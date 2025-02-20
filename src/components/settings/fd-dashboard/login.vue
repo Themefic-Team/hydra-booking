@@ -29,8 +29,7 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.login.login_page_title"  
             required= "true"  
             :label="$tfhb_trans('Login Title')"   
-            :subtitle="$tfhb_trans(`Type here custom login title.`)" 
-            :description="$tfhb_trans(`Default : Welcome back`)" 
+            :subtitle="$tfhb_trans(`Type here custom login title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type login title')" 
             width="50" 
@@ -39,8 +38,7 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.login.login_page_sub_title"  
             required= "true"  
             :label="$tfhb_trans('Login Sub-title')"   
-            :subtitle="$tfhb_trans(`Type here custom login sub-title.`)" 
-            :description="$tfhb_trans(`Default : Please enter your details.`)" 
+            :subtitle="$tfhb_trans(`Type here custom login sub-title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type login sub-title')" 
             width="50" 
@@ -73,6 +71,8 @@ const props = defineProps([
         /> 
         <!-- Time format -->
         <HbDropdown  
+
+        v-if="props.FrontendDashboard.fd_dashboard.login.after_login_redirect_type == 'page'"
             v-model="props.FrontendDashboard.fd_dashboard.login.after_login_redirect"  
             required= "true" 
             :subtitle="$tfhb_trans('Select the destination page for users after they log in.')"  

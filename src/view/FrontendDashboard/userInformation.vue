@@ -284,7 +284,7 @@ const props = defineProps({
                 selected = "1"
                 :placeholder="$tfhb_trans('Type your old password')" 
                 width="100"
-                :disabled="disable_password"
+                :disabled="FdDashboard.disable_password"
             /> 
             <HbText  
                 v-model="FdDashboard.pass_data.new_password"  
@@ -294,7 +294,7 @@ const props = defineProps({
                 selected = "1"
                 :placeholder="$tfhb_trans('Type your new password')" 
                 width="50"
-                :disabled="disable_password"
+                :disabled="FdDashboard.disable_password"
             /> 
             <HbText  
                 v-model="FdDashboard.pass_data.confirm_password"  
@@ -304,7 +304,7 @@ const props = defineProps({
                 selected = "1"
                 :placeholder="$tfhb_trans('Re-type your new password')" 
                 width="50"
-                :disabled="disable_password"
+                :disabled="FdDashboard.disable_password"
             /> 
             
         <!-- Time Zone -->

@@ -23,7 +23,7 @@ class Signup {
     public function __construct() { 
        
         // Add Shortcode
-        add_shortcode( 'hydra_registration_form', array( $this, 'hydra_registration_form_shortcode' ) );
+        add_shortcode( 'hydra_signup_form', array( $this, 'hydra_signup_form_shortcode' ) );
 
         // write ajax function 
         add_action( 'wp_ajax_nopriv_tfhb_registration', array( $this, 'tfhb_registration_callback' ) );
@@ -38,7 +38,7 @@ class Signup {
      * 
      */
 
-     public function hydra_registration_form_shortcode() {
+     public function hydra_signup_form_shortcode() {
 
         // Enqueue Select2
 		if ( ! wp_script_is( 'tfhb-app-registration', 'enqueued' ) ) {
@@ -322,7 +322,7 @@ class Signup {
                 $user = get_user_by( 'ID', $user_id );
                 $settings = get_option('_tfhb_frontend_dashboard_settings');
 
-                $disable_email_verification = isset($settings['signup']['disable_email_verification']) ? sanitize_text_field($settings['signup']['disable_email_verification']) : false;
+                $enable_email_verification = isset($settings['signup']['enable_email_verification']) ? sanitize_text_field($settings['signup']['enable_email_verification']) : false;
 
                 // update user first name and last name
                 update_user_meta( $user->ID, 'first_name', $field['tfhb_first_name'] );
@@ -359,7 +359,7 @@ class Signup {
                         // 'status'         => 'deactivate',
                     );
 
-                    if ($disable_email_verification){ 
+                    if ($enable_email_verification == false){ 
                         update_user_meta( $user->ID, 'tfhb_user_is_activated', true );
                         $data['status'] = 'activate';
                     }else{ 
@@ -390,7 +390,7 @@ class Signup {
                     if ( $hostInsert ) {
                         
 
-                        if ($disable_email_verification){  
+                        if ($enable_email_verification == false){  
                             // Send activation email 
                             $this->tfhb_send_email_confirmation($data);
 

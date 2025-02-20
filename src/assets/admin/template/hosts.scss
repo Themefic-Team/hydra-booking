@@ -169,6 +169,9 @@
       .cartbox-text {
         max-width: 330px !important;
       }
+      h3{
+        font-size: 17px !important;
+      }
 
       .tfhb-integrations-single-block {
         position: relative !important;
@@ -178,7 +181,7 @@
         &:hover {
           background-color: $surface-primary;
         }
-
+        
         .tfhb-badge.tfhb-badge-pro {
           margin: 0 !important;
           font-size: $text-font-size-small !important;
