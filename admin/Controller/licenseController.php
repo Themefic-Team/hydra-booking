@@ -172,7 +172,7 @@ class licenseController {
         // Default response structure
         self::$cached_result = [
             'is_valid' => false,
-            'license_type' => 'free', // Default to 'free'
+            'license_type' => false, // Default to 'free'
         ];
     
         if (!empty($HydraBooking->response_obj)) {

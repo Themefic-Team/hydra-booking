@@ -125,9 +125,9 @@ const upgradeToPro = async (key) => {
         </div>
         <div class="tfhb-content-wrap">
            <!-- {{ LicenseBase.license_key }} -->
-             <!-- {{  LicenseBase.license_type }}
-             {{  LicenseBase.license_active }}
-             {{ $tfhb_is_pro }} -->
+             <!-- {{  LicenseBase.license_type }} -->
+             <!-- {{  LicenseBase.license_active }} -->
+             <!-- {{ $tfhb_is_pro }} -->
             <HbInfoBox v-if="LicenseBase.license_type=='free' && $tfhb_is_pro == false && LicenseBase.license_active == true"  icon="Lock" name="first-modal">
                 <template #content>
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
