@@ -196,61 +196,66 @@ document.addEventListener('click', (e) => {
     </div>   
     <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true"  class="tfhb-admin-title" >
         <h2>{{ $tfhb_trans('Others Information') }}    </h2>  
-    </div>
+    </div> 
     <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true && hosts_settings.others_information.fields" class="tfhb-admin-card-box tfhb-flexbox">  
        <div class="tfhb-host-single-information" v-for="(field, index) in hosts_settings.others_information.fields" :key="index">  
             <!--  --> 
-            <div v-if="field.type == 'checkbox'" class="tfhb-hosts-single-information-wrap">
+            <div v-if="field.type == 'checkbox' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                 
                 <HbCheckbox 
-                    v-model="host.others_information[field.label]" 
-                    :names="host.others_information[field.label]"
-                    :label="field.placeholder"
+                    v-model="props.host.others_information[field.name]" 
+                    :names="props.others_information[field.name]"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
                     :groups="true"
                     :options="field.options" 
                 />
             </div>
-            <div v-else-if="field.type == 'textarea'" class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.type == 'textarea' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                 
                 <HbTextarea 
-                    v-model="host.others_information[field.label]" 
-                    :names="host.others_information[field.label]"
-                    :label="field.placeholder"  
-                    :name="host.others_information[field.label]"
+                    v-model="props.host.others_information[field.name]" 
+                    :names="props.host.others_information[field.name]"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
+                    :name="props.host.others_information[field.name]"
                 />
             </div>
-            <div v-else-if="field.type == 'radio'" class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.type == 'radio' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                  
                 <HbRadio 
-                    v-model="host.others_information[field.label]" 
-                    :names="host.others_information[field.label]"
-                    :label="field.placeholder"
+                    v-model="props.host.others_information[field.name]" 
+                    :names="props.host.others_information[field.name]"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
                     :groups="true"
                     :options="field.options"   
-                    :name="host.others_information[field.label]"
+                    :name="host.others_information[field.name]"
                 />
             </div>
-            <div v-else-if="field.type == 'select'" class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.type == 'select' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                 
                 <HbDropdown 
             
-                    v-model="host.others_information[field.label]"  
+                    v-model="props.host.others_information[field.name]"  
                     required= "true"  
-                    label="field.placeholder"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
                     selected = "1" 
                     placeholder="Select Time Zone"  
                     :option = "field.options"  
                     optionType = "array"  
                 />  
             </div>
-            <div v-else class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.enable == 1" class="tfhb-hosts-single-information-wrap">
+            
                 <HbText  
-                    v-model="host.others_information[field.label]"  
+                    v-model="props.host.others_information[field.name]"  
                     :required= "field.required == 1 ? 'true' : 'false'"  
-                    :label="field.placeholder"   
+                    :label="field.label"  
                     :placeholder="field.placeholder"  
                     :type="field.type"  
-                    :errors="field.required == 1 ? errors['others_information___' + field.label] : ''"
+                    :errors="field.required == 1 ? errors['others_information___' + field.name] : ''"
                 />
             </div>
             

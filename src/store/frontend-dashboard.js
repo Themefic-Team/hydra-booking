@@ -9,7 +9,9 @@ export const FdDashboard = reactive({
     reset_password_preloader: false,
     disable_personal_info: true,
     disable_password: true,
-    userAuth: {},
+    userAuth: {
+        others_information: {},
+    },
     site_settings: {},
     time_zone: {},
     hosts_settings: {},
@@ -34,7 +36,8 @@ export const FdDashboard = reactive({
             if (response.data.status) {  
                 this.userAuth = response.data.userAuth; 
                 this.site_settings = response.data.site_settings; 
-                this.time_zone = response.data.time_zone; 
+                this.time_zone = response.data.time_zone;  
+                this.userAuth.others_information = response.data.userAuth.others_information != '[]' && response.data.userAuth.others_information != null ? JSON.parse(response.data.userAuth.others_information) : {};
                 this.skeleton = false;
                  
             }

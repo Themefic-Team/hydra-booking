@@ -167,8 +167,7 @@ const props = defineProps({
                 width="50" 
                 :disabled="FdDashboard.disable_personal_info"
             />  
-            
-             <!-- {{ FdDashboard.userAuth }} -->
+             
             <!-- Time Zone -->
             <div class="tfhb-full-width">
                 <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true"  class="tfhb-admin-title " >
@@ -176,63 +175,67 @@ const props = defineProps({
                 </div>
                 
                 <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true && hosts_settings.others_information.fields" class="tfhb-flexbox">  
-                    
+                     
                     <div class="tfhb-host-single-information" v-for="(field, index) in hosts_settings.others_information.fields" :key="index">  
                         <!-- {{field}} -->
+                       
                             <!--  --> 
-                            <div v-if="field.type == 'checkbox'" class="tfhb-hosts-single-information-wrap">
-                                
+                            <div v-if="field.type == 'checkbox' && field.enable == 1" class="tfhb-hosts-single-information-wrap"> 
                                 <HbCheckbox 
-                                    v-model="FdDashboard.userAuth.others_information[field.label]" 
-                                    :names="FdDashboard.userAuth.others_information[field.label]"
-                                    :label="field.placeholder"
+                                    v-model="FdDashboard.userAuth.others_information[field.name]" 
+                                    :names="FdDashboard.userAuth.others_information[field.name]"
+                                    :label="field.label"  
+                                    :placeholder="field.placeholder" 
                                     :groups="true"
                                     :options="field.options" 
                                 />
                             </div>
-                            <div v-else-if="field.type == 'textarea'" class="tfhb-hosts-single-information-wrap">
+                            <div v-else-if="field.type == 'textarea' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                                 
                                 <HbTextarea 
-                                    v-model="FdDashboard.userAuth.others_information[field.label]" 
-                                    :names="FdDashboard.userAuth.others_information[field.label]"
-                                    :label="field.placeholder"  
-                                    :name="FdDashboard.userAuth.others_information[field.label]"
+                                    v-model="FdDashboard.userAuth.others_information[field.name]" 
+                                    :names="FdDashboard.userAuth.others_information[field.name]"
+                                    :label="field.label"  
+                                    :placeholder="field.placeholder"   
+                                    :name="FdDashboard.userAuth.others_information[field.name]"
                                 />
                             </div>
-                            <div v-else-if="field.type == 'radio'" class="tfhb-hosts-single-information-wrap">
+                            <div v-else-if="field.type == 'radio'  && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                                 
                                 <HbRadio 
-                                    v-model="FdDashboard.userAuth.others_information[field.label]" 
-                                    :names="FdDashboard.userAuth.others_information[field.label]"
-                                    :label="field.placeholder"
+                                    v-model="FdDashboard.userAuth.others_information[field.name]" 
+                                    :names="FdDashboard.userAuth.others_information[field.name]"
+                                    :label="field.label"  
+                                    :placeholder="field.placeholder"  
                                     :groups="true"
                                     :options="field.options"   
-                                    :name="FdDashboard.userAuth.others_information[field.label]"
+                                    :name="FdDashboard.userAuth.others_information[field.name]"
                                 />
                             </div>
-                            <div v-else-if="field.type == 'select'" class="tfhb-hosts-single-information-wrap">
+                            <div v-else-if="field.type == 'select' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                                 
                                 <HbDropdown 
                             
-                                    v-model="FdDashboard.userAuth.others_information[field.label]"  
+                                    v-model="FdDashboard.userAuth.others_information[field.name]"  
                                     required= "true"  
-                                    label="field.placeholder"
+                                    :label="field.label"  
+                                    :placeholder="field.placeholder"  
                                     selected = "1" 
                                     placeholder="Select Time Zone"  
                                     :option = "field.options"  
                                     optionType = "array"  
                                 />  
                             </div>
-                            <div v-else class="tfhb-hosts-single-information-wrap">
+                            <div v-else-if="field.enable == 1" class="tfhb-hosts-single-information-wrap">
                                 <HbText  
-                                    v-model="FdDashboard.userAuth.others_information[field.label]"  
+                                    v-model="FdDashboard.userAuth.others_information[field.name]"  
                                     :required= "field.required == 1 ? 'true' : 'false'"  
-                                    :label="field.placeholder"   
-                                    :placeholder="field.placeholder"  
+                                    :label="field.label"  
+                                    :placeholder="field.placeholder"    
                                     :type="field.type"  
-                                    :errors="field.required == 1 ? errors['others_information___' + field.label] : ''"
-                                />
-                            </div>
+                                    :errors="field.required == 1 ? errors['others_information___' + field.name] : ''"
+                                /> 
+                            </div> 
                             
 
                     </div>

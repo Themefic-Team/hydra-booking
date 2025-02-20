@@ -812,12 +812,30 @@ class SettingsController {
 		if ( isset( $request['hosts_settings']['others_information']['enable_others_information'] ) ) {
 			$_tfhb_hosts_settings['others_information']['enable_others_information'] = sanitize_text_field( $request['hosts_settings']['others_information']['enable_others_information'] );
 			foreach ( $request['hosts_settings']['others_information']['fields'] as $key => $value ) {
+				
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['label']       = sanitize_text_field( $value['label'] );
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['type']        = sanitize_text_field( $value['type'] );
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['placeholder'] = sanitize_text_field( $value['placeholder'] );
 				// sanitize array
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['options']  = array_map( 'sanitize_text_field', $value['options'] );
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['required'] = sanitize_text_field( $value['required'] );
+				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['enable'] = sanitize_text_field( $value['enable'] );
+
+				if(!isset($value['name']) || empty($value['name'])){
+					$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $value['label']));
+	
+					 
+					$count = count( array_filter( array_map( function($item) use ($baseName) { return $item['name'] == $baseName; }, $_tfhb_hosts_settings['others_information']['fields'] ) ) );
+					if ( $count > 0 ) {
+						$uniqueName = $baseName. '_'. substr( md5( mt_rand() ), 0, 2 );
+					} else {
+						$uniqueName = $baseName;
+					} 
+					$_tfhb_hosts_settings['others_information']['fields'][$key]['name'] = $uniqueName; 
+				}
+				// if(!isset($question['enable']) ) {
+				// 	$_tfhb_hosts_settings['others_information']['fields'][$key]['enable'] = 1;
+				// } 
 			}
 		}
 
