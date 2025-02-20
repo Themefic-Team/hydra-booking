@@ -182,7 +182,11 @@ class licenseController {
             if (!empty($HydraBooking->response_obj->license_title) && stripos($HydraBooking->response_obj->license_title, 'free') !== false) {
                 self::$cached_result['license_type'] = false;
             } else {
-                self::$cached_result['license_type'] = true;
+                if ( is_plugin_active( 'hydra-booking-pro/hydra-booking-pro.php' ) ) {
+                    self::$cached_result['license_type'] = true;
+                }else{
+                    self::$cached_result['license_type'] = false; 
+                }
             }
         }
     
