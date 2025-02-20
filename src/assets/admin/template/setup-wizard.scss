@@ -114,6 +114,9 @@
             // width: 80%;
             // padding: 64px 50px;
             .tfhb-popup-open {
+                .tfhb-popup-overlay{
+                    display: none;
+                }
                 .tfhb-popup-wrap {
                     animation: none !important;
                 }
