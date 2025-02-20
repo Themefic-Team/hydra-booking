@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 use HydraBooking\Admin\Controller\TransStrings;
 use HydraBooking\Admin\Controller\AuthController;
+use HydraBooking\Admin\Controller\licenseController;
 
 /**
  * Enqueue Class
@@ -108,6 +109,16 @@ class Enqueue {
 				'trans'				   => TransStrings::getTransStrings(),
 			)
 		);
+
+		$license = LicenseController::getInstance()->check_license();
+        wp_localize_script(
+            'tfhb-admin-core',
+            'tfhb_core_apps_pro',
+            array(
+                'tfhb_is_pro' =>  $license['license_type'],
+                'tfhb_license_status'  =>  $license['is_valid'],
+            )
+        ); 
 
 		if($front_end_dashboard == true){
 			$settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();

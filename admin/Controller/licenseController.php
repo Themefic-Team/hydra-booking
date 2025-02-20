@@ -10,12 +10,20 @@ use HydraBooking\License\HydraBookingBase;
  
 
 class licenseController {
-
+    private static $instance = null; // Holds the single instance
+    private static $cached_result = null;
 
 	// constaract
 	public function __construct() {
         
 	}
+
+    public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
 	public function create_endpoint() {
 		register_rest_route(
@@ -152,29 +160,34 @@ class licenseController {
      *
      * @return void
      */
-    public function check_license(){
-
+    public function check_license() {
+        // Ensure the license check runs only once per request
+        if (self::$cached_result !== null) {
+            return self::$cached_result; // Return cached result if already checked
+        }
+    
+        // Initialize necessary classes
         $HydraBooking = new HydraBooking();
-        $main_lic_key="HydraBooking_lic_Key";
-        $lic_key_name =HydraBookingBase::get_lic_key_param($main_lic_key);
-
-        // After my migration lic_key_name is : 'HydraBooking_lic_Key_s7c976efc' but old license key is 'HydraBooking_lic_Key_saeaad6b1' update it with new key 
-        $license_key=get_option($lic_key_name,"");
- 
-        if(empty($license_key)){
-	        $license_key=get_option($main_lic_key,"");
-	        if(!empty($license_key)){
-	            update_option($lic_key_name,$license_key) || add_option($lic_key_name,$license_key);
-		        update_option($main_lic_key,$license_key);
+        
+        // Default response structure
+        self::$cached_result = [
+            'is_valid' => false,
+            'license_type' => 'free', // Default to 'free'
+        ];
+    
+        if (!empty($HydraBooking->response_obj)) {
+            self::$cached_result['is_valid'] = !empty($HydraBooking->response_obj->is_valid) ? $HydraBooking->response_obj->is_valid : false;
+            
+            // Determine license type based on 'license_title'
+            if (!empty($HydraBooking->response_obj->license_title) && stripos($HydraBooking->response_obj->license_title, 'free') !== false) {
+                self::$cached_result['license_type'] = false;
+            } else {
+                self::$cached_result['license_type'] = true;
             }
         }
-        $lice_email=get_option( "HydraBooking_lic_email","");
-        HydraBookingBase::add_on_delete(function(){
-           update_option("HydraBooking_lic_Key","");
-        });
-
-
-        return HydraBookingBase::check_wp_plugin($license_key,$lice_email,$HydraBooking->license_message,$HydraBooking->response_obj,TFHB_BASE_FILE);
- 
+    
+        return self::$cached_result;
     }
+    
+    
 }

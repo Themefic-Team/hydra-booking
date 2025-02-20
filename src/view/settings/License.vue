@@ -154,7 +154,7 @@ const upgradeToPro = async (key) => {
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
                         <div class="tfhb-admin-title tfhb-m-0"> 
                             <h2 >{{ $tfhb_trans('Please Install the HydraBooking Pro !') }}</h2>  
-                            <p>{{ $tfhb_trans('You already actived the HydraBooking Pro Plugin.') }}</p>
+                            <p>{{ $tfhb_trans('You already actived the HydraBooking Pro License, Install the HydraBooking Pro Plugin.') }}</p>
                         </div>
                     </div> 
                 </template>
@@ -171,7 +171,7 @@ const upgradeToPro = async (key) => {
                 <h2>{{ $tfhb_trans('License Info') }}</h2> 
                 <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
             </div>
-            <div  v-if="$tfhb_license_status == false && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
+            <div  v-if="$tfhb_license_status == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
 
                 <ul class="el-license-info">
                     <li>
