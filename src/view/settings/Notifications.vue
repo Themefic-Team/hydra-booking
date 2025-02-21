@@ -252,33 +252,91 @@ onBeforeMount(() => {
                                 <p style="font-weight: bold; margin: 8px 0 32px 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>
 
                                 <!-- Meeting Details -->
-                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 15px; background: #FAFAFA;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px;">
                                     <tr>
-                                        <td style="font-weight: bold; font-size: 16px; padding-bottom: 10px;">Meeting Details</td>
+                                        <td style="font-weight: bold; font-size: 16px;">Meeting Details</td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
-                                                    <td style="vertical-align: middle;">
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Date & Time"  style="float: left;margin-right: 8px;">
                                                         Date & Time:
                                                     </td>
 
-                                                    <td style="vertical-align: middle; padding-left: 8px;">
-                                                        Sunday, November 11, 2024 at 12:00 PM (UTC+06:00) Asia - Dhaka
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        <strong>Sunday November 11, 2024 at 12:00 PM (UTC+06:00) Asia - Dhaka</strong> <br>
+                                                        Host time: Nov 11, 2024 at 10:00 PM (UTC+11:00) Australia - Sydney
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
-                                    <tr><td><strong>Host:</strong> Kamrul Hasan Shovo</td></tr>
-                                    <tr><td><strong>About:</strong> Discussion about design system</td></tr>
-                                    <tr><td><strong>Description:</strong> Hydra reads your availability from all your existing calendars ensuring you never get double booked.</td></tr>
-                                    <tr><td><strong>Location:</strong> Host will initiate the meeting by Google Meet</td></tr>
-                                    <tr><td><strong>Meeting link:</strong> <a href="https://google.meet/asdfkjasdflk">https://google.meet/asdfkjasdflk</a></td></tr>
                                     <tr>
-                                        <td style="padding-top: 10px;">
-                                            <a href="https://google.meet/asdfkjasdflk" style="background-color: #137333; color: #FFFFFF; padding: 10px 15px; border-radius: 5px; text-decoration: none; display: inline-block; font-weight: bold;">Join Google Meet</a>
+                                        <td>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                                <tr>
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Host:"  style="float: left;margin-right: 8px;">
+                                                        Host:
+                                                    </td>
+
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        <strong>Kamrul Hasan Shovo</strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                                <tr>
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="About:"  style="float: left;margin-right: 8px;">
+                                                        About:
+                                                    </td>
+
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        <strong>Discussion about design system</strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                                <tr>
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Description:"  style="float: left;margin-right: 8px;">
+                                                        Description:
+                                                    </td>
+
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        Hydra reads your availability from all your existing calendars ensuring you never get double booked ensuring you never get double booked
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                                <tr>
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Location:"  style="float: left;margin-right: 8px;">
+                                                        Location:
+                                                    </td>
+
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        <strong>Host will initiate the meeting by Google Meet</strong>
+                                                        Meeting link: https://google.meet/asdfkjasdflk
+                                                        <a href="https://google.meet/asdfkjasdflk" style="background-color: #137333; color: #FFFFFF; padding: 10px 15px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: bold; margin-top: 8px;">Join Google Meet</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </td>
                                     </tr>
                                 </table>
@@ -286,32 +344,115 @@ onBeforeMount(() => {
                                 <br>
 
                                 <!-- Host Details -->
-                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: #FAFAFA;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px;">
                                     <tr>
-                                        <td style="font-weight: bold; font-size: 16px; padding-bottom: 10px;">Host Details</td>
+                                        <td style="font-weight: bold; font-size: 16px;">Host Details</td>
                                     </tr>
-                                    <tr><td><strong>Name:</strong> Kamrul Hasan Shovo</td></tr>
-                                    <tr><td><strong>Email:</strong> jack.spar@gmail.com</td></tr>
-                                    <tr><td><strong>Phone:</strong> +89 000 123 456</td></tr>
+                                    <tr>
+                                        <td>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                                <tr>
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Name:"  style="float: left;margin-right: 8px;">
+                                                        Name:
+                                                    </td>
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        <strong>Kamrul Hasan Shovo</strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                                <tr>
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Email:"  style="float: left;margin-right: 8px;">
+                                                        Email:
+                                                    </td>
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        <strong><a href="" style="text-decoration: none; color: #2E6B38;">jack.spar@gmail.com</a></strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                                <tr>
+                                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Phone:"  style="float: left;margin-right: 8px;">
+                                                        Phone:
+                                                    </td>
+                                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                                        <strong><a href="" style="text-decoration: none; color: #2E6B38;">+89 000 123 456</a></strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
                                 </table>
 
                                 <br>
 
                                 <!-- Instructions -->
-                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: #FAFAFA;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                     <tr>
-                                        <td style="font-weight: bold; font-size: 16px; padding-bottom: 10px;">Instructions</td>
+                                        <td style="font-weight: bold; font-size: 17px; padding-bottom: 24px;">Instructions</td>
                                     </tr>
-                                    <tr><td>• Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</td></tr>
-                                    <tr><td>• Ensure you have a good internet connection, a quality camera, and a quiet space.</td></tr>
+                                    <tr>
+                                        <td style="font-size: 15px;">
+                                            <ul>
+                                                <li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li>
+                                                <li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
                                 </table>
                             </td>
                         </tr>
 
                         <!-- Footer -->
                         <tr>
-                            <td align="center" style="font-size: 12px; padding: 15px; background: #F9F9F9; color: #777;">
-                                © 2025 HydraBooking. All rights reserved.
+                            <td bgcolor="#121D13" align="center" style="padding: 16px 32px;">
+                                <table width="100%" role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                    <tr>
+                                        <td align="left">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                                <tr>
+                                                    <td>
+                                                        <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="HydraBooking"  style="max-height: 27px;display: block;">
+                                                    </td>
+                                                    <td style="padding-left: 6px;">
+                                                        <span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td align="right" style="vertical-align: middle;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                                <tr>
+                                                    <td style="padding-left: 24px;">
+                                                        <a href="#" style="text-decoration: none;"><img :src="$tfhb_url+'/assets/images/facebook-logo.svg'" alt="Facebook"></a>
+                                                    </td>
+                                                    <td style="padding-left: 24px;">
+                                                        <a href="#" style="text-decoration: none;"><img :src="$tfhb_url+'/assets/images/twitter-x-logo.svg'" alt="twitter"></a>
+                                                    </td>
+                                                    <td style="padding-left: 24px;">
+                                                        <a href="#" style="text-decoration: none;"><img :src="$tfhb_url+'/assets/images/youtube-logo.svg'" alt="youtube"></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
                             </td>
                         </tr>
 
