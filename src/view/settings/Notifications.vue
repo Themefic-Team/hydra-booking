@@ -278,7 +278,7 @@ onBeforeMount(() => {
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
                                                     <td style="vertical-align: top; font-size: 15px; width: 120px;">
-                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Host:"  style="float: left;margin-right: 8px;">
+                                                        <img :src="$tfhb_url+'/assets/images/user.svg'" alt="Host:"  style="float: left;margin-right: 8px;">
                                                         Host:
                                                     </td>
 
@@ -294,7 +294,7 @@ onBeforeMount(() => {
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
                                                     <td style="vertical-align: top; font-size: 15px; width: 120px;">
-                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="About:"  style="float: left;margin-right: 8px;">
+                                                        <img :src="$tfhb_url+'/assets/images/Meeting.svg'" alt="About:"  style="float: left;margin-right: 8px;">
                                                         About:
                                                     </td>
 
@@ -310,7 +310,7 @@ onBeforeMount(() => {
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
                                                     <td style="vertical-align: top; font-size: 15px; width: 120px;">
-                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Description:"  style="float: left;margin-right: 8px;">
+                                                        <img :src="$tfhb_url+'/assets/images/file-text.svg'" alt="Description:"  style="float: left;margin-right: 8px;">
                                                         Description:
                                                     </td>
 
@@ -326,7 +326,7 @@ onBeforeMount(() => {
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
                                                     <td style="vertical-align: top; font-size: 15px; width: 120px;">
-                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Location:"  style="float: left;margin-right: 8px;">
+                                                        <img :src="$tfhb_url+'/assets/images/Location.svg'" alt="Location:"  style="float: left;margin-right: 8px;">
                                                         Location:
                                                     </td>
 
@@ -353,7 +353,7 @@ onBeforeMount(() => {
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
                                                     <td style="vertical-align: top; font-size: 15px; width: 120px;">
-                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Name:"  style="float: left;margin-right: 8px;">
+                                                        <img :src="$tfhb_url+'/assets/images/user.svg'" alt="Name:"  style="float: left;margin-right: 8px;">
                                                         Name:
                                                     </td>
                                                     <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
@@ -368,7 +368,7 @@ onBeforeMount(() => {
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
                                                     <td style="vertical-align: top; font-size: 15px; width: 120px;">
-                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Email:"  style="float: left;margin-right: 8px;">
+                                                        <img :src="$tfhb_url+'/assets/images/mail.svg'" alt="Email:"  style="float: left;margin-right: 8px;">
                                                         Email:
                                                     </td>
                                                     <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
@@ -383,7 +383,7 @@ onBeforeMount(() => {
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                                 <tr>
                                                     <td style="vertical-align: top; font-size: 15px; width: 120px;">
-                                                        <img :src="$tfhb_url+'/assets/images/calendar-days.svg'" alt="Phone:"  style="float: left;margin-right: 8px;">
+                                                        <img :src="$tfhb_url+'/assets/images/phone.svg'" alt="Phone:"  style="float: left;margin-right: 8px;">
                                                         Phone:
                                                     </td>
                                                     <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
@@ -436,7 +436,7 @@ onBeforeMount(() => {
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td align="right" style="vertical-align: middle;">
+                                        <td align="right" style="vertical-align: baseline;">
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                                 <tr>
                                                     <td style="padding-left: 24px;">
