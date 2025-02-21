@@ -411,6 +411,18 @@ onBeforeMount(() => {
                                         </td>
                                     </tr>
                                 </table>
+
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; margin: 32px 0;">
+                                    <tr>
+                                        <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 15px; padding-bottom: 24px;">
+                                            <a href="https://google.meet/asdfkjasdflk" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;">Cancel</a>
+                                            <a href="https://google.meet/asdfkjasdflk" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;">Reschedule</a>
+                                        </td>
+                                    </tr>
+                                </table>
                             </td>
                         </tr>
 
