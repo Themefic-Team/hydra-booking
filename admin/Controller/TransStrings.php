@@ -430,6 +430,8 @@ namespace HydraBooking\Admin\Controller;
             'Please enter a valid email address.' => __('Please enter a valid email address.', 'hydra-booking'),
             'Perfect' => __('Perfect', 'hydra-booking'),
             'Create a Free License Key' => __('Create a Free License Key', 'hydra-booking'),
+            'Please Install the HydraBooking Pro !' => __("Please Install the HydraBooking Pro !", 'hydra-booking'),
+            'You already activated the HydraBooking Pro License, Install the Hydra Booking Pro Plugin.' => __("You already activated the HydraBooking Pro License, Install the Hydra Booking Pro Plugin.", 'hydra-booking'),
 
             // Component : availability 
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 

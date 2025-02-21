@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';  
@@ -20,7 +20,7 @@ const licenseing = reactive({
 const UnlockPopup = () => {
   licenseing.isOpen = false;
 }
-
+const License_pre_loader = ref(false);
 const licenseingData = reactive({
   email: ''
 });
@@ -39,6 +39,7 @@ const GenaratePasswordLink = async () => {
   formData.append("email", licenseingData.email);
   formData.append("nonce", tfhb_core_apps.rest_nonce);
 
+  License_pre_loader.value = true;
   try {
     const response = await fetch("/wp-admin/admin-ajax.php", {
       method: "POST",
@@ -47,13 +48,16 @@ const GenaratePasswordLink = async () => {
 
     const result = await response.json();
     if (result.success) {
+      License_pre_loader.value = false;
       LicenseMessage.status = true;
       LicenseMessage.message = result.data.message;
     } else {
+      License_pre_loader.value = false;
       LicenseMessage.status = false;
       LicenseMessage.message = result.data.message || "Something went wrong.";
     }
   } catch (error) {
+    License_pre_loader.value = false;
     console.error("AJAX Error:", error);
     LicenseMessage.value = "Failed to connect to the server.";
   }
@@ -96,6 +100,10 @@ const GenaratePasswordLink = async () => {
               @click="GenaratePasswordLink()"
               classValue="tfhb-btn boxed-btn flex-btn" 
               :buttonText="$tfhb_trans('Send me the License key')"
+              icon="ChevronRight" 
+              hover_icon="ArrowRight" 
+              :hover_animation="true" 
+              :pre_loader="License_pre_loader"
             />  
           </div> 
       </template> 
