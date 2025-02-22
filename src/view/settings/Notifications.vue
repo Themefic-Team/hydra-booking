@@ -219,7 +219,7 @@ onBeforeMount(() => {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Booking Confirmation</title>
     </head>
-    <body style="margin: 0; padding: 0; background-color: #F4F4F4; font-family: Arial, sans-serif;">
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
 
         <!-- Main Container -->
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" bgcolor="#F4F4F4">
