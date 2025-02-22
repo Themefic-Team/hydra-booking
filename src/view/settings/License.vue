@@ -154,7 +154,7 @@ const upgradeToPro = async (key) => {
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
                         <div class="tfhb-admin-title tfhb-m-0"> 
                             <h2 >{{ $tfhb_trans('Please Install the HydraBooking Pro !') }}</h2>  
-                            <p>{{ $tfhb_trans('You already actived the HydraBooking Pro License, Install the HydraBooking Pro Plugin.') }}</p>
+                            <p>{{ $tfhb_trans('You already activated the HydraBooking Pro License, Install the Hydra Booking Pro Plugin.') }}</p>
                         </div>
                     </div> 
                 </template>
@@ -162,7 +162,7 @@ const upgradeToPro = async (key) => {
 
             <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-else-if="LicenseBase.license_type=='free' && $tfhb_is_pro != true">
                 <template #content>
-                    {{ $tfhb_trans('You already activated the HydraBooking Pro License, Install the Hydra Booking Pro Plugin.') }} 
+                    {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
                 </template>
             </HbInfoBox>
 
@@ -195,7 +195,6 @@ const upgradeToPro = async (key) => {
                         <span class="el-license-info-title">{{ $tfhb_trans('License Expired on') }}</span>
                         {{ LicenseBase.LicenseData.expire_date }} 
                     
-                            <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a>
                         
                     </div>
                 </li>
@@ -204,7 +203,6 @@ const upgradeToPro = async (key) => {
                     <div>
                         <span class="el-license-info-title">{{ $tfhb_trans('Support Expired on') }}</span>
                         {{ LicenseBase.LicenseData.support_end }}
-                        <a v-if="LicenseBase.LicenseData.expire_renew_link" target="_blank" class="el-blue-btn" href="{{ LicenseBase.LicenseData.expire_renew_link }}">{{ $tfhb_trans('Renew') }}</a> 
                     </div>
                 </li>
                     <li>
