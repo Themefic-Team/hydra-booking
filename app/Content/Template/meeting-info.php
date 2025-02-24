@@ -83,7 +83,7 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
         <div class="tfhb-full-description">
             <?php 
                 echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : '';
-                echo '<span class="tfhb-see-less-description">See less</span>';
+                echo '<span class="tfhb-see-less-description">'.esc_html(__('See less', 'hydra-booking')).'</span>';
             ?>
         </div>
 		

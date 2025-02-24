@@ -137,7 +137,7 @@ $availability_time_zone = $availability_data['time_zone'];
 				),
 				home_url()
 			);
-			echo '<a href="' . esc_attr( $cancel ) . '">Cancel booking</a>';
+			echo '<a href="' . esc_attr( $cancel ) . '">'.esc_html(__('Cancel booking', 'hydra-booking')).'</a>';
 		}
 		if ( true == $data->attendee_can_reschedule ) {
 
@@ -151,7 +151,7 @@ $availability_time_zone = $availability_data['time_zone'];
 				home_url()
 			);
 
-			echo '<a href="' . esc_url( $reschedule_url ) . '">Reschedule</a>';
+			echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html(__('Reschedule', 'hydra-booking')).'</a>';
 		}
 		?>
 	</div>

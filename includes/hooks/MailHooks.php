@@ -99,8 +99,8 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => date('M d, Y, h:i A'), 
-							'title' => esc_html(__( 'Confirmation Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'Confirmation Email Sent to Host', 'hydra-booking')), 
+							'title' => 'Confirmation Email Sent', // translate it from Vue
+							'description' => 'Confirmation Email Sent to Host',  // translate it from Vue
 						)
 					]
 				);
@@ -149,8 +149,8 @@ class MailHooks {
 					'value' => array(
 							 
 							'datetime' => date('M d, Y, h:i A'), 
-							'title' =>  esc_html(__( 'Confirmation Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'Confirmation Email Sent to Attendee', 'hydra-booking')),
+							'title' =>  'Confirmation Email Sent', // translate it from Vue
+							'description' => 'Confirmation Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
@@ -206,8 +206,8 @@ class MailHooks {
 					'value' => array(
 							 
 							'datetime' => date('M d, Y, h:i A'),  
-							'title' => esc_html(__( 'Pending Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'Pending Email Sent to Host', 'hydra-booking')),
+							'title' => 'Pending Email Sent', // translate it from Vue
+							'description' => 'Pending Email Sent to Host', // translate it from Vue
 						)
 					]
 				);
@@ -250,8 +250,8 @@ class MailHooks {
 					'value' => array(
 							 
 							'datetime' => date('M d, Y, h:i A'),   
-							'title' => esc_html(__( 'Pending Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'Pending Email Sent to Attendee', 'hydra-booking')),
+							'title' => 'Pending Email Sent', // translate it from Vue
+							'description' => 'Pending Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
@@ -305,8 +305,8 @@ class MailHooks {
 					'value' => array(
 							 
 							'datetime' => date('M d, Y, h:i A'),    
-							'title' => esc_html(__( 'Canceled Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'Canceled Email Sent to Host', 'hydra-booking')),
+							'title' => 'Canceled Email Sent', // translate it from Vue
+							'description' => 'Canceled Email Sent to Host', // translate it from Vue
 						)
 					]
 				);
@@ -348,8 +348,8 @@ class MailHooks {
 					'value' => array(
 							 
 							'datetime' => date('M d, Y, h:i A'),
-							'title' => esc_html(__( 'Canceled Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'Canceled Email Sent to Attendee', 'hydra-booking')),
+							'title' => 'Canceled Email Sent', // translate it from Vue
+							'description' => 'Canceled Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
@@ -402,8 +402,8 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => date('M d, Y, h:i A'),
-							'title' => esc_html(__( 'ReSchedule Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'ReSchedule Email Sent to Host', 'hydra-booking')),
+							'title' => 'ReSchedule Email Sent', // translate it from Vue
+							'description' => 'ReSchedule Email Sent to Host', // translate it from Vue
 						)
 					]
 				);
@@ -444,8 +444,8 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => date('M d, Y, h:i A'),
-							'title' => esc_html(__( 'ReSchedule Email Sent', 'hydra-booking')),
-							'description' => esc_html(__( 'ReSchedule Email Sent to Attendee', 'hydra-booking')),
+							'title' => 'ReSchedule Email Sent', // translate it from Vue
+							'description' => 'ReSchedule Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
@@ -500,8 +500,8 @@ class MailHooks {
 						'meta_key' => 'booking_activity',
 						'value' => array( 
 								'datetime' => date('M d, Y, h:i A'), 
-								'title' => esc_html(__( 'Reminder Email Sent', 'hydra-booking')),
-								'description' => esc_html(__( 'Reminder Email Sent to Attendee', 'hydra-booking')),
+								'title' => 'Reminder Email Sent', // translate it from Vue
+								'description' => 'Reminder Email Sent to Attendee', // translate it from Vue
 							)
 						]
 					);
@@ -559,8 +559,8 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => date('M d, Y, h:i A'),  
-							'title' => esc_html(__( 'Booking Has Been Confirmed', 'hydra-booking')),
-							'description' => esc_html(__( 'Confirmation Email Sent to Attendee', 'hydra-booking')),
+							'title' => 'Booking Has Been Confirmed', // translate it from Vue
+							'description' => 'Confirmation Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
@@ -616,8 +616,8 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => date('M d, Y, h:i A'),   
-							'title' => esc_html(__( 'Booking Has Been Pending', 'hydra-booking')),
-							'description' => esc_html(__( 'Pending Email Sent to Attendee', 'hydra-booking')),
+							'title' => 'Booking Has Been Pending', // translate it from Vue
+							'description' => 'Pending Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
@@ -674,8 +674,8 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => date('M d, Y, h:i A'),    
-							'title' => esc_html(__(  'Booking Has Been Canceled', 'hydra-booking')),
-							'description' => esc_html(__( 'Canceled Email Sent to Attendee', 'hydra-booking')),
+							'title' => 'Booking Has Been Canceled', // translate it from Vue
+							'description' => 'Canceled Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
@@ -736,8 +736,8 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => date('M d, Y, h:i A'),     
-							'title' =>  esc_html(__( 'Booking Has Been Rescheduled', 'hydra-booking')),
-							'description' => esc_html(__( 'ReSchedule Email Sent to Attendee', 'hydra-booking')),
+							'title' => 'Booking Has Been Rescheduled', // translate it from Vue
+							'description' => 'ReSchedule Email Sent to Attendee', // translate it from Vue
 						)
 					]
 				);
