@@ -268,7 +268,16 @@ const routes = [
                 path: 'notifications',
                 name: 'SettingsNotifications',
                 meta: { Capabilities: 'tfhb_manage_settings' },
-                component: () => import('../view/settings/Notifications.vue')
+                component: () => import('../view/settings/Notifications.vue'),
+                children: [ 
+                    {
+                        path: 'single/:type/:id',
+                        props: true,
+                        name: 'EmailTemplateSingle',
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
+                        component: () => import('../view/settings/EmailSingle.vue')
+                    },
+                ]
             },
             {
                 path: 'integrations',

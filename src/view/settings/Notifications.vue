@@ -2,10 +2,12 @@
 import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount } from 'vue';
+import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
-
+const route = useRoute();
+const router = useRouter();
 
 // import Form Field 
 import MailNotifications from '@/components/notifications/MailNotifications.vue'
@@ -240,6 +242,9 @@ onBeforeMount(() => {
                     :ispopup="hostBookingConfirmPopUp"
                     @popup-open-control="hostBookingConfirmPopUp = true"
                     @popup-close-control="hostBookingConfirmPopUp = false"
+                    :isSingle="true"
+                    categoryKey="host"
+                    emailKey="booking_confirmation"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -252,6 +257,9 @@ onBeforeMount(() => {
                     :ispopup="hostBookingPendingPopUp"
                     @popup-open-control="hostBookingPendingPopUp = true"
                     @popup-close-control="hostBookingPendingPopUp = false"
+                    :isSingle="true"
+                    categoryKey="host"
+                    emailKey="booking_pending"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -265,6 +273,9 @@ onBeforeMount(() => {
                     :ispopup="hostBookingCencelPopUp"
                     @popup-open-control="hostBookingCencelPopUp = true"
                     @popup-close-control="hostBookingCencelPopUp = false"
+                    :isSingle="true"
+                    categoryKey="host"
+                    emailKey="booking_cancel"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -277,6 +288,9 @@ onBeforeMount(() => {
                     :ispopup="hostBookingReschedulePopUp"
                     @popup-open-control="hostBookingReschedulePopUp = true"
                     @popup-close-control="hostBookingReschedulePopUp = false"
+                    :isSingle="true"
+                    categoryKey="host"
+                    emailKey="booking_reschedule"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -289,9 +303,12 @@ onBeforeMount(() => {
                     :ispopup="hostBookingReminderPopUp"
                     @popup-open-control="hostBookingReminderPopUp = true"
                     @popup-close-control="hostBookingReminderPopUp = false"
+                    :isSingle="true"
+                    categoryKey="host"
+                    emailKey="booking_reminder"
                 /> 
                 <!-- Single Integrations  -->
- 
+                <!-- <router-view :notifications="Notification" /> -->
  
             </div> 
             <div v-if="attendee"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box "> 
@@ -359,6 +376,7 @@ onBeforeMount(() => {
  
             </div> 
 
+            <router-view :data="Notification" />
 
         </div>
     </div>

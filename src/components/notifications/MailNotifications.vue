@@ -26,7 +26,10 @@ const props = defineProps([
     'label', 
     'data',
     'ispopup',
-    'update_preloader'
+    'update_preloader',
+    'isSingle',
+    'categoryKey',
+    'emailKey'
 ])
 const emit = defineEmits(['update-notification', 'popup-open-control', 'popup-close-control']);
 
@@ -81,9 +84,12 @@ const closePopup = () => {
             <HbSwitch v-model="props.data.status"  @change="emit('update-notification')"  :label="props.label "  /> 
 
         </div>
+        <router-link v-if="isSingle" class="tfhb-btn tfhb-edit flex-btn" :to="{ name: 'EmailTemplateSingle', params: { id: emailKey, type: categoryKey } }">
+            <Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }}
+        </router-link>
+        <button v-else class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }} </button>
 
-        <button class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }} </button>
-
+        
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="700px" name="first-modal">
             <template #header> 
                 <h3>{{ title }}</h3>
