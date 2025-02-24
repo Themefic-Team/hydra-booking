@@ -180,16 +180,15 @@ class licenseController {
             
             // Determine license type based on 'license_title'
             if (!empty($HydraBooking->response_obj->license_title) && stripos($HydraBooking->response_obj->license_title, 'free') !== false) {
-                self::$cached_result['license_type'] = false;
+                self::$cached_result['license_type'] = 'free';
             } else {
-                if ( is_plugin_active( 'hydra-booking-pro/hydra-booking-pro.php' ) ) {
-                    self::$cached_result['license_type'] = true;
+                if ( is_plugin_active( 'hydra-booking-pro/hydra-booking-pro.php'  ) ) {
+                    self::$cached_result['license_type'] = 'pro';
                 }else{
                     self::$cached_result['license_type'] = false; 
                 }
             }
-        }
-    
+        } 
         return self::$cached_result;
     }
     

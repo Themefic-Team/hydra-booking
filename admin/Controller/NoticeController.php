@@ -18,7 +18,7 @@ class NoticeController {
     }
 
     // Register Callback
-    function tfhb_user_registration_license_callback() {
+    public function tfhb_user_registration_license_callback() {
         check_ajax_referer('wp_rest', 'nonce');
 
         if (!isset($_POST['email']) || !is_email($_POST['email'])) {
@@ -46,7 +46,7 @@ class NoticeController {
     }
 
     // Add To Cart Callback
-    function tfhb_cart_item_license_callback() {
+    public function tfhb_cart_item_license_callback() {
         check_ajax_referer('wp_rest', 'nonce');
 
         if (!isset($_POST['key'])) {

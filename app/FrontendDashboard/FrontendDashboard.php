@@ -9,7 +9,7 @@ use HydraBooking\Admin\Controller\Enqueue;
 // use Shortcode\Signup;
 use HydraBooking\FdDashboard\Shortcode\Signup;
 use HydraBooking\FdDashboard\Shortcode\Login;
-
+use HydraBooking\Admin\Controller\licenseController;
 /**
  * Frontend Dashboard Class
  * 
@@ -27,7 +27,14 @@ class FrontendDashboard {
         if(!self::is_frontend_dashboard_enabled()){
             return false;
         }
+        
+        // Check if License is valid`
+        $license = LicenseController::getInstance()->check_license();
+        if(!$license['is_valid']){
+            return false;
+        }
 
+        // 
         // Define Constants
         $this->define_constants();
 

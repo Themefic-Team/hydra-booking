@@ -90,14 +90,15 @@ class Enqueue {
 		// Localize the script
 		 
 		$embed_script_link = esc_html('<script src="' .TFHB_URL . 'assets/app/js/widget.js"></script>');
- 
+		$license = LicenseController::getInstance()->check_license();
 		wp_localize_script(
 			'tfhb-admin-core',
 			'tfhb_core_apps',
 			array(
 				// 'url' => TFHB_URL,
 				'rest_nonce'           => wp_create_nonce( 'wp_rest' ),
-				'tfhb_is_pro'          => wp_create_nonce( 'wp_rest' ),
+				'tfhb_license_type' =>  $license['license_type'],
+                'tfhb_is_valid'  =>  $license['is_valid'],
 				'admin_url'            => site_url(),
 				'rest_route'           => get_rest_url(),
 				'embed_script_link'    => esc_html( $embed_script_link ),
@@ -108,17 +109,7 @@ class Enqueue {
 				'user'                 => $user_auth, 
 				'trans'				   => TransStrings::getTransStrings(),
 			)
-		);
-
-		$license = LicenseController::getInstance()->check_license();
-        wp_localize_script(
-            'tfhb-admin-core',
-            'tfhb_core_apps_pro',
-            array(
-                'tfhb_is_pro' =>  $license['license_type'],
-                'tfhb_license_status'  =>  $license['is_valid'],
-            )
-        ); 
+		); 
 
 		if($front_end_dashboard == true){
 			$settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();

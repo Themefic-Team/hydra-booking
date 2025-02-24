@@ -5,16 +5,14 @@ import { onBeforeMount } from 'vue';
 import { RouterView } from 'vue-router'  
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
-import FrontendDashboard from '@/store/settings/fd-dashboard.js'
-import { LicenseBase } from '@/store/license'; 
+import FrontendDashboard from '@/store/settings/fd-dashboard.js' 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 
 // Get Current Route url
 onBeforeMount(() => { 
-    FrontendDashboard.fetchFrontendDashboardSettings();
-    LicenseBase.GetLicense();
+    FrontendDashboard.fetchFrontendDashboardSettings(); 
 });
 
  
@@ -27,6 +25,7 @@ onBeforeMount(() => {
             <div class="tfhb-admin-title "> 
                 <h1 class="tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Frontend Dashboard') }} 
                     <HbSwitch 
+                        v-if="$tfhb_is_valid == true"
                         v-model="FrontendDashboard.fd_dashboard.general.enable_fd_dashboard" 
                         :label="''"  
                         @change="FrontendDashboard.updateFrontendDashboardSettings()" 
@@ -37,15 +36,14 @@ onBeforeMount(() => {
             <div class="thb-admin-btn right"> 
                 <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=20 /></a>
             </div> 
-        </div>
-
-        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-if="LicenseBase.license_active != true">
+        </div> 
+        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-if="$tfhb_is_valid != true">
             <template #content>
                 {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
             </template>
         </HbInfoBox>
 
-        <div class="tfhb-content-wrap" :class="LicenseBase.license_active != true ? 'tfhb-pro' : ''">    
+        <div class="tfhb-content-wrap" :class="$tfhb_is_valid != true  ? 'tfhb-pro' : ''">    
              <nav class="tfhb-booking-tabs"> 
                 <ul>
                     <!-- to route example like hosts/profile/13/information -->
