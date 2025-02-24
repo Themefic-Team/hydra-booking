@@ -19,11 +19,96 @@ import Editor from 'primevue/editor';
 const route = useRoute();
 //  Load Time Zone 
 const skeleton = ref(false);
+const emit = defineEmits(["update-notification"]); 
 
+const Notification = reactive(  { 
+     host : {
+        booking_confirmation: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
 
-const props = defineProps([ 
-    'data', 
-])
+        },
+        booking_pending: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_cancel: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_reschedule: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_reminder: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+    
+     },
+     attendee : {
+        booking_confirmation: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_pending: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_cancel: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_reschedule: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_reminder: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+    
+     }
+});
 
 const meetingShortcode = ref([
     '{{meeting.title}}',
@@ -63,14 +148,63 @@ const copyShortcode = (value) => {
     toast.success(value + ' is Copied');
 }
 
-const closePopup = () => { 
-    emit('popup-close-control', false)
+const preloader = ref(false);
+
+const fetchNotification = async () => {
+    try { 
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
+        if (response.data.status) { 
+            // console.log(response.data.integration_settings);
+            Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
+            Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
+            
+            
+            skeleton.value = false;
+        }
+    } catch (error) {
+        console.log(error);
+    } 
 }
-const propsData = ref('');
+
+const UpdateNotification = async () => {   
+    preloader.value = true;
+    try { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification/update', Notification, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+
+        if (response.data.status) {    
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            }); 
+
+            preloader.value = false;
+            
+        }else{
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+            });
+
+            preloader.value = false;
+        }
+    } catch (error) {
+        toast.error('Action successful', {
+            position: 'bottom-right', // Set the desired position
+        });
+    }
+}
 
 onBeforeMount(() => {  
-    propsData.value = props.data[route.params.type][route.params.id];
-    console.log(props.data[route.params.type][route.params.id]);
+    fetchNotification();
 });
 
 </script>
@@ -82,7 +216,7 @@ onBeforeMount(() => {
             <!-- Time format -->
             <HbDropdown 
                     
-                v-model="propsData.template"  
+                v-model="Notification[$route.params.type][$route.params.id].template"  
                 required= "true" 
                 :label="$tfhb_trans('Select Template')"  
                 width="50"
@@ -94,7 +228,7 @@ onBeforeMount(() => {
             /> 
             <!-- Time format --> 
             <HbText  
-                v-model="propsData.from"   
+                v-model="Notification[$route.params.type][$route.params.id].from"   
                 type="email"
                 width="50"
                 :label="$tfhb_trans('From')"  
@@ -103,7 +237,7 @@ onBeforeMount(() => {
             /> 
 
             <HbText  
-                v-model="propsData.subject"  
+                v-model="Notification[$route.params.type][$route.params.id].subject"  
                 required= "true"  
                 :label="$tfhb_trans('Subject')"  
                 selected = "1"
@@ -117,7 +251,7 @@ onBeforeMount(() => {
                     <!--if has label show label with tag else remove tags  --> 
                     <label for="">{{ $tfhb_trans('Mail Body') }}</label>  
                     <Editor 
-                        v-model="propsData.body"  
+                        v-model="Notification[$route.params.type][$route.params.id].body"  
                         :placeholder="$tfhb_trans('Mail Body')"    
                         editorStyle="height: 250px" 
                     />
@@ -130,12 +264,12 @@ onBeforeMount(() => {
 
             <HbButton  
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                @click="emit('update-notification')"
+                @click="UpdateNotification"
                 :buttonText="$tfhb_trans('Update')" 
                 icon="ChevronRight"
                 hover_icon="ArrowRight"
                 :hover_animation="true"
-                :pre_loader="props.update_preloader"
+                :pre_loader="preloader"
             />  
 
         </div>

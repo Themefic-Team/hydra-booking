@@ -139,7 +139,6 @@ const attendeeBookingReminderPopUp = ref(false);
 
 
 // Update Notification 
-
 const changeTab = (e) => {  
     // get data-tab attribute value of clicked button
     const tab = e.target.getAttribute('data-tab'); 
@@ -216,7 +215,11 @@ onBeforeMount(() => {
     <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard ">
   
         <div  class="tfhb-dashboard-heading  ">
-            <div class="tfhb-admin-title tfhb-m-0"> 
+            <div class="tfhb-admin-title tfhb-m-0" v-if="$route.params.id"> 
+                <h1 class="tfhb-capitalize">{{ $route.params.type }}</h1> 
+                <p class="tfhb-capitalize">{{ $route.params.id.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
+            </div>
+            <div class="tfhb-admin-title tfhb-m-0" v-else> 
                 <h1 >{{ $tfhb_trans('Notifications') }}</h1> 
                 <p>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
             </div>
@@ -226,12 +229,12 @@ onBeforeMount(() => {
         </div>
         <div class="tfhb-content-wrap">
             <!-- Gmail -->
-            <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">
+            <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16" v-if="!$route.params.id">
                 <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn"  :class="host ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }} </button>
                 <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="attendee ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
  
-            <div v-if="host" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+            <div v-if="host && !$route.params.id" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
  
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -311,7 +314,7 @@ onBeforeMount(() => {
                 <!-- <router-view :notifications="Notification" /> -->
  
             </div> 
-            <div v-if="attendee"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box "> 
+            <div v-if="attendee && !$route.params.id"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box "> 
 
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -322,6 +325,9 @@ onBeforeMount(() => {
                     :ispopup="attendeeBookingConfirmPopUp"
                     @popup-open-control="attendeeBookingConfirmPopUp = true"
                     @popup-close-control="attendeeBookingConfirmPopUp = false"
+                    :isSingle="true"
+                    categoryKey="attendee"
+                    emailKey="booking_confirmation"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -334,6 +340,9 @@ onBeforeMount(() => {
                     :ispopup="attendeeBookingPendingPopUp"
                     @popup-open-control="attendeeBookingPendingPopUp = true"
                     @popup-close-control="attendeeBookingPendingPopUp = false"
+                    :isSingle="true"
+                    categoryKey="attendee"
+                    emailKey="booking_pending"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -347,6 +356,9 @@ onBeforeMount(() => {
                     :ispopup="attendeeBookingCancelPopUp"
                     @popup-open-control="attendeeBookingCancelPopUp = true"
                     @popup-close-control="attendeeBookingCancelPopUp = false"
+                    :isSingle="true"
+                    categoryKey="attendee"
+                    emailKey="booking_cancel"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -358,6 +370,9 @@ onBeforeMount(() => {
                     :ispopup="attendeeBookingReschedulePopUp"
                     @popup-open-control="attendeeBookingReschedulePopUp = true"
                     @popup-close-control="attendeeBookingReschedulePopUp = false"
+                    :isSingle="true"
+                    categoryKey="attendee"
+                    emailKey="booking_reschedule"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -370,13 +385,24 @@ onBeforeMount(() => {
                     :ispopup="attendeeBookingReminderPopUp"
                     @popup-open-control="attendeeBookingReminderPopUp = true"
                     @popup-close-control="attendeeBookingReminderPopUp = false"
+                    :isSingle="true"
+                    categoryKey="attendee"
+                    emailKey="booking_reminder"
                 /> 
                 <!-- Single Integrations  -->
  
  
             </div> 
-
-            <router-view :data="Notification" />
+            
+            <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-mb-24" :to="{ name: 'SettingsNotifications' }" v-if="$route.params.id">
+                <Icon name="ArrowLeft" :width="20"/>
+                {{ $tfhb_trans('Back') }}
+            </router-link>
+           
+            <router-view 
+            v-if="$route.params" 
+            @update-notification="UpdateNotification" 
+            />
 
         </div>
     </div>
