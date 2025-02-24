@@ -1,5 +1,44 @@
 .tfhb-question-box{
     width: 100%;
+    .tfhb-single-question-box{
+        .tfhb-question-label{
+            margin: 4px 0;
+            label{
+                margin: 0 !important;
+            }
+        }
+        .status{ 
+            display: inline-block;
+            background: $success-background ;
+            color: $success-text !important;
+            padding: 2px 8px;
+            border-radius: 16px;
+            font-size: 11px !important;
+            &.disabled{
+                background-color: $warning-background;
+                color: $warning-text !important;
+            }
+            &.info{
+                background-color: $info-background;
+                color: $info-text !important;   
+            }
+        }
+        
+        &.tfhb-disable{
+            opacity: 0.7;
+        }
+        .tfhb-question-type{ 
+            position: relative;
+            .tfhb-question-type-tags{
+                position: absolute;
+                right: 8px;
+                top: 4px;
+               
+            }
+            
+        }
+       
+    }
     .tfhb-flexbox{
         flex-wrap: nowrap !important;
         select{
@@ -25,6 +64,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color:  $secondary-default;
         }
     }
     .tfhb-single-form-field.tfhb-flexbox{

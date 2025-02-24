@@ -320,15 +320,21 @@ class Signup {
                 $response['message'] = $user_id->get_error_message();
             } else {
                 $user = get_user_by( 'ID', $user_id );
+                $settings = get_option('_tfhb_frontend_dashboard_settings');
+
+                $disable_email_verification = isset($settings['signup']['disable_email_verification']) ? sanitize_text_field($settings['signup']['disable_email_verification']) : false;
+
                 // update user first name and last name
                 update_user_meta( $user->ID, 'first_name', $field['tfhb_first_name'] );
 
                 update_user_meta( $user->ID, 'last_name', $field['tfhb_last_name'] );
 
                 // update user activation code 
+                
 			    $code = $this->tfhb_generate_random_string( 32 );
                 update_user_meta( $user->ID, 'tfhb_user_activation_code', $code );
-                update_user_meta( $user->ID, 'tfhb_user_is_activated', false );
+
+             
 
                 // $user->set_role( $user_role );
                 // $response['success'] = true;
@@ -350,8 +356,16 @@ class Signup {
                         'about'          => '',
                         'avatar'         => '',
                         'featured_image' => '',
-                        'status'         => 'deactivate',
+                        // 'status'         => 'deactivate',
                     );
+
+                    if ($disable_email_verification){ 
+                        update_user_meta( $user->ID, 'tfhb_user_is_activated', true );
+                        $data['status'] = 'activate';
+                    }else{ 
+                        update_user_meta( $user->ID, 'tfhb_user_is_activated', false );
+                        $data['status'] = 'deactivate';
+                    }
             
                     // get Default Availability
                     $Availability = new Availability();
@@ -374,16 +388,28 @@ class Signup {
                     $hostInsert = $host->add( $data );
                    
                     if ( $hostInsert ) {
-                       
-                        // Send activation email 
-                        $this->tfhb_send_activation_code($data, $code);
+                        
 
-                         unset( $data['user_id'] );
+                        if ($disable_email_verification){  
+                            // Send activation email 
+                            $this->tfhb_send_email_confirmation($data);
+
+                            $response['message'] = esc_html__( 'Your account has been created successfully. You can login using your email and password.', 'hydra-booking' );
+                        }else{ 
+                            // Send activation email 
+                            $this->tfhb_send_activation_code($data, $code);
+
+                            $response['message'] = esc_html__( 'Your account has been created successfully. A confirmation email has been sent to your email address.', 'hydra-booking' );
+                        }
+
+
+                        unset( $data['user_id'] );
                         $data['host_id'] = $hostInsert['insert_id'];
                         // Update user Option
                         update_user_meta( $user_id, '_tfhb_host', $data );
+
+
                         $response['success'] = true;
-                        $response['message'] = esc_html__( 'Your account has been created successfully. A confirmation email has been sent to your email address.', 'hydra-booking' );
                     }
                 }
 
@@ -420,6 +446,30 @@ class Signup {
         wp_mail( $email, $subject, $message, $headers );
 
     }
+    /**
+     * Send Email Confirmation 
+     *
+     * @param array $data
+     * @param string $activation_code
+     * @return void
+     */
+    public function tfhb_send_email_confirmation( $data ) {
+
+       // send confirmation email 
+       $email = $data['email'];
+       $name = $data['first_name'] . ' ' . $data['last_name'];
+        $subject = esc_html__( 'Your account has been activated', 'hydra-booking' );
+        $message = '<p>' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $name . '</p>';
+        $message .= '<p>' . esc_html__( 'Your account has been successfully activated.', 'hydra-booking' ) . '</p>'; 
+
+        $headers = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>' . "\r\n";
+        $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n"; 
+
+        wp_mail( $email, $subject, $message, $headers );
+
+    }
+
+
  
 
 }

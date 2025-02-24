@@ -8,6 +8,7 @@ const FrontendDashboard = reactive({
     pages: [],
     fd_dashboard: {
         general: {
+            enable_fd_dashboard: false,  
             dashboard_logo: '',  
             mobile_dashboard_logo: '', 
             colors_palette : 'default',
@@ -29,6 +30,7 @@ const FrontendDashboard = reactive({
             after_registration_redirect_type: '',
             after_registration_redirect: '',
             after_registration_redirect_custom: '',
+            disable_email_verification: false,
         },
         login: {
             login_page_title: '',

@@ -9,6 +9,7 @@ import FrontendDashboard from '@/store/settings/fd-dashboard.js'
 import { LicenseBase } from '@/store/license'; 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 
+import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 
 // Get Current Route url
 onBeforeMount(() => { 
@@ -20,11 +21,17 @@ onBeforeMount(() => {
  
 </script>
 <template> 
-    <div :class="{ 'tfhb-skeleton': false }" class="thb-host-dashboard "> 
+    <div :class="{ 'tfhb-skeleton': FrontendDashboard.skeleton }" class="thb-host-dashboard "> 
         <div  class="tfhb-dashboard-heading tfhb-mb-16">
          
             <div class="tfhb-admin-title "> 
-                <h1 >{{ $tfhb_trans('Frontend Dashboard Settings') }}</h1> 
+                <h1 class="tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Frontend Dashboard') }} 
+                    <HbSwitch 
+                        v-model="FrontendDashboard.fd_dashboard.general.enable_fd_dashboard" 
+                        :label="''"  
+                        @change="FrontendDashboard.updateFrontendDashboardSettings()" 
+                    />
+                </h1> 
                 <p>{{ $tfhb_trans('Manage the settings and preferences for the frontend dashboard') }} </p>
             </div>
             <div class="thb-admin-btn right"> 

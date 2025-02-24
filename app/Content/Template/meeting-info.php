@@ -30,7 +30,29 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 // display short 
 
+$selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $meeting['availability_custom']['time_zone'] : 'UTC';
+if ( 'settings' === $meeting['availability_type'] ) {
+	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
+	// tfhb_print_r( $host );
+		
+	if($_tfhb_availability_settings['availability_type'] === 'settings' ){
+		// Get Global Settings
+		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
+		
+		$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
 
+		if ( in_array( $key, array_keys( $_tfhb_availability_settings_global ) ) ) {
+			$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+		}
+
+
+	}elseif ( in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
+	}
+		
+}
+
+$host_feature_image_link = isset($host['featured_image']) && !empty($host['featured_image']) ? $host['featured_image'] : TFHB_URL . 'assets/app/images/meeting-cover.png';
 ?> 
 
 <div class="tfhb-meeting-info"> 
@@ -56,7 +78,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		}
 		?>
 	</div>  
-	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_attr(TFHB_URL . 'assets/app/images/meeting-cover.png'); ?>) ;">
+	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_url($host_feature_image_link); ?>) ;">
 		<div class="tfhb-host-profile tfhb-flexbox tfhb-gap-8">
 			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : '<img src="' . TFHB_URL.'assets/images/avator.png' . '" alt="">'; ?>
 			
@@ -124,7 +146,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 						$location_value = 'Organizer Phone Number';
 					
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
-						$location_value = 'In Person (Attendee Address) ';
+						$location_value = 'In Person (Attendee Address)';
 					}else{
 						$location_value = $location['location'];
 					}
@@ -181,30 +203,8 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 			
 			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone_<?php echo esc_attr($meeting['id']) ?>">
 				<?php
-				if ( ! empty( $time_zone ) ) {
-
-					$selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $meeting['availability_custom']['time_zone'] : 'UTC';
-					if ( 'settings' === $meeting['availability_type'] ) {
-						$_tfhb_availability_settings = get_user_meta( $meeting['host_id'], '_tfhb_host', true );
-						 
-						if($_tfhb_availability_settings['availability_type'] === 'settings' ){
-							// Get Global Settings
-							$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
-							
-							$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
-
-							if ( in_array( $key, array_keys( $_tfhb_availability_settings_global ) ) ) {
-								$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
-							}
-
-					
-						}elseif ( in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
-							$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
-						}
-						 
-					}
-					// $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
-
+			
+				if ( ! empty( $time_zone ) ) {  
 					foreach ( $time_zone as $key => $zone ) {
 						$selected = ( $zone['value'] == $selected_timezone ) ? 'selected' : '';
 						echo '<option value="' . esc_attr( $zone['value'] ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $zone['name'] ) . '</option>';

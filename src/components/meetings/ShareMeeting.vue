@@ -109,7 +109,7 @@ const ShareTabs = (tab) => {
                             <HbButton 
                                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
                                 @click="copyMeeting(props.shareData.link)" 
-                                :buttonText="$tfhb_trans('Copy Code')" 
+                                :buttonText="$tfhb_trans('Copy Link')" 
                             />  
                         </div>
                     </div>

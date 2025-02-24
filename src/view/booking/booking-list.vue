@@ -945,16 +945,17 @@ const changeToDate = (value) => {
     </template>
 
     <template #content> 
-
+        
         <HbDropdown  
             v-model="singleCalendarBookingData.status"
             :label="$tfhb_trans('Status')" 
-            :selected = "1"
+            :selected = "1" 
             :placeholder="$tfhb_trans('Select Booking status')"   
             :option = "[
                 {'name': 'Pending', 'value': 'pending'},  
                 {'name': 'Confirmed', 'value': 'confirmed'},   
-                {'name': 'Re-schedule', 'value': 'schedule'},   
+                {'name': 'Completed', 'value': 'completed'},   
+                // {'name': 'Re-schedule', 'value': 'schedule'},   
                 {'name': 'Canceled', 'value': 'canceled'}
             ]"
             @tfhb-onchange="Booking_Status_Callback" 
@@ -980,7 +981,7 @@ const changeToDate = (value) => {
             </div>
         </div>
 
-        <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width">
+        <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width tfhb-gap-8">
             <!-- <a href="#" class="tfhb-btn boxed-btn flex-btn"><Icon name="Video" size=20 /> {{ $tfhb_trans('Join Meet') }}</a> -->
 
             <HbButton  
@@ -988,6 +989,16 @@ const changeToDate = (value) => {
                 @click="deleteBooking(singleCalendarBookingData.booking_id, singleCalendarBookingData.host_id)"
                 :buttonText="$tfhb_trans('Delete')"
                 icon="Trash2"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            /> 
+ 
+
+            <HbButton  
+                @click.stop="Tfhb_Booking_View(singleCalendarBookingData.booking_id)"
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"  
+                :buttonText="$tfhb_trans('View')"
+                icon="Eye"   
                 :hover_animation="false" 
                 icon_position = 'left'
             /> 

@@ -916,6 +916,7 @@ class HostsController {
 		// Response
 		$data = array(
 			'status'       => true,
+			'message'     =>  __( 'Availability Settings Deleted Successfully', 'hydra-booking' ),
 			'availability' => $_tfhb_host_availability_settings['availability'],
 		);
 		return rest_ensure_response( $data );

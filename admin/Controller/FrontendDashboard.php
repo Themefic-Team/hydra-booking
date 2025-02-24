@@ -145,6 +145,7 @@ class FrontendDashboard {
         $request =  json_decode(file_get_contents('php://input'), true);
         $settings = get_option('_tfhb_frontend_dashboard_settings');
         $fd_dashboard = isset($request['fd_dashboard']) ? $request['fd_dashboard'] : array();
+        $settings['general']['enable_fd_dashboard'] = isset($fd_dashboard['general']['enable_fd_dashboard']) ? sanitize_text_field($fd_dashboard['general']['enable_fd_dashboard']) : '';
         $settings['general']['dashboard_logo'] = isset($fd_dashboard['general']['dashboard_logo']) ? esc_url($fd_dashboard['general']['dashboard_logo']) : '';
         $settings['general']['mobile_dashboard_logo'] = isset($fd_dashboard['general']['mobile_dashboard_logo']) ? esc_url($fd_dashboard['general']['mobile_dashboard_logo']) : '';
         $settings['general']['colors_palette'] = isset($fd_dashboard['general']['colors_palette']) ? sanitize_text_field( $fd_dashboard['general']['colors_palette']) : '';
@@ -167,6 +168,7 @@ class FrontendDashboard {
         $settings['signup']['after_registration_redirect_type'] = isset($fd_dashboard['signup']['after_registration_redirect_type']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect_type']) : '';
         $settings['signup']['after_registration_redirect'] = isset($fd_dashboard['signup']['after_registration_redirect']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect']) : '';
         $settings['signup']['after_registration_redirect_custom'] = isset($fd_dashboard['signup']['after_registration_redirect_custom']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect_custom']) : '';
+        $settings['signup']['disable_email_verification'] = isset($fd_dashboard['signup']['disable_email_verification']) ? sanitize_text_field($fd_dashboard['signup']['disable_email_verification']) : '';
 
         
         $settings['login']['login_page'] = isset($fd_dashboard['login']['login_page']) ? sanitize_text_field($fd_dashboard['login']['login_page']) : '';

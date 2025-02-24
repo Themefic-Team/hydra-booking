@@ -214,12 +214,12 @@
                         &:after {
                             content: "";
                             position: absolute;
-                            left: 6px;
+                            left: 7px;
                             top: 2px;
                             width: 4px;
                             height: 8px;
                             border: $border-type $surface-secondary;
-                            border-width: 0 3px 3px 0;
+                            border-width: 0 2px 2px 0;
                             -webkit-transform: rotate(45deg);
                             -ms-transform: rotate(45deg);
                             transform: rotate(45deg);
@@ -290,16 +290,17 @@
                 &:after {
                     content: "";
                     position: absolute;
-                    left: 6px;
+                    left: 7px;
                     top: 2px;
                     width: 4px;
                     height: 8px;
                     border: $border-type $surface-secondary;
-                    border-width: 0 3px 3px 0;
+                    border-width: 0 2px 2px 0;
                     -webkit-transform: rotate(45deg);
                     -ms-transform: rotate(45deg);
                     transform: rotate(45deg);
                     display: none;
+                    box-sizing: unset;
                 }
             }
 
@@ -358,7 +359,7 @@
         height: 72px;
         width: 72px;
         overflow: hidden;
-        border: $fields-border $border-type #ddd !important;
+        border: $fields-border $border-type #ddd ;
 
         &:hover {
             .tfhb-image-btn {

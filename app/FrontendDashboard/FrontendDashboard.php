@@ -22,10 +22,16 @@ class FrontendDashboard {
      * 
      * @author Sydur Rahman 
      */
-    public function __construct() { 
+    public function __construct() {  
+
+        if(!self::is_frontend_dashboard_enabled()){
+            return false;
+        }
 
         // Define Constants
         $this->define_constants();
+
+        
 
         // Load Shortcode
         new Signup();
@@ -53,8 +59,7 @@ class FrontendDashboard {
 			'^meeting/([0-9]+)/?$',
 			'index.php?hydra-booking=email-verification&tfhb_verification=$matches[1]',
 			'top'
-		);
-        
+		); 
 
         // Page Template
         add_filter( 'template_include', array( $this, 'tfhb_single_page_template' ) );
@@ -64,7 +69,12 @@ class FrontendDashboard {
 
         // reset password  
         add_action( 'wp_ajax_nopriv_tfhb_reset_password', array( $this, 'tfhb_reset_password_callback' ) );
- 
+
+        // prevent admin access for roles
+        add_action('admin_init', array( $this, 'tfhb_prevent_admin_access_for_roles' ) ); 
+
+        // redirect to dashboard after login
+        add_action( 'login_redirect', array( $this, 'tfhb_redirect_to_dashboard' ), 10, 3 );
        
     }
 
@@ -83,6 +93,8 @@ class FrontendDashboard {
 
     }
 
+    
+
      /**
      * query vars
      * 
@@ -96,12 +108,31 @@ class FrontendDashboard {
     }
 
     /**
+     * Check Frontend Dashboard enable or not
+     * 
+     * @return void
+     * @since 1.0.0
+     * @author Sydur Rahman
+     */
+
+    public static function is_frontend_dashboard_enabled() {
+        $settings = get_option('_tfhb_frontend_dashboard_settings'); 
+        $enable_fd_dashboard = isset($settings['general']['enable_fd_dashboard']) ? sanitize_text_field($settings['general']['enable_fd_dashboard']) : false;
+        if ( $enable_fd_dashboard ) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+      /**
      * Page Template
      * 
      * @return void
      * @since 1.0.0
      * @author Sydur Rahman
      */
+
 
     public function tfhb_single_page_template( $template ) {
 
@@ -301,12 +332,7 @@ class FrontendDashboard {
         // load frontend dashboard template
         if ( $page_template == 'tfhb-frontend-dashboard.php' ) {
             if( is_user_logged_in() ) {
-            //     global $post;
-            //     $page_id = $post->ID;
-            //     echo "<pre>";
-            //    print_r($page_id);
-            //     echo '</pre>';
-            //     new Enqueue();
+             
 
                 $template = TFHB_FD_DASHBOARD_TEMPLATE_PATH . 'frontend-dashboard.php';
             }else{
@@ -455,13 +481,62 @@ class FrontendDashboard {
 
 
     /**
-     * Forgot Password
+     *  Prevent Admin Access for Roles
      * 
      * @author Sydur
      */
 
-     public function tfhb_forgot_password(){
+     public function tfhb_prevent_admin_access_for_roles(){
+        $admin_roles = array('tfhb_host');
+        $current_user = wp_get_current_user();
+
+        if(in_array($current_user->roles[0], $admin_roles)){ 
+            // return to frontend dashboard
+            $settings = get_option('_tfhb_frontend_dashboard_settings');
+            $after_login_redirect_type = isset($settings['login']['after_login_redirect_type']) && !empty($settings['login']['after_login_redirect_type']) ? $settings['login']['after_login_redirect_type'] :  'page';
+
+            $after_login_redirect = isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
+            $after_login_redirect_custom = isset($settings['login']['after_login_redirect_custom']) && !empty($settings['login']['after_login_redirect_custom']) ? $settings['login']['after_login_redirect_custom'] :  '';
+
+            if('page' == $after_login_redirect_type || empty($after_login_redirect_custom)){
+                $redirect_url = get_permalink( $after_login_redirect );
+            }else{ 
+                $redirect_url = esc_url($after_login_redirect_custom);
+            }
+            wp_redirect($redirect_url);
+            exit; // Prevent further script execution after redirection
+             
+        }
 
      }
+
+    /**
+     *  Redirect to the correct login page after logout
+     * 
+     * @author Sydur
+     */
+    public function tfhb_redirect_to_dashboard($redirect_to, $request, $user){
+        if (!is_wp_error($user) && is_a($user, 'WP_User')) {
+            $restricted_roles = ['tfhb_host', ]; // Add roles to restrict
+    
+            if (array_intersect($restricted_roles, $user->roles)) {
+                 // return to frontend dashboard
+                $settings = get_option('_tfhb_frontend_dashboard_settings');
+                $after_login_redirect_type = isset($settings['login']['after_login_redirect_type']) && !empty($settings['login']['after_login_redirect_type']) ? $settings['login']['after_login_redirect_type'] :  'page';
+
+                $after_login_redirect = isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
+                $after_login_redirect_custom = isset($settings['login']['after_login_redirect_custom']) && !empty($settings['login']['after_login_redirect_custom']) ? $settings['login']['after_login_redirect_custom'] :  '';
+
+                if('page' == $after_login_redirect_type || empty($after_login_redirect_custom)){
+                    $redirect_url = get_permalink( $after_login_redirect );
+                }else{ 
+                    $redirect_url = esc_url($after_login_redirect_custom);
+                }
+                return $redirect_url; // Change to desired redirect URL
+            }
+        }
+        return $redirect_to;
+    }
+
 
 }

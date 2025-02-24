@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import HbQuestion from '@/components/widgets/HbQuestion.vue'; 
-import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbColor from '@/components/form-fields/HbColor.vue'; 
 import HbColorPalette from '@/components/form-fields/HbColorPalette.vue'; 
 import LvColorpicker from 'lightvue/color-picker';
@@ -62,7 +61,7 @@ const ChangeColors = (value,  colors) => {
         
         <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('General Settings') }} </h2> 
         <p>{{ $tfhb_trans('Manage the general settings and preferences for the frontend dashboard') }}</p>
-    </div> 
+    </div>  
     <div class="tfhb-admin-card-box">   
 
         <div class="tfhb-single-form-field-wrap tfhb-flexbox">
@@ -101,8 +100,8 @@ const ChangeColors = (value,  colors) => {
     </div>
 
     <div class="tfhb-admin-title" >
-        <h2>{{ $tfhb_trans('Frontend dashboard custom brand colors') }}</h2> 
-        <p>{{ $tfhb_trans('Customize your own brand color into Frontend Dashboard') }}</p>
+        <h2>{{ $tfhb_trans('Select Color Palette for Dashboard') }}</h2> 
+        <p>{{ $tfhb_trans('Customize your brand colors for the Frontend Dashboard.') }}</p>
     </div>
 
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16"> 

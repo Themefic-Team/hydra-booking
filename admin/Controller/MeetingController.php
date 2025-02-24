@@ -644,6 +644,18 @@ class MeetingController {
 		$current_user = wp_get_current_user();
 		// get user id
 		$current_user_id = $current_user->ID;
+		$host = new Host ();
+		$host_data = $host->getHostByUserId( $current_user_id ); 
+		
+		// if host is not found, return error 
+		if( empty($host_data) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __( 'Host not found', 'hydra-booking' ),
+				)
+			);
+		}
 
 		if(tfhb_is_pro_active() == false && $request_data['meeting_type'] == 'one-to-group'){
 			return rest_ensure_response(
@@ -663,9 +675,10 @@ class MeetingController {
 			'post_author' => $current_user_id,
 		);
 		$meeting_post_id   = wp_insert_post( $meeting_post_data );
- 
+		
 		$data = array(
 			'user_id'      => $current_user_id,
+			'host_id'      => $host_data->id,
 			'meeting_type' => isset( $request_data['meeting_type'] ) ? sanitize_text_field( $request_data['meeting_type'] ) : '',
 			'post_id'      => $meeting_post_id,
 			'created_by'   => $current_user_id,
@@ -1064,7 +1077,29 @@ class MeetingController {
 		$host_data = $host->getHostById( $data['host_id'] );
 		if($host_data){ 
 			$data['user_id'] = $host_data->user_id;
+		} 
+
+		// this is a temporay fix it will be removed in version 2.0.0 or higher version
+		foreach($data['questions'] as $key => $question){
+
+			if(!isset($question['name']) || empty($question['name'])){
+				$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
+
+				 
+                $count = count( array_filter( array_map( function($item) use ($baseName) { return $item['name'] == $baseName; }, $data['questions'] ) ) );
+                if ( $count > 0 ) {
+                    $uniqueName = $baseName. '_'. substr( md5( mt_rand() ), 0, 2 );
+                } else {
+                    $uniqueName = $baseName;
+                } 
+                $data['questions'][$key]['name'] = $uniqueName; 
+			}
+			if(!isset($question['enable']) ) {
+				$data['questions'][$key]['enable'] = 1;
+			}
+
 		}
+		// ******** end of fix
 
 		// if Payment Methood is woo_payment
 		if ( 'woo_payment' == $data['payment_method'] &&  class_exists( 'WooCommerce' ) ) {

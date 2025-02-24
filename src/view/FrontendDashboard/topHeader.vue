@@ -56,6 +56,9 @@ function hideDropdownOutsideClick(e) {
     if (!document.querySelector('.tfhb-header-notification').contains(e.target)) {
         displayNotification.value = false;
     }
+    if (!document.querySelector('.tfhb-header-profile-dropdown').contains(e.target)) {
+        profileDropdown.value = false;
+    }
 }
 onBeforeMount(() => {  
     window.addEventListener('click', hideDropdownOutsideClick); 
@@ -106,6 +109,10 @@ const toggleSidebar = () => {
     <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox">
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >
+
+                <a  class="responsive-header-icon"  v-if="'' != FdDashboard.site_settings.mobile_dashboard_logo"   :href="FdDashboard.site_settings.dashboard_url" >
+                    <img :src="FdDashboard.site_settings.mobile_dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
+                </a>
                 <span class="tfhb-responsive-menu-trigger" @click="toggleSidebar()">
                     <Icon name="Menu" size=20 /> 
                 </span>
@@ -113,9 +120,6 @@ const toggleSidebar = () => {
                 <a  v-if="'' == FdDashboard.site_settings.dashboard_logo" :href="FdDashboard.site_settings.dashboard_url" class="desktop-header-icon" >{{ FdDashboard.site_settings.blog_title }}</a>
                 <a  v-else  :href="FdDashboard.site_settings.dashboard_url" >
                     <img class="desktop-header-icon" :src="FdDashboard.site_settings.dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
-                </a>
-                <a  v-if="'' != FdDashboard.site_settings.mobile_dashboard_logo"   :href="FdDashboard.site_settings.dashboard_url" >
-                    <img class="responsive-header-icon" :src="FdDashboard.site_settings.mobile_dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
                 </a>
              
 
@@ -142,7 +146,7 @@ const toggleSidebar = () => {
                             <!-- {{ notifications }} -->
                         </div>
 
-                        <div class="tfhb-notification-wrap tfhb-scrollbar">
+                        <div  v-if="props.notifications.length > 0" class="tfhb-notification-wrap tfhb-scrollbar">
                             
                             <!-- Single Notifaction wrap -->
                             <div v-for=" notification in props.notifications" :key="notification.id" class="tfhb-single-notification tfhb-flexbox tfhb-gap-16"
@@ -156,12 +160,11 @@ const toggleSidebar = () => {
                                     <p> {{notification.value.message}}</p>
 
                                 <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago </span>
-                                </div>
-                                
-
-
+                                </div> 
                             </div> 
+                        <!-- emti then display on notifcation here --> 
                         </div>
+                        <p v-if="props.notifications.length == 0" style="text-align:center; padding:12px"> {{ $tfhb_trans('No notifications found') }} </p>
                     </div>
                 </transition>
             </div>

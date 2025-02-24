@@ -60,10 +60,11 @@
 
 						span {
 							padding: 4px 8px;
-							background-color: $info-background;
-							color: $info-text;
+							background-color: $info-background !important;
+							color: $info-text !important;
 							border-radius: 16px;
-							font-size: $text-font-size-small;
+							font-size: $text-font-size-small !important;
+							font-weight: 400;
 						}
 					}
 				}

@@ -12,12 +12,14 @@ if($page != "email-verification" || !$tfhb_verification) {
 }
  
 $data = base64_decode($tfhb_verification);
+ 
 $data = json_decode($data, true);
 
 $user_id = $data ? $data['id'] : '';
 $data_code = $data ? $data['code'] : '';
 $saved_code = !empty($user_id) ? get_user_meta($user_id, 'tfhb_user_activation_code', true) : '';
 $tfhb_user_is_activated = !empty($user_id) ? get_user_meta($user_id, 'tfhb_user_is_activated', true) : '';
+
 
 
 $frontend_dashboard_settings = get_option('_tfhb_frontend_dashboard_settings');

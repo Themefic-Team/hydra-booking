@@ -292,7 +292,7 @@ const truncateString = (str, num) => {
         </template> 
     </HbPopup>
 
-    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
+    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="542px" name="first-modal">
         <template #header> 
 
             

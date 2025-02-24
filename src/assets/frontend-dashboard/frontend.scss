@@ -7,7 +7,7 @@ html {
 
 #tfhb-admin-app {
     background-color: $surface-primary;
-
+ 
     .tfhb-frontend-top-header {
         margin-bottom: 0 !important;
         min-height: 60px;
@@ -23,7 +23,9 @@ html {
 
             .tfhb-dropdown-wrap {
                 width: auto !important;
+                min-width: 150px;
             }
+            
 
             @media #{$max450} {
                 .tfhb-profile-name {
@@ -83,7 +85,7 @@ html {
                 }
             }
 
-            @media #{$max450} {
+            @media #{$max570} {
                 .tfhb-admin-header-title {
                     display: none;
                 }
@@ -105,7 +107,26 @@ html {
 
     .tfhb-frontend-dashboard {
         padding: 8px;
-        
+        margin-bottom: 32px;
+        .tfhb-single-meeting{
+            border: none;
+        }
+        .user-info-icon{
+            svg{
+                margin-top: 0;
+            }
+        }
+        .tfhb-hydra-dasboard-content {
+            width: 100%;
+        }
+        .tfhb-field-date { 
+            .tfhb-flat-icon {
+                position: absolute;
+                right: 8px;
+                top: 6px;
+                bottom: auto;
+            }
+        }
         .tfhb-popup-wrap{
             .tfhb-availability-schedule-single{
                 // align-items: center !important;
@@ -153,6 +174,9 @@ html {
                     border-bottom: 1px solid $surface-border;
                 }
             }
+            .tfhb-booking-calendar tr td{
+                border: 1px solid $surface-border;
+            }
 
             .tfhb-admin-frontend-end-wrap,
             .tfhb-admin-booking,
@@ -193,9 +217,7 @@ html {
                 .tfhb-hydra-wrap {
                     margin: 0;
 
-                    .tfhb-hydra-dasboard-content {
-                        width: 100%;
-                    }
+                   
                 }
 
                 .tfhb-integrations-single-block {
@@ -246,7 +268,7 @@ html {
                         background-color: $primary-default;
                         border-radius: 8px;
                         padding: 4px !important; 
-                        min-width: 200px;
+                        min-width: 250px;
                         
                     }
  
@@ -265,6 +287,34 @@ html {
 
                 &.collapsed {
                     text-align: center;
+                }
+                @media #{$max767} { 
+                    display: none;
+                }
+            }
+            .tfhb-sidbar-responsive-close {
+                display: none;
+                @media #{$max767} { 
+                    display: block;
+                    width: 100%;
+                    text-align: right; 
+                    span{
+                        height: 32px;
+                        width: 32px;
+                        display: inline-block;
+                        background-color: $surface-secondary;
+                        text-align: center;
+                        border-radius: 50%;
+                        padding: 6px;
+                        cursor: pointer;
+                        svg{
+                            color:  $secondary-default !important;
+                        }
+                        &:hover{
+                            background-color: $secondary-hover;
+                            
+                        }
+                    }
                 }
             }
 
@@ -329,6 +379,9 @@ html {
                 font-size: 13px;
                 padding: 0 16px;
                 min-height: 20px;
+                // @media #{$max767} { 
+                //     display: none;
+                // }
             }
 
             .tfhb-frontend-sidebar-card {
@@ -355,8 +408,17 @@ html {
                     left: 8px;
                     visibility: visible;
                     opacity: 1;
+                    max-height: 100vh;
+                    overflow: auto;
                 }
 
+            }
+            @media #{$max767} { 
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 9999;
+                border-radius: 0;
             }
         }
   
@@ -368,40 +430,11 @@ html {
             padding: 32px;
             border-radius: 16px;
 
-            .tfhb-user-profile-image {
-                border-bottom: 1px solid #C0D8C4;
-                padding-bottom: 32px;
-
-                .tfhb-field-image {
-                    height: 136px;
-                    width: 136px;
-                    border: 4px solid #C0D8C4 !important;
-
-                    overflow: unset;
-
-                    .tfhb-image-btn {
-                        opacity: 1;
-                        visibility: visible;
-                        bottom: 6;
-                        height: 32px;
-                        width: 32px;
-                        z-index: 10;
-                        background-color: #F9FBF9;
-                        color: #273F2B;
-                        border-radius: 50%;
-                        border: 2px solid var(--Border, #C0D8C4);
-                        right: 0;
-                        left: auto;
-                        transition: $transition;
-                        padding: 0;
-                    }
-
-                    .tfhb-image-btn:hover {
-                        background-color: $primary-default;
-                        color: #fff;
-                    }
-                }
-            }
+            // .tfhb-host-profile-image-wrap {
+            //     // border-bottom: 1px solid #C0D8C4;
+            //     // padding-bottom: 32px;
+ 
+            // }
         }
 
         // Dashboard Page 
@@ -414,6 +447,16 @@ html {
                 }
             }
            }
+           @media #{$max991} {  
+                .tfhb-single-chartbox{
+                    width: calc(50% - 18px);
+                }
+            }
+            @media #{$max570} {  
+                .tfhb-single-chartbox{
+                    width: 100%;
+                }
+            }
         }
 
     }

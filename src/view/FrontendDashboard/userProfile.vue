@@ -9,7 +9,8 @@ const { errors } = useValidators();
 
 
 import { FdDashboard } from '@/store/frontend-dashboard.js';
- 
+import HbButton from '@/components/form-fields/HbButton.vue'
+
 // Get Current Route url 
 const route = useRoute();
 const skeleton = ref(true);
@@ -179,12 +180,12 @@ onBeforeMount(() => {
     fetchHost();
 });
     
+
 const imageChange = (attachment) => {   
-    FdDashboard.userAuth.featured_image = attachment.url; 
+    FdDashboard.userAuth.avatar = attachment.url; 
     const image = document.querySelector('.avatar_display'); 
     image.src = attachment.url; 
-    FdDashboard.updateUserProfile();
-
+    activeProfileDropdown.value = false;
 }
 const UploadImage = () => {   
     wp.media.editor.send.attachment = (props, attachment) => { 
@@ -192,25 +193,95 @@ const UploadImage = () => {
     imageChange(attachment);
     };  
     wp.media.editor.open(); 
+} 
+const EmptyImage = () => {   
+    FdDashboard.userAuth.avatar = ''; 
+    activeProfileDropdown.value = false;
 }
+    
+
+const imageChangeFeature = (attachment) => {   
+    FdDashboard.userAuth.featured_image = attachment.url; 
+    const image = document.querySelector('.featured_image_display'); 
+    image.src = attachment.url; 
+}
+const UploadImageFeature  = () => {   
+    wp.media.editor.send.attachment = (props, attachment) => { 
+    // set the image url to the input field
+    imageChangeFeature(attachment);
+    };  
+    wp.media.editor.open(); 
+}
+
+
+const EmptyImageFeatured  = () => {
+    FdDashboard.userAuth.featured_image = '';
+    activeCoverDropdown.value = false;
+} 
+// Profile Image and cover image dropdown
+const activeCoverDropdown = ref(false);
+const activeProfileDropdown = ref(false);
+
+// hide activeCoverDropdown when clicked outside
+document.addEventListener('click', (e) => { 
+    if ( !e.target.closest('.edit-profile-image')) { 
+        activeProfileDropdown.value = false;
+    }
+    if ( !e.target.closest('.edit-cover-image')) { 
+        activeCoverDropdown.value = false;
+    }
+});
     
 </script>
 
 <template> 
-    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="tfhbb-fd-user-profile-page tfhb-hydra-wrap tfhb-flexbox tfh-gap-32">   
-        
-        <div class="tfhb-single-form-field-wrap tfhb-user-profile-image tfhb-flexbox  tfhb-full-width">
-            <div class="tfhb-field-image" >  
-                <img v-if="FdDashboard.userAuth.featured_image ==''" class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >
-                <img v-else class='avatar_display'  :src="FdDashboard.userAuth.featured_image" >
-                <button class="tfhb-image-btn" @click="UploadImage"><Icon name="ImagePlus" size=20 /> </button> 
-                <input  type="text"  v-model="FdDashboard.userAuth.featured_image"   />  
+    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="tfhbb-fd-user-profile-page tfhb-hydra-wrap tfhb-flexbox tfh-gap-32">    
+        <div class="tfhb-admin-card-box tfhb-host-profile-image-wrap tfhb-full-width "   
+            :style="{
+                'background-image': FdDashboard.userAuth.featured_image != '' ? `url('${FdDashboard.userAuth.featured_image}')` : `url('${$tfhb_url}/assets/app/images/meeting-cover.png')`, 
+            }"
+        >
+            <span class="tfhb-profile-overlay"></span>
+            
+            <div class="tfhb-single-form-field-wrap avatar_display-wrap tfhb-flexbox" >
+                
+                <div   class="tfhb-field-image" > 
+                    <div  class="tfhb-dropdown edit-profile-image">  
+                        <span  @click="activeProfileDropdown = !activeProfileDropdown"> <Icon name="Edit" size=16 /></span> 
+                        <transition  name="tfhb-dropdown-transition">
+                            <div v-if="activeProfileDropdown" class="tfhb-dropdown-wrap"> 
+                                <span class="tfhb-dropdown-single"  @click="UploadImage" > <Icon name="Upload" size=20 /> {{ $tfhb_trans('Upload image') }}</span>
+                        
+                                <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="EmptyImage" ><Icon name="Trash2" size=20 />{{ $tfhb_trans('Delete') }}</span>
+                            </div>
+                        </transition>
+                    </div>
+                    <img v-if="FdDashboard.userAuth.avatar != ''"  class='avatar_display'  :src="FdDashboard.userAuth.avatar">
+                    <img v-else  class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >
+                    <input  type="text"  :v-model="FdDashboard.userAuth.avatar"   />  
+                </div>
+                <div class="tfhb-image-box-content">  
+                <h4 v-if="FdDashboard.userAuth.first_name"  >{{ FdDashboard.userAuth.first_name }}  {{ FdDashboard.userAuth.last_name }} </h4>
+                <p v-if="FdDashboard.userAuth.email"  class="tfhb-m-0">{{ FdDashboard.userAuth.email }}</p>
+                </div>
+            </div> 
+            <div  class="tfhb-dropdown edit-cover-image"> 
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn flex-btn"  
+                    :buttonText="$tfhb_trans('Edit cover image')"
+                    icon="Edit"   
+                    @click="activeCoverDropdown =!activeCoverDropdown"
+                    icon_position="left"  
+                /> 
+                <transition  name="tfhb-dropdown-transition">
+                    <div v-if="activeCoverDropdown" class="tfhb-dropdown-wrap"> 
+                        <span class="tfhb-dropdown-single" @click="UploadImageFeature" > <Icon name="Upload" size=20  /> {{ $tfhb_trans('Upload image') }}</span>
+                
+                        <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="EmptyImageFeatured"  ><Icon name="Trash2" size=20 />{{ $tfhb_trans('Delete') }}</span>
+                    </div>
+                </transition>
             </div>
-            <div class="tfhb-image-box-content">  
-            <h4 v-if="label !=''" :for="name">{{ FdDashboard.userAuth.first_name }}  {{ FdDashboard.userAuth.last_name }} <span  v-if="required == 'true'"> *</span> </h4>
-            <p v-if="description !=''"  class="tfhb-m-0">{{ FdDashboard.userAuth.email }}</p>
-            </div>
-        </div> 
+        </div>
  
         <nav class="tfhb-booking-tabs tfhb-full-width"> 
             <ul>

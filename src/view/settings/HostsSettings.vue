@@ -34,7 +34,7 @@ const updateHosts = async () => {
                 <ul>
                     <!-- to route example like hosts/profile/13/information -->
                     <li><router-link to="/settings/hosts-settings/information-builder" exact :class="{ 'active': $route.path === '/settings/hosts-settings/information-builder' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Information Builder') }}</router-link></li> 
-                    <li><router-link to="/settings/hosts-settings/permission" exact :class="{ 'active': $route.path === '/settings/hosts-settings/permission' }"> <Icon name="KeyRound" /> {{ $tfhb_trans('Permission') }}</router-link></li> 
+                    <li><router-link to="/settings/hosts-settings/permission" exact :class="{ 'active': $route.path === '/settings/hosts-settings/permission' }"> <Icon name="KeyRound" /> {{ $tfhb_trans('Permissions') }}</router-link></li> 
                     
                 </ul>  
             </nav>
