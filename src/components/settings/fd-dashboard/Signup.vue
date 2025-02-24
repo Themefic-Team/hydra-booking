@@ -24,7 +24,7 @@ const props = defineProps([
      <HbInfoBox  name="first-modal">
         
         <template #content>
-            <span>{{$tfhb_trans('Use shortcode [hydra_registration_form] to show registration form in post/page/widget.')}}</span> 
+            <span>{{$tfhb_trans('Use shortcode [hydra_signup_form] to show Sign up form in post/page/widget.')}}</span> 
         </template>
     </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-flexbox"> 
@@ -32,8 +32,7 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_title"  
             required= "true"  
             :label="$tfhb_trans('Sign up Title')"   
-            :subtitle="$tfhb_trans(`Type here custom Sign up title.`)" 
-            :description="$tfhb_trans(`Default : Sign up`)" 
+            :subtitle="$tfhb_trans(`Type here custom Sign up title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type Sign up title')" 
             width="50" 
@@ -42,8 +41,7 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_sub_title"  
             required= "true"  
             :label="$tfhb_trans('Sign up Sub-title')"   
-            :subtitle="$tfhb_trans(`Type here custom Sign up sub-title.`)" 
-            :description="$tfhb_trans(` Default : Please enter your details.`)" 
+            :subtitle="$tfhb_trans(`Type here custom Sign up sub-title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type Sign up sub-title')" 
             width="50" 
@@ -53,7 +51,7 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.registration_page"  
             required= "true" 
             :filter="true"
-            :subtitle="$tfhb_trans('Choose a page that will be used as the Registration Page.')"  
+            :subtitle="$tfhb_trans('Choose a page that will be used as the Sign up Page.')"  
             :label="$tfhb_trans('Registration Page')"  
             width="50"
             :selected = "1"
@@ -82,7 +80,7 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.after_registration_redirect"  
             required= "true" 
             :filter="true"
-            :subtitle="$tfhb_trans('Select the destination page for users after they log in.')"  
+            :subtitle="$tfhb_trans('Select the destination page for users after they Sign up.')"  
             :label="$tfhb_trans('Choose your Page')"  
             width="50"
             :selected = "1"
@@ -108,9 +106,9 @@ const props = defineProps([
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox"> 
         <HbSwitch 
-            v-model="props.FrontendDashboard.fd_dashboard.signup.disable_email_verification"  
+            v-model="props.FrontendDashboard.fd_dashboard.signup.enable_email_verification"  
             width="100"
-            :label="$tfhb_trans('Disable Email Verification')" 
+            :label="$tfhb_trans('Enable Email Verification')" 
         />
         
     </div>

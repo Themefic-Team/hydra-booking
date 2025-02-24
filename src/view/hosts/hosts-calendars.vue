@@ -125,8 +125,9 @@ const Integration = reactive( {
 
  // Fetch generalSettings
 const fetchIntegration = async () => { 
+    let host_id = route.params.id != undefined? route.params.id : props.hostId; 
     let data = {
-        id: route.params.id,
+        id: host_id,
         user_id: props.host.user_id,
     };  
     try { 
@@ -155,10 +156,11 @@ const fetchIntegration = async () => {
     } 
 }
 const UpdateIntegration = async (key, value) => { 
+    let host_id = route.params.id != undefined? route.params.id : props.hostId; 
     let data = {
         key: key,
         value: value,
-        id: route.params.id,
+        id: host_id,
         user_id: props.host.user_id,
     };   
     try { 

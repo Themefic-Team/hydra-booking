@@ -168,7 +168,7 @@ class FrontendDashboard {
         $settings['signup']['after_registration_redirect_type'] = isset($fd_dashboard['signup']['after_registration_redirect_type']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect_type']) : '';
         $settings['signup']['after_registration_redirect'] = isset($fd_dashboard['signup']['after_registration_redirect']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect']) : '';
         $settings['signup']['after_registration_redirect_custom'] = isset($fd_dashboard['signup']['after_registration_redirect_custom']) ? sanitize_text_field($fd_dashboard['signup']['after_registration_redirect_custom']) : '';
-        $settings['signup']['disable_email_verification'] = isset($fd_dashboard['signup']['disable_email_verification']) ? sanitize_text_field($fd_dashboard['signup']['disable_email_verification']) : '';
+        $settings['signup']['enable_email_verification'] = isset($fd_dashboard['signup']['enable_email_verification']) ? sanitize_text_field($fd_dashboard['signup']['enable_email_verification']) : '';
 
         
         $settings['login']['login_page'] = isset($fd_dashboard['login']['login_page']) ? sanitize_text_field($fd_dashboard['login']['login_page']) : '';

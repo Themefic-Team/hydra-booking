@@ -633,7 +633,7 @@ const AvailabilityTabs = (type) => {
                                 
                             </div>
                             <div v-else class="tfhb-availability-schedule-wrap"> 
-                            <h4 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h4>
+                            <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
                             </div>
                         </div>  
                     </div>  
