@@ -774,6 +774,15 @@ class SettingsController {
 			}
 		}
 
+		// sanitize Notification Settings
+		if ( isset( $request['email'] ) ) {
+			$data['email']['site_title']   = sanitize_text_field( $request['email']['site_title'] );
+			$data['email']['email_logo'] = sanitize_url( $request['email']['email_logo'] );
+			$data['email']['facebook'] = sanitize_url( $request['email']['facebook'] );
+			$data['email']['twitter'] = sanitize_url( $request['email']['twitter'] );
+			$data['email']['youtube'] = sanitize_url( $request['email']['youtube'] );
+		}
+
 		// update option
 		update_option( '_tfhb_notification_settings', $data );
 
