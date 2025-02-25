@@ -20,12 +20,6 @@ const skeleton = ref(true);
 const currentTabs = ref('host');
 const popup = ref(false);
 const update_preloader = ref(false);
-const isPopupOpen = () => {
-    popup.value = true;
-}
-const isPopupClose = (data) => {
-    popup.value = false;
-}
 
 const Notification = reactive(  { 
      host : {
@@ -123,35 +117,11 @@ const Notification = reactive(  {
     }
 });
 
-// Host Booking Confirm PopUp
-const hostBookingConfirmPopUp = ref(false);
-// Host Booking Pending PopUp
-const hostBookingPendingPopUp = ref(false);
-// Host Booking Cencel PopUp
-const hostBookingCencelPopUp = ref(false);
-// Host Booking Reschedule PopUp
-const hostBookingReschedulePopUp = ref(false);
-// Host Booking Reminder PopUp
-const hostBookingReminderPopUp = ref(false);
-
-// Attendee Booking Confirm PopUp
-const attendeeBookingConfirmPopUp = ref(false);
-// Attendee Booking Pending PopUp
-const attendeeBookingPendingPopUp = ref(false);
-// Attendee Booking Cancel PopUp
-const attendeeBookingCancelPopUp = ref(false);
-// Attendee Booking Reschedule PopUp
-const attendeeBookingReschedulePopUp = ref(false);
-// Attendee Booking Reminder PopUp
-const attendeeBookingReminderPopUp = ref(false);
-
-
 // Update Notification 
 const changeTab = (e) => {  
     // get data-tab attribute value of clicked button
     const tab = e.target.getAttribute('data-tab'); 
     currentTabs.value = tab;
-
 }
 
 
@@ -262,9 +232,6 @@ onBeforeMount(() => {
                    :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_confirmation"  
-                    :ispopup="hostBookingConfirmPopUp"
-                    @popup-open-control="hostBookingConfirmPopUp = true"
-                    @popup-close-control="hostBookingConfirmPopUp = false"
                     :isSingle="true"
                     categoryKey="host"
                     emailKey="booking_confirmation"
@@ -277,9 +244,6 @@ onBeforeMount(() => {
                    :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_pending"  
-                    :ispopup="hostBookingPendingPopUp"
-                    @popup-open-control="hostBookingPendingPopUp = true"
-                    @popup-close-control="hostBookingPendingPopUp = false"
                     :isSingle="true"
                     categoryKey="host"
                     emailKey="booking_pending"
@@ -293,9 +257,6 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Booking Cancel')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_cancel"  
-                    :ispopup="hostBookingCencelPopUp"
-                    @popup-open-control="hostBookingCencelPopUp = true"
-                    @popup-close-control="hostBookingCencelPopUp = false"
                     :isSingle="true"
                     categoryKey="host"
                     emailKey="booking_cancel"
@@ -308,9 +269,6 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Booking Reschedule')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reschedule"  
-                    :ispopup="hostBookingReschedulePopUp"
-                    @popup-open-control="hostBookingReschedulePopUp = true"
-                    @popup-close-control="hostBookingReschedulePopUp = false"
                     :isSingle="true"
                     categoryKey="host"
                     emailKey="booking_reschedule"
@@ -323,9 +281,6 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reminder"  
-                    :ispopup="hostBookingReminderPopUp"
-                    @popup-open-control="hostBookingReminderPopUp = true"
-                    @popup-close-control="hostBookingReminderPopUp = false"
                     :isSingle="true"
                     categoryKey="host"
                     emailKey="booking_reminder"
@@ -342,9 +297,6 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_confirmation"  
-                    :ispopup="attendeeBookingConfirmPopUp"
-                    @popup-open-control="attendeeBookingConfirmPopUp = true"
-                    @popup-close-control="attendeeBookingConfirmPopUp = false"
                     :isSingle="true"
                     categoryKey="attendee"
                     emailKey="booking_confirmation"
@@ -357,9 +309,6 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_pending"  
-                    :ispopup="attendeeBookingPendingPopUp"
-                    @popup-open-control="attendeeBookingPendingPopUp = true"
-                    @popup-close-control="attendeeBookingPendingPopUp = false"
                     :isSingle="true"
                     categoryKey="attendee"
                     emailKey="booking_pending"
@@ -373,9 +322,6 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Booking Cancel')"  
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_cancel"  
-                    :ispopup="attendeeBookingCancelPopUp"
-                    @popup-open-control="attendeeBookingCancelPopUp = true"
-                    @popup-close-control="attendeeBookingCancelPopUp = false"
                     :isSingle="true"
                     categoryKey="attendee"
                     emailKey="booking_cancel"
@@ -387,9 +333,6 @@ onBeforeMount(() => {
                     title="Send Email to Attendee" 
                     :label="$tfhb_trans('Booking Reschedule')"
                     :data="Notification.attendee.booking_reschedule"  
-                    :ispopup="attendeeBookingReschedulePopUp"
-                    @popup-open-control="attendeeBookingReschedulePopUp = true"
-                    @popup-close-control="attendeeBookingReschedulePopUp = false"
                     :isSingle="true"
                     categoryKey="attendee"
                     emailKey="booking_reschedule"
@@ -402,9 +345,6 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_reminder"  
-                    :ispopup="attendeeBookingReminderPopUp"
-                    @popup-open-control="attendeeBookingReminderPopUp = true"
-                    @popup-close-control="attendeeBookingReminderPopUp = false"
                     :isSingle="true"
                     categoryKey="attendee"
                     emailKey="booking_reminder"

@@ -207,11 +207,39 @@ onBeforeMount(() => {
     fetchNotification();
 });
 
+const emailBuilder = reactive({ 
+    editor: {
+        status : 0,
+        content : 'default',
+    }
+});
+
+const ContentBox = () =>{
+    alert("clic")
+}
+
 </script>
 <template>
     <!-- Single Notification  -->
-    <div class="tfhb-notification-single tfhb-flexbox tfhb-justify-between">
-        <div class="tfhb-swicher-wrap  tfhb-flexbox"> 
+    <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap tfhb-align-baseline">
+        <div class="tfhb-builder-tools">
+            <div class="single-tools">
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                    <div class="tfhb-flexbox">
+                        <Icon name="Menu" @click="ContentBox" :width="20"/> {{ $tfhb_trans('Editor') }}
+                    </div>
+                    <HbSwitch v-model="emailBuilder.editor.status" />
+                </div>
+                <div class="tools-content">
+                    <Editor 
+                        v-model="emailBuilder.editor.content"  
+                        :placeholder="$tfhb_trans('Mail Body')"    
+                        editorStyle="height: 250px" 
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="tfhb-email-preview-wrap  tfhb-flexbox"> 
             
             <!-- Time format -->
             <HbDropdown 

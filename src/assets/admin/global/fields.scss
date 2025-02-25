@@ -590,3 +590,25 @@
         justify-content: center;
     }
 }
+.tfhb-email-builder{
+    .tfhb-builder-tools{
+        width: 300px;
+        .single-tools{
+            .tools-heading{
+                border: 1px solid $surface-border;
+                padding: 10px;
+                .tfhb-flexbox{
+                    svg{
+                        cursor: pointer;
+                    }
+                }
+            }
+            .tools-content{
+                display: none;
+            }
+        }
+    }
+    .tfhb-email-preview-wrap{
+        width: calc(100% - 324px);
+    }
+}
