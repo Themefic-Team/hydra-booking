@@ -887,10 +887,10 @@ class MeetingController {
 		if(!empty($integrations['fluent_crm_status'])){
 			if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'fluent-crm/fluent-crm.php' ) ) {
 				$fluentcrm_Data['status'] = false;
-				$fluentcrm_Data['error_msg'] = 'Install and activate the Fluent CRM plugin.';
+				$fluentcrm_Data['error_msg'] =  __( 'Install and activate the Fluent CRM plugin.', 'hydra-booking' );
 			} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
 				$fluentcrm_Data['status'] = false;
-				$fluentcrm_Data['error_msg'] = 'Activate the Fluent CRM plugin.';
+				$fluentcrm_Data['error_msg'] =  __( 'Activate the Fluent CRM plugin.', 'hydra-booking' );
 			}else{
 				$fluentcrm_Data['status'] = true;
 			}
@@ -982,7 +982,7 @@ class MeetingController {
 			'zohocrm'          => $zohocrm_Data,
 			'formsList'        => $formsList,
 			'integrations'     => $integrations,
-			'message'          => 'Meeting Data',
+			'message'          =>  __( 'Meeting Data','hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
