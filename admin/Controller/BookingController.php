@@ -609,7 +609,7 @@ class BookingController {
 			'status'           => true,
 			'bookings'         => $bookingsList,
 			'booking_calendar' => $booking_array,
-			'message'          => 'Booking Data Successfully Retrieve!',
+			'message'          =>  __( 'Booking Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -1224,7 +1224,7 @@ class BookingController {
 					'value' => array(
 							
 							'datetime' => date('M d, Y, h:i A'),
-							'title' =>  esc_html(__(  'Booking has been completed', 'hydra-booking')),
+							'title' =>  'Booking has been completed',
 							'description' => '',
 						)
 					]

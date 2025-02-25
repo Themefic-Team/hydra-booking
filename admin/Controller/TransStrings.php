@@ -52,6 +52,8 @@ namespace HydraBooking\Admin\Controller;
             'Status' =>  __('Status', 'hydra-booking'), 
             'Select Booking status' =>  __('Select Booking status', 'hydra-booking'), 
             'Create Booking' =>  __('Create Booking', 'hydra-booking'), 
+            'Has booked a meeting' =>  __('Has booked a meeting', 'hydra-booking'), 
+            
 
             'Delete' =>  __('Delete', 'hydra-booking'), 
             'Export as CSV' =>  __('Export as CSV', 'hydra-booking'), 
@@ -512,6 +514,27 @@ namespace HydraBooking\Admin\Controller;
             'Subject' =>  __('Subject', 'hydra-booking'), 
             'Mail Body' =>  __('Mail Body', 'hydra-booking'), 
             'Update' =>  __('Update', 'hydra-booking'), 
+
+            // Activity Logs
+            'Booking has been completed' =>  __('Booking has been completed', 'hydra-booking'), 
+            'Confirmation Email Sent' =>  __('Confirmation Email Sent', 'hydra-booking'), 
+            'Confirmation Email Sent to Host' =>  __('Confirmation Email Sent to Host', 'hydra-booking'), 
+            'Confirmation Email Sent to Attendee' =>  __('Confirmation Email Sent to Attendee', 'hydra-booking'), 
+            'Pending Email Sent' =>  __('Pending Email Sent', 'hydra-booking'), 
+            'Pending Email Sent to Host' =>  __('Pending Email Sent to Host', 'hydra-booking'), 
+            'Pending Email Sent to Attendee' =>  __('Pending Email Sent to Attendee', 'hydra-booking'), 
+            'Canceled Email Sent' =>  __('Canceled Email Sent', 'hydra-booking'), 
+            'Canceled Email Sent to Host' =>  __('Canceled Email Sent to Host', 'hydra-booking'), 
+            'Canceled Email Sent to Attendee' =>  __('Canceled Email Sent to Attendee', 'hydra-booking'), 
+            'ReSchedule Email Sent' =>  __('ReSchedule Email Sent', 'hydra-booking'), 
+            'ReSchedule Email Sent to Host' =>  __('ReSchedule Email Sent to Host', 'hydra-booking'), 
+            'ReSchedule Email Sent to Attendee' =>  __('ReSchedule Email Sent to Attendee', 'hydra-booking'), 
+            'Reminder Email Sent' =>  __('Reminder Email Sent', 'hydra-booking'), 
+            'Reminder Email Sent to Attendee' =>  __('Reminder Email Sent to Attendee', 'hydra-booking'), 
+            'Booking Has Been Confirmed' =>  __('Booking Has Been Confirmed', 'hydra-booking'),  
+            'Booking Has Been Pending' =>  __('Booking Has Been Pending', 'hydra-booking'), 
+            'Booking Has Been Canceled' =>  __('Booking Has Been Canceled', 'hydra-booking'), 
+            'Booking Has Been Rescheduled' =>  __('Booking Has Been Rescheduled', 'hydra-booking'),  
 
             //
             'Import bookings from a CSV file' =>  __('Import bookings from a CSV file', 'hydra-booking'), 
