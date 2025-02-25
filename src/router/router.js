@@ -207,8 +207,7 @@ const routes = [
                 name: 'SettingsGeneral',
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/General.vue')
-            },  
-
+            },   
             {
                 path: 'hosts-settings',
                 name: 'HostsSettings',
@@ -228,6 +227,33 @@ const routes = [
                         meta: { Capabilities: 'tfhb_manage_settings' },
                         component: () => import('@/components/settings/hostsPermission.vue')
                     }
+                ]
+            },
+            {
+                path: 'shortcodes',
+                name: 'ShortcodeSettings',
+                meta: { Capabilities: 'tfhb_manage_settings' },
+                component: () => import('../view/settings/Shortcodes.vue'),
+                // redirect: { name: 'HostsSettingsInformationBuilder' },
+                children: [ 
+                    {
+                        path: 'meetings',
+                        name: 'MeetingsShortcodeSettings',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/shortcodes/MeetingsShortcodes.vue')
+                    }, 
+                    // {
+                    //     path: 'hosts',
+                    //     name: 'HostsShortcodeSettings',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/shortcodes/MeetingsShortcodes.vue')
+                    // }, 
+                    // {
+                    //     path: 'meeting-categories',
+                    //     name: 'MeetingsCategoriesShortcodeSettings',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/shortcodes/MeetingsShortcodes.vue')
+                    // }, 
                 ]
             },
             {

@@ -331,7 +331,6 @@ onBeforeMount(() => {
                 
                 <!-- Minimum time required before Booking/Cancel/Reschedule -->
                 <HbDropdown 
-                    
                     v-model="generalSettings.allowed_reschedule_before_meeting_start"  
                     required= "true" 
                     :label="$tfhb_trans('Minimum time required before Booking/Cancel/Reschedule')"  
@@ -357,10 +356,6 @@ onBeforeMount(() => {
                     width="100"
                     :label="$tfhb_trans('Confirmed bookings by default.')"  
                 />
-               
-                <!-- Default status of bookings --> 
-
-                
                  
             </div>  
 
