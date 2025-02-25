@@ -326,8 +326,7 @@
 			});
 
 			$($this).on('click', '.tfhb-meeting-booking-form .tfhb-back-btn', function (e) { 
-
-				 
+ 
 				$this.find('.tfhb-meeting-booking-form').animate({
 					left: "-5%", 
 					opacity: 0

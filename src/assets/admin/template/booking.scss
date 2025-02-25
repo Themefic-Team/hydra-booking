@@ -983,7 +983,7 @@
 
     .tfhb-booking-details-content {
         width: calc(100% - 316px);
-        flex-direction: column;
+        flex-direction: column; 
     }
 
     .tfhb-booking-details-activity {
@@ -999,6 +999,8 @@
 
         h3 {
             margin: 0 !important;
+
+            font-size:  $heading-font-size-medium;
         }
 
         .tfhb-b-d-inner-title {

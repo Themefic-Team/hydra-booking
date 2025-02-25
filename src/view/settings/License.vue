@@ -139,7 +139,8 @@ const upgradeToPro = async (key) => {
                                 icon="ChevronRight" 
                                 hover_icon="ArrowRight" 
                                 :hover_animation="true" 
-                                :pre_loader="License_pre_loader"                            />  
+                                :pre_loader="License_pre_loader" 
+                            />  
                         </div> 
                     </div> 
                 </template>
@@ -156,7 +157,7 @@ const upgradeToPro = async (key) => {
                 </template>
             </HbInfoBox> 
 
-            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-else-if="LicenseBase.license_type=='free' && $tfhb_is_pro != true">
+            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-else-if="!LicenseBase.license_active">
                 <template #content>
                     {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
                 </template>

@@ -192,13 +192,15 @@ class Signup {
                         </button>
                     </div>
 
-                    <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
-                         <p><?php echo esc_html(__('Already have an account?', domain: 'hydra-booking')) ?><a href="<?php echo esc_url( $get_login_page_url ); ?>"> <?php echo esc_html(__('Login', domain: 'hydra-booking')) ?></a></p>
-                         
-                    </div>
                    
                 </div>
+
+               
             </form>
+             <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
+                        <p><?php echo esc_html(__('Already have an account?', domain: 'hydra-booking')) ?><a href="<?php echo esc_url( $get_login_page_url ); ?>"> <?php echo esc_html(__('Login', domain: 'hydra-booking')) ?></a></p>
+                        
+                </div>
         </div>
         <?php 
 
