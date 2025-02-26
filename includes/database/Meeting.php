@@ -230,6 +230,54 @@ class Meeting {
 	}
 
 	/**
+	 * Get all  meeting Data.
+	 */
+	public function getAll($where = null, $sort_by = 'id', $order_by = 'DESC', $limit = false){
+		global $wpdb;
+		$table_name = $wpdb->prefix . $this->table;
+		$sql        = "SELECT * FROM $table_name";
+		$data = [];
+
+		if ($where != null || !empty($where)) {
+			foreach ($where as $key => $condition) {
+				$field = $condition[0];
+				$operator = strtoupper($condition[1]); // Ensure operator is uppercase
+				$value = $condition[2];
+
+				if ($operator == 'IN') {
+					// Convert comma-separated string to an array
+					$values_array = is_array($value) ? $value : explode(',', $value);
+					$placeholders = implode(',', array_fill(0, count($values_array), '%d')); // Numeric values
+
+					$condition_sql = "$field IN ($placeholders)";
+					$data = array_merge($data, array_map('intval', $values_array)); // Ensure values are integers
+				} else {
+					$condition_sql = "$field $operator %s";
+					$data[] = $value;
+				}
+
+				$sql .= ($key == 0) ? " WHERE $condition_sql" : " AND $condition_sql";
+			}
+		}
+
+		// Sort and order
+		$sql .= " ORDER BY $sort_by $order_by";
+
+		// Limit
+		if ($limit !== false) {
+			$sql .= " LIMIT $limit";
+		}
+
+		// Prepare and execute
+		$query = $wpdb->prepare($sql, ...$data);
+		$data = $wpdb->get_results($query);
+ 
+
+		return $data;
+
+	}
+
+	/**
 	 * Get with ID
 	 */
 

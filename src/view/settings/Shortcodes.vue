@@ -7,11 +7,11 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 
 // Store 
-import { hostsSettings } from '@/store/settings/hostsSettings';
+import { ShortcodeData } from '@/store/settings/shortcode';
 
  
 onBeforeMount(() => {   
-    //  hostsSettings.fetchHostsSettings();
+    ShortcodeData.fetchShortcodeData();
 });
  
 </script>
@@ -19,8 +19,8 @@ onBeforeMount(() => {
     <div :class="{ 'tfhb-skeleton': false }" class="thb-host-dashboard "> 
         <div  class="tfhb-dashboard-heading tfhb-mb-16">
             <div class="tfhb-admin-title "> 
-                <h1 >{{ $tfhb_trans('Host Settings') }}</h1> 
-                <p>{{ $tfhb_trans('Manage the settings and preferences for the hosts') }}</p>
+                <h1 >{{ $tfhb_trans('Shortcodes Settings') }}</h1> 
+                <p>{{ $tfhb_trans('Manage and customize your shortcodes for Hydrabooking.') }}</p> 
             </div>
             <div class="thb-admin-btn right"> 
                 <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=20 /></a>
@@ -39,11 +39,7 @@ onBeforeMount(() => {
             </nav>
             <div class="tfhb-hydra-content-wrap">      
              
-                <router-view />
-
-                <div class="tfhb-submission-btn tfhb-mt-16"> 
-                </div> 
-
+                <router-view /> 
             </div> 
 
         </div>

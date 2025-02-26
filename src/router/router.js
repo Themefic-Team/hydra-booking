@@ -234,7 +234,7 @@ const routes = [
                 name: 'ShortcodeSettings',
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/Shortcodes.vue'),
-                // redirect: { name: 'HostsSettingsInformationBuilder' },
+                redirect: { name: 'MeetingsShortcodeSettings' },
                 children: [ 
                     {
                         path: 'meetings',

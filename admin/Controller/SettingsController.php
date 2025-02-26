@@ -10,6 +10,7 @@ use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Admin\Controller\ScheduleController;
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
 use HydraBooking\Admin\Controller\Helper;
+use HydraBooking\DB\Host;
 // Use DB
 use HydraBooking\DB\Availability;
 // exit
@@ -177,6 +178,18 @@ class SettingsController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+		// Short Code Settings.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/shortcode',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'getShortcodeSettings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
 	} 
 	// permission_callback
 	public function GetGeneralSettings() {
@@ -892,5 +905,55 @@ class SettingsController {
 			'data'    => $request,
 		);
 		return rest_ensure_response( $data );
+	}
+
+
+	/**
+     * ShortCode for Get Booking Details
+     */
+	public function getShortcodeSettings(){
+
+		// hosts list  
+		$host      = new Host();
+		$getHosts = $host->get();
+		$hostsList = array();
+		if($getHosts){
+			foreach($getHosts as $host){
+				$hostsList[] = array(
+                    'value'          => $host->id,
+                    'name'        => $host->first_name.' '. $host->last_name, 
+                );
+            }
+		}
+
+
+		// meeting Category list
+	    $category = get_terms(
+			array(
+				'taxonomy'   => 'meeting_category',
+				'hide_empty' => false, // Set to true to hide empty terms
+			)
+		);
+		// Prepare the response data
+		$categoryList = array();
+		foreach ( $category as $term ) {
+			$categoryList[] = array(
+				'value'          => $term->term_id,
+				'name'        => $term->name, 
+			);
+		}
+
+		// 
+		$data = array(
+			'status'  => true,
+            'message' => 'Shortcode Settings',
+            'hostsList' => $hostsList,
+            'categoryList' => $categoryList, 
+		);
+
+		return rest_ensure_response( $data );
+
+
+		
 	}
 }
