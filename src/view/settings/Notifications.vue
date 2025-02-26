@@ -417,7 +417,7 @@ onBeforeMount(() => {
            
             <router-view 
             v-if="$route.params" 
-            @update-notification="UpdateNotification" 
+            :mediaurl="$tfhb_url"
             />
 
         </div>

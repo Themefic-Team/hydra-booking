@@ -603,8 +603,15 @@
                     }
                 }
             }
+            margin-bottom: 10px;
+            &:last-child{
+                margin-bottom: 0px;
+            }
             .tools-content{
-                display: none;
+                margin-top: 10px;
+                .single-tools{
+                    margin-left: 20px;
+                }
             }
         }
     }
