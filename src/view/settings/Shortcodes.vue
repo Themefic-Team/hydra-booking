@@ -16,7 +16,7 @@ onBeforeMount(() => {
  
 </script>
 <template> 
-    <div :class="{ 'tfhb-skeleton': false }" class="thb-host-dashboard "> 
+    <div :class="{ 'tfhb-skeleton': ShortcodeData.skeleton }" class="thb-host-dashboard "> 
         <div  class="tfhb-dashboard-heading tfhb-mb-16">
             <div class="tfhb-admin-title "> 
                 <h1 >{{ $tfhb_trans('Shortcodes Settings') }}</h1> 

@@ -189,6 +189,15 @@ class SettingsController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/shortcode/preview',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'generateShortPreview' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 
 	} 
 	// permission_callback
@@ -955,5 +964,32 @@ class SettingsController {
 
 
 		
+	}
+
+	/**
+     * ShortCode for Preview
+	 * 
+     */
+	public function generateShortPreview(){
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$shortcode = isset($request['shortcode']) ? $request['shortcode'] : '';
+		if($shortcode){
+			ob_start();
+			echo do_shortcode( $shortcode );
+			$shortcodeHTML = ob_get_clean();
+			$data = array(
+                'status'  => true,
+                'message' => 'Shortcode Preview',
+                'output' => $shortcodeHTML, 
+            );
+
+		}  else {
+			$data = array(
+                'status'  => false,
+                'message' => 'No Shortcode provided',
+            );
+        }
+		return rest_ensure_response( $data );
+		 
 	}
 }

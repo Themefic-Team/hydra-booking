@@ -22,9 +22,9 @@ const shortCodeField = reactive({
     subtitle: '',
     category: [],
     hosts: [],
-    short_by: '',
-    order_by: '',
-    limit: '',
+    short_by: 'id',
+    order_by: 'DESC',
+    limit: '10',
 });
 const shortcode = ref(`[tfhb_meetings title="Title" subtitle="Sub title" category="all" hosts="all" sort_by="id" order_by="DESC" display_limit="9"]`)
 
@@ -44,6 +44,8 @@ function copyToClipboard(text) {
 }
 // Generate shortcode
 const generateShortcode = () => {
+
+    ShortcodeData.preview_skeleton = true;
     let shortcode_field = `[tfhb_meetings`;
     Object.keys(shortCodeField).forEach(key => {
         if ((key === 'hosts' && shortCodeField[key].length == 0) || (key === 'category' && shortCodeField[key].length == 0) ) { 
@@ -54,44 +56,60 @@ const generateShortcode = () => {
     });
     shortcode_field += ']';
     shortcode.value = shortcode_field;
+    ShortcodeData.generateShortPreview(shortcode.value);
 }
+
+// reset the shortcode field
+const resetShortcode =  () => { 
+    ShortcodeData.preview_skeleton_reset = true;
+    shortCodeField.title = '';
+    shortCodeField.subtitle = '';
+    shortCodeField.category = [];
+    shortCodeField.hosts = [];
+    shortCodeField.short_by = 'id';
+    shortCodeField.order_by = 'DESC';
+    shortCodeField.limit = '10';
+    shortcode.value = `[tfhb_meetings title="Title" subtitle="Sub title" category="all" hosts="all" sort_by="id" order_by="DESC" display_limit="9"]`;
+    ShortcodeData.generateShortPreview(shortcode.value);
+
+};
 
 
  
 onBeforeMount(() => {   
-    //  hostsSettings.fetchHostsSettings();
+    ShortcodeData.generateShortPreview(shortcode.value);
 });
  
 </script>
 <template> 
-    <div :class="{ 'tfhb-skeleton': false }" class="tfhb-settings-dashboard  tfhb-flexbox tfhb-gap-16 tfhb-full-width"> 
-        {{ ShortcodeData }}
-        {{shortCodeField}}
-        <div class="tfhb-settings-shortcode-wrap settings ">
-            {{shortcode}}
+    <div :class="{ 'tfhb-skeleton': ShortcodeData.skeleton }" class="tfhb-settings-dashboard  tfhb-flexbox tfhb-gap-16 tfhb-full-width"> 
+       
+        <div class="tfhb-settings-shortcode-wrap settings "> 
             <div  class="tfhb-dashboard-heading tfhb-mb-16">
                 <div class="tfhb-admin-title "> 
                     <h3 >{{ $tfhb_trans('Meetings Shortcode') }}</h3>  
                 </div> 
             </div> 
-            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
-
+             
+            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-16 tfhb-justify-between">  
+                 
                 <!-- Time Zone -->
                 <HbText  
                     v-model="shortCodeField.title"   
                     :label="$tfhb_trans('Shortcode title')"  
-                    selected = "1"
+                    selected = "1" 
                     :placeholder="$tfhb_trans('Type a title for your shortcode')"  
                 /> 
                 <HbText  
                     v-model="shortCodeField.subtitle"   
-                    :label="$tfhb_trans('Shortcode sub-title')"  
+                    :label="$tfhb_trans('Shortcode sub-title')"    
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a sub-title for your shortcode')"  
                 />  
                 <HbMultiSelect  
                     v-model="shortCodeField.category" 
-                    :selected = "1"
+                    :selected = "1"  
+                    :label="$tfhb_trans('Select meeting category')"  
                     @add-change="Booking.fetchBookings()"
                     :placeholder="$tfhb_trans(' Meeting category : All')"  
                     :option="ShortcodeData.categoryList"
@@ -99,7 +117,8 @@ onBeforeMount(() => {
                
                 <HbMultiSelect  
                     v-model="shortCodeField.hosts" 
-                    :selected = "1"
+                    :selected = "1"  
+                    :label="$tfhb_trans('Select Host')"  
                     @add-change="Booking.fetchBookings()"
                     :placeholder="$tfhb_trans('Select host : All')"  
                     :option="ShortcodeData.hostsList"
@@ -113,8 +132,7 @@ onBeforeMount(() => {
                     :placeholder="$tfhb_trans('Sort by meetings')"   
                     :option = "[
                         {'name': 'ID', 'value': 'id'}, 
-                        {'name': 'Title', 'value': 'tittle'},
-                        {'name': 'Date', 'value': 'date'}
+                        {'name': 'Title', 'value': 'tittle'}, 
                     ]" 
                 />
                 <!-- Time format -->
@@ -126,8 +144,7 @@ onBeforeMount(() => {
                     :placeholder="$tfhb_trans(' Order by meetings')"  
                     :option = "[
                         {'name': 'ASC', 'value': 'ASC'}, 
-                        {'name': 'DESC', 'value': 'DESC'},
-                        {'name': 'RANDOM', 'value': 'RANDOM'}
+                        {'name': 'DESC', 'value': 'DESC'}, 
                     ]" 
                 />
                 <!-- Time format --> 
@@ -135,52 +152,67 @@ onBeforeMount(() => {
                 <HbText  
                     v-model="shortCodeField.limit"   
                     type="number"  
+ 
                     :label="$tfhb_trans(' Display Limit')"  
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a number to limit the number of meetings displayed')"  
                 />  
-                <div class="tfhb-hydra-shortcode-btn tfhb-flexbox tfhb-justify-center tfhb-gap-8">
+                <div class="tfhb-hydra-shortcode-btn tfhb-flexbox  tfhb-gap-8">
                     <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation"  
+                        classValue="tfhb-btn secondary-btn flex-btn"  
                         :buttonText="$tfhb_trans('Reset')"
-                        icon="ChevronRight" 
-                        hover_icon="ArrowRight" 
-                        :hover_animation="true" 
+                        icon="RefreshCcw" 
+                        icon_position="left"  
+                        @click="resetShortcode()" 
+                        :pre_loader="ShortcodeData.preview_skeleton_reset"
                     /> 
                     <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation"  
+                        classValue="tfhb-btn boxed-btn flex-btn"  
                         :buttonText="$tfhb_trans('Generate')"
                         icon="ChevronRight" 
                         hover_icon="ArrowRight" 
                         :hover_animation="true" 
+                        :pre_loader="ShortcodeData.preview_skeleton"
                         @click=" generateShortcode()"
                     />
 
                 </div>  
             </div>   
             
+             
         </div> 
+
         <div class="tfhb-settings-shortcode-wrap preview">
             <div  class="tfhb-dashboard-heading tfhb-mb-16">
                 <div class="tfhb-admin-title "> 
                     <h3 >{{ $tfhb_trans('Preview') }}</h3>  
                 </div> 
             </div>
-            <div class="share-link tfhb-flexbox tfhb-gap-8" > 
-                <HbText 
-                    v-model="shortcode"  
-                    :readonly="true"
+            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
+                <div class="share-link tfhb-flexbox tfhb-gap-8 tfhb-full-width" > 
+                    <HbText 
+                        v-model="shortcode"  
+                        :readonly="true"
 
-                />
-                <div class="tfhb-copy-btn "> 
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 "   
-                        icon="Copy"
-                        @click="copyToClipboard(shortcode)"
-                        :hover_animation="true"
-                    />  
+                    />
+                    <div class="tfhb-copy-btn "> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 "   
+                            icon="Copy"
+                            @click="copyToClipboard(shortcode)"
+                            :hover_animation="true"
+                        />  
+                    </div>
                 </div>
-            </div>
+            </div> 
+            <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-admin-card-box  tfhb-desktop-wrapper tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
+                <div class="desktop-view">
+                    <div v-html="ShortcodeData.output"></div>     
+                </div>
+            </div> 
+
+
+            
         </div> 
     </div>
  
@@ -193,7 +225,11 @@ onBeforeMount(() => {
         margin-bottom: 0 !important;
     }
     .tfhb-settings-shortcode-wrap{
-        width: calc(50% - 17px); 
+       
+        width: calc(100% - 317px); 
+        &.settings{
+            width: 300px;
+        }
         .share-link{
              > .tfhb-single-form-field{
                 width: calc(100% - 75px) !important;
@@ -204,6 +240,22 @@ onBeforeMount(() => {
     .tfhb-hydra-shortcode-btn{
         width: 100% !important;
     }
+    .tfhb-desktop-wrapper{
+        max-height: 400px;
+        overflow-y: auto;
+        position: relative;
+        &:after{
+            position: absolute;
+            inset: 0;
+            content: "";
+            cursor: not-allowed;
+
+        }
+    }
+    .desktop-view {
+        zoom: 0.4; /* Scale down */
+    }
+    
 }
 
 </style>
