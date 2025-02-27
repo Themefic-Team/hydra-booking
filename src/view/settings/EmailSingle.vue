@@ -1,7 +1,7 @@
 <script setup> 
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
-import { ref, reactive, onBeforeMount,computed } from 'vue';
+import { ref, reactive, onBeforeMount, computed, watch } from 'vue';
 import { useRoute, useRouter, RouterView,} from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -217,7 +217,7 @@ const emailBuilder = reactive({
     },
     gratitude: {
         status: 1,
-        content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 32px 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
+        content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
     },
     meeting_details: {
         status: 1,
@@ -373,7 +373,7 @@ const emailTemplate = computed(() => {
         emailContent += `
             <tr>
                 <td style="padding: 0 32px;">
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; margin-top: 32px">
                         <tr><td style="font-weight: bold; font-size: 16px;">Meeting Details</td></tr>
         `;
 
@@ -403,7 +403,7 @@ const emailTemplate = computed(() => {
     if (emailBuilder.host_details.status) {
         emailContent += `
             <tr>
-                <td style="padding: 32px 32px; 0 32px">
+                <td style="padding: 32px 32px 0 32px">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px;">
                         <tr><td style="font-weight: bold; font-size: 16px;">Host Details</td></tr>
         `;
@@ -434,7 +434,7 @@ const emailTemplate = computed(() => {
     if (emailBuilder.instructions.status) {
         emailContent += `
             <tr>
-                <td style="font-weight: bold; font-size: 17px; padding: 0 32px 24px 32px;">Instructions</td>
+                <td style="font-weight: bold; font-size: 17px; padding: 32px 32px 24px 32px;">Instructions</td>
             </tr>
             <tr>
                 <td style="font-size: 15px; padding: 0 32px 0 32px;">${emailBuilder.instructions.content}</td>
@@ -532,11 +532,17 @@ const formatLabel = (key) => {
     return labels[key] || key;
 };
 
+watch(emailTemplate, (newTemplate) => {
+  if (Notification[route.params.type] && Notification[route.params.type][route.params.id]) {
+    Notification[route.params.type][route.params.id].body = newTemplate;
+  }
+});
+
 </script>
 
 <template>
     <!-- Single Notification  -->
-    <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap tfhb-align-baseline">
+    <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap">
         <div class="tfhb-builder-tools">
 
             <div class="single-tools">
@@ -926,25 +932,10 @@ const formatLabel = (key) => {
                 type = "text"
                 :placeholder="$tfhb_trans('Enter Mail Subject')"  
             /> 
-
-            <div class="email-preview" v-html="emailTemplate"></div>
-
-            <div class="tfhb-single-form-field" style="width: 100%;"  >
-                <div class="tfhb-single-form-field-wrap tfhb-field-input">
-                    <!--if has label show label with tag else remove tags  --> 
-                    <label for="">{{ $tfhb_trans('Mail Body') }}</label>  
-                    <Editor 
-                        v-model="Notification[$route.params.type][$route.params.id].body"  
-                        :placeholder="$tfhb_trans('Mail Body')"    
-                        editorStyle="height: 250px" 
-                    />
-                </div> 
-            </div> 
             <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8"> 
                 <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
-
             </div>
-
+            
             <HbButton  
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="UpdateNotification"
@@ -956,7 +947,7 @@ const formatLabel = (key) => {
             />  
 
         </div>
-
+        <div class="email-preview" v-html="emailTemplate"></div>
     </div>
     <!-- Single Integrations  -->
 
