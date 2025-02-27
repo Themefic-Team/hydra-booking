@@ -211,6 +211,10 @@ onBeforeMount(() => {
 });
 
 const emailBuilder = reactive({ 
+    header: {
+        status: 1,
+        content: '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>'
+    },
     gratitude: {
         status: 1,
         content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 32px 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
@@ -220,23 +224,23 @@ const emailBuilder = reactive({
         content: {
             data_time: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>Sunday November 11, 2024 at 12:00 PM (UTC+06:00) Asia - Dhaka</strong> <br>Host time: Nov 11, 2024 at 10:00 PM (UTC+11:00) Australia - Sydney</td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}</td>'
             },
             host: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>Kamrul Hasan Shovo</strong></td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{host.name}}</strong></td>'
             },
             about: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>Discussion about design system</strong></td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{meeting.title}}</strong></td>'
             },
             description: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;">Hydra reads your availability from all your existing calendars ensuring you never get double booked ensuring you never get double booked</td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;">{{meeting.content}}</td>'
             },
             location: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>Kamrul Hasan Shovo</strong></td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{meeting.location}}</strong></td>'
             }
         },
     },
@@ -245,15 +249,15 @@ const emailBuilder = reactive({
         content: {
             name: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>Kamrul Hasan Shovo</strong></td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{host.name}}</strong></td>'
             },
             email: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong><a href="" style="text-decoration: none; color: #2E6B38;">jack.spar@gmail.com</a></strong></td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong></td>'
             },
             phone: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong><a href="" style="text-decoration: none; color: #2E6B38;">+89 000 123 456</a></strong></td>'
+                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong></td>'
             },
         }
     },
@@ -263,12 +267,41 @@ const emailBuilder = reactive({
     },
     cancel_reschedule: {
         status: 1,
-        content: '<tr><td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td></tr><tr><td style="font-size: 15px; padding-bottom: 24px;"><a href="https://google.meet/asdfkjasdflk" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;">Cancel</a><a href="https://google.meet/asdfkjasdflk" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;">Reschedule</a></td></tr>',
-    }
+        content: {
+            description: {
+                status: 1,
+                content: 'You can cancel or reschedule this event for any reason.'
+            },
+            cancel: {
+                status: 1,
+                content: '{{booking.cancel_link}}'
+            },
+            reschedule: {
+                status: 1,
+                content: '{{booking.rescheduled_link}}'
+            },
+        }
+    },
+    footer: {
+        status: 1,
+        content: {
+            description: {
+                status: 1,
+                content: '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+            },
+            social: {
+                status: 1,
+                facebook: '#',
+                x: '#',
+                youtube: '#',
+            },
+        }
+    },
 });
 
 // Initialize contentVisibility with a nested structure
 const contentVisibility = reactive({
+    header: false,
     gratitude: false,
     meeting_details: {
         main: false,
@@ -285,7 +318,17 @@ const contentVisibility = reactive({
         phone: false
     },
     instructions: false,
-    cancel_reschedule: false
+    cancel_reschedule: {
+        main: false,
+        description: false,
+        cancel: false,
+        reschedule: false
+    },
+    footer: {
+        main: false,
+        description: false,
+        social: false
+    },
 });
 
 const ContentBox = (key, subKey = null) => {
@@ -308,8 +351,22 @@ const ContentBox = (key, subKey = null) => {
 const emailTemplate = computed(() => {
     let emailContent = '';
 
+    if (emailBuilder.header.status) {
+        emailContent += `<tr>
+            <td bgcolor="#215732" style="padding: 16px 32px; text-align: left;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            ${emailBuilder.header.content}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>`;
+    }
+
     if (emailBuilder.gratitude.status) {
-        emailContent += `<tr><td style="padding: 0px 32px;">${emailBuilder.gratitude.content}</td></tr>`;
+        emailContent += `<tr><td style="padding: 32px 32px 0 32px;">${emailBuilder.gratitude.content}</td></tr>`;
     }
 
     if (emailBuilder.meeting_details.status) {
@@ -380,14 +437,70 @@ const emailTemplate = computed(() => {
                 <td style="font-weight: bold; font-size: 17px; padding: 0 32px 24px 32px;">Instructions</td>
             </tr>
             <tr>
-                <td style="font-size: 15px; padding: 0 24px 0 24px;">${emailBuilder.instructions.content}</td>
+                <td style="font-size: 15px; padding: 0 32px 0 32px;">${emailBuilder.instructions.content}</td>
             </tr>`;
     }
     if (emailBuilder.cancel_reschedule.status) {
-        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 32px 0;"><tr><td style="padding: 0 32px;"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4;">${emailBuilder.cancel_reschedule.content}</table></td></tr></table>`;
+        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 32px 0;"><tr><td style="padding: 0 32px;"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4;">`;
+            if (emailBuilder.cancel_reschedule.content.description.content) {
+                emailContent += ` <tr>
+                    <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
+                </tr>`;
+            }
+            if (emailBuilder.cancel_reschedule.content.cancel.content || emailBuilder.cancel_reschedule.content.reschedule.content) {
+                emailContent += `<tr>
+                <td style="font-size: 15px; padding-bottom: 24px;">`;
+                    if (emailBuilder.cancel_reschedule.content.cancel.content){
+                        emailContent += `<a href="${emailBuilder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;">Cancel</a>`;
+                    }
+                    if (emailBuilder.cancel_reschedule.content.reschedule.content){
+                        emailContent += `<a href="${emailBuilder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;"">Reschedule</a>`;
+                    }
+                emailContent += `</td></tr>`;
+            }
+        emailContent += `</table></td></tr></table>`;
     }
 
-    return `<table>${emailContent}</table>`;
+    if (emailBuilder.footer.status) {
+        emailContent += `<tr>
+            <td align="center">
+                <table width="100%" role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;">
+                    <tr>`;
+                        if (emailBuilder.footer.content.description.content) {
+                        emailContent += `<td align="left">
+                            ${emailBuilder.footer.content.description.content}
+                        </td>`;
+                        }
+                        if (emailBuilder.footer.content.social) {
+                        emailContent += `<td align="right" style="vertical-align: baseline;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                <tr>`;
+                                    if (emailBuilder.footer.content.social.facebook) {
+                                    emailContent += `<td style="padding-left: 24px;">
+                                        <a href="${emailBuilder.footer.content.social.facebook}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/facebook-logo.svg" alt="Facebook"></a>
+                                    </td>`;
+                                    }
+                                    if (emailBuilder.footer.content.social.x) {
+                                    emailContent += `<td style="padding-left: 24px;">
+                                        <a href="${emailBuilder.footer.content.social.x}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/twitter-x-logo.svg" alt="twitter"></a>
+                                    </td>`;
+                                    }
+                                    if (emailBuilder.footer.content.social.youtube) {
+                                    emailContent += `<td style="padding-left: 24px;">
+                                        <a href="${emailBuilder.footer.content.social.youtube}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/youtube-logo.svg" alt="youtube"></a>
+                                    </td>`;
+                                    }
+                        emailContent += `</tr>
+                            </table>
+                        </td>`;
+                        }
+                emailContent += `</tr>
+                </table>
+            </td>
+        </tr>`;
+    }
+
+    return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" bgcolor="#FFFFFF" >${emailContent}</table>`;
 });
 
 // Utility Functions
@@ -425,6 +538,23 @@ const formatLabel = (key) => {
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap tfhb-align-baseline">
         <div class="tfhb-builder-tools">
+
+            <div class="single-tools">
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                    <div class="tfhb-flexbox">
+                        <Icon name="Menu" @click="ContentBox('header')" :width="20"/> 
+                        {{ $tfhb_trans('Header') }}
+                    </div>
+                    <HbSwitch v-model="emailBuilder.header.status" />
+                </div>
+                <div class="tools-content" v-show="contentVisibility.header && emailBuilder.header.status">
+                    <Editor 
+                        v-model="emailBuilder.header.content"  
+                        :placeholder="$tfhb_trans('Mail Body')"    
+                        editorStyle="height: 180px" 
+                    />
+                </div>
+            </div>
 
             <div class="single-tools">
                 <div class="tools-heading tfhb-flexbox tfhb-justify-between">
@@ -643,12 +773,121 @@ const formatLabel = (key) => {
                     </div>
                     <HbSwitch v-model="emailBuilder.cancel_reschedule.status" />
                 </div>
-                <div class="tools-content" v-show="contentVisibility.cancel_reschedule && emailBuilder.cancel_reschedule.status">
-                    <Editor 
-                        v-model="emailBuilder.cancel_reschedule.content"  
-                        :placeholder="$tfhb_trans('Mail Body')"    
-                        editorStyle="height: 180px" 
-                    />
+                <div class="tools-content" v-show="contentVisibility.cancel_reschedule.main && emailBuilder.cancel_reschedule.status">
+                    
+                    <!-- Description -->
+                    <div class="single-tools">
+                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                            <div class="tfhb-flexbox">
+                                <Icon name="Menu" @click="ContentBox('cancel_reschedule', 'description')" :width="20"/> 
+                                {{ $tfhb_trans('Heading:') }}
+                            </div>
+                            <HbSwitch v-model="emailBuilder.cancel_reschedule.content.description.status" />
+                        </div>
+                        <div class="tools-content" 
+                            v-show="contentVisibility.cancel_reschedule.description && emailBuilder.cancel_reschedule.content.description.status">
+                            <Editor 
+                                v-model="emailBuilder.cancel_reschedule.content.description.content"  
+                                :placeholder="$tfhb_trans('Mail Body')"    
+                                editorStyle="height: 100px" 
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Cancel -->
+                    <div class="single-tools">
+                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                            <div class="tfhb-flexbox">
+                                <Icon name="Menu" @click="ContentBox('cancel_reschedule', 'cancel')" :width="20"/> 
+                                {{ $tfhb_trans('Cancel URL:') }}
+                            </div>
+                            <HbSwitch v-model="emailBuilder.cancel_reschedule.content.cancel.status" />
+                        </div>
+                        <div class="tools-content" 
+                            v-show="contentVisibility.cancel_reschedule.cancel && emailBuilder.cancel_reschedule.content.cancel.status">
+                            <HbText 
+                                v-model="emailBuilder.cancel_reschedule.content.cancel.content"  
+                                :placeholder="$tfhb_trans('Cancel URL:')"    
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Reschedule -->
+                    <div class="single-tools">
+                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                            <div class="tfhb-flexbox">
+                                <Icon name="Menu" @click="ContentBox('cancel_reschedule', 'reschedule')" :width="20"/> 
+                                {{ $tfhb_trans('Reschedule URL:') }}
+                            </div>
+                            <HbSwitch v-model="emailBuilder.cancel_reschedule.content.reschedule.status" />
+                        </div>
+                        <div class="tools-content" 
+                            v-show="contentVisibility.cancel_reschedule.reschedule && emailBuilder.cancel_reschedule.content.reschedule.status">
+                            <HbText 
+                                v-model="emailBuilder.cancel_reschedule.content.reschedule.content"  
+                                :placeholder="$tfhb_trans('Reschedule URL:')"    
+                            />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="single-tools">
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                    <div class="tfhb-flexbox">
+                        <Icon name="Menu" @click="ContentBox('footer')" :width="20"/> 
+                        {{ $tfhb_trans('Footer') }}
+                    </div>
+                    <HbSwitch v-model="emailBuilder.footer.status" />
+                </div>
+                <div class="tools-content" v-show="contentVisibility.footer.main && emailBuilder.footer.status">
+                    
+                    <!-- Description -->
+                    <div class="single-tools">
+                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                            <div class="tfhb-flexbox">
+                                <Icon name="Menu" @click="ContentBox('footer', 'description')" :width="20"/> 
+                                {{ $tfhb_trans('Quick Content:') }}
+                            </div>
+                            <HbSwitch v-model="emailBuilder.footer.content.description.status" />
+                        </div>
+                        <div class="tools-content" 
+                            v-show="contentVisibility.footer.description && emailBuilder.footer.content.description.status">
+                            <Editor 
+                                v-model="emailBuilder.footer.content.description.content"  
+                                :placeholder="$tfhb_trans('Mail Body')"    
+                                editorStyle="height: 100px" 
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="single-tools">
+                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
+                            <div class="tfhb-flexbox">
+                                <Icon name="Menu" @click="ContentBox('footer', 'social')" :width="20"/> 
+                                {{ $tfhb_trans('Social:') }}
+                            </div>
+                            <HbSwitch v-model="emailBuilder.footer.content.social.status" />
+                        </div>
+                        <div class="tools-content" 
+                            v-show="emailBuilder.footer.content.social && emailBuilder.footer.content.social.status">
+                            <HbText 
+                                v-model="emailBuilder.footer.content.social.facebook"  
+                                :placeholder="$tfhb_trans('Facebook URL:')"    
+                            />
+                            <HbText 
+                                v-model="emailBuilder.footer.content.social.x"  
+                                :placeholder="$tfhb_trans('X (previously twitter)')"    
+                            />
+                            <HbText 
+                                v-model="emailBuilder.footer.content.social.youtube"  
+                                :placeholder="$tfhb_trans('Youtube')"    
+                            />
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
