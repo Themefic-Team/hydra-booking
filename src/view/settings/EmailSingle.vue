@@ -10,10 +10,8 @@ import { toast } from "vue3-toastify";
 
 // import Form Field 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
-import HbPopup from '@/components/widgets/HbPopup.vue';   
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
-import HbEditor from '@/components/form-fields/HbEditor.vue';
 import HbButton from '@/components/form-fields/HbButton.vue'
 import Editor from 'primevue/editor';
 const route = useRoute();
