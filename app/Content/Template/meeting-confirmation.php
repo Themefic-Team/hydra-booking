@@ -43,7 +43,7 @@ $availability_time_zone = $availability_data['time_zone'];
 					<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/user.svg'); ?>" alt="User">
 				</div>
 				<?php echo ! empty( $data->first_name ) ? '' . esc_html( $data->first_name ) . '  ' . esc_html( $data->last_name ) . '' : ''; ?>
-				<span>Host</span>
+				<span><?php echo esc_html( __( 'Host', 'hydra-booking' ) ); ?></span>
 			</li> 
 			<?php if ( ! empty( $data->start_time ) ) { ?>
 			<li class="tfhb-flexbox tfhb-gap-8">

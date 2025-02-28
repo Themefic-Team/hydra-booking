@@ -114,17 +114,17 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
 
 					$location_value = $location['address'];
 					if($location['location'] == 'zoom'){
-						$location_value = 'Zoom';
+						$location_value = __('Zoom', 'hydra-booking');
 					}elseif($location['location'] == 'meet'){
-						$location_value = 'Google Meet';
+						$location_value = __('Google Meet', 'hydra-booking');
 					}
 					elseif($location['location'] == 'Attendee Phone Number'){
-						$location_value = 'Attendee Phone Number';
+						$location_value = __('Attendee Phone Number', 'hydra-booking');
 					}elseif($location['location'] == 'Organizer Phone Number'){
-						$location_value = 'Organizer Phone Number';
+						$location_value = __('Organizer Phone Number', 'hydra-booking');
 					
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
-						$location_value = 'In Person (Attendee Address)';
+						$location_value = __('In Person (Attendee Address)', 'hydra-booking');
 					}else{
 						$location_value = $location['location'];
 					}
