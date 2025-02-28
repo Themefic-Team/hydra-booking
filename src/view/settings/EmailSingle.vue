@@ -108,7 +108,7 @@ const Notification = reactive(  {
             builder: ''
         },
     
-     }
+    }
 });
 
 const meetingShortcode = ref([
