@@ -119,6 +119,7 @@ const meetingShortcode = ref([
     '{{meeting.time}}', 
     '{{host.name}}', 
     '{{host.email}}',  
+    '{{host.phone}}',
     '{{attendee.name}}', 
     '{{attendee.email}}', 
     '{{attendee.additional_data}}',
