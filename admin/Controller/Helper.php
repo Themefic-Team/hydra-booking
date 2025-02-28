@@ -44,7 +44,8 @@ class Helper {
 
                 <h3>Additional Data</h3>
                 <p> {{attendee.additional_data}} </p>
-            '
+            ',
+            'builder' => ''
             
         );
         $notification['host']['booking_cancel'] = array(
@@ -73,7 +74,8 @@ class Helper {
 
                 <h3>Additional Data</h3>
                 <p> {{attendee.additional_data}} </p>
-            '
+            ',
+            'builder' => ''
         );
         
         $notification['host']['booking_pending'] = array(
@@ -97,7 +99,8 @@ class Helper {
  
                 <h3>Additional Data</h3>
                 <p> {{attendee.additional_data}} </p>
-            '
+            ',
+            'builder' => ''
             
         );
         $notification['host']['booking_reschedule'] = array(
@@ -126,7 +129,8 @@ class Helper {
 
                 <h3>Additional Data</h3>
                 <p> {{attendee.additional_data}} </p>
-            '
+            ',
+            'builder' => ''
         );
         $notification['host']['booking_reminder'] = array(
             'status' => 1,
@@ -150,7 +154,8 @@ class Helper {
 
                 <h3>Additional Data</h3>
                 <p> {{attendee.additional_data}} </p>
-            '
+            ',
+            'builder' => ''
         );
 
         // Attendee Notification
@@ -174,7 +179,8 @@ class Helper {
 
                 <h3>Where</h3>
                 <p>{{booking.location_details_html}}  </p>
-            '
+            ',
+            'builder' => ''
 
         );
         // Attendee Notification
@@ -196,7 +202,8 @@ class Helper {
 
                 <p> Attendee: {{attendee.name}}  </p>
  
-            '
+            ',
+            'builder' => ''
 
         );
         $notification['attendee']['booking_cancel'] = array(
@@ -222,7 +229,8 @@ class Helper {
 
                 <h3>Where</h3> 
                <p>{{booking.location_details_html}}  </p>
-            '
+            ',
+            'builder' => ''
 
 
         );
@@ -250,7 +258,7 @@ class Helper {
                 <h3>Where</h3> 
                 <p>{{booking.location_details_html}}  </p>
  
-            '
+            ',
         );
         $notification['attendee']['booking_reminder'] = array(
             'status' => 1,
@@ -271,7 +279,7 @@ class Helper {
 
                 <h3>Where</h3>
                 <p>{{booking.location_details_html}}  </p>
-            '
+            ',
         );
 
 

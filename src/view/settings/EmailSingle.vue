@@ -30,7 +30,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_pending: {
             status : 0,
@@ -38,7 +38,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_cancel: {
             status : 0,
@@ -46,7 +46,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_reschedule: {
             status : 0,
@@ -54,7 +54,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_reminder: {
             status : 0,
@@ -62,7 +62,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
     
      },
@@ -73,7 +73,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_pending: {
             status : 0,
@@ -81,7 +81,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_cancel: {
             status : 0,
@@ -89,7 +89,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_reschedule: {
             status : 0,
@@ -97,7 +97,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
         booking_reminder: {
             status : 0,
@@ -105,7 +105,7 @@ const Notification = reactive(  {
             from : '',
             subject : '',
             body : '',
-
+            builder: ''
         },
     
      }
@@ -148,65 +148,6 @@ const copyShortcode = (value) => {
     // Show a toast notification or perform any other action
     toast.success(value + ' is Copied');
 }
-
-const preloader = ref(false);
-
-const fetchNotification = async () => {
-    try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification', {
-            headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
-            } 
-        });
-        if (response.data.status) { 
-            // console.log(response.data.integration_settings);
-            Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
-            Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
-            
-            
-            skeleton.value = false;
-        }
-    } catch (error) {
-        console.log(error);
-    } 
-}
-
-const UpdateNotification = async () => {   
-    preloader.value = true;
-    try { 
-        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification/update', Notification, {
-            headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
-            } 
-        } );
-
-        if (response.data.status) {    
-            toast.success(response.data.message, {
-                position: 'bottom-right', // Set the desired position
-                "autoClose": 1500,
-            }); 
-
-            preloader.value = false;
-            
-        }else{
-            toast.error(response.data.message, {
-                position: 'bottom-right', // Set the desired position
-            });
-
-            preloader.value = false;
-        }
-    } catch (error) {
-        toast.error('Action successful', {
-            position: 'bottom-right', // Set the desired position
-        });
-    }
-}
-
-onBeforeMount(() => {  
-    fetchNotification();
-});
 
 const emailBuilder = reactive({ 
     header: {
@@ -533,12 +474,80 @@ const formatLabel = (key) => {
 watch(emailTemplate, (newTemplate) => {
   if (Notification[route.params.type] && Notification[route.params.type][route.params.id]) {
     Notification[route.params.type][route.params.id].body = newTemplate;
+    Notification[route.params.type][route.params.id].builder = emailBuilder;
   }
+});
+
+
+const preloader = ref(false);
+const fetchNotification = async () => {
+    try { 
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        });
+        if (response.data.status) { 
+            // console.log(response.data.integration_settings);
+            Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
+            Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
+            
+            if(response.data.notification_settings[route.params.type][route.params.id].builder==''){
+                Notification[route.params.type][route.params.id].builder = emailBuilder;
+            }else{
+                // console.log(response.data.notification_settings[route.params.type][route.params.id].builder);
+
+                Object.assign(emailBuilder, response.data.notification_settings[route.params.type][route.params.id].builder);
+            }
+            
+            skeleton.value = false;
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+}
+
+const UpdateNotification = async () => {   
+    preloader.value = true;
+    try { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification/update', Notification, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+
+        if (response.data.status) {    
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            }); 
+
+            preloader.value = false;
+            
+        }else{
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+            });
+
+            preloader.value = false;
+        }
+    } catch (error) {
+        toast.error('Action successful', {
+            position: 'bottom-right', // Set the desired position
+        });
+    }
+}
+
+onBeforeMount(() => {  
+    fetchNotification();
 });
 
 </script>
 
 <template>
+    <!-- {{ Notification[route.params.type][route.params.id] }} -->
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap">
         <div class="tfhb-builder-tools">
