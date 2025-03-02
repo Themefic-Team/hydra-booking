@@ -6,12 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Namespace 
 use HydraBooking\DB\Meeting;
+use HydraBooking\DB\Host;
 /**
  * Signup Class
  * 
  * @author Sydur Rahman
  */
-class MeetingsShortcode {
+class ShortcodeBuilder {
 
     /**
      * Constructor
@@ -20,8 +21,14 @@ class MeetingsShortcode {
      */
     public function __construct() { 
        
-        // Add Shortcode
+        // Add Shortcode Meeting Shortcode 
         add_shortcode( 'tfhb_meetings', array( $this, 'tfhb_meetings_callback' ) );
+
+        // Host Shortcode
+        add_shortcode('tfhb_hosts', array($this, 'tfhb_hosts_callback') );
+
+        // Meeting categories 
+        add_shortcode('tfhb_categories', array($this, 'tfhb_categories_callback') );
  
     }
 
@@ -72,6 +79,7 @@ class MeetingsShortcode {
                         // Get  all treams details based on trames id 
                         $meeting_category = $meeting->meeting_category; // meeting_category is a trems id 
                         $terms = get_term( $meeting_category ); 
+                        $terms_archive_url = get_term_link($terms); 
                         $permalink = get_permalink($meeting->post_id);
                         // tfhb_print_r($terms);
                         $price = !empty($meeting->meeting_price) ? $meeting->meeting_price : esc_html(__('Free', 'hydra_booking'));
@@ -90,7 +98,7 @@ class MeetingsShortcode {
                         </span> 
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags"><path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19"/><path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="6.5" cy="9.5" r=".5" fill="currentColor"/></svg>
-                            <?php echo esc_html($terms->name) ?>    
+                            <a href="<?php echo esc_url($terms_archive_url); ?>"><?php echo esc_html($terms->name) ?>  </a>  
                         </span> 
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>    
@@ -123,6 +131,125 @@ class MeetingsShortcode {
         // tfhb_print_r($meetings);
  
         return $html;  // return the generated HTML for the shortcode
+
+    }
+
+    /**
+     * Hosts Shortcode Generator
+     * 
+     * @author Sydur 
+     * 
+     * */
+
+    public function tfhb_hosts_callback($atts){
+
+        $atts = shortcode_atts([
+            'title'        => '',
+            'subtitle'    => '', 
+            'sort_by'      => 'id',
+            'order_by'     => 'DESC',
+            'limit' => '10',
+        ], $atts, 'tfhb_hosts');
+
+ 
+        // get all meetings based on given parameters
+        $host = new Host();
+        $query = array( ); 
+        $limit = $atts['limit'] ? $atts['limit'] : 10; 
+        $hostData = $host->getAll( $query, $atts['sort_by'], $atts['order_by'], $limit ); 
+        ob_start();
+        ?>
+        <div class="tfhb-hosts-list">
+            <div class="tfhb-hosts-list__heading">
+                <h2><?php echo esc_html( $atts['title'] );?></h2>
+                <p><?php echo esc_html( $atts['subtitle'] );?></p>
+            </div>
+            <div class="tfhb-hosts-list__wrap"> 
+                <?php if(count($hostData) > 0):
+                    foreach ($hostData as $host) : 
+                ?>
+                <div class="tfhb-hosts-list__wrap__items">
+                    <a class="tfhb-hosts-list__wrap__items__content">
+                        <?php if($host->avatar): ?>
+                        <div class="tfhb-hosts-list__wrap__items__content__img">
+                            <img src="<?php echo esc_url($host->avatar)?>" alt="<?php echo esc_html($host->first_name.' '. $host->last_name)?>">
+                        </div>
+                        <?php endif; ?>
+                        <h3><?php echo esc_html($host->first_name.' '. $host->last_name)?></h3>
+                        <p><?php echo esc_html($host->email) ?></p>
+                    </a> 
+                    <!-- <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
+                        <a href="#" class="tfhb-btn boxed-btn">Book Now</a>
+                    </div> -->
+                </div>
+
+                <?php endforeach; else: ?>
+                    <div class="tfhb-meeting-list__wrap__no-found">
+                        <p><?php esc_html_e('No meetings found.', 'hydra_booking')?></p>
+                    </div>
+                <?php endif;?>
+
+            </div>
+        </div>
+        <?php 
+        $html = ob_get_clean();
+        // tfhb_print_r($meetings);
+ 
+        return $html;  // return the generated HTML for the shortcode
+
+
+    }
+
+
+    /**
+     * Meeting Category Shortcode
+     * 
+     * @author Sydur Rahmanur <
+     * 
+     * */
+    public function tfhb_categories_callback($atts){
+
+        $terms = get_terms(
+			array(
+				'taxonomy'   => 'meeting_category',
+				'hide_empty' => false, // Set to true to hide empty terms
+			)
+		);  
+        ob_start();
+        ?>
+        <div class="tfhb-category-list">
+            <div class="tfhb-category-list__heading">
+                <h2><?php echo esc_html( $atts['title'] );?></h2>
+                <p><?php echo esc_html( $atts['subtitle'] );?></p>
+            </div>
+            <div class="tfhb-category-list__wrap"> 
+                <?php if(count($terms) > 0):
+                    foreach ($terms as $term) : 
+                ?>
+                <div class="tfhb-category-list__wrap__items">
+                    <a class="tfhb-category-list__wrap__items__content"> 
+                        <h3><?php echo esc_html($term->name)?></h3>
+                        <p><?php echo esc_html($term->description) ?></p>
+                    </a> 
+                    <!-- <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
+                        <a href="#" class="tfhb-btn boxed-btn">Book Now</a>
+                    </div> -->
+                </div>
+
+                <?php endforeach; else: ?>
+                    <div class="tfhb-meeting-list__wrap__no-found">
+                        <p><?php esc_html_e('No meetings found.', 'hydra_booking')?></p>
+                    </div>
+                <?php endif;?>
+
+            </div>
+        </div>
+        <?php 
+        $html = ob_get_clean();
+        // tfhb_print_r($meetings);
+ 
+        return $html;  // return the generated HTML for the shortcode
+
 
     }
  

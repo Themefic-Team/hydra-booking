@@ -1959,39 +1959,39 @@ button.tfhb-btn.tfhb-preloader:before {
   padding-right: 40px;
 }
 
-.tfhb-meeting-list h1, .tfhb-meeting-list h2, .tfhb-meeting-list h3, .tfhb-meeting-list h4, .tfhb-meeting-list p {
+.tfhb-meeting-list h1, .tfhb-meeting-list h2, .tfhb-meeting-list h3, .tfhb-meeting-list h4, .tfhb-meeting-list p, .tfhb-hosts-list h1, .tfhb-hosts-list h2, .tfhb-hosts-list h3, .tfhb-hosts-list h4, .tfhb-hosts-list p, .tfhb-category-list h1, .tfhb-category-list h2, .tfhb-category-list h3, .tfhb-category-list h4, .tfhb-category-list p {
   margin: 0;
 }
-.tfhb-meeting-list__wrap {
+.tfhb-meeting-list__wrap, .tfhb-hosts-list__wrap, .tfhb-category-list__wrap {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
-  width: 100%;
+  width: 100% !important;
   margin-top: 24px;
 }
-.tfhb-meeting-list__wrap__items {
+.tfhb-meeting-list__wrap__items, .tfhb-hosts-list__wrap__items, .tfhb-category-list__wrap__items {
   display: flex;
   flex-wrap: wrap;
   gap: 13px;
-  width: calc(33.33% - 16px);
   padding: 24px;
+  width: calc(33.33% - 16px);
   border: 1px solid #C0D8C4;
   border-radius: 8px;
   background-color: #FFF;
 }
-.tfhb-meeting-list__wrap__items__content h3 {
+.tfhb-meeting-list__wrap__items__content h3, .tfhb-hosts-list__wrap__items__content h3, .tfhb-category-list__wrap__items__content h3 {
   font-size: 17px;
   font-weight: 700;
 }
-.tfhb-meeting-list__wrap__items__content p {
+.tfhb-meeting-list__wrap__items__content p, .tfhb-hosts-list__wrap__items__content p, .tfhb-category-list__wrap__items__content p {
   font-size: 15px;
 }
-.tfhb-meeting-list__wrap__items__tags {
+.tfhb-meeting-list__wrap__items__tags, .tfhb-hosts-list__wrap__items__tags, .tfhb-category-list__wrap__items__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-.tfhb-meeting-list__wrap__items__tags span {
+.tfhb-meeting-list__wrap__items__tags span, .tfhb-hosts-list__wrap__items__tags span, .tfhb-category-list__wrap__items__tags span {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2002,6 +2002,22 @@ button.tfhb-btn.tfhb-preloader:before {
   border-radius: 12px;
   font-size: 13px;
   color: #2E6B38;
+}
+
+.tfhb-hosts-list__wrap__items, .tfhb-category-list__wrap__items {
+  width: calc(25% - 16px);
+  justify-content: center;
+}
+.tfhb-hosts-list__wrap__items__content, .tfhb-category-list__wrap__items__content {
+  text-align: center;
+}
+.tfhb-hosts-list__wrap__items__content__img, .tfhb-category-list__wrap__items__content__img {
+  margin-bottom: 16px;
+}
+.tfhb-hosts-list__wrap__items__content__img img, .tfhb-category-list__wrap__items__content__img img {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
 }
 
 .tfhb-flexbox {

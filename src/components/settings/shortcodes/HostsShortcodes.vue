@@ -26,7 +26,7 @@ const shortCodeField = reactive({
     order_by: 'DESC',
     limit: '10',
 });
-const shortcode = ref(`[tfhb_meetings title="Title" subtitle="Sub title" category="all" hosts="all" sort_by="id" order_by="DESC" limit="9"]`)
+const shortcode = ref(`[tfhb_hosts title="Title" subtitle="Sub title" sort_by="id" order_by="DESC" limit="9"]`)
 
 // copy to clipboard
 function copyToClipboard(text) {
@@ -46,13 +46,9 @@ function copyToClipboard(text) {
 const generateShortcode = () => {
 
     ShortcodeData.preview_skeleton = true;
-    let shortcode_field = `[tfhb_meetings`;
+    let shortcode_field = `[tfhb_hosts`;
     Object.keys(shortCodeField).forEach(key => {
-        if ((key === 'hosts' && shortCodeField[key].length == 0) || (key === 'category' && shortCodeField[key].length == 0) ) { 
-            shortcode_field += ` ${key}="all"`;
-        }else{ 
-            shortcode_field += ` ${key}="${shortCodeField[key]}"`;
-        }
+        shortcode_field += ` ${key}="${shortCodeField[key]}"`;
     });
     shortcode_field += ']';
     shortcode.value = shortcode_field;
@@ -63,9 +59,7 @@ const generateShortcode = () => {
 const resetShortcode =  () => { 
     ShortcodeData.preview_skeleton_reset = true;
     shortCodeField.title = '';
-    shortCodeField.subtitle = '';
-    shortCodeField.category = [];
-    shortCodeField.hosts = [];
+    shortCodeField.subtitle = ''; 
     shortCodeField.short_by = 'id';
     shortCodeField.order_by = 'DESC';
     shortCodeField.limit = '10';
@@ -87,7 +81,7 @@ onBeforeMount(() => {
         <div class="tfhb-settings-shortcode-wrap settings "> 
             <div  class="tfhb-dashboard-heading tfhb-mb-16">
                 <div class="tfhb-admin-title "> 
-                    <h3 >{{ $tfhb_trans('Meetings Shortcode') }}</h3>  
+                    <h3 >{{ $tfhb_trans('Hosts Shortcode') }}</h3>  
                 </div> 
             </div> 
              
@@ -105,24 +99,7 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Shortcode sub-title')"    
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a sub-title for your shortcode')"  
-                />  
-                <HbMultiSelect  
-                    v-model="shortCodeField.category" 
-                    :selected = "1"  
-                    :label="$tfhb_trans('Select meeting category')"  
-                    @add-change="Booking.fetchBookings()"
-                    :placeholder="$tfhb_trans(' Meeting category : All')"  
-                    :option="ShortcodeData.categoryList"
-                /> 
-               
-                <HbMultiSelect  
-                    v-model="shortCodeField.hosts" 
-                    :selected = "1"  
-                    :label="$tfhb_trans('Select Host')"  
-                    @add-change="Booking.fetchBookings()"
-                    :placeholder="$tfhb_trans('Select host : All')"  
-                    :option="ShortcodeData.hostsList"
-                />  
+                />   
                 <HbDropdown 
                     
                     v-model="shortCodeField.short_by"   

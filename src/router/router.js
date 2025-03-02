@@ -242,18 +242,18 @@ const routes = [
                         meta: { Capabilities: 'tfhb_manage_settings' },
                         component: () => import('@/components/settings/shortcodes/MeetingsShortcodes.vue')
                     }, 
-                    // {
-                    //     path: 'hosts',
-                    //     name: 'HostsShortcodeSettings',
-                    //     meta: { Capabilities: 'tfhb_manage_settings' },
-                    //     component: () => import('@/components/settings/shortcodes/MeetingsShortcodes.vue')
-                    // }, 
-                    // {
-                    //     path: 'meeting-categories',
-                    //     name: 'MeetingsCategoriesShortcodeSettings',
-                    //     meta: { Capabilities: 'tfhb_manage_settings' },
-                    //     component: () => import('@/components/settings/shortcodes/MeetingsShortcodes.vue')
-                    // }, 
+                    {
+                        path: 'hosts',
+                        name: 'HostsShortcodeSettings',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/shortcodes/HostsShortcodes.vue')
+                    }, 
+                    {
+                        path: 'meeting-categories',
+                        name: 'MeetingsCategoriesShortcodeSettings',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/shortcodes/CategoriesShortcodes.vue')
+                    }, 
                 ]
             },
             {

@@ -173,6 +173,75 @@ class Host {
 		return $data;
 	}
 
+	/**
+	 * Get all  Hosts
+	 */
+	public function getAll($where = null, $sort_by = 'id', $order_by = 'DESC', $limit = false){
+		global $wpdb;
+ 
+		$table_name = $wpdb->prefix . $this->table;
+		$sql        = "SELECT *  FROM $table_name";	 
+		$data = [];
+ 
+			if($where != null || !empty($where)) { 
+				foreach ($where as $key => $condition) {
+					$field =  $condition[0]; 
+					if(strpos($field, '.') === false){
+						$field = $condition[0];
+					} 
+
+					$operator = $condition[1];
+					$value = $condition[2]; 
+					if($key == 0){
+						$sql .= " WHERE ";
+					}else{
+						$sql .= " AND ";
+					}
+					if($operator == 'BETWEEN'){  
+						$sql .= " $field $operator %s AND %s";
+						$data[] = $value[0];
+						$data[] = $value[1]; 
+					}elseif($operator == 'IN'){   
+						// value is array 
+						$values_array = is_array($value) ? $value : explode(',', $value);
+						$in = implode(',', array_fill(0, count($values_array), '%d')); // Numeric values
+ 
+						$sql .= " $field $operator ($in)";
+						$data = array_merge($data, array_map('intval', $values_array));
+					}elseif($operator == 'LIKE'){   
+						// if operator is like 
+						$like_conditions[] = "$field $operator %s";
+						$data[] = $value; 
+					}else{
+
+						$sql .= " $field $operator %s";
+						$data[] = $value;
+					}
+				} 
+			} 
+
+		
+		// Sort and order
+		$sql .= " ORDER BY $sort_by $order_by";
+
+		// Limit
+		if ($limit !== false) {
+			$sql .= " LIMIT $limit";
+		}
+
+		if(!empty($data)) {
+			// Prepare and execute
+			$query = $wpdb->prepare($sql, ...$data);
+		} else {
+            $query = $sql;
+        }
+		$data = $wpdb->get_results($query);  
+ 
+
+		return $data;
+
+	}
+
 	// delete
 	public function delete( $id ) {
 		global $wpdb;
