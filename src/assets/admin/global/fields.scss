@@ -595,6 +595,7 @@
     .tfhb-builder-tools{
         width: 300px;
         .single-tools{
+            margin-bottom: 10px;
             .tools-heading{
                 border: 1px solid $surface-border;
                 padding: 10px;
@@ -604,7 +605,6 @@
                     }
                 }
             }
-            margin-bottom: 10px;
             &:last-child{
                 margin-bottom: 0px;
             }
