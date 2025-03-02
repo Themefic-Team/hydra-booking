@@ -92,7 +92,7 @@ const upgradeToPro = async (key) => {
 
   License_pre_loader.value = true;
   try {
-    const response = await fetch("/wp-admin/admin-ajax.php", {
+    const response = await fetch(tfhb_core_apps.ajax_url, {
       method: "POST",
       body: formData,
     });
