@@ -311,7 +311,7 @@ const emailTemplate = computed(() => {
 
     if (emailBuilder.header.status) {
         emailContent += `<tr>
-            <td bgcolor="#215732" style="padding: 16px 32px; text-align: left;">
+            <td bgcolor="#215732" style="padding: 16px 32px; text-align: left; border-radius: 8px 8px 0 0;">
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                     <tr>
                         <td style="vertical-align: middle;">
@@ -399,7 +399,7 @@ const emailTemplate = computed(() => {
             </tr>`;
     }
     if (emailBuilder.cancel_reschedule.status) {
-        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" style="margin: 32px 0;"><tr><td style="padding: 0 32px;"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4;">`;
+        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" bgcolor="#FFFFFF" style="padding: 32px 0;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px;">`;
             if (emailBuilder.cancel_reschedule.content.description.content) {
                 emailContent += ` <tr>
                     <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
@@ -409,10 +409,10 @@ const emailTemplate = computed(() => {
                 emailContent += `<tr>
                 <td style="font-size: 15px; padding-bottom: 24px;">`;
                     if (emailBuilder.cancel_reschedule.content.cancel.content){
-                        emailContent += `<a href="${emailBuilder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;">Cancel</a>`;
+                        emailContent += `<a href="${emailBuilder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
                     }
                     if (emailBuilder.cancel_reschedule.content.reschedule.content){
-                        emailContent += `<a href="${emailBuilder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;"">Reschedule</a>`;
+                        emailContent += `<a href="${emailBuilder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
                     }
                 emailContent += `</td></tr>`;
             }
@@ -422,7 +422,7 @@ const emailTemplate = computed(() => {
     if (emailBuilder.footer.status) {
         emailContent += `<tr>
             <td align="center">
-                <table width="600px" role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;">
+                <table width="600px" role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px;">
                     <tr>`;
                         if (emailBuilder.footer.content.description.content) {
                         emailContent += `<td align="left">
@@ -615,12 +615,13 @@ onBeforeMount(() => {
                 </div>
                 <div class="tools-content" v-show="contentVisibility.header && emailBuilder.header.status">
                     <div class="tfhb-shortcode-box tfhb-full-width">
-                        <Editor 
-                            v-model="emailBuilder.header.content"  
-                            :placeholder="$tfhb_trans('Mail Body')"    
-                            editorStyle="height: 180px" 
-                            @tfhb-onclick="TfhbOnFocus"
-                        />
+                        <div @click="TfhbOnFocus">
+                            <Editor 
+                                v-model="emailBuilder.header.content"  
+                                :placeholder="$tfhb_trans('Mail Body')"    
+                                editorStyle="height: 180px" 
+                            />
+                        </div>
                         <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
                             <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
                         </div>
@@ -637,11 +638,18 @@ onBeforeMount(() => {
                     <HbSwitch v-model="emailBuilder.gratitude.status" />
                 </div>
                 <div class="tools-content" v-show="contentVisibility.gratitude && emailBuilder.gratitude.status">
-                    <Editor 
-                        v-model="emailBuilder.gratitude.content"  
-                        :placeholder="$tfhb_trans('Mail Body')"    
-                        editorStyle="height: 180px" 
-                    />
+                    <div class="tfhb-shortcode-box tfhb-full-width">
+                        <div @click="TfhbOnFocus">
+                            <Editor 
+                                v-model="emailBuilder.gratitude.content"  
+                                :placeholder="$tfhb_trans('Mail Body')"    
+                                editorStyle="height: 180px" 
+                            />
+                        </div>
+                        <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                            <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -669,11 +677,20 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.data_time && emailBuilder.meeting_details.content.data_time.status">
-                            <Editor 
-                                v-model="emailBuilder.meeting_details.content.data_time.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.meeting_details.content.data_time.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -689,11 +706,19 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.host && emailBuilder.meeting_details.content.host.status">
-                            <Editor 
-                                v-model="emailBuilder.meeting_details.content.host.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.meeting_details.content.host.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -709,11 +734,19 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.about && emailBuilder.meeting_details.content.about.status">
-                            <Editor 
-                                v-model="emailBuilder.meeting_details.content.about.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.meeting_details.content.about.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -729,11 +762,19 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.description && emailBuilder.meeting_details.content.description.status">
-                            <Editor 
-                                v-model="emailBuilder.meeting_details.content.description.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.meeting_details.content.description.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -749,11 +790,19 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.location && emailBuilder.meeting_details.content.location.status">
-                            <Editor 
-                                v-model="emailBuilder.meeting_details.content.location.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.meeting_details.content.location.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -785,11 +834,19 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.host_details.name && emailBuilder.host_details.content.name.status">
-                            <Editor 
-                                v-model="emailBuilder.host_details.content.name.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.host_details.content.name.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -806,11 +863,19 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.host_details.email && emailBuilder.host_details.content.email.status">
-                            <Editor 
-                                v-model="emailBuilder.host_details.content.email.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.host_details.content.email.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -827,11 +892,19 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.host_details.phone && emailBuilder.host_details.content.phone.status">
-                            <Editor 
-                                v-model="emailBuilder.host_details.content.phone.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.host_details.content.phone.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -964,11 +1037,18 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.footer.description && emailBuilder.footer.content.description.status">
-                            <Editor 
-                                v-model="emailBuilder.footer.content.description.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.footer.content.description.content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

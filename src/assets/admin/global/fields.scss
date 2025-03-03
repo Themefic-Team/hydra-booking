@@ -650,10 +650,16 @@
                 }
             }
         }
+        button.boxed-btn{
+            margin-top: 24px;
+        }
     }
     .tfhb-email-preview{
         width: calc(50% - 12px);
         background-color: $secondary-hover;
         padding: 16px;
+        table{
+            width: 100% !important;
+        }
     }
 }

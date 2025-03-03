@@ -15,7 +15,7 @@ const props = defineProps([
     'tooltip',
     'tooltipText'
 ])
-const emit = defineEmits(['update:modelValue', 'tfhb-onclick'])
+const emit = defineEmits(['update:modelValue'])
 const changeEditor = (value) => { 
     emit('update:modelValue', value)
 }
@@ -49,7 +49,6 @@ const changeEditor = (value) => {
           :placeholder="placeholder"
           :disabled="disabled"
           editorStyle="height: 250px" 
-          @focus="emit('tfhb-onclick', $event)"
         />
     </div> 
   </div>
