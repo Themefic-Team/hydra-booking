@@ -26,5 +26,29 @@ tfhbApps.config.globalProperties.$tfhb_trans = function (text) {
     // return tfhb_trans[text] || text + ' -not found';
     return tfhb_trans[text] || text;
 };
+tfhbApps.config.globalProperties.$tfhb_transNumber = function (text) { 
+    return text
+        .toString()
+        .split('')
+        .map(letter => tfhb_trans[letter] || letter)
+        .join('');
+};
+tfhbApps.config.globalProperties.$tfhb_transTimeSlot = function (text) { 
+    return (
+        tfhbApps.config.globalProperties.$tfhb_transNumber(text.substring(0, 2)) + ':' + 
+        tfhbApps.config.globalProperties.$tfhb_transNumber(text.substring(3, 5)) + ' ' + 
+        tfhbApps.config.globalProperties.$tfhb_trans(text.substring(6, 8))
+    );
+};
+tfhbApps.config.globalProperties.$tfhb_transDateSlot = function (text) { 
+    let parts = text.split(', '); // Example: "Tuesday, March 4"
+    if (parts.length < 2) return text; // Return original text if format is incorrect
+
+    let [weekday, datePart] = parts;
+    let [month, day] = datePart.split(' ');
+
+    return `${tfhbApps.config.globalProperties.$tfhb_trans(weekday)}, ${tfhbApps.config.globalProperties.$tfhb_trans(month)} ${tfhbApps.config.globalProperties.$tfhb_transNumber(day)}`;
+};
+console.log(tfhbApps.config.globalProperties.$tfhb_transDateSlot("Tuesday, March 5")); // Translates each part
 tfhbApps.mount('#tfhb-admin-app')
 

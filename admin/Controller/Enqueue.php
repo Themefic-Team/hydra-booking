@@ -27,7 +27,6 @@ class Enqueue {
 		// if page=hydra-booking then load the script
 		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/admin/js/main.js', array( 'jquery' ),  time(), true );
  
-
 		if ( ! isset( $_GET['page'] ) || 'hydra-booking' !== $_GET['page'] ) {
 			return;
 		}
@@ -45,16 +44,16 @@ class Enqueue {
 		wp_enqueue_script( 'tfhb-app-script', TFHB_URL . 'assets/admin/js/main.js', array( 'jquery' ), null, true );
  
 		
-		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
+		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true );
 
 		//  Build the core script
-		wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
+		// wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		// wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
  
 		// Localize the script
 		 
 		$embed_script_link = esc_html('<script src="' .TFHB_URL . 'assets/app/js/widget.js"></script>');
- 
+		 $trans_string = array_merge(TransStrings::getTransStrings(), TransStrings::calendarTransString());
 		wp_localize_script(
 			'tfhb-admin-core',
 			'tfhb_core_apps',
@@ -69,7 +68,7 @@ class Enqueue {
 				'tfhb_url'             => TFHB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),
 				'user'                 => $user_auth, 
-				'trans'				   => TransStrings::getTransStrings(),
+				'trans'				   => $trans_string,
 			)
 		);
 

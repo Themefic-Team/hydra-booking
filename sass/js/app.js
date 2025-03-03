@@ -18,8 +18,13 @@
             }).join('');
         }
 		function tfhbTranslateTimeSlot(key) {  
-			// key like "09:00 AM " AM string  
-			return tfhbTranslateNumber(key.slice(0, 2)) + ':' + tfhbTranslateNumber(key.slice(3, 5)) +' ' + tfhbTranslate(key.slice(6, 8));
+			// key like "09:00 AM " AM string   
+			if(key.slice(6, 8) != ''){
+				return tfhbTranslateNumber(key.slice(0, 2)) + ':' + tfhbTranslateNumber(key.slice(3, 5)) +' ' + tfhbTranslate(key.slice(6, 8));
+
+			}else{
+				return tfhbTranslateNumber(key.slice(0, 2)) + ':' + tfhbTranslateNumber(key.slice(3, 5));
+			}
         }
 
         // Initialize the Date Picker
