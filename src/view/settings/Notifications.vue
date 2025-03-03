@@ -197,7 +197,12 @@ onBeforeMount(() => {
   
         <div  class="tfhb-dashboard-heading  ">
             <div class="tfhb-admin-title tfhb-m-0" v-if="$route.params.id"> 
-                <h1 class="tfhb-capitalize">{{ $route.params.type }}</h1> 
+                <div class="tfhb-flexbox tfhb-gap-4">
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" :to="{ name: 'SettingsNotifications' }" v-if="$route.params.id">
+                        <Icon name="ArrowLeft" :width="20"/>
+                    </router-link>
+                    <h1 class="tfhb-capitalize">{{ $route.params.type }}</h1> 
+                </div>
                 <p class="tfhb-capitalize">{{ $route.params.id.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
             </div>
             <div class="tfhb-admin-title tfhb-m-0" v-else> 
@@ -344,12 +349,6 @@ onBeforeMount(() => {
  
  
             </div> 
-
-            <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox tfhb-mb-24" :to="{ name: 'SettingsNotifications' }" v-if="$route.params.id">
-                <Icon name="ArrowLeft" :width="20"/>
-                {{ $tfhb_trans('Back') }}
-            </router-link>
-           
             <router-view 
             v-if="$route.params" 
             :mediaurl="$tfhb_url"

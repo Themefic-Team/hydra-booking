@@ -1,7 +1,7 @@
 <script setup> 
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
-import { ref, reactive, onBeforeMount, computed, watch } from 'vue';
+import { ref, reactive, onBeforeMount, computed, watch, nextTick } from 'vue';
 import { useRoute, useRouter, RouterView,} from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -148,6 +148,24 @@ const copyShortcode = (value) => {
     
     // Show a toast notification or perform any other action
     toast.success(value + ' is Copied');
+}
+
+const TfhbOnFocus = (event) => {
+    nextTick(() => {
+        // Hide all shortcode boxes first
+        document.querySelectorAll(".tfhb-mail-shortcode").forEach((el) => {
+            el.style.display = "none";
+        });
+
+        // Find the nearest shortcode box and show it
+        const parentBox = event.target.closest(".tfhb-shortcode-box");
+        if (parentBox) {
+            const shortcodeBox = parentBox.querySelector(".tfhb-mail-shortcode");
+            if (shortcodeBox) {
+                shortcodeBox.style.display = "flex"; // Show the shortcode box
+            }
+        }
+    });
 }
 
 const emailBuilder = reactive({ 
@@ -381,7 +399,7 @@ const emailTemplate = computed(() => {
             </tr>`;
     }
     if (emailBuilder.cancel_reschedule.status) {
-        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 32px 0;"><tr><td style="padding: 0 32px;"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4;">`;
+        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" style="margin: 32px 0;"><tr><td style="padding: 0 32px;"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4;">`;
             if (emailBuilder.cancel_reschedule.content.description.content) {
                 emailContent += ` <tr>
                     <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
@@ -404,7 +422,7 @@ const emailTemplate = computed(() => {
     if (emailBuilder.footer.status) {
         emailContent += `<tr>
             <td align="center">
-                <table width="100%" role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;">
+                <table width="600px" role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;">
                     <tr>`;
                         if (emailBuilder.footer.content.description.content) {
                         emailContent += `<td align="left">
@@ -553,30 +571,67 @@ onBeforeMount(() => {
     <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap">
         <div class="tfhb-builder-tools">
 
+            <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32">
+                <HbDropdown 
+                    v-model="Notification[$route.params.type][$route.params.id].template"  
+                    required= "true" 
+                    :label="$tfhb_trans('Select Template')"  
+                    :selected = "1"
+                    :placeholder="$tfhb_trans('Select Template')"   
+                    :option = "[
+                        {'name': 'Default', 'value': 'default'},  
+                    ]"  
+                /> 
+                <HbText  
+                    v-model="Notification[$route.params.type][$route.params.id].from"   
+                    type="email"
+                    :label="$tfhb_trans('From')"  
+                    selected = "1"
+                    :placeholder="$tfhb_trans('Enter From Email')"  
+                /> 
+                <div class="tfhb-shortcode-box tfhb-full-width">
+                    <HbText  
+                        v-model="Notification[$route.params.type][$route.params.id].subject"  
+                        required= "true"  
+                        :label="$tfhb_trans('Subject')"  
+                        selected = "1"
+                        type = "text"
+                        :placeholder="$tfhb_trans('Enter Mail Subject')"  
+                        @tfhb-onclick="TfhbOnFocus"
+                    /> 
+                    <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="single-tools">
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-flexbox">
-                        <Icon name="Menu" v-if="!contentVisibility.header || !emailBuilder.header.status" @click="ContentBox('header')" :width="20"/> 
-                        <Icon name="X" v-else @click="ContentBox('header')" :width="20"/> 
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('header')">
+                        <Icon name="GripVertical" :width="20"/> 
                         {{ $tfhb_trans('Header') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.header.status" />
                 </div>
                 <div class="tools-content" v-show="contentVisibility.header && emailBuilder.header.status">
-                    <Editor 
-                        v-model="emailBuilder.header.content"  
-                        :placeholder="$tfhb_trans('Mail Body')"    
-                        editorStyle="height: 180px" 
-                    />
+                    <div class="tfhb-shortcode-box tfhb-full-width">
+                        <Editor 
+                            v-model="emailBuilder.header.content"  
+                            :placeholder="$tfhb_trans('Mail Body')"    
+                            editorStyle="height: 180px" 
+                            @tfhb-onclick="TfhbOnFocus"
+                        />
+                        <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                            <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="single-tools">
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-flexbox">
-                        <Icon name="Menu" v-if="!contentVisibility.gratitude || !emailBuilder.gratitude.status" @click="ContentBox('gratitude')" :width="20"/> 
-                        <Icon name="X" v-else @click="ContentBox('gratitude')" :width="20"/> 
-
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('gratitude')">
+                        <Icon name="GripVertical" :width="20"/> 
                         {{ $tfhb_trans('Gratitude') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.gratitude.status" />
@@ -592,11 +647,9 @@ onBeforeMount(() => {
 
             <!-- Meeting Details Section -->
             <div class="single-tools">
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-flexbox">
-                        <Icon name="Menu" v-if="!contentVisibility.meeting_details.main || !emailBuilder.meeting_details.status" @click="ContentBox('meeting_details')" :width="20"/> 
-                        <Icon name="X" v-else @click="ContentBox('meeting_details')" :width="20"/> 
-
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('meeting_details')">
+                        <Icon name="GripVertical" :width="20"/> 
                         {{ $tfhb_trans('Meeting Details') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.meeting_details.status" />
@@ -605,14 +658,14 @@ onBeforeMount(() => {
                     
                     <!-- Nested: Date & Time -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-                                <Icon name="Menu" v-if="!contentVisibility.meeting_details.data_time || !emailBuilder.meeting_details.content.data_time.status" @click="ContentBox('meeting_details', 'data_time')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('meeting_details', 'data_time')" :width="20"/> 
-                                
-                                {{ $tfhb_trans('Date & Time:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('meeting_details', 'data_time')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('meeting_details', 'data_time')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Date & Time:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.meeting_details.content.data_time.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.meeting_details.content.data_time.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.data_time && emailBuilder.meeting_details.content.data_time.status">
@@ -625,14 +678,14 @@ onBeforeMount(() => {
                     </div>
 
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-
-                                <Icon name="Menu" v-if="!contentVisibility.meeting_details.host || !emailBuilder.meeting_details.content.host.status" @click="ContentBox('meeting_details', 'host')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('meeting_details', 'host')" :width="20"/> 
-                                {{ $tfhb_trans('Host:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('meeting_details', 'host')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('meeting_details', 'host')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Host:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.meeting_details.content.host.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.meeting_details.content.host.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.host && emailBuilder.meeting_details.content.host.status">
@@ -645,14 +698,14 @@ onBeforeMount(() => {
                     </div>
 
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-                                <Icon name="Menu" v-if="!contentVisibility.meeting_details.about || !emailBuilder.meeting_details.content.about.status" @click="ContentBox('meeting_details', 'about')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('meeting_details', 'about')" :width="20"/> 
-
-                                {{ $tfhb_trans('About:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('meeting_details', 'about')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('meeting_details', 'about')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('About:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.meeting_details.content.about.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.meeting_details.content.about.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.about && emailBuilder.meeting_details.content.about.status">
@@ -665,14 +718,14 @@ onBeforeMount(() => {
                     </div>
 
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-                                <Icon name="Menu" v-if="!contentVisibility.meeting_details.description || !emailBuilder.meeting_details.content.description.status" @click="ContentBox('meeting_details', 'description')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('meeting_details', 'description')" :width="20"/> 
-
-                                {{ $tfhb_trans('Description:') }}
-                            </div>
-                            <HbSwitch v-model="emailBuilder.meeting_details.content.description.status" />
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('meeting_details', 'description')" :width="20"/>
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('meeting_details', 'description')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Description:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.meeting_details.content.description.status" />
+                            </div> 
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.description && emailBuilder.meeting_details.content.description.status">
@@ -685,14 +738,14 @@ onBeforeMount(() => {
                     </div>
 
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-                                <Icon name="Menu" v-if="!contentVisibility.meeting_details.location || !emailBuilder.meeting_details.content.location.status" @click="ContentBox('meeting_details', 'location')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('meeting_details', 'location')" :width="20"/> 
-
-                                {{ $tfhb_trans('Location:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('meeting_details', 'location')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('meeting_details', 'location')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Location:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.meeting_details.content.location.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.meeting_details.content.location.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.meeting_details.location && emailBuilder.meeting_details.content.location.status">
@@ -709,10 +762,9 @@ onBeforeMount(() => {
 
             <!-- Host Details Section -->
             <div class="single-tools">
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-flexbox">
-                        <Icon name="Menu" v-if="!contentVisibility.host_details.main || !emailBuilder.host_details.status" @click="ContentBox('host_details')" :width="20"/> 
-                        <Icon name="X" v-else @click="ContentBox('host_details')" :width="20"/> 
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('host_details')">
+                        <Icon name="GripVertical" :width="20"/> 
 
                         {{ $tfhb_trans('Host Details') }}
                     </div>
@@ -722,14 +774,14 @@ onBeforeMount(() => {
                     
                     <!-- Name -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-                                <Icon name="Menu" v-if="!contentVisibility.host_details.name || !emailBuilder.host_details.content.name.status" @click="ContentBox('host_details', 'name')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('host_details', 'name')" :width="20"/> 
-
-                                {{ $tfhb_trans('Name:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('host_details', 'name')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('host_details', 'name')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Name:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.host_details.content.name.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.host_details.content.name.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.host_details.name && emailBuilder.host_details.content.name.status">
@@ -743,15 +795,14 @@ onBeforeMount(() => {
 
                     <!-- Email -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-
-                                <Icon name="Menu" v-if="!contentVisibility.host_details.email || !emailBuilder.host_details.content.email.status" @click="ContentBox('host_details', 'email')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('host_details', 'email')" :width="20"/> 
-
-                                {{ $tfhb_trans('Email:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('host_details', 'email')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('host_details', 'email')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Email:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.host_details.content.email.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.host_details.content.email.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.host_details.email && emailBuilder.host_details.content.email.status">
@@ -765,14 +816,14 @@ onBeforeMount(() => {
 
                     <!-- Phone -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-                                <Icon name="Menu" v-if="!contentVisibility.host_details.phone || !emailBuilder.host_details.content.phone.status" @click="ContentBox('host_details', 'phone')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('host_details', 'phone')" :width="20"/> 
-
-                                {{ $tfhb_trans('Phone:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('host_details', 'phone')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('host_details', 'phone')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Phone:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.host_details.content.phone.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.host_details.content.phone.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.host_details.phone && emailBuilder.host_details.content.phone.status">
@@ -787,11 +838,9 @@ onBeforeMount(() => {
             </div>
 
             <div class="single-tools">
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-flexbox">
-                        <Icon name="Menu" v-if="!contentVisibility.instructions || !emailBuilder.instructions.status" @click="ContentBox('instructions')" :width="20"/> 
-                        <Icon name="X" v-else @click="ContentBox('instructions')" :width="20"/>
-
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('instructions')">
+                        <Icon name="GripVertical" :width="20"/> 
                         {{ $tfhb_trans('Instructions') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.instructions.status" />
@@ -806,11 +855,9 @@ onBeforeMount(() => {
             </div>
 
             <div class="single-tools">
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-flexbox">
-                        <Icon name="Menu" v-if="!contentVisibility.cancel_reschedule.main || !emailBuilder.cancel_reschedule.status" @click="ContentBox('cancel_reschedule')" :width="20"/> 
-                        <Icon name="X" v-else @click="ContentBox('cancel_reschedule')" :width="20"/>
-
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('cancel_reschedule')">
+                        <Icon name="GripVertical" :width="20"/> 
                         {{ $tfhb_trans('Cancel & Reschedule') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.cancel_reschedule.status" />
@@ -819,15 +866,14 @@ onBeforeMount(() => {
                     
                     <!-- Description -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-
-                                <Icon name="Menu" v-if="!contentVisibility.cancel_reschedule.description || !emailBuilder.cancel_reschedule.content.description.status" @click="ContentBox('cancel_reschedule', 'description')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('cancel_reschedule', 'description')" :width="20"/> 
-
-                                {{ $tfhb_trans('Heading:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'description')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'description')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Heading:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.cancel_reschedule.content.description.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.cancel_reschedule.content.description.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.cancel_reschedule.description && emailBuilder.cancel_reschedule.content.description.status">
@@ -841,43 +887,54 @@ onBeforeMount(() => {
 
                     <!-- Cancel -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-
-                                <Icon name="Menu" v-if="!contentVisibility.cancel_reschedule.cancel || !emailBuilder.cancel_reschedule.content.cancel.status" @click="ContentBox('cancel_reschedule', 'cancel')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('cancel_reschedule', 'cancel')" :width="20"/> 
-
-                                {{ $tfhb_trans('Cancel URL:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'cancel')" :width="20"/>
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'cancel')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Cancel URL:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.cancel_reschedule.content.cancel.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.cancel_reschedule.content.cancel.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.cancel_reschedule.cancel && emailBuilder.cancel_reschedule.content.cancel.status">
-                            <HbText 
-                                v-model="emailBuilder.cancel_reschedule.content.cancel.content"  
-                                :placeholder="$tfhb_trans('Cancel URL:')"    
-                            />
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <HbText 
+                                    v-model="emailBuilder.cancel_reschedule.content.cancel.content"  
+                                    :placeholder="$tfhb_trans('Cancel URL:')"    
+                                    @tfhb-onclick="TfhbOnFocus"
+                                />
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Reschedule -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-
-                                <Icon name="Menu" v-if="!contentVisibility.cancel_reschedule.reschedule || !emailBuilder.cancel_reschedule.content.reschedule.status" @click="ContentBox('cancel_reschedule', 'reschedule')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('cancel_reschedule', 'reschedule')" :width="20"/> 
-
-                                {{ $tfhb_trans('Reschedule URL:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'reschedule')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'reschedule')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Reschedule URL:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.cancel_reschedule.content.reschedule.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.cancel_reschedule.content.reschedule.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.cancel_reschedule.reschedule && emailBuilder.cancel_reschedule.content.reschedule.status">
-                            <HbText 
-                                v-model="emailBuilder.cancel_reschedule.content.reschedule.content"  
-                                :placeholder="$tfhb_trans('Reschedule URL:')"    
-                            />
+                            
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <HbText 
+                                    v-model="emailBuilder.cancel_reschedule.content.reschedule.content"  
+                                    :placeholder="$tfhb_trans('Reschedule URL:')"    
+                                    @tfhb-onclick="TfhbOnFocus"
+                                />
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -885,11 +942,9 @@ onBeforeMount(() => {
             </div>
 
             <div class="single-tools">
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-flexbox">
-                        <Icon name="Menu" v-if="!contentVisibility.footer.main || !emailBuilder.footer.status" @click="ContentBox('footer')" :width="20"/> 
-                        <Icon name="X" v-else @click="ContentBox('footer')" :width="20"/>
-
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('footer')">
+                        <Icon name="GripVertical" :width="20"/> 
                         {{ $tfhb_trans('Footer') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.footer.status" />
@@ -898,15 +953,14 @@ onBeforeMount(() => {
                     
                     <!-- Description -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-
-                                <Icon name="Menu" v-if="!contentVisibility.footer.description || !emailBuilder.footer.content.description.status" @click="ContentBox('footer', 'description')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('footer', 'description')" :width="20"/> 
-
-                                {{ $tfhb_trans('Quick Content:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('footer', 'description')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'description')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Quick Content:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.footer.content.description.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.footer.content.description.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.footer.description && emailBuilder.footer.content.description.status">
@@ -920,15 +974,14 @@ onBeforeMount(() => {
 
                     <!-- Email -->
                     <div class="single-tools">
-                        <div class="tools-heading tfhb-flexbox tfhb-justify-between">
-                            <div class="tfhb-flexbox">
-
-                                <Icon name="Menu" v-if="!contentVisibility.footer.social || !emailBuilder.footer.content.social.status" @click="ContentBox('footer', 'social')" :width="20"/> 
-                                <Icon name="X" v-else @click="ContentBox('footer', 'social')" :width="20"/> 
-
-                                {{ $tfhb_trans('Social:') }}
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('footer', 'social')" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'social')">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ $tfhb_trans('Social:') }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.footer.content.social.status" />
                             </div>
-                            <HbSwitch v-model="emailBuilder.footer.content.social.status" />
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.footer.social && emailBuilder.footer.content.social.status">
@@ -949,46 +1002,6 @@ onBeforeMount(() => {
 
                 </div>
             </div>
-
-        </div>
-
-        <div class="tfhb-email-preview-wrap  tfhb-flexbox"> 
-            
-            <!-- Time format -->
-            <HbDropdown 
-                    
-                v-model="Notification[$route.params.type][$route.params.id].template"  
-                required= "true" 
-                :label="$tfhb_trans('Select Template')"  
-                width="50"
-                :selected = "1"
-                :placeholder="$tfhb_trans('Select Template')"   
-                :option = "[
-                    {'name': 'Default', 'value': 'default'},  
-                ]"  
-            /> 
-            <!-- Time format --> 
-            <HbText  
-                v-model="Notification[$route.params.type][$route.params.id].from"   
-                type="email"
-                width="50"
-                :label="$tfhb_trans('From')"  
-                selected = "1"
-                :placeholder="$tfhb_trans('Enter From Email')"  
-            /> 
-
-            <HbText  
-                v-model="Notification[$route.params.type][$route.params.id].subject"  
-                required= "true"  
-                :label="$tfhb_trans('Subject')"  
-                selected = "1"
-                type = "text"
-                :placeholder="$tfhb_trans('Enter Mail Subject')"  
-            /> 
-            <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8"> 
-                <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
-            </div>
-            
             <HbButton  
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="UpdateNotification"
@@ -997,10 +1010,9 @@ onBeforeMount(() => {
                 hover_icon="ArrowRight"
                 :hover_animation="true"
                 :pre_loader="preloader"
-            />  
-
+            /> 
         </div>
-        <div class="email-preview" v-html="emailTemplate"></div>
+        <div class="tfhb-email-preview" v-html="emailTemplate"></div>
     </div>
     <!-- Single Integrations  -->
 
