@@ -15,6 +15,8 @@ class licenseController {
 
 	// constaract
 	public function __construct() {
+        // if HydraBooking is not exicuted 
+        
 
 	}
 
@@ -178,8 +180,20 @@ class licenseController {
         ];
     
         $response = get_option('HydraBooking_lic_response_obj', false);  
+        
+
         // tfhb_print_r($response);
-        if (false !=  $response) {
+        if (false !=  $response ) {
+            // if expire_date	is over then return  //2026-03-04 08:21:06
+            $exp_date = strtotime($response->expire_date);
+            $current_date = strtotime(current_time('mysql'));
+
+            if ($exp_date <= $current_date) {
+                return self::$cached_result;
+            }
+             
+
+
             self::$cached_result['is_valid'] = !empty($response->is_valid) ? $response->is_valid : false;
             
             // Determine license type based on 'license_title'
