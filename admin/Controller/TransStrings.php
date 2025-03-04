@@ -600,6 +600,8 @@ namespace HydraBooking\Admin\Controller;
             'seats left' =>  _x('seats left', 'Calendar seats left', 'hydra-booking'),   
             'Previous' =>  _x('Previous', 'Calendar previous', 'hydra-booking'),
             'Next' =>  _x('Next', 'Calendar next', 'hydra-booking'),
+            'Name' =>  _x('Name', 'Calendar form name field', 'hydra-booking'),
+            'Email' =>  _x('Email', 'Calendar form email field', 'hydra-booking'),
             'AM' =>  _x('AM', 'Calendar Time Format AM', 'hydra-booking'),
             'PM' =>  _x('PM', 'Calendar Time Format PM', 'hydra-booking'),
             'Bookings' =>  _x('Bookings', 'Calendar bookings', 'hydra-booking'),
@@ -622,7 +624,7 @@ namespace HydraBooking\Admin\Controller;
 
     public static function tfhbTranslate($key) {
          $translations = self::calendarTransString();
-         return $translations[$key] ?? $key . ' not found';
+         return $translations[$key] ?? $key;
    }
 
    public static function tfhbTranslateNumber($key) {
@@ -640,7 +642,7 @@ namespace HydraBooking\Admin\Controller;
       // Example input: 'Tuesday, March 4'
       $dateParts = explode(', ', $key);  // Split by comma (weekday and date)
       if (count($dateParts) < 2) {
-         return $key . ' not found'; // Return original string if format is incorrect
+         return $key; // Return original string if format is incorrect
       }
       
       $weekday = $dateParts[0]; // 'Tuesday'

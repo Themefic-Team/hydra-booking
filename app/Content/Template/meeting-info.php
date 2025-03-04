@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */
-
+use HydraBooking\Admin\Controller\TransStrings;
 $meeting      = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host         = isset( $args['host'] ) ? $args['host'] : array(); 
 $time_zone    = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
@@ -105,7 +105,7 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
 					</defs>
 					</svg>
 				</div>
-				<?php echo ! empty( $meeting['duration'] ) ? esc_html( $meeting['duration'] . ' minutes' ) : '0 minutes'; ?>
+				<?php echo ! empty( $meeting['duration'] ) ? esc_html( TransStrings::tfhbTranslateNumber($meeting['duration']) . ' minutes' ) : '0 minutes'; ?>
 				
 			</li>
 			<?php
@@ -123,6 +123,9 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
 					}elseif($location['location'] == 'Organizer Phone Number'){
 						$location_value = __('Organizer Phone Number', 'hydra-booking');
 					
+					}elseif($location['location'] == 'In Person (Organizer Address)'){
+						$location_value = __('In Person (Organizer Address)', 'hydra-booking');
+					 
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
 						$location_value = __('In Person (Attendee Address)', 'hydra-booking');
 					}else{
