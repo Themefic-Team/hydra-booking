@@ -91,6 +91,7 @@ class Enqueue {
 		 
 		$embed_script_link = esc_html('<script src="' .TFHB_URL . 'assets/app/js/widget.js"></script>');
 		$license = LicenseController::getInstance()->check_license();
+	
 		wp_localize_script(
 			'tfhb-admin-core',
 			'tfhb_core_apps',
