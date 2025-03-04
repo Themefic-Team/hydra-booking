@@ -104,7 +104,6 @@ const UpdateNotification = async () => {
             </div>
  
             <div v-if="host" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width"> 
- 
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 

@@ -772,6 +772,16 @@ class MeetingController {
 		return rest_ensure_response( $data );
 	}
 
+	private function ensureBuilderKeyExists(&$notifications) {
+        foreach ($notifications as $role => &$notificationsData) {
+            foreach ($notificationsData as $key => &$notification) {
+                if (!isset($notification['builder'])) {
+                    $notification['builder'] = '';
+                }
+            }
+        }
+    }
+
 	// Get Single Meeting
 	public function getMeetingData( $request ) {
 		$id = $request['id'];
@@ -810,6 +820,8 @@ class MeetingController {
 			}
 			$MeetingData->notification   = $_tfhb_notification_settings;
 		}
+
+		$this->ensureBuilderKeyExists($MeetingData->notification);
 
 		// Integration
 		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
