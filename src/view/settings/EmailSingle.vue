@@ -179,48 +179,51 @@ const emailBuilder = reactive({
     },
     meeting_details: {
         status: 1,
+        title: 'Meeting Details',
         content: {
             data_time: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}</td>'
+                content: '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
             },
             host: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{host.name}}</strong></td>'
+                content: '<strong>{{host.name}}</strong>'
             },
             about: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{meeting.title}}</strong></td>'
+                content: '<strong>{{meeting.title}}</strong>'
             },
             description: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;">{{meeting.content}}</td>'
+                content: '{{meeting.content}}'
             },
             location: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{meeting.location}}</strong></td>'
+                content: '<strong>{{booking.location_details_html}}</strong>'
             }
         },
     },
     host_details: {
         status: 1,
+        title: 'Host Details',
         content: {
             name: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong>{{host.name}}</strong></td>'
+                content: '<strong>{{host.name}}</strong>'
             },
             email: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong></td>'
+                content: '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
             },
             phone: {
                 status: 1,
-                content: '<td style="padding-left: 32px;font-size: 15px; line-height: 24px;"><strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong></td>'
+                content: '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
             },
         }
     },
     instructions: {
         status: 1,
+        title: 'Instructions',
         content: '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
     },
     cancel_reschedule: {
@@ -332,7 +335,7 @@ const emailTemplate = computed(() => {
             <tr>
                 <td style="padding: 0 32px;">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; margin-top: 32px">
-                        <tr><td style="font-weight: bold; font-size: 16px;">Meeting Details</td></tr>
+                        <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.meeting_details.title}</td></tr>
         `;
 
         Object.keys(emailBuilder.meeting_details.content).forEach(key => {
@@ -346,7 +349,9 @@ const emailTemplate = computed(() => {
                                         ${getIcon(key)}
                                         ${formatLabel(key)}
                                     </td>
-                                    ${emailBuilder.meeting_details.content[key].content}
+                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                        ${emailBuilder.meeting_details.content[key].content}
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -363,7 +368,7 @@ const emailTemplate = computed(() => {
             <tr>
                 <td style="padding: 32px 32px 0 32px">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px;">
-                        <tr><td style="font-weight: bold; font-size: 16px;">Host Details</td></tr>
+                        <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.host_details.title}</td></tr>
         `;
 
         Object.keys(emailBuilder.host_details.content).forEach(key => {
@@ -377,7 +382,9 @@ const emailTemplate = computed(() => {
                                         ${getIcon(key)}
                                         ${formatLabel(key)}
                                     </td>
-                                    ${emailBuilder.host_details.content[key].content}
+                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                        ${emailBuilder.host_details.content[key].content}
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -392,14 +399,14 @@ const emailTemplate = computed(() => {
     if (emailBuilder.instructions.status) {
         emailContent += `
             <tr>
-                <td style="font-weight: bold; font-size: 17px; padding: 32px 32px 24px 32px;">Instructions</td>
+                <td style="font-weight: bold; font-size: 17px; padding: 32px 32px 24px 32px;">${emailBuilder.instructions.title}</td>
             </tr>
             <tr>
                 <td style="font-size: 15px; padding: 0 32px 0 32px;">${emailBuilder.instructions.content}</td>
             </tr>`;
     }
     if (emailBuilder.cancel_reschedule.status) {
-        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" bgcolor="#FFFFFF" style="padding: 32px 0;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600px" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px;">`;
+        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 32px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
             if (emailBuilder.cancel_reschedule.content.description.content) {
                 emailContent += ` <tr>
                     <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
@@ -422,7 +429,7 @@ const emailTemplate = computed(() => {
     if (emailBuilder.footer.status) {
         emailContent += `<tr>
             <td align="center">
-                <table width="600px" role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                     <tr>`;
                         if (emailBuilder.footer.content.description.content) {
                         emailContent += `<td align="left">
@@ -458,7 +465,7 @@ const emailTemplate = computed(() => {
         </tr>`;
     }
 
-    return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" bgcolor="#FFFFFF" >${emailContent}</table>`;
+    return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" max-width="600" bgcolor="#FFFFFF" style="width: 100%; max-width: 600px; margin: 0 auto;">${emailContent}</table>`;
 });
 
 // Utility Functions
@@ -663,7 +670,10 @@ onBeforeMount(() => {
                     <HbSwitch v-model="emailBuilder.meeting_details.status" />
                 </div>
                 <div class="tools-content" v-show="contentVisibility.meeting_details.main && emailBuilder.meeting_details.status">
-                    
+                    <HbText 
+                        v-model="emailBuilder.meeting_details.title"  
+                        :placeholder="$tfhb_trans('Heading')"    
+                    />
                     <!-- Nested: Date & Time -->
                     <div class="single-tools">
                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
@@ -820,7 +830,10 @@ onBeforeMount(() => {
                     <HbSwitch v-model="emailBuilder.host_details.status" />
                 </div>
                 <div class="tools-content" v-show="contentVisibility.host_details.main && emailBuilder.host_details.status">
-                    
+                    <HbText 
+                        v-model="emailBuilder.host_details.title"  
+                        :placeholder="$tfhb_trans('Heading')"    
+                    />
                     <!-- Name -->
                     <div class="single-tools">
                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
@@ -919,6 +932,10 @@ onBeforeMount(() => {
                     <HbSwitch v-model="emailBuilder.instructions.status" />
                 </div>
                 <div class="tools-content" v-show="contentVisibility.instructions && emailBuilder.instructions.status">
+                    <HbText 
+                        v-model="emailBuilder.instructions.title"  
+                        :placeholder="$tfhb_trans('Instructions Heading')"    
+                    />
                     <Editor 
                         v-model="emailBuilder.instructions.content"  
                         :placeholder="$tfhb_trans('Mail Body')"    

@@ -756,7 +756,8 @@ class MailHooks {
 	 */
 	public function email_body_open() {
 		// email body open
-		$email_body_open = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"></head><body>';
+		$email_body_open = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"></head><body style="margin: 0; padding: 0; background-color: #E1F2E4;">';
 		return $email_body_open;
 	}
 
@@ -860,18 +861,17 @@ class MailHooks {
 		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
 			$booking_locations = json_decode($attendeeBooking->meeting_locations); 
 			
-			$booking_locations_html = '<ul>';
+			$booking_locations_html = '';
 			foreach ($booking_locations as $key => $value) { 
 				if($key == 'zoom'){
 					$link = $value->address->link;
 					$password = $value->address->password;  
-					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'</li>';
+					$booking_locations_html .= '<b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'<br>';
 				}else{
-
-					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> '.$value->address.'</li>'; 
+					$booking_locations_html .= '<b>'.$value->location.' :</b> '.$value->address.'<br>'; 
 				}
 			}
-			$booking_locations_html .= '</ul>';
+
 			$replacements['{{booking.location_details_html}}'] = $booking_locations_html;
 		}  
 		$tags   = array_keys( $replacements );
