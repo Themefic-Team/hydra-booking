@@ -345,11 +345,11 @@ const emailTemplate = computed(() => {
                         <td>
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                 <tr>
-                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                    <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
                                         ${getIcon(key)}
                                         ${formatLabel(key)}
                                     </td>
-                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
                                         ${emailBuilder.meeting_details.content[key].content}
                                     </td>
                                 </tr>
@@ -378,11 +378,11 @@ const emailTemplate = computed(() => {
                         <td>
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                 <tr>
-                                    <td style="vertical-align: top; font-size: 15px; width: 120px;">
+                                    <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
                                         ${getIcon(key)}
                                         ${formatLabel(key)}
                                     </td>
-                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px;">
+                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
                                         ${emailBuilder.host_details.content[key].content}
                                     </td>
                                 </tr>

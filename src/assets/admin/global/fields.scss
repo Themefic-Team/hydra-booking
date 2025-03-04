@@ -592,8 +592,17 @@
 }
 .tfhb-email-builder{
     align-items: flex-start !important;
+    @media #{$max1140} {
+        display: flow-root !important;
+    }
     .tfhb-builder-tools{
-        width: calc(50% - 12px);
+        width: calc(45% - 12px);
+        @media #{$max1366} {
+            width: calc(40% - 12px);
+        }
+        @media #{$max1140} {
+            width: 100%;
+        }
         .tfhb-template-info{
             .tfhb-single-form-field{
                 .tfhb-single-form-field-wrap{
@@ -655,9 +664,16 @@
         }
     }
     .tfhb-email-preview{
-        width: calc(50% - 12px);
+        width: calc(55% - 12px);
         background-color: $secondary-hover;
         padding: 16px;
+        @media #{$max1366} {
+            width: calc(60% - 12px);
+        }
+        @media #{$max1140} {
+            width: 100%;
+            margin-top: 24px;
+        }
         table{
             width: 100% !important;
             max-width: none !important;
