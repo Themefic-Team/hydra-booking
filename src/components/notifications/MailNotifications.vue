@@ -1,7 +1,7 @@
 <script setup> 
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
-import { ref, reactive, onBeforeMount,computed } from 'vue';
+import { ref, reactive, onBeforeMount, watch, computed, nextTick } from 'vue';
 import { useRouter, RouterView,} from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -29,7 +29,8 @@ const props = defineProps([
     'update_preloader',
     'isSingle',
     'categoryKey',
-    'emailKey'
+    'emailKey',
+    'mediaurl'
 ])
 const emit = defineEmits(['update-notification', 'popup-open-control', 'popup-close-control']);
 
@@ -103,33 +104,17 @@ const contentVisibility = reactive({
     },
 });
 
-const ContentBox = (key, subKey = null) => {
-    if (subKey) {
-        if (emailBuilder[key].content[subKey].status) {
-            contentVisibility[key][subKey] = !contentVisibility[key][subKey];
-        }
-    } else {
-        if (emailBuilder[key].status) {
-            if (typeof contentVisibility[key] === 'boolean') {
-                contentVisibility[key] = !contentVisibility[key];
-            } else {
-                contentVisibility[key].main = !contentVisibility[key].main;
-            }
-        }
-    }
-};
-
 const defaultEmailBuilder = reactive({ 
     header: {
-        status: 1,
+        status: 0,
         content: '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>'
     },
     gratitude: {
-        status: 1,
+        status: 0,
         content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
     },
     meeting_details: {
-        status: 1,
+        status: 0,
         title: 'Meeting Details',
         content: {
             data_time: {
@@ -155,7 +140,7 @@ const defaultEmailBuilder = reactive({
         },
     },
     host_details: {
-        status: 1,
+        status: 0,
         title: 'Host Details',
         content: {
             name: {
@@ -173,12 +158,12 @@ const defaultEmailBuilder = reactive({
         }
     },
     instructions: {
-        status: 1,
+        status: 0,
         title: 'Instructions',
         content: '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
     },
     cancel_reschedule: {
-        status: 1,
+        status: 0,
         content: {
             description: {
                 status: 1,
@@ -195,7 +180,7 @@ const defaultEmailBuilder = reactive({
         }
     },
     footer: {
-        status: 1,
+        status: 0,
         content: {
             description: {
                 status: 1,
@@ -215,6 +200,237 @@ const emailBuilder = computed(() => {
     return props.data?.builder && Object.keys(props.data.builder).length 
         ? props.data.builder 
         : defaultEmailBuilder;
+});
+
+const TfhbOnFocus = (event) => {
+    nextTick(() => {
+        // Hide all shortcode boxes first
+        document.querySelectorAll(".tfhb-mail-shortcode").forEach((el) => {
+            el.style.display = "none";
+        });
+
+        // Find the nearest shortcode box and show it
+        const parentBox = event.target.closest(".tfhb-shortcode-box");
+        if (parentBox) {
+            const shortcodeBox = parentBox.querySelector(".tfhb-mail-shortcode");
+            if (shortcodeBox) {
+                shortcodeBox.style.display = "flex"; // Show the shortcode box
+            }
+        }
+    });
+}
+
+const ContentBox = (key, subKey = null) => {
+    const builder = emailBuilder.value;
+    if (!builder[key]) return;
+
+    if (subKey) {
+        if (builder[key]?.content?.[subKey]?.status) {
+            contentVisibility[key][subKey] = !contentVisibility[key][subKey];
+        }
+    } else {
+        if (builder[key]?.status) {
+            if (typeof contentVisibility[key] === 'boolean') {
+                contentVisibility[key] = !contentVisibility[key];
+            } else {
+                contentVisibility[key].main = !contentVisibility[key].main;
+            }
+        }
+    }
+};
+
+// Computed Property to Generate Email Preview
+const emailTemplate = computed(() => {
+    let emailContent = '';
+    const builder = emailBuilder.value;
+    if (builder.header.status) {
+        emailContent += `<tr>
+            <td bgcolor="#215732" style="padding: 16px 32px; text-align: left; border-radius: 8px 8px 0 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            ${builder.header.content}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>`;
+    }
+
+    if (builder.gratitude.status) {
+        emailContent += `<tr><td style="padding: 32px 32px 0 32px;">${builder.gratitude.content}</td></tr>`;
+    }
+
+    if (builder.meeting_details.status) {
+        emailContent += `
+            <tr>
+                <td style="padding: 0 32px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; margin-top: 32px">
+                        <tr><td style="font-weight: bold; font-size: 16px;">${builder.meeting_details.title}</td></tr>
+        `;
+
+        Object.keys(builder.meeting_details.content).forEach(key => {
+            if (builder.meeting_details.content[key].status) {
+                emailContent += `
+                    <tr>
+                        <td>
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                <tr>
+                                    <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
+                                        ${getIcon(key)}
+                                        ${formatLabel(key)}
+                                    </td>
+                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
+                                        ${builder.meeting_details.content[key].content}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+
+        emailContent += `</table></td></tr>`;
+    }
+
+    if (builder.host_details.status) {
+        emailContent += `
+            <tr>
+                <td style="padding: 32px 32px 0 32px">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px;">
+                        <tr><td style="font-weight: bold; font-size: 16px;">${builder.host_details.title}</td></tr>
+        `;
+
+        Object.keys(builder.host_details.content).forEach(key => {
+            if (builder.host_details.content[key].status) {
+                emailContent += `
+                    <tr>
+                        <td>
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
+                                <tr>
+                                    <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
+                                        ${getIcon(key)}
+                                        ${formatLabel(key)}
+                                    </td>
+                                    <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
+                                        ${builder.host_details.content[key].content}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+
+        emailContent += `</table></td></tr>`;
+    }
+
+    if (builder.instructions.status) {
+        emailContent += `
+            <tr>
+                <td style="font-weight: bold; font-size: 17px; padding: 32px 32px 24px 32px;">${builder.instructions.title}</td>
+            </tr>
+            <tr>
+                <td style="font-size: 15px; padding: 0 32px 0 32px;">${builder.instructions.content}</td>
+            </tr>`;
+    }
+    if (builder.cancel_reschedule.status) {
+        emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 32px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            if (builder.cancel_reschedule.content.description.content) {
+                emailContent += ` <tr>
+                    <td style="font-size: 15px;padding: 24px 0 16px 0;">${builder.cancel_reschedule.content.description.content}</td>
+                </tr>`;
+            }
+            if (builder.cancel_reschedule.content.cancel.content || builder.cancel_reschedule.content.reschedule.content) {
+                emailContent += `<tr>
+                <td style="font-size: 15px; padding-bottom: 24px;">`;
+                    if (builder.cancel_reschedule.content.cancel.content){
+                        emailContent += `<a href="${builder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
+                    }
+                    if (builder.cancel_reschedule.content.reschedule.content){
+                        emailContent += `<a href="${builder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
+                    }
+                emailContent += `</td></tr>`;
+            }
+        emailContent += `</table></td></tr></table>`;
+    }
+
+    if (builder.footer.status) {
+        emailContent += `<tr>
+            <td align="center">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
+                    <tr>`;
+                        if (builder.footer.content.description.content) {
+                        emailContent += `<td align="left">
+                            ${builder.footer.content.description.content}
+                        </td>`;
+                        }
+                        if (builder.footer.content.social) {
+                        emailContent += `<td align="right" style="vertical-align: baseline;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                <tr>`;
+                                    if (builder.footer.content.social.facebook) {
+                                    emailContent += `<td style="padding-left: 24px;">
+                                        <a href="${builder.footer.content.social.facebook}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/facebook-logo.svg" alt="Facebook"></a>
+                                    </td>`;
+                                    }
+                                    if (builder.footer.content.social.x) {
+                                    emailContent += `<td style="padding-left: 24px;">
+                                        <a href="${builder.footer.content.social.x}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/twitter-x-logo.svg" alt="twitter"></a>
+                                    </td>`;
+                                    }
+                                    if (builder.footer.content.social.youtube) {
+                                    emailContent += `<td style="padding-left: 24px;">
+                                        <a href="${builder.footer.content.social.youtube}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/youtube-logo.svg" alt="youtube"></a>
+                                    </td>`;
+                                    }
+                        emailContent += `</tr>
+                            </table>
+                        </td>`;
+                        }
+                emailContent += `</tr>
+                </table>
+            </td>
+        </tr>`;
+    }
+
+    return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" max-width="600" bgcolor="#FFFFFF" style="width: 100%; max-width: 600px; margin: 0 auto;">${emailContent}</table>`;
+});
+
+// Utility Functions
+const getIcon = (key) => {
+    const icons = {
+        data_time: 'calendar-days.svg',
+        host: 'user.svg',
+        about: 'Meeting.svg',
+        description: 'file-text.svg',
+        location: 'Location.svg',
+        name: 'user.svg',
+        email: 'mail.svg',
+        phone: 'phone.svg',
+    };
+    return `<img src="${props.mediaurl}assets/images/${icons[key] || 'default.svg'}" alt="${key}" style="float: left;margin-right: 8px;">`;
+};
+
+const formatLabel = (key) => {
+    const labels = {
+        data_time: 'Date & Time:',
+        host: 'Host:',
+        about: 'About:',
+        description: 'Description:',
+        location: 'Location:',
+        name: 'Name:',
+        email: 'Email:',
+        phone: 'Phone:',
+    };
+    return labels[key] || key;
+};
+
+watch(emailTemplate, (newTemplate) => {
+    props.data.body = newTemplate;
+    props.data.builder = emailBuilder;
 });
 
 const closePopup = () => { 
@@ -246,7 +462,6 @@ const closePopup = () => {
                 <div class="tfhb-email-builder">
                     <div class="tfhb-builder-tools">
                     <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32">
-                        
                         <HbDropdown 
                             v-model="data.template"  
                             required= "true" 
@@ -767,66 +982,9 @@ const closePopup = () => {
 
                         </div>
                     </div>
-                    <HbButton  
-                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="UpdateNotification"
-                        :buttonText="$tfhb_trans('Update')" 
-                        icon="ChevronRight"
-                        hover_icon="ArrowRight"
-                        :hover_animation="true"
-                        :pre_loader="preloader"
-                    /> 
                     </div>
                 </div>
-                <!-- Time format -->
-                <HbDropdown 
-                    
-                    v-model="data.template"  
-                    required= "true" 
-                    :label="$tfhb_trans('Select Template')"  
-                    width="50"
-                    :selected = "1"
-                    :placeholder="$tfhb_trans('Select Template')"   
-                    :option = "[
-                        {'name': 'Default', 'value': 'default'},  
-                    ]"  
-                /> 
-                <!-- Time format --> 
-                <HbText  
-                    v-model="props.data.from"   
-                    type="email"
-                    width="50"
-                    :label="$tfhb_trans('From')"  
-                    selected = "1"
-                    :placeholder="$tfhb_trans('Enter From Email')"  
-                /> 
-
-                <HbText  
-                    v-model="props.data.subject"  
-                    required= "true"  
-                    :label="$tfhb_trans('Subject')"  
-                    selected = "1"
-                    type = "text"
-                    :placeholder="$tfhb_trans('Enter Mail Subject')"  
-                /> 
- 
                 
-                <div class="tfhb-single-form-field" style="width: 100%;"  >
-                    <div class="tfhb-single-form-field-wrap tfhb-field-input">
-                        <!--if has label show label with tag else remove tags  --> 
-                        <label for="">{{ $tfhb_trans('Mail Body') }}</label>  
-                        <Editor 
-                            v-model="props.data.body"  
-                            :placeholder="$tfhb_trans('Mail Body')"    
-                            editorStyle="height: 250px" 
-                        />
-                    </div> 
-                </div> 
-                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8"> 
-                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
-
-                </div>
-
                 <HbButton  
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                     @click="emit('update-notification')"
@@ -836,6 +994,9 @@ const closePopup = () => {
                     :hover_animation="true"
                     :pre_loader="props.update_preloader"
                 />  
+
+                <div class="tfhb-email-preview" v-if="emailBuilder.header.status || emailBuilder.gratitude.status || emailBuilder.meeting_details.status || emailBuilder.host_details.status || emailBuilder.instructions.status || emailBuilder.cancel_reschedule.status || emailBuilder.footer.status" v-html="emailTemplate"></div>
+
              </template> 
         </HbPopup>
     </div>

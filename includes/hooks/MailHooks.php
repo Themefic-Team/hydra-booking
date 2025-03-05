@@ -75,12 +75,6 @@ class MailHooks {
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['body'] : ''; 
 
-				if(empty($mailbody)){
-					$_tfhb_global_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-
-					$mailbody = !empty( $_tfhb_global_notification_settings['host']['booking_confirmation']['body'] ) ? $_tfhb_global_notification_settings['host']['booking_confirmation']['body'] : '';
-				}
-
 				// Replace Shortcode to Values
 				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 			
