@@ -43,14 +43,14 @@ class ActionHooks {
 		if(isset($woo_payment['status']) && $woo_payment['status'] == true){  
 		 
 			// Show custom data in order details.
-			add_action( 'woocommerce_checkout_create_order_line_item', array( new WooBooking(), 'tfhb_apartment_custom_order_data' ), 10, 4 );
+			add_action( 'woocommerce_checkout_create_order_line_item', array( new WooBooking(), 'tfhb_booking_custom_order_data' ), 10, 4 );
 
 			// add booking_id to order meta
-			add_action( 'woocommerce_checkout_order_processed', array( new WooBooking(), 'tfhb_add_apartment_data_checkout_order_processed' ), 10, 4 );
+			add_action( 'woocommerce_checkout_order_processed', array( new WooBooking(), 'tfhb_add_booking_data_checkout_order_processed' ), 10, 4 );
 
 			add_action( 'woocommerce_thankyou', array( new WooBooking(), 'tfhb_woocommerce_thankyou' ) );
 
-			add_action( 'woocommerce_store_api_checkout_order_processed', array( new WooBooking(), 'tfhb_add_apartment_data_checkout_order_processed_block_checkout' ) );
+			add_action( 'woocommerce_store_api_checkout_order_processed', array( new WooBooking(), 'tfhb_add_booking_data_checkout_order_processed_block_checkout' ) );
 
 		}
 		
