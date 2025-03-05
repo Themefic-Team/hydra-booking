@@ -1959,65 +1959,80 @@ button.tfhb-btn.tfhb-preloader:before {
   padding-right: 40px;
 }
 
+.tfhb-meeting-list, .tfhb-hosts-list, .tfhb-category-list {
+  padding: 50px 0px;
+  max-width: 800px !important;
+  margin: 0 auto;
+}
 .tfhb-meeting-list h1, .tfhb-meeting-list h2, .tfhb-meeting-list h3, .tfhb-meeting-list h4, .tfhb-meeting-list p, .tfhb-hosts-list h1, .tfhb-hosts-list h2, .tfhb-hosts-list h3, .tfhb-hosts-list h4, .tfhb-hosts-list p, .tfhb-category-list h1, .tfhb-category-list h2, .tfhb-category-list h3, .tfhb-category-list h4, .tfhb-category-list p {
   margin: 0;
+}
+.tfhb-meeting-list a, .tfhb-hosts-list a, .tfhb-category-list a {
+  text-decoration: none !important;
+}
+.tfhb-meeting-list__heading, .tfhb-hosts-list__heading, .tfhb-category-list__heading {
+  text-align: center;
+  margin-bottom: 30px;
 }
 .tfhb-meeting-list__wrap, .tfhb-hosts-list__wrap, .tfhb-category-list__wrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 32px;
   width: 100% !important;
   margin-top: 24px;
 }
 .tfhb-meeting-list__wrap__items, .tfhb-hosts-list__wrap__items, .tfhb-category-list__wrap__items {
   display: flex;
-  flex-wrap: wrap;
-  gap: 13px;
-  padding: 24px;
-  width: calc(33.33% - 16px);
-  border: 1px solid #C0D8C4;
-  border-radius: 8px;
-  background-color: #FFF;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  border-radius: 12px;
+  background-color: #F9FBF9;
+  align-items: center;
+  justify-content: space-between;
 }
-.tfhb-meeting-list__wrap__items__content h3, .tfhb-hosts-list__wrap__items__content h3, .tfhb-category-list__wrap__items__content h3 {
+.tfhb-meeting-list__wrap__items__wrap, .tfhb-hosts-list__wrap__items__wrap, .tfhb-category-list__wrap__items__wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.tfhb-meeting-list__wrap__items__wrap__img img, .tfhb-hosts-list__wrap__items__wrap__img img, .tfhb-category-list__wrap__items__wrap__img img {
+  max-width: 84px;
+  border-radius: 8px;
+}
+.tfhb-meeting-list__wrap__items__wrap__content h3, .tfhb-hosts-list__wrap__items__wrap__content h3, .tfhb-category-list__wrap__items__wrap__content h3 {
   font-size: 17px;
   font-weight: 700;
 }
-.tfhb-meeting-list__wrap__items__content p, .tfhb-hosts-list__wrap__items__content p, .tfhb-category-list__wrap__items__content p {
+.tfhb-meeting-list__wrap__items__wrap__content h3 a, .tfhb-hosts-list__wrap__items__wrap__content h3 a, .tfhb-category-list__wrap__items__wrap__content h3 a {
+  color: #141915 !important;
+}
+.tfhb-meeting-list__wrap__items__wrap__content p, .tfhb-hosts-list__wrap__items__wrap__content p, .tfhb-category-list__wrap__items__wrap__content p {
   font-size: 15px;
 }
-.tfhb-meeting-list__wrap__items__tags, .tfhb-hosts-list__wrap__items__tags, .tfhb-category-list__wrap__items__tags {
+.tfhb-meeting-list__wrap__items__wrap__content__tags, .tfhb-hosts-list__wrap__items__wrap__content__tags, .tfhb-category-list__wrap__items__wrap__content__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 24px;
+  margin-top: 8px;
 }
-.tfhb-meeting-list__wrap__items__tags span, .tfhb-hosts-list__wrap__items__tags span, .tfhb-category-list__wrap__items__tags span {
+.tfhb-meeting-list__wrap__items__wrap__content__tags span, .tfhb-hosts-list__wrap__items__wrap__content__tags span, .tfhb-category-list__wrap__items__wrap__content__tags span {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 2px 10px;
-  border: 1px solid #C0D8C4;
   border-radius: 12px;
-  font-size: 13px;
-  color: #2E6B38;
+  font-size: 15px;
+  color: #273F2B;
+}
+
+.tfhb-meeting-archive {
+  padding: 50px 0px;
 }
 
 .tfhb-hosts-list__wrap__items, .tfhb-category-list__wrap__items {
-  width: calc(25% - 16px);
-  justify-content: center;
-}
-.tfhb-hosts-list__wrap__items__content, .tfhb-category-list__wrap__items__content {
-  text-align: center;
-}
-.tfhb-hosts-list__wrap__items__content__img, .tfhb-category-list__wrap__items__content__img {
-  margin-bottom: 16px;
-}
-.tfhb-hosts-list__wrap__items__content__img img, .tfhb-category-list__wrap__items__content__img img {
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
+  width: calc(50% - 16px);
 }
 
 .tfhb-flexbox {

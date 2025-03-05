@@ -1,48 +1,99 @@
+ 
 <?php
-/* Template Name: Host Profile */
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+use HydraBooking\DB\Meeting;
 
-get_header();
-
+use HydraBooking\DB\Host;
 // Get the "username" query variable from the URL
 $username = get_query_var('username');
 
-// Fetch user data based on username (assuming you're using WP User Slug or similar)
+// Fetch user data based on  (assuming you're using WP User Slug or similar)
 $user = get_user_by('slug', $username);
+$user_id = $user->ID;
+$meeting = new Meeting();
+$host = new Host();
+$hostData = $host->getHostByUserId($user_id);
+$query = array( );
+// meeting_category  
+$query[] = array('host_id', '=', $hostData->id); 
+$meetings = $meeting->getAll( $query, 'id', 'DESC');
+ 
 
-if ($user) {
-    echo '<h1>' . esc_html($user->display_name) . '</h1>';
+get_header();
+?>
+<!-- Loade theme class -->
 
-    // Query the bookings associated with this host
-    // Assuming bookings are stored as a custom post type or custom fields
-    $args = array(
-        'post_type' => 'booking', // Assuming bookings are a custom post type
-        'posts_per_page' => -1, // Fetch all bookings
-        'meta_query' => array(
-            array(
-                'key' => 'host_username', // Assuming the host username is saved in a custom field
-                'value' => $user->user_login, // Match the username
-                'compare' => '='
-            )
-        )
-    );
+<div class="tfhb-meeting-archive">
+    <div class="tfhb-category-list">
+        <div class="tfhb-category-list__heading">
+            <h2><?php echo esc_html( __('Host: ', 'hydra-booking') );?> <?php echo $hostData->first_name ?> <?php echo $hostData->last_name ?></h2>
+          
+        </div>  
+        <div class="tfhb-meeting-list__wrap">
+            <?php 
+                if(count($meetings) > 0):
+                    foreach ($meetings as $meeting) : 
+                    // Get  all treams details based on trames id 
+                    $meeting_category = $meeting->meeting_category; // meeting_category is a trems id 
+                    $terms = get_term( $meeting_category ); 
+                    $terms_archive_url = get_term_link($terms); 
+                    $permalink = get_permalink($meeting->post_id);
+                    // tfhb_print_r($terms);
+                    $price = !empty($meeting->meeting_price) ? $meeting->meeting_price : esc_html(__('Free', 'hydra_booking'));
+            ?>
+            <div class="tfhb-meeting-list__wrap__items">
+                
+                <div class="tfhb-meeting-list__wrap__items__wrap">
+                    <?php if($meeting->host_featured_image != ''): ?>
+                    <div class="tfhb-meeting-list__wrap__items__wrap__img">
+                        <img src="<?php echo esc_url($meeting->host_featured_image); ?>" alt="">
+                    </div>
+                    <?php endif; ?>
+                    <div class="tfhb-meeting-list__wrap__items__wrap__content">
+                        <h3>
+                            <a href="<?php echo esc_url($permalink) ?>"><?php echo esc_html($meeting->title) ?></a>
+                        </h3>
+                        <!-- <p><?php echo esc_html($meeting->description) ?></p> -->
+                        <div class="tfhb-meeting-list__wrap__items__wrap__content__tags"> 
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                <?php echo esc_html($meeting->host_first_name) ?> <?php echo esc_html($meeting->host_last_name) ?>
+                            </span> 
+                            <!-- <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags"><path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19"/><path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="6.5" cy="9.5" r=".5" fill="currentColor"/></svg>
+                                <a href="<?php // echo esc_url($terms_archive_url); ?>"><?php echo esc_html($terms->name) ?>  </a>  
+                            </span>  -->
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>    
+                                <?php echo esc_html($meeting->duration) ?> minutes
+                            </span>
+                            <!-- <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg> 
+                                <?php // echo esc_html($meeting->meeting_type) ?>
+                            </span> -->
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg> 
+                                <?php echo esc_html($price) ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
+                    <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn">Select</a>
+                </div>
+            </div>
 
-    $bookings = new WP_Query($args);
+            <?php endforeach; else: ?>
+                <div class="tfhb-meeting-list__wrap__no-found">
+                    <p><?php esc_html_e('No meetings found.', 'hydra_booking')?></p>
+                </div>
+            <?php endif;?>
 
-    if ($bookings->have_posts()) :
-        echo '<ul>';
-        while ($bookings->have_posts()) : $bookings->the_post();
-            echo '<li>';
-            echo '<strong>' . get_the_title() . '</strong>'; // Booking title
-            echo '<p>' . get_the_content() . '</p>'; // Booking details (you can customize this)
-            echo '</li>';
-        endwhile;
-        echo '</ul>';
-    else :
-        echo '<p>No bookings found for this host.</p>';
-    endif;
-    wp_reset_postdata();
-} else {
-    echo '<p>User not found.</p>';
-}
+        </div>
+    </div>
+</div>
 
-get_footer();
+
+<?php get_footer(); ?>

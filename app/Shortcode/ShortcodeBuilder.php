@@ -69,6 +69,7 @@ class ShortcodeBuilder {
         ?>
         <div class="tfhb-meeting-list">
             <div class="tfhb-meeting-list__heading">
+
                 <h2><?php echo esc_html( $atts['title'] );?></h2>
                 <p><?php echo esc_html( $atts['subtitle'] );?></p>
             </div>
@@ -85,37 +86,46 @@ class ShortcodeBuilder {
                         $price = !empty($meeting->meeting_price) ? $meeting->meeting_price : esc_html(__('Free', 'hydra_booking'));
                 ?>
                 <div class="tfhb-meeting-list__wrap__items">
-                    <div class="tfhb-meeting-list__wrap__items__content">
-                        <h3>
-                            <a href="<?php echo esc_url($permalink) ?>"><?php echo esc_html($meeting->title) ?></a>
-                        </h3>
-                        <p><?php echo esc_html($meeting->description) ?></p>
+                   
+                    <div class="tfhb-meeting-list__wrap__items__wrap">
+                        <?php if($meeting->host_featured_image != ''): ?>
+                        <div class="tfhb-meeting-list__wrap__items__wrap__img">
+                            <img src="<?php echo esc_url($meeting->host_featured_image); ?>" alt="">
+                        </div>
+                        <?php endif; ?>
+                        <div class="tfhb-meeting-list__wrap__items__wrap__content">
+                            <h3>
+                                <a href="<?php echo esc_url($permalink) ?>"><?php echo esc_html($meeting->title) ?></a>
+                            </h3>
+                            <!-- <p><?php echo esc_html($meeting->description) ?></p> -->
+                            <div class="tfhb-meeting-list__wrap__items__wrap__content__tags"> 
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    <?php echo esc_html($meeting->host_first_name) ?> <?php echo esc_html($meeting->host_last_name) ?>
+                                </span> 
+                                <!-- <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags"><path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19"/><path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="6.5" cy="9.5" r=".5" fill="currentColor"/></svg>
+                                    <a href="<?php // echo esc_url($terms_archive_url); ?>"><?php echo esc_html($terms->name) ?>  </a>  
+                                </span>  -->
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>    
+                                    <?php echo esc_html($meeting->duration) ?> minutes
+                                </span>
+                                <!-- <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg> 
+                                    <?php // echo esc_html($meeting->meeting_type) ?>
+                                </span> -->
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg> 
+                                    <?php echo esc_html($price) ?>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tfhb-meeting-list__wrap__items__tags"> 
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            <?php echo esc_html($meeting->host_first_name) ?> <?php echo esc_html($meeting->host_last_name) ?>
-                        </span> 
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags"><path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19"/><path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="6.5" cy="9.5" r=".5" fill="currentColor"/></svg>
-                            <a href="<?php echo esc_url($terms_archive_url); ?>"><?php echo esc_html($terms->name) ?>  </a>  
-                        </span> 
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>    
-                            <?php echo esc_html($meeting->duration) ?> minutes
-                        </span>
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg> 
-                            <?php echo esc_html($meeting->meeting_type) ?>
-                        </span>
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg> 
-                            <?php echo esc_html($price) ?>
-                        </span>
+                    
+                    <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
+                        <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn">Select</a>
                     </div>
-                    <!-- <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="#" class="tfhb-btn boxed-btn">Book Now</a>
-                    </div> -->
                 </div>
 
                 <?php endforeach; else: ?>
@@ -167,20 +177,32 @@ class ShortcodeBuilder {
             <div class="tfhb-hosts-list__wrap"> 
                 <?php if(count($hostData) > 0):
                     foreach ($hostData as $host) : 
+                        // get user data  
+                        $nickname = get_user_meta($host->user_id, 'nickname', true); 
+                        
+                        $user_url = home_url('/tfhb-host/' . $nickname . '/');
+       
                 ?>
-                <div class="tfhb-hosts-list__wrap__items">
-                    <a class="tfhb-hosts-list__wrap__items__content">
+                <div class="tfhb-hosts-list__wrap__items"> 
+
+                    <div class="tfhb-meeting-list__wrap__items__wrap">
                         <?php if($host->avatar): ?>
-                        <div class="tfhb-hosts-list__wrap__items__content__img">
+                        <div class="tfhb-meeting-list__wrap__items__wrap__img">
                             <img src="<?php echo esc_url($host->avatar)?>" alt="<?php echo esc_html($host->first_name.' '. $host->last_name)?>">
                         </div>
                         <?php endif; ?>
-                        <h3><?php echo esc_html($host->first_name.' '. $host->last_name)?></h3>
-                        <p><?php echo esc_html($host->email) ?></p>
-                    </a> 
-                    <!-- <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="#" class="tfhb-btn boxed-btn">Book Now</a>
-                    </div> -->
+                        <div class="tfhb-meeting-list__wrap__items__wrap__content">
+                            <h3></h3> 
+                            <h3> <a href="<?php echo esc_url($user_url) ?>"><?php echo esc_html($host->first_name.' '. $host->last_name)?></a></h3>
+
+                        </div>
+                    </div>
+                    
+                    <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
+                        <a href="<?php echo esc_url(  $user_url ) ?>" class="tfhb-btn secondary-btn">Select</a>
+                    </div>
+
+                    
                 </div>
 
                 <?php endforeach; else: ?>
@@ -192,8 +214,7 @@ class ShortcodeBuilder {
             </div>
         </div>
         <?php 
-        $html = ob_get_clean();
-        // tfhb_print_r($meetings);
+        $html = ob_get_clean(); 
  
         return $html;  // return the generated HTML for the shortcode
 
@@ -225,15 +246,22 @@ class ShortcodeBuilder {
             <div class="tfhb-category-list__wrap"> 
                 <?php if(count($terms) > 0):
                     foreach ($terms as $term) : 
+                    // make  term link 
+                    $terms_archive_url = get_term_link( $term, 'meeting_category' );
+ 
                 ?>
-                <div class="tfhb-category-list__wrap__items">
-                    <a class="tfhb-category-list__wrap__items__content"> 
-                        <h3><?php echo esc_html($term->name)?></h3>
-                        <p><?php echo esc_html($term->description) ?></p>
-                    </a> 
-                    <!-- <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="#" class="tfhb-btn boxed-btn">Book Now</a>
-                    </div> -->
+                <div class="tfhb-category-list__wrap__items"> 
+                    <div class="tfhb-meeting-list__wrap__items__wrap"> 
+                        <div class="tfhb-meeting-list__wrap__items__wrap__content">
+                            <h3> <a href="<?php echo esc_url($terms_archive_url) ?>"><?php echo esc_html($term->name) ?></a></h3>
+
+                            <p><?php echo esc_html($term->description) ?></p>
+                        </div>
+                    </div>
+                    
+                    <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
+                        <a href="<?php echo esc_url($terms_archive_url) ?>" class="tfhb-btn secondary-btn">Select</a>
+                    </div>
                 </div>
 
                 <?php endforeach; else: ?>

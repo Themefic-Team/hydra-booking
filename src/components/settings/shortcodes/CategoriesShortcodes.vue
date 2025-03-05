@@ -76,32 +76,48 @@ onBeforeMount(() => {
  
 </script>
 <template> 
-    <div :class="{ 'tfhb-skeleton': ShortcodeData.skeleton }" class="tfhb-settings-dashboard  tfhb-flexbox tfhb-gap-16 tfhb-full-width"> 
-       
-        <div class="tfhb-settings-shortcode-wrap settings "> 
-            <div  class="tfhb-dashboard-heading tfhb-mb-16">
-                <div class="tfhb-admin-title "> 
-                    <h3 >{{ $tfhb_trans('Categories Shortcode') }}</h3>  
-                </div> 
+    <div :class="{ 'tfhb-skeleton': ShortcodeData.skeleton }" class="tfhb-settings-dashboard tfhb-full-width tfhb-flexbox tfhb-gap-16"> 
+        <div  class="tfhb-dashboard-heading tfhb-mb-16 tfhb-full-width">
+            <div class="tfhb-admin-title "> 
+                <h3 >{{ $tfhb_trans('Categories Shortcode') }}</h3>  
+                <p>{{ $tfhb_trans('Generate a shortcode to embed your meetings categories list on your website.') }}</p>
             </div> 
-             
-            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-16 tfhb-justify-between">  
+        </div> 
+        <div class="share-link tfhb-flexbox tfhb-gap-8 tfhb-full-width " > 
+            <HbText 
+                v-model="shortcode"  
+                :readonly="true"
+
+            />
+            <div class="tfhb-copy-btn "> 
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 "   
+                    icon="Copy"
+                    @click="copyToClipboard(shortcode)" 
+                />  
+            </div>
+        </div>
+        <div class="tfhb-settings-shortcode-wrap tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-16 tfhb-align-normal tfhb-justify-between"> 
+          
+            <div class="settings tfhb-flexbox tfhb-gap-16 tfhb-align-normal tfhb-justify-between">  
                  
-                <!-- Time Zone -->
-                <HbText  
+                 <!-- Time Zone -->
+                 <HbText  
                     v-model="shortCodeField.title"   
                     :label="$tfhb_trans('Shortcode title')"  
                     selected = "1" 
                     :placeholder="$tfhb_trans('Type a title for your shortcode')"  
+                    @change="generateShortcode()"
                 /> 
                 <HbText  
                     v-model="shortCodeField.subtitle"   
                     :label="$tfhb_trans('Shortcode sub-title')"    
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a sub-title for your shortcode')"  
+                    @change="generateShortcode()"
                 />   
                 <HbDropdown 
-                    
+                    @add-change="generateShortcode()"
                     v-model="shortCodeField.short_by"   
                     :label="$tfhb_trans('Sort By')"   
                     :selected = "1"
@@ -114,6 +130,7 @@ onBeforeMount(() => {
                 />
                 <!-- Time format -->
                 <HbDropdown  
+                    @add-change="generateShortcode()"
                     v-model="shortCodeField.order_by"     
                     :label="$tfhb_trans('Order By')"   
                     :selected = "1" 
@@ -129,7 +146,7 @@ onBeforeMount(() => {
                 <HbText  
                     v-model="shortCodeField.limit"   
                     type="number"  
- 
+                    @change="generateShortcode()"
                     :label="$tfhb_trans(' Display Limit')"  
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a number to limit the number of meetings displayed')"  
@@ -154,43 +171,18 @@ onBeforeMount(() => {
                     />
 
                 </div>  
-            </div>   
+            </div>  
+            <div class="preview">   
+                <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-desktop-wrapper">  
+                    <div class="desktop-view tfhb-full-width">
+                        <div v-html="ShortcodeData.output"></div>     
+                    </div>
+                </div> 
+            </div>
             
              
         </div> 
-
-        <div class="tfhb-settings-shortcode-wrap preview">
-            <div  class="tfhb-dashboard-heading tfhb-mb-16">
-                <div class="tfhb-admin-title "> 
-                    <h3 >{{ $tfhb_trans('Preview') }}</h3>  
-                </div> 
-            </div>
-            <div class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
-                <div class="share-link tfhb-flexbox tfhb-gap-8 tfhb-full-width" > 
-                    <HbText 
-                        v-model="shortcode"  
-                        :readonly="true"
-
-                    />
-                    <div class="tfhb-copy-btn "> 
-                        <HbButton 
-                            classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 "   
-                            icon="Copy"
-                            @click="copyToClipboard(shortcode)"
-                            :hover_animation="true"
-                        />  
-                    </div>
-                </div>
-            </div> 
-            <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-admin-card-box  tfhb-desktop-wrapper tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
-                <div class="desktop-view tfhb-full-width">
-                    <div v-html="ShortcodeData.output"></div>     
-                </div>
-            </div> 
-
-
-            
-        </div> 
+ 
     </div>
  
 </template>
@@ -201,17 +193,41 @@ onBeforeMount(() => {
     .tfhb-admin-title{
         margin-bottom: 0 !important;
     }
-    .tfhb-settings-shortcode-wrap{
-       
-        width: calc(100% - 317px); 
-        &.settings{
-            width: 300px;
+    .share-link{
+        position: relative;
+        input{
+            padding-right: 100px !important;
         }
-        .share-link{
+        .tfhb-copy-btn{
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            button{
+                height: 100%;
+                border-radius: 4px;
+            }
+            // cursor: pointer;
+        }
              > .tfhb-single-form-field{
-                width: calc(100% - 75px) !important;
+                // width: calc(100% - 80px) !important;
+            }
+            .tfhb-copy-btn{
+                // max-width: 75px;
             }
         }
+    .tfhb-settings-shortcode-wrap{
+       >div{
+
+        width: calc(50% - 16px); 
+       }
+       .preview{
+        padding: 16px;
+        background-color: #E1F2E4;
+        // border-radius: ;
+       }
+       
+       
         
     }
     .tfhb-hydra-shortcode-btn{

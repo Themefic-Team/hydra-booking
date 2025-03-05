@@ -241,7 +241,8 @@ class Meeting {
 					host.first_name AS host_first_name,
 					host.last_name AS host_last_name,
 					host.email AS host_email,
-					host.time_zone AS host_time_zone
+					host.time_zone AS host_time_zone,
+					host.featured_image AS host_featured_image
 					FROM $table_name As tfhb_meetings LEFT JOIN {$host_table} AS host  ON host.id = tfhb_meetings.host_id ";	 
 		$data = [];
  
@@ -292,7 +293,12 @@ class Meeting {
 		}
 
 		// Prepare and execute
-		$query = $wpdb->prepare($sql, ...$data);
+		if(!empty($data)){
+
+			$query = $wpdb->prepare($sql, ...$data);
+		}else{
+			$query = $sql;
+		}
 		$data = $wpdb->get_results($query);  
  
 
