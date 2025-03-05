@@ -8331,7 +8331,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                     <tr>`,b.footer.content.description.content&&(g+=`<td align="left">
                             ${b.footer.content.description.content}
-                        </td>`),b.footer.content.social&&(g+=`<td align="right" style="vertical-align: baseline;">
+                        </td>`),b.footer.content.social&&(g+=`<td align="right" class="social" style="vertical-align: baseline;">
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                 <tr>`,b.footer.content.social.facebook&&(g+=`<td style="padding-left: 24px;">
                                         <a href="${b.footer.content.social.facebook}" style="text-decoration: none;"><img src="${n.mediaurl}assets/images/facebook-logo.svg" alt="Facebook"></a>
@@ -8940,7 +8940,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                     <tr>`,c.footer.content.description.content&&(m+=`<td align="left">
                             ${c.footer.content.description.content}
-                        </td>`),c.footer.content.social&&(m+=`<td align="right" style="vertical-align: baseline;">
+                        </td>`),c.footer.content.social&&(m+=`<td align="right" class="social" style="vertical-align: baseline;">
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                 <tr>`,c.footer.content.social.facebook&&(m+=`<td style="padding-left: 24px;">
                                         <a href="${c.footer.content.social.facebook}" style="text-decoration: none;"><img src="${o.mediaurl}assets/images/facebook-logo.svg" alt="Facebook"></a>

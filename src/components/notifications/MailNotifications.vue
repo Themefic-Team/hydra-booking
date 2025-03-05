@@ -368,7 +368,7 @@ const emailTemplate = computed(() => {
                         </td>`;
                         }
                         if (builder.footer.content.social) {
-                        emailContent += `<td align="right" style="vertical-align: baseline;">
+                        emailContent += `<td align="right" class="social" style="vertical-align: baseline;">
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                 <tr>`;
                                     if (builder.footer.content.social.facebook) {
