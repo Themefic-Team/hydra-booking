@@ -9,7 +9,7 @@ use HydraBooking\Admin\Controller\Enqueue;
 // use Shortcode\Signup;
 use HydraBooking\FdDashboard\Shortcode\Signup;
 use HydraBooking\FdDashboard\Shortcode\Login;
-
+use HydraBooking\Admin\Controller\licenseController;
 /**
  * Frontend Dashboard Class
  * 
@@ -27,7 +27,14 @@ class FrontendDashboard {
         if(!self::is_frontend_dashboard_enabled()){
             return false;
         }
+        
+        // Check if License is valid`
+        $license = LicenseController::getInstance()->check_license();
+        if(!$license['is_valid']){
+            return false;
+        }
 
+        // 
         // Define Constants
         $this->define_constants();
 
@@ -490,7 +497,13 @@ class FrontendDashboard {
         $admin_roles = array('tfhb_host');
         $current_user = wp_get_current_user();
 
+        
+
         if(in_array($current_user->roles[0], $admin_roles)){ 
+            // Allow AJAX requests
+            if (defined('DOING_AJAX') && DOING_AJAX) {
+                return; 
+            }
             // return to frontend dashboard
             $settings = get_option('_tfhb_frontend_dashboard_settings');
             $after_login_redirect_type = isset($settings['login']['after_login_redirect_type']) && !empty($settings['login']['after_login_redirect_type']) ? $settings['login']['after_login_redirect_type'] :  'page';

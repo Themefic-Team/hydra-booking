@@ -177,12 +177,12 @@ const routes = [
                         meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-payment.vue')
                     },
-                    {
-                        path: 'webhook',
-                        name: 'MeetingsCreateWebhook',
-                        meta: { Capabilities: 'tfhb_manage_meetings' },
-                        component: () => import('../view/meetings/meetings-webhook.vue')
-                    },
+                    // {
+                    //     path: 'webhook',
+                    //     name: 'MeetingsCreateWebhook',
+                    //     meta: { Capabilities: 'tfhb_manage_meetings' },
+                    //     component: () => import('../view/meetings/meetings-webhook.vue')
+                    // },
                     {
                         path: 'integrations',
                         name: 'MeetingsCreateIntegrations',

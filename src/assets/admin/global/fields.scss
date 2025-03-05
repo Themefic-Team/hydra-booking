@@ -556,6 +556,10 @@
         }
         .error{
             color: $error-text;
+            border: 0px solid;
+            box-shadow: none;
+            margin: 0;
+            padding: 0;
         }
     }
     .tfhb-license-email-field{

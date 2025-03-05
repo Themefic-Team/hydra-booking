@@ -15,7 +15,9 @@ class licenseController {
 
 	// constaract
 	public function __construct() {
+        // if HydraBooking is not exicuted 
         
+
 	}
 
     public static function getInstance() {
@@ -64,10 +66,11 @@ class licenseController {
         $license_key=get_option($lic_key_name,"");
         $license_email=get_option("HydraBooking_lic_email","");
 
-        $HydraBooking = new HydraBooking();
-        $response = $HydraBooking->response_obj;
-
-        if(empty($response)){
+        // $HydraBooking = new HydraBooking();
+        $response = get_option('HydraBooking_lic_response_obj', false); 
+       
+         
+        if(false == $response){
             wp_send_json_error( array( 
                 'status' => false,
                 'message' => 'Invalid License Key'
@@ -103,11 +106,12 @@ class licenseController {
         update_option($main_lic_key,$license_key) || add_option($main_lic_key,$license_key);
         update_option("HydraBooking_lic_email",$license_email) || add_option("HydraBooking_lic_email",$license_email);
         update_option('_site_transient_update_plugins',''); 
-        $HydraBooking = new HydraBooking();  
+        $HydraBooking = new HydraBooking();
      
-        $response = $HydraBooking->response_obj;  
-         
-        if(empty($response)){ 
+        $HydraBooking->response_obj;  
+        $response = get_option('HydraBooking_lic_response_obj', false); 
+       
+        if(false == $response){ 
             delete_option($lic_key_name);
             delete_option("HydraBooking_lic_email");
 
@@ -167,7 +171,7 @@ class licenseController {
         }
     
         // Initialize necessary classes
-        $HydraBooking = new HydraBooking();
+        // $HydraBooking = new HydraBooking();
         
         // Default response structure
         self::$cached_result = [
@@ -175,21 +179,34 @@ class licenseController {
             'license_type' => false, // Default to 'free'
         ];
     
-        if (!empty($HydraBooking->response_obj)) {
-            self::$cached_result['is_valid'] = !empty($HydraBooking->response_obj->is_valid) ? $HydraBooking->response_obj->is_valid : false;
+        $response = get_option('HydraBooking_lic_response_obj', false);  
+        
+
+        // tfhb_print_r($response);
+        if (false !=  $response ) {
+            // if expire_date	is over then return  //2026-03-04 08:21:06
+            $exp_date = strtotime($response->expire_date);
+            $current_date = strtotime(current_time('mysql'));
+
+            if ($exp_date <= $current_date) {
+                return self::$cached_result;
+            }
+             
+
+
+            self::$cached_result['is_valid'] = !empty($response->is_valid) ? $response->is_valid : false;
             
             // Determine license type based on 'license_title'
-            if (!empty($HydraBooking->response_obj->license_title) && stripos($HydraBooking->response_obj->license_title, 'free') !== false) {
-                self::$cached_result['license_type'] = false;
+            if (!empty($response->license_title) && stripos($response->license_title, 'free') !== false) {
+                self::$cached_result['license_type'] = 'free';
             } else {
-                if ( is_plugin_active( 'hydra-booking-pro/hydra-booking-pro.php' ) ) {
-                    self::$cached_result['license_type'] = true;
+                if ( is_plugin_active( 'hydra-booking-pro/hydra-booking-pro.php'  ) ) {
+                    self::$cached_result['license_type'] = 'pro';
                 }else{
                     self::$cached_result['license_type'] = false; 
                 }
             }
-        }
-    
+        } 
         return self::$cached_result;
     }
     

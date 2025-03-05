@@ -92,7 +92,7 @@ const upgradeToPro = async (key) => {
 
   License_pre_loader.value = true;
   try {
-    const response = await fetch("/wp-admin/admin-ajax.php", {
+    const response = await fetch(tfhb_core_apps.ajax_url, {
       method: "POST",
       body: formData,
     });
@@ -123,12 +123,8 @@ const upgradeToPro = async (key) => {
 
             </div> 
         </div>
-        <div class="tfhb-content-wrap">
-           <!-- {{ LicenseBase.license_key }} -->
-             <!-- {{  LicenseBase.license_type }} -->
-             <!-- {{  LicenseBase.license_active }} -->
-             <!-- {{ $tfhb_is_pro }} -->
-            <HbInfoBox v-if="LicenseBase.license_type=='free' && $tfhb_is_pro == false && LicenseBase.license_active == true"  icon="Lock" name="first-modal">
+        <div class="tfhb-content-wrap"> 
+            <HbInfoBox v-if="LicenseBase.license_type=='free'   && LicenseBase.license_active == true"  icon="Lock" name="first-modal">
                 <template #content>
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
                         <div class="tfhb-admin-title tfhb-m-0"> 
@@ -143,12 +139,13 @@ const upgradeToPro = async (key) => {
                                 icon="ChevronRight" 
                                 hover_icon="ArrowRight" 
                                 :hover_animation="true" 
-                                :pre_loader="License_pre_loader"                            />  
+                                :pre_loader="License_pre_loader" 
+                            />  
                         </div> 
                     </div> 
                 </template>
             </HbInfoBox> 
-
+            
             <HbInfoBox v-else-if="LicenseBase.license_type=='pro' && $tfhb_is_pro == false && LicenseBase.license_active == true"  icon="Lock" name="first-modal">
                 <template #content>
                     <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
@@ -160,18 +157,18 @@ const upgradeToPro = async (key) => {
                 </template>
             </HbInfoBox> 
 
-            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-else-if="LicenseBase.license_type=='free' && $tfhb_is_pro != true">
+            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-else-if="!LicenseBase.license_active">
                 <template #content>
                     {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
                 </template>
             </HbInfoBox>
 
             <!-- Date And Time --> 
-            <div  v-if="$tfhb_license_status == false"  class="tfhb-admin-title" >
+            <div  v-if="$tfhb_is_valid == false"  class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('License Info') }}</h2> 
                 <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
             </div>
-            <div  v-if="$tfhb_license_status == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
+            <div  v-if="$tfhb_is_valid == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
 
                 <ul class="el-license-info">
                     <li>
@@ -262,7 +259,7 @@ const upgradeToPro = async (key) => {
 
             </div>  
 
-            <div  v-if="$tfhb_license_status == false && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
+            <div  v-if="$tfhb_is_valid == false && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <HbText  
                     v-model="LicenseBase.license_key"  
                     required= "true"  

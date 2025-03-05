@@ -405,6 +405,9 @@
 
     .tfhb-admin-title {
         margin-bottom: 16px;
+        h3{
+            font-size:  $heading-font-size-medium;
+        }
     }
 
     .tfhb-mail-shortcode {
@@ -1094,9 +1097,12 @@
     border: none;
     background-color: transparent;
     transition: $transition;
+    padding: 0 !important;
+    box-shadow: none;
 
     &:hover {
         color: $primary-default;
+        background-color: transparent !important;
     }
 }
 
@@ -1216,6 +1222,7 @@
         h3 {
             font-weight: $font-weight-medium;
             line-height: 1.5;
+            // font-size: 17px !important;
         }
 
         .tfhb-integrations-single-block-icon {
@@ -2030,7 +2037,7 @@ button.question-edit-btn {
         height: 100%;
         border-radius: 8px;
         background-color: #000000;
-        opacity: 0.5;
+        opacity: 0.3;
         z-index: -1;
         margin: 0 !important;
     }

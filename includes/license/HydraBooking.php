@@ -36,6 +36,10 @@ class HydraBooking {
             // add_action( 'admin_post_HydraBooking_el_deactivate_license', [ $this, 'action_deactivate_license' ] );
             //$this->licenselMessage=$this->mess;
             //***Write you plugin's code here***
+            // tfhb_print_r( $this->response_obj);
+            $responsed = $this->response_obj;
+            // delete_option("HydraBooking_lic_response_obj");
+            update_option("HydraBooking_lic_response_obj",$responsed);
 
         }else{
             // if(!empty($license_key) && !empty($this->license_message)){
@@ -44,6 +48,7 @@ class HydraBooking {
             // update_option($license_key,"") || add_option($license_key,"");
             // add_action( 'admin_post_HydraBooking_el_activate_license', [ $this, 'action_activate_license' ] );
             // add_action( 'admin_menu', [$this,'inactive_menu']);
+            update_option("HydraBooking_lic_response_obj",false);
         }
     }
     public function set_plugin_data(){
