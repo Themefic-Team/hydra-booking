@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage HydraBooking/app
  */
 
-
+ use HydraBooking\Admin\Controller\TransStrings;
 $meeting             = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $questions           = isset( $meeting['questions'] ) ? $meeting['questions'] : array();
 $questions_type      = isset( $meeting['questions_type'] ) ? $meeting['questions_type'] : 'custom';
@@ -107,7 +107,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 					$required      = $question['required'] == 1 ? 'required' : '';
 
 					echo '<div class="tfhb-single-form">
-                                <label for="' . esc_attr($name) . '">' . esc_attr($label) . ' ' . esc_attr($required_star) . '</label>';
+                                <label for="' . esc_attr($name) . '">' . esc_attr(TransStrings::tfhbTranslate($label)) . ' ' . esc_attr($required_star) . '</label>';
 					if ( $question['type'] == 'select' ) {
 
 						echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>';
@@ -118,7 +118,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 
 					} elseif ( $question['type'] == 'textarea' ) {
 
-						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . 'placeholder="' . esc_attr($placehoder) . '">' . esc_html($value) . '</textarea>';
+						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . 'placeholder="' . esc_attr(TransStrings::tfhbTranslate($placehoder)) . '">' . esc_html($value) . '</textarea>';
 
 					} elseif ( $question['type'] == 'checkbox' ) { 
 						echo '<div class="tfhb-checkbox-group">';
@@ -144,7 +144,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 
 					}  else {
 
-						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr($placehoder) . '">';
+						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr(TransStrings::tfhbTranslate($placehoder)) . '">';
 					}
 							echo '</div>';
 
