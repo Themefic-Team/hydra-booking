@@ -134,7 +134,7 @@ const toggleSidebar = () => {
             <div v-if="props.notifications" class="tfhb-header-notification  tfhb-dropdown tfhb-mega-dropdown">
                 <span @click="displayNotification = !displayNotification"> <Icon name="Bell" size=24 /> </span>
 
-                <span v-if="props.total_unread && props.total_unread != 0" class="tfhb-header-notification-count">
+                <span  v-if="props.total_unread && props.total_unread != 0"  @click="displayNotification = !displayNotification" class="tfhb-header-notification-count">
                     {{props.total_unread}}
                 </span>
 
@@ -169,7 +169,7 @@ const toggleSidebar = () => {
                 </transition>
             </div>
             <div class="tfhb-dropdown tfhb-header-profile-dropdown">
-                <div @click="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
+                <div @click.stop="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
                     <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">
                     <span class="tfhb-profile-name">  {{ $tfhb_trans('Hi,') }} <b>{{props.userAuth.first_name}}</b> </span>
                     <span  class="tfhb-dropdown-single" >

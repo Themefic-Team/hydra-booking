@@ -1,5 +1,5 @@
 <script setup> 
-import { reactive, onBeforeMount, ref, nextTick } from 'vue';
+import { reactive, onBeforeMount, onMounted, ref, nextTick } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router'
 import axios from 'axios'  
 import { toast } from "vue3-toastify";  
@@ -7,6 +7,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
 const { errors } = useValidators();
 
+import { Notification } from '@/store/notification';
 
 import { FdDashboard } from '@/store/frontend-dashboard.js';
 import HbButton from '@/components/form-fields/HbButton.vue'
@@ -180,6 +181,9 @@ onBeforeMount(() => {
     fetchHost();
 });
     
+onMounted(() => { 
+    Notification.fetchNotifications();
+}); 
 
 const imageChange = (attachment) => {   
     FdDashboard.userAuth.avatar = attachment.url; 
