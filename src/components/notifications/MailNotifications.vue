@@ -402,7 +402,7 @@ const emailTemplate = computed(() => {
 // Utility Functions
 const getIcon = (key) => {
     const icons = {
-        data_time: 'calendar-days.svg',
+        data_time: 'calendar-days.png',
         host: 'user.svg',
         about: 'Meeting.svg',
         description: 'file-text.svg',
