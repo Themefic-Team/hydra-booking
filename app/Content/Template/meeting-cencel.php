@@ -40,7 +40,7 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 								<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/user.svg'); ?>" alt="User">
 							</div>
 							<?php echo ! empty( $data->host_first_name ) ? '' . esc_html( $data->host_first_name ) . '  ' . esc_html( $data->host_last_name ) . '' : ''; ?>
-							<span>Host</span>
+							<span><?php echo esc_html( __( 'Host', 'hydra-booking' ) ); ?></span>
 						</li>
 						<li class="tfhb-flexbox tfhb-gap-8">
 							<div class="tfhb-icon">
