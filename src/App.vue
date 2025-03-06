@@ -5,7 +5,24 @@ const front_end_dashboard =  tfhb_core_apps.front_end_dashboard || false;
 
 // import front end dashboard
 import FrontEndDashboard from './view/FrontendDashboard/Frontend.vue';
- 
+
+
+// Update local Storage when page reload
+let webHash = window.location.hash;
+let hashParts = webHash.split('/');
+let requiredPart = hashParts[1];
+if("meetings"==requiredPart){
+  localStorage.setItem('currentMenuItemIndex', 2);
+}else if("booking"==requiredPart){
+  localStorage.setItem('currentMenuItemIndex', 3);
+}else if("hosts"==requiredPart){
+  localStorage.setItem('currentMenuItemIndex', 4);
+}else if("settings"==requiredPart){
+  localStorage.setItem('currentMenuItemIndex', 5);
+}else{
+  localStorage.setItem('currentMenuItemIndex', 1);
+}
+
  
 if(!front_end_dashboard){
   //Admin Menu Active
@@ -45,25 +62,6 @@ if(!front_end_dashboard){
   }
 
 }
-
-
-
-// Update local Storage when page reload
-let webHash = window.location.hash;
-let hashParts = webHash.split('/');
-let requiredPart = hashParts[1];
-if("meetings"==requiredPart){
-  localStorage.setItem('currentMenuItemIndex', 2);
-}else if("booking"==requiredPart){
-  localStorage.setItem('currentMenuItemIndex', 3);
-}else if("hosts"==requiredPart){
-  localStorage.setItem('currentMenuItemIndex', 4);
-}else if("settings"==requiredPart){
-  localStorage.setItem('currentMenuItemIndex', 5);
-}else{
-  localStorage.setItem('currentMenuItemIndex', 1);
-}
-
 
 
 // if tfhb-setup-wizard has class add class into body else remove
