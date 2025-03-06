@@ -19,6 +19,9 @@
         gap: 32px; 
         width: 100% !important;
         margin-top: 24px;  
+        *{
+            box-sizing: border-box;
+        }
         &__items{ 
             display: flex; 
             gap: 16px;
@@ -76,6 +79,7 @@
 }
 .tfhb-meeting-archive{
     padding: 50px 0px;
+    width: 100%;
 }
 .tfhb-hosts-list, .tfhb-category-list{
     &__wrap{

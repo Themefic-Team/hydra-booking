@@ -173,7 +173,7 @@ onBeforeMount(() => {
                 </div>  
             </div>  
             <div class="preview">   
-                <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-desktop-wrapper">  
+                <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-desktop-wrapper tfhb-scrollbar">  
                     <div class="desktop-view tfhb-full-width">
                         <div v-html="ShortcodeData.output"></div>     
                     </div>

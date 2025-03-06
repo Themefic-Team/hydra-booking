@@ -1981,6 +1981,9 @@ button.tfhb-btn.tfhb-preloader:before {
   width: 100% !important;
   margin-top: 24px;
 }
+.tfhb-meeting-list__wrap *, .tfhb-hosts-list__wrap *, .tfhb-category-list__wrap * {
+  box-sizing: border-box;
+}
 .tfhb-meeting-list__wrap__items, .tfhb-hosts-list__wrap__items, .tfhb-category-list__wrap__items {
   display: flex;
   gap: 16px;
@@ -2029,6 +2032,7 @@ button.tfhb-btn.tfhb-preloader:before {
 
 .tfhb-meeting-archive {
   padding: 50px 0px;
+  width: 100%;
 }
 
 .tfhb-hosts-list__wrap__items, .tfhb-category-list__wrap__items {

@@ -198,8 +198,8 @@ onBeforeMount(() => {
                 </div>  
             </div>  
             <div class="preview">   
-                <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-desktop-wrapper">  
-                    <div class="desktop-view tfhb-full-width">
+                <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-desktop-wrapper tfhb-scrollbar">  
+                    <div class="desktop-view tfhb-full-width ">
                         <div v-html="ShortcodeData.output"></div>     
                     </div>
                 </div> 
@@ -250,16 +250,14 @@ onBeforeMount(() => {
         padding: 16px;
         background-color: #E1F2E4;
         // border-radius: ;
-       }
-       
-       
+       } 
         
     }
     .tfhb-hydra-shortcode-btn{
         width: 100% !important;
     }
     .tfhb-desktop-wrapper{
-        max-height: 400px;
+        max-height: 500px;
         overflow-y: auto;
         position: relative;
         &:after{
