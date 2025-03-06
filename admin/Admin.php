@@ -9,7 +9,7 @@ use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Migration\Migration;
 use HydraBooking\Admin\Controller\NoticeController;
 use HydraBooking\Admin\Controller\licenseController;
-
+use HydraBooking\License\HydraBooking; 
 // Load Migrator
 use HydraBooking\DB\Migrator;
 
@@ -46,7 +46,9 @@ class Admin {
 		Migration::instance();
 
 		// license controller
+        new  HydraBooking();
 		new licenseController();
+		
 
 		add_action( 'admin_init', array( $this, 'tfhb_hydra_activation_redirect' ) );
 
