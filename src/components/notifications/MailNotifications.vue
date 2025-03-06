@@ -373,17 +373,17 @@ const emailTemplate = computed(() => {
                                 <tr>`;
                                     if (builder.footer.content.social.facebook) {
                                     emailContent += `<td style="padding-left: 24px;">
-                                        <a href="${builder.footer.content.social.facebook}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/facebook-logo.svg" alt="Facebook"></a>
+                                        <a href="${builder.footer.content.social.facebook}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/facebook-logo.png" alt="Facebook"></a>
                                     </td>`;
                                     }
                                     if (builder.footer.content.social.x) {
                                     emailContent += `<td style="padding-left: 24px;">
-                                        <a href="${builder.footer.content.social.x}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/twitter-x-logo.svg" alt="twitter"></a>
+                                        <a href="${builder.footer.content.social.x}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/twitter-x-logo.png" alt="twitter"></a>
                                     </td>`;
                                     }
                                     if (builder.footer.content.social.youtube) {
                                     emailContent += `<td style="padding-left: 24px;">
-                                        <a href="${builder.footer.content.social.youtube}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/youtube-logo.svg" alt="youtube"></a>
+                                        <a href="${builder.footer.content.social.youtube}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/youtube-logo.png" alt="youtube"></a>
                                     </td>`;
                                     }
                         emailContent += `</tr>
@@ -403,13 +403,13 @@ const emailTemplate = computed(() => {
 const getIcon = (key) => {
     const icons = {
         data_time: 'calendar-days.png',
-        host: 'user.svg',
-        about: 'Meeting.svg',
-        description: 'file-text.svg',
-        location: 'Location.svg',
-        name: 'user.svg',
-        email: 'mail.svg',
-        phone: 'phone.svg',
+        host: 'user.png',
+        about: 'Meeting.png',
+        description: 'file-text.png',
+        location: 'Location.png',
+        name: 'user.png',
+        email: 'mail.png',
+        phone: 'phone.png',
     };
     return `<img src="${props.mediaurl}assets/images/${icons[key] || 'default.svg'}" alt="${key}" style="float: left;margin-right: 8px;">`;
 };

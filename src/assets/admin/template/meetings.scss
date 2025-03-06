@@ -667,6 +667,11 @@
         table{
             width: 100% !important;
             max-width: none !important;
+            td.social{
+                table{
+                    width: auto !important;
+                }
+            }
         }
     }
 }
