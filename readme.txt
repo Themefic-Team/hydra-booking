@@ -209,7 +209,7 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
-= 1.0.30 – March 06, 2025 =
+= 1.0.30 – March 08, 2025 =
 
 - Fixed: Woocommerce Block theme Checkout issue fixed.
 - Fixed: Meeting forms translate issue fixed on frontend.
