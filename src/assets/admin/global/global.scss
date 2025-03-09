@@ -149,6 +149,8 @@
     .tfhb-tooltip {
         position: relative;
         display: inline-block;
+        line-height: 0 !important;
+        cursor: pointer;
 
         .tfhb-tooltiptext {
             // visibility: hidden;
@@ -156,7 +158,7 @@
             text-align: center;
             padding: 5px 10px;
             border-radius: 6px;
-            min-width: 150px;
+            min-width: 200px;
             border-radius: $border-radius-medium;
             /* Position the tooltip */
             position: absolute;
@@ -168,6 +170,7 @@
 
             /* Fade in tooltip */
             opacity: 0;
+            visibility: hidden;
             transition: opacity 0.3s;
 
             /* Arrow */
@@ -467,6 +470,9 @@
 
     .tfhb-align-normal {
         align-items: normal;
+    }
+    .tfhb-align-start {
+        align-items: start;
     }
 
     .tfhb-flexbox-nowrap {

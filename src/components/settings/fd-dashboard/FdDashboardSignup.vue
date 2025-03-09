@@ -10,6 +10,7 @@ import HbText from '@/components/form-fields/HbText.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 
 
+
 const props = defineProps([
     'FrontendDashboard', 
 ])
@@ -32,7 +33,8 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_title"  
             required= "true"  
             :label="$tfhb_trans('Sign up Title')"   
-            :subtitle="$tfhb_trans(`Type here custom Sign up title.`)"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans(`Type here custom Sign up title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type Sign up title')" 
             width="50" 
@@ -41,7 +43,8 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_sub_title"  
             required= "true"  
             :label="$tfhb_trans('Sign up Sub-title')"   
-            :subtitle="$tfhb_trans(`Type here custom Sign up sub-title.`)"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans(`Type here custom Sign up sub-title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type Sign up sub-title')" 
             width="50" 
@@ -51,11 +54,12 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.registration_page"  
             required= "true" 
             :filter="true"
-            :subtitle="$tfhb_trans('Choose a page that will be used as the Sign up Page.')"  
-            :label="$tfhb_trans('Registration Page')"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans('Choose a page that will be used as the Sign up Page.')"  
+            :label="$tfhb_trans('Sign up Page')"  
             width="50"
             :selected = "1"
-            :placeholder="$tfhb_trans('Registration Page')"   
+            :placeholder="$tfhb_trans('Sign up Page')"   
             :option = "props.FrontendDashboard.pages" 
         />
         <!-- Time format --> 
@@ -63,7 +67,8 @@ const props = defineProps([
         <HbDropdown  
             v-model="props.FrontendDashboard.fd_dashboard.signup.after_registration_redirect_type"  
             required= "true" 
-            :subtitle="$tfhb_trans('Select the destination for users after they register.')"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans('Select the destination for users after they register.')"  
             :label="$tfhb_trans('Choose your Page')"  
             width="50"
             :selected = "1"
@@ -80,7 +85,8 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.after_registration_redirect"  
             required= "true" 
             :filter="true"
-            :subtitle="$tfhb_trans('Select the destination page for users after they Sign up.')"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans('Select the destination page for users after they Sign up.')"  
             :label="$tfhb_trans('Choose your Page')"  
             width="50"
             :selected = "1"
@@ -99,11 +105,7 @@ const props = defineProps([
         /> 
      
         
-    </div>
-    <div class="tfhb-admin-title" >
-        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Signup Email Settings') }} </h2>
-        <p>{{ $tfhb_trans('Customize the email settings for the signup page') }}</p>
-    </div>
+    </div> 
     <div class="tfhb-admin-card-box tfhb-flexbox"> 
         <HbSwitch 
             v-model="props.FrontendDashboard.fd_dashboard.signup.enable_email_verification"  

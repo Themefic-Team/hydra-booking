@@ -5,6 +5,7 @@ import { useRouter, RouterView,} from 'vue-router'
 import HbQuestion from '@/components/widgets/HbQuestion.vue'; 
 import HbColor from '@/components/form-fields/HbColor.vue'; 
 import HbColorPalette from '@/components/form-fields/HbColorPalette.vue'; 
+import HbFileUpload from '@/components/form-fields/HbFileUpload.vue'; 
 import LvColorpicker from 'lightvue/color-picker';
 const props = defineProps([
     'FrontendDashboard', 
@@ -59,9 +60,33 @@ const ChangeColors = (value,  colors) => {
 <template>   
     <div class="tfhb-admin-title" >
         
-        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('General Settings') }} </h2> 
-        <p>{{ $tfhb_trans('Manage the general settings and preferences for the frontend dashboard') }}</p>
+        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Logo preference') }} </h2> 
+        <p>{{ $tfhb_trans('This only applies to your Frontend Dashboard.') }}</p>
     </div>  
+    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-start">   
+        <HbFileUpload
+            name="dashboard_logo"
+            v-model= "props.FrontendDashboard.fd_dashboard.general.dashboard_logo"
+            :label = "$tfhb_trans('Choose images or drag & drop it here.')"
+            :subtitle = "$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+            :btn_label = "$tfhb_trans('Upload logo')"
+            file_size ="5"
+            file_format ="jpg,jpeg,png"
+
+            width="50"
+         />
+         <HbFileUpload
+            name="mobile_dashboard_logo"
+            v-model="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo"
+            :label = "$tfhb_trans('Choose images or drag & drop it here.')"
+            :subtitle = "$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+            :btn_label = "$tfhb_trans('Upload logo')"  
+            width="50"
+            file_size ="5"
+            file_format ="jpg,jpeg,png"
+         />
+     
+    </div>
     <div class="tfhb-admin-card-box">   
 
         <div class="tfhb-single-form-field-wrap tfhb-flexbox">
@@ -100,7 +125,7 @@ const ChangeColors = (value,  colors) => {
     </div>
 
     <div class="tfhb-admin-title" >
-        <h2>{{ $tfhb_trans('Select Color Palette for Dashboard') }}</h2> 
+        <h2>{{ $tfhb_trans('Color Palette for Dashboard') }}</h2> 
         <p>{{ $tfhb_trans('Customize your brand colors for the Frontend Dashboard.') }}</p>
     </div>
 
