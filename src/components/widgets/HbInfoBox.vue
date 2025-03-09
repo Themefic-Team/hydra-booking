@@ -88,6 +88,9 @@ const GenaratePasswordLink = async () => {
               selected = "1"
               placeholder="Enter your email address" 
             />
+            <div class="tfhb-validate-notice empty" v-if="!licenseingData.email">
+              user@example.com
+            </div>
             <div class="tfhb-validate-notice invalid" v-if="licenseingData.email && !isValidEmail">
               {{ $tfhb_trans('Please enter a valid email address.') }}
             </div>

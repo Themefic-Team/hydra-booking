@@ -572,6 +572,9 @@
             &.valid{
                 color: $success-text;
             }
+            &.empty{
+                color: $surface-input-field;
+            }
         }
     }
     .tfhb-disable-btn{
