@@ -112,7 +112,7 @@ const GenaratePasswordLink = async () => {
       </template> 
   </HbPopup>
   
-  <div class="tfhb-info-box tfhb-flexbox tfhb-gap-16 tfhb-p-24 tfhb-full-width">
+  <div class="tfhb-info-box tfhb-flexbox tfhb-gap-16 tfhb-p-24 tfhb-full-width" :class="isblocked ? 'tfhb-blue-border' : ''">
     <div class="tfhb-info-box-icon" v-if="!isblocked">
         <Icon :name="icon ?? 'Info'" :size="20" />
     </div>

@@ -585,11 +585,17 @@
         }
     }
 }
+.tfhb-blue-border{
+    border-color: $info-text !important;
+}
 .tfhb-unlock-box{
     flex-wrap: nowrap !important;
     gap: 16px !important;
     justify-content: space-between !important;
     width: 100%;
+    .tfhb-info-box-desc{
+        font-size: 15px;
+    }
     button{
         width: 190px !important;
         box-sizing: content-box;
