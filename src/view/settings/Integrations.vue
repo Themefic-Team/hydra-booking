@@ -24,6 +24,7 @@ import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegratio
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
 import PabblyIntegrations from '@/components/integrations/PabblyIntegrations.vue'; 
 import ZapierIntegrations from '@/components/integrations/ZapierIntegrations.vue';
+import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
 
 // import Form Field 
 import Icon from '@/components/icon/LucideIcon.vue' 
@@ -343,6 +344,16 @@ onBeforeMount(() => {
                 v-if="currentHash === 'all' || currentHash === 'conference'"
                 />
                 <!-- zoom intrigation -->
+
+                <!-- Telegram intrigation -->
+                <TelegramIntregration 
+                :zoom_meeting="Integration.zoom_meeting"  
+                @update-integrations="UpdateIntegration" 
+                :ispopup="popup"
+                @popup-open-control="isPopupOpen"
+                @popup-close-control="isPopupClose"
+                v-if="currentHash === 'all' || currentHash === 'conference'"
+                />
 
                 <!-- zoom intrigation -->
                 <GoogleCalendarIntegrations 
