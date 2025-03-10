@@ -80,7 +80,7 @@ const ChangeColors = (value,  colors) => {
             v-model="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo"
             :label = "$tfhb_trans('Choose images or drag & drop it here.')"
             :subtitle = "$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
-            :btn_label = "$tfhb_trans('Upload logo')"  
+            :btn_label = "$tfhb_trans('Upload Responsive logo')"  
             width="50"
             file_size ="5"
             file_format ="jpg,jpeg,png"
