@@ -346,6 +346,7 @@ namespace HydraBooking\Admin\Controller;
             'Confirm License Deactivation!' =>  __('Confirm License Deactivation!', 'hydra-booking'), 
             'Deactivating the license will remove access to all premium features.' =>  __('Deactivating the license will remove access to all premium features.', 'hydra-booking'), 
             'License Key' =>  __('License Key', 'hydra-booking'), 
+            'Enter your License key' => __('Enter your License key', 'hydra-booking'),
             'Insert your license key here. You can get it from our Client Portal -> Support -> License keys.' =>  __('Insert your license key here. You can get it from our Client Portal -> Support -> License keys.', 'hydra-booking'), 
             'License Email' =>  __('License Email', 'hydra-booking'), 
             'Please enter the email address you used for purchasing the plugin.' =>  __('Please enter the email address you used for purchasing the plugin.', 'hydra-booking'), 

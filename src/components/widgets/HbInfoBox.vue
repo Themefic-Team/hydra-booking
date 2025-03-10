@@ -88,6 +88,9 @@ const GenaratePasswordLink = async () => {
               selected = "1"
               placeholder="Enter your email address" 
             />
+            <div class="tfhb-validate-notice empty" v-if="!licenseingData.email">
+              user@example.com
+            </div>
             <div class="tfhb-validate-notice invalid" v-if="licenseingData.email && !isValidEmail">
               {{ $tfhb_trans('Please enter a valid email address.') }}
             </div>
@@ -109,7 +112,7 @@ const GenaratePasswordLink = async () => {
       </template> 
   </HbPopup>
   
-  <div class="tfhb-info-box tfhb-flexbox tfhb-gap-16 tfhb-p-24 tfhb-full-width">
+  <div class="tfhb-info-box tfhb-flexbox tfhb-gap-16 tfhb-p-24 tfhb-full-width" :class="isblocked ? 'tfhb-blue-border' : ''">
     <div class="tfhb-info-box-icon" v-if="!isblocked">
         <Icon :name="icon ?? 'Info'" :size="20" />
     </div>
