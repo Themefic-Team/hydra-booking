@@ -103,12 +103,16 @@
     // info box
     .tfhb-info-box {
         background-color: $info-background;
-        border: $border-reguler $border-type $surface-border;
+        border: $border-reguler $border-type $info-text;
         border-radius: $border-radius-medium;
         padding: 16px;
         margin-bottom: 16px;
         color: $info-text;
         flex-wrap: nowrap !important;
+        span{
+
+            color: $info-text;
+        }
 
         .tfhb-btn {
             // margin: 0 !important;

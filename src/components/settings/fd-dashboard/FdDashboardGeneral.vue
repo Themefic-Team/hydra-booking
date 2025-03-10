@@ -6,6 +6,7 @@ import HbQuestion from '@/components/widgets/HbQuestion.vue';
 import HbColor from '@/components/form-fields/HbColor.vue'; 
 import HbColorPalette from '@/components/form-fields/HbColorPalette.vue'; 
 import HbFileUpload from '@/components/form-fields/HbFileUpload.vue'; 
+
 import LvColorpicker from 'lightvue/color-picker';
 const props = defineProps([
     'FrontendDashboard', 
@@ -37,8 +38,7 @@ const UploadChangeMobileDashboardLogo = () => {
 }
 const ChangeColors = (value,  colors) => {
 
-    props.FrontendDashboard.fd_dashboard.general.colors_palette = value; 
-    console.log(colors);
+    props.FrontendDashboard.fd_dashboard.general.colors_palette = value;  
     if('custom' != props.FrontendDashboard.fd_dashboard.general.colors_palette){  
         props.FrontendDashboard.fd_dashboard.general.primery_default = colors.primary; 
         props.FrontendDashboard.fd_dashboard.general.primery_hover = colors.primery_hover; 
@@ -84,44 +84,7 @@ const ChangeColors = (value,  colors) => {
             width="50"
             file_size ="5"
             file_format ="jpg,jpeg,png"
-         />
-     
-    </div>
-    <div class="tfhb-admin-card-box">   
-
-        <div class="tfhb-single-form-field-wrap tfhb-flexbox">
-            <div class="tfhb-field-image" >  
-                <img v-if="props.FrontendDashboard.fd_dashboard.general.dashboard_logo != ''"  class='dashboard_logo_display'  :src="props.FrontendDashboard.fd_dashboard.general.dashboard_logo">
-                <img v-else class='dashboard_logo_display'  :src="$tfhb_url+'/assets/images/images-icon.png'" >
-                <button class="tfhb-image-btn" @click="UploadChangeDashboardLogo">{{ $tfhb_trans('Change') }}</button> 
-                <input  type="text"  :v-model="props.FrontendDashboard.fd_dashboard.general.dashboard_logo"   />  
-            </div>
-            <div class="tfhb-image-box-content">  
-            <h4 >{{ $tfhb_trans('Dashboard Header Logo') }} <span  v-if="required == 'true'"> *</span> </h4>
-            <p   class="tfhb-m-0">{{ $tfhb_trans('This logo serves as the main header image of the dashboard') }}</p>
-            </div>
-        </div> 
- 
-    </div>
-    <div class="tfhb-admin-card-box">  
-        
-        <div class="tfhb-single-form-field-wrap tfhb-flexbox ">
-            <div class="tfhb-field-image" >  
-                <img v-if="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo != ''"  class='mobile_dashboard_logo_display'  :src="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo">
-                
-                <img v-else class='mobile_dashboard_logo_display'  :src="$tfhb_url+'/assets/images/images-icon.png'" >
-                <button class="tfhb-image-btn" @click="UploadChangeMobileDashboardLogo">{{ $tfhb_trans('Change') }}</button> 
-                <input  type="text"  :v-model="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo"   />  
-            </div>
-            <div class="tfhb-image-box-content">  
-            <h4 >{{ $tfhb_trans('Responsive Logo') }} <span  v-if="required == 'true'"> *</span> </h4>
-               
-            <p class="tfhb-m-0">{{ $tfhb_trans('This logo is used for the mobile version of the dashboard') }}</p>
-
-            
-            </div>
-        </div>
-        
+         /> 
     </div>
 
     <div class="tfhb-admin-title" >
@@ -217,7 +180,7 @@ const ChangeColors = (value,  colors) => {
             :label="$tfhb_trans('Surface Color (Border Hover)')"  
             selected = "1" 
             width="50" 
-        />  
+        />
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.surface_input_field"   
             :label="$tfhb_trans('Surface Color (Input Field)')"  

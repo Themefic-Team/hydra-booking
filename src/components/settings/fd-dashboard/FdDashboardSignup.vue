@@ -6,15 +6,35 @@ import { useRouter, RouterView,} from 'vue-router'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbText from '@/components/form-fields/HbText.vue';
-
+import { toast } from "vue3-toastify"; 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 
+import Icon from '@/components/icon/LucideIcon.vue';
 
 
 const props = defineProps([
     'FrontendDashboard', 
-])
-
+]) 
+ 
+const copyShortcodeCode = () => {
+    const link = '[hydra_signup_form]';
+    const textarea = document.createElement('textarea');
+    textarea.value = link;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Show a toast notification or perform any other action 
+    // success mess into bottom right
+    toast.success( 'Copied' , {
+        position: 'bottom-right', // Set the desired position
+        duration: 2000 // Set the desired duration
+    });
+}
 </script>
 
 <template>   
@@ -25,7 +45,14 @@ const props = defineProps([
      <HbInfoBox  name="first-modal">
         
         <template #content>
-            <span>{{$tfhb_trans('Use shortcode [hydra_signup_form] to show Sign up form in post/page/widget.')}}</span> 
+            <div class="tfhb-flexbox tfhb-justify-between tfhb-align-center">
+                
+                <span>{{$tfhb_trans('Use shortcode [hydra_signup_form] to show Sign up form in post/page/widget.')}}</span> 
+                <span  class="copy-shortcode" @click="copyShortcodeCode()"> 
+                    <!-- Copy -->
+                    <Icon name="Copy" size ="16" /> 
+                </span> 
+            </div>
         </template>
     </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-flexbox"> 
@@ -106,18 +133,22 @@ const props = defineProps([
      
         
     </div> 
-    <div class="tfhb-admin-card-box tfhb-flexbox"> 
+    <div class="tfhb-admin-card-box tfhb-flexbox email_verifaction"> 
         <HbSwitch 
             v-model="props.FrontendDashboard.fd_dashboard.signup.enable_email_verification"  
             width="100"
             :label="$tfhb_trans('Enable Email Verification')" 
         />
         
-    </div>
-
-   
+    </div> 
     
 </template>
 
 <style scoped>
+.copy-shortcode{
+    cursor:pointer;
+}
+.email_verifaction{
+    background-color: #F9FBF9;
+}
 </style> 

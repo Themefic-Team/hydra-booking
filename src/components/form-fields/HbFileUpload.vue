@@ -14,18 +14,16 @@ const props = defineProps([
     'file_size', // 5 MB
     'file_format' // jpg, jpeg, png
 ])
-
-const emit = defineEmits(['update:modelValue'])
-const imageUrl = ref(props.modelValue)
-const dragOver = ref(false)
-const fileName = ref('')
-const isUploading = ref(false)
-const uploadProgress = ref(0)
-
+const emit = defineEmits(['update:modelValue']);
+const imageUrl = ref(props.modelValue);
+const dragOver = ref(false);
+const fileName = ref('');
+const isUploading = ref(false);
+const uploadProgress = ref(0);
 const MAX_FILE_SIZE = props.file_size * 1024 * 1024 // Convert MB to bytes
-const ALLOWED_FORMATS = props.file_format != '' ?  props.file_format.split(',') : ''
+const ALLOWED_FORMATS = props.file_format != '' ?  props.file_format.split(',') : '';
 
-const extractFileName = (url) => url ? url.split('/').pop().split('?')[0] : ''
+const extractFileName = (url) => url ? url.split('/').pop().split('?')[0] : '';
 
 const validateFile = (file) => {  
     if (file.size > MAX_FILE_SIZE) {
@@ -35,7 +33,8 @@ const validateFile = (file) => {
         });  
         return false
     }
-    const fileExt = file.name.split('.').pop().toLowerCase()
+    
+    const fileExt = file.name.split('.').pop().toLowerCase();
     if (!ALLOWED_FORMATS.includes(fileExt)) {
         toast.error(`Invalid file format. Allowed formats: ${props.file_format}`, {
             position: 'bottom-right', // Set the desired position
@@ -44,12 +43,17 @@ const validateFile = (file) => {
         return false
     }
     return true
-}
-
-const imageChange = (attachment) => {   
-    imageUrl.value = attachment.source_url  
-    fileName.value = extractFileName(attachment.source_url)
-    emit('update:modelValue', attachment.source_url)
+} 
+const imageChange = (attachment, type) => {  
+    if(type == 'clicked'){ 
+        imageUrl.value = attachment.url  
+        fileName.value = extractFileName(attachment.url) 
+        emit('update:modelValue', attachment.url)
+    }else{
+        imageUrl.value = attachment.source_url  
+        fileName.value = extractFileName(attachment.source_url) 
+        emit('update:modelValue', attachment.source_url)
+    } 
     isUploading.value = false
     uploadProgress.value = 0
 }
@@ -64,7 +68,7 @@ const UploadImage = () => {
 
     mediaUploader.on('select', function () {
         const attachment = mediaUploader.state().get('selection').first().toJSON()
-        imageChange(attachment)
+        imageChange(attachment, 'clicked')
     })
 
     mediaUploader.open()
@@ -96,7 +100,7 @@ const uploadFileToWordPress = async (file) => {
         if (!response.ok) throw new Error('Upload failed')
 
         const result = await response.json()
-        imageChange(result) 
+        imageChange(result, 'dragDrop') 
     } catch (error) {
         console.error('Error uploading file:', error)
         isUploading.value = false
