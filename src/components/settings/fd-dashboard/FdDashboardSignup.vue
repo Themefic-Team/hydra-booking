@@ -6,14 +6,35 @@ import { useRouter, RouterView,} from 'vue-router'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbText from '@/components/form-fields/HbText.vue';
-
+import { toast } from "vue3-toastify"; 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
+
+import Icon from '@/components/icon/LucideIcon.vue';
 
 
 const props = defineProps([
     'FrontendDashboard', 
-])
-
+]) 
+ 
+const copyShortcodeCode = () => {
+    const link = '[hydra_signup_form]';
+    const textarea = document.createElement('textarea');
+    textarea.value = link;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Show a toast notification or perform any other action 
+    // success mess into bottom right
+    toast.success( 'Copied' , {
+        position: 'bottom-right', // Set the desired position
+        duration: 2000 // Set the desired duration
+    });
+}
 </script>
 
 <template>   
@@ -24,7 +45,14 @@ const props = defineProps([
      <HbInfoBox  name="first-modal">
         
         <template #content>
-            <span>{{$tfhb_trans('Use shortcode [hydra_signup_form] to show Sign up form in post/page/widget.')}}</span> 
+            <div class="tfhb-flexbox tfhb-justify-between tfhb-align-center">
+                
+                <span>{{$tfhb_trans('Use shortcode [hydra_signup_form] to show Sign up form in post/page/widget.')}}</span> 
+                <span  class="copy-shortcode" @click="copyShortcodeCode()"> 
+                    <!-- Copy -->
+                    <Icon name="Copy" size ="16" /> 
+                </span> 
+            </div>
         </template>
     </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-flexbox"> 
@@ -32,7 +60,8 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_title"  
             required= "true"  
             :label="$tfhb_trans('Sign up Title')"   
-            :subtitle="$tfhb_trans(`Type here custom Sign up title.`)"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans(`Type here custom Sign up title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type Sign up title')" 
             width="50" 
@@ -41,7 +70,8 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.signup_page_sub_title"  
             required= "true"  
             :label="$tfhb_trans('Sign up Sub-title')"   
-            :subtitle="$tfhb_trans(`Type here custom Sign up sub-title.`)"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans(`Type here custom Sign up sub-title.`)"  
             selected = "1"
             :placeholder="$tfhb_trans('Type Sign up sub-title')" 
             width="50" 
@@ -51,11 +81,12 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.registration_page"  
             required= "true" 
             :filter="true"
-            :subtitle="$tfhb_trans('Choose a page that will be used as the Sign up Page.')"  
-            :label="$tfhb_trans('Registration Page')"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans('Choose a page that will be used as the Sign up Page.')"  
+            :label="$tfhb_trans('Sign up Page')"  
             width="50"
             :selected = "1"
-            :placeholder="$tfhb_trans('Registration Page')"   
+            :placeholder="$tfhb_trans('Sign up Page')"   
             :option = "props.FrontendDashboard.pages" 
         />
         <!-- Time format --> 
@@ -63,7 +94,8 @@ const props = defineProps([
         <HbDropdown  
             v-model="props.FrontendDashboard.fd_dashboard.signup.after_registration_redirect_type"  
             required= "true" 
-            :subtitle="$tfhb_trans('Select the destination for users after they register.')"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans('Select the destination for users after they register.')"  
             :label="$tfhb_trans('Choose your Page')"  
             width="50"
             :selected = "1"
@@ -80,7 +112,8 @@ const props = defineProps([
             v-model="props.FrontendDashboard.fd_dashboard.signup.after_registration_redirect"  
             required= "true" 
             :filter="true"
-            :subtitle="$tfhb_trans('Select the destination page for users after they Sign up.')"  
+            tooltip="true"
+            :tooltipText="$tfhb_trans('Select the destination page for users after they Sign up.')"  
             :label="$tfhb_trans('Choose your Page')"  
             width="50"
             :selected = "1"
@@ -99,23 +132,23 @@ const props = defineProps([
         /> 
      
         
-    </div>
-    <div class="tfhb-admin-title" >
-        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Signup Email Settings') }} </h2>
-        <p>{{ $tfhb_trans('Customize the email settings for the signup page') }}</p>
-    </div>
-    <div class="tfhb-admin-card-box tfhb-flexbox"> 
+    </div> 
+    <div class="tfhb-admin-card-box tfhb-flexbox email_verifaction"> 
         <HbSwitch 
             v-model="props.FrontendDashboard.fd_dashboard.signup.enable_email_verification"  
             width="100"
             :label="$tfhb_trans('Enable Email Verification')" 
         />
         
-    </div>
-
-   
+    </div> 
     
 </template>
 
 <style scoped>
+.copy-shortcode{
+    cursor:pointer;
+}
+.email_verifaction{
+    background-color: #F9FBF9;
+}
 </style> 
