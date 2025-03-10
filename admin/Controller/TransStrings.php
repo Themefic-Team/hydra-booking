@@ -501,6 +501,9 @@ namespace HydraBooking\Admin\Controller;
             'Zoho Redirect URL' =>  __('Zoho Redirect URL', 'hydra-booking'), 
             'Enter Your Redirect URL' =>  __('Enter Your Redirect URL', 'hydra-booking'), 
             'Save & Validate' =>  __('Save & Validate', 'hydra-booking'), 
+            'Shortcode' =>  __('Shortcode', 'hydra-booking'), 
+            'Embed code' =>  __('Embed code', 'hydra-booking'), 
+            'Copy Link' =>  __('Copy Link', 'hydra-booking'), 
 
             // Component : integrations
             'Contact Form 7' =>  __('Contact Form 7', 'hydra-booking'), 

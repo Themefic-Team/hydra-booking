@@ -29,8 +29,8 @@ tfhbApps.config.globalProperties.$user = user;
 tfhbApps.config.globalProperties.$tfhb_is_pro = tfhb_is_pro; 
 tfhbApps.config.globalProperties.$tfhb_license_status = tfhb_license_status;  
 tfhbApps.config.globalProperties.$tfhb_trans = function (text) { 
-    return tfhb_trans[text] || text + ' Not Found';
-    // return tfhb_trans[text] || text;
+    // return tfhb_trans[text] || text + ' Not Found';
+    return tfhb_trans[text] || text;
 };
 tfhbApps.mount('#tfhb-admin-app')
 
