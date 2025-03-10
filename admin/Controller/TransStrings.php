@@ -429,6 +429,10 @@ namespace HydraBooking\Admin\Controller;
             'Create a Free License Key' => __('Create a Free License Key', 'hydra-booking'),
             'Please Install the HydraBooking Pro !' => __("Please Install the HydraBooking Pro !", 'hydra-booking'),
             'You already activated the HydraBooking Pro License, Install the Hydra Booking Pro Plugin.' => __("You already activated the HydraBooking Pro License, Install the Hydra Booking Pro Plugin.", 'hydra-booking'),
+            'Already used!' => __('Already used!', 'hydra-booking'),
+            'You already used this email. Use another email address or click on the following link to obtain the previous license key.' => __('You already used this email. Use another email address or click on the following link to obtain the previous license key.', 'hydra-booking'),
+            'Check your inbox and set a password for your security then paste the license key below.' => __('Check your inbox and set a password for your security then paste the license key below.', 'hydra-booking'),
+            'Sent successfully!' => __('Sent successfully!', 'hydra-booking'),
 
             // Component : availability 
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 

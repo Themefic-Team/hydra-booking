@@ -11,7 +11,7 @@ class NoticeController {
 
     // Constructor
     public function __construct() {
-        $this->api_base_url = 'https://portaltest.hydrabooking.com/wp-json';
+        $this->api_base_url = 'https://portal.themefic.com/wp-json';
 
         add_action('wp_ajax_tfhb_user_registration_license', [$this, 'tfhb_user_registration_license_callback']);
         add_action('wp_ajax_tfhb_cart_item_license', [$this, 'tfhb_cart_item_license_callback']);
@@ -36,10 +36,17 @@ class NoticeController {
 
         $response_body = json_decode(wp_remote_retrieve_body($response), true);
 
-        if (!empty($response_body['message'])) {
+        if ($response_body['status']) {
             wp_send_json_success(['message' => 'Check your inbox and set a password for free licensing!']);
         } else {
-            wp_send_json_error(['message' => $response_body['message'] ?? 'Something went wrong.']);
+            if(!empty($response_body['exits'])){
+                wp_send_json_error([
+                    'message' => $response_body['message'],
+                    'exits'   => $response_body['exits']
+                ]);
+            }else{
+                wp_send_json_error(['message' => $response_body['message'] ?? 'Something went wrong.']);
+            }
         }
 
         wp_die();
