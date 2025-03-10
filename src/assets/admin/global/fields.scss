@@ -542,25 +542,10 @@
     }
 }
 .tfhb-content-wrap{
-    .tfhb-license-message{
-        width: 100%;
-        text-align: center;
-        .success,
-        .error{
-            width: 100%;
-            text-align: center;
-            color: $success-text;
-            font-size: 17px;
-            line-height: 26px;
-            font-weight: 500;
-        }
-        .error{
-            color: $error-text;
-            border: 0px solid;
-            box-shadow: none;
-            margin: 0;
-            padding: 0;
-        }
+    .tfhb-license-url{
+        color: $primary-default;
+        font-size: 15px;
+        font-weight: 700;
     }
     .tfhb-license-email-field{
         width: 100%;
