@@ -531,6 +531,18 @@ namespace HydraBooking\Admin\Controller;
             'Enter Your App Client ID' =>  __('Enter Your App Client ID', 'hydra-booking'), 
             'Zoom App Secret Key' =>  __('Zoom App Secret Key', 'hydra-booking'), 
             'Enter Your App Secret Key' =>  __('Enter Your App Secret Key', 'hydra-booking'), 
+            'Telegram' => __('Telegram', 'hydra-booking'),
+            'Connect Telegram API to configure virtual meetings.' => __('Connect Telegram API to configure virtual meetings.', 'hydra-booking'),
+            'Add New Telegram Option' => __('Add New Telegram Option', 'hydra-booking'),
+            'Please read the documentation here for step by step guide to know how you can get BOT Token and Chat ID from Telegram Account' => __('Please read the documentation here for step by step guide to know how you can get BOT Token and Chat ID from Telegram Account', 'hydra-booking'),
+            'Telegram BOT Token' => __('Telegram BOT Token', 'hydra-booking'),
+            'Enter Your Telegram BOT Token' => __('Enter Your Telegram BOT Token', 'hydra-booking'),
+            'Telegram Chat ID' => __('Telegram Chat ID', 'hydra-booking'),
+            'Enter Your Telegram Chat ID' => __('Enter Your Telegram Chat ID', 'hydra-booking'),
+            'Telegram' => __('Telegram', 'hydra-booking'),
+            'Telegram' => __('Telegram', 'hydra-booking'),
+            'Telegram' => __('Telegram', 'hydra-booking'),
+
 
             // Component : meetings
             'Integration' =>  __('Integration', 'hydra-booking'), 

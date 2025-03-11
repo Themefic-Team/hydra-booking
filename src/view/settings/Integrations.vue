@@ -40,6 +40,7 @@ const spopup = ref(false);
 const mailpopup = ref(false);
 const outlookpopup = ref(false);
 const paypalpopup = ref(false);
+const tpopup = ref(false);
 
 const currentHash = ref('all'); 
  
@@ -100,6 +101,14 @@ const ispaypalPopupOpen = () => {
 const ispaypalPopupClose = (data) => {
     paypalpopup.value = false;
 }
+
+const istPopupOpen = () => {
+    tpopup.value = true;
+}
+const istPopupClose = (data) => {
+    tpopup.value = false;
+}
+
 const preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
@@ -114,7 +123,12 @@ const Integration = reactive( {
         account_id: '',
         app_client_id: '',
         app_secret_key: '',
-
+    },
+    telegram : {
+        type: 'meeting', 
+        status: 0, 
+        bot_token: '',
+        chat_id: '',
     },
     google_calendar : {
         type: 'calendar', 
@@ -227,6 +241,7 @@ const fetchIntegration = async () => {
             Integration.cf7= response.data.integration_settings.cf7 ? response.data.integration_settings.cf7 : Integration.cf7;
             Integration.fluent= response.data.integration_settings.fluent ? response.data.integration_settings.fluent : Integration.fluent;
             Integration.gravity= response.data.integration_settings.gravity ? response.data.integration_settings.gravity : Integration.gravity;
+            Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
 
             skeleton.value = false;
         }
@@ -258,6 +273,7 @@ const UpdateIntegration = async (key, value) => {
             gpopup.value = false;
             spopup.value = false;
             spopup.value = false;
+            tpopup.value = false;
             mailpopup.value = false;
             paypalpopup.value = false;
             
@@ -272,6 +288,7 @@ const UpdateIntegration = async (key, value) => {
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
+            Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             
         }else{
             toast.error(response.data.message, {
@@ -281,6 +298,7 @@ const UpdateIntegration = async (key, value) => {
             popup.value = false;
             gpopup.value = false;
             outlookpopup.value = false;
+            tpopup.value = false;
         }
     } catch (error) {
         // toast.error('Action successful', {
@@ -347,15 +365,15 @@ onBeforeMount(() => {
 
                 <!-- Telegram intrigation -->
                 <TelegramIntregration 
-                :zoom_meeting="Integration.zoom_meeting"  
+                :telegram_data="Integration.telegram"  
                 @update-integrations="UpdateIntegration" 
-                :ispopup="popup"
-                @popup-open-control="isPopupOpen"
-                @popup-close-control="isPopupClose"
+                :ispopup="tpopup"
+                @popup-open-control="istPopupOpen"
+                @popup-close-control="istPopupClose"
                 v-if="currentHash === 'all' || currentHash === 'conference'"
                 />
 
-                <!-- zoom intrigation -->
+                <!-- Google Calendar intrigation -->
                 <GoogleCalendarIntegrations 
                 :google_calendar="Integration.google_calendar" 
                 @update-integrations="UpdateIntegration"
@@ -364,7 +382,7 @@ onBeforeMount(() => {
                 @popup-close-control="isgPopupClose" 
                 v-if="currentHash === 'all' || currentHash === 'calendars'"
                 />
-                <!-- zoom intrigation -->
+                <!-- Google Calendar intrigation -->
                  
                 <!-- Outlook intrigation -->
                 <OutlookCalendarIntegrations 
