@@ -24,13 +24,13 @@ onMounted(() => {
 
                     <!-- <li><router-link to="/settings/notifications" :class="{ 'active': $route.path === '/settings/notifications' }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}</router-link></li> -->
 
-                    <li  :class="{ 'expand': $route.path === '/settings/notifications' }" class="tfhb-integrations-settings-menu"><router-link to="/settings/notifications#email" class="integrations-submenu" data-filter="email" :class="{ 'active': $route.path === '/settings/notifications' }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}
+                    <li  :class="{ 'expand': $route.path === '/settings/notifications' }" class="tfhb-notification-settings-menu"><router-link to="/settings/notifications#email" class="notification-submenu" data-filter="email" :class="{ 'active': $route.path === '/settings/notifications' }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}
                        <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size=20 /> </span>
                     </router-link>
                         <ul class="dropdown">
-                            <li><router-link to="/settings/notifications#email" :class="{ 'active': $route.hash === '#email' }" class="integrations-submenu" data-filter="email"> <Icon name="GalleryVerticalEnd" /> {{ $tfhb_trans('Email') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#email" :class="{ 'active': $route.hash === '#email' }" class="notification-submenu" data-filter="email"> <Icon name="GalleryVerticalEnd" /> {{ $tfhb_trans('Email') }}</router-link></li>
                             
-                            <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.hash === '#telegram' }" class="integrations-submenu" data-filter="telegram"> <Icon name="Video" /> {{ $tfhb_trans('Telegram') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.hash === '#telegram' }" class="notification-submenu" data-filter="telegram"> <Icon name="Video" /> {{ $tfhb_trans('Telegram') }}</router-link></li>
 
                         </ul>
                     </li>
