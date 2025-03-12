@@ -93,7 +93,7 @@ onBeforeRouteLeave((to, from, next) => {
                 </svg>    
             </span>
 
-            <span v-if="props.total_unread && props.total_unread != 0" class="tfhb-header-notification-count">
+            <span v-if="props.total_unread && props.total_unread != 0" @click="displayNotification = !displayNotification" class="tfhb-header-notification-count">
                 {{props.total_unread}}
             </span>
 
