@@ -465,6 +465,7 @@ namespace HydraBooking\Admin\Controller;
             'You already used this email. Use another email address or click on the following link to obtain the previous license key.' => __('You already used this email. Use another email address or click on the following link to obtain the previous license key.', 'hydra-booking'),
             'Check your inbox and set a password for your security then paste the license key below.' => __('Check your inbox and set a password for your security then paste the license key below.', 'hydra-booking'),
             'Sent successfully!' => __('Sent successfully!', 'hydra-booking'),
+            'Unlock Features' => __('Unlock Features', 'hydra-booking'),
 
             // Component : availability 
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 

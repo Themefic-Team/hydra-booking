@@ -57,6 +57,7 @@ const GenaratePasswordLink = async () => {
       LicenseMessage.status = true;
       LicenseMessage.message = result.data.message;
       LicenseMessage.exits = false;
+      LicenseBase.license_email = licenseingData.email;
     } else {
       License_pre_loader.value = false;
       LicenseMessage.status = false;
@@ -72,7 +73,7 @@ const GenaratePasswordLink = async () => {
 };
  
 onBeforeMount(async () => {
-    LicenseBase.GetLicense();
+  LicenseBase.GetLicense();
 });
 
 const updateLicense = async (validator_field) => {

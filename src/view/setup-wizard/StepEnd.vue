@@ -369,7 +369,7 @@ window.addEventListener('click', function(e) {
        
         </div>
 
-        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Unlock this Feature')" v-if="$tfhb_is_valid != true">
+        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Unlock Features')" v-if="$tfhb_is_valid != true">
             <template #content>
                 {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
             </template>

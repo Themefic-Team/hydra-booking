@@ -102,11 +102,16 @@
             // width: 90%;
             // padding: 64px 30px;
             width: 100%;
-
+            gap: 32px !important;
             .cartbox-text {
                 max-width: 175px !important;
             }
-
+            .tfhb-s-w-icon-text{
+                p{
+                    max-width: none;
+                    padding: 0 35px;
+                }
+            }
         }
 
         &.tfhb-s-w-step-two {
