@@ -123,7 +123,48 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-    
+    },
+    telegram : {
+        booking_confirmation: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+            builder: ''
+        },
+        booking_pending: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+            builder: ''
+        },
+        booking_cancel: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+            builder: ''
+        },
+        booking_reschedule: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+            builder: ''
+        },
+        booking_reminder: {
+            status : 0,
+            template : 'default',
+            from : '',
+            subject : '',
+            body : '',
+            builder: ''
+        },
     }
 });
 
@@ -367,6 +408,24 @@ onBeforeMount(() => {
  
  
             </div> 
+
+            <!-- Telegram Notification -->
+            <div v-if="!$route.params.id && currentHash === 'telegram'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+ 
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host for Booking Confirmation" 
+                :label="$tfhb_trans('Booking Confirmation')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_confirmation"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_confirmation"
+            /> 
+            <!-- Single Integrations  -->
+
+            </div> 
+
             <router-view 
             v-if="$route.params" 
             :mediaurl="$tfhb_url"
