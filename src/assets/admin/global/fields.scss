@@ -542,25 +542,10 @@
     }
 }
 .tfhb-content-wrap{
-    .tfhb-license-message{
-        width: 100%;
-        text-align: center;
-        .success,
-        .error{
-            width: 100%;
-            text-align: center;
-            color: $success-text;
-            font-size: 17px;
-            line-height: 26px;
-            font-weight: 500;
-        }
-        .error{
-            color: $error-text;
-            border: 0px solid;
-            box-shadow: none;
-            margin: 0;
-            padding: 0;
-        }
+    .tfhb-license-url{
+        color: $primary-default;
+        font-size: 15px;
+        font-weight: 700;
     }
     .tfhb-license-email-field{
         width: 100%;
@@ -601,5 +586,100 @@
         box-sizing: content-box;
         align-content: center;
         justify-content: center;
+    }
+}
+.tfhb-email-builder{
+    align-items: flex-start !important;
+    @media #{$max1140} {
+        display: flow-root !important;
+    }
+    .tfhb-builder-tools{
+        width: calc(45% - 12px);
+        @media #{$max1366} {
+            width: calc(40% - 12px);
+        }
+        @media #{$max1140} {
+            width: 100%;
+        }
+        .tfhb-template-info{
+            .tfhb-single-form-field{
+                .tfhb-single-form-field-wrap{
+                    label{
+                        margin-top: 0px !important;
+                    }
+                }
+            }
+        }
+        .tfhb-mail-shortcode{
+            margin-top: 16px;
+            .tfhb-mail-shortcode-badge{
+                color: $text-title !important;
+                font-weight: 600 !important;
+            }
+        }
+        .single-tools{
+            margin-bottom: 8px;
+            .tools-heading{
+                border-radius: 4px;
+                background:  $surface-primary;
+                box-shadow: 0px 1px 3px 0px rgba(16, 40, 20, 0.10), 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
+                padding: 8px;
+                .tfhb-flexbox{
+                    &.tfhb-head{
+                        width: calc(100% - 40px);
+                        cursor: pointer;
+                    }
+                }
+            }
+            &:last-child{
+                margin-bottom: 0px;
+            }
+            .tools-content{
+                padding-top: 8px;
+                background:  $surface-primary;
+                margin-top: 1px;
+                .single-tools{
+                    padding: 0px 8px 8px 8px;
+                    margin-bottom: 0;
+                    .tfhb-sub-tools{
+                        .tools-heading{
+                            width: calc(100% - 28px);
+                            border-radius: 4px;
+                            background:  $surface-secondary;
+                            box-shadow: 0px 1px 3px 0px rgba(16, 40, 20, 0.10), 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
+                        }
+                    }
+                }
+                .tfhb-single-form-field{
+                    .tfhb-field-input{
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+        button.boxed-btn{
+            margin-top: 24px;
+        }
+    }
+    .tfhb-email-preview{
+        width: calc(55% - 12px);
+        background-color: $secondary-hover;
+        padding: 16px;
+        @media #{$max1366} {
+            width: calc(60% - 12px);
+        }
+        @media #{$max1140} {
+            width: 100%;
+            margin-top: 24px;
+        }
+        table{
+            width: 100% !important;
+            max-width: none !important;
+            td.social{
+                table{
+                    width: auto !important;
+                }
+            }
+        }
     }
 }

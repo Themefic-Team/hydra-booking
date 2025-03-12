@@ -19,7 +19,8 @@
     h6,
     p,
     span,
-    label {
+    label,
+    button {
         font-family: 'Inter', sans-serif;
         margin: 0;
         font-style: normal;
@@ -103,12 +104,16 @@
     // info box
     .tfhb-info-box {
         background-color: $info-background;
-        border: $border-reguler $border-type $surface-border;
+        border: $border-reguler $border-type $info-text;
         border-radius: $border-radius-medium;
         padding: 16px;
         margin-bottom: 16px;
         color: $info-text;
         flex-wrap: nowrap !important;
+        span{
+
+            color: $info-text;
+        }
 
         .tfhb-btn {
             // margin: 0 !important;
@@ -149,6 +154,8 @@
     .tfhb-tooltip {
         position: relative;
         display: inline-block;
+        line-height: 0 !important;
+        cursor: pointer;
 
         .tfhb-tooltiptext {
             // visibility: hidden;
@@ -156,7 +163,7 @@
             text-align: center;
             padding: 5px 10px;
             border-radius: 6px;
-            min-width: 150px;
+            min-width: 200px;
             border-radius: $border-radius-medium;
             /* Position the tooltip */
             position: absolute;
@@ -168,6 +175,7 @@
 
             /* Fade in tooltip */
             opacity: 0;
+            visibility: hidden;
             transition: opacity 0.3s;
 
             /* Arrow */
@@ -318,7 +326,9 @@
     .tfhb-p-0 {
         padding: 0px !important;
     }
-
+    .tfhb-capitalize {
+        text-transform: capitalize;
+    }
     .tfhb-pro {
         // opacity: 0.6 !important;
         position: relative;
@@ -440,6 +450,9 @@
         gap: 24px;
         box-sizing: border-box;
     }
+    .tfhb-inline-flexbox {
+        display: inline-flex;;
+    }
 
     .tfhb-justify-normal {
         justify-content: normal;
@@ -467,6 +480,9 @@
 
     .tfhb-align-normal {
         align-items: normal;
+    }
+    .tfhb-align-start {
+        align-items: start;
     }
 
     .tfhb-flexbox-nowrap {

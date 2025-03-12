@@ -235,26 +235,26 @@ const routes = [
                 name: 'FrontendDashboard',
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/FrontendDashboard.vue'),
-                redirect: { name: 'FrontendDashboardGeneral' },
+                // redirect: { name: 'FrontendDashboardGeneral' },
                 children: [ 
-                    {
-                        path: 'general',
-                        name: 'FrontendDashboardGeneral',
-                        meta: { Capabilities: 'tfhb_manage_settings' },
-                        component: () => import('@/components/settings/fd-dashboard/General.vue')
-                    },
-                    {
-                        path: 'login',
-                        name: 'FrontendDashboardLogin',
-                        meta: { Capabilities: 'tfhb_manage_settings' },
-                        component: () => import('@/components/settings/fd-dashboard/login.vue')
-                    },
-                    {
-                        path: 'signup',
-                        name: 'FrontendDashboardSignup',
-                        meta: { Capabilities: 'tfhb_manage_settings' },
-                        component: () => import('@/components/settings/fd-dashboard/Signup.vue')
-                    }
+                    // {
+                    //     path: 'general',
+                    //     name: 'FrontendDashboardGeneral',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/General.vue')
+                    // },
+                    // {
+                    //     path: 'login',
+                    //     name: 'FrontendDashboardLogin',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/login.vue')
+                    // },
+                    // {
+                    //     path: 'signup',
+                    //     name: 'FrontendDashboardSignup',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/Signup.vue')
+                    // }
                 ]
             },
 
@@ -268,7 +268,16 @@ const routes = [
                 path: 'notifications',
                 name: 'SettingsNotifications',
                 meta: { Capabilities: 'tfhb_manage_settings' },
-                component: () => import('../view/settings/Notifications.vue')
+                component: () => import('../view/settings/Notifications.vue'),
+                children: [ 
+                    {
+                        path: 'single/:type/:id',
+                        props: true,
+                        name: 'EmailTemplateSingle',
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
+                        component: () => import('../view/settings/EmailSingle.vue')
+                    },
+                ]
             },
             {
                 path: 'integrations',

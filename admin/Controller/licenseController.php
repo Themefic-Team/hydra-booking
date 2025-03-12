@@ -188,7 +188,7 @@ class licenseController {
             $exp_date = strtotime($response->expire_date);
             $current_date = strtotime(current_time('mysql'));
 
-            if ($exp_date <= $current_date) {
+            if ($response->expire_date!='No expiry' && $exp_date <= $current_date) {
                 return self::$cached_result;
             }
              

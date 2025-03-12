@@ -7,6 +7,9 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import FrontendDashboard from '@/store/settings/fd-dashboard.js' 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
+import FdDashboardGeneral from '@/components/settings/fd-dashboard/FdDashboardGeneral.vue';
+import FdDashboardSignup from '@/components/settings/fd-dashboard/FdDashboardSignup.vue';
+import FdDashboardlogin from '@/components/settings/fd-dashboard/FdDashboardlogin.vue';
 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 
@@ -44,19 +47,14 @@ onBeforeMount(() => {
         </HbInfoBox>
 
         <div class="tfhb-content-wrap" :class="$tfhb_is_valid != true  ? 'tfhb-pro' : ''">    
-             <nav class="tfhb-booking-tabs"> 
-                <ul>
-                    <!-- to route example like hosts/profile/13/information -->
-                    <li><router-link to="/settings/fd-dashboard/general" exact :class="{ 'active': $route.path === '/settings/fd-dashboard/general' }"> <Icon name="SlidersHorizontal" /> {{ $tfhb_trans('General') }}</router-link></li>
-                    <li><router-link to="/settings/fd-dashboard/signup" exact :class="{ 'active': $route.path === '/settings/fd-dashboard/signup' }"> <Icon name="CircleUser" /> {{ $tfhb_trans('Signup') }}</router-link></li>
-                    <li><router-link to="/settings/fd-dashboard/login" exact :class="{ 'active': $route.path === '/settings/fd-dashboard/login' }"> <Icon name="LogIn" /> {{ $tfhb_trans('LogIn') }}</router-link></li>
-                    
-                </ul>  
-            </nav>
+            
             <div class="tfhb-hydra-content-wrap">       
-                <router-view 
+                <!-- <router-view 
                 :FrontendDashboard="FrontendDashboard"
-                />
+                /> -->
+                <FdDashboardGeneral :FrontendDashboard="FrontendDashboard"   /> 
+                <FdDashboardSignup :FrontendDashboard="FrontendDashboard"   /> 
+                <FdDashboardlogin :FrontendDashboard="FrontendDashboard"   /> 
 
                 <div class="tfhb-submission-btn tfhb-mt-16">
                     <HbButton 
