@@ -108,6 +108,33 @@ const Notification = reactive(  {
             builder: ''
         },
     
+    },
+    telegram : {
+        booking_confirmation: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_pending: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_cancel: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reschedule: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reminder: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
     }
 });
 
@@ -518,7 +545,7 @@ const fetchNotification = async () => {
             // console.log(response.data.integration_settings);
             Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
             Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
-            
+            Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
             if(response.data.notification_settings[route.params.type][route.params.id].builder==''){
                 Notification[route.params.type][route.params.id].builder = emailBuilder;
             }else{
@@ -574,9 +601,11 @@ onBeforeMount(() => {
 
 <template>
     <!-- {{ Notification[route.params.type][route.params.id] }} -->
+      <!-- {{ route.params.type }} -->
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap">
-        <div class="tfhb-builder-tools">
+
+        <div class="tfhb-builder-tools" v-if="route.params.type!='telegram'">
 
             <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32">
                 <HbDropdown 
@@ -1109,7 +1138,30 @@ onBeforeMount(() => {
                 :pre_loader="preloader"
             /> 
         </div>
-        <div class="tfhb-email-preview" v-html="emailTemplate"></div>
+        <div class="tfhb-email-preview" v-html="emailTemplate" v-if="route.params.type!='telegram'"></div>
+
+        <div class="tfhb-email-body" v-if="route.params.type=='telegram'">
+            <Editor 
+                v-model="Notification[route.params.type][route.params.id].body"  
+                :placeholder="$tfhb_trans('Mail Body')"    
+                editorStyle="height: 280px" 
+            />
+            <HbButton  
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-mt-24" 
+                @click="UpdateNotification"
+                :buttonText="$tfhb_trans('Update')" 
+                icon="ChevronRight"
+                hover_icon="ArrowRight"
+                :hover_animation="true"
+                :pre_loader="preloader"
+            /> 
+        </div>
+
+        <div class="tfhb-email-shortcodes-list" v-if="route.params.type=='telegram'">
+            <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8"> 
+                <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+            </div>
+        </div>
     </div>
     <!-- Single Integrations  -->
 

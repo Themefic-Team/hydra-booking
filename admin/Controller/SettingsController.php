@@ -804,6 +804,15 @@ class SettingsController {
 			}
 		}
 
+		// sanitize Telegram Notification
+		if ( isset( $request['telegram'] ) ) {
+			foreach ( $request['telegram'] as $key => $value ) {
+				$data['telegram'][ $key ]['status']   = sanitize_text_field( $value['status'] );
+				$data['telegram'][ $key ]['body']     = wp_kses_post( $value['body'] );
+				$data['telegram'][ $key ]['builder']  = $value['builder'];
+			}
+		}
+
 		// update option
 		update_option( '_tfhb_notification_settings', $data );
 

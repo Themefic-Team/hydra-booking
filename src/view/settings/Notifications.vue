@@ -127,41 +127,26 @@ const Notification = reactive(  {
     telegram : {
         booking_confirmation: {
             status : 0,
-            template : 'default',
-            from : '',
-            subject : '',
             body : '',
             builder: ''
         },
         booking_pending: {
             status : 0,
-            template : 'default',
-            from : '',
-            subject : '',
             body : '',
             builder: ''
         },
         booking_cancel: {
             status : 0,
-            template : 'default',
-            from : '',
-            subject : '',
             body : '',
             builder: ''
         },
         booking_reschedule: {
             status : 0,
-            template : 'default',
-            from : '',
-            subject : '',
             body : '',
             builder: ''
         },
         booking_reminder: {
             status : 0,
-            template : 'default',
-            from : '',
-            subject : '',
             body : '',
             builder: ''
         },
@@ -189,8 +174,7 @@ const fetchNotification = async () => {
         if (response.data.status) { 
             Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
             Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
-            Notification.email = response.data.notification_settings.email ? response.data.notification_settings.email : Notification.email;
-            
+            Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
             skeleton.value = false;
         }
     } catch (error) {
@@ -256,7 +240,10 @@ onBeforeMount(() => {
         <div  class="tfhb-dashboard-heading  ">
             <div class="tfhb-admin-title tfhb-m-0" v-if="$route.params.id"> 
                 <div class="tfhb-flexbox tfhb-gap-4">
-                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#email" v-if="$route.params.id">
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#email" v-if="$route.params.id && $route.params.type!='telegram'">
+                        <Icon name="ArrowLeft" :width="20"/>
+                    </router-link>
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#telegram" v-if="$route.params.id && $route.params.type=='telegram'">
                         <Icon name="ArrowLeft" :width="20"/>
                     </router-link>
                     <h1 class="tfhb-capitalize">{{ $route.params.type }}</h1> 

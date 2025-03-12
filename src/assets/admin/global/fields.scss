@@ -682,4 +682,9 @@
             }
         }
     }
+
+    .tfhb-email-body,
+    .tfhb-email-shortcodes-list{
+        width: calc(50% - 12px);
+    }
 }
