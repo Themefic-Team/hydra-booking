@@ -1,11 +1,13 @@
 (function ($) {
-	// wp.i18n.setLocaleData( { '': {} }, 'hydra-booking' ); // Ensure translations load
-	// const { __, _x } = wp.i18n;
-	// const { __ } = wp.i18n;
-
+	  
     $(document).ready(function () { 
-		const tfhb_local_timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		let tfhb_local_timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		const tfhb_i18n = tfhb_app_booking.i18n;
+
+		// Check if
+		if( 'Asia/Calcutta' == tfhb_local_timeZone ){
+			tfhb_local_timeZone = 'Asia/Kolkata'; // convert to Indian Standard Time (IST)
+		}
 
 		// function tfhb translate 
 		function tfhbTranslate(key) {
@@ -60,8 +62,7 @@
 			let year = date.getFullYear();
 			let month = date.getMonth();
 		 
-			const tfhb_calendar_navs = $this.find(".tfhb-calendar-navigation span") 
-			console.log(tfhb_app_booking.i18n) 
+			const tfhb_calendar_navs = $this.find(".tfhb-calendar-navigation span")  
 			// Array of month names
 			const months = [
 				"January",
