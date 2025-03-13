@@ -16,12 +16,16 @@ defined( 'ABSPATH' ) || exit;
  */
 
 use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks;
 
 $data = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(); 
 
 $date_time = new DateTimeController( 'UTC' );
 $availability_data = $date_time->GetAvailabilityData($data);    
 $availability_time_zone = $availability_data['time_zone'];  
+$Bookmark = new BookingBookmarks();
+$getBookmark = $Bookmark->getMeetingBookmarks( '', $data );
+// tfhb_print_r($getBookmark);
 ?> 
 <div class="tfhb-meeting-confirmation" >
 	<?php
@@ -31,8 +35,7 @@ $availability_time_zone = $availability_data['time_zone'];
 	?>
 	<div class="tfhb-confirmation-seccess">
 		<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/sucess.gif'); ?>" alt="Success"> 
-		<h3><?php echo esc_html( __( 'Booking', 'hydra-booking' ) ); ?> <?php echo esc_html( $booking['status'] ); ?></h3>
-		<!-- <p>Please check your email for more information. Now you can reschedule or cancel booking from here.</p> -->
+		<h3><?php echo esc_html( __( 'Booking', 'hydra-booking' ) ); ?> <?php echo esc_html( $booking['status'] ); ?></h3> 
 	</div>
 
 	<div class="tfhb-meeting-hostinfo">
@@ -121,8 +124,21 @@ $availability_time_zone = $availability_data['time_zone'];
 		</ul>
 	</div>
 
- 
-
+			
+	<div class="tfhb-meeting-bookmark-action tfhb-text-center">
+		<p><?php echo esc_html(__('Add to calender', 'hydra_booking')) ?></p>
+		<div class="tfhb-meeting-bookmark-list">
+			<!-- Bookmarks -->
+			<?php 
+				foreach ($getBookmark as $key => $bookmark){
+					echo '<a href="'.$bookmark['url'].'" target="_blank">
+						<img src="'.esc_url($bookmark['icon']).'" alt="'.$bookmark['title'].'" />
+					</a>';
+				}
+			?>
+		</div>
+		
+	</div>
 	<div class="tfhb-meeting-confirmation-action tfhb-flexbox tfhb-gap-16">
 		
 		<?php

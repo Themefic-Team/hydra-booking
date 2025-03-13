@@ -1450,6 +1450,42 @@
   border-color: #4C9959;
   color: #fff;
 }
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action {
+  text-align: center;
+  margin-top: 16px;
+  padding: 16px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action p,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action p {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list a,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list a {
+  display: inline-block;
+  width: 35px;
+  height: 37px;
+  padding: 4px;
+  box-shadow: 0px 15px 30px 0px rgba(16, 40, 20, 0.1);
+  border-radius: 4px;
+  transition: 0.4s;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list a:hover,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list a:hover {
+  background-color: #F3F6F4;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list a:focus,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation .tfhb-meeting-bookmark-action .tfhb-meeting-bookmark-list a:focus {
+  outline: none;
+}
 
 .select2-results__options {
   display: flex;
