@@ -13,10 +13,35 @@ class BookingBookmarks {
 
 	}
 
+    public function GetBookingConfirmationUrl ($data){
+        $confirmation = add_query_arg(
+            array(
+                'hydra-booking' => 'booking',
+                'hash'          => $data->hash,
+                'meetingId'    => $data->meeting_id,
+                'type'          => 'confirmation',
+            ),
+            home_url()
+        );
+        return $confirmation;
+    }
+
+    public function GetBookingIcsUrl ($data){
+        $confirmation = add_query_arg(
+            array(
+                'hydra-booking' => 'booking',
+                'hash'          => $data->hash,
+                'meetingId'    => $data->meeting_id,
+                'type'          => 'download_ics',
+            ),
+            home_url()
+        );
+        return $confirmation;
+    }
     public function getMeetingBookmarks($assetsUrl = '', $data){
         //  $bookmarks = [];
         $bookingTitle = $data->meeting_title . ' Between ' . $data->host_first_name . ' ' . $data->host_last_name . ' and ' . $data->attendee_name;
-        $location = '';
+        $location = $this->GetBookingConfirmationUrl($data);
         $availability_time_zone = $data->availability_time_zone; // Example: "America/New_York"
 
         // Convert to required format with the correct timezone
@@ -104,7 +129,7 @@ class BookingBookmarks {
         $bookmarks['other']    = [
             'title' => __('Other Calendar', 'fluent-booking'),
             'url'   => '',
-            // 'url'   => $this->getIcsDownloadUrl(), 
+            'url'   => $this->GetBookingIcsUrl($data), 
             'icon' => esc_url(TFHB_URL . 'assets/app/images/other-calendar.svg'), 
         ];
         
@@ -112,40 +137,36 @@ class BookingBookmarks {
 
     }
 
-    // public static function generateBookingICS(Booking $booking)
-    // {
-    //     $author = $booking->getHostDetails(false);
+    public  function generateBookingICS($data)
+    {
+        // Convert time to UTC format for ICS
+        $start = new \DateTime("{$data->meeting_date} {$data->start_time}", new \DateTimeZone($data->availability_time_zone));
+        $end = new \DateTime("{$data->meeting_date} {$data->end_time}", new \DateTimeZone($data->availability_time_zone));
+        $start->setTimezone(new \DateTimeZone('UTC'));
+        $end->setTimezone(new \DateTimeZone('UTC'));
 
-    //     // Initialize the ICS content
-    //     $icsContent = "BEGIN:VCALENDAR\r\n";
-    //     $icsContent .= "VERSION:2.0\r\n";
-    //     $icsContent .= "PRODID:-//Google Inc//Fluent Booking//EN\r\n";
-    //     $icsContent .= "METHOD:REQUEST\r\n";
-    //     $icsContent .= "STATUS:CONFIRMED\r\n";
+        // ICS File Content
+        $ics_content = "BEGIN:VCALENDAR\r\n";
+        $ics_content .= "VERSION:2.0\r\n";
+        $ics_content .= "PRODID:-//YourPlugin//BookingSystem//EN\r\n";
+        $ics_content .= "METHOD:REQUEST\r\n";
+        $ics_content .= "BEGIN:VEVENT\r\n";
+        $ics_content .= "UID:" . md5($data->hash) . "\r\n";
+        $ics_content .= "SUMMARY:" . $data->meeting_title . "\r\n";
+        $ics_content .= "DESCRIPTION:Meeting with " . $data->attendee_name . "\r\n";
+        $ics_content .= "DTSTART:" . $start->format('Ymd\THis\Z') . "\r\n";
+        $ics_content .= "DTEND:" . $end->format('Ymd\THis\Z') . "\r\n";
+        $ics_content .= "LOCATION:" . $location . "\r\n";
+        $ics_content .= "ORGANIZER;CN=\"" . $data->host_first_name . "\":mailto:" . $data->host_email . "\r\n";
+        $ics_content .= "ATTENDEE;CN=\"" . $data->attendee_name . "\";ROLE=REQ-PARTICIPANT;RSVP=TRUE;PARTSTAT=ACCEPTED:mailto:" . $data->email . "\r\n";
+        $ics_content .= "END:VEVENT\r\n";
+        $ics_content .= "END:VCALENDAR\r\n";
 
-    //     $icsContent .= "BEGIN:VEVENT\r\n";
-    //     $icsContent .= "UID:" . md5($booking->hash) . "\r\n"; // Unique ID for the event
-
-    //     // Event details
-    //     $icsContent .= "SUMMARY:" . $booking->getBookingTitle() . "\r\n";
-    //     $icsContent .= "DESCRIPTION:" . $booking->getIcsBookingDescription() . "\r\n";
-
-    //     // Date and time formatting (assuming eventStart and eventEnd are DateTime objects)
-    //     $icsContent .= "DTSTART:" . gmdate('Ymd\THis\Z', strtotime($booking->start_time)) . "\r\n";
-    //     $icsContent .= "DTEND:" . gmdate('Ymd\THis\Z', strtotime($booking->end_time)) . "\r\n";
-
-    //     $icsContent .= "LOCATION:" . $booking->getLocationAsText() . "\r\n";
-
-    //     $icsContent .= "ORGANIZER;CN=\"" . $author['name'] . "\":mailto:" . $author['email'] . "\r\n";
-
-    //     $icsContent .= "ATTENDEE;CN=\"" . $booking->email . "\";ROLE=REQ-PARTICIPANT;RSVP=TRUE;PARTSTAT=ACCEPTED:mailto:" . $booking->email . "\r\n";
-
-    //     $icsContent .= "END:VEVENT\r\n";
-
-    //     // Close the VCALENDAR component
-    //     $icsContent .= "END:VCALENDAR\r\n";
-
-    //     return $icsContent;
-    // }
+        // Send Headers
+        header('Content-Type: text/calendar; charset=utf-8');
+        header('Content-Disposition: attachment; filename="booking-event.ics"');
+        echo $ics_content;
+        exit;
+    }
  
 }
