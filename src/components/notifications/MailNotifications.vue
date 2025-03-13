@@ -438,6 +438,8 @@ const closePopup = () => {
 }
 </script>
 <template>
+
+    <!-- {{ data }} -->
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-flexbox tfhb-justify-between">
         <div class="tfhb-swicher-wrap  tfhb-flexbox"> 

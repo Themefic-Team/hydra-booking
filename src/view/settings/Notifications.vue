@@ -19,7 +19,7 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 const skeleton = ref(true);   
 const currentTabs = ref('host');
 const popup = ref(false);
-
+const update_preloader = ref(false);
 const currentHash = ref('email'); 
  
 // tfhb-hydra-admin-tabs a clicked using javascript event
@@ -144,12 +144,7 @@ const Notification = reactive(  {
             status : 0,
             body : '',
             builder: ''
-        },
-        booking_reminder: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
+        }
     }
 });
 
@@ -408,6 +403,43 @@ onBeforeMount(() => {
                 :isSingle="true"
                 categoryKey="telegram"
                 emailKey="booking_confirmation"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host for Booking Pending" 
+                :label="$tfhb_trans('Booking Pending')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_pending"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_pending"
+            /> 
+            <!-- Single Integrations  -->
+
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host for Booking Cancels" 
+                :label="$tfhb_trans('Booking Cancel')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_cancel"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_cancel"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host" 
+                :label="$tfhb_trans('Booking Reschedule')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_reschedule"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_reschedule"
             /> 
             <!-- Single Integrations  -->
 
