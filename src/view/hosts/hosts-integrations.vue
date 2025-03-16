@@ -132,6 +132,7 @@ const Integration = reactive( {
     telegram : {
         type: 'telegram', 
         status: 0, 
+        connection_status: 0, 
         bot_token: '',
         chat_id: '',
     },
@@ -161,6 +162,7 @@ const fetchIntegration = async () => {
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
             Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
+            Integration.telegram = response.data.telegram  ? response.data.telegram  : Integration.telegram ; 
             
 
             skeleton.value = false;

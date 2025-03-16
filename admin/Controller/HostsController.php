@@ -689,6 +689,22 @@ class HostsController {
 			$mailchimp['connection_status']            = 0; 
 		}
 
+		// Telegram
+		$telegram = isset( $_tfhb_host_integration_settings['telegram'] ) ? $_tfhb_host_integration_settings['telegram'] : array();
+		if (isset($_tfhb_integration_settings['telegram']['status']) && $_tfhb_integration_settings['telegram']['status'] == true ) {
+
+			$telegram['type']              = 'telegram';
+			$telegram['status']            = $_tfhb_host_integration_settings['telegram']['status'];
+			$telegram['connection_status'] = $_tfhb_integration_settings['telegram']['status'];
+			$telegram['bot_token']         = $_tfhb_host_integration_settings['telegram']['bot_token'];
+			$telegram['chat_id']           = $_tfhb_host_integration_settings['telegram']['chat_id'];
+
+		}else{
+			$telegram['type']              = 'telegram';
+			$telegram['status']            = 0; 
+			$telegram['connection_status'] = 0; 
+		}
+
 		// Zoho
 		$zoho = isset( $_tfhb_host_integration_settings['zoho'] ) ? $_tfhb_host_integration_settings['zoho'] : array();
 		if (isset($_tfhb_integration_settings['zoho']['status']) && $_tfhb_integration_settings['zoho']['status'] ) {
@@ -718,6 +734,7 @@ class HostsController {
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
 			'zoho'                       => $zoho,
+			'telegram'                   => $telegram,
 			'_tfhb_integration_settings' => $_tfhb_integration_settings,
 		);
 
@@ -811,6 +828,17 @@ class HostsController {
 			 
 			$responseData['status'] = true;
 			$responseData['message'] = esc_html(__('Mailchimp Settings Updated Successfully', 'hydra-booking'));   
+		} elseif ( $key == 'telegram_data' ) {
+			$_tfhb_host_integration_settings['telegram']['type']   = 'telegram';
+			$_tfhb_host_integration_settings['telegram']['status'] = sanitize_text_field( $data['status'] );
+			$_tfhb_host_integration_settings['telegram']['bot_token']    = sanitize_text_field( $data['bot_token'] );
+			$_tfhb_host_integration_settings['telegram']['chat_id']    = sanitize_text_field( $data['chat_id'] );
+
+			// update User Meta
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Telegram Settings Updated Successfully', 'hydra-booking'));   
 		} elseif ( $key == 'zoho' ) {
 			$_tfhb_host_integration_settings['zoho']['type']          = 'zoho';
 			$_tfhb_host_integration_settings['zoho']['status']        = sanitize_text_field( $data['status'] );

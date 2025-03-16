@@ -35,7 +35,7 @@ class Telegram {
 
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
         if(!empty($_tfhb_notification_settings['telegram']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_confirmation']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_confirmation']['body'], $attendees->id);
+            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_confirmation']['body'], $attendees);
         }
        
 	}
@@ -46,7 +46,7 @@ class Telegram {
 
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
         if(!empty($_tfhb_notification_settings['telegram']['booking_pending']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_pending']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_pending']['body'], $attendees->id);
+            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_pending']['body'], $attendees);
         }
 
 	}
@@ -56,7 +56,7 @@ class Telegram {
 
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
         if(!empty($_tfhb_notification_settings['telegram']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_cancel']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_cancel']['body'], $attendees->id);
+            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_cancel']['body'], $attendees);
         }
 
 	}
@@ -66,26 +66,40 @@ class Telegram {
 		
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
         if(!empty($_tfhb_notification_settings['telegram']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_reschedule']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_reschedule']['body'], $attendees->id);
+            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_reschedule']['body'], $attendees);
         }
 
 	}
 
-    function tfhb_telegram_callback($body, $attendee_id) {
+    function tfhb_telegram_callback($body, $attendees) {
+
+		$_tfhb_host_integration_settings = is_array( get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) : array();
         $_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
         
-        if(!empty($_tfhb_integration_settings['telegram']['status']) && !empty($_tfhb_integration_settings['telegram']['bot_token']) && !empty($_tfhb_integration_settings['telegram']['chat_id'])){
-            $bot_token = $_tfhb_integration_settings['telegram']['bot_token'];
-            $chat_id = $_tfhb_integration_settings['telegram']['chat_id'];
+		if(!empty($_tfhb_host_integration_settings)){
+			$telegram_status = !empty($_tfhb_host_integration_settings['telegram']['status']) ? $_tfhb_host_integration_settings['telegram']['status'] : '';
+			$telegram_bot_token = !empty($_tfhb_host_integration_settings['telegram']['bot_token']) ? $_tfhb_host_integration_settings['telegram']['bot_token'] : '';
+			$telegram_chat_id = !empty($_tfhb_host_integration_settings['telegram']['chat_id']) ? $_tfhb_host_integration_settings['telegram']['chat_id'] : '';
+		}
 
-            $mailbody = $this->replace_mail_tags($body, $attendee_id);
+		$global_telegram_status = !empty($_tfhb_integration_settings['telegram']['status']) ? $_tfhb_integration_settings['telegram']['status'] : '';
+		$global_telegram_bot_token = !empty($_tfhb_integration_settings['telegram']['bot_token']) ? $_tfhb_integration_settings['telegram']['bot_token'] : '';
+		$global_telegram_chat_id = !empty($_tfhb_integration_settings['telegram']['chat_id']) ? $_tfhb_integration_settings['telegram']['chat_id'] : '';
+
+		$telegram_status = $telegram_status ? $telegram_status : $global_telegram_status;
+		$telegram_bot_token = $telegram_bot_token ? $telegram_bot_token : $global_telegram_bot_token;
+		$telegram_chat_id = $telegram_chat_id ? $telegram_chat_id : $global_telegram_chat_id;
+
+        if(!empty($telegram_status) && !empty($telegram_bot_token) && !empty($telegram_chat_id)){
+
+            $mailbody = $this->replace_mail_tags($body, $attendees->id);
             $plain_text = preg_replace('/<\/?p>/', "\n", $mailbody);
             $plain_text = wp_strip_all_tags($plain_text);
             $plain_text = trim($plain_text);
 
-            $api_url = "https://api.telegram.org/bot$bot_token/sendMessage";
+            $api_url = "https://api.telegram.org/bot$telegram_bot_token/sendMessage";
 			$args = array(
-				'chat_id' => $chat_id,
+				'chat_id' => $telegram_chat_id,
 				'text' => $plain_text,
                 'parse_mode' => 'MarkdownV2'
 			);

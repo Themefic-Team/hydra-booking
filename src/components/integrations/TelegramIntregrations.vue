@@ -29,6 +29,7 @@ const closePopup = () => {
 </script>
 
 <template>
+    <!-- {{ telegram_data }} -->
       <!-- Telegram Integrations  -->
       <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
@@ -42,8 +43,8 @@ const closePopup = () => {
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
 
-            <button  v-if=" props.from == 'host' && telegram_data.status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Configured') }} </button>
-            <router-link  v-else-if=" props.from == 'host' && telegram_data.status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <button  v-if=" props.from == 'host' && telegram_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Configured') }} </button>
+            <router-link  v-else-if=" props.from == 'host' && telegram_data.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
            
             <HbButton 
                 v-else @click="emit('popup-open-control')" 
@@ -54,7 +55,7 @@ const closePopup = () => {
             />  
             <!-- Checkbox swicher --> 
             <HbSwitch v-if="telegram_data.status && telegram_data.bot_token !='' && display != 'list'" @change="emit('update-integrations', 'telegram_data', telegram_data)" v-model="telegram_data.status"    /> 
-            <HbSwitch v-if="telegram_data.bot_token && display == 'list'" @change="emit('update-integrations', 'telegram_data', telegram_data)" v-model="telegram_data.status"    /> 
+            <HbSwitch v-if="telegram_data.bot_token && display == 'list' && telegram_data.connection_status == '1'" @change="emit('update-integrations', 'telegram_data', telegram_data)" v-model="telegram_data.status"    /> 
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->
