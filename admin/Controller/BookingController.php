@@ -188,10 +188,10 @@ class BookingController {
 		// Export Booking Data as csv
 		register_rest_route(
 			'hydra-booking/v1',
-			'/booking/export-csv',
+			'/booking/export-as',
 			array(
 				'methods'  => 'POST',
-				'callback' => array( $this, 'exportBookingDataCSV' ),
+				'callback' => array( $this, 'exportBookingDataAs' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
@@ -1491,7 +1491,7 @@ class BookingController {
 	}
 
 	// Export Booking Data as CSV.
-	public function exportBookingDataCSV() {
+	public function exportBookingDataAs() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		// 2024-07-03 23:48:25
 		$time         = '00:00:00';
@@ -1522,56 +1522,125 @@ class BookingController {
 			$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( 'first day of last year', strtotime( $current_time ) ) );
 		}
 		if ( $request['date_range'] == 'all' ) {
-			$file_name = 'booking-data.csv';
+			$file_name = 'booking-data';
 
 		} else {
-			$file_name = 'booking-data-' . gmdate( 'Y-m-d', strtotime( $previous_date ) ) . '-' . gmdate( 'Y-m-d', strtotime( $current_date ) ) . '.csv';
+			$file_name = 'booking-data-' . gmdate( 'Y-m-d', strtotime( $previous_date ) ) . '-' . gmdate( 'Y-m-d', strtotime( $current_date ) ) . '';
 
 		}
 	 
 
 		if ( $request['date_range'] == 'all' ) {
-			$bookingsList = $booking->export();
+			$bookingsList = $booking->getBookingWithAttendees();
 		} else {
-			$bookingsList = $booking->export(
-				array(
-					array(
-						'column'   => 'created_at',
-						'operator' => 'BETWEEN',
-						'value'    => "'" . $previous_date . "' AND  '" . $current_date . "'",
-					),
-				)
+			// $bookingsList = $booking->export(
+			// 	array(
+			// 		array(
+			// 			'column'   => 'created_at',
+			// 			'operator' => 'BETWEEN',
+			// 			'value'    => "'" . $previous_date . "' AND  '" . $current_date . "'",
+			// 		),
+			// 	)
+			// );
+			$where = array(
+				array('created_at', 'BETWEEN', [$previous_date, $current_date]),
 			);
+			 $bookingsList = $booking->getBookingWithAttendees(  
+				$where,
+				NULL,
+				'DESC',
+			);  
 		}
-
-		$booking_array  = array();
-		$booking_column = array();
-		foreach ( $bookingsList as $key => $book ) {
-			if ( $key == 0 ) {
-				foreach ( $book as $c_key => $c_value ) {
-					$booking_column[] = $c_key;
+ 
+		
+		if('CSV' == $request['type']){
+			$booking_array  = array();
+			$booking_column = array();
+			foreach ( $bookingsList as $key => $book ) {
+				
+				if ( $key == 0 ) {
+					foreach ( $book as $c_key => $c_value ) {
+						$booking_column[] = $c_key;
+					}
 				}
+				$book->attendees = json_encode($book->attendees); 
+				$booking_array[] = (array) $book;
+			} 
+
+			ob_start();
+			$file = fopen( 'php://output', 'w' );
+			fputcsv( $file, $booking_column );
+
+			foreach ( $booking_array as $booking ) {
+				fputcsv( $file, $booking );
 			}
-			$booking_array[] = (array) $book;
-		} 
 
-		ob_start();
-		$file = fopen( 'php://output', 'w' );
-		fputcsv( $file, $booking_column );
+			fclose( $file );
+			$data = ob_get_clean();
+			// Return response
+			$data = array(
+				'status'    => true,
+				'data'      => $data,
+				'file_name' => $file_name.'.csv',
+				'message'   =>  __('Booking Data Exported Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
+		}elseif('iCal' == $request['type']){
+			// Set the correct headers for .ics file
+		 
+			// iCal header
+			 // Start iCal file
+			 $ical = "BEGIN:VCALENDAR\r\n";
+			 $ical .= "VERSION:2.0\r\n";
+			 $ical .= "PRODID:-//Your Company//Meeting Scheduler//EN\r\n";
+			 $ical .= "CALSCALE:GREGORIAN\r\n";
+			 $ical .= "METHOD:PUBLISH\r\n";
+			foreach ($bookingsList as $meeting) { 
+				$uid = uniqid();
+				$dtStart = $this->formatToUTC($meeting->meeting_dates, $meeting->start_time, $meeting->availability_time_zone);
+				$dtEnd = $this->formatToUTC($meeting->meeting_dates, $meeting->end_time, $meeting->availability_time_zone);
+			
+				$ical .= "BEGIN:VEVENT\r\n";
+				$ical .= "UID:$uid\r\n";
+				$ical .= "DTSTAMP:" . gmdate("Ymd\THis\Z") . "\r\n";
+				$ical .= "DTSTART:$dtStart\r\n";
+				$ical .= "DTEND:$dtEnd\r\n";
+				$ical .= "SUMMARY:" . $meeting->title . "\r\n";
+				$ical .= "STATUS:" . strtoupper($meeting->status) . "\r\n";
+				
+				// Add attendees
+				if (!empty($meeting->attendees)) {
+					foreach ($meeting->attendees as $attendee) {
+						$ical .= "ATTENDEE;CN={$attendee->attendee_name}:mailto:{$attendee->email}\r\n";
+					}
+				}
+			
+				$ical .= "END:VEVENT\r\n";
+			}
+			 
+			// iCal footer
+			$ical .= "END:VCALENDAR\r\n";
+			 
+			// Return response
+			$data = array(
+				'status'    => true,
+				'data'      => $ical,
+				'file_name' => $file_name.'.ics',
+				'message'   =>  __('Booking Data Exported Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
 
-		foreach ( $booking_array as $booking ) {
-			fputcsv( $file, $booking );
 		}
 
-		fclose( $file );
-		$data = ob_get_clean();
-		// Return response
-		$data = array(
-			'status'    => true,
-			'data'      => $data,
-			'file_name' => $file_name,
-			'message'   =>  __('Booking Data Exported Successfully!', 'hydra-booking'),
-		);
-		return rest_ensure_response( $data );
+		
 	}
+
+	 // Convert date and time to UTC format
+	 public function formatToUTC($date, $time, $timezone)
+	 {
+		 $datetime = \DateTime::createFromFormat('Y-m-d h:i A', "$date $time", new \DateTimeZone($timezone));
+		 $datetime->setTimezone(new \DateTimeZone("UTC"));
+		 return $datetime->format("Ymd\THis\Z");
+	 }
+ 
 }
