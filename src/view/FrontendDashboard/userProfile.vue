@@ -105,6 +105,9 @@ const UpdateHostsInformation = async (validator_field) => {
             if("HostsAvailability"==route.name){ 
                 nextRouteName = 'HostsProfileCalendars';
             }
+            if("FrontendDashboardAvailability"==route.name){ 
+                nextRouteName = 'FrontendDashboardCalendars';
+            }
             if("HostsProfileCalendars"==route.name){ 
                 nextRouteName = 'HostsProfileIntegrations';
             }

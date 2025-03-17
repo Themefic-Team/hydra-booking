@@ -287,7 +287,10 @@ const TfhbStartDataEvent = (key, skey, startTime) => {
     const latestEndTime = getLatestEndTime(day);
 
     if (startTime <= latestEndTime) {
-        toast.error("Your start time will be over the: " + latestEndTime);
+        toast.error("Your start time will be over the: " + latestEndTime, {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });  
         return latestEndTime;
     }
 }
@@ -299,12 +302,18 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayDatas, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });   
             return;
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });  
             return;
         }
     }
@@ -313,7 +322,26 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 const isobjectempty = (data) => {
     return Object.keys(data).length === 0;
 }
-
+const CheckDateRangeStart = (date) => { 
+    // if end date below of the sart date then set a alert and empty the end date
+    if(props.meeting.availability_range.end!= '' && date > props.meeting.availability_range.end){
+         
+         toast.error("End date should be greater than or equal to Start dates", {
+             position: 'bottom-right', // Set the desired position
+             "autoClose": 1500,
+         });   
+     }
+}
+const CheckDateRangeEnd = (date) => { 
+    // if end date below of the sart date then set a alert and empty the end date
+    if(props.meeting.availability_range.start!= '' && date < props.meeting.availability_range.start){
+         
+        toast.error("End date should be greater than or equal to Start dates", {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });   
+    }
+}
 </script>
 
 <template>
@@ -321,6 +349,7 @@ const isobjectempty = (data) => {
     <div class="meeting-create-details tfhb-gap-24"> 
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title" >
+                {{ props.meeting.availability_range.start }}
                 <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
                 <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
             </div>
@@ -353,6 +382,7 @@ const isobjectempty = (data) => {
                         <HbDateTime   
                             v-model="meeting.availability_range.start"
                             icon="CalendarDays"
+                            @dateChange="CheckDateRangeStart"
                             selected = "1" 
                             :config="{
                             }"
@@ -361,7 +391,8 @@ const isobjectempty = (data) => {
                         /> 
                         <Icon name="MoveRight" size=15 /> 
                         <HbDateTime  
-                            v-model="meeting.availability_range.end"
+                            v-model="meeting.availability_range.end" 
+                            @dateChange="CheckDateRangeEnd"
                             icon="CalendarDays" 
                             selected = "1"
                             :config="{

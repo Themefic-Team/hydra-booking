@@ -162,8 +162,11 @@ watch(() => props.modelValue, (newVal) => {
 
         <div class="upload-file-preview tfhb-full-width" v-if="imageUrl">
             <div class="upload-file-preview-items tfhb-flexbox tfhb-justify-between tfhb-gap-16">
-                <img :src="imageUrl" alt="Uploaded Image">
-                <span class="file-name">{{ fileName || 'Uploaded Image' }}</span>
+                <div class="tfhb-flexbox tfhb-upload-flie-img-wrap tfhb-gap-16">
+                    <img :src="imageUrl" alt="Uploaded Image">
+                    <span class="file-name">{{ fileName || 'Uploaded Image' }}</span>
+                </div>
+                
                 <span class="remove-icon" @click="removeImage"> 
                     <Icon name="X" size=14 />
                 </span>
@@ -214,22 +217,36 @@ watch(() => props.modelValue, (newVal) => {
             display: flex;
             align-items: center;
             gap: 16px;
-            img {
-                max-height: 40px;
-                border-radius: 4px;
-            }
-            .remove-icon {
+            
+            .remove-icon { 
+                flex-shrink: 0;
                 cursor: pointer;
-                height: 16px;
-                width: 16px;
+                height: 24px;
+                width: 24px;
                 border: 1px solid #AC0C22;
-                border-radius: 2px;
+                border-radius: 4px;
                 text-align: center;
                 display: flex;
                 align-items: center;
-                justify-content: center;
+                justify-content: center; 
                 svg path {
                     stroke: #AC0C22;
+                }
+            }
+            .tfhb-upload-flie-img-wrap{
+                max-width: calc(100% - 40px);
+                
+                img {
+                    max-height: 40px;
+                    border-radius: 4px;
+                    max-width: 200px;
+                }
+                .file-name { 
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: block;
+                    max-width: 200px; /* Ensures it respects flexbox */
                 }
             }
         }

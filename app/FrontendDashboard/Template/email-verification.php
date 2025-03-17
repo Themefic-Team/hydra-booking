@@ -25,7 +25,8 @@ $tfhb_user_is_activated = !empty($user_id) ? get_user_meta($user_id, 'tfhb_user_
 $frontend_dashboard_settings = get_option('_tfhb_frontend_dashboard_settings');
 $settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings : array();
 $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
- 
+$tfhb_dashboard_page_id = isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
+   
 get_header();   
 
  
