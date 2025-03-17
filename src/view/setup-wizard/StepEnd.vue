@@ -7,6 +7,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
 import useValidators from '@/store/validator'; 
+import { LicenseBase } from '@/store/license'; 
 const router = useRouter();
 
 const { errors } = useValidators();
@@ -322,8 +323,8 @@ const UpdateIntegration = async (key, value, validator_field) => {
     }
 }
 onBeforeMount(() => {   
+    LicenseBase.GetLicense();
     fetchIntegration();
-    // if currentHash == all  
 });
 
 const activeDropdown = ref(false);
@@ -369,7 +370,7 @@ window.addEventListener('click', function(e) {
        
         </div>
 
-        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Unlock Features')" v-if="$tfhb_is_valid != true">
+        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Unlock Features')" v-if="LicenseBase.LicenseData.is_valid != true">
             <template #content>
                 {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
             </template>
