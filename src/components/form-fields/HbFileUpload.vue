@@ -168,7 +168,7 @@ watch(() => props.modelValue, (newVal) => {
                 </div>
                 
                 <span class="remove-icon" @click="removeImage"> 
-                    <Icon name="X" size=14 />
+                    <Icon name="X" size=16 />
                 </span>
             </div>
         </div>
