@@ -47,7 +47,8 @@
                     font-size: $heading-font-size-small;
 
                     &::placeholder {
-                        color: $text-input !important;
+                        color: $text-input-placeholder !important; // Define this variable in your SCSS
+                        opacity: 1; // Ensures full visibility
                     }
                 }
             }
