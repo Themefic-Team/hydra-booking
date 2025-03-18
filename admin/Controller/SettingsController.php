@@ -846,6 +846,15 @@ class SettingsController {
 			}
 		}
 
+		// Sanitize Twilio Notification
+		if ( isset( $request['twilio'] ) ) {
+			foreach ( $request['twilio'] as $key => $value ) {
+				$data['twilio'][ $key ]['status']   = sanitize_text_field( $value['status'] );
+				$data['twilio'][ $key ]['body']     = wp_kses_post( $value['body'] );
+				$data['twilio'][ $key ]['builder']  = $value['builder'];
+			}
+		}
+
 		// update option
 		update_option( '_tfhb_notification_settings', $data );
 
