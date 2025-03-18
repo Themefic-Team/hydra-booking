@@ -13,6 +13,7 @@ import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue';
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
+import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -128,6 +129,13 @@ const Integration = reactive( {
         refresh_token: '',
         modules: ''
     },
+    telegram : {
+        type: 'telegram', 
+        status: 0, 
+        connection_status: 0, 
+        bot_token: '',
+        chat_id: '',
+    },
 });
  
 
@@ -154,6 +162,7 @@ const fetchIntegration = async () => {
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
             Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
+            Integration.telegram = response.data.telegram  ? response.data.telegram  : Integration.telegram ; 
             
 
             skeleton.value = false;
@@ -262,6 +271,17 @@ onBeforeMount(() => {
         @popup-close-control="isZohoPopupClose" 
         />
         <!-- Zoho intrigation -->
+
+        <!-- telegram intrigation -->
+        <TelegramIntregration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        :telegram_data="Integration.telegram" 
+        @update-integrations="UpdateIntegration" 
+        from="host"
+        :ispopup="mailpopup"
+        @popup-open-control="ismailchimpPopupOpen"
+        @popup-close-control="ismailchimpPopupClose" 
+        />
+        <!-- telegram intrigation -->
 
     </div> 
 </template>

@@ -14,7 +14,7 @@ const { errors, isEmpty } = useValidators();
 const props = defineProps([
     'class', 
     'display', 
-    'telegram_data', 
+    'twilio_data', 
     'pre_loader', 
     'Integration', 
     'ispopup',
@@ -29,67 +29,76 @@ const closePopup = () => {
 </script>
 
 <template>
-    <!-- {{ telegram_data }} -->
-      <!-- Telegram Integrations  -->
+    <!-- {{ twilio_data }} -->
+      
       <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/Zoom.png'" alt="">
             </span>  
             <div class="cartbox-text"> 
-                <h3>{{ $tfhb_trans('Telegram') }}</h3>
-                <p>{{ $tfhb_trans('Connect Telegram API to configure virtual meetings.') }}</p>
+                <h3>{{ $tfhb_trans('Twilio') }}</h3>
+                <p>{{ $tfhb_trans('Connect Twilio API to configure virtual meetings.') }}</p>
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
 
-            <button  v-if=" props.from == 'host' && telegram_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Configured') }} </button>
-            <router-link  v-else-if=" props.from == 'host' && telegram_data.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <button  v-if=" props.from == 'host' && twilio_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Configured') }} </button>
+            <router-link  v-else-if=" props.from == 'host' && twilio_data.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
            
             <HbButton 
                 v-else @click="emit('popup-open-control')" 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="telegram_data.status == 1 ? 'Connected' : 'Connect'" 
+                :buttonText="twilio_data.status == 1 ? 'Connected' : 'Connect'" 
                 hover_icon="ArrowRight" 
                 :hover_animation="false"    
             />  
             <!-- Checkbox swicher --> 
-            <HbSwitch v-if="telegram_data.status && telegram_data.bot_token !='' && display != 'list'" @change="emit('update-integrations', 'telegram_data', telegram_data)" v-model="telegram_data.status"    /> 
-            <HbSwitch v-if="telegram_data.bot_token && display == 'list' && telegram_data.connection_status == '1'" @change="emit('update-integrations', 'telegram_data', telegram_data)" v-model="telegram_data.status"    /> 
+            <HbSwitch v-if="twilio_data.status && twilio_data.bot_token !='' && display != 'list'" @change="emit('update-integrations', 'twilio_data', twilio_data)" v-model="twilio_data.status"    /> 
+            <HbSwitch v-if="twilio_data.bot_token && display == 'list' && twilio_data.connection_status == '1'" @change="emit('update-integrations', 'twilio_data', twilio_data)" v-model="twilio_data.status"    /> 
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->
             <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
                 <template #header> 
-                    <h2>{{ $tfhb_trans('Add New Telegram Option') }}</h2>
+                    <h2>{{ $tfhb_trans('Add Twilio Option') }}</h2>
                     
                 </template>
 
                 <template #content>  
                     <p>
-                        {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get BOT Token and Chat ID from Telegram Account') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
+                        {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get Access Token from Twilio Account') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                     </p>
                     <HbText  
-                        v-model="telegram_data.bot_token"  
+                        v-model="twilio_data.number"  
                         required= "true"  
-                        name="bot_token"
-                        :errors="errors.bot_token"
-                        :label="$tfhb_trans('Telegram BOT Token')"  
+                        name="number"
+                        :errors="errors.number"
+                        :label="$tfhb_trans('Whatsapp Number')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Your Telegram BOT Token')"  
+                        :placeholder="$tfhb_trans('Enter Your Whatsapp Number')"  
                     /> 
                     <HbText  
-                        v-model="telegram_data.chat_id"  
+                        v-model="twilio_data.sid"  
                         required= "true"  
-                        name="chat_id"
-                        :errors="errors.chat_id"
-                        :label="$tfhb_trans('Telegram Chat ID')"  
+                        name="sid"
+                        :errors="errors.sid"
+                        :label="$tfhb_trans('Account SID')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Your Telegram Chat ID')"  
+                        :placeholder="$tfhb_trans('Enter Your Account SID')"  
+                    /> 
+                    <HbText  
+                        v-model="twilio_data.token"  
+                        required= "true"  
+                        name="token"
+                        :errors="errors.token"
+                        :label="$tfhb_trans('Access Token')"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans('Enter Your Access Token')"  
                     /> 
 
                     <HbButton  
-                         @click.stop="emit('update-integrations', 'telegram_data', telegram_data, ['bot_token', 'chat_id'])"
+                         @click.stop="emit('update-integrations', 'twilio_data', twilio_data, ['number', 'sid', 'token'])"
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
                         :buttonText="'Save & Validate' "
                         icon="ChevronRight" 

@@ -33,9 +33,37 @@ class Telegram {
 	// If booking Status is Complted
 	public function pushBookingToConfirmed( $attendees ) {
 
+		$message = "Hello Jahid Hasan";
+
+		$sid = '';
+		$token = '';
+		$twilio_number = ''; // whatsapp:+14155238886
+		$customer_phone = '';
+		$args = [
+			'body'    => [
+				'From' => $twilio_number,
+				'To'   => 'whatsapp:' . $customer_phone,
+				'Body' => $message,
+			],
+			'headers' => [
+				'Authorization' => 'Basic ' . base64_encode("$sid:$token"),
+				'Content-Type'  => 'application/x-www-form-urlencoded',
+			],
+			'timeout' => 30, // Increase timeout
+			'method'  => 'POST',
+		];
+		
+		$response = wp_remote_post('https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Messages.json', $args);
+		
+
+		var_dump($response); exit();
+		if (is_wp_error($response)) {
+			error_log('Twilio API Error: ' . $response->get_error_message());
+		}
+		
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_confirmation']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_confirmation']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['twilio']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_confirmation']['body'])){
+            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_confirmation']['body'], $attendees);
         }
        
 	}
@@ -45,8 +73,8 @@ class Telegram {
 	public function pushBookingToPending( $attendees ) {
 
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_pending']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_pending']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_pending']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['twilio']['booking_pending']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_pending']['body'])){
+            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_pending']['body'], $attendees);
         }
 
 	}
@@ -55,8 +83,8 @@ class Telegram {
 	public function pushBookingToCanceled( $attendees ) {
 
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_cancel']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_cancel']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['twilio']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_cancel']['body'])){
+            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_cancel']['body'], $attendees);
         }
 
 	}
@@ -65,13 +93,13 @@ class Telegram {
 	public function pushBookingToscheduled( $attendees ) {
 		
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_reschedule']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_reschedule']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['twilio']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_reschedule']['body'])){
+            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_reschedule']['body'], $attendees);
         }
 
 	}
 
-    function tfhb_telegram_callback($body, $attendees) {
+    function tfhb_twilio_callback($body, $attendees) {
 
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) : array();
         $_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
