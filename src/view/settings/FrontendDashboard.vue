@@ -12,9 +12,11 @@ import FdDashboardSignup from '@/components/settings/fd-dashboard/FdDashboardSig
 import FdDashboardlogin from '@/components/settings/fd-dashboard/FdDashboardlogin.vue';
 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
+import { LicenseBase } from '@/store/license'; 
 
 // Get Current Route url
 onBeforeMount(() => { 
+    LicenseBase.GetLicense();
     FrontendDashboard.fetchFrontendDashboardSettings(); 
 });
 
@@ -40,13 +42,13 @@ onBeforeMount(() => {
                 <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div> 
-        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-if="$tfhb_is_valid != true">
+        <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-if="LicenseBase.LicenseData.is_valid != true">
             <template #content>
                 {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
             </template>
         </HbInfoBox>
 
-        <div class="tfhb-content-wrap" :class="$tfhb_is_valid != true  ? 'tfhb-pro' : ''">    
+        <div class="tfhb-content-wrap" :class="LicenseBase.LicenseData.is_valid != true  ? 'tfhb-pro' : ''">    
             
             <div class="tfhb-hydra-content-wrap">       
                 <!-- <router-view 
