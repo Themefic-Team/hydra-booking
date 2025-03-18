@@ -705,6 +705,23 @@ class HostsController {
 			$telegram['connection_status'] = 0; 
 		}
 
+		// twilio
+		$twilio = isset( $_tfhb_host_integration_settings['twilio'] ) ? $_tfhb_host_integration_settings['twilio'] : array();
+		if (isset($_tfhb_integration_settings['twilio']['status']) && $_tfhb_integration_settings['twilio']['status'] == true ) {
+
+			$twilio['type']              = 'twilio';
+			$twilio['status']            = $_tfhb_host_integration_settings['twilio']['status'];
+			$twilio['connection_status'] = $_tfhb_integration_settings['twilio']['status'];
+			$twilio['number']         	 = $_tfhb_host_integration_settings['twilio']['number'];
+			$twilio['sid']           	 = $_tfhb_host_integration_settings['twilio']['sid'];
+			$twilio['token']           	 = $_tfhb_host_integration_settings['twilio']['token'];
+
+		}else{
+			$twilio['type']              = 'twilio';
+			$twilio['status']            = 0; 
+			$twilio['connection_status'] = 0; 
+		}
+
 		// Zoho
 		$zoho = isset( $_tfhb_host_integration_settings['zoho'] ) ? $_tfhb_host_integration_settings['zoho'] : array();
 		if (isset($_tfhb_integration_settings['zoho']['status']) && $_tfhb_integration_settings['zoho']['status'] ) {
@@ -730,11 +747,12 @@ class HostsController {
 			'status'                     => true,
 			'integration_settings'       => $_tfhb_host_integration_settings,
 			'google_calendar'            => $google_calendar,
-			'zoom_meeting'            => $zoom_meeting, 
+			'zoom_meeting'               => $zoom_meeting, 
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
 			'zoho'                       => $zoho,
 			'telegram'                   => $telegram,
+			'twilio'                     => $twilio,
 			'_tfhb_integration_settings' => $_tfhb_integration_settings,
 		);
 
@@ -839,6 +857,18 @@ class HostsController {
 
 			$responseData['status'] = true;
 			$responseData['message'] = esc_html(__('Telegram Settings Updated Successfully', 'hydra-booking'));   
+		} elseif ( $key == 'twilio_data' ) {
+			$_tfhb_host_integration_settings['twilio']['type']   = 'twilio';
+			$_tfhb_host_integration_settings['twilio']['status'] = sanitize_text_field( $data['status'] );
+			$_tfhb_host_integration_settings['twilio']['number']    = sanitize_text_field( $data['number'] );
+			$_tfhb_host_integration_settings['twilio']['sid']    = sanitize_text_field( $data['sid'] );
+			$_tfhb_host_integration_settings['twilio']['token']    = sanitize_text_field( $data['token'] );
+
+			// update User Meta
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Twilio Settings Updated Successfully', 'hydra-booking'));   
 		} elseif ( $key == 'zoho' ) {
 			$_tfhb_host_integration_settings['zoho']['type']          = 'zoho';
 			$_tfhb_host_integration_settings['zoho']['status']        = sanitize_text_field( $data['status'] );

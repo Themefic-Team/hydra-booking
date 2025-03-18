@@ -424,8 +424,8 @@ onBeforeMount(() => {
                 />
                 <!-- Whatsapp intrigation -->
 
-                 <!-- TwilioIntegration intrigation -->
-                 <TwilioIntegration 
+                <!-- TwilioIntegration intrigation -->
+                <TwilioIntegration 
                 :twilio_data="Integration.twilio"  
                 @update-integrations="UpdateIntegration" 
                 :ispopup="twpopup"

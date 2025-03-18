@@ -54,8 +54,8 @@ const closePopup = () => {
                 :hover_animation="false"    
             />  
             <!-- Checkbox swicher --> 
-            <HbSwitch v-if="twilio_data.status && twilio_data.bot_token !='' && display != 'list'" @change="emit('update-integrations', 'twilio_data', twilio_data)" v-model="twilio_data.status"    /> 
-            <HbSwitch v-if="twilio_data.bot_token && display == 'list' && twilio_data.connection_status == '1'" @change="emit('update-integrations', 'twilio_data', twilio_data)" v-model="twilio_data.status"    /> 
+            <HbSwitch v-if="twilio_data.status && twilio_data.token !='' && display != 'list'" @change="emit('update-integrations', 'twilio_data', twilio_data)" v-model="twilio_data.status"    /> 
+            <HbSwitch v-if="twilio_data.token && display == 'list' && twilio_data.connection_status == '1'" @change="emit('update-integrations', 'twilio_data', twilio_data)" v-model="twilio_data.status"    /> 
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->
