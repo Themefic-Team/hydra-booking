@@ -36,7 +36,7 @@ function hideDropdownOutsideClick(e) {
     if (!document.querySelector('.tfhb-meetings-list-wrap').contains(e.target)) {
         activeItemDropdown.value = 0;
     }
-    if (!document.querySelector('.tfhb-filter-content-wrap').contains(e.target)) {
+    if (!document.querySelector('.tfhb-filter-box').contains(e.target)) {
         FilterPreview.value = false;
     }
     
@@ -261,7 +261,7 @@ const truncateString = (str, num) => {
                         
                     </div>
                 </div>
-            </div>
+            </div> 
             <div class="tfhb-meeting-person-type" 
                 :class=" {
                     'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status, 
@@ -292,7 +292,7 @@ const truncateString = (str, num) => {
         </template> 
     </HbPopup>
 
-    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="400px" name="first-modal">
+    <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="542px" name="first-modal">
         <template #header> 
 
             

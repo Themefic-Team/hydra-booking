@@ -1,8 +1,11 @@
 <?php
 namespace HydraBooking\App;
+// exit
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Classes
 use HydraBooking\App\Shortcode\HydraBookingShortcode;
+use HydraBooking\FdDashboard\FrontendDashboard;
 use HydraBooking\App\Enqueue;
 use HydraBooking\App\BookingLocation;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
@@ -24,6 +27,7 @@ class App {
 		new HydraBookingShortcode();
  
 
+		new FrontendDashboard();
 
 
 		add_filter( 'query_vars', array( $this, 'tfhb_single_query_vars' ) );

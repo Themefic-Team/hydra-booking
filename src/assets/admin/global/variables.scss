@@ -1,108 +1,108 @@
- 
-// Color Variables
+ // Color Variables
 
-// Primary
-$primary-default : #2E6B38;
-$primary-color : #17030C;
-$primary-hover : #4C9959;
-$primary-text : #FFFFFF;
+ // Primary
+ $primary-default : var(--tfhb-admin-primary-default, #2E6B38);
+ $primary-color : #17030C;
+ $primary-hover : var(--tfhb-admin-primary-hover, #4C9959);
+ $primary-text : #FFFFFF;
 
-// Secondary
-$secondary-default : #273F2B;
-$secondary-hover : #E1F2E4;
+ // Secondary
+ $secondary-default : var(--tfhb-admin-secondary-default, #273F2B);
+ $secondary-hover : var(--tfhb-admin-secondary-hover, #E1F2E4);
 
-// Text Color
-$text-title : #141915;
-$text-paragraph : #273F2B;
-$text-input : #273F2B;
+ // Text Color
+ $text-title : var(--tfhb-admin-text-title, #141915);
+ $text-paragraph : var(--tfhb-admin-text-paragraph, #273F2B); 
+ $text-input-placeholder : #8C958E;
+ $text-input : var(--tfhb-admin-text-paragraph, #273F2B);
 
-// Background
-$surface-primary : #F3F6F4; 
-$surface-secondary : #FFFFFF;
+ // Background
+ $surface-primary : var(--tfhb-admin-surface-primary, #F9FBF9);
+ $surface-secondary : #FFFFFF;
 
-$surface-border : #C0D8C4;
-$surface-border-hover : #211319;
-$surface-background : #C0D8C4;
-$surface-input-field : #56765B; 
+ $surface-border : var(--tfhb-admin-surface_border, #C0D8C4);
+ $surface-border-hover :  var(--tfhb-admin-surface-border-hover, #211319);
+ $surface-background : var(--tfhb-admin-surface-background, #C0D8C4);
+ $surface-input-field : var(--tfhb-admin-surface-input-field, #56765B);
 
-// Error    
-$error-text : #AC0C22;
-$error-background : #FEECEE;
-// $error-background : #FCD9DE;
-
-
-// warning
-$warning-text : #A37800;
-$warning-background : #FFF8E5;
-$warning-background-secondary : #FFF8E5;
-
-// Info
-$info-text : #002AB3;
-$info-background : #EBEFFF;
-
-// Info
-$alert-text : #D69D00;
-$alert-background : #EBEFFF;
-
-// Success
-$success-text : #17723F;
-$success-background : #E6FAEE;
+ // Error    
+ $error-text : #AC0C22;
+ $error-background : #FEECEE;
+ // $error-background : #FCD9DE;
 
 
-// Border Variables
+ // warning
+ $warning-text : #A37800;
+ $warning-background : #FFF8E5;
+ $warning-background-secondary : #FFF8E5;
 
-$border-radius-small : 4px;
-$border-radius-medium : 8px;
-$border-radius-xmedium : 12px;
-$border-radius-large : 16px; 
-$border-radius-xlarge : 24px;
-$border-radius-xxlarge : 32px;
-$border-radius-full : 50%;
+ // Info
+ $info-text : #002AB3;
+ $info-background : #EBEFFF;
 
-// Box Shadow
+ // Info
+ $alert-text : #D69D00;
+ $alert-background : #EBEFFF;
 
-$btn-box-shadow : 0px 1px 3px 0px rgba(40, 16, 26, 0.10), 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
-$popup-box-shadow : 0px 8px 30px 0px rgba(40, 16, 26, 0.1019607843);
-$filter-box-shadow : 0px 8px 30px 0px rgba(40, 16, 26, 0.10); 
-$dropdown-box-shadow : 0px 15px 30px 0px rgba(16, 40, 20, 0.10);
-$flatpickr-box-shadow : 0px 8px 30px 0px rgba(229, 0, 99, 0.30);
-$setup-wizard-box-shadow : 0px 8px 16px 0px rgba(40, 16, 26, 0.04); 
-$input-field-box-shadow : 0px 1px 3px 0px rgba(16, 40, 20, 0.10), 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
-$meeting-card-box-shadow : 0px 15px 30px 0px rgba(16, 40, 20, 0.10);
-
-// transition
-$transition : 0.4s;
-
-// Typography
-$text-font-size : 13px;
-$text-font-size-small : 11px;
-$heading-font-size-small : 15px;
-$heading-font-size-medium : 17px;
-$heading-font-size-large : 24px;
-
-$font-weight-reguler : 400;
-$font-weight-medium : 600;
-$font-weight-bold : 700;
-
-// Border Variables
-$border-type : solid;
-$border-reguler : 1px;
-$button-border : 1px;
-$fields-border : 1px;
+ // Success
+ $success-text : #17723F;
+ $success-background : #E6FAEE;
 
 
+ // Border Variables
+
+ $border-radius-small : 4px;
+ $border-radius-medium : 8px;
+ $border-radius-xmedium : 12px;
+ $border-radius-large : 16px;
+ $border-radius-xlarge : 24px;
+ $border-radius-xxlarge : 32px;
+ $border-radius-full : 50%;
+
+ // Box Shadow
+
+ $btn-box-shadow : 0px 1px 3px 0px rgba(40, 16, 26, 0.10),
+ 0px 1px 2px 0px rgba(40, 16, 26, 0.06);
+ $popup-box-shadow : 0px 8px 30px 0px rgba(40, 16, 26, 0.1019607843);
+ $filter-box-shadow : 0px 8px 30px 0px rgba(40, 16, 26, 0.10);
+ $dropdown-box-shadow : 0px 15px 30px 0px rgba(16, 40, 20, 0.10);
+ $flatpickr-box-shadow : 0px 8px 30px 0px rgba(229, 0, 99, 0.30);
+ $setup-wizard-box-shadow : 0px 8px 16px 0px rgba(40, 16, 26, 0.04);
+ $input-field-box-shadow : 0px 1px 3px 0px rgba(16, 40, 20, 0.10),
+ 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
+ $meeting-card-box-shadow : 0px 15px 30px 0px rgba(16, 40, 20, 0.10);
+
+ // transition
+ $transition : 0.4s;
+
+ // Typography
+ $text-font-size : 13px;
+ $text-font-size-small : 11px;
+ $heading-font-size-small : 15px;
+ $heading-font-size-medium : 17px;
+ $heading-font-size-large : 24px;
+
+ $font-weight-reguler : 400;
+ $font-weight-medium : 600;
+ $font-weight-bold : 700;
+
+ // Border Variables
+ $border-type : solid;
+ $border-reguler : 1px;
+ $button-border : 1px;
+ $fields-border : 1px;
 
 
 
+ // Responsive Veriable
+ $max1399: "only screen and (max-width: 1399px)";
+ $max1240: "only screen and (max-width: 1240px)";
+ $max1366: "only screen and (max-width: 1366px)";
+ $max1140: "only screen and (max-width: 1140px)";
+ $max991: "only screen and (max-width: 991px)";
+ $max767: "only screen and (max-width: 767px)";
+ $max640: "only screen and (max-width: 640px)";
+ $max570: "only screen and (max-width: 570px)";
+ $max450: "only screen and (max-width: 450px)";
 
-// Responsive Veriable
-$max1399: "only screen and (max-width: 1399px)";
-$max1240: "only screen and (max-width: 1240px)";
-$max1366: "only screen and (max-width: 1366px)";
-$max1140: "only screen and (max-width: 1140px)";
-$max991: "only screen and (max-width: 991px)";
-$max767: "only screen and (max-width: 767px)";
-$max640: "only screen and (max-width: 640px)";
-$max570: "only screen and (max-width: 570px)";
-
-/// 
+ /// 

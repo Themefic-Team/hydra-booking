@@ -1,5 +1,4 @@
-<script setup>
-import { __ } from '@wordpress/i18n';
+<script setup> 
 import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
@@ -157,7 +156,7 @@ const UpdateHostsInformation = async (validator_field) => {
             hostData.availability = response.data.host.availability;
             hostData.availability_type = response.data.host.availability_type ? response.data.host.availability_type : 'settings';
             hostData.availability_id = response.data.host.availability_id;
-            hostData.others_information = response.data.host.others_information != null ? response.data.host.others_information : {};
+            hostData.others_information = response.data.host.others_information.length != '[]' || response.data.host.others_information != null ? response.data.host.others_information : {};
             skeleton.value = false;
             time_zones.data = response.data.time_zone; 
             hosts_settings.data = response.data.hosts_settings; 
@@ -198,7 +197,8 @@ onBeforeMount(() => {
 
             </ul>  
         </nav>
-        <div class="tfhb-hydra-dasboard-content">      
+        <div class="tfhb-hydra-dasboard-content"> 
+              
             <router-view 
             :hostId ="hostId" 
             :host="hostData" 

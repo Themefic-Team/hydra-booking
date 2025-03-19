@@ -1,8 +1,11 @@
-.tfhb-scrollbar, .fc-scroller, .p-dropdown-items-wrapper { 
-    overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: #273F2B #F3F6F4; 
-    padding-right: 10px;
+.tfhb-scrollbar,
+.fc-scroller,
+.p-dropdown-items-wrapper {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #273F2B #F3F6F4;
+  padding-right: 10px;
+
   /* For Chrome, Edge, and Safari */
   ::-webkit-scrollbar {
     width: 4px;
@@ -10,17 +13,17 @@
 
 
   ::-webkit-scrollbar-track {
-    background: #F3F6F4; 
+    background: #F3F6F4;
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #273F2B; 
+    background-color: #273F2B;
     border-radius: 10px;
     border: 3px solid #F3F6F4;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+    background: #555;
   }
 
   /* For Firefox */
@@ -30,5 +33,5 @@
   }
 
   /* Optional: To target specific elements */
-  
+
 }

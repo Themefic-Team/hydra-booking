@@ -16,9 +16,6 @@ const props = defineProps({
 }); 
 
 const GettingStart = () => {
-   
- 
-    
     props.setupWizard.currentStep = 'step-one';
 }
 

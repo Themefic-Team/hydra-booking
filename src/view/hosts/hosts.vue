@@ -215,10 +215,9 @@ const Tfhb_Host_Filter = async (e) =>{
 </script>
 
 <template>
-
-    <!-- {{ tfhbClass }} -->
-    <div :class="{ 'tfhb-skeleton': skeleton }"  class="tfhb-admin-hosts">
-        <Header :title="$tfhb_trans('Hosts')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
+ 
+    <div :class="{ 'tfhb-skeleton': skeleton, 'tfhb-admin-frontend-end-wrap': $route.path === '/hosts/list' }"  class="tfhb-admin-hosts">
+        <Header v-if="$front_end_dashboard == false"  :title="$tfhb_trans('Hosts')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
         <div v-if="$user.role != 'tfhb_host'" class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 

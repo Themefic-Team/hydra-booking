@@ -336,7 +336,7 @@ class HostsController {
 
 		
 
-		$data['host_id'] = $hostInsert['insert_id'];
+		// $data['host_id'] = $hostInsert['insert_id'];
 
 	
 		// Update user Option
@@ -560,7 +560,8 @@ class HostsController {
 
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $host_id );
+		$HostData =  $host->getHostById( $host_id );
+		$user_id = $HostData->user_id;
 
 		if ( empty( $HostData ) ) {
 			return rest_ensure_response(
@@ -587,11 +588,11 @@ class HostsController {
 		}
 
 		// Get User MEta
-		$_tfhb_host           = get_user_meta( $host_id, '_tfhb_host', true );
+		$_tfhb_host           = get_user_meta( $user_id, '_tfhb_host', true );
 		$_tfhb_host['status'] = $status;
 
 		// Update user Option
-		update_user_meta( $host_id, '_tfhb_host', $_tfhb_host );
+		update_user_meta( $user_id, '_tfhb_host', $_tfhb_host );
 
 		// Hosts Lists
 		$HostsList = $host->get();
@@ -915,6 +916,7 @@ class HostsController {
 		// Response
 		$data = array(
 			'status'       => true,
+			'message'     =>  __( 'Availability Settings Deleted Successfully', 'hydra-booking' ),
 			'availability' => $_tfhb_host_availability_settings['availability'],
 		);
 		return rest_ensure_response( $data );
@@ -935,7 +937,7 @@ class HostsController {
 			return rest_ensure_response( $data );
 		}
 
-		$_tfhb_host_info        = get_user_meta( $request['user_id'], '_tfhb_host', true );
+		$_tfhb_host_info        = !empty(get_user_meta( $request['user_id'], '_tfhb_host', true )) ? get_user_meta( $request['user_id'], '_tfhb_host', true ) : array();
 		$tfhb_host_availability = ! empty( $_tfhb_host_info['availability'] ) ? $_tfhb_host_info['availability'] : array();
 
 		$availability['id']          = isset( $request['id'] ) ? sanitize_text_field( $request['id'] ) : '';

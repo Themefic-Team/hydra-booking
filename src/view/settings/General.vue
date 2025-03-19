@@ -360,13 +360,7 @@ onBeforeMount(() => {
                
                 <!-- Default status of bookings --> 
 
-                 <!-- Default status of bookings -->
-                 <HbSwitch 
-                    v-model="generalSettings.reschedule_status"
-                    width="100"
-                    :label="$tfhb_trans('Confirmed reschedule by default.')"  
-                />
-                <!-- Default status of bookings --> 
+                
                  
             </div>  
 

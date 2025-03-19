@@ -9,7 +9,7 @@ import AvailabilitySingle from '@/components/availability/AvailabilitySingle.vue
 import { toast } from "vue3-toastify"; 
 import { Host } from '@/store/hosts';
 import { Availability } from '@/store/availability';
-
+import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 
 const emit = defineEmits(["availability-tabs", "save-host-info"]); 
@@ -46,7 +46,7 @@ const availabilityDataSingle = reactive({})
 const skeleton = ref(true);
 
 const GeneralSettings = reactive({});
-
+const deletePopup = ref(false);
 const openModal = () => {
 
   const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -243,6 +243,7 @@ const deleteAvailabilitySettings = async (key, id, user_id ) => {
       if (response.data.status) { 
         AvailabilityGet.data = response.data.availability; 
         props.host.availability = response.data.availability; 
+        deletePopup.value = false;
         toast.success(response.data.message, {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
@@ -286,9 +287,61 @@ const formatTimeSlots = (timeSlots) =>  {
     }).join(', ');
 }
 
+const deleteItemsData = reactive({
+    key : 0,
+    id : 0,
+    user_id : 0
+});
+// Delete Popup
+const deletePopupToggle = (key, id, user_id) => { 
+    // empty first deleteItemsData
+    deleteItemsData.key = 0;
+    deleteItemsData.id = 0;
+    deleteItemsData.user_id = user_id;
+
+    deletePopup.value = true;
+    deleteItemsData.key = key;
+    deleteItemsData.id = id;
+    deleteItemsData.user_id = user_id;
+}
 </script>
 
 <template>
+
+<HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="542px" name="first-modal">
+    <template #header> 
+
+        
+    </template>  
+
+    <template #content>  
+        <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+            <div class="tfhb-close-icon">
+                <img :src="$tfhb_url+'/assets/images/delete-icon.svg'" alt="">
+            </div>
+            <div class="tfhb-close-content">
+                <h3>{{ $tfhb_trans('Are you absolutely sure?') }}  </h3>  
+                <p>{{ $tfhb_trans('Data and bookings associated with this meeting will be deleted. It will not affect previously scheduled meetings.') }}</p>
+            </div>
+            <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16"> 
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                    @click=" deletePopup = !deletePopup"
+                    :buttonText="$tfhb_trans('Cancel')" 
+                />  
+                <HbButton  
+                    classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                    @click="deleteAvailabilitySettings(deleteItemsData.key, deleteItemsData.id, deleteItemsData.user_id)"
+                    :buttonText="$tfhb_trans('Delete')"
+                    icon="Trash2"   
+                    :hover_animation="false" 
+                    icon_position = 'left'
+                />
+                
+            </div>
+        </div> 
+    </template> 
+</HbPopup>
 <div class="tfhb-host-availability">
     <!-- {{host}} -->
     <div class="tfhb-availaility-tabs tfhb-mb-24">
@@ -404,7 +457,7 @@ const formatTimeSlots = (timeSlots) =>  {
 
     <div class="tfhb-content-wrap tfhb-host-availability-list-wrap tfhb-flexbox" v-if="'custom'==host.availability_type">
 
-        <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key"  @edit-availability="EditAvailabilitySettings(key, availability.id, availability)" @delete-availability="deleteAvailabilitySettings(key, availability.id, host.user_id)" />
+        <AvailabilitySingle  v-for="(availability, key) in AvailabilityGet.data" :availability="availability" :key="key"  @edit-availability="EditAvailabilitySettings(key, availability.id, availability)" @delete-availability="deletePopupToggle(key, availability.id, host.user_id)" />
 
        
         <AvailabilityPopupSingle v-if="isModalOpened" max_width="850px !important" :timeZone="timeZone.value" :display_overwrite="true" :availabilityDataSingle="availabilityDataSingle.value" :isOpen="isModalOpened" @modal-close="closeModal" :is_host="true" @update-availability="fetchAvailabilitySettingsUpdate" />

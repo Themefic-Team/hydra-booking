@@ -14,7 +14,7 @@
             $.ajax({
                 url: tfhb_app_booking.ajax_url, 
                 type: 'POST',
-                data: data,
+                data: data, 
                 processData: false,
                 contentType: false,
                 success: function (response) {

@@ -1,9 +1,8 @@
-
 // .tfhb-setup-wizard-body {
 //     #wpadminbar, #adminmenuwrap, #adminmenuback, #wpfooter {
 //         display: none;
 //       }
-      
+
 //       #wpcontent {
 //         margin-left: 0;
 //         padding: 0;
@@ -12,13 +11,13 @@
 //         padding: 0;
 //       }
 // }
-  
- 
+
+
 .tfhb-setup-wizard {
     padding: 130px 0 !important;
     background-color: $surface-secondary;
     background-size: cover;
-    background-position: center center; 
+    background-position: center center;
     padding: 88px 0;
     justify-content: center !important;
     width: 100% !important;
@@ -28,9 +27,9 @@
     height: 100% !important;
     width: 100% !important;
     overflow: auto;
- 
 
-    .tfhb-s-w-preloader{
+
+    .tfhb-s-w-preloader {
         height: 20px;
         width: 20px;
     }
@@ -62,7 +61,7 @@
                 font-weight: $font-weight-bold;
                 color: $primary-default;
                 font-size: $heading-font-size-small;
-                
+
                 font-weight: $font-weight-medium;
                 line-height: 24px;
             }
@@ -82,64 +81,80 @@
         border-radius: $border-radius-large;
         border: 2px $border-type $surface-border;
         background: #FFF;
-        box-shadow: $setup-wizard-box-shadow ; 
+        box-shadow: $setup-wizard-box-shadow ;
         padding: 64px 120px;
         width: 100%;
         max-width: 1024px;
         // min-width: 60%;
-        flex-direction: column; 
+        flex-direction: column;
         justify-content: center !important;
-        gap : 56px !important;
-        
-        .tfhb-s-w-getting-email{
+        gap: 56px !important;
+
+        .tfhb-s-w-getting-email {
             .tfhb-field-checkbox {
-                > div{
+                >div {
                     justify-content: center !important;
                 }
             }
         }
+
         &.tfhb-s-w-step-end {
             // width: 90%;
             // padding: 64px 30px;
             width: 100%;
+            gap: 32px !important;
             .cartbox-text {
                 max-width: 175px !important;
             }
-             
+            .tfhb-s-w-icon-text{
+                p{
+                    max-width: none;
+                    padding: 0 35px;
+                }
+            }
         }
 
         &.tfhb-s-w-step-two {
+
             // width: 80%;
             // padding: 64px 50px;
             .tfhb-popup-open {
+                .tfhb-popup-overlay{
+                    display: none;
+                }
                 .tfhb-popup-wrap {
                     animation: none !important;
                 }
             }
-            .tfhb-availability-popup-wrap{
+
+            .tfhb-availability-popup-wrap {
                 width: 100% !important;
             }
+
             // .tfhb-availability-content-wrap{
             //     > .tfhb-admin-card-box{
             //         border: none !important;
             //         padding: 0 !important;
             //     }
             // }
-           
+
             .tfhb-dashboard-heading {
                 // display: none !important;
                 margin-left: 0 !important;
-              }
-            .tfhb-overrides-heading{
+            }
+
+            .tfhb-overrides-heading {
                 display: block !important;
             }
+
             .tfhb-popup-wrap {
                 max-width: 800px !important;
+
                 .tfhb-popup-wrap {
                     box-shadow: none !important;
                     border: none !important;
                     padding: 0 !important;
-                  }
+                }
             }
         }
 
@@ -160,7 +175,7 @@
                 color: $secondary-default;
                 font-size: $heading-font-size-small !important;
                 font-weight: $font-weight-reguler;
-                line-height: 24px; 
+                line-height: 24px;
                 /* 160% */
                 max-width: 470px;
                 font-weight: 400;
@@ -168,9 +183,11 @@
                 margin: 0 auto;
             }
         }
-        .tfhb-step-wizard-steper{
+
+        .tfhb-step-wizard-steper {
             justify-content: center !important;
         }
+
         .tfhb-step-bar {
             width: 24px;
             height: 8px;
@@ -192,32 +209,32 @@
                 background-color: transparent !important;
 
                 .tfhb-popup-wrap {
-                  
+
                     // max-width: 100% !important;
                     // width: 100% !important;
-                    width: 100% !important; 
-                    border-radius: 8px; 
+                    width: 100% !important;
+                    border-radius: 8px;
                     background: $surface-secondary;
                     box-shadow: none !important;
-                    
-                    > div > .tfhb-dashboard-heading { 
+
+                    >div>.tfhb-dashboard-heading {
                         display: none !important;
                     }
-                } 
+                }
 
-              
+
 
                 .tfhb-btn.boxed-btn {
                     display: none;
                 }
-               
+
             }
-            
+
         }
-       
+
         .tfhb-submission-btn {
             justify-content: center !important;
- 
+
         }
     }
 
@@ -229,6 +246,7 @@
         background: $surface-secondary !important;
         min-height: auto !important;
         width: 500px;
+
         .tfhb-single-meeting {
             padding: 24px !important;
             width: 100% !important;
@@ -236,8 +254,8 @@
         }
     }
 
-    .tfhb-s-w-step-end { 
-        .tfhb-s-w-integrations-wrap{
+    .tfhb-s-w-step-end {
+        .tfhb-s-w-integrations-wrap {
             width: 100% !important;
             align-items: normal !important;
         }
@@ -267,11 +285,13 @@
                     border-radius: $border-radius-small;
                     border: $border-reguler $border-type $surface-border;
                     background: #FFF;
-                    &:focus, &:active {
+
+                    &:focus,
+                    &:active {
                         outline: none;
-                        box-shadow: none; 
+                        box-shadow: none;
                         border-color: $surface-border-hover;
-                        color : $primary-color !important;
+                        color: $primary-color !important;
                     }
                 }
 
@@ -288,44 +308,50 @@
             margin-bottom: 0 !important;
             padding: 16px !important;
             gap: 16px !important;
-            
+
             position: relative !important;
-            .tfhb-admin-cartbox-cotent{
-                gap : 16px !important;
-                
-            }
-            .tfhb-integrations-single-block-btn{ 
-                flex-direction: column;
-                align-items: end !important;
-                gap: 8px !important; 
-                .tfhb-field-swicher{
-                    padding: 0 4px;
-                }
-                
+
+            .tfhb-admin-cartbox-cotent {
+                gap: 16px !important;
 
             }
-            &.tfhb-pro{ 
+
+            .tfhb-integrations-single-block-btn {
+                flex-direction: column;
+                align-items: end !important;
+                gap: 8px !important;
+
+                .tfhb-field-swicher {
+                    padding: 0 4px;
+                }
+
+
+            }
+
+            &.tfhb-pro {
                 .tfhb-badge.tfhb-badge-pro {
-                    margin: 0 !important; 
-                    font-size: $text-font-size-small !important; 
+                    margin: 0 !important;
+                    font-size: $text-font-size-small !important;
                     line-height: 1.1 !important;
                     // position: relative !important;
                 }
-                .tfhb-integrations-single-block-btn{
+
+                .tfhb-integrations-single-block-btn {
                     display: none !important;
                     visibility: hidden;
                 }
             }
-           
-            
+
+
         }
 
         .tfhb-s-w-integrations-dropdown {
             padding: 8px;
 
-             > span{
+            >span {
                 font-weight: $font-weight-medium !important;
             }
+
             .tfhb-dropdown-wrap {
                 width: 180px !important;
                 // background-color: $surface-secondary !important;

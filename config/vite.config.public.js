@@ -8,6 +8,8 @@ export default defineConfig({
 				app: "./sass/js/app.js",
 				main: "./sass/js/main.js",
 				widget: "./sass/js/widget.js",
+				registration: "./sass/js/registration.js",
+				login: "./sass/js/login.js",
 			},
 			output: {
                 entryFileNames: '[name].js',

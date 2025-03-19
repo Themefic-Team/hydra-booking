@@ -1,139 +1,175 @@
-.tfhb-btn {
+.tfhb-btn,
+button.tfhb-btn {
     font-family: "Inter", sans-serif;
-   
+    cursor: pointer;
     color: $primary-default;
     // height: 40px;
     box-sizing: border-box;
-    background-color: transparent; 
-    border: none ;
+    background-color: transparent;
+    border: none;
     font-size: $text-font-size;
     font-weight: $font-weight-medium;
     line-height: 24px;
     transition: $transition;
-    // padding: 8px 24px; 
+    padding: 0;
+    box-shadow: none;
 
-    &:hover, &:focus, &:active {
+    &:hover,
+    &:focus,
+    &:active {
         color: $primary-hover !important;
-        span{
-             color: $primary-hover !important;
-         }
-         
-     }
-     &:hover{ 
-         transition: $transition;
-    
-     }
+
+        span {
+            color: $primary-hover !important;
+        }
+
+    }
+
+    &:hover {
+        transition: $transition;
+
+    }
+
     // .tfhb-button-icon {
     //     padding: 3px 8px !important;
     // }
-    &.tfhb-docs-btn{
+    &.tfhb-docs-btn {
         font-weight: 600;
     }
+
     &.boxed-btn {
-        padding: 8px 24px; 
-        border-radius: $border-radius-medium; 
+        padding: 8px 24px;
+        border-radius: $border-radius-medium;
         background-color: $primary-default;
-       
+
         color: $primary-text;
         border: $button-border $border-type $primary-default;
         cursor: pointer;
-        &:hover, &:focus, &:active {
+
+        &:hover,
+        &:focus,
+        &:active {
             background-color: $primary-hover;
             color: $primary-text;
         }
-        span{
+
+        span {
             color: $primary-text !important;
         }
+
         &.disabled {
-            span{
-               color: #FFFFFF70 !important;
+            span {
+                color: #FFFFFF70 !important;
             }
-       }
-    //    .tfhb-button-icon {
-    //         padding: 10px 8px !important;
-    //     }
+        }
+
+        //    .tfhb-button-icon {
+        //         padding: 10px 8px !important;
+        //     }
     }
-    &.boxed-btn-danger{
-        padding: 8px 24px; 
-        border-radius: $border-radius-medium; 
+
+    &.boxed-btn-danger {
+        padding: 8px 24px;
+        border-radius: $border-radius-medium;
         border: $button-border $border-type $error-text;
         background-color: $error-background;
-       
+
         transition: $transition;
-        &:hover, &:focus, &:active {
+
+        &:hover,
+        &:focus,
+        &:active {
 
             background-color: $error-text;
-            span{
+
+            span {
                 color: $surface-secondary !important;
             }
         }
-        span{
+
+        span {
             color: $error-text !important;
         }
     }
+
     &.tab-btn {
-        padding: 8px 12px; 
+        padding: 8px 12px;
         border-radius: $border-radius-small;
         background: $surface-secondary;
         box-shadow: $btn-box-shadow;
         border: 0px $border-type;
         cursor: pointer;
         color: $secondary-default;
-        &:hover, &:focus, &.active {
+
+        &:hover,
+        &:focus,
+        &.active {
             background: $secondary-hover;
             color: $primary-default;
             box-shadow: $btn-box-shadow;
         }
-        span{
+
+        span {
             color: $secondary-default;
             font-size: $text-font-size;
         }
     }
-    &.secondary-btn{
-        padding: 8px 24px; 
-        border-radius: $border-radius-medium; 
+
+    &.secondary-btn {
+        padding: 8px 24px;
+        border-radius: $border-radius-medium;
         border: $button-border $border-type $surface-border;
         background: $surface-secondary;
         color: $secondary-default;
-        
+
         font-weight: $font-weight-reguler;
 
         &.disabled {
-            span{
-               color: #273F2B70 !important;
+            span {
+                color: #273F2B70 !important;
             }
+
             .tfhb-button-icon svg {
                 g circle {
                     stroke: #273F2B70 !important;
                 }
             }
-       }
-       &:hover, &:focus, &.active {
-            background: $secondary-hover;
-            color: $primary-default; 
         }
-        span{
+
+        &:hover,
+        &:focus,
+        &.active {
+            background: $secondary-hover;
+            color: $primary-default;
+        }
+
+        span {
             color: $secondary-default !important;
         }
-       
+
     }
-    &.flex-btn{
+
+    &.flex-btn {
         display: flex;
         gap: 5px;
         align-items: center;
     }
-    &.tfhb-edit{
+
+    &.tfhb-edit {
         background-color: transparent;
         color: $secondary-default;
         border: 0px $border-type;
         cursor: pointer;
     }
-    &.tfhb-hover-effect{
+
+    &.tfhb-hover-effect {
+
         &:hover,
-        &:focus{
+        &:focus {
             color: #fff !important;
         }
     }
+
     // &.tfhb-icon-hover-animation{
     //     &:hover svg{
     //         transition: transform 0.4s ease, opacity 0.4s ease;
@@ -146,82 +182,91 @@
 
     &.tfhb-icon-hover-animation {
         padding-right: 20px !important;
+
         &.left {
             padding-left: 20px !important;
             padding-right: 24px !important;
         }
-        .tfhb-button-icon{
+
+        .tfhb-button-icon {
             position: relative;
-            height: 20px; 
+            height: 20px;
             width: 20px;
+
             .tfhb-btn-hover-icon {
                 transition: all ease .4s;
-              position: absolute;
-              left: 0;
-              height: 100%;
-              width: 0;
-              visibility: hidden;
-              opacity: 0;
-            }
-            .tfhb-btn-icon { 
                 position: absolute;
                 left: 0;
                 height: 100%;
-                width: 100;
+                width: 0;
+                visibility: hidden;
+                opacity: 0;
+            }
+
+            .tfhb-btn-icon {
+                position: absolute;
+                left: 0;
+                height: 100%;
+                // width: 100;
                 transition: all ease .4s;
-                
-                }
-            &.left{
-                .tfhb-btn-hover-icon { 
+
+            }
+
+            &.left {
+                .tfhb-btn-hover-icon {
                     left: 100%;
                 }
-                   
+
             }
         }
-        &:hover{
-            .tfhb-btn-hover-icon { 
+
+        &:hover {
+            .tfhb-btn-hover-icon {
                 transition: all ease .4s;
                 visibility: visible;
                 opacity: 1;
                 width: 100%;
-              }
-              .tfhb-btn-icon {  
+            }
+
+            .tfhb-btn-icon {
                 visibility: hidden;
-                opacity: 0; 
-              }
-              &.left{
-                .tfhb-btn-hover-icon { 
+                opacity: 0;
+            }
+
+            &.left {
+                .tfhb-btn-hover-icon {
                     left: 0;
                 }
-                   
+
             }
         }
-         
+
     }
 
-   
-   
- 
-   
-    span{
+
+
+
+
+    span {
 
         color: $primary-default !important;
         font-size: $text-font-size !important;
         font-weight: $font-weight-medium !important;
         line-height: 24px !important;
-        transition:$transition !important;
+        transition: $transition !important;
         margin: 0 !important;
         display: inline-flex;
         font-weight: 600;
     }
-    &.tfhb-btn-large{ 
-        font-size: $heading-font-size-small; 
+
+    &.tfhb-btn-large {
+        font-size: $heading-font-size-small;
     }
-   
-    
+
+
     &.tfhb-preloader {
         position: relative;
-        
+
         &:after {
             content: '';
             position: absolute;
@@ -232,17 +277,20 @@
             height: 20px;
             border: 2px $border-type $primary-default;
             border-top-color: transparent;
-            border-radius: $border-radius-full; 
+            border-radius: $border-radius-full;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
             0% {
                 transform: translate(-50%, -50%) rotate(0deg);
             }
+
             100% {
                 transform: translate(-50%, -50%) rotate(360deg);
             }
         }
+
         &:before {
             content: '';
             position: absolute;
@@ -250,11 +298,9 @@
             width: 100%;
             top: 0;
             left: 0;
-            background: rgba(255, 255, 255, 0.5); 
+            background: rgba(255, 255, 255, 0.5);
 
         }
     }
-     
-  }
-  
 
+}

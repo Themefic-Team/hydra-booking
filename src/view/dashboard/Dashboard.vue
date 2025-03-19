@@ -104,7 +104,7 @@ const upCommingBookingTitle = (data) => {
 
 <!-- {{ tfhbClass }} -->
 <div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
-    <Header :title="$tfhb_trans('Dashboard')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+    <Header v-if="$front_end_dashboard == false" :title="$tfhb_trans('Dashboard')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
     <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
         <div class="thb-admin-title">
             <h2>{{ $tfhb_trans('Booking Overview') }}</h2>
@@ -120,7 +120,7 @@ const upCommingBookingTitle = (data) => {
                 <div v-show="datachart_box_dropdown" class="tfhb-dropdown-wrap "  > 
                     <!-- route link -->
                     <span @click="updateDashboardDay(1)" data-name="Today" class="tfhb-dropdown-single">{{ $tfhb_trans('Today') }}</span>
-                    <span  @click="updateDashboardDay(7)" data-name="Last 7 week" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 7 week') }}</span> 
+                    <span  @click="updateDashboardDay(7)" data-name="Last 7 Days" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 7 Days') }}</span> 
                     <span  @click="updateDashboardDay(30)" data-name="Last 30 Days" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 30 Days') }}</span> 
                     <span  @click="updateDashboardDay(60)" data-name="Last 3 months" class="tfhb-dropdown-single">{{ $tfhb_trans('Last 3 months') }}</span> 
                     <div class="tfhb-dropdown-single tfhb-no-hover">

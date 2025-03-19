@@ -59,7 +59,17 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 			} elseif ( $questions_form_type == 'forminator' ) {
 					echo do_shortcode( '[forminator_form id="' . $questions_form . '"]' );
 			}
-	 
+			
+			if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 ):
+			?> 
+				<div class="tfhb-paypal-button-container"></div>
+			<?php
+				endif;
+				if(isset($tfhb_stripe['status']) && $tfhb_stripe['status'] == 1 ):
+			?>
+			<div class="tfhb-stripe-button-container"></div>
+			<?php
+			endif;
 
 		} else {
 			echo '<form  method="post" action="" class="tfhb-meeting-form ajax-submit"  enctype="multipart/form-data">';
