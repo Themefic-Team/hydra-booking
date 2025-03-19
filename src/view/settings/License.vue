@@ -109,8 +109,7 @@ const upgradeToPro = async (key) => {
 };
 
 </script>
-<template>
-    
+<template> 
     <div :class="{ 'tfhb-skeleton': LicenseBase.skeleton }" class="thb-event-dashboard">
   
         <div  class="tfhb-dashboard-heading ">
@@ -162,8 +161,8 @@ const upgradeToPro = async (key) => {
                 </template>
             </HbInfoBox>
 
-            <!-- Date And Time --> 
-            <div  v-if="$tfhb_is_valid == false"  class="tfhb-admin-title" >
+            <!-- Date And Time -->  
+            <div  v-if="LicenseBase.license_active == false"  class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('License Info') }}</h2> 
                 <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
             </div>
@@ -258,7 +257,7 @@ const upgradeToPro = async (key) => {
 
             </div>  
 
-            <div  v-if="$tfhb_is_valid == false && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
+            <div  v-if="LicenseBase.license_active == false && LicenseBase.LicenseData.is_valid == false" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-tb-24 tfhb-justify-between">  
                 <HbText  
                     v-model="LicenseBase.license_key"  
                     required= "true"  

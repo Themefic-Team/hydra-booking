@@ -64,7 +64,7 @@ const LicenseBase = reactive({
                 this.LicenseData = response.data.data.data;
                 this.license_key = response.data.data.license_key;
                 this.license_email = response.data.data.license_email; 
-                this.skeleton = false;
+                // this.skeleton = false;
                 
                 const licenseTitle = response.data.data.data.license_title || "";
                 this.license_type = licenseTitle.toLowerCase().includes("free") ? 'free' : 'pro';
