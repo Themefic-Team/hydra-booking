@@ -712,9 +712,11 @@ class HostsController {
 			$twilio['type']              = 'twilio';
 			$twilio['status']            = $_tfhb_host_integration_settings['twilio']['status'];
 			$twilio['connection_status'] = $_tfhb_integration_settings['twilio']['status'];
-			$twilio['number']         	 = $_tfhb_host_integration_settings['twilio']['number'];
+			$twilio['receive_number']    = $_tfhb_host_integration_settings['twilio']['receive_number'];
+			$twilio['from_number']       = $_tfhb_host_integration_settings['twilio']['from_number'];
 			$twilio['sid']           	 = $_tfhb_host_integration_settings['twilio']['sid'];
 			$twilio['token']           	 = $_tfhb_host_integration_settings['twilio']['token'];
+			$twilio['otp_type']          = $_tfhb_host_integration_settings['twilio']['otp_type'];
 
 		}else{
 			$twilio['type']              = 'twilio';
@@ -860,9 +862,11 @@ class HostsController {
 		} elseif ( $key == 'twilio_data' ) {
 			$_tfhb_host_integration_settings['twilio']['type']   = 'twilio';
 			$_tfhb_host_integration_settings['twilio']['status'] = sanitize_text_field( $data['status'] );
-			$_tfhb_host_integration_settings['twilio']['number']    = sanitize_text_field( $data['number'] );
+			$_tfhb_host_integration_settings['twilio']['receive_number']    = sanitize_text_field( $data['receive_number'] );
+			$_tfhb_host_integration_settings['twilio']['from_number']    = sanitize_text_field( $data['from_number'] );
 			$_tfhb_host_integration_settings['twilio']['sid']    = sanitize_text_field( $data['sid'] );
 			$_tfhb_host_integration_settings['twilio']['token']    = sanitize_text_field( $data['token'] );
+			$_tfhb_host_integration_settings['twilio']['otp_type']    = sanitize_text_field( $data['otp_type'] );
 
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );

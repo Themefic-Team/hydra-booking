@@ -609,9 +609,11 @@ class SettingsController {
 		} elseif ( $key == 'twilio_data' ) {
 			$_tfhb_integration_settings['twilio']['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['twilio']['status']      = sanitize_text_field( $data['status'] );
-			$_tfhb_integration_settings['twilio']['number']      = sanitize_text_field( $data['number'] );
+			$_tfhb_integration_settings['twilio']['receive_number']      = sanitize_text_field( $data['receive_number'] );
+			$_tfhb_integration_settings['twilio']['from_number']      = sanitize_text_field( $data['from_number'] );
 			$_tfhb_integration_settings['twilio']['sid']   = sanitize_text_field( $data['sid'] );
 			$_tfhb_integration_settings['twilio']['token']   = sanitize_text_field( $data['token'] );
+			$_tfhb_integration_settings['twilio']['otp_type']   = sanitize_text_field( $data['otp_type'] );
 
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );

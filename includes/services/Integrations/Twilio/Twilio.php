@@ -1,5 +1,5 @@
 <?php
-namespace HydraBooking\Services\Integrations\Telegram;
+namespace HydraBooking\Services\Integrations\Twilio;
 
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Attendees;
@@ -7,7 +7,7 @@ use HydraBooking\DB\Host;
 use HydraBooking\DB\BookingMeta;
 use HydraBooking\Admin\Controller\DateTimeController;
 
-class Telegram {
+class Twilio {
 
 	public function __construct( ) {
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 ); 
@@ -32,34 +32,6 @@ class Telegram {
 
 	// If booking Status is Complted
 	public function pushBookingToConfirmed( $attendees ) {
-
-		$message = "Hello Jahid Hasan";
-
-		$sid = '';
-		$token = '';
-		$twilio_number = ''; // whatsapp:+14155238886
-		$customer_phone = '';
-		$args = [
-			'body'    => [
-				'From' => $twilio_number,
-				'To'   => 'whatsapp:' . $customer_phone,
-				'Body' => $message,
-			],
-			'headers' => [
-				'Authorization' => 'Basic ' . base64_encode("$sid:$token"),
-				'Content-Type'  => 'application/x-www-form-urlencoded',
-			],
-			'timeout' => 30, // Increase timeout
-			'method'  => 'POST',
-		];
-		
-		$response = wp_remote_post('https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Messages.json', $args);
-		
-
-		var_dump($response); exit();
-		if (is_wp_error($response)) {
-			error_log('Twilio API Error: ' . $response->get_error_message());
-		}
 		
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
         if(!empty($_tfhb_notification_settings['twilio']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_confirmation']['body'])){
@@ -105,42 +77,53 @@ class Telegram {
         $_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
         
 		if(!empty($_tfhb_host_integration_settings)){
-			$telegram_status = !empty($_tfhb_host_integration_settings['telegram']['status']) ? $_tfhb_host_integration_settings['telegram']['status'] : '';
-			$telegram_bot_token = !empty($_tfhb_host_integration_settings['telegram']['bot_token']) ? $_tfhb_host_integration_settings['telegram']['bot_token'] : '';
-			$telegram_chat_id = !empty($_tfhb_host_integration_settings['telegram']['chat_id']) ? $_tfhb_host_integration_settings['telegram']['chat_id'] : '';
+			$twilio_status = !empty($_tfhb_host_integration_settings['twilio']['status']) ? $_tfhb_host_integration_settings['twilio']['status'] : '';
+			$twilio_number = !empty($_tfhb_host_integration_settings['twilio']['receive_number']) ? $_tfhb_host_integration_settings['twilio']['receive_number'] : '';
+			$twilio_from_number = !empty($_tfhb_host_integration_settings['twilio']['from_number']) ? $_tfhb_host_integration_settings['twilio']['from_number'] : '';
+			$twilio_sid = !empty($_tfhb_host_integration_settings['twilio']['sid']) ? $_tfhb_host_integration_settings['twilio']['sid'] : '';
+			$twilio_token = !empty($_tfhb_host_integration_settings['twilio']['token']) ? $_tfhb_host_integration_settings['twilio']['token'] : '';
+			$twilio_otp_type = !empty($_tfhb_host_integration_settings['twilio']['otp_type']) ? $_tfhb_host_integration_settings['twilio']['otp_type'] : '';
 		}
 
-		$global_telegram_status = !empty($_tfhb_integration_settings['telegram']['status']) ? $_tfhb_integration_settings['telegram']['status'] : '';
-		$global_telegram_bot_token = !empty($_tfhb_integration_settings['telegram']['bot_token']) ? $_tfhb_integration_settings['telegram']['bot_token'] : '';
-		$global_telegram_chat_id = !empty($_tfhb_integration_settings['telegram']['chat_id']) ? $_tfhb_integration_settings['telegram']['chat_id'] : '';
+		$global_twilio_status = !empty($_tfhb_integration_settings['twilio']['status']) ? $_tfhb_integration_settings['twilio']['status'] : '';
+		$global_twilio_number = !empty($_tfhb_integration_settings['twilio']['receive_number']) ? $_tfhb_integration_settings['twilio']['receive_number'] : '';
+		$global_twilio_from_number = !empty($_tfhb_integration_settings['twilio']['from_number']) ? $_tfhb_integration_settings['twilio']['from_number'] : '';
+		$global_twilio_sid = !empty($_tfhb_integration_settings['twilio']['sid']) ? $_tfhb_integration_settings['twilio']['sid'] : '';
+		$global_twilio_token = !empty($_tfhb_host_integration_settings['twilio']['token']) ? $_tfhb_host_integration_settings['twilio']['token'] : '';
+		$global_twilio_otp_type = !empty($_tfhb_host_integration_settings['twilio']['otp_type']) ? $_tfhb_host_integration_settings['twilio']['otp_type'] : '';
 
-		$telegram_status = $telegram_status ? $telegram_status : $global_telegram_status;
-		$telegram_bot_token = $telegram_bot_token ? $telegram_bot_token : $global_telegram_bot_token;
-		$telegram_chat_id = $telegram_chat_id ? $telegram_chat_id : $global_telegram_chat_id;
+		$twilio_status = $twilio_status ? $twilio_status : $global_twilio_status;
+		$twilio_number = $twilio_number ? $twilio_number : $global_twilio_number;
+		$twilio_from_number = $twilio_from_number ? $twilio_from_number : $global_twilio_from_number;
+		$twilio_sid = $twilio_sid ? $twilio_sid : $global_twilio_sid;
+		$twilio_token = $twilio_token ? $twilio_token : $global_twilio_token;
+		$twilio_otp_type = $twilio_otp_type ? $twilio_otp_type : $global_twilio_otp_type;
 
-        if(!empty($telegram_status) && !empty($telegram_bot_token) && !empty($telegram_chat_id)){
+        if(!empty($twilio_status) && !empty($twilio_number) && !empty($twilio_sid) && !empty($twilio_token)){
 
             $mailbody = $this->replace_mail_tags($body, $attendees->id);
             $plain_text = preg_replace('/<\/?p>/', "\n", $mailbody);
             $plain_text = wp_strip_all_tags($plain_text);
             $plain_text = trim($plain_text);
-
-            $api_url = "https://api.telegram.org/bot$telegram_bot_token/sendMessage";
-			$args = array(
-				'chat_id' => $telegram_chat_id,
-				'text' => $plain_text,
-                'parse_mode' => 'MarkdownV2'
-			);
-
-			$response = wp_remote_post( $api_url, array(
-				'body' => json_encode( $args ),
-				'headers' => array( 'Content-Type' => 'application/json' ),
-			) );
-            return $response;
-
-
-			if ( is_wp_error( $response ) ) {
-				error_log( 'Telegram API request failed: ' . $response->get_error_message() );
+			$otp_type = $twilio_otp_type=='whatsapp' ? 'whatsapp:' : '';
+			$args = [
+				'body'    => [
+					'From' => $otp_type . $twilio_from_number,
+					'To'   => $otp_type . $twilio_number,
+					'Body' => $plain_text,
+				],
+				'headers' => [
+					'Authorization' => 'Basic ' . base64_encode("$twilio_sid:$twilio_token"),
+					'Content-Type'  => 'application/x-www-form-urlencoded',
+				],
+				'timeout' => 30,
+				'method'  => 'POST',
+			];
+			
+			$response = wp_remote_post('https://api.twilio.com/2010-04-01/Accounts/' . $twilio_sid . '/Messages.json', $args);
+			// var_dump($response); exit();
+			if (is_wp_error($response)) {
+				error_log('Twilio API Error: ' . $response->get_error_message());
 			}
         }
     }

@@ -9,6 +9,7 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import useValidators from '@/store/validator';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 const { errors, isEmpty } = useValidators();
 
 const props = defineProps([
@@ -70,13 +71,22 @@ const closePopup = () => {
                         {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get Access Token from Twilio Account') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                     </p>
                     <HbText  
-                        v-model="twilio_data.number"  
+                        v-model="twilio_data.from_number"  
                         required= "true"  
-                        name="number"
-                        :errors="errors.number"
-                        :label="$tfhb_trans('Whatsapp Number')"  
+                        name="from_number"
+                        :errors="errors.from_number"
+                        :label="$tfhb_trans('From Number')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Your Whatsapp Number')"  
+                        :placeholder="$tfhb_trans('Enter Your From Number')"  
+                    /> 
+                    <HbText  
+                        v-model="twilio_data.receive_number"  
+                        required= "true"  
+                        name="receive_number"
+                        :errors="errors.receive_number"
+                        :label="$tfhb_trans('Receiver Number')"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans('Enter Your Receiver Number')"  
                     /> 
                     <HbText  
                         v-model="twilio_data.sid"  
@@ -97,6 +107,19 @@ const closePopup = () => {
                         :placeholder="$tfhb_trans('Enter Your Access Token')"  
                     /> 
 
+                    <HbDropdown 
+                        v-model="twilio_data.otp_type" 
+                        required= "true" 
+                        :label="$tfhb_trans('Select Message Type')"  
+                        :selected = "1"
+                        name="duration"
+                        placeholder="Select Message Type"  
+                        :option = "[
+                            {name: 'WhatsApp', value: 'whatsapp'}, 
+                            {name: 'SMS', value: 'sms'},
+                        ]" 
+                    />
+                    
                     <HbButton  
                          @click.stop="emit('update-integrations', 'twilio_data', twilio_data, ['number', 'sid', 'token'])"
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  

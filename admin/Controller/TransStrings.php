@@ -592,7 +592,10 @@ namespace HydraBooking\Admin\Controller;
             'Please read the documentation here for step by step guide to know how you can get Access Token from Twilio Account' => __('Please read the documentation here for step by step guide to know how you can get Access Token from Twilio Account', 'hydra-booking'),
             'Account SID' => __('Account SID', 'hydra-booking'),
             'Enter Your Account SID' => __('Enter Your Account SID', 'hydra-booking'),
-            'Access' => __('Access', 'hydra-booking'),
+            'From Number' => __('From Number', 'hydra-booking'),
+            'Enter Your From Number' => __('Enter Your From Number', 'hydra-booking'),
+            'Receiver Number' => __('Receiver Number', 'hydra-booking'),
+            'Enter Your Receiver Number' => __('Enter Your Receiver Number', 'hydra-booking'),
 
 
             // Component : meetings

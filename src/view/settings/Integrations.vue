@@ -157,7 +157,9 @@ const Integration = reactive( {
     twilio : {
         type: 'meeting', 
         status: 0, 
-        number: '',
+        otp_type: 'whatsapp',
+        receive_number: '',
+        from_number: '',
         sid: '',
         token: '',
     },
