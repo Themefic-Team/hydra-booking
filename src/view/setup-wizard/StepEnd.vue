@@ -6,7 +6,8 @@ import { useRouter, useRoute, RouterView } from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
-import useValidators from '@/store/validator';
+import useValidators from '@/store/validator'; 
+import { LicenseBase } from '@/store/license'; 
 const router = useRouter();
 
 const { errors } = useValidators();
@@ -28,6 +29,8 @@ import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.v
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';  
+
 // Toast
 import { toast } from "vue3-toastify"; 
 //  Load Time Zone 
@@ -320,9 +323,8 @@ const UpdateIntegration = async (key, value, validator_field) => {
     }
 }
 onBeforeMount(() => {   
+    LicenseBase.GetLicense();
     fetchIntegration();
-    // if currentHash == all 
-   
 });
 
 const activeDropdown = ref(false);
@@ -367,6 +369,7 @@ window.addEventListener('click', function(e) {
             <p>{{ $tfhb_trans('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.') }}</p> 
        
         </div>
+ 
         <div class="tfhb-s-w-step-end tfhb-flexbox tfhb-full-width">
 
             <div class="tfhb-s-w-integrations-bar tfhb-flexbox  tfhb-justify-between">

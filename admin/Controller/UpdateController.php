@@ -18,6 +18,9 @@ class UpdateController {
 
         // update version 1.0.12 to 1.0.13.
         $this->update_1_0_13();
+
+        // Remove it after few releases
+        $this->tfhb_check_and_add_upload_cap();
  
 		 
 	} 
@@ -148,5 +151,15 @@ class UpdateController {
         }
         
      }
+
+    //  update Upload Files Capabilities
+     public function tfhb_check_and_add_upload_cap() {
+        $role_name = 'tfhb_host'; // Change this to the role you want to modify
+        $role = get_role($role_name);
+    
+        if ($role && !$role->has_cap('upload_files')) {
+            $role->add_cap('upload_files');
+        }
+    }
 
 }

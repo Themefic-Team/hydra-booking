@@ -15,7 +15,9 @@
             "HydraBooking\\PostType\\": "includes/post-type/",
             "HydraBooking\\Hooks\\": "includes/hooks/",
             "HydraBooking\\Migration\\": "includes/migration/",
-            "HydraBooking\\App\\": "app/"
+            "HydraBooking\\App\\": "app/",
+            "HydraBooking\\FdDashboard\\": "app/FrontendDashboard/",
+            "HydraBooking\\License\\": "includes/license/"
         }
     },
     "require-dev": {

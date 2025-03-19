@@ -4,6 +4,7 @@ namespace HydraBooking\App\Shortcode;
 // use Classes
 use HydraBooking\DB\Meeting;
 use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Admin\Controller\Notification;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
@@ -145,6 +146,7 @@ class HydraBookingShortcode {
 
 		$id      = isset( $data['id'] ) ? $data['id'] : 0;
 		$host_id = isset( $data['host_id'] ) ? $data['host_id'] : 0;
+		$user_id = isset( $data['user_id'] ) ? $data['user_id'] : 0;
 
 		// Check if id is not set
 		if ( 0 === $id && 0 === $host_id ) {
@@ -152,7 +154,7 @@ class HydraBookingShortcode {
 		}
 
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
-			$_tfhb_availability_settings = get_user_meta( $host_id, '_tfhb_host', true ); 
+			$_tfhb_availability_settings = get_user_meta( $user_id, '_tfhb_host', true ); 
 			if($_tfhb_availability_settings['availability_type'] == 'settings'){
 				$host_settings_availability_id = $_tfhb_availability_settings['availability_id'];
 				$_tfhb_availability_settings =  get_option( '_tfhb_availability_settings' );
@@ -635,6 +637,8 @@ class HydraBookingShortcode {
 		if($attendeeBooking->status == 'pending'){  
 			do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
 		}
+		$notification = new Notification();
+		$notification->AddNotification($attendeeBooking);
 		
 
 		

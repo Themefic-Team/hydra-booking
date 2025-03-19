@@ -1,14 +1,15 @@
 <?php
 namespace HydraBooking\Admin;
 
-use HydraBooking\Admin\Controller\Enqueue;
 use HydraBooking\Admin\Controller\AdminMenu;
 use HydraBooking\Admin\Controller\AvailabilityController;
 use HydraBooking\Admin\Controller\Notification;
 use HydraBooking\Admin\Controller\UpdateController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Migration\Migration;
-
+use HydraBooking\Admin\Controller\NoticeController;
+use HydraBooking\Admin\Controller\licenseController;
+use HydraBooking\License\HydraBooking; 
 // Load Migrator
 use HydraBooking\DB\Migrator;
 
@@ -22,8 +23,7 @@ class Admin {
 	public function __construct() { 
 		// run migrator
 		new Migrator();
-		// enqueue
-		new Enqueue();
+	
 
 		// admin menu
 		new AdminMenu();
@@ -33,6 +33,9 @@ class Admin {
 
 		// update controller
 		new UpdateController();
+		
+		// notice controller
+		new NoticeController();
 
 		// Notification controller
 		// new Notification();
@@ -41,6 +44,11 @@ class Admin {
 		register_activation_hook( TFHB_URL, array( $this, 'activate' ) );
 
 		Migration::instance();
+
+		// license controller
+        new  HydraBooking();
+		new licenseController();
+		
 
 		add_action( 'admin_init', array( $this, 'tfhb_hydra_activation_redirect' ) );
 

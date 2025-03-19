@@ -34,8 +34,8 @@ class Host {
                 availability_id INT(11) NULL, 
                 others_information text NULL, 
                 status VARCHAR(11) NOT NULL,
-                created_at DATE NOT NULL,
-                updated_at DATE NOT NULL, 
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)
             ) $charset_collate";
 
@@ -85,7 +85,9 @@ class Host {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-				$request['others_information'] = wp_json_encode( $request['others_information'] );
+		if( isset($request['others_information']) && is_array($request['others_information'])){ 
+			$request['others_information'] = wp_json_encode( $request['others_information'] );
+		}
 
 		$id = $request['id'];
 		unset( $request['id'] );
@@ -103,7 +105,7 @@ class Host {
 		} else {
 			return array(
 				'status'    => true,
-				'update_id' => $wpdb->insert_id,
+				'update_id' => $id,
 			);
 		}
 	}

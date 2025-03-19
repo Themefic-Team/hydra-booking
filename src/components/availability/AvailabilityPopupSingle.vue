@@ -287,6 +287,7 @@ const tfhbValidateInput = (fieldName) => {
         </template>
 
         <template #content>   
+            
             <div class=" tfhb-availability-popup-wrap">
                 <div class="tfhb-content-wrap "> 
                     <div class="tfhb-admin-card-box tfhb-flexbox">  
@@ -497,11 +498,21 @@ const tfhbValidateInput = (fieldName) => {
 
                     </div>  
  
-                    <!-- Create Or Update Availability -->
+                    <!-- Create Or Update Availability -->  
                     <HbButton 
+                            v-if="availabilityDataSingle.key != 0"
                             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                             @click="UpdateAvailabilitySettings(['title', 'time_zone'])" 
-                            :buttonText="is_host ? $tfhb_trans('Save Availability'): $tfhb_trans('Update Availability')"
+                            :buttonText="$tfhb_trans('Update Availability')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                        />  
+                    <HbButton 
+                            v-else
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="UpdateAvailabilitySettings(['title', 'time_zone'])" 
+                            :buttonText="$tfhb_trans('Add Availability')"
                             icon="ChevronRight" 
                             hover_icon="ArrowRight" 
                             :hover_animation="true"

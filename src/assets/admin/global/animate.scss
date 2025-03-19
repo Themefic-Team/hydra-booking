@@ -4,9 +4,11 @@
     opacity: 0;
     transform: scale(0.3);
   }
+
   50% {
     opacity: 1;
   }
+
   to {
     transform: scale(1);
   }
@@ -16,22 +18,25 @@
 .zoom-in-enter-active {
   animation: zoomIn 0.6s ease both;
 }
+
 .tfhb-popup-open .tfhb-popup-wrap {
-    animation: zoomIn 0.6s ease both;
+  animation: zoomIn 0.6s ease both;
 }
 
 
 .zoom-in-leave-active {
   animation: zoomIn 0.6s ease reverse both;
 }
+
 .tfhb-popup-close .tfhb-popup-wrap {
   animation: zoomIn 0.6s ease reverse both;
 }
+
 .tfhb-popup-open {
-    visibility: visible !important;
-    opacity: 1 !important; 
-    transition:$transition;
-} 
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: $transition;
+}
 
 
 /* Define the custom flipInX animation */
@@ -40,16 +45,20 @@
     transform: perspective(400px) rotateX(90deg);
     opacity: 0;
   }
+
   40% {
     transform: perspective(400px) rotateX(-20deg);
   }
+
   60% {
     transform: perspective(400px) rotateX(10deg);
     opacity: 1;
   }
+
   80% {
     transform: perspective(400px) rotateX(-5deg);
   }
+
   to {
     transform: perspective(400px);
   }
@@ -68,35 +77,43 @@
 
 // Dropdown animation
 /* Transition styles */
-.tfhb-dropdown-transition-enter-active, .tfhb-dropdown-transition-leave-active {
+.tfhb-dropdown-transition-enter-active,
+.tfhb-dropdown-transition-leave-active {
   transition: all 0.2s ease;
 }
-.tfhb-dropdown-transition-enter-from{
+
+.tfhb-dropdown-transition-enter-from {
   transform: translateY(-20px);
-  opacity: 0; 
+  opacity: 0;
 }
+
 .tfhb-dropdown-transition-leave-to {
-    transform: translateY(-10px); 
-    opacity: 0; 
+  transform: translateY(-10px);
+  opacity: 0;
 }
-.tfhb-dropdown-transition-enter-to { 
+
+.tfhb-dropdown-transition-enter-to {
   transform: translateY(0);
-  opacity: 1; 
+  opacity: 1;
 }
-.slide-leave-from { 
+
+.slide-leave-from {
   transform: translateY(10);
-  opacity: 1; 
+  opacity: 1;
 }
 
 // button animation
 .tfhb-icon-transition-enter-active,
 .tfhb-icon-transition-leave-active {
-    transition: transform 0.1s ease, opacity 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease;
 }
 
-.tfhb-icon-transition-enter, 
-.tfhb-icon-transition-leave-to /* .leave-active in <2.1.8 */ {
-  
+.tfhb-icon-transition-enter,
+.tfhb-icon-transition-leave-to
+
+/* .leave-active in <2.1.8 */
+  {
+
   // transform wit transition
   transform: scale(0.98);
   opacity: 0.95;
@@ -108,12 +125,14 @@
 .tfhb-fade-left-enter-active {
   transition: opacity .8s ease, transform 1.2s ease;
 }
+
 .tfhb-fade-left-enter-from {
   opacity: 0;
   transform: translateX(-20px);
   transition: opacity .3s ease, transform .5s ease;
 
 }
+
 .tfhb-fade-left-enter-to {
   opacity: 1;
   transform: translateX(0);
@@ -124,11 +143,13 @@
 .tfhb-fade-right-enter-active {
   transition: opacity .8s ease, transform 1.2s ease;
 }
+
 .tfhb-fade-right-enter-from {
   opacity: 0;
   transform: translateX(20px);
   transition: opacity .3s ease, transform .5s ease;
 }
+
 .tfhb-fade-right-enter-to {
   opacity: 1;
   transform: translateX(0);
@@ -141,9 +162,11 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
+
 .accordion-item {
   margin-bottom: 5px;
 }
+
 .accordion-header {
   background: #f5f5f5;
   border: none;
@@ -152,9 +175,11 @@
   width: 100%;
   cursor: pointer;
 }
+
 .accordion-content {
   overflow: hidden;
 }
+
 .accordion-content-inner {
   padding: 10px;
   background: #fff;
@@ -165,14 +190,37 @@
 .accordion-leave-active {
   transition: max-height 0.3s ease, opacity 0.3s ease;
 }
+
 .accordion-enter-from,
 .accordion-leave-to {
   max-height: 0;
   opacity: 0;
 }
+
 .accordion-enter-to,
 .accordion-leave-from {
-  max-height: 300px; /* Adjust as needed */
+  max-height: 300px;
+  /* Adjust as needed */
   opacity: 1;
 }
+
 // Accordion animation
+
+
+// Normal Fade in 
+.tfhb-fade-in-enter-active,
+.tfhb-fade-in-leave-active {
+  transition: opacity 0.5s;
+}
+
+.tfhb-fade-in-enter-from,
+.tfhb-fade-in-leave-to {
+  opacity: 0;
+}
+
+.tfhb-fade-in-enter-to,
+.tfhb-fade-in-leave-from {
+  opacity: 1;
+}
+
+// Normal Fade in 

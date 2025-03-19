@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
 import { toast } from "vue3-toastify"; 
+import { useRouter, useRoute, RouterView } from 'vue-router' 
 
 // component
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
@@ -305,6 +306,23 @@ onBeforeMount(() => {
                 <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div>
+         <nav v-if="$front_end_dashboard == true" class="tfhb-booking-tabs tfhb-integrations-settings-menu"> 
+            <ul>
+                <!-- to route example like hosts/profile/13/information -->
+                
+                <li><router-link to="/settings/integrations#all" :class="{ 'active': $route.hash === '#all' }" class="integrations-submenu" data-filter="all"> <Icon name="GalleryVerticalEnd" /> {{ $tfhb_trans('All') }}</router-link></li>
+                            
+                <li><router-link to="/settings/integrations#conference" :class="{ 'active': $route.hash === '#conference' }" class="integrations-submenu" data-filter="conference"> <Icon name="Video" /> {{ $tfhb_trans('Conference') }}</router-link></li>
+
+                <li><router-link to="/settings/integrations#calendars" :class="{ 'active': $route.hash === '#calendars' }" class="integrations-submenu" data-filter="calendars"> <Icon name="CalendarDays" /> {{ $tfhb_trans('Calendars') }}</router-link></li>
+
+                <li><router-link to="/settings/integrations#payments" :class="{ 'active': $route.hash === '#payments' }" class="integrations-submenu" data-filter="payments"> <Icon name="HandCoins" /> {{ $tfhb_trans('Payments') }}</router-link></li> 
+
+                <li><router-link to="/settings/integrations#marketing-tools" :class="{ 'active': $route.hash === '#marketing-tools' }" class="integrations-submenu" data-filter="marketing-tools"> <Icon name="BadgePercent" /> {{ $tfhb_trans('Marketing Tools') }}</router-link></li> 
+                <li><router-link to="/settings/integrations#forms" :class="{ 'active': $route.hash === '#forms' }" class="integrations-submenu" data-filter="forms"> <Icon name="BookText" /> {{ $tfhb_trans('Forms') }}</router-link></li> 
+               
+            </ul>  
+        </nav>
         <div class="tfhb-content-wrap"> 
             <!-- {{ Integration }} -->
             <div class="tfhb-integrations-wrap tfhb-flexbox">
