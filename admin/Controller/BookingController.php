@@ -284,6 +284,7 @@ class BookingController {
 			);
 			
 		}
+		
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host     = new Host();
 			$HostData = $host->getHostByUserId( $current_user_id );
@@ -1528,10 +1529,25 @@ class BookingController {
 			$file_name = 'booking-data-' . gmdate( 'Y-m-d', strtotime( $previous_date ) ) . '-' . gmdate( 'Y-m-d', strtotime( $current_date ) ) . '.csv';
 
 		}
+
+		$current_user = wp_get_current_user();
+		// get user role
+		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
+		$current_user_id   = $current_user->ID; 
+			$host     = new Host();
+			$HostData = $host->getHostByUserId( $current_user_id ); 
 	 
 
 		if ( $request['date_range'] == 'all' ) {
-			$bookingsList = $booking->export();
+			$bookingsList = $booking->export(
+				array( 
+					array(
+						'column'   => 'host_id',
+						'operator' => '=',
+						'value'    => $HostData->id,
+					),
+				)
+			);
 		} else {
 			$bookingsList = $booking->export(
 				array(
@@ -1540,7 +1556,12 @@ class BookingController {
 						'operator' => 'BETWEEN',
 						'value'    => "'" . $previous_date . "' AND  '" . $current_date . "'",
 					),
-				)
+					array(
+						'column'   => 'host_id',
+						'operator' => '=',
+						'value'    => $HostData->id,
+					),
+				), 
 			);
 		}
 
