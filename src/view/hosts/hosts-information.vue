@@ -46,6 +46,7 @@ const imageChange = (attachment) => {
     props.host.avatar = attachment.url; 
     const image = document.querySelector('.avatar_display'); 
     image.src = attachment.url; 
+    activeProfileDropdown.value = false;
 }
 const UploadImage = () => {   
     wp.media.editor.send.attachment = (props, attachment) => { 
@@ -56,6 +57,7 @@ const UploadImage = () => {
 } 
 const EmptyImage = () => {   
     props.host.avatar = ''; 
+    activeProfileDropdown.value = false;
 }
     
 
@@ -76,21 +78,44 @@ const UploadImageFeature  = () => {
 const EmptyImageFeatured  = () => {
     props.host.featured_image = '';
 } 
+// Profile Image and cover image dropdown
+const activeCoverDropdown = ref(false);
+const activeProfileDropdown = ref(false);
 
+// hide activeCoverDropdown when clicked outside
+document.addEventListener('click', (e) => { 
+    if ( !e.target.closest('.edit-profile-image')) { 
+        activeProfileDropdown.value = false;
+    }
+    if ( !e.target.closest('.edit-cover-image')) { 
+        activeCoverDropdown.value = false;
+    }
+});
 </script>
 
-<template>  
-    <div class="tfhb-admin-card-box">   
-
-        <div class="tfhb-single-form-field-wrap avatar_display-wrap tfhb-flexbox">
-               <span  v-if="host.avatar != ''" class=" tfhb-image-field-close" @click="EmptyImage">
-                    <Icon name="X" size="13" />
-                </span>
+<template>   
+    <div class="tfhb-admin-card-box tfhb-host-profile-image-wrap"   
+        :style="{
+            'background-image': props.host.featured_image != '' ? `url('${props.host.featured_image}')` : `url('${$tfhb_url}/assets/app/images/meeting-cover.png')`, 
+        }"
+    >
+    <span class="tfhb-profile-overlay"></span>
+       
+        <div class="tfhb-single-form-field-wrap avatar_display-wrap tfhb-flexbox" >
+            
             <div   class="tfhb-field-image" > 
-             
+                <div  class="tfhb-dropdown edit-profile-image">  
+                    <span  @click="activeProfileDropdown = !activeProfileDropdown"> <Icon name="Edit" size=16 /></span> 
+                    <transition  name="tfhb-dropdown-transition">
+                        <div v-if="activeProfileDropdown" class="tfhb-dropdown-wrap"> 
+                            <span class="tfhb-dropdown-single"  @click="UploadImage" > <Icon name="Upload" size=20 /> {{ $tfhb_trans('Upload image') }}</span>
+                    
+                            <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="EmptyImage" ><Icon name="Trash2" size=20 />{{ $tfhb_trans('Delete') }}</span>
+                        </div>
+                    </transition>
+                </div>
                 <img v-if="host.avatar != ''"  class='avatar_display'  :src="host.avatar">
                 <img v-else  class='avatar_display'  :src="$tfhb_url+'/assets/images/avator.png'" >
-                <button class="tfhb-image-btn" @click="UploadImage">{{ $tfhb_trans('Change') }}</button> 
                 <input  type="text"  :v-model="host.avatar"   />  
             </div>
             <div class="tfhb-image-box-content">  
@@ -98,24 +123,24 @@ const EmptyImageFeatured  = () => {
             <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Recommended Image Size: 120x120px') }}</p>
             </div>
         </div> 
+        <div  class="tfhb-dropdown edit-cover-image"> 
+            <HbButton 
+                classValue="tfhb-btn secondary-btn flex-btn"  
+                :buttonText="$tfhb_trans('Edit cover image')"
+                icon="Edit"   
+                @click="activeCoverDropdown =!activeCoverDropdown"
+                icon_position="left"  
+            /> 
+            <transition  name="tfhb-dropdown-transition">
+                <div v-if="activeCoverDropdown" class="tfhb-dropdown-wrap"> 
+                     <span class="tfhb-dropdown-single" @click="UploadImageFeature" > <Icon name="Upload" size=20  /> {{ $tfhb_trans('Upload image') }}</span>
+            
+                    <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="EmptyImageFeatured"  ><Icon name="Trash2" size=20 />{{ $tfhb_trans('Delete') }}</span>
+                </div>
+            </transition>
+        </div>
     </div>
-    <div class="tfhb-admin-card-box">    
-        <div class="tfhb-single-form-field-wrap tfhb-flexbox featured_image_display-wrap">
-            <div class="tfhb-field-image" > 
-                <span  v-if="host.featured_image != ''" class=" tfhb-image-field-close" @click="EmptyImageFeatured">
-                    <Icon name="X" size="13" />
-                </span>
-                <img v-if="host.featured_image != ''"  class='featured_image_display'  :src="host.featured_image">
-                <img v-else  class='featured_image_display'  :src="$tfhb_url+'/assets/images/images-icon.png'" >
-                <button class="tfhb-image-btn" @click="UploadImageFeature">{{ $tfhb_trans('Change') }}</button> 
-                <input  type="text"  :v-model="host.featured_image"   />  
-            </div>
-            <div class="tfhb-image-box-content">  
-                <h4 v-if="label !=''" :for="name">{{ $tfhb_trans('Cover image') }} <span  v-if="required == 'true'"> *</span> </h4>
-                <p v-if="description !=''"  class="tfhb-m-0">{{ $tfhb_trans('Cover image is displayed in the meeting forms.') }}</p>
-            </div>
-        </div> 
-    </div>
+
     <div class="tfhb-admin-title" >
         <h2>{{ $tfhb_trans('General Information') }}    </h2>  
     </div>
@@ -171,61 +196,66 @@ const EmptyImageFeatured  = () => {
     </div>   
     <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true"  class="tfhb-admin-title" >
         <h2>{{ $tfhb_trans('Others Information') }}    </h2>  
-    </div>
+    </div> 
     <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true && hosts_settings.others_information.fields" class="tfhb-admin-card-box tfhb-flexbox">  
        <div class="tfhb-host-single-information" v-for="(field, index) in hosts_settings.others_information.fields" :key="index">  
             <!--  --> 
-            <div v-if="field.type == 'checkbox'" class="tfhb-hosts-single-information-wrap">
+            <div v-if="field.type == 'checkbox' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                 
                 <HbCheckbox 
-                    v-model="host.others_information[field.label]" 
-                    :names="host.others_information[field.label]"
-                    :label="field.placeholder"
+                    v-model="props.host.others_information[field.name]" 
+                    :names="props.others_information[field.name]"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
                     :groups="true"
                     :options="field.options" 
                 />
             </div>
-            <div v-else-if="field.type == 'textarea'" class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.type == 'textarea' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                 
                 <HbTextarea 
-                    v-model="host.others_information[field.label]" 
-                    :names="host.others_information[field.label]"
-                    :label="field.placeholder"  
-                    :name="host.others_information[field.label]"
+                    v-model="props.host.others_information[field.name]" 
+                    :names="props.host.others_information[field.name]"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
+                    :name="props.host.others_information[field.name]"
                 />
             </div>
-            <div v-else-if="field.type == 'radio'" class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.type == 'radio' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                  
                 <HbRadio 
-                    v-model="host.others_information[field.label]" 
-                    :names="host.others_information[field.label]"
-                    :label="field.placeholder"
+                    v-model="props.host.others_information[field.name]" 
+                    :names="props.host.others_information[field.name]"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
                     :groups="true"
                     :options="field.options"   
-                    :name="host.others_information[field.label]"
+                    :name="host.others_information[field.name]"
                 />
             </div>
-            <div v-else-if="field.type == 'select'" class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.type == 'select' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
                 
                 <HbDropdown 
             
-                    v-model="host.others_information[field.label]"  
+                    v-model="props.host.others_information[field.name]"  
                     required= "true"  
-                    label="field.placeholder"
+                    :label="field.label"  
+                    :placeholder="field.placeholder"  
                     selected = "1" 
                     placeholder="Select Time Zone"  
                     :option = "field.options"  
                     optionType = "array"  
                 />  
             </div>
-            <div v-else class="tfhb-hosts-single-information-wrap">
+            <div v-else-if="field.enable == 1" class="tfhb-hosts-single-information-wrap">
+            
                 <HbText  
-                    v-model="host.others_information[field.label]"  
+                    v-model="props.host.others_information[field.name]"  
                     :required= "field.required == 1 ? 'true' : 'false'"  
-                    :label="field.placeholder"   
+                    :label="field.label"  
                     :placeholder="field.placeholder"  
                     :type="field.type"  
-                    :errors="field.required == 1 ? errors['others_information___' + field.label] : ''"
+                    :errors="field.required == 1 ? errors['others_information___' + field.name] : ''"
                 />
             </div>
             

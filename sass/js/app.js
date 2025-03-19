@@ -351,8 +351,7 @@
 			});
 
 			$($this).on('click', '.tfhb-meeting-booking-form .tfhb-back-btn', function (e) { 
-
-				 
+ 
 				$this.find('.tfhb-meeting-booking-form').animate({
 					left: "-5%", 
 					opacity: 0
@@ -472,6 +471,7 @@
 			var confirmation_template = responseData.confirmation_template;
 			// hide the form .tfhb-confirmation-button
 			$this.find('.tfhb-confirmation-button').hide(); 
+			$this.find('.wpcf7').hide(); 
 			let currency = typeof tfhb_app_booking.general_settings.currency !== 'undefined' && tfhb_app_booking.general_settings.currency != '' ? tfhb_app_booking.general_settings.currency : 'USD';
 		 
 			// Render PayPal button into the container
@@ -542,6 +542,7 @@
 			$this.find('.tfhb-confirmation-button').hide();
 			let currency = typeof tfhb_app_booking.general_settings.currency !== 'undefined' && tfhb_app_booking.general_settings.currency != '' ? tfhb_app_booking.general_settings.currency : 'USD';
 		 
+			$this.find('.wpcf7').hide(); 
 			// Add Stripe Payment Button
 			const stripeButtonContainer = $this.find('.tfhb-stripe-button-container');
 			stripeButtonContainer.html("<a href='#' class='tfhb-stripe-payment-btn'>Pay With Stripe</a>");

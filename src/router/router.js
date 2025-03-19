@@ -177,12 +177,12 @@ const routes = [
                         meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-payment.vue')
                     },
-                    {
-                        path: 'webhook',
-                        name: 'MeetingsCreateWebhook',
-                        meta: { Capabilities: 'tfhb_manage_meetings' },
-                        component: () => import('../view/meetings/meetings-webhook.vue')
-                    },
+                    // {
+                    //     path: 'webhook',
+                    //     name: 'MeetingsCreateWebhook',
+                    //     meta: { Capabilities: 'tfhb_manage_meetings' },
+                    //     component: () => import('../view/meetings/meetings-webhook.vue')
+                    // },
                     {
                         path: 'integrations',
                         name: 'MeetingsCreateIntegrations',
@@ -208,6 +208,7 @@ const routes = [
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/General.vue')
             },  
+
             {
                 path: 'hosts-settings',
                 name: 'HostsSettings',
@@ -229,6 +230,34 @@ const routes = [
                     }
                 ]
             },
+            {
+                path: 'fd-dashboard',
+                name: 'FrontendDashboard',
+                meta: { Capabilities: 'tfhb_manage_settings' },
+                component: () => import('../view/settings/FrontendDashboard.vue'),
+                // redirect: { name: 'FrontendDashboardGeneral' },
+                children: [ 
+                    // {
+                    //     path: 'general',
+                    //     name: 'FrontendDashboardGeneral',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/General.vue')
+                    // },
+                    // {
+                    //     path: 'login',
+                    //     name: 'FrontendDashboardLogin',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/login.vue')
+                    // },
+                    // {
+                    //     path: 'signup',
+                    //     name: 'FrontendDashboardSignup',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/Signup.vue')
+                    // }
+                ]
+            },
+
             {
                 path: 'availability',
                 name: 'SettingsAvailability',
@@ -279,6 +308,44 @@ const routes = [
         
     },
     // ...
+
+    // frontend dasboard profile
+    {
+        path: '/frontend-dashboard/profile',
+        name: 'FrontendDashboardProfile',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/userProfile.vue'),
+        redirect: { name: 'FrontendDashboardInformation' },
+        children: [
+            {
+                path: 'information',
+                name: 'FrontendDashboardInformation',
+                meta: { Capabilities: 'tfhb_manage_hosts' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/userInformation.vue')
+            }, 
+            {
+                path: 'availability',
+                name: 'FrontendDashboardAvailability',
+                meta: { Capabilities: 'tfhb_manage_hosts' },
+                props: true,
+                component: () => import('../view/hosts/hosts-availability.vue')
+            }, 
+            {
+                path: 'integrations',
+                name: 'FrontendDashboardIntegrations',
+                meta: { Capabilities: 'tfhb_manage_integrations' },
+                component: () => import('../view/hosts/hosts-integrations.vue')
+            }, 
+            {
+                path: 'calendars',
+                name: 'FrontendDashboardCalendars',
+                meta: { Capabilities: 'tfhb_manage_integrations' },
+                component: () => import('../view/hosts/hosts-calendars.vue')
+            }, 
+        ]
+    },
 ];
 
 const router = createRouter({

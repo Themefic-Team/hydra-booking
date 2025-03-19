@@ -28,20 +28,23 @@ $meeting_id           = isset($meeting['id']) ? $meeting['id'] : 0;
 
 $selected_timezone =  isset($meeting['availability_custom']['time_zone']) && !empty($meeting['availability_custom']['time_zone']) ? $meeting['availability_custom']['time_zone'] : 'UTC';
 if ( 'settings' === $meeting['availability_type'] ) {
-	$_tfhb_availability_settings = get_user_meta( $meeting['host_id'], '_tfhb_host', true );
+	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
 	if($_tfhb_availability_settings['availability_type'] === 'settings' ){
 		// Get Global Settings
 		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
 		
 		$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
-
+		
 		if ( in_array( $key, array_keys( $_tfhb_availability_settings_global ) ) ) {
+		
 			$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
 		}
 
 	}elseif ( in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+		 
 		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
 	}
+	
 }
 
 // $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
