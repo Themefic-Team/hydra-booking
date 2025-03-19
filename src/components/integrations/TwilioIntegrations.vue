@@ -121,7 +121,7 @@ const closePopup = () => {
                     />
                     
                     <HbButton  
-                         @click.stop="emit('update-integrations', 'twilio_data', twilio_data, ['number', 'sid', 'token'])"
+                         @click.stop="emit('update-integrations', 'twilio_data', twilio_data, ['from_number', 'receive_number', 'sid', 'token', 'otp_type'])"
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
                         :buttonText="'Save & Validate' "
                         icon="ChevronRight" 
