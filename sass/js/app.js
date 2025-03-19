@@ -446,6 +446,7 @@
 			var confirmation_template = responseData.confirmation_template;
 			// hide the form .tfhb-confirmation-button
 			$this.find('.tfhb-confirmation-button').hide(); 
+			$this.find('.wpcf7').hide(); 
 			let currency = typeof tfhb_app_booking.general_settings.currency !== 'undefined' && tfhb_app_booking.general_settings.currency != '' ? tfhb_app_booking.general_settings.currency : 'USD';
 		 
 			// Render PayPal button into the container
@@ -514,7 +515,7 @@
 
 		function tfhb_render_stripe_payment($this, responseData, stripe_public_key, meeting_title) {
 			$this.find('.tfhb-confirmation-button').hide();
-		
+			$this.find('.wpcf7').hide(); 
 			// Add Stripe Payment Button
 			const stripeButtonContainer = $this.find('.tfhb-stripe-button-container');
 			stripeButtonContainer.html("<a href='#' class='tfhb-stripe-payment-btn'>Pay With Stripe</a>");
