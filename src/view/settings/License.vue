@@ -2,7 +2,6 @@
 import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount } from 'vue';
-import { useRouter } from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
@@ -164,11 +163,11 @@ const upgradeToPro = async (key) => {
             </HbInfoBox>
 
             <!-- Date And Time --> 
-            <div  v-if="LicenseBase.LicenseData.is_valid == false"  class="tfhb-admin-title" >
+            <div  v-if="$tfhb_is_valid == false"  class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('License Info') }}</h2> 
                 <p>{{ $tfhb_trans('Explore licensing options and benefits for advanced features.') }}</p>
             </div>
-            <div  v-if="LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
+            <div  v-if="$tfhb_is_valid == true && LicenseBase.LicenseData.is_valid == true" class="tfhb-admin-card-box tfhb-general-card  ">  
 
                 <ul class="el-license-info">
                     <li>

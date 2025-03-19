@@ -8,6 +8,7 @@ const LicenseBase = reactive({
     license_email: '',
     license_active: false,
     license_type: 'free',
+    path: '',
     LicenseData: {
         is_valid : false,
     }, 
@@ -73,7 +74,9 @@ const LicenseBase = reactive({
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
-                // window.location.reload();
+                if(this.path!='/setup-wizard'){
+                    window.location.reload();
+                }
                 // this.skeleton = false;
 
 
