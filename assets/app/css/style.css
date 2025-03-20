@@ -1278,6 +1278,10 @@
 .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .wpcf7 .wpcf7-submit:hover {
   background-color: #4C9959;
 }
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-paypal-button-container,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-paypal-button-container {
+  width: 100%;
+}
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation,
 .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation {
   width: 500px;

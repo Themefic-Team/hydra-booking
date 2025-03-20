@@ -1,5 +1,6 @@
 <?php 
 namespace HydraBooking\Admin\Controller;
+
   // exit
   if ( ! defined( 'ABSPATH' ) ) { exit; }
 
@@ -52,6 +53,8 @@ namespace HydraBooking\Admin\Controller;
             'Status' =>  __('Status', 'hydra-booking'), 
             'Select Booking status' =>  __('Select Booking status', 'hydra-booking'), 
             'Create Booking' =>  __('Create Booking', 'hydra-booking'), 
+            'Has booked a meeting' =>  __('Has booked a meeting', 'hydra-booking'), 
+            
 
             'Delete' =>  __('Delete', 'hydra-booking'), 
             'Export as CSV' =>  __('Export as CSV', 'hydra-booking'), 
@@ -599,6 +602,27 @@ namespace HydraBooking\Admin\Controller;
             'Mail Body' =>  __('Mail Body', 'hydra-booking'), 
             'Update' =>  __('Update', 'hydra-booking'), 
 
+            // Activity Logs
+            'Booking has been completed' =>  __('Booking has been completed', 'hydra-booking'), 
+            'Confirmation Email Sent' =>  __('Confirmation Email Sent', 'hydra-booking'), 
+            'Confirmation Email Sent to Host' =>  __('Confirmation Email Sent to Host', 'hydra-booking'), 
+            'Confirmation Email Sent to Attendee' =>  __('Confirmation Email Sent to Attendee', 'hydra-booking'), 
+            'Pending Email Sent' =>  __('Pending Email Sent', 'hydra-booking'), 
+            'Pending Email Sent to Host' =>  __('Pending Email Sent to Host', 'hydra-booking'), 
+            'Pending Email Sent to Attendee' =>  __('Pending Email Sent to Attendee', 'hydra-booking'), 
+            'Canceled Email Sent' =>  __('Canceled Email Sent', 'hydra-booking'), 
+            'Canceled Email Sent to Host' =>  __('Canceled Email Sent to Host', 'hydra-booking'), 
+            'Canceled Email Sent to Attendee' =>  __('Canceled Email Sent to Attendee', 'hydra-booking'), 
+            'ReSchedule Email Sent' =>  __('ReSchedule Email Sent', 'hydra-booking'), 
+            'ReSchedule Email Sent to Host' =>  __('ReSchedule Email Sent to Host', 'hydra-booking'), 
+            'ReSchedule Email Sent to Attendee' =>  __('ReSchedule Email Sent to Attendee', 'hydra-booking'), 
+            'Reminder Email Sent' =>  __('Reminder Email Sent', 'hydra-booking'), 
+            'Reminder Email Sent to Attendee' =>  __('Reminder Email Sent to Attendee', 'hydra-booking'), 
+            'Booking Has Been Confirmed' =>  __('Booking Has Been Confirmed', 'hydra-booking'),  
+            'Booking Has Been Pending' =>  __('Booking Has Been Pending', 'hydra-booking'), 
+            'Booking Has Been Canceled' =>  __('Booking Has Been Canceled', 'hydra-booking'), 
+            'Booking Has Been Rescheduled' =>  __('Booking Has Been Rescheduled', 'hydra-booking'),  
+
             //
             'Import bookings from a CSV file' =>  __('Import bookings from a CSV file', 'hydra-booking'), 
             'This tool allows you to import or merge booking data to your store from a CSV file.' =>  __('This tool allows you to import or merge booking data to your store from a CSV file.', 'hydra-booking'), 
@@ -624,5 +648,104 @@ namespace HydraBooking\Admin\Controller;
            
         );
      } 
+
+   /* *
+    * Calendar Trans String
+    * 
+    */ 
+
+    public static function calendarTransString(){
+       return array(
+            'January' =>  _x('January', 'Calendar full month', 'hydra-booking'),   
+            'February' =>  _x('February', 'Calendar full month', 'hydra-booking'),   
+            'March' =>  _x('March', 'Calendar full month', 'hydra-booking'),   
+            'April' =>  _x('April', 'Calendar full month', 'hydra-booking'),   
+            'May' =>  _x('May', 'Calendar full month', 'hydra-booking'),
+            'June' =>  _x('June', 'Calendar full month', 'hydra-booking'),   
+            'July' =>  _x('July', 'Calendar full month', 'hydra-booking'),   
+            'August' =>  _x('August', 'Calendar full month', 'hydra-booking'),   
+            'September' =>  _x('September', 'Calendar full month', 'hydra-booking'),
+            'October' =>  _x('October', 'Calendar full month', 'hydra-booking'),   
+            'November' =>  _x('November', 'Calendar full month', 'hydra-booking'),   
+            'December' =>  _x('December', 'Calendar full month', 'hydra-booking'),
+            'Sunday' =>  _x('Sunday', 'Calendar day', 'hydra-booking'),   
+            'Monday' =>  _x('Monday', 'Calendar day', 'hydra-booking'),   
+            'Tuesday' =>  _x('Tuesday', 'Calendar day', 'hydra-booking'),   
+            'Wednesday' =>  _x('Wednesday', 'Calendar day', 'hydra-booking'),
+            'Thursday' =>  _x('Thursday', 'Calendar day', 'hydra-booking'),   
+            'Friday' =>  _x('Friday', 'Calendar day', 'hydra-booking'),   
+            'Saturday' =>  _x('Saturday', 'Calendar day', 'hydra-booking'), 
+            'Sun' =>  _x('Sun', 'Calendar short day', 'hydra-booking'),
+            'Mon' =>  _x('Mon', 'Calendar short day', 'hydra-booking'),   
+            'Tue' =>  _x('Tue', 'Calendar short day', 'hydra-booking'),   
+            'Wed' =>  _x('Wed', 'Calendar short day', 'hydra-booking'),
+            'Thu' =>  _x('Thu', 'Calendar short day', 'hydra-booking'),
+            'Fri' =>  _x('Fri', 'Calendar short day', 'hydra-booking'),   
+            'Sat' =>  _x('Sat', 'Calendar short day', 'hydra-booking'),
+            'Today' =>  _x('Today', 'Calendar today', 'hydra-booking'),   
+            'seats left' =>  _x('seats left', 'Calendar seats left', 'hydra-booking'),   
+            'Previous' =>  _x('Previous', 'Calendar previous', 'hydra-booking'),
+            'Next' =>  _x('Next', 'Calendar next', 'hydra-booking'),
+            'Name' =>  _x('Name', 'Calendar form name field', 'hydra-booking'),
+            'Email' =>  _x('Email', 'Calendar form email field', 'hydra-booking'),
+            'AM' =>  _x('AM', 'Calendar Time Format AM', 'hydra-booking'),
+            'PM' =>  _x('PM', 'Calendar Time Format PM', 'hydra-booking'),
+            'Bookings' =>  _x('Bookings', 'Calendar bookings', 'hydra-booking'),
+            'Add New' =>  _x('Add New', 'Calendar add new', 'hydra-booking'),
+            'View Details' =>  _x('View Details', 'Calendar view details', 'hydra-booking'),
+            // number
+            '0' => _x('0', 'Calendar number', 'hydra-booking'),
+            '1' => _x('1', 'Calendar number', 'hydra-booking'),
+            '2' => _x('2', 'Calendar number', 'hydra-booking'),
+            '3' => _x('3', 'Calendar number', 'hydra-booking'),
+            '4' => _x('4', 'Calendar number', 'hydra-booking'),
+            '5' => _x('5', 'Calendar number', 'hydra-booking'),
+            '6' => _x('6', 'Calendar number', 'hydra-booking'),
+            '7' => _x('7', 'Calendar number', 'hydra-booking'),
+            '8' => _x('8', 'Calendar number', 'hydra-booking'),
+            '9' => _x('9', 'Calendar number', 'hydra-booking'),
+
+       );
+    }
+
+    public static function tfhbTranslate($key) {
+         $translations = self::calendarTransString();
+         return $translations[$key] ?? $key;
+   }
+
+   public static function tfhbTranslateNumber($key) {
+      return implode('', array_map(function ($letter) {
+         return self::tfhbTranslate($letter);
+      }, str_split((string) $key)));
+   }
+
+   public static function tfhbTranslateTimeSlot($key) {
+      return self::tfhbTranslateNumber(substr($key, 0, 2)) . ':' .
+            self::tfhbTranslateNumber(substr($key, 3, 2)) . ' ' .
+            self::tfhbTranslate(substr($key, 6, 2));
+   }
+   public static function tfhbTranslateDateSlot($key) {
+      // Example input: 'Tuesday, March 4'
+      $dateParts = explode(', ', $key);  // Split by comma (weekday and date)
+      if (count($dateParts) < 2) {
+         return $key; // Return original string if format is incorrect
+      }
+      
+      $weekday = $dateParts[0]; // 'Tuesday'
+      $monthDay = $dateParts[1]; // 'March 4'
+   
+      // Split month and day
+      $monthDayParts = explode(' ', $monthDay);
+      $month = $monthDayParts[0]; // 'March'
+      $day = $monthDayParts[1]; // '4'
+   
+      // Translate each part
+      $translatedWeekday = self::tfhbTranslate($weekday);
+      $translatedMonth = self::tfhbTranslate($month);
+      $translatedDay = self::tfhbTranslate($day);
+   
+      // Return the translated string in the format 'Weekday, Month Day'
+      return $translatedWeekday . ', ' . $translatedMonth . ' ' . $translatedDay;
+   }
 
 }

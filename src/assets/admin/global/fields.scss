@@ -113,6 +113,8 @@
                 box-shadow: none;
                 color: $text-input;
                 font-family: "Inter", sans-serif;
+                
+                
 
                 &:focus,
                 &:active,
@@ -126,7 +128,7 @@
                 }
 
                 &::placeholder {
-                    color: $text-input !important; // Define this variable in your SCSS
+                    color: $text-input-placeholder !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
 
@@ -258,7 +260,7 @@
                 }
 
                 &::placeholder {
-                    color: $text-input !important; // Define this variable in your SCSS
+                    color: $text-input-placeholder !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
             }

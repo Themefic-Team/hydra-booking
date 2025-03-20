@@ -877,7 +877,7 @@
                     font-weight: 600;
                     line-height: 150%;
                     /* 25.5px */
-                    margin: 0;
+                    margin: 0; 
                 }
             }
 
@@ -1219,7 +1219,11 @@
                         }
                     }
                 }
+                .tfhb-paypal-button-container{
+                    width: 100%;
+                }
             }
+
         }
 
 

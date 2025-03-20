@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed, onBeforeMount } from 'vue';
+import { useRoute } from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';  
@@ -8,6 +9,7 @@ import { toast } from "vue3-toastify";
 import { LicenseBase } from '@/store/license'; 
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
+const route = useRoute();
 
 const props = defineProps({
   title: String,
@@ -121,6 +123,7 @@ const updateLicense = async (validator_field) => {
         return
     }
    
+    LicenseBase.path = route.fullPath;
 
     LicenseBase.UpdateLicense();
 }

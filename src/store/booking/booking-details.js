@@ -17,8 +17,7 @@ const BookingDetails = reactive({
         booking_id: 0,
         attendee_name: '',
         status: 'canceled',
-        cancel_reason: ''
-
+        cancel_reason: '' 
     },
     skeleton : ref(true),
 

@@ -14,7 +14,8 @@ $settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings 
 $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
  
 $registration_page_id = isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
-        
+$tfhb_dashboard_page_id = isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
+                   
 get_header(); 
  
 

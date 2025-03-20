@@ -285,6 +285,7 @@ class BookingController {
 			);
 			
 		}
+		
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$host     = new Host();
 			$HostData = $host->getHostByUserId( $current_user_id );
@@ -610,7 +611,7 @@ class BookingController {
 			'status'           => true,
 			'bookings'         => $bookingsList,
 			'booking_calendar' => $booking_array,
-			'message'          => 'Booking Data Successfully Retrieve!',
+			'message'          =>  __( 'Booking Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -1225,7 +1226,7 @@ class BookingController {
 					'value' => array(
 							
 							'datetime' => date('M d, Y, h:i A'),
-							'title' =>  esc_html(__(  'Booking has been completed', 'hydra-booking')),
+							'title' =>  'Booking has been completed',
 							'description' => '',
 						)
 					]
@@ -1529,23 +1530,23 @@ class BookingController {
 			$file_name = 'booking-data-' . gmdate( 'Y-m-d', strtotime( $previous_date ) ) . '-' . gmdate( 'Y-m-d', strtotime( $current_date ) ) . '';
 
 		}
-	 
 
+		$current_user = wp_get_current_user();
+		// get user role
+		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
+		$current_user_id   = $current_user->ID; 
+			$host     = new Host();
+			$HostData = $host->getHostByUserId( $current_user_id ); 
+	 
+		$where = array();
+		if($current_user_role != 'administrator'){
+			$where[] = array('host_id', '=', $HostData->id);
+		} 
 		if ( $request['date_range'] == 'all' ) {
-			$bookingsList = $booking->getBookingWithAttendees();
-		} else {
-			// $bookingsList = $booking->export(
-			// 	array(
-			// 		array(
-			// 			'column'   => 'created_at',
-			// 			'operator' => 'BETWEEN',
-			// 			'value'    => "'" . $previous_date . "' AND  '" . $current_date . "'",
-			// 		),
-			// 	)
-			// );
-			$where = array(
-				array('created_at', 'BETWEEN', [$previous_date, $current_date]),
-			);
+			
+			$bookingsList = $booking->getBookingWithAttendees($where);
+		} else { 
+			$where[] = array('created_at', 'BETWEEN', [$previous_date, $current_date]);
 			 $bookingsList = $booking->getBookingWithAttendees(  
 				$where,
 				NULL,

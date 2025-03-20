@@ -120,7 +120,7 @@ const attendeeCencelPopupClose = () => {
 const getSingleAttendeeActivity = ($value) => {   
     $value = JSON.parse($value);
     let activityHtml = ''; 
-    activityHtml += '<span>'+Tfhb_DateTime($value.datetime)+'</span> <h5>'+$value.title+'</h5> <p>'+$value.description+'</p>';
+    activityHtml += '<span>'+Tfhb_DateTime($value.datetime)+'</span> <h5>'+tfhb_core_apps.trans[$value.title]+'</h5> <p>'+tfhb_core_apps.trans[$value.description]+'</p>';
  
     return activityHtml;
 
