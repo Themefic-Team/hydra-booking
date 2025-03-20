@@ -209,7 +209,7 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
-= 1.1.0 – March 19, 2025 =
+= 1.1.0 – March 20, 2025 =
 
 - Introduced: Frontend dashboard for host and admin.
 - Introduced: Free license creation settings.
