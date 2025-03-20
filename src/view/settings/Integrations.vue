@@ -27,6 +27,7 @@ import ZapierIntegrations from '@/components/integrations/ZapierIntegrations.vue
 import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
 import WhatsappIntegration from '@/components/integrations/WhatsappIntegrations.vue';
 import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
+import SlackIntegration from '@/components/integrations/SlackIntegrations.vue';
 
 // import Form Field 
 import Icon from '@/components/icon/LucideIcon.vue' 
@@ -45,6 +46,7 @@ const paypalpopup = ref(false);
 const tpopup = ref(false);
 const wpopup = ref(false);
 const twpopup = ref(false);
+const slpopup = ref(false);
 
 const currentHash = ref('all'); 
  
@@ -127,6 +129,13 @@ const istwPopupClose = (data) => {
     twpopup.value = false;
 }
 
+const isslPopupOpen = () => {
+    slpopup.value = true;
+}
+const isslPopupClose = (data) => {
+    slpopup.value = false;
+}
+
 const preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
@@ -161,6 +170,12 @@ const Integration = reactive( {
         receive_number: '',
         from_number: '',
         sid: '',
+        token: '',
+    },
+    slack : {
+        type: 'meeting', 
+        status: 0, 
+        channel: '',
         token: '',
     },
     google_calendar : {
@@ -277,6 +292,7 @@ const fetchIntegration = async () => {
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.whatsapp= response.data.integration_settings.whatsapp ? response.data.integration_settings.whatsapp : Integration.whatsapp;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
+            Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
 
             skeleton.value = false;
         }
@@ -313,6 +329,7 @@ const UpdateIntegration = async (key, value) => {
             twpopup.value = false;
             mailpopup.value = false;
             paypalpopup.value = false;
+            slpopup.value = false;
             
             Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
             Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
@@ -328,6 +345,7 @@ const UpdateIntegration = async (key, value) => {
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.whatsapp= response.data.integration_settings.whatsapp ? response.data.integration_settings.whatsapp : Integration.whatsapp;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
+            Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
             
         }else{
             toast.error(response.data.message, {
@@ -340,6 +358,7 @@ const UpdateIntegration = async (key, value) => {
             tpopup.value = false;
             wpopup.value = false;
             twpopup.value = false;
+            slpopup.value = false;
         }
     } catch (error) {
         // toast.error('Action successful', {
@@ -425,7 +444,7 @@ onBeforeMount(() => {
                 v-if="currentHash === 'all' || currentHash === 'conference'"
                 />
                 <!-- Whatsapp intrigation -->
-
+                
                 <!-- TwilioIntegration intrigation -->
                 <TwilioIntegration 
                 :twilio_data="Integration.twilio"  
@@ -436,6 +455,17 @@ onBeforeMount(() => {
                 v-if="currentHash === 'all' || currentHash === 'conference'"
                 />
                 <!-- TwilioIntegration intrigation -->
+
+                <!-- SlackIntegration intrigation -->
+                <SlackIntegration 
+                :slack_data="Integration.slack"  
+                @update-integrations="UpdateIntegration" 
+                :ispopup="slpopup"
+                @popup-open-control="isslPopupOpen"
+                @popup-close-control="isslPopupClose"
+                v-if="currentHash === 'all' || currentHash === 'conference'"
+                />
+                <!-- SlackIntegration intrigation -->
 
                 <!-- Google Calendar intrigation -->
                 <GoogleCalendarIntegrations 

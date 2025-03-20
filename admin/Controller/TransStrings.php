@@ -596,6 +596,12 @@ namespace HydraBooking\Admin\Controller;
             'Enter Your From Number' => __('Enter Your From Number', 'hydra-booking'),
             'Receiver Number' => __('Receiver Number', 'hydra-booking'),
             'Enter Your Receiver Number' => __('Enter Your Receiver Number', 'hydra-booking'),
+            'Slack' => __('Slack', 'hydra-booking'),
+            'Connect Slack API to configure virtual meetings.' => __('Connect Slack API to configure virtual meetings.', 'hydra-booking'),
+            'Add Slack Option' => __('Add Slack Option', 'hydra-booking'),
+            'Please read the documentation here for step by step guide to know how you can get Access Token from Slack Account' => __('Please read the documentation here for step by step guide to know how you can get Access Token from Slack Account', 'hydra-booking'),
+            'Channel Name' => __('Channel Name', 'hydra-booking'),
+            'Enter Your Channel Name' => __('Enter Your Channel Name', 'hydra-booking'),
 
 
             // Component : meetings

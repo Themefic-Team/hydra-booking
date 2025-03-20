@@ -625,6 +625,22 @@ class SettingsController {
 				'message' =>  __('Twilio Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
+		} elseif ( $key == 'slack_data' ) {
+			$_tfhb_integration_settings['slack']['type']        = sanitize_text_field( $data['type'] );
+			$_tfhb_integration_settings['slack']['status']      = sanitize_text_field( $data['status'] );
+			$_tfhb_integration_settings['slack']['channel']   = sanitize_text_field( $data['channel'] );
+			$_tfhb_integration_settings['slack']['token']   = sanitize_text_field( $data['token'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option,
+				'message' =>  __('Twilio Settings Updated Successfully', 'hydra-booking')
+			);
+			return rest_ensure_response( $data );
 		} elseif ( $key == 'webhook' ) {
 
 			$_tfhb_integration_settings['webhook']['status']      = sanitize_text_field( $data['status'] );
