@@ -765,27 +765,25 @@ const changeToDate = (value) => {
         <label for="">{{ $tfhb_trans('Select Date Range') }}</label>
         <div class="tfhb-filter-dates tfhb-flexbox">
             
-            <div class="tfhb-filter-start-end-date">
-                <HbDateTime 
-                    v-model="exportData.start_date"
-                    :label="''" 
-                    enableTime='true'
-                    icon="CalendarDays"
-                    :placeholder="$tfhb_trans('From')"   
-                />  
-            </div>
+            <HbDateTime 
+                v-model="exportData.start_date"
+                :label="''" 
+                width="40"
+                enableTime='true'
+                icon="CalendarDays"
+                :placeholder="$tfhb_trans('From')"   
+            /> 
             <div class="tfhb-calender-move-icon">
                 <Icon name="MoveRight" size="20px" /> 
             </div>
-            <div class="tfhb-filter-start-end-date">
-                <HbDateTime 
+             <HbDateTime 
                     v-model="exportData.end_date"
                     :label="''" 
+                    width="40"
                     icon="CalendarDays"
                     enableTime='true'
                     :placeholder="$tfhb_trans('To')"  
                 />  
-            </div>
         </div> 
       </div>
 

@@ -247,8 +247,9 @@ const BookingDetails = reactive({
         
         ical += "END:VEVENT\r\n";
         ical += "END:VCALENDAR\r\n";
-        
-        this.downloadICS(ical, 'booking_event.ics');
+        // make booking event file name as title and date time 
+     
+        this.downloadICS(ical, 'booking_event_'+this.booking.id+'.ics');
     }, 
     formatToUTC(date, time, timezone) {
         let dateTimeString = `${date} ${time}`;
