@@ -93,6 +93,7 @@ const BookingDetails = reactive({
             console.log(error);
         } 
     }, 
+  
      // cancel Booking Status
     async cancelBookingAttendee( ) { 
         
@@ -207,6 +208,63 @@ const BookingDetails = reactive({
         } catch (error) {
             console.log(error);
         }
+    },
+    // Change Booking Status
+    DownloadAsIcs() { 
+
+         
+        let ical = "BEGIN:VCALENDAR\r\n";
+        ical += "VERSION:2.0\r\n";
+        ical += "PRODID:-//Your Company//Meeting Scheduler//EN\r\n";
+        ical += "CALSCALE:GREGORIAN\r\n";
+        ical += "METHOD:PUBLISH\r\n";
+        
+        let uid = Date.now().toString();
+        let dtStart = this.formatToUTC(this.booking.meeting_dates, this.booking.start_time, this.booking.availability_time_zone); 
+        let dtEnd = this.formatToUTC(this.booking.meeting_dates, this.booking.end_time, this.booking.availability_time_zone);
+        
+        ical += "BEGIN:VEVENT\r\n";
+        ical += "UID:" + uid + "\r\n";
+        ical += "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").split('.')[0] + "Z\r\n";
+        ical += "DTSTART:" + dtStart + "\r\n";
+        ical += "DTEND:" + dtEnd + "\r\n";
+        ical += "SUMMARY:" + this.booking.title + "\r\n";
+        ical += "STATUS:" + this.booking.status.toUpperCase() + "\r\n";
+        
+        // Decode and add meeting locations
+        let locations = JSON.parse(this.booking.meeting_locations || '{}');
+        let locationString = Object.values(locations).map(loc => `${loc.location} - ${loc.address}`).join(', ');
+        if (locationString) {
+            ical += "LOCATION:" + locationString + "\r\n";
+        }
+        
+        // Add attendees
+        if (this.booking.attendees && this.booking.attendees.length > 0) {
+            this.booking.attendees.forEach(attendee => {
+                ical += `ATTENDEE;CN=${attendee.attendee_name}:mailto:${attendee.email}\r\n`;
+            });
+        }
+        
+        ical += "END:VEVENT\r\n";
+        ical += "END:VCALENDAR\r\n";
+        
+        this.downloadICS(ical, 'booking_event.ics');
+    }, 
+    formatToUTC(date, time, timezone) {
+        let dateTimeString = `${date} ${time}`;
+        let dateTime = new Date(dateTimeString);
+        return dateTime.toISOString().replace(/[-:]/g, "").split('.')[0] + "Z";
+    },
+    downloadICS(content, filename) {
+        let blob = new Blob([content], { type: 'text/calendar' });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     // async ChangeAttendeeStatus(attendee_id, booking_id, status) {

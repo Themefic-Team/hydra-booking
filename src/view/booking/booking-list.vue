@@ -559,7 +559,7 @@ const changeToDate = (value) => {
             <HbButton 
                 classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="ExportAsCSV = true, exportData.type = 'iCal'"
-                :buttonText="$tfhb_trans('Export as iCal')"
+                :buttonText="$tfhb_trans('Export as .ics')"
                 icon="Calendar"   
                 :hover_animation="false" 
                 icon_position = 'left'

@@ -14,6 +14,7 @@ use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\BookingMeta;
+use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks;
 
 class BookingController {
 
@@ -1587,39 +1588,9 @@ class BookingController {
 			return rest_ensure_response( $data );
 		}elseif('iCal' == $request['type']){
 			// Set the correct headers for .ics file
-		 
-			// iCal header
-			 // Start iCal file
-			 $ical = "BEGIN:VCALENDAR\r\n";
-			 $ical .= "VERSION:2.0\r\n";
-			 $ical .= "PRODID:-//Your Company//Meeting Scheduler//EN\r\n";
-			 $ical .= "CALSCALE:GREGORIAN\r\n";
-			 $ical .= "METHOD:PUBLISH\r\n";
-			foreach ($bookingsList as $meeting) { 
-				$uid = uniqid();
-				$dtStart = $this->formatToUTC($meeting->meeting_dates, $meeting->start_time, $meeting->availability_time_zone);
-				$dtEnd = $this->formatToUTC($meeting->meeting_dates, $meeting->end_time, $meeting->availability_time_zone);
+			$BookingBookmarks = new BookingBookmarks();
+			$ical = $BookingBookmarks->generateFullBookingICS($bookingsList);
 			
-				$ical .= "BEGIN:VEVENT\r\n";
-				$ical .= "UID:$uid\r\n";
-				$ical .= "DTSTAMP:" . gmdate("Ymd\THis\Z") . "\r\n";
-				$ical .= "DTSTART:$dtStart\r\n";
-				$ical .= "DTEND:$dtEnd\r\n";
-				$ical .= "SUMMARY:" . $meeting->title . "\r\n";
-				$ical .= "STATUS:" . strtoupper($meeting->status) . "\r\n";
-				
-				// Add attendees
-				if (!empty($meeting->attendees)) {
-					foreach ($meeting->attendees as $attendee) {
-						$ical .= "ATTENDEE;CN={$attendee->attendee_name}:mailto:{$attendee->email}\r\n";
-					}
-				}
-			
-				$ical .= "END:VEVENT\r\n";
-			}
-			 
-			// iCal footer
-			$ical .= "END:VCALENDAR\r\n";
 			 
 			// Return response
 			$data = array(
@@ -1635,12 +1606,5 @@ class BookingController {
 		
 	}
 
-	 // Convert date and time to UTC format
-	 public function formatToUTC($date, $time, $timezone)
-	 {
-		 $datetime = \DateTime::createFromFormat('Y-m-d h:i A', "$date $time", new \DateTimeZone($timezone));
-		 $datetime->setTimezone(new \DateTimeZone("UTC"));
-		 return $datetime->format("Ymd\THis\Z");
-	 }
- 
+	
 }

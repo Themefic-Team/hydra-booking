@@ -268,6 +268,7 @@ const TfhbPrevNavigator = () => {
                         <div v-show="activeBookingAction == true" class="tfhb-dropdown-wrap "> 
                              
                             <span class="tfhb-dropdown-single " @click="BookingDetails.ChangeBookingStatus('completed')"><Icon name="FileCheck" size=16 />{{ $tfhb_trans('Mark as Complete') }}</span>
+                            <span class="tfhb-dropdown-single " @click="BookingDetails.DownloadAsIcs(BookingDetails.booking.id)"><Icon name="Calendar" size=16 />{{ $tfhb_trans('Download as .ics') }}</span>
                             <span class="tfhb-dropdown-single "  v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="goForReschedule(BookingDetails.attendees[0])"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
                             <span class="tfhb-dropdown-single " v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="cancelAttendee(BookingDetails.attendees[0])"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span>
                             <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="BookingDetails.deletePopup = true"><Icon name="Trash" size=16 />{{ $tfhb_trans('Delete') }}</span>
