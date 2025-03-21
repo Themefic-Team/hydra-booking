@@ -17,15 +17,14 @@ defined( 'ABSPATH' ) || exit;
 
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks; 
-use HydraBooking\Admin\Controller\TransStrings;
 $data = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array();  
-$confirmation_page = isset( $args['confirmation_page'] ) ? $args['confirmation_page'] : false;   
+$confirmation_page = isset( $args['confirmation_page'] ) ? $args['confirmation_page'] : false;  
 
 $date_time = new DateTimeController( 'UTC' );
 $availability_data = $date_time->GetAvailabilityData($data);    
 $availability_time_zone = $availability_data['time_zone'];  
 $Bookmark = new BookingBookmarks();
-$getBookmark = $Bookmark->getMeetingBookmarks( '', $data );
+$getBookmark = $Bookmark->getMeetingBookmarks($data );
 // tfhb_print_r($getBookmark);
 ?> 
 <?php if($confirmation_page == true):  
@@ -35,67 +34,6 @@ $getBookmark = $Bookmark->getMeetingBookmarks( '', $data );
 	<div class="tfhb-meeting-card">
 <?php endif ?>
 		<div class="tfhb-meeting-confirmation" >
-<div class="tfhb-meeting-confirmation" >
-	<?php
-		// Hook for before confirmation
-		do_action( 'hydra_booking/before_meeting_confirmation' );
-
-	?>
-	<div class="tfhb-confirmation-seccess">
-		<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/sucess.gif'); ?>" alt="Success"> 
-		<h3><?php echo esc_html( __( 'Booking', 'hydra-booking' ) ); ?> <?php echo esc_html( $booking['status'] ); ?></h3>
-		<!-- <p>Please check your email for more information. Now you can reschedule or cancel booking from here.</p> -->
-	</div>
-
-	<div class="tfhb-meeting-hostinfo">
-		<h4 class="tfhb-mb-16"><?php echo esc_html($data->title); ?></h4>
-		<ul>
-			<li class="tfhb-flexbox tfhb-gap-8">
-				<div class="tfhb-icon">
-					<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/user.svg'); ?>" alt="User">
-				</div>
-				<?php echo ! empty( $data->first_name ) ? '' . esc_html( $data->first_name ) . '  ' . esc_html( $data->last_name ) . '' : ''; ?>
-				<span><?php echo esc_html( __( 'Host', 'hydra-booking' ) ); ?></span>
-			</li> 
-			<?php if ( ! empty( $data->start_time ) ) { ?>
-			<li class="tfhb-flexbox tfhb-gap-8">
-				<div class="tfhb-icon">
-					<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/Meeting.svg'); ?>" alt="User">
-				</div>
-				<!--date stored in this format  2024-05-24  9:00pm-9:45pm, Saturday, April 25 -->
-				<?php 
-					$meeting_dates = explode( ',', $data->meeting_dates ); 
-
-					$start_time = $data->start_time;
-					$end_time = $data->end_time;
-					$date = $meeting_dates[0]; 
-					$booking_availability_time_zone = !empty($data->availability_time_zone) ? $data->availability_time_zone : $availability_time_zone;
-					$start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $booking_availability_time_zone,  $data->attendee_time_zone, '' );
-					
-					$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $booking_availability_time_zone, $data->attendee_time_zone , '' ); 
-					$date_strings = '';
-				foreach ( $meeting_dates as $key => $date ) {
-					$formate_date = $date_time->convert_time_based_on_timezone( $date, $data->start_time, $booking_availability_time_zone, $data->attendee_time_zone , '' );
-					$date_strings .= TransStrings::tfhbTranslateDateSlot($formate_date->format('l, F j'));
-					$date_strings .= '| ';
-				}
-				$date_strings = rtrim( $date_strings, '| ' ); 
-
-					echo ! empty( $start_time->format('h:i A') ) ? '' . esc_html( TransStrings::tfhbTranslateTimeSlot($start_time->format('h:i A') ) ) . ' - ' . esc_html( TransStrings::tfhbTranslateTimeSlot($end_time->format('h:i A') )) . ', ' . esc_html( $date_strings ) . '' : ''
-				?>
-			</li>
-			<?php } ?>
-			<?php if ( ! empty( $data->attendee_time_zone ) ) { ?>
-			<li class="tfhb-flexbox tfhb-gap-8">
-				<div class="tfhb-icon">
-					<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/globe.svg'); ?>" alt="User">
-				</div>
-				<!-- Asia/Dhaka  -->
-				<?php echo ! empty( $data->attendee_time_zone ) ? '' . esc_html( $data->attendee_time_zone ) . '' : ''; ?>
-
-			</li>
-			<?php } ?>
-			<!-- Meeting location -->
 			<?php
 				// Hook for before confirmation
 				do_action( 'hydra_booking/before_meeting_confirmation' );
@@ -103,11 +41,11 @@ $getBookmark = $Bookmark->getMeetingBookmarks( '', $data );
 			?>
 			<div class="tfhb-confirmation-seccess">
 				<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/sucess.gif'); ?>" alt="Success"> 
-				<h3><?php echo esc_html( __( 'Booking', 'hydra-booking' ) ); ?> <?php echo esc_html( $booking['status'] ); ?></h3> 
+				<h3><?php echo esc_html( __( 'Booking', 'hydra-booking' ) ); ?> <?php echo esc_html( $data->status ); ?></h3> 
 			</div>
 
 			<div class="tfhb-meeting-hostinfo">
-				<h4 class="tfhb-mb-16"><?php echo esc_html($data->title); ?></h4>
+				<h4 class="tfhb-mb-16"><?php echo esc_html($data->meeting_title); ?></h4>
 				<ul>
 					<li class="tfhb-flexbox tfhb-gap-8">
 						<div class="tfhb-icon">
@@ -131,7 +69,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks( '', $data );
 							$booking_availability_time_zone = !empty($data->availability_time_zone) ? $data->availability_time_zone : $availability_time_zone;
 							$start_time = $date_time->convert_time_based_on_timezone( $date, $start_time, $booking_availability_time_zone,  $data->attendee_time_zone, '' );
 							
-							$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $booking_availability_time_zone, $data->attendee_time_zone , '' ); 
+							$end_time   = $date_time->convert_time_based_on_timezone($date, $end_time, $booking_availability_time_zone, $data->attendee_time_zone , '' ); 
 							$date_strings = '';
 						foreach ( $meeting_dates as $key => $date ) {
 							$formate_date = $date_time->convert_time_based_on_timezone( $date, $data->start_time, $booking_availability_time_zone, $data->attendee_time_zone , '' );
@@ -250,49 +188,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks( '', $data );
 
 
 <?php if($confirmation_page == true): ?>
-	</div> 
-
- 
-
-	<div class="tfhb-meeting-confirmation-action tfhb-flexbox tfhb-gap-16">
-		
-		<?php
-
-		if ( true == $data->attendee_can_cancel ) {
-			$cancel = add_query_arg(
-				array(
-					'hydra-booking' => 'booking',
-					'hash'          => $data->hash,
-					'meetingId'    => $data->meeting_id,
-					'type'          => 'cancel',
-				),
-				home_url()
-			);
-			echo '<a href="' . esc_attr( $cancel ) . '">'.esc_html(__('Cancel booking', 'hydra-booking')).'</a>';
-		}
-		if ( true == $data->attendee_can_reschedule ) {
-
-			$reschedule_url = add_query_arg(
-				array(
-					'hydra-booking' => 'booking',
-					'hash'          => $data->hash,
-					'meetingId'    => $data->meeting_id,
-					'type'          => 'reschedule',
-				),
-				home_url()
-			);
-
-			echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html(__('Reschedule', 'hydra-booking')).'</a>';
-		}
-		?>
 	</div>
-
-	<?php
-		// Hook for After confirmation
-		do_action( 'hydra_booking/after_meeting_confirmation' );
-
-	?>
- 
 </div>
 <?php 
 get_footer(); 

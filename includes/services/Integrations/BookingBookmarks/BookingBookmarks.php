@@ -13,7 +13,8 @@ class BookingBookmarks {
 
 	}
 
-    public function GetBookingConfirmationUrl ($data){
+    public function GetBookingConfirmationUrl ($data){ 
+
         $confirmation = add_query_arg(
             array(
                 'hydra-booking' => 'booking',
@@ -38,28 +39,39 @@ class BookingBookmarks {
         );
         return $confirmation;
     }
-    public function getMeetingBookmarks($assetsUrl = '', $data){
-        //  $bookmarks = [];
+    public function getMeetingBookmarks($data ){ 
         $bookingTitle = $data->meeting_title . ' Between ' . $data->host_first_name . ' ' . $data->host_last_name . ' and ' . $data->attendee_name;
-        $location = $this->GetBookingConfirmationUrl($data);
+        $location = '';
+        if (!empty($data->meeting_locations)) {
+            $location_data = json_decode($data->meeting_locations, true);
+        
+            foreach ($location_data as $key => $value) {
+                $location .= $value['location'] ." - ". $value['address'] ; 
+                if ($key < count($location_data) - 1) {
+                    $location .= ", ";
+                }
+
+            }  
+        }
+         
         $availability_time_zone = $data->availability_time_zone; // Example: "America/New_York"
 
         // Convert to required format with the correct timezone
         $dtStart = new \DateTime($data->start_time, new \DateTimeZone($availability_time_zone));
         $dtEnd = new \DateTime($data->end_time, new \DateTimeZone($availability_time_zone));
+        $details = '<p>'.esc_html($data->meeting_title).'</p>'; 
 
         // Format for Google Calendar (Including Timezone)
         $start_time_google = $dtStart->format("Ymd\THis");
-        $end_time_google = $dtEnd->format("Ymd\THis");
-
+        $end_time_google = $dtEnd->format("Ymd\THis"); 
         // Google Calendar Link with Timezone
         $bookmarks['google'] = [
             'title' => __('Google Calendar', 'fluent-booking'),
             'url'   => add_query_arg([
                 'dates'    => $start_time_google . '/' . $end_time_google,
                 'text'     => $bookingTitle,
-                'details'  => $data->meeting_title,
-                'location' => $location,
+                'details'  => $details,
+                'location' => ''.$location.'',
                 'ctz'      => $availability_time_zone // Time Zone Parameter for Google
             ], 'https://calendar.google.com/calendar/r/eventedit'),
            
@@ -77,7 +89,7 @@ class BookingBookmarks {
                 'enddt'    => $end_time_outlook,
                 'subject'  => $bookingTitle,
                 'path'     => '/calendar/action/compose',
-                'body'     =>  $data->meeting_title,
+                'body'     =>  $details,
                 'rru'      => 'addevent',
                 'location' => $location,
             ], 'https://outlook.live.com/calendar/0/deeplink/compose'),
@@ -121,14 +133,13 @@ class BookingBookmarks {
                 'title'    => $bookingTitle,
                 'st'       => $start_time_yahoo,
                 'dur'      => $formatted_duration,
-                'desc'     => $data->meeting_title,
+                'desc'     => $details,
                 'in_loc'   => $location,
             ], 'http://calendar.yahoo.com/'),
             'icon' => esc_url(TFHB_URL . 'assets/app/images/yahoo-calendar.svg'), 
         ];
         $bookmarks['other']    = [
-            'title' => __('Other Calendar', 'fluent-booking'),
-            'url'   => '',
+            'title' => __('Other Calendar', 'fluent-booking'), 
             'url'   => $this->GetBookingIcsUrl($data), 
             'icon' => esc_url(TFHB_URL . 'assets/app/images/other-calendar.svg'), 
         ];
