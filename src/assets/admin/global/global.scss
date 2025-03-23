@@ -326,7 +326,9 @@
     .tfhb-p-0 {
         padding: 0px !important;
     }
-
+    .tfhb-capitalize {
+        text-transform: capitalize;
+    }
     .tfhb-pro {
         // opacity: 0.6 !important;
         position: relative;
@@ -447,6 +449,9 @@
         flex-wrap: wrap;
         gap: 24px;
         box-sizing: border-box;
+    }
+    .tfhb-inline-flexbox {
+        display: inline-flex;;
     }
 
     .tfhb-justify-normal {

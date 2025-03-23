@@ -104,7 +104,6 @@ const UpdateNotification = async () => {
             </div>
  
             <div v-if="host" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width"> 
- 
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
@@ -115,6 +114,7 @@ const UpdateNotification = async () => {
                     :ispopup="hostBookingConfirmPopUp"
                     @popup-open-control="hostBookingConfirmPopUp = true"
                     @popup-close-control="hostBookingConfirmPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -128,6 +128,7 @@ const UpdateNotification = async () => {
                     :ispopup="hostBookingPendingPopUp"
                     @popup-open-control="hostBookingPendingPopUp = true"
                     @popup-close-control="hostBookingPendingPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -141,6 +142,7 @@ const UpdateNotification = async () => {
                     :ispopup="hostBookingCencelPopUp"
                     @popup-open-control="hostBookingCencelPopUp = true"
                     @popup-close-control="hostBookingCencelPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -154,6 +156,7 @@ const UpdateNotification = async () => {
                     :ispopup="hostBookingReschedulePopUp"
                     @popup-open-control="hostBookingReschedulePopUp = true"
                     @popup-close-control="hostBookingReschedulePopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -167,6 +170,7 @@ const UpdateNotification = async () => {
                     :ispopup="hostBookingReminderPopUp"
                     @popup-open-control="hostBookingReminderPopUp = true"
                     @popup-close-control="hostBookingReminderPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
  
@@ -184,6 +188,7 @@ const UpdateNotification = async () => {
                     :ispopup="attendeeBookingConfirmPopUp"
                     @popup-open-control="attendeeBookingConfirmPopUp = true"
                     @popup-close-control="attendeeBookingConfirmPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -197,6 +202,7 @@ const UpdateNotification = async () => {
                     :ispopup="attendeeBookingPendingPopUp"
                     @popup-open-control="attendeeBookingPendingPopUp = true"
                     @popup-close-control="attendeeBookingPendingPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -210,6 +216,7 @@ const UpdateNotification = async () => {
                     :ispopup="attendeeBookingCancelPopUp"
                     @popup-open-control="attendeeBookingCancelPopUp = true"
                     @popup-close-control="attendeeBookingCancelPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                  
                 <!-- Single Integrations  -->
@@ -218,11 +225,13 @@ const UpdateNotification = async () => {
                 <MailNotifications 
                    :title="$tfhb_trans('Send Email to Attendee')"
                     :label="$tfhb_trans('Booking Reschedule')"
+                    @update-notification="UpdateNotification"
                     :data="meeting.notification.attendee.booking_reschedule"  
                     :update_preloader="props.update_preloader"  
                     :ispopup="attendeeBookingReschedulePopUp"
                     @popup-open-control="attendeeBookingReschedulePopUp = true"
                     @popup-close-control="attendeeBookingReschedulePopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -236,6 +245,7 @@ const UpdateNotification = async () => {
                     :ispopup="attendeeBookingReminderPopUp"
                     @popup-open-control="attendeeBookingReminderPopUp = true"
                     @popup-close-control="attendeeBookingReminderPopUp = false"
+                    :mediaurl="$tfhb_url"
                 /> 
                 <!-- Single Integrations  -->
  
