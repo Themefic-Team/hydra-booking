@@ -12,36 +12,63 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */
-
+use HydraBooking\Admin\Controller\TransStrings;
 $meeting      = isset( $args['meeting'] ) ? $args['meeting'] : array();
-$host         = isset( $args['host'] ) ? $args['host'] : array();
+$host         = isset( $args['host'] ) ? $args['host'] : array(); 
 $time_zone    = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
 $booking_data = isset( $args['booking_data'] ) ? $args['booking_data'] : array(); 
 // Stripe Public api Key
 $_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+$currency = ! empty( $_tfhb_general_settings['currency'] ) ? $_tfhb_general_settings['currency'] : 'USD';
 $stripePublicKey            = ! empty( $_tfhb_integration_settings['stripe']['public_key'] ) ? $_tfhb_integration_settings['stripe']['public_key'] : '';
 $paypalPublicKey            = ! empty( $_tfhb_integration_settings['paypal']['client_id'] ) ? $_tfhb_integration_settings['paypal']['client_id'] : '';
 
-$_tfhb_host_integration_settings = get_user_meta( $host['host_id'], '_tfhb_host_integration_settings' );
+$_tfhb_host_integration_settings = get_user_meta( $host['user_id'], '_tfhb_host_integration_settings' );
 $stripePublicKey                 = ! empty( $_tfhb_host_integration_settings['stripe']['public_key'] ) ? $_tfhb_host_integration_settings['stripe']['public_key'] : $stripePublicKey;
 $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['paypal']['client_id'] ) ? $_tfhb_host_integration_settings['paypal']['client_id'] : $paypalPublicKey;
 
+// display short 
+
+$selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $meeting['availability_custom']['time_zone'] : 'UTC';
+if ( 'settings' === $meeting['availability_type'] ) {
+	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
+	// tfhb_print_r( $host );
+		
+	if($_tfhb_availability_settings['availability_type'] === 'settings' ){
+		// Get Global Settings
+		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
+		
+		$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
+
+		if ( in_array( $key, array_keys( $_tfhb_availability_settings_global ) ) ) {
+			$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+		}
 
 
+	}elseif ( in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
+	}
+		
+}
 
+$host_feature_image_link = isset($host['featured_image']) && !empty($host['featured_image']) ? $host['featured_image'] : TFHB_URL . 'assets/app/images/meeting-cover.png';
 ?> 
 
-<div class="tfhb-meeting-info">
+<div class="tfhb-meeting-info"> 
+	
+	
+	<?php //echo esc_html( __( 'Booking Overview-w', 'hydra-booking' ) ); ?>
 	<div class="hidden-field">
 		<input type="hidden" id="meeting_id" name="meeting_id" value="<?php echo esc_attr($meeting['id']); ?>">
-		<input type="hidden" id="host_id" name="host_id" value="<?php echo esc_attr($host['host_id']); ?>"> 
+		<input type="hidden" id="host_id" name="host_id" value="<?php echo esc_attr($host['id']); ?>"> 
 		<input type="hidden" id="meeting_duration" name="meeting_dates" value="<?php echo esc_attr($meeting['duration']); ?>">
 		<input type="hidden" id="meeting_dates" name="meeting_dates" value="">
 		<input type="hidden" id="meeting_time_start" name="meeting_time_start" value="">
 		<input type="hidden" id="meeting_time_end" name="meeting_time_end" value="">
 		<input type="hidden" id="payment_method" name="payment_method" value="<?php echo esc_attr($meeting['payment_method']); ?>">
 		<input type="hidden" id="payment_amount" name="payment_amount" value="<?php echo ! empty( $meeting['meeting_price'] ) ? esc_attr($meeting['meeting_price']) : ''; ?>">
-		<input type="hidden" id="payment_currency" name="payment_currency" value="<?php echo ! empty( $meeting['payment_currency'] ) ? esc_attr($meeting['payment_currency']) : esc_attr('USD'); ?>">
+		<input type="hidden" id="payment_currency" name="payment_currency" value="<?php echo ! empty( $currency ) ? esc_attr($currency) : esc_attr('USD'); ?>">
 		<input type="hidden" id="stpublic_key" name="public_key" value="<?php echo esc_attr($stripePublicKey); ?>">
 		<input type="hidden" id="paypal_public_key" name="public_key" value="<?php echo esc_attr($paypalPublicKey); ?>">
 		<?php
@@ -51,10 +78,10 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		}
 		?>
 	</div>  
-	<div class="tfhb-host-info" style="background: linear-gradient(181deg, rgba(252, 169, 185, 0.00) 1.18%, rgba(89, 1, 39, 0.70) 98.83%), url(<?php echo esc_url(THB_URL . 'assets/app/images/meeting-cover.png'); ?>) lightgray 50% / cover no-repeat;">
+	<div class="tfhb-host-info" style="background-image: url(<?php echo esc_url($host_feature_image_link); ?>) ;">
 		<div class="tfhb-host-profile tfhb-flexbox tfhb-gap-8">
-			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : ''; ?>
-				  
+			<?php echo ! empty( $host['avatar'] ) ? '<img src="' . esc_url( $host['avatar'] ) . '" alt="">' : '<img src="' . TFHB_URL.'assets/images/avator.png' . '" alt="">'; ?>
+			
 			<div class="tfhb-host-name">
 				<?php echo ! empty( $host['first_name'] ) ? '<h3>' . esc_html( $host['first_name'] ) . '  ' . esc_html( $host['last_name'] ) . '</h3>' : ''; ?>
 				<?php echo ! empty( $host['about'] ) ? '<p>' . esc_html( $host['about'] ) . '</p>' : ''; ?>
@@ -64,12 +91,12 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 	</div>
 
 	<div class="tfhb-meeting-details">
-		<?php echo ! empty( $meeting['title'] ) ? '<h2>' . esc_html( $meeting['title'] ) . '</h2>' : ''; ?> 
+		<?php echo ! empty( $meeting['title'] ) ? '<h2>' . esc_html(  wp_strip_all_tags(tfhb_character_limit_callback($meeting['title'], 60)) ) . '</h2>' : ''; ?> 
 
 		<div class="tfhb-short-description">
             <?php 
             if(strlen($meeting['description']) > 100 ){
-                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 100))) . '<span class="tfhb-see-description">See more</span>';
+                echo wp_kses_post(wp_strip_all_tags(tfhb_character_limit_callback($meeting['description'], 100))) . '<span class="tfhb-see-description">'.esc_html(__('See more', 'hydra-booking')).'</span>';
             }else{
                 echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : ''; 
             }
@@ -78,7 +105,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
         <div class="tfhb-full-description">
             <?php 
                 echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : '';
-                echo '<span class="tfhb-see-less-description">See less</span>';
+                echo '<span class="tfhb-see-less-description">'.esc_html(__('See less', 'hydra-booking')).'</span>';
             ?>
         </div>
 		
@@ -86,7 +113,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 		<ul>
 			<li class="tfhb-flexbox tfhb-gap-8">
 				<div class="tfhb-icon">
-					<!-- <img src="<?php echo esc_url(THB_URL . 'assets/app/images/clock.svg'); ?>" alt="Clock"> -->
+					<!-- <img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/clock.svg'); ?>" alt="Clock"> -->
 
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<g clip-path="url(#clip0_1911_10275)">
@@ -100,26 +127,49 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 					</defs>
 					</svg>
 				</div>
-				<?php echo ! empty( $meeting['duration'] ) ? esc_html( $meeting['duration'] . ' minutes' ) : '0 minutes'; ?>
+				<?php echo ! empty( $meeting['duration'] ) ? esc_html( TransStrings::tfhbTranslateNumber($meeting['duration']) . ' minutes' ) : '0 minutes'; ?>
 				
 			</li>
 			<?php
 			if ( ! empty( $meeting['meeting_locations'] ) ) {
 				foreach ( $meeting['meeting_locations'] as $key => $location ) { 
+
+					$location_value = $location['address'];
+					if($location['location'] == 'zoom'){
+						$location_value = __('Zoom', 'hydra-booking');
+					}elseif($location['location'] == 'meet'){
+						$location_value = __('Google Meet', 'hydra-booking');
+					}
+					elseif($location['location'] == 'Attendee Phone Number'){
+						$location_value = __('Attendee Phone Number', 'hydra-booking');
+					}elseif($location['location'] == 'Organizer Phone Number'){
+						$location_value = __('Organizer Phone Number', 'hydra-booking');
+					
+					}elseif($location['location'] == 'In Person (Organizer Address)'){
+						$location_value = __('In Person (Organizer Address)', 'hydra-booking');
+					 
+					}elseif($location['location'] == 'In Person (Attendee Address)'){
+						$location_value = __('In Person (Attendee Address)', 'hydra-booking');
+					}else{
+						$location_value = $location['location'];
+					}
+
 					 if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
-						$icon = '<img src="'.esc_url(THB_URL . 'assets/app/images/phone.png').'" alt="Phone">';
+						$icon = '<img src="'.esc_url(TFHB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';
 					 }elseif($location['location'] == 'zoom'){
-						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
 					 }elseif($location['location'] == 'meet'){
-						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">';
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">'; 
+					 }elseif($location['location'] == 'MS Teams'){
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/ms_teams-logo.svg').'" alt="MS Teams">';
 					 }else{
-						$icon =  '<img src="'.esc_url(THB_URL . 'assets/app/images/location.png').'" alt="Location">';
+						$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/location.svg').'" alt="Location">';
 					 }
 					echo '<li class="tfhb-flexbox tfhb-gap-8">
                                 <input type="hidden" id="meeting_locations[' . esc_attr($key) . '][location]" name="meeting_locations[' . esc_attr($key) . '][location]" value="' . esc_attr( $location['location'] ) . '">
                                 <input type="hidden" id="meeting_locations[' . esc_attr($key) . '][address]" name="meeting_locations[' . esc_attr($key) . '][address]" value="' . esc_attr( $location['address'] ) . '">
                                 <div class="tfhb-icon">'.$icon.'</div> 
-                                ' . esc_html( $location['location'] ) . '
+                                ' . esc_html( $location_value ) . '
                             </li>';
 				}
 			}
@@ -130,6 +180,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 
 
 				$price = ! empty( $meeting['meeting_price'] ) ? $meeting['meeting_price'] : 'Free';
+				$currency = ! empty( $currency ) && $price !='Free' ? $currency : '';
 				echo '<li class="tfhb-flexbox tfhb-gap-8">
                             <input type="hidden" id="meeting_price" name="meeting_price" value="' . esc_attr( $price ) . '">
                             <div class="tfhb-icon">
@@ -139,45 +190,24 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
                                 <path d="M4 8H4.00667M12 8H12.0067" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </div> 
-                            ' . esc_html( $price ) . '
+                            ' . esc_html( $price ) . ' ' . esc_html( $currency ) . '
                         </li>';
 			}
 			?>
-						<?php
-						if ( ! empty( $meeting['recurring_status'] ) && true == $meeting['recurring_status'] ) {
+			<?php
+			if ( ! empty( $meeting['recurring_status'] ) && true == $meeting['recurring_status'] ) {
 
-							echo '<li class="tfhb-flexbox tfhb-gap-8">
-                            <input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
-                            <div class="tfhb-icon">  
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2 8C2 6.4087 2.63214 4.88258 3.75736 3.75736C4.88258 2.63214 6.4087 2 8 2C9.67737 2.00631 11.2874 2.66082 12.4933 3.82667L14 5.33333" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.9993 2V5.33333H10.666" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M14 8C14 9.5913 13.3679 11.1174 12.2426 12.2426C11.1174 13.3679 9.5913 14 8 14C6.32263 13.9937 4.71265 13.3392 3.50667 12.1733L2 10.6667" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M5.33333 10.6667H2V14" stroke="#765664" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div> 
-                            <div>
-                                Recurring every  <span>' . esc_attr( $meeting['recurring_repeat'][0]['limit'] ) . '</span> ' . esc_attr( $meeting['recurring_repeat'][0]['times'] ) . ' for  <span>' . esc_attr( $meeting['recurring_maximum'] ) . '</span>  Bookings
-                            </div>
-                        </li>';
-						}
-						?>
-					</ul>
-
+			 
+			}
+			?>
+ 
+		</ul> 
 		<div class="tfhb-timezone ">   
-			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone">
+			
+			<select class="tfhb-time-zone-select" name="attendee_time_zone" id="attendee_time_zone_<?php echo esc_attr($meeting['id']) ?>">
 				<?php
-				if ( ! empty( $time_zone ) ) {
-
-					$selected_timezone = $meeting['availability_custom']['time_zone'];
-					if ( 'settings' === $meeting['availability_type'] ) {
-						$_tfhb_availability_settings = get_user_meta( $meeting['host_id'], '_tfhb_host', true );
-						if ( in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
-							$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
-						}
-					}
-					$selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
-
+			
+				if ( ! empty( $time_zone ) ) {  
 					foreach ( $time_zone as $key => $zone ) {
 						$selected = ( $zone['value'] == $selected_timezone ) ? 'selected' : '';
 						echo '<option value="' . esc_attr( $zone['value'] ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $zone['name'] ) . '</option>';
@@ -185,7 +215,7 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 				}
 
 				?>
-							</select>
+			</select>
 			<div class="tfhb-timezone-icon ">
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<g clip-path="url(#clip0_1911_10296)">

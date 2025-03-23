@@ -9,6 +9,7 @@ use HydraBooking\Admin\Controller\AuthController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Admin\Controller\ScheduleController;
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
+use HydraBooking\Admin\Controller\Helper;
 // Use DB
 use HydraBooking\DB\Availability;
 // exit
@@ -52,7 +53,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAvailabilitySettings' ),
-			// 	'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
 		register_rest_route(
@@ -82,6 +83,16 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetSingleAvailabilitySettings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		// Mark as default
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/availability/mark-as-default',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'MarkAsDefault' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
@@ -173,11 +184,13 @@ class SettingsController {
 		$time_zone              = $DateTimeZone->TimeZone();
 		$country                = new CountryController();
 		$country_list           = $country->country_list();
+		$currency_list           = $country->currency_list();
 		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
 		$data                   = array(
 			'status'           => true,
 			'time_zone'        => $time_zone,
 			'country_list'     => $country_list,
+			'currency_list'     => $currency_list,
 			'general_settings' => $_tfhb_general_settings,
 		);
 		return rest_ensure_response( $data );
@@ -186,7 +199,8 @@ class SettingsController {
 	// Update General Settings
 	public function UpdateGeneralSettings() {
 		$request                = json_decode( file_get_contents( 'php://input' ), true );
-		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+		$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+		
 
 		// senitaized
 		$_tfhb_general_settings['time_zone']                               = sanitize_text_field( $request['time_zone'] );
@@ -194,6 +208,7 @@ class SettingsController {
 		$_tfhb_general_settings['week_start_from']                         = sanitize_text_field( $request['week_start_from'] );
 		$_tfhb_general_settings['date_format']                             = sanitize_text_field( $request['date_format'] );
 		$_tfhb_general_settings['country']                                 = sanitize_text_field( $request['country'] );
+		$_tfhb_general_settings['currency']                                 = sanitize_text_field( $request['currency'] );
 		$_tfhb_general_settings['after_booking_completed']                 = sanitize_text_field( $request['after_booking_completed'] );
 		$_tfhb_general_settings['booking_status']                          = sanitize_text_field( $request['booking_status'] );
 		$_tfhb_general_settings['reschedule_status']                       = sanitize_text_field( $request['reschedule_status'] );
@@ -206,7 +221,7 @@ class SettingsController {
 
 		$data = array(
 			'status'  => true,
-			'message' => 'General Settings Updated Successfully',
+			'message' =>  __('General Settings Updated Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
 	}
@@ -217,6 +232,7 @@ class SettingsController {
 		$time_zone        = $DateTimeZone->TimeZone();
 		$availability     = get_option( '_tfhb_availability_settings' );
 		$general_settings = get_option( '_tfhb_general_settings' );
+		 
 		$data             = array(
 			'status'           => true,
 			'time_zone'        => $time_zone,
@@ -257,7 +273,7 @@ class SettingsController {
 			// response
 			$data = array(
 				'status'  => false,
-				'message' => 'Something Went Wrong, Please Try Again Later.',
+				'message' =>  __('Something Went Wrong, Please Try Again Later.', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}
@@ -292,6 +308,10 @@ class SettingsController {
 			}
 		}
 
+		if(empty($request['date_slots'] )){
+			$availability['date_slots'] = array();
+		}
+
 		if ( $availability['id'] == 0 ) {
 
 			// Insert into database
@@ -303,7 +323,7 @@ class SettingsController {
 			} else {
 				$data = array(
 					'status'  => false,
-					'message' => 'Availability Not Updated',
+					'message' =>  __('Availability Not Inserted', 'hydra-booking')
 				);
 				return rest_ensure_response( $data );
 			}
@@ -318,7 +338,7 @@ class SettingsController {
 			if ( $update['status'] != true ) {
 				$data = array(
 					'status'  => false,
-					'message' => 'Availability Not Updated',
+					'message' =>  __('Availability Not Updated', 'hydra-booking')
 				);
 				return rest_ensure_response( $data );
 			}
@@ -337,8 +357,8 @@ class SettingsController {
 		$data = array(
 			'status'       => true,
 			'availability' => $availability,
-			'update'       => $update,
-			'message'      => 'Availability Updated Successfully',
+			// 'update'       => $update,
+			'message'      => __('Availability Updated Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
 	}
@@ -364,14 +384,66 @@ class SettingsController {
 		$data         = array(
 			'status'       => true,
 			'availability' => $availability,
-			'message'      => 'Availability Deleted Successfully',
+			'message'      =>  __('Availability Deleted Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
 	}
 
+	// Mark as Default
+	public function MarkAsDefault(){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+		$key     = sanitize_text_field( $request['key'] );
+		$id      = sanitize_text_field( $request['id'] );
+		$availabilityData      =$request['availabilityData'];
+
+
+		update_option('_tfhb_availability_settings', $availabilityData);
+	 
+		// update availability
+		$updated_current_availability = $availabilityData[$key];
+		// print_r($updated_current_availability);
+		// update into database
+		$AvailabilityInsert = new Availability();
+ 
+		
+		// get all availability data
+		$getAvailability = $AvailabilityInsert->get(
+			array(
+				'default_status' => true,
+			)
+		);
+		if(count($getAvailability) > 0){ 
+			
+			foreach ($getAvailability as $key => $value) {  
+				if($id == $value->id){ 
+					continue;
+				}
+
+				$data = array(
+					'id' => $value->id,
+					'default_status' => 0,
+				);
+				  
+
+				// convert object to array
+				$value = (array) $value;
+				$AvailabilityInsert->update( $data );
+			}
+		}  
+		 $AvailabilityInsert->update( 
+			array(
+				'id' => $id,
+				'default_status' => 1,
+			)
+		  );
+
+		$_tfhb_availability_settings = get_option( '_tfhb_availability_settings' );
+
+	}
+
 	// Get Integration Settings
 	public function GetIntegrationSettings() {
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
 		// Checked woocommerce installed and activated
 		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'woocommerce/woocommerce.php' ) ) {
 			$woo_connection_status = 0;
@@ -401,7 +473,7 @@ class SettingsController {
 			$_tfhb_integration_settings['google_calendar']['redirect_url']      = $GoogleCalendar->redirectUrl;
 
 		}
-
+		$_tfhb_integration_settings = apply_filters( 'tfhb_get_integration_settings', $_tfhb_integration_settings );
 		// Checked if woo
 		$data = array(
 			'status'               => true,
@@ -413,24 +485,20 @@ class SettingsController {
 	// Update Integration Settings.
 	public function UpdateIntegrationSettings() {
 
-		$request                    = json_decode( file_get_contents( 'php://input' ), true );
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$request                    = json_decode( file_get_contents( 'php://input' ), true ); 
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
+		
 		$key                        = sanitize_text_field( $request['key'] );
 		$data                       = $request['value'];
 
 		if ( $key == 'zoom_meeting' ) {
 
-			$zoom = new ZoomServices(
-				sanitize_text_field( $data['account_id'] ),
-				sanitize_text_field( $data['app_client_id'] ),
-				sanitize_text_field( $data['app_secret_key'] )
-			);
+			$zoom = new ZoomServices();
 			return rest_ensure_response( $zoom->updateZoomSettings( $data ) );
 
 		} elseif ( $key == 'woo_payment' ) {
 			$_tfhb_integration_settings['woo_payment']['type']        = sanitize_text_field( $data['type'] );
-			$_tfhb_integration_settings['woo_payment']['status']      = sanitize_text_field( $data['status'] );
-			$_tfhb_integration_settings['woo_payment']['woo_payment'] = sanitize_text_field( $data['woo_payment'] );
+			$_tfhb_integration_settings['woo_payment']['status']      = sanitize_text_field( $data['status'] ); 
 
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
@@ -438,7 +506,7 @@ class SettingsController {
 			// woocommerce payment
 			$data = array(
 				'status'  => true,
-				'message' => 'Integration Settings Updated Successfully',
+				'message' =>  __('Integration Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'google_calendar' ) {
@@ -457,7 +525,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Google Calendar Settings Updated Successfully',
+				'message' =>  __('Google Calendar Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'apple_calendar' ) {
@@ -471,7 +539,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Apple Calendar Settings Updated Successfully',
+				'message' => __('Apple Calendar Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'mailchimp' ) {
@@ -486,7 +554,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Mailchimp Settings Updated Successfully',
+				'message' => __('Mailchimp Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'paypal' ) {
@@ -503,7 +571,75 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => 'Paypal Settings Updated Successfully',
+				'message' =>  __('Paypal Settings Updated Successfully', 'hydra-booking')
+			);
+			return rest_ensure_response( $data );
+		}elseif ( $key == 'webhook' ) {
+
+			$_tfhb_integration_settings['webhook']['status']      = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option,
+				'message' =>  __('Webhook Settings Updated Successfully', 'hydra-booking')
+			);
+			return rest_ensure_response( $data );
+		}elseif ( $key == 'fluent_crm' ) {
+
+			$_tfhb_integration_settings['fluent_crm']['status']      = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option,
+				'message' => __('FluentCRM Settings Updated Successfully', 'hydra-booking')
+			);
+			return rest_ensure_response( $data );
+		}elseif ( $key == 'zoho_crm' ) {
+
+			$_tfhb_integration_settings['zoho_crm']['status']      = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option,
+				'message' =>  __('Zoho CRM Settings Updated Successfully', 'hydra-booking')
+			);
+			return rest_ensure_response( $data );
+		}elseif ( $key == 'pabbly' ) {
+			$_tfhb_integration_settings['pabbly']['status'] = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option, 
+				'message' =>  __('Pabbly Settings Updated Successfully', 'hydra-booking')
+			);
+			return rest_ensure_response( $data );
+		}elseif ( $key == 'zapier' ) {
+			$_tfhb_integration_settings['zapier']['status'] = sanitize_text_field( $data['status'] );
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			$data = array(
+				'status'  => true,
+				'integration_settings'  => $option, 
+				'message' =>  __('Zapier Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		}elseif ( $key == 'cf7' || $key == 'fluent'  || $key == 'forminator' || $key == 'gravity') { 
@@ -514,19 +650,38 @@ class SettingsController {
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
 			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+		 
 			$name = ucfirst($key);
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => $name . ' Settings Updated Successfully',
+				'message' => $name . __( ' Settings Updated Successfully', 'hydra-booking' ),
 			);
+
+			if($key == 'gravity' && !empty($data['status'])){
+				$data['message'] =  __('Install and activate the Gravity Forms plugin if it is not already installed or active.', 'hydra-booking');
+			}
+			if($key == 'cf7' && !empty($data['status']) && $_tfhb_integration_settings[$key]['status'] == true){
+				if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
+					$data['message'] = __( 'Install and activate the Contact Form 7 plugin if it is not already installed or active.', 'hydra-booking' );
+			
+				}
+			}
+			
+			if($key == 'fluent' && !empty($data['status'] ) && $_tfhb_integration_settings[$key]['status'] == true){
+				if (!is_plugin_active('fluentform/fluentform.php')) {
+					$data['message'] =  __('Install and activate the Fluent Forms plugin if it is not already installed or active.', 'hydra-booking');
+			
+				}
+			}
+			
 			return rest_ensure_response( $data );
 		}else{ 
 
 		 	$data =  apply_filters( 'tfhb_update_integration_settings', // Hook for update integration settings
 				array(
 					'status'  => true, 
-					'message' => 'Integration Settings Updated Successfully',
+					'message' =>  __('Integration Settings Updated Successfully', 'hydra-booking')
 				), 
 				$_tfhb_integration_settings,
 				$key, 
@@ -540,6 +695,7 @@ class SettingsController {
 
 		}
 	}
+
 
 
 	// Install Active Plugins
@@ -562,12 +718,12 @@ class SettingsController {
 			if ( $install ) {
 				$data = array(
 					'status'  => true,
-					'message' => 'WooCommerce Installed Successfully',
+					'message' => __( 'WooCommerce Installed Successfully','hydra-booking' ),
 				);
 			} else {
 				$data = array(
 					'status'  => false,
-					'message' => 'WooCommerce Not Installed',
+					'message' => __( 'WooCommerce Not Installed','hydra-booking' ),
 				);
 			}
 		}
@@ -575,7 +731,14 @@ class SettingsController {
 
 	// Get Notification Settings
 	public function GetNotificationSettings() {
-		$_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+		// $_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+		$_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
+		
+		if(empty($_tfhb_notification_settings)){
+			$default_notification =  new Helper();
+			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
+		}
+
 		$data                        = array(
 			'status'                => true,
 			'notification_settings' => $_tfhb_notification_settings,
@@ -587,13 +750,14 @@ class SettingsController {
 	public function UpdateNotificationSettings() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		$data    = get_option( '_tfhb_notification_settings' );
+		
 
 		// sanitize Hosts Notification
 		if ( isset( $request['host'] ) ) {
 			foreach ( $request['host'] as $key => $value ) {
 				$data['host'][ $key ]['status']   = sanitize_text_field( $value['status'] );
 				$data['host'][ $key ]['template'] = sanitize_text_field( $value['template'] );
-				$data['host'][ $key ]['form']     = sanitize_text_field( $value['form'] );
+				$data['host'][ $key ]['from']     = sanitize_text_field( $value['from'] );
 				$data['host'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['host'][ $key ]['body']     = wp_kses_post( $value['body'] );
 			}
@@ -604,7 +768,7 @@ class SettingsController {
 			foreach ( $request['attendee'] as $key => $value ) {
 				$data['attendee'][ $key ]['status']   = sanitize_text_field( $value['status'] );
 				$data['attendee'][ $key ]['template'] = sanitize_text_field( $value['template'] );
-				$data['attendee'][ $key ]['form']     = sanitize_text_field( $value['form'] );
+				$data['attendee'][ $key ]['form']     = sanitize_text_field( $value['from'] );
 				$data['attendee'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['attendee'][ $key ]['body']     = wp_kses_post( $value['body'] );
 			}
@@ -616,7 +780,7 @@ class SettingsController {
 		// woocommerce payment
 		$data = array(
 			'status'  => true,
-			'message' => 'Notification Settings Updated Successfully',
+			'message' => __( 'Notification Settings Updated Successfully','hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -648,12 +812,30 @@ class SettingsController {
 		if ( isset( $request['hosts_settings']['others_information']['enable_others_information'] ) ) {
 			$_tfhb_hosts_settings['others_information']['enable_others_information'] = sanitize_text_field( $request['hosts_settings']['others_information']['enable_others_information'] );
 			foreach ( $request['hosts_settings']['others_information']['fields'] as $key => $value ) {
+				
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['label']       = sanitize_text_field( $value['label'] );
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['type']        = sanitize_text_field( $value['type'] );
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['placeholder'] = sanitize_text_field( $value['placeholder'] );
 				// sanitize array
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['options']  = array_map( 'sanitize_text_field', $value['options'] );
 				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['required'] = sanitize_text_field( $value['required'] );
+				$_tfhb_hosts_settings['others_information']['fields'][ $key ]['enable'] = sanitize_text_field( $value['enable'] );
+
+				if(!isset($value['name']) || empty($value['name'])){
+					$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $value['label']));
+	
+					 
+					$count = count( array_filter( array_map( function($item) use ($baseName) { return $item['name'] == $baseName; }, $_tfhb_hosts_settings['others_information']['fields'] ) ) );
+					if ( $count > 0 ) {
+						$uniqueName = $baseName. '_'. substr( md5( mt_rand() ), 0, 2 );
+					} else {
+						$uniqueName = $baseName;
+					} 
+					$_tfhb_hosts_settings['others_information']['fields'][$key]['name'] = $uniqueName; 
+				}
+				// if(!isset($question['enable']) ) {
+				// 	$_tfhb_hosts_settings['others_information']['fields'][$key]['enable'] = 1;
+				// } 
 			}
 		}
 
@@ -676,7 +858,7 @@ class SettingsController {
 		// woocommerce payment
 		$data = array(
 			'status'  => true,
-			'message' => 'Hosts Settings Updated Successfully',
+			'message' => __( 'Hosts Settings Updated Successfully', 'hydra-booking' ),
 			'data'    => $_tfhb_hosts_settings,
 		);
 		return rest_ensure_response( $data );
@@ -706,7 +888,7 @@ class SettingsController {
 
 		$data = array(
 			'status'  => true,
-			'message' => 'Appearance Settings Updated Successfully',
+			'message' => __( 'Appearance Settings Updated Successfully', 'hydra-booking' ),
 			'data'    => $request,
 		);
 		return rest_ensure_response( $data );

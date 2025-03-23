@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import HbQuestion from '@/components/widgets/HbQuestion.vue';
@@ -23,17 +23,21 @@ const QuestionPopupOpen = () => {
     props.hostsSettings.others_information.fields.push({
         label: '',
         type:'',
+        name:'',
         placeholder:'',
         options: ['Option 1', 'Option 2'],
-        required: 1
+        required: 0,
+        enable: 1,
     });
     const lastIndexOfQuestion = props.hostsSettings.others_information.fields.length - 1;
     questions_data.key = lastIndexOfQuestion;
     questions_data.label = '';
+    questions_data.name = '';
     questions_data.type = '';
     questions_data.placeholder = '';
     questions_data.options = ['Option 1', 'Option 2'];
-    questions_data.required = '';
+    questions_data.required = 0;
+    questions_data.enable = 1;
     informationPopup.value = true;
 }
 
@@ -60,16 +64,21 @@ function EditExtraInformation(key){
         if (qkey === key) {
             questions_data.key = key;
             questions_data.label = question.label;
+            questions_data.name = question.name;
             questions_data.type = question.type;
             questions_data.placeholder = question.placeholder;
             questions_data.options = question.options;
             questions_data.required = question.required;
+            questions_data.enable = question.enable;
             informationPopup.value = true;
         }
     });
 }
 
- 
+// Remove removeExtraQuestion
+const removeExtraQuestion = (key) => {
+    props.hostsSettings.others_information.fields.splice(key, 1)
+}
 
 // Extra Qestion Data
 const questions_data =  reactive({});
@@ -78,31 +87,32 @@ const questions_data =  reactive({});
 
 <template>   
     <div class="tfhb-admin-title" >
-        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans['Information Builder'] }}  
+        <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Information Builder') }}  
             <HbSwitch 
                 v-model="hostsSettings.others_information.enable_others_information" 
             />
         </h2> 
-        <p>{{ $tfhb_trans['Date and Time Settings'] }}</p>
+        <p>{{ $tfhb_trans('Create and customize the information fields for your hosts') }}</p>
     </div>
     <div v-if="hostsSettings.others_information.enable_others_information "  class="tfhb-admin-card-box  tfhb-gap-24 tfhb-m-0"  >   
         <div v-if="hostsSettings.others_information.fields !=''"  class="tfhb-host-info-builder-wrap  tfhb-mb-16" >
+            
             <HbQuestion 
                 :question_value="hostsSettings.others_information.fields"
                 :skip_remove="-1"
                 @question-edit="EditExtraInformation"
-                @question-remove="props.hostsSettings.others_information.fields.splice(key, 1)"
+                @question-remove="removeExtraQuestion"
             />
         </div>
         
         <button class="tfhb-btn tfhb-flexbox tfhb-gap-8"  @click="QuestionPopupOpen()" >
             <Icon name="PlusCircle" :width="20"/>
-            {{ $tfhb_trans['Add more Information'] }}
+            {{ $tfhb_trans('Add more Information') }}
         </button>
 
         <HbPopup :isOpen="informationPopup" @modal-close="informationPopup = false" max_width="400px" name="first-modal">
             <template #header> 
-                <h3>{{ $tfhb_trans['Add Information for Hosts'] }}</h3>
+                <h3>{{ $tfhb_trans('Add Information for Hosts') }}</h3>
             </template>
 
             <template #content>  

@@ -22,7 +22,16 @@
   .table,
   .tfhb-hosts-status,
   .tfhb-badge,
-  .tfhb-integrations-single-block-icon {
+  .tfhb-empty-notice-box-wrap span,
+  .share-link,
+  .tfhb-integrations-single-block,
+  .tfhb-info-box,
+  .tfhb-header-profile-dropdown,
+  .tfhb-header-notification,
+  .tfhb-host-profile-image-wrap, 
+  .tfhb-host-profile-image-wrap span, 
+  .tfhb-integrations-single-block-icon,
+  .tfhb-info-box-desc {
     border: none !important;
     display: block;
     position: relative;
@@ -51,11 +60,14 @@
       width: 100%;
       content: '';
       z-index: 3;
-      border-radius: 4px;
+      border-radius: $border-radius-small;
     }
-  } 
-  .table{
-    button, a{
+  }
+
+  .table {
+
+    button,
+    a {
       &::before {
         display: none;
       }

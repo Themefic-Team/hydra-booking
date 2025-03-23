@@ -15,7 +15,7 @@ const importExport = reactive({
     }, 
     async GetImportExportData() { 
         try {  
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/import-export', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export', {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -39,7 +39,7 @@ const importExport = reactive({
     // export Booking Data
     async exportBooking() { 
         try {  
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/import-export/export-meeting-csv', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-meeting-csv', {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce
                 } 
@@ -105,7 +105,7 @@ const importExport = reactive({
     // Run The booking import
     async importBooking() { 
         try {  
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/import-export/import-booking', {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-booking', {
                 data: this.booking.import_data,
                 column: this.booking.rearrange_column
             }, {

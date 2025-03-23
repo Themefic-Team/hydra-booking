@@ -26,8 +26,8 @@ class BookingMeta {
                 booking_id INT(11) NULL,  
                 meta_key VARCHAR(255) NULL,  
                 value LONGTEXT NULL,
-                created_at DATE NULL,
-                updated_at DATE NULL, 
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)
             ) $charset_collate";
 
@@ -50,6 +50,13 @@ class BookingMeta {
 
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->table;
+
+		if($request['booking_id'] == null) {
+			return false;
+		}
+		if($request['value'] && is_array($request['value'])) {
+			$request['value'] = json_encode($request['value']);
+		}
 
 		// insert availability
 		$result = $wpdb->insert(
@@ -77,6 +84,10 @@ class BookingMeta {
 
 		$id = $request['id'];
 		unset( $request['id'] );
+
+		if($request['value'] && is_array($request['value'])) {
+			$request['value'] = json_encode($request['value']);
+		}
 		// Update availability
 		$result = $wpdb->update(
 			$table_name,
@@ -95,10 +106,82 @@ class BookingMeta {
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $where = null, $filterData = '' ) {
+	public function get( $id ) {
 
 		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE id = %d", $id)
+		);
+
+		return $data;
+ 
 	}
+
+	/**
+	 * getWithIdKey
+	 */
+	public function getWithIdKey($id, $key, $limit = null) { 
+
+		// example 
+	 
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		if($limit > 1) { 
+			$data = $wpdb->get_results(
+				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s  LIMIT %d", $id, $key, $limit)
+			);
+		} else {
+			if($limit == 1) {
+				$data = $wpdb->get_row(
+					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s ORDER BY id DESC", $id, $key)
+				);
+			} else {
+				$data = $wpdb->get_results(
+					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s ORDER BY id DESC", $id, $key)
+				);
+			} 
+		} 
+
+		return $data;
+	}
+
+	/**
+	 * fet first data of multiple ids 
+	 * 
+	 */
+	public function getFirstDataOfMultipleIds($ids, $key) {
+		global $wpdb;
+ 
+		
+		$table_name = $wpdb->prefix . $this->table;
+
+		// Prepare placeholders for each ID in the IN clause
+		$placeholders = implode(',', array_fill(0, count($ids), '%d'));
+	
+		// Construct the SQL query with placeholders
+		$sql = "SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id IN ($placeholders) AND meta_key = %s";
+	
+		// Merge $ids and $key into a single array of arguments
+		$params = array_merge($ids, [$key]);
+	
+		// Use call_user_func_array to dynamically apply $params to $wpdb->prepare
+		$query = call_user_func_array([$wpdb, 'prepare'], array_merge([$sql], $params));
+	
+		// Fetch the first matching row
+		$data = $wpdb->get_row($query); 
+		if($data) {
+			return $data;
+		} else {
+			return false;
+		}
+	}
+	
 
 		/**
 		 * Get all  availability Data.
@@ -139,5 +222,20 @@ class BookingMeta {
 	// delete
 	public function delete( $id ) {
 		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$result = $wpdb->delete(
+			$table_name,
+			array( 'id' => $id )
+		);
+
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status' => true,
+			);
+		}
 	}
 }

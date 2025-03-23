@@ -3,7 +3,10 @@ namespace HydraBooking\Hooks;
 
 // Use
 use HydraBooking\DB\Meeting;
+use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
+use HydraBooking\DB\BookingMeta;
+use HydraBooking\Admin\Controller\DateTimeController;
 
 
 class MailHooks {
@@ -11,10 +14,25 @@ class MailHooks {
 	// Pending
 	// Re-schedule
 	// Canceled
+ 
 	public function __construct() {
-		add_action( 'hydra_booking/after_booking_completed', array( $this, 'pushBookingToCompleted' ), 10, 1 );
-		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 10, 1 );
-		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 10, 1 );
+		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 ); 
+		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 1 );
+		add_action( 'hydra_booking/send_booking_reminder', array( $this, 'send_booking_reminder' ), 20, 1 );
+
+		// Send Mail Booking with All attendees
+		add_action( 'hydra_booking/send_booking_with_all_attendees_confirmed', array( $this, 'send_booking_with_all_attendees_confirmed' ), 10, 1 );
+
+		// Send Mail Booking with All attendees Pending
+		add_action( 'hydra_booking/send_booking_with_all_attendees_pending', array( $this, 'send_booking_with_all_attendees_pending' ), 10, 1 );
+
+		// Send Mail Booking with All attendees Canceled
+		add_action( 'hydra_booking/send_booking_with_all_attendees_canceled', array( $this, 'send_booking_with_all_attendees_canceled' ), 10, 1 );
+
+		// Send Mail Booking with All attendees Schedule
+		add_action( 'hydra_booking/send_booking_with_all_attendees_schedule', array( $this, 'send_booking_with_all_attendees_schedule' ), 10, 1 );
 	}
 
 	// Get Meeting Data
@@ -27,32 +45,147 @@ class MailHooks {
 	// Get Host Data
 	public function getHostData( $host_id ) {
 		$host      = new Host();
-		$host_data = $host->get( $host_id );
+		$host_data = $host->getHostById(  $host_id );
 		return $host_data;
 	}
 
 	// If booking Status is Complted
-	public function pushBookingToCompleted( $booking ) {
-
-		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+	public function pushBookingToConfirmed( $attendees ) {
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
-		$hostData                    = $this->getHostData( $booking->host_id );
-
+		$hostData                    = $this->getHostData( $attendees->host_id );  
+		
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
 			// Host Confirmation Email, If Settings Enable for Host Confirmation
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['status'] ) ) {
+				
+				
 				// From Email
 				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['form'] : get_option( 'admin_email' );
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['subject'] : 'Booking Confirmation';
 
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+				
+				
 				// Setting Body
-				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['body'] : '';
+				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['body'] : ''; 
+
+				
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
+			
+				// Result after Shortcode replce
+				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+				// tfhb_print_r($body);
+				// Host Email
+				$mailto = ! empty( $hostData->email ) ? $hostData->email : '';
+
+				$headers = array(
+					'Reply-To: ' . $replyTo,
+				);
+
+				
+				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'), 
+							'title' => 'Confirmation Email Sent', // translate it from Vue
+							'description' => 'Confirmation Email Sent to Host',  // translate it from Vue
+						)
+					]
+				);
+			}
+
+			// Attendee Confirmation Email, If Settings Enable for Attendee Confirmation
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['status'] ) ) {
+				
+				
+				// From Email
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] : get_option( 'admin_email' );
+
+				// Email Subject
+				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] : 'Booking Confirmation';
 
 				// Replace Shortcode to Values
-				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+				
+				
+				// Setting Body
+				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] : ''; 
+
+				
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
+			
+				// Result after Shortcode replce
+				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+				// tfhb_print_r($body);
+				// Host Email
+				$mailto = ! empty( $attendees->email ) ? $attendees->email : '';
+
+				$headers = array(
+					'Reply-To: ' . $replyTo,
+				);
+
+				
+				Mailer::send( $mailto, $subject, $body, $headers );
+
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'), 
+							'title' =>  'Confirmation Email Sent', // translate it from Vue
+							'description' => 'Confirmation Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
+			}
+		}
+	}
+
+
+	// If booking Status is Pending
+	public function pushBookingToPending( $attendees ) {
+
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $attendees->host_id );  
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+
+			// Host Pending Email, If Settings Enable for Host Pending
+			if ( ! empty( $_tfhb_notification_settings['host']['booking_pending']['status'] ) ) {
+				
+				// From Email
+				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_pending']['form'] ) ? $_tfhb_notification_settings['host']['booking_pending']['form'] : get_option( 'admin_email' );
+
+				// Email Subject
+				$subject = ! empty( $_tfhb_notification_settings['host']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['host']['booking_pending']['subject'] : 'Booking Pending';
+
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+				
+				// Setting Body
+				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_pending']['body'] ) ? $_tfhb_notification_settings['host']['booking_pending']['body'] : '';
+
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
@@ -65,45 +198,75 @@ class MailHooks {
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),  
+							'title' => 'Pending Email Sent', // translate it from Vue
+							'description' => 'Pending Email Sent to Host', // translate it from Vue
+						)
+					]
+				);
 			}
 
-			// Attendee Confirmation Email, If Settings Enable for Attendee Confirmation
-			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['status'] ) ) {
+			// Attendee Pending Email, If Settings Enable for Attendee Pending
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['status'] ) ) {
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['form'] : get_option( 'admin_email' );
 
 				// Email Subject
-				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] : 'Booking Confirmation';
-
-				// Setting Body
-				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] : '';
+				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['subject'] : 'Booking Pending';
 
 				// Replace Shortcode to Values
-				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+
+
+				// Setting Body
+				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['body'] : '';
+
+				// Replace Shortcode to Values
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
 
 				// Attendee Email
-				$mailto = ! empty( $booking->email ) ? $booking->email : '';
+				$mailto = ! empty( $attendees->email ) ? $attendees->email : '';
 
 				$headers = array(
 					'Reply-To: ' . $replyTo,
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),   
+							'title' => 'Pending Email Sent', // translate it from Vue
+							'description' => 'Pending Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
 			}
 		}
 	}
 
 	// If booking Status is Cancel
-	public function pushBookingToCanceled( $booking ) {
-
-		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+	public function pushBookingToCanceled( $attendees ) {
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
-		$hostData                    = $this->getHostData( $booking->host_id );
+		$hostData                    = $this->getHostData( $attendees->host_id );
 
-		// tfhb_print_r($hostData);
+		
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
 			// Host Canceled Email, If Settings Enable for Host Canceled
@@ -115,11 +278,14 @@ class MailHooks {
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['host']['booking_cancel']['subject'] : 'Booking Canceled';
 
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_cancel']['body'] ) ? $_tfhb_notification_settings['host']['booking_cancel']['body'] : '';
 
 				// Replace Shortcode to Values
-				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
@@ -131,6 +297,19 @@ class MailHooks {
 					'Reply-To: ' . $replyTo,
 				);
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),    
+							'title' => 'Canceled Email Sent', // translate it from Vue
+							'description' => 'Canceled Email Sent to Host', // translate it from Vue
+						)
+					]
+				);
 			}
 
 			// Attendee Canceled Email, If Settings Enable for Attendee Canceled
@@ -141,33 +320,49 @@ class MailHooks {
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] : 'Booking Canceled';
 
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['body'] : '';
 
 				// Replace Shortcode to Values
-				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
 
 				// Attendee Email
-				$mailto = ! empty( $booking->email ) ? $booking->email : '';
+				$mailto = ! empty( $attendees->email ) ? $attendees->email : '';
 
 				$headers = array(
 					'Reply-To: ' . $replyTo,
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							 
+							'datetime' => date('M d, Y, h:i A'),
+							'title' => 'Canceled Email Sent', // translate it from Vue
+							'description' => 'Canceled Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
 			}
 		}
 	}
 
 	// If booking Status is ReSchedule
-	public function pushBookingToscheduled( $booking ) {
-
-		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+	public function pushBookingToscheduled( $attendees ) {
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
-		$hostData                    = $this->getHostData( $booking->host_id );
+		$hostData                    = $this->getHostData( $attendees->host_id );
 
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 
@@ -175,15 +370,19 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['status'] ) ) {
 				// From Email
 				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['form'] : get_option( 'admin_email' );
-
+ 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['subject'] : 'Booking ReSchedule';
+				
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+
 
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['body'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['body'] : '';
 
 				// Replace Shortcode to Values
-				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
@@ -196,6 +395,18 @@ class MailHooks {
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),
+							'title' => 'ReSchedule Email Sent', // translate it from Vue
+							'description' => 'ReSchedule Email Sent to Host', // translate it from Vue
+						)
+					]
+				);
 			}
 
 			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
@@ -206,23 +417,331 @@ class MailHooks {
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] : 'Booking ReSchedule';
 
+				// Replace Shortcode to Values
+				$subject = $this->replace_mail_tags( $subject, $attendees->id );
+
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] : '';
 
 				// Replace Shortcode to Values
-				$finalbody = $this->replace_mail_tags( $mailbody, $booking->id );
+				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
 
 				// Attendee Email
-				$mailto = ! empty( $booking->email ) ? $booking->email : '';
+				$mailto = ! empty( $attendees->email ) ? $attendees->email : '';
 
 				$headers = array(
 					'Reply-To: ' . $replyTo,
 				);
 
 				Mailer::send( $mailto, $subject, $body, $headers );
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $attendees->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),
+							'title' => 'ReSchedule Email Sent', // translate it from Vue
+							'description' => 'ReSchedule Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
+			}
+		}
+	}
+
+
+		// If booking Status is ReSchedule
+	public function send_booking_reminder( $booking ) {
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $booking->host_id );
+
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+			$attendees = $booking->attendees;
+	 
+			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['status'] ) ) {
+				foreach($attendees as $key => $attendee_data){
+					// From Email
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['form'] : get_option( 'admin_email' );
+
+					// Email Subject
+					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['subject'] : 'Booking ReSchedule';
+
+					// Replace Shortcode to Values
+					$subject = $this->replace_mail_tags( $subject, $attendee_data->id );
+
+					// Setting Body
+					$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['body'] : '';
+
+					// Replace Shortcode to Values
+					$finalbody = $this->replace_mail_tags( $mailbody, $attendee_data->id );
+
+					// Result after Shortcode replce
+					$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+					// Attendee Email
+					$mailto = ! empty( $attendee_data->email ) ? $attendee_data->email : ''; 
+					$headers = array(
+						'Reply-To: ' . $replyTo,
+					);
+
+					Mailer::send( $mailto, $subject, $body, $headers );
+
+						// Add activity after email sent
+					$bookingMeta->add([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'), 
+								'title' => 'Reminder Email Sent', // translate it from Vue
+								'description' => 'Reminder Email Sent to Attendee', // translate it from Vue
+							)
+						]
+					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Send Mail Booking with All attendees
+	 */
+	public function send_booking_with_all_attendees_confirmed( $booking ) { 
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $booking->host_id );
+		 
+		$attendees = $booking->attendees;
+ 
+		if ( ! empty( $_tfhb_notification_settings ) ) { 
+			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['status'] ) ) {
+				foreach($attendees as $key => $attendee_data){
+					// From Email
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] : get_option( 'admin_email' );
+
+					// Email Subject
+					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] : 'Booking ReSchedule';
+
+					// Replace Shortcode to Values
+					$subject = $this->replace_mail_tags( $subject, $attendee_data->id );
+
+					// Setting Body
+					$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['body'] : '';
+
+					// Replace Shortcode to Values
+					$finalbody = $this->replace_mail_tags( $mailbody, $attendee_data->id );
+
+					// Result after Shortcode replce
+					$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+					// Attendee Email
+					$mailto = ! empty( $attendee_data->email ) ? $attendee_data->email : ''; 
+					$headers = array(
+						'Reply-To: ' . $replyTo,
+					);
+ 
+					Mailer::send( $mailto, $subject, $body, $headers );
+
+					
+				}
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $booking->id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),  
+							'title' => 'Booking Has Been Confirmed', // translate it from Vue
+							'description' => 'Confirmation Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
+			}
+		}
+	}
+	/**
+	 * Send Mail Booking with All attendees Pending
+	 */
+	public function send_booking_with_all_attendees_pending( $booking ) {
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $booking->host_id );
+		 
+		$attendees = $booking->attendees; 
+
+		if ( ! empty( $_tfhb_notification_settings ) ) { 
+			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['status'] ) ) {
+				foreach($attendees as $key => $attendee_data){
+					// From Email
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['form'] : get_option( 'admin_email' );
+
+					// Email Subject
+					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['subject'] : 'Booking ReSchedule';
+
+					// Replace Shortcode to Values
+					$subject = $this->replace_mail_tags( $subject, $attendee_data->id );
+
+					// Setting Body
+					$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['body'] : '';
+
+					// Replace Shortcode to Values
+					$finalbody = $this->replace_mail_tags( $mailbody, $attendee_data->id );
+
+					// Result after Shortcode replce
+					$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+					// Attendee Email
+					$mailto = ! empty( $attendee_data->email ) ? $attendee_data->email : ''; 
+					$headers = array(
+						'Reply-To: ' . $replyTo,
+					);
+ 
+					Mailer::send( $mailto, $subject, $body, $headers );
+
+				
+				}
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $booking->id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),   
+							'title' => 'Booking Has Been Pending', // translate it from Vue
+							'description' => 'Pending Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
+			
+			}
+		}
+	}
+	/**
+	 * Send Mail Booking with All attendees Canceled
+	 */
+	public function send_booking_with_all_attendees_canceled( $booking ) {
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $booking->host_id );
+		 
+		$attendees = $booking->attendees;
+ 
+		if ( ! empty( $_tfhb_notification_settings ) ) { 
+			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['status'] ) ) {
+				foreach($attendees as $key => $attendee_data){
+					// From Email
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['form'] : get_option( 'admin_email' );
+
+					// Email Subject
+					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] : 'Booking ReSchedule';
+
+					// Replace Shortcode to Values
+					$subject = $this->replace_mail_tags( $subject, $attendee_data->id );
+
+					// Setting Body
+					$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['body'] : '';
+
+					// Replace Shortcode to Values
+					$finalbody = $this->replace_mail_tags( $mailbody, $attendee_data->id );
+
+					// Result after Shortcode replce
+					$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+					// Attendee Email
+					$mailto = ! empty( $attendee_data->email ) ? $attendee_data->email : ''; 
+					$headers = array(
+						'Reply-To: ' . $replyTo,
+					);
+ 
+					Mailer::send( $mailto, $subject, $body, $headers );
+
+					
+				}
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $booking->id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),    
+							'title' => 'Booking Has Been Canceled', // translate it from Vue
+							'description' => 'Canceled Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
+				
+			}
+		}
+	}
+
+	/**
+	 * Send Mail Booking with All attendees Schedule
+	 */
+	public function send_booking_with_all_attendees_schedule( $booking ) {
+		$bookingMeta                 = new BookingMeta();
+		$Meeting_meta                = $this->getMeetingData( $booking->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+		$hostData                    = $this->getHostData( $booking->host_id );
+		 
+		$attendees = $booking->attendees;
+
+		// tfhb_print_r($attendees);
+
+		if ( ! empty( $_tfhb_notification_settings ) ) { 
+			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
+			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['status'] ) ) {
+				foreach($attendees as $key => $attendee_data){
+					// From Email
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] : get_option( 'admin_email' );
+
+					// Email Subject
+					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] : 'Booking ReSchedule';
+
+					// Replace Shortcode to Values
+					$subject = $this->replace_mail_tags( $subject, $attendee_data->id );
+
+					// Setting Body
+					$mailbody = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['body'] : '';
+
+					// Replace Shortcode to Values
+					$finalbody = $this->replace_mail_tags( $mailbody, $attendee_data->id );
+
+					// Result after Shortcode replce
+					$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
+
+					// Attendee Email
+					$mailto = ! empty( $attendee_data->email ) ? $attendee_data->email : ''; 
+					$headers = array(
+						'Reply-To: ' . $replyTo,
+					);
+ 
+					Mailer::send( $mailto, $subject, $body, $headers );
+
+					
+				}
+
+				// Add activity after email sent
+				$bookingMeta->add([
+					'booking_id' => $booking->id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),     
+							'title' => 'Booking Has Been Rescheduled', // translate it from Vue
+							'description' => 'ReSchedule Email Sent to Attendee', // translate it from Vue
+						)
+					]
+				);
+				
 			}
 		}
 	}
@@ -248,34 +767,19 @@ class MailHooks {
 	/**
 	 * Replace all available mail tags
 	 */
-	public function replace_mail_tags( $template, $booking_id ) {
-
-		global $wpdb;
-		$tfhb_booking_table = $wpdb->prefix . 'tfhb_bookings';
-		$meeting_table      = $wpdb->prefix . 'tfhb_meetings';
-		$host_table         = $wpdb->prefix . 'tfhb_hosts';
-
-		$sql          = "
-            SELECT $tfhb_booking_table.attendee_name, 
-            $tfhb_booking_table.email AS attendee_email,
-            $tfhb_booking_table.meeting_dates,
-            $tfhb_booking_table.start_time,
-            $tfhb_booking_table.end_time,
-            $tfhb_booking_table.duration AS meeting_duration,
-            $host_table.email AS host_email,
-            $host_table.first_name AS host_first_name,
-            $host_table.last_name AS host_last_name,
-            $meeting_table.title AS meeting_title,
-            $meeting_table.meeting_locations AS meeting_location
-            FROM $tfhb_booking_table
-            INNER JOIN $host_table ON $tfhb_booking_table.host_id = $host_table.id
-            INNER JOIN $meeting_table ON $tfhb_booking_table.meeting_id = $meeting_table.id
-            WHERE $tfhb_booking_table.id = %d
-        ";
-		$booking_data = $wpdb->get_row( $wpdb->prepare( $sql, $booking_id ) );
-
+	public function replace_mail_tags( $template, $attendee_id ) {
+		
+		$Attendee = new Attendees();
+		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+			array(
+				array('id', '=',$attendee_id),
+			),
+			1,
+			'DESC'
+		); 
+		 
 		// Meeting Location Check
-		$meeting_locations = json_decode( $booking_data->meeting_location );
+		$meeting_locations = json_decode( $attendeeBooking->meeting_location );
 		$locations         = array();
 		if ( is_array( $meeting_locations ) ) {
 			foreach ( $meeting_locations as $location ) {
@@ -284,22 +788,87 @@ class MailHooks {
 				}
 			}
 		}
+		// 
 
 		$replacements = array(
-			'{{meeting.title}}'    => ! empty( $booking_data->meeting_title ) ? $booking_data->meeting_title : '',
-			'{{meeting.date}}'     => ! empty( $booking_data->meeting_dates ) ? $booking_data->meeting_dates : '',
+			'{{meeting.title}}'    => ! empty( $attendeeBooking->meeting_title ) ? $attendeeBooking->meeting_title : '',
+			'{{meeting.date}}'     => ! empty( $attendeeBooking->meeting_dates ) ? $attendeeBooking->meeting_dates : '',
 			'{{meeting.location}}' => implode( ', ', $locations ),
-			'{{meeting.duration}}' => $booking_data->meeting_duration,
-			'{{meeting.time}}'     => $booking_data->start_time . '-' . $booking_data->end_time,
-			'{{host.name}}'        => $booking_data->host_first_name . ' ' . $booking_data->host_last_name,
-			'{{host.email}}'       => ! empty( $booking_data->host_email ) ? $booking_data->host_email : '',
-			'{{attendee.name}}'    => ! empty( $booking_data->attendee_name ) ? $booking_data->attendee_name : '',
-			'{{attendee.email}}'   => ! empty( $booking_data->attendee_email ) ? $booking_data->attendee_email : '',
+			'{{meeting.duration}}' => $attendeeBooking->meeting_duration,
+			'{{meeting.time}}'     => $attendeeBooking->start_time . '-' . $attendeeBooking->end_time,
+			'{{host.name}}'        => $attendeeBooking->host_first_name . ' ' . $attendeeBooking->host_last_name,
+			'{{host.email}}'       => ! empty( $attendeeBooking->host_email ) ? $attendeeBooking->host_email : '',
+			'{{attendee.name}}'    => ! empty( $attendeeBooking->attendee_name ) ? $attendeeBooking->attendee_name : '',
+			'{{attendee.email}}'   => ! empty( $attendeeBooking->attendee_email ) ? $attendeeBooking->attendee_email : '', 
+
 		);
+		
+		// Additional Data
+		if( !empty($attendeeBooking->others_info) && $attendeeBooking->others_info != NULL ){
+			$additional_data = json_decode($attendeeBooking->others_info);
+			$others_info_html = '<ul>';
+			foreach ($additional_data as $key => $value) {
+				$others_info_html .= '<li>'.$key.' : '.$value.'</li>'; 
+			}
+			$others_info_html .= '</ul>';
+			$replacements['{{attendee.additional_data}}'] = $others_info_html;
+		}
+		 
+		// reason
+		if( !empty($attendeeBooking->reason) && $attendeeBooking->reason != NULL ){
+			$replacements['{{booking.cancel_reason}}'] = $attendeeBooking->reason;
+			$replacements['{{booking.rescheduled_reason}}'] = $attendeeBooking->reason;
+		}
+		
+		
+		if($attendeeBooking->attendee_can_cancel == 1){ 
+		
+			$cancel_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id  . '&type=cancel' );
+			$replacements['{{booking.cancel_link}}'] = $cancel_link;
+		}
+		if( $attendeeBooking->attendee_can_cancel == 1){ 
+			$rescheduled_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id . '&type=reschedule' );
+			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
+		}
+		// Full start end time with timezone for attendee 
+		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
+		$replacements['{{booking.start_date_time_for_attendee}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
+		
+	
+		// Full start end time with timezone for host
+		$dateTime = new DateTimeController( 'UTC' );
+		$metting_dates = explode(',', $attendeeBooking->meeting_dates);
+		if($attendeeBooking->host_time_zone != ''){
+			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->host_time_zone,  $metting_dates[0], 'full' );  
+			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
 
+			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->host_time_zone,  $metting_dates[0], 'start' );
+			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
+		}else{
+			$replacements['{{booking.full_start_end_host_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
+
+			$replacements['{{booking.start_date_time_for_host}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
+		}
+ 
+		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
+			$booking_locations = json_decode($attendeeBooking->meeting_locations); 
+			
+			$booking_locations_html = '<ul>';
+			foreach ($booking_locations as $key => $value) { 
+				if($key == 'zoom'){
+					$link = $value->address->link;
+					$password = $value->address->password;  
+					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'</li>';
+				}else{
+
+					$booking_locations_html .= '<li> <b>'.$value->location.' :</b> '.$value->address.'</li>'; 
+				}
+			}
+			$booking_locations_html .= '</ul>';
+			$replacements['{{booking.location_details_html}}'] = $booking_locations_html;
+		}  
 		$tags   = array_keys( $replacements );
-		$values = array_values( $replacements );
-
+		$values = array_values( $replacements ); 
 		return str_replace( $tags, $values, $template );
 	}
 }

@@ -28,6 +28,11 @@ const Dashboard = reactive({
             percentage: 100,
             growth: 'increase',
         },
+        total_earning: {
+            total: 0,
+            percentage: 100,
+            growth: 'increase',
+        },
         upcoming_booking: {}, 
         recent_booking: {}, 
         statistics: {
@@ -48,7 +53,7 @@ const Dashboard = reactive({
     async fetcDashboard() { 
 
         try {  
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/dashboard', this.data_request,  {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/dashboard', this.data_request,  {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -57,6 +62,7 @@ const Dashboard = reactive({
     
             if (response.data.status) {  
                 this.data.total_bookings =  response.data.total_bookings != null ? response.data.total_bookings : 0;
+                this.data.total_earning =  response.data.total_earning != null ? response.data.total_earning : 0;
                 this.data.total_completed_bookings =  response.data.total_completed_bookings != null ? response.data.total_completed_bookings : 0;
                 this.data.total_cancelled_bookings =  response.data.total_cancelled_bookings != null ? response.data.total_cancelled_bookings : 0;
                 this.data.upcoming_booking =  response.data.upcoming_booking != null ? response.data.upcoming_booking : {};
@@ -76,7 +82,7 @@ const Dashboard = reactive({
     async fetcDashboardStatistics() { 
 
         try {  
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/dashboard/statistics', this.data_request,  {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/dashboard/statistics', this.data_request,  {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -112,9 +118,9 @@ const Dashboard = reactive({
                     data: this.data.statistics.total_booked,
                     fill: true,
                     tension: 0.4,
-                    borderColor: '#F62881', 
-                    pointBackgroundColor: '#F62881', 
-                    backgroundColor: '#D9568F15'
+                    borderColor: '#2E6B38', 
+                    pointBackgroundColor: '#2E6B38', 
+                    backgroundColor: '#2E6B3815'
                 },
                 {
                     label: 'Canceled',
@@ -122,18 +128,20 @@ const Dashboard = reactive({
                     fill: true,
                     // borderDash: [5, 5],
                     tension: 0.4,
-                    borderColor: '#C40859',
-                    pointBackgroundColor: '#C40859', 
-                    backgroundColor: '#C4085915'
+                    borderColor: '#AC0C22',
+                    pointBackgroundColor: '#AC0C22', 
+                    backgroundColor: '#AC0C2215'
                 },
                 {
                     label: 'Completed',
                     data: this.data.statistics.total_completed,
                     fill: true,
-                    borderColor: '#5E082D',
-                    pointBackgroundColor: '#5E082D', 
+                    borderColor: '#4C9959',
+                    pointBackgroundColor: '#4C9959', 
                     tension: 0.4,
-                    backgroundColor: '#5E082D15'
+                    backgroundColor: '#4C995915', 
+                    // Pointer height and width
+
                 }
             ]
         };

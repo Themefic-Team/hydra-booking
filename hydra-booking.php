@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Hydra Booking
- * Plugin URI: https://themefic.com/hydra-booking
- * Description: Create a booking / Appointment Form using Contact Form 7. You can insert Calendar, Time on the form and manage your booking. User can pay using WooCommerce.
- * Version: 1.0.0
+ * Plugin Name: Hydra Booking - All in One Appointment Booking System with Automated Appointment Scheduling.
+ * Plugin URI: https://hydrabooking.com/
+ * Description: Appointment Booking Plugin with Automated Scheduling - Apple/Outlook/ Google Calendar, WooCommerce, Zoom, Fluent Forms, Zapier, Mailchimp & CRM Integration.
+ * Version: 1.1.0
  * Author: Themefic
  * Author URI: https://themefic.com/
  * License: GPL-2.0+
@@ -16,61 +16,71 @@
 defined( 'ABSPATH' ) || exit;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
+use HydraBooking\Admin\Controller\Enqueue;
 class THB_INIT {
 	// CONSTARACT
 	public function __construct() {
 		// DEFINE PATH
-		define( 'THB_PATH', plugin_dir_path( __FILE__ ) );
-		define( 'THB_URL', plugin_dir_url( __FILE__ ) );
-		define( 'THB_VERSION', '1.0.0' );
+    
+		define( 'TFHB_PATH', plugin_dir_path( __FILE__ ) );
+		define( 'TFHB_URL', plugin_dir_url( __FILE__ ) );
+
+		define( 'TFHB_VERSION', '1.1.0' );
+		define( 'TFHB_BASE_FILE', __FILE__);
+
 
 		// Load Vendor Auto Load
-		if ( file_exists( THB_PATH . '/vendor/autoload.php' ) ) {
+		if ( file_exists( TFHB_PATH . '/vendor/autoload.php' ) ) {
 
-			require_once THB_PATH . '/vendor/autoload.php';
+			require_once TFHB_PATH . '/vendor/autoload.php';
 		}
 
 		// Helper Function
 		// Load Vendor Auto Load
-		if ( file_exists( THB_PATH . '/includes/helper/helper-functions.php' ) ) {
+		if ( file_exists( TFHB_PATH . '/includes/Includes.php' ) ) {
 
-			require_once THB_PATH . '/includes/helper/helper-functions.php';
+			require_once TFHB_PATH . '/includes/Includes.php';
 		}
+		
 
-		// Activation Hooks
-		new HydraBooking\Hooks\ActivationHooks();
-
-		// Deactivation Hooks
-		new HydraBooking\Hooks\DeactivationHooks();
-
-		// Mail Hooks
-		new HydraBooking\Hooks\MailHooks();
-
-		// Web Hooks
-		new HydraBooking\Services\Integrations\WebHook\WebHook();
-
-		// Integrations
-		new HydraBooking\Services\Integrations\MailChimp\MailChimp();
-		new HydraBooking\Services\Integrations\Zoho\Zoho();
-		new HydraBooking\Services\Integrations\FluentCRM\FluentCRM();
-
+	
 		add_action( 'init', array( $this, 'init' ) ); 
-		add_filter( 'authenticate', array( new HydraBooking\Admin\Controller\AuthController(), 'tfhb_restrict_unverified_user' ), 10, 3 );
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'tfhb_enqueue_scripts' ) );
+
+
+		
+		add_action('plugins_loaded', array($this, 'tfhb_load_textdomain'));
+ 
 	}
 
 
+	function tfhb_load_textdomain() {
+		load_plugin_textdomain('hydra-booking', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+	}
+
+ 
+
+
 	public function init() {
+
+		
+		//Register text domain
+		load_plugin_textdomain( 'hydra-booking', false, basename( dirname( __FILE__ ) ) . '/languages' );
+
+		// Load Appsero Tracker
+		$this->tfhb_appsero_init_tracker_hydra_booking();
+
 		new HydraBooking\Admin\Controller\ScheduleController();
 
 		// Post Type
 		new HydraBooking\PostType\Meeting\Meeting_CPT();
 		new HydraBooking\PostType\Booking\Booking_CPT();
 
-		// Create a New host Role
-		new HydraBooking\Admin\Controller\RouteController();
+		// enqueue
+		new Enqueue();
 
+		// Create a New host Role
+		new HydraBooking\Admin\Controller\RouteController(); 
 		if ( is_admin() ) {
 			// Load Admin Class
 			new HydraBooking\Admin\Admin();
@@ -96,43 +106,27 @@ class THB_INIT {
 		remove_all_actions( 'admin_notices' );
 	}
 
-	public function tfhb_enqueue_scripts() {
-		wp_enqueue_style( 'tfhb-style', THB_URL . 'assets/app/css/style.css', '', THB_VERSION );
-		wp_register_style( 'tfhb-select2-style', THB_URL . 'assets/app/css/select2.min.css', array(), THB_VERSION );
 
-		// Global General Settings
-		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
+	/**
+	 * Initialize the plugin tracker
+	 *
+	 * @return void
+	 */
+	function tfhb_appsero_init_tracker_hydra_booking() {
 
-		$_tfhb_appearance_settings = get_option( '_tfhb_appearance_settings' );
-		// var_dump($_tfhb_appearance_settings);
-		$tfhb_primary_color   = ! empty( $_tfhb_appearance_settings['primary_color'] ) ? $_tfhb_appearance_settings['primary_color'] : '#F62881';
-		$tfhb_secondary_color = ! empty( $_tfhb_appearance_settings['secondary_color'] ) ? $_tfhb_appearance_settings['secondary_color'] : '#3F2731';
-		$tfhb_paragraph_color = ! empty( $_tfhb_appearance_settings['paragraph_color'] ) ? $_tfhb_appearance_settings['paragraph_color'] : '#765664';
-		$tfhb_theme_css       = "
-        :root {
-            --tfhb-primary-color: $tfhb_primary_color;
-            --tfhb-secondary-color: $tfhb_secondary_color;
-            --tfhb-paragraph-color: $tfhb_paragraph_color;
-          }
-        ";
-		wp_add_inline_style( 'tfhb-style', $tfhb_theme_css );
+		if ( ! class_exists( 'Appsero\Client' ) ) {
+			require_once __DIR__ . '/appsero/src/Client.php';
+		}
 
-		// register script
-		wp_enqueue_script( 'stripe', '//checkout.stripe.com/checkout.js', array( 'jquery' ), '1.0.0', true );
-		wp_enqueue_script( 'paypal', '//paypalobjects.com/api/checkout.js', array( 'jquery' ), '1.0.0', true );
-		wp_register_script( 'tfhb-select2-script', THB_URL . 'assets/app/js/select2.min.js', array( 'jquery', 'tfhb-app-script' ), THB_VERSION, true );
-		wp_register_script( 'tfhb-app-script', THB_URL . 'assets/app/js/main.js', array( 'jquery' ), THB_VERSION, true );
+		$client = new Appsero\Client( '685ed86d-9a98-46e2-9f07-79206f5fd69b', 'Hydra Booking &#8211; All-in-One Appointment Management Solution', __FILE__ );
+		$notice = sprintf( $client->__trans( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information. I agree to get Important Product Updates & Discount related information on my email from  %1$s (I can unsubscribe anytime).' ), $client->name );
+		$client->insights()->notice( $notice );
+		// Active insights
+		$client->insights()->init();
 
-		wp_localize_script(
-			'tfhb-app-script',
-			'tfhb_app_booking',
-			array(
-				'ajax_url'         => admin_url( 'admin-ajax.php' ),
-				'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
-				'general_settings' => $general_settings,
-			)
-		);
 	}
+
+
 }
 
 

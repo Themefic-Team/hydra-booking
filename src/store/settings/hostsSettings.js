@@ -4,6 +4,7 @@ import { toast } from "vue3-toastify";
 
 const hostsSettings = reactive({
     skeleton: true,
+    update_preloader: false,
     settings: {
         others_information: {
             enable_others_information: false, 
@@ -23,7 +24,7 @@ const hostsSettings = reactive({
     async fetchHostsSettings() { 
 
         try {  
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/hosts-settings', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/hosts-settings', {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -48,9 +49,9 @@ const hostsSettings = reactive({
         }  
     },
     async updateHostsSettings() { 
-
+        this.update_preloader = true;
         try {  
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/hosts-settings/update', {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/hosts-settings/update', {
                 hosts_settings: this.settings
             }, {
                 headers: {
@@ -60,11 +61,16 @@ const hostsSettings = reactive({
             } );
     
             if (response.data.status) {   
-                toast.success(response.data.message);
+                
+                // responsed message bottom
+                toast.success(response.data.message, {
+                    position: "bottom-right",
+                });
+                this.update_preloader = false;
             }
         } catch (error) {
-
             console.log(error);
+            this.update_preloader = false;
 
         }  
     },

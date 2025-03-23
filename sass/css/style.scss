@@ -1,0 +1,1459 @@
+.tfhb-meeting-box,
+.tfhb-booking-cencel {
+    input {
+        box-sizing: border-box;
+    }
+
+    .tfhb-reschedule-box {
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .tfhb-meeting-card {
+        border-radius: 16px;
+        border: 0.5px solid $surface-border;
+        background: $surface-secondary;
+        // box-shadow: 0px 0px 8px 2px rgba(208, 225, 211, 0.30) inset, 0px 0px 0px 16px #F5FEF7;
+        display: flex;
+        gap: 24px;
+        width: fit-content;
+        position: relative;
+        margin: 0 auto;
+        overflow: hidden;
+        min-height: 450px;
+
+        @media #{$max991} {
+            flex-wrap: wrap;
+        }
+
+        @media #{$max570} {
+            width: 100%;
+        }
+
+
+        // .tfhb-preloader {
+        //     position: absolute;
+        //     left: 0;
+        //     top: 0;
+        //     height: 100%;
+        //     width: 100%;
+        //     display: flex;
+        //     align-items: center;
+        //     justify-content: center;
+        //     z-index: 99;
+        //     &::after {
+        //         position: absolute;
+        //         left: 0; 
+        //         content: '';
+        //         background-color: $primary-default !important;
+        //         height: 100%; 
+        //         width: 100%;
+        //         opacity: 0.1;
+        //     }
+        // } 
+
+        .tfhb-meeting-info {
+            width: 322px;
+            z-index: 11;
+
+            border-right: 0.5px solid $surface-background;
+            background: $surface-secondary;
+            border-radius: 16px 0 0 16px;
+            box-shadow: 0 0px 30px 0px rgba(40, 16, 26, 0.20);
+
+            @media #{$max1170} {
+                width: 220px;
+            }
+
+            @media #{$max991} {
+                width: 100%;
+            }
+
+            .tfhb-host-info {
+                padding: 38px 16px 16px 16px;
+                border-radius: 16px 0 0 0;
+                background-size: cover;
+                position: relative;
+                z-index: 1;
+                &::after {
+                    position: absolute;
+                    content: "";
+                    inset: 0;
+                    background: linear-gradient(181deg, rgba(19, 25, 20, 0.00) 1.18%, rgba(19, 25, 20, 0.50) 98.83%);
+                    z-index: -1;
+                }
+                @media #{$max991} {
+                    background-position: center center; 
+                    border-radius: 16px 16px 0 0;
+                    width: 100%;
+                }
+
+                .tfhb-host-profile {
+                    img {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                    }
+
+                    .tfhb-host-name {
+                        h3 {
+                            color: $surface-secondary;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 600;
+                            line-height: 24px;
+                            /* 160% */
+                            margin: 0;
+                        }
+
+                        p {
+                            color: $surface-secondary;
+                            font-size: 13px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 20px;
+                            /* 153.846% */
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+
+            .tfhb-meeting-details {
+                padding: 8px 16px 16px 16px;
+
+                h2 {
+                    color: $secondary-default;
+                    font-size: 22px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 150%;
+                    /* 33px */
+                    margin: 0 0 8px 0;
+                }
+
+                .tfhb-short-description,
+                .tfhb-full-description {
+                    color: $secondary-default;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                    /* 160% */
+                    margin: 0 0 16px 0;
+
+                    span {
+                        color: $secondary-default;
+                        cursor: pointer;
+                    }
+                }
+
+                .tfhb-full-description {
+                    display: none;
+                }
+
+                p {
+                    color: $secondary-default;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                    /* 160% */
+                    margin: 0;
+
+                    span {
+                        color: $secondary-default;
+                        cursor: pointer;
+                    }
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    margin-bottom: 40px;
+
+                    li {
+                        color: $secondary-default;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 24px;
+                        /* 160% */
+                        margin-bottom: 8px;
+
+                        &:last-child {
+                            margin-bottom: 0px;
+                        }
+
+                        span {
+                            border-radius: 6px;
+                            border: 1px solid $surface-border;
+                            padding: 0 16px;
+                            margin: 0 8px;
+                        }
+
+                        .tfhb-icon {
+                            border-radius: 6px;
+                            border: 0.2px solid rgba(227, 207, 215, 0.2);
+                            background: $surface-secondary;
+                            width: 24px;
+                            height: 24px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            svg {
+                                path {
+                                    stroke: $secondary-default;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .tfhb-timezone {
+                    border-radius: 8px;
+                    background: $surface-secondary;
+                    padding: 8px 12px;
+                    justify-content: space-between;
+                    padding: 0 !important;
+                    position: relative;
+                    z-index: 1;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: -1px;
+                        left: -1px;
+                        right: -1px;
+                        bottom: -1px;
+                        border-radius: 8px;
+                        /* Same as the main element */
+                        background: linear-gradient(to bottom right, rgba(207, 227, 210, 0), rgb(207, 227, 210), rgba(207, 227, 210, 0));
+                        box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
+                        z-index: -1;
+                        pointer-events: none;
+                        /* Prevents the pseudo-element from interfering with user interactions */
+                    }
+
+                    select {
+                        background-image: none !important;
+                        background-size: 0 !important;
+                    }
+
+                    .tfhb-timezone-title {
+                        color: $secondary-default;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 24px;
+                        /* 160% */
+                        width: calc(100% - 24px);
+                    }
+
+                    .select2-container {
+                        width: 100% !important;
+                    }
+
+                    .select2-selection {
+                        padding-left: 2em !important;
+                        border-radius: 8px;
+                        height: 40px;
+                        padding-top: 8px;
+                        padding-bottom: 8px;
+                        border: none;
+
+                        .select2-selection__rendered {
+                            color: $secondary-default;
+                            padding: 0px !important;
+                            line-height: normal;
+                            font-size: 15px !important;
+                            font-weight: 400;
+                            line-height: 24px;
+                            /* 160% */
+                        }
+
+                        .select2-selection__arrow {
+                            top: 50%;
+                            width: 1.7em;
+                            transform: translateY(-50%);
+
+                            b {
+                                border-color: $primary-default transparent transparent transparent;
+                                display: block;
+                            }
+                        }
+                    }
+
+                    .tfhb-timezone-icon {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        height: 100%;
+                        width: 35px;
+                        text-align: center;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        svg {
+                            path {
+                                stroke: $secondary-default;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .select2-dropdown.tfhb-select2-dropdown {
+                border: 1px solid $surface-input-field;
+            }
+
+            .select2-dropdown.tfhb-select2-dropdown.select2-dropdown--above {
+                border-bottom: 0;
+            }
+
+            .select2-dropdown.tfhb-select2-dropdown.select2-dropdown--below {
+                border-top: 0;
+            }
+
+            .select2-search.select2-search--dropdown input {
+                padding: 8px 8px 8px 12px;
+                border: 1px solid $surface-input-field !important;
+            }
+
+        }
+
+        .tfhb-calander-times {
+            position: relative;
+            left: 0;
+
+            @media #{$max991} {
+                width: 100%;
+                padding: 0px 16px;
+                justify-content: space-between;
+            }
+
+            @media #{$max767} {
+                flex-wrap: wrap;
+            }
+        }
+
+        .tfhb-meeting-calendar {
+            padding: 16px 16px 16px 0;
+            width: 536px;
+            z-index: 99;
+            background-color: #fff;
+            min-height: 100%;
+            box-sizing: border-box;
+
+            @media #{$max1170} {
+                // padding: 0 16px 16px 0;
+                width: 500px;
+            }
+
+            @media #{$max991} {
+                width: 100%;
+                padding: 0 0 16px 0;
+                min-height: auto;
+            }
+
+            .tfhb-calendar-container {
+                width: 520px;
+
+                @media #{$max1170} {
+                    width: 480px;
+                }
+
+                @media #{$max767} {
+                    width: 100%;
+                }
+            }
+
+            .tfhb-calendar-container header {
+                display: flex;
+                align-items: center;
+                padding: 0px 0px 16px 0;
+                justify-content: space-between;
+                border-bottom: 0.5px solid $icon-gradient;
+
+                .tfhb-calendar-navigation {
+                    display: flex;
+                    border-radius: 8px;
+                    background: $surface-secondary;
+                    box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
+                    width: 94px;
+                    justify-content: space-between;
+                    position: relative;
+                    z-index: 1;
+                    height: 36px;
+                    align-items: center;
+                    padding: 0 8px 0 8px;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: -1px;
+                        left: -1px;
+                        right: -1px;
+                        bottom: -1px;
+                        border-radius: 8px;
+                        /* Same as the main element */
+                        background: linear-gradient(to bottom right, rgba(207, 227, 210, 0), rgba(207, 227, 210, 1), rgba(207, 227, 210, 0));
+                        z-index: -1;
+                        pointer-events: none;
+                        /* Prevents the pseudo-element from interfering with user interactions */
+                    }
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        top: 0px;
+                        left: 0px;
+                        right: 0px;
+                        bottom: 0px;
+                        border-radius: 8px;
+                        background: $surface-secondary;
+                        z-index: -1;
+                    }
+
+                    span {
+                        cursor: pointer;
+                        font-size: 1.9rem;
+                        width: 20px;
+                        height: 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: .3s all ease;
+
+                        svg {
+                            path {
+                                stroke: $primary-default;
+                                transition: .3s all ease;
+                            }
+                        }
+
+                        &:hover {
+                            background-color: $primary-default;
+                            border-radius: 5px;
+
+                            svg {
+                                path {
+                                    stroke: #fff;
+                                }
+                            }
+                        }
+                    }
+
+                    .tfhb-calendar-navigation-dots {
+                        width: 8px;
+                        height: 8px;
+                        background-color: $surface-input-field;
+                        border-radius: 50%;
+                        left: -24px;
+                    }
+                }
+            }
+
+            .tfhb-calendar-current-date {
+                color: $secondary-default;
+                font-size: 22px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 150%;
+                /* 33px */
+                margin: 0;
+            }
+
+            .tfhb-calendar-body {
+                &.inactive {
+                    position: relative !important;
+                    z-index: 1;
+
+                    &::before {
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        content: '';
+                        background-color: #fff;
+                        z-index: 3;
+                        opacity: 0.3;
+                        cursor: wait;
+                    }
+                }
+
+                ul.tfhb-calendar-weekdays {
+                    list-style: none;
+                    flex-wrap: wrap;
+                    display: flex;
+                    text-align: center;
+                    gap: 0;
+                    margin: 12px 0 16px 0;
+                    padding: 0;
+
+                    li {
+                        color: $secondary-default;
+                        text-align: center;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 24px;
+                        /* 160% */
+                        width: calc(100% / 7);
+                    }
+                }
+            }
+
+            .tfhb-calendar-body ul.tfhb-calendar-dates {
+                list-style: none;
+                flex-wrap: wrap;
+                display: flex;
+                text-align: center;
+                gap: 0;
+                padding: 0;
+                margin: 0;
+
+                li {
+                    border: 0.5px solid rgba(227, 207, 215, 0.00);
+                    width: calc(100% / 7);
+                    color: $secondary-default;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                    /* 160% */
+                    padding: 16px 0;
+                    box-sizing: border-box;
+
+                    &.inactive {
+                        color: $secondary-default;
+                        cursor: not-allowed !important;
+                        background-color: transparent !important;
+
+                        &::after {
+                            position: static !important;
+                            margin: 0 !important;
+                            border: 0px solid !important;
+                            box-sizing: inherit;
+                        }
+                    }
+
+                    &.current {
+                        position: relative;
+                        z-index: 0;
+                        cursor: pointer;
+                        transition: .3s all ease;
+
+                        &::after {
+                            position: absolute;
+                            content: "";
+                            border-radius: 8px;
+                            border: 0.5px solid rgba(227, 207, 215, 0.00);
+                            background: #EEF6F0;
+                            height: 90%;
+                            width: 90%;
+                            left: 50%;
+                            z-index: -1;
+                            margin-left: -45%;
+                            top: 5%;
+                            box-sizing: inherit;
+                            transition: .3s all ease;
+                        }
+
+                        &:hover {
+                            &::after {
+
+                                border: 0.5px solid rgba(227, 207, 215, 0.00);
+                                background: $secondary-hover;
+                                box-shadow: 0px 3px 0px 0px rgba(16, 36, 19, 0.04);
+                            }
+                        }
+                    }
+
+                    &.current.active {
+                        color: $surface-secondary !important;
+                        position: relative;
+
+                        font-weight: 600;
+
+                        &::after {
+                            position: absolute;
+                            content: "";
+                            border-radius: 8px;
+                            border: 0.5px solid rgba(227, 207, 215, 0.00);
+                            box-shadow: $icon-box-shadow;
+                            background: $primary-default !important;
+                            height: 90%;
+                            width: 90%;
+                            left: 50%;
+                            z-index: -1;
+                            margin-left: -45%;
+                            top: 5%;
+                            box-sizing: inherit;
+                        }
+
+                        &::before {
+                            position: absolute;
+                            content: "";
+                            height: 2px;
+                            width: 24px;
+                            border-radius: 16px;
+                            background: #FFFFFF;
+                            bottom: 12px;
+                            left: 50%;
+                            margin-left: -12px;
+                            box-sizing: inherit;
+                        }
+                    }
+                }
+            }
+        }
+
+        .tfhb-meeting-times {
+            width: 0;
+            padding: 16px 16px 16px 0;
+            display: none;
+            position: relative;
+            left: -50%;
+            opacity: 1;
+            z-index: 8;
+            min-height: 100%;
+            box-sizing: border-box;
+
+            @media #{$max1170} {
+                // padding: 0 0 16px 0;
+
+                max-width: 200px;
+            }
+
+            @media #{$max991} {
+                padding: 0 0 16px 0;
+                width: 100%;
+                max-width: auto;
+                // width: calc(100% - 536px);
+            }
+
+            @media #{$max767} {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .tfhb-timezone-tabs-warp {
+                display: flex;
+                justify-content: end;
+            }
+
+            .tfhb-timezone-tabs {
+                padding: 4px;
+                border-radius: 8px;
+                width: 96px;
+                height: 36px;
+                position: relative;
+                z-index: 0;
+                background: $surface-secondary;
+                display: flex;
+                box-sizing: border-box;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: -1px;
+                    left: -1px;
+                    right: -1px;
+                    bottom: -1px;
+                    border-radius: 8px;
+                    /* Same as the main element */
+                    background: linear-gradient(to bottom right, rgba(207, 227, 210, 0), rgba(207, 227, 210, 1), rgba(207, 227, 210, 0));
+                    box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
+                    z-index: -1;
+                    pointer-events: none;
+                    /* Prevents the pseudo-element from interfering with user interactions */
+                }
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 0px;
+                    left: 0px;
+                    right: 0px;
+                    bottom: 0px;
+                    border-radius: 8px;
+                    background: $surface-secondary;
+                    z-index: -1;
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    gap: 8px;
+                    display: inline-flex;
+
+                    li {
+                        width: 40px;
+                        display: inline-block;
+                        height: 28px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-sizing: border-box;
+
+                        label {
+
+                            padding: 4px 8px;
+                            color: $text-input;
+                            font-size: 11px;
+                            font-style: normal;
+                            font-weight: 600;
+                            line-height: 16px;
+                            /* 145.455% */
+                            cursor: pointer;
+                            text-align: center;
+
+                            input {
+                                display: none;
+                            }
+                        }
+
+                        &.active {
+                            border-radius: 4px;
+                            background: $surface-border;
+
+                            label {
+                                color: $secondary-default;
+                            }
+                        }
+                    }
+                }
+            }
+
+            h3 {
+                color: $secondary-default;
+                font-size: 17px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 150%;
+                /* 25.5px */
+                margin: 24px 0 16px 0;
+            }
+
+            .tfhb-available-times {
+                position: relative;
+
+                &.inactive {
+                    position: relative !important;
+                    z-index: 1;
+
+                    &::before {
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        content: '';
+                        background-color: #fff;
+                        z-index: 3;
+                        opacity: 0.3;
+                        cursor: wait;
+                    }
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    max-height: 338px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 12px;
+
+                    li {
+                        gap: 12px;
+                        width: 100%;
+
+                        .time,
+                        .next {
+                            border-radius: 8px;
+                            border: 0.5px solid $primary-default;
+                            background: $surface-secondary;
+                            padding: 10px 8px;
+                            color: $primary-default;
+                            text-align: center;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 24px;
+                            /* 160% */
+                            width: 100%;
+                            text-align: center;
+                            cursor: pointer;
+                            transition: .3s all ease;
+
+                            @media #{$max991} {
+                                padding: 16px 1px;
+                            }
+
+                            &:hover {
+                                border: 0.5px solid $primary-default;
+                                background: $surface-border;
+                            }
+
+                            &.time.active {
+                                border: 0.5px solid $primary-default;
+                                background: $surface-border;
+                            }
+
+                            .tfhb-time-slot-remaining {
+                                justify-content: center;
+                                font-size: 10px;
+                                line-height: 16px;
+
+                                span {
+                                    display: inline-block;
+                                    height: 4px;
+                                    width: 4px;
+                                    border-radius: 50%;
+                                    background-color: #2E6B38;
+                                    margin-right: 4px;
+                                    line-height: 0 !important;
+                                }
+                            }
+                        }
+
+                        span.next {
+                            border-radius: 8px;
+                            background: $primary-default;
+                            color: $surface-secondary;
+                            align-items: center;
+                            justify-content: center;
+                            transition: .3s all ease;
+
+                            &:hover {
+                                background-color: $primary-hover ;
+                            }
+                        }
+
+                        p {
+                            color: $secondary-default;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 24px;
+                            /* 160% */
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        .tfhb-meeting-booking-form {
+            width: 536px;
+            padding: 16px 16px 16px 0;
+            position: relative;
+            z-index: 9;
+            left: -5%;
+            opacity: 0;
+
+            @media #{$max991} {
+                padding: 0 16px 16px 16px;
+                width: 100% !important;
+            }
+
+            .tfhb-back-btn {
+                align-items: center;
+                cursor: pointer;
+
+                svg {
+                    path {
+                        stroke: $primary-default;
+                    }
+                }
+
+                h3 {
+                    color: $secondary-default;
+                    font-size: 17px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 150%;
+                    /* 25.5px */
+                    margin: 0; 
+                }
+            }
+
+            .tfhb-forms {
+                flex-wrap: wrap;
+                gap: 16px;
+                margin-top: 16px;
+
+                .tfhb-meeting-form {
+                    width: 100%;
+
+                    .tfhb-single-form {
+                        width: 100%;
+                        margin-bottom: 16px;
+
+                        label {
+                            color: $secondary-default;
+                            font-size: 13px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 20px; /* 153.846% */
+                            margin: 0 0 4px 0; 
+                            display: inline-block; 
+                        }
+
+                        input[type="text"],
+                        input[type="email"],
+                        input[type="number"],
+                        input[type="tel"],
+                        input[type="date"],
+                        select,
+                        textarea {
+                            border-radius: 8px;
+                            border: 0.5px solid $surface-background;
+                            background: $surface-secondary;
+                            height: 40px;
+                            width: 100%;
+                            padding: 8px 12px;
+
+                            &:focus {
+                                outline: none;
+                                box-shadow: none;
+                            }
+                        }
+
+                        textarea {
+                            min-height: 90px;
+                        }
+                        select{
+                            line-height: 1.2;
+                        }
+
+                        .tfhb-field-checkbox,
+                        .tfhb-field-radio {
+                            position: relative;
+                            color: $text-paragraph !important;
+                            font-size: $heading-font-size-small !important;
+                            margin-left: 40px;
+                            font-weight: $font-weight-reguler;
+                            // line-height: 24px !important;
+                            margin: 0 !important;
+                            position: relative;
+                            padding-left: 28px;
+                            margin-right: 16px !important;
+
+                            input:checked~.checkmark {
+                                background-color: $primary-default;
+                                border: $fields-border $border-type $primary-default;
+                            }
+
+                            input:checked~.checkmark:after {
+                                display: block;
+                            }
+
+                            input[type="checkbox"],
+                            input[type="radio"] {
+                                display: none;
+                            }
+
+                            .tfhb-checkbox-label {
+                                justify-content: start !important;
+                            }
+
+                            .checkmark {
+                                position: absolute;
+                                top: 0px;
+                                left: 0px;
+                                height: 20px;
+                                width: 20px;
+                                background-color: $surface-border;
+                                border-radius: 3px;
+                                border: $fields-border $border-type $primary-default;
+                                margin: 0 !important;
+
+                                &:after {
+                                    content: "";
+                                    position: absolute;
+                                    left: 7px;
+                                    top: 2px;
+                                    width: 6px;
+                                    height: 11px;
+                                    border: $border-type $surface-secondary;
+                                    border-width: 0 3px 3px 0;
+                                    -webkit-transform: rotate(45deg);
+                                    -ms-transform: rotate(45deg);
+                                    transform: rotate(45deg);
+                                    display: none;
+                                }
+                            }
+
+
+                        }
+
+                        .tfhb-field-radio {
+                            .checkmark {
+                                border-radius: 50%;
+                            }
+                        }
+                    }
+
+                    .tfhb-stripe-button-container {
+                        a {
+                            text-decoration: none !important;
+                            background-color: rgb(25, 37, 82);
+                            color: rgb(255, 255, 255);
+                            padding: 12px 10px;
+                            display: flex;
+                            text-align: center;
+                            border-radius: 8px;
+                            font-size: 14px;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 8px;
+
+                            .tfhb-submit-preloader {
+                                svg {
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            }
+
+                            &.disabled {
+                                pointer-events: none !important;
+                            }
+                        }
+                    }
+                }
+
+                .tfhb-confirmation-box {
+                    flex-wrap: wrap;
+                    gap: 24px;
+                    margin: 16px 0;
+
+                    .tfhb-swicher-wrap {
+                        width: 100%;
+                        align-items: center;
+
+                        .swicher-label {
+                            color: $secondary-default;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 24px;
+                            /* 160% */
+                        }
+                    }
+
+                    .tfhb-checkbox-wrap {
+                        width: 100%;
+                    }
+                }
+
+                .tfhb-confirmation-button {
+                    width: 100%;
+                    display: flex;
+                    justify-content: end;
+
+                    button {
+                        border-radius: 8px;
+                        background: $primary-default;
+                        padding: 10px 24px;
+                        color: $surface-secondary;
+                        justify-content: center;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 24px;
+                        /* 160% */
+                        cursor: pointer;
+                        // width: 224px; 
+                        border: 0px solid;
+                        transition: .3s all ease;
+                        position: relative;
+
+                        &:hover {
+                            background-color: $primary-hover;
+                        }
+
+                        .tfhb-submit-preloader {
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            height: 100%;
+                            width: 100%;
+                            background-color: #ffffff50;
+                            padding: 10px;
+                            text-align: right;
+                            box-sizing: border-box;
+
+                            svg {
+                                height: 100%;
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
+
+                .fluentform {
+                    width: 100%;
+
+                    label {
+                        color: $secondary-default;
+                        font-size: 13px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px;
+                        /* 153.846% */
+                        margin: 0 0 4px 0;
+                    }
+
+                    input[type="text"],
+                    input[type="email"],
+                    input[type="number"],
+                    input[type="tel"],
+                    input[type="date"],
+                    select,
+                    textarea {
+                        border-radius: 8px;
+                        border: 0.5px solid $surface-background;
+                        background: $surface-secondary;
+                        height: 40px;
+                        width: 100%;
+                        padding: 8px 12px;
+
+                        &:focus {
+                            outline: none;
+                            box-shadow: none;
+                        }
+                    }
+
+                    textarea {
+                        min-height: 90px;
+                    }
+
+                    .ff_submit_btn_wrapper {
+                        text-align: right;
+
+                        button {
+                            border-radius: 8px;
+                            background: $primary-default;
+                            padding: 10px 24px;
+                            color: $surface-secondary;
+                            justify-content: center;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 24px;
+                            /* 160% */
+                            cursor: pointer;
+                            // width: 224px; 
+                            border: 0px solid;
+                            transition: .3s all ease;
+                            position: relative;
+
+                            &:hover {
+                                background-color: $primary-hover;
+                            }
+                        }
+                    }
+                }
+
+                .wpcf7 {
+                    width: 100% !important;
+
+                    label {
+                        color: $secondary-default;
+                        font-size: 13px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px;
+                        /* 153.846% */
+                        margin: 0 0 4px 0;
+                    }
+
+                    input[type="text"],
+                    input[type="email"],
+                    input[type="number"],
+                    input[type="tel"],
+                    input[type="date"],
+                    select,
+                    textarea {
+                        border-radius: 8px;
+                        border: 0.5px solid $surface-background;
+                        background: $surface-secondary;
+                        height: 40px;
+                        width: 100%;
+                        padding: 8px 12px;
+
+                        &:focus {
+                            outline: none;
+                            box-shadow: none;
+                        }
+                    }
+
+                    textarea {
+                        min-height: 90px;
+                    }
+
+                    .wpcf7-submit {
+                        float: right;
+                        border-radius: 8px;
+                        background: $primary-default;
+                        padding: 10px 24px;
+                        color: $surface-secondary;
+                        justify-content: center;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 24px;
+                        /* 160% */
+                        cursor: pointer;
+                        // width: 224px; 
+                        border: 0px solid;
+                        transition: .3s all ease;
+                        position: relative;
+
+                        &:hover {
+                            background-color: $primary-hover;
+                        }
+                    }
+                }
+                .tfhb-paypal-button-container{
+                    width: 100%;
+                }
+            }
+
+        }
+
+
+        .tfhb-meeting-confirmation {
+            width: 500px;
+            margin: 64px 265px 64px;
+
+            @media #{$max1170} {
+                margin: 16px;
+                padding: 0 16px 16px 16px;
+                width: 100% !important;
+            }
+
+            .tfhb-confirmation-seccess {
+                text-align: center;
+
+                img {
+                    height: 66px;
+                    width: 66px;
+                    margin-bottom: 24px;
+                }
+
+                h3 {
+                    color: $secondary-default;
+                    font-size: 22px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 150%;
+                    /* 33px */
+                    margin: 0 0 16px 0;
+                }
+
+                p {
+                    color: $secondary-default;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                    /* 160% */
+                    margin: 0 0 16px 0;
+                }
+            }
+
+            .tfhb-meeting-hostinfo {
+                border-radius: 8px;
+                background: $surface-primary;
+                padding: 24px;
+
+                h4 {
+                    color: $secondary-default;
+                    font-size: 17px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 150%;
+                    /* 25.5px */
+                    margin-top: 0px;
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+
+                    li {
+                        color: $secondary-default;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 24px;
+                        /* 160% */
+                        padding-bottom: 8px;
+                        margin-bottom: 8px;
+                        border-bottom: 1px solid rgba(227, 207, 215, 0.10);
+                        align-items: start !important;
+
+                        &:last-child {
+                            margin-bottom: 0px;
+                            padding-bottom: 0px;
+                        }
+
+                        span {
+                            border-radius: 16px;
+                            background: $info-background;
+                            padding: 4px 8px;
+                            color: $info-text;
+                            font-size: 11px;
+                            font-style: normal;
+                            font-weight: 600;
+                            line-height: 16px;
+                            /* 145.455% */
+                        }
+
+                        .tfhb-icon {
+                            border-radius: 6px;
+                            border: 0.2px solid rgba(227, 207, 215, 0.2);
+                            background: $surface-secondary;
+                            width: 24px;
+                            height: 24px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
+
+            .tfhb-meeting-confirmation-calender {
+                margin: 32px 0 0 0;
+
+                h3 {
+                    color: $secondary-default;
+                    text-align: center;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                    /* 160% */
+                    margin: 0 0 8px 0;
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    justify-content: center;
+
+                    li {
+                        a {
+                            img {
+                                width: 32px;
+                                height: 32px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .tfhb-meeting-confirmation-action {
+                justify-content: center;
+                margin-top: 24px;
+
+                @media #{$max570} {
+                    flex-wrap: wrap;
+                }
+
+                button,
+                a {
+                    border-radius: 8px;
+                    border: 1px solid $surface-background;
+                    background: $surface-secondary;
+                    padding: 8px 24px;
+                    width: 158px;
+                    color: $secondary-default;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                    /* 160% */
+                    cursor: pointer;
+                    text-decoration: none !important;
+                    transition: .3s all ease;
+                    text-align: center;
+
+                    &:hover {
+                        background-color: $primary-hover;
+                        border-color: $primary-hover;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.select2-results__options {
+    // background-color: $surface-border;
+    display: flex;
+    flex-direction: column;
+    // gap: 2px;
+    width: 100% !important;
+    margin: 0 !important;
+    // padding: 2px !important;
+    border-radius: 4px;
+    border: 1px solid $surface-border;
+
+    li {
+        background-color: $surface-secondary;
+        // width: 100% !important;
+        // border-radius: 4px;
+        height: 40px !important;
+        // padding: 8px 12px;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 24px;
+        color: #273F2B;
+
+        &:hover {
+            background-color: $surface-primary;
+            color: #273F2B;
+        }
+
+        &.select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: $surface-primary;
+            color: #273F2B;
+        }
+    }
+}
+
+.tfhb-single-meeting-section {
+    padding: 60px 0px;
+    width: 100%;
+}
+
+.hydra-booking-embad-container {
+    height: 100%;
+    min-height: 650px;
+}
+
+.tfhb-meeting-embed-section {
+
+    &.tfhb-meeting-embed-section {
+        padding: 70px 0 !important;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        visibility: hidden;
+        opacity: 0;
+    }
+
+}

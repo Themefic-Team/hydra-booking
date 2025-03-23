@@ -1,139 +1,247 @@
-.tfhb-hydra-wrap { 
+.tfhb-hydra-wrap {
 	width: 80%;
 	padding: 0;
 	margin: 0;
-	background-color: #ffffff;
-	border-radius: 16px;
-	a{
+	background-color: $primary-text;
+	border-radius: $border-radius-large;
+
+	a {
 		text-decoration: none;
-	
-	}  
- 
+
+	}
+
 	.tfhb-dashboard-heading {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 32px;
+		gap: 8px;
+
+		>.tfhb-admin-title {
+			max-width: 70%;
+		}
 	}
-	.tfhb-content-wrap{
-		&.tfhb-flexbox{
+
+	.tfhb-content-wrap {
+		flex-direction: row;
+
+		&.tfhb-flexbox {
 			justify-content: normal;
 		}
-		
 
-		.tfhb-availability-single-box{
-			width: calc(50% - 12px);
-			@media #{$max991}{
+		.tfhb-availability-single-box {
+			width: 100%;
+
+			@media #{$max991} {
 				width: 100% !important;
 			}
+
 			.tfhb-availability-single-box-wrap {
-				border-radius: 8px;
-				border: 1px solid $ui50;
+				border-radius: $border-radius-medium;
+				border: $border-reguler $border-type $surface-border;
 				padding: 24px;
+				transition: $transition;
+
+				&:hover {
+					background-color: $surface-primary;
+				}
+
 				.tfhb-dashboard-heading {
 					margin-bottom: 16px;
-					border-bottom: .5px solid $ui50;
+					border-bottom: .5px $border-type $surface-border;
 					margin-right: 0 !important;
-					.tfhb-admin-title{
-						h3{
-							font-size: 15px !important;
-						font-weight: 400 !important;
+					border-radius: 0 !important;
+
+					.tfhb-admin-title {
+						h3 {
+							font-size: $heading-font-size-small !important;
+							font-weight: $font-weight-medium !important;
+						}
+
+						span {
+							padding: 4px 8px;
+							background-color: $info-background !important;
+							color: $info-text !important;
+							border-radius: 16px;
+							font-size: $text-font-size-small !important;
+							font-weight: 400;
 						}
 					}
-				  }
-			  }
-			  .tfhb-availability-single-box-info{
+				}
+			}
+
+			.tfhb-availability-single-box-info {
 				margin-bottom: 16px;
+
 				// last child
 				&:last-child {
 					margin-bottom: 0;
 				}
-				&.tfhb-flexbox {
 
+				&.tfhb-flexbox {
+					align-items: normal !important;
 					justify-content: normal !important;
-					gap: 16px !important; 
+					gap: 16px !important;
 				}
+
 				span {
-					font-size: 15px !important; 
-					line-height: 24px !important; 
+					margin: 0 !important;
+					font-size: $heading-font-size-small !important;
+
+					svg {
+						margin-top: 4px;
+					}
+
+				}
+
+				.fthb-availability-timeslots {
 					width: calc(100% - 36px);
-				  }
-				.fthb-availability-timeslots{
-					p{ 
-						display: inline-block; 
+
+					p {
+						line-height: 24px !important;
+						margin: 0 !important;
+						display: inline-block;
 					}
 				}
-			  }
-			
+			}
+
 		}
 
-		.tfhb-popup.tfhb-availability-popup{
-			.tfhb-popup-wrap{
-				max-width: 980px !important;
-				width: 980px !important;
-				@media #{$max991}{
+		.tfhb-popup.tfhb-availability-popup {
+			.tfhb-popup-wrap {
+
+				// max-width: 980px !important;
+				// width: 980px !important;
+				@media #{$max991} {
 					max-width: 100% !important;
 					width: 100% !important;
 				}
 			}
 		}
 
-		.tfhb-integrations-wrap{
-			width: 100% !important; 
+		.tfhb-integrations-wrap {
+			width: 100% !important;
 			justify-content: normal !important;
-			@media #{$max1240}{
+			align-items: normal !important;
+
+			@media #{$max1240} {
 				flex-wrap: wrap !important;
 			}
-			.tfhb-integrations-single-block{
+
+			.tfhb-integrations-single-block {
 				margin: 0 !important;
 				width: calc(33% - 14px);
-				@media #{$max1240}{
-                    width: calc(50% - 12px);
-                }
+				transition: $transition;
+				padding: 16px !important;
+				display: flex !important;
+				flex-direction: column;
+				justify-content: space-between;
+
+				&:hover {
+					background-color: $surface-primary;
+				}
+
+				@media #{$max1240} {
+					width: calc(50% - 12px);
+				}
+
 				h3 {
-					font-weight: 600;
+					font-weight: $font-weight-medium;
 					line-height: 1.5;
-				} 
+				}
+
 				.tfhb-integrations-single-block-icon {
 					margin-bottom: 16px !important;
 					display: inline-block;
-				} 
+				}
+
 				.tfhb-integrations-single-block-btn {
 					margin-top: 32px;
-					svg{
+
+					svg {
 						margin-top: 2px;
 					}
 				}
-			} 
+
+
+				.tfhb-google-calender-redirection-url {
+
+					position: relative;
+
+					.tfhb-single-form-field.redirect_url input {
+						padding-right: 125px !important;
+					}
+
+
+
+					.tfhb-btn {
+						position: absolute;
+						right: 3px;
+						bottom: 3px;
+						height: 34px;
+						border: none !important;
+						border-radius: 4px !important;
+
+						.tfhb-button-text {
+							line-height: 13px !important;
+							font-size: 13px !important;
+						}
+
+					}
+				}
+			}
 		}
-		.tfhb-notification-wrap{
+
+		.tfhb-notification-wrap {
 			.tfhb-notification-single {
 				margin-bottom: 16px;
+
 				// last child
 				&:last-child {
 					margin-bottom: 0;
 				}
 			}
 		}
-		
+
 	}
 
-	.tfhb-availability-popup{   
-		.tfhb-availability-content-wrap{
+	.tfhb-availability-popup {
+		.tfhb-availability-content-wrap {
 			margin-top: 32px;
-			.tfhb-availability-schedule-single  {
+			min-width: 650px !important;
+
+			.tfhb-dashboard-heading {
+				span {
+					font-size: 15px !important;
+				}
+			}
+
+			.tfhb-availability-schedule-single {
 				margin-bottom: 24px;
+
 				// last child
 				&:last-child {
 					margin-bottom: 0;
 				}
 
-				.tfhb-availability-schedule-wrap{
-					@media #{$max570}{
+				.tfhb-availability-schedule-wrap {
+					width: 75% !important;
+
+					.tfhb-availability-schedule-time {
+						width: calc(100% - 59px);
+					}
+
+					.tfhb-availability-schedule-btn {
+						width: 35px;
+					}
+
+					@media #{$max570} {
 						width: 100%;
 					}
-					.tfhb-availability-schedule-inner{
+
+					.tfhb-availability-schedule-inner {
 						margin-bottom: 24px;
+
 						// last child
 						&:last-child {
 							margin-bottom: 0;
@@ -141,61 +249,84 @@
 					}
 				}
 			}
-		} 
+		}
+
 		.tfhb-availability-schedule-btn {
 			border: none;
-			background-color: transparent; 
+			background-color: transparent;
 		}
-		.tfhb-hydra-dasboard-content{ 
+
+		.tfhb-hydra-dasboard-content {
 			position: relative;
-			.tfhb-availability-content-wrap{
+
+			.tfhb-availability-content-wrap {
 				margin-top: 32px;
-				.tfhb-availability-schedule-single{
+
+				.tfhb-availability-schedule-single {
 					justify-content: normal !important;
-					input, label, span {
+
+					input,
+					label,
+					span {
 						margin-top: 0 !important;
 					}
+
 					.tfhb-availability-schedule-clone-btn {
 						border: none;
-						background-color: transparent; 
+						background-color: transparent;
 					}
 				}
 			}
 		}
-		
+
 
 	}
+
 	.tfhb-hydra-admin-tabs {
 		padding: 32px 16px 32px 16px;
-		border-right: 1px solid $ui50;
+		border-right: 1px $border-type $surface-border;
+
 		ul {
 			display: flex;
 
-			li { 
+			li {
 				a {
 					padding: 12px 16px 12px 16px;
 					border-radius: 6px;
 					width: 100%;
 					display: flex;
 					gap: 13px;
-					align-items: center; 
-					font-weight: 400;
-					font-size: 15px;
+					align-items: center;
+					font-weight: $font-weight-reguler;
+					font-size: $heading-font-size-small;
 					font-family: inter;
-					color: $ui600;
-					
-					&.active, &.active .setings-taps-dropdown-arrow, &:hover {
-						background-color: $primaryi50;
-						color: $primaryi !important;
+					color: $secondary-default;
+
+
+					&:hover {
+						background-color: $surface-primary;
 					}
+
+					&.active,
+					&.active .setings-taps-dropdown-arrow {
+						background-color: $secondary-hover;
+						color: $primary-default !important;
+
+						&:hover {
+							background-color: $secondary-hover;
+							color: $primary-default !important;
+						}
+					}
+
 					&:focus {
 						outline: none;
 						box-shadow: none;
 					}
 
-					&.integrations-submenu{
+					&.integrations-submenu {
 						position: relative;
 					}
+
 					.setings-taps-dropdown-arrow {
 						margin: 0 !important;
 						position: absolute;
@@ -203,22 +334,28 @@
 						top: 16px;
 					}
 				}
+
 				.dropdown {
 					width: 100%;
 					display: none !important;
 					visibility: hidden;
-					li{
-						
+					margin-top: 4px !important;
+
+					li {
+
 						a {
 							padding-left: 32px !important;
-							border-radius: 6px; 
+							border-radius: 6px;
 							padding-top: 8px;
 							padding-bottom: 8px;
-							color: $ui600;
-							&.active, &:hover {
-								background-color: $ui25;
-								color: $primaryi;
+							color: $secondary-default;
+
+							&.active,
+							&:hover {
+								background-color: $surface-primary;
+								color: $primary-default;
 							}
+
 							&:focus {
 								outline: none;
 								box-shadow: none;
@@ -227,8 +364,9 @@
 					}
 
 				}
-				&.expand{
-					.dropdown{
+
+				&.expand {
+					.dropdown {
 						display: block !important;
 						visibility: visible !important;
 					}
@@ -237,56 +375,62 @@
 		}
 	}
 
-	.tfhb-category-warp{
-		.tfhb-category-create-box{
+	.tfhb-category-warp {
+		.tfhb-category-create-box {
 			width: 45%;
 		}
-		.tfhb-category-list{
+
+		.tfhb-category-list {
 			width: calc(55% - 24px);
-			table{
+
+			table {
 				width: 100%;
-				border-radius: 8px;
-				background: $ui50;
-				thead{
-					border-bottom: 1px solid $ui50;
-					th{
+				border-radius: $border-radius-medium;
+				background: $surface-border;
+
+				thead {
+					border-bottom: 1px $border-type $surface-border;
+
+					th {
 						padding: 12px 16px;
-						color: $ui600;
-						font-size: 15px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 24px; /* 160% */
+						color: $secondary-default;
+						font-size: $heading-font-size-small;
+
+						font-weight: $font-weight-reguler;
+						line-height: 24px;
+						/* 160% */
 						text-align: left;
 					}
 				}
-				tbody{
-					border-left: 1px solid $ui50;
-					tr{
-						background-color: #fff;
-						td{
+
+				tbody {
+					border-left: 1px $border-type $surface-border;
+
+					tr {
+						background-color: $surface-secondary;
+
+						td {
 							padding: 16px;
-							color: $ui600;
-							font-size: 15px;
-							font-style: normal;
-							font-weight: 400;
+							color: $secondary-default;
+							font-size: $heading-font-size-small;
+
+							font-weight: $font-weight-reguler;
 							line-height: 24px;
-							border: 0px solid;
-							border-bottom: 1px solid $ui50;
+							border: 0px $border-type;
+							border-bottom: 1px $border-type $surface-border;
 						}
 					}
 				}
 			}
 		}
 
-		.tfhb-booking-details-pagination .tfhb-prev-next-button{
+		.tfhb-booking-details-pagination .tfhb-prev-next-button {
 			background-color: #f6eef2;
 		}
-		.tfhb-booking-details-pagination .tfhb-pagination ul li.active{
+
+		.tfhb-booking-details-pagination .tfhb-pagination ul li.active {
 			background-color: #f6eef2;
 		}
 	}
- 
+
 }
-
-
- 

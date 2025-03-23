@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 
@@ -32,11 +32,11 @@ const closePopup = () => {
 
 
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans['Gravity Forms'] }}</h3>
-                <p>{{ $tfhb_trans['New standard in online payment'] }}</p>
+                <h3>{{ $tfhb_trans('Gravity Forms') }}</h3>
+                <p>{{ $tfhb_trans('Install and enable Gravity Forms for meeting forms.') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox">
+        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbSwitch  @change="emit('update-integrations', 'gravity', gravity_data)" v-model="gravity_data.status"    />
         </div>
 

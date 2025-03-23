@@ -1,4 +1,5 @@
 <script setup> 
+import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
@@ -28,7 +29,15 @@ const Notification = reactive(  {
         booking_confirmation: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_pending: {
+            status : 0,
+            template : 'default',
+            from : '',
             subject : '',
             body : '',
 
@@ -36,7 +45,7 @@ const Notification = reactive(  {
         booking_cancel: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -44,7 +53,7 @@ const Notification = reactive(  {
         booking_reschedule: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -52,7 +61,7 @@ const Notification = reactive(  {
         booking_reminder: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -63,7 +72,15 @@ const Notification = reactive(  {
         booking_confirmation: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
+            subject : '',
+            body : '',
+
+        },
+        booking_pending: {
+            status : 0,
+            template : 'default',
+            from : '',
             subject : '',
             body : '',
 
@@ -71,7 +88,7 @@ const Notification = reactive(  {
         booking_cancel: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -79,7 +96,7 @@ const Notification = reactive(  {
         booking_reschedule: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -87,7 +104,7 @@ const Notification = reactive(  {
         booking_reminder: {
             status : 0,
             template : 'default',
-            form : '',
+            from : '',
             subject : '',
             body : '',
 
@@ -98,6 +115,8 @@ const Notification = reactive(  {
 
 // Host Booking Confirm PopUp
 const hostBookingConfirmPopUp = ref(false);
+// Host Booking Pending PopUp
+const hostBookingPendingPopUp = ref(false);
 // Host Booking Cencel PopUp
 const hostBookingCencelPopUp = ref(false);
 // Host Booking Reschedule PopUp
@@ -107,6 +126,8 @@ const hostBookingReminderPopUp = ref(false);
 
 // Attendee Booking Confirm PopUp
 const attendeeBookingConfirmPopUp = ref(false);
+// Attendee Booking Pending PopUp
+const attendeeBookingPendingPopUp = ref(false);
 // Attendee Booking Cancel PopUp
 const attendeeBookingCancelPopUp = ref(false);
 // Attendee Booking Reschedule PopUp
@@ -135,7 +156,7 @@ const changeTab = (e) => {
 const fetchNotification = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/notification', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -156,7 +177,7 @@ const fetchNotification = async () => {
 const UpdateNotification = async () => {   
 
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/notification/update', Notification, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification/update', Notification, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -192,20 +213,20 @@ onBeforeMount(() => {
 <template> 
     <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard ">
   
-        <div  class="tfhb-dashboard-heading ">
+        <div  class="tfhb-dashboard-heading  ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans['Notifications'] }}</h1> 
-                <p>{{ $tfhb_trans['One-liner description'] }}</p>
+                <h1 >{{ $tfhb_trans('Notifications') }}</h1> 
+                <p>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
             </div>
-            <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn"> {{ $tfhb_trans['View Documentation'] }}<Icon name="ArrowUpRight" size="15" /></a>
+            <div class="thb-admin-btn"> 
+                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">
-                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs boxed-secondary-btn flex-btn"  :class="host ? 'active' : ''" ><Icon name="UserRound" size="15" /> {{ $tfhb_trans['To Host'] }} </button>
-                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs boxed-secondary-btn flex-btn" :class="attendee ? 'active' : ''"><Icon name="UsersRound" size="15" /> {{ $tfhb_trans['To Attendee'] }} </button>
+                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn"  :class="host ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }} </button>
+                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="attendee ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
  
             <div v-if="host" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
@@ -213,7 +234,7 @@ onBeforeMount(() => {
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host for Booking Confirmation" 
-                   :label="$tfhb_trans['Booking Confirmation']" 
+                   :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_confirmation"  
                     :ispopup="hostBookingConfirmPopUp"
@@ -222,11 +243,23 @@ onBeforeMount(() => {
                 /> 
                 <!-- Single Integrations  -->
 
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    title="Send Email to Host for Booking Pending" 
+                   :label="$tfhb_trans('Booking Pending')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.host.booking_pending"  
+                    :ispopup="hostBookingPendingPopUp"
+                    @popup-open-control="hostBookingPendingPopUp = true"
+                    @popup-close-control="hostBookingPendingPopUp = false"
+                /> 
+                <!-- Single Integrations  -->
+
 
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host for Booking Cancels" 
-                    :label="$tfhb_trans['Booking Cancel']" 
+                    :label="$tfhb_trans('Booking Cancel')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_cancel"  
                     :ispopup="hostBookingCencelPopUp"
@@ -238,7 +271,7 @@ onBeforeMount(() => {
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
-                    :label="$tfhb_trans['Booking Reschedule']" 
+                    :label="$tfhb_trans('Booking Reschedule')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reschedule"  
                     :ispopup="hostBookingReschedulePopUp"
@@ -250,7 +283,7 @@ onBeforeMount(() => {
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Host" 
-                    :label="$tfhb_trans['Booking Reminder']" 
+                    :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reminder"  
                     :ispopup="hostBookingReminderPopUp"
@@ -266,7 +299,7 @@ onBeforeMount(() => {
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Confirmation']" 
+                    :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_confirmation"  
                     :ispopup="attendeeBookingConfirmPopUp"
@@ -275,11 +308,23 @@ onBeforeMount(() => {
                 /> 
                 <!-- Single Integrations  -->
 
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    title="Send Email to Attendee" 
+                    :label="$tfhb_trans('Booking Pending')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.attendee.booking_pending"  
+                    :ispopup="attendeeBookingPendingPopUp"
+                    @popup-open-control="attendeeBookingPendingPopUp = true"
+                    @popup-close-control="attendeeBookingPendingPopUp = false"
+                /> 
+                <!-- Single Integrations  -->
+
 
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Cancel']"  
+                    :label="$tfhb_trans('Booking Cancel')"  
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_cancel"  
                     :ispopup="attendeeBookingCancelPopUp"
@@ -291,7 +336,7 @@ onBeforeMount(() => {
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Reschedule']"
+                    :label="$tfhb_trans('Booking Reschedule')"
                     :data="Notification.attendee.booking_reschedule"  
                     :ispopup="attendeeBookingReschedulePopUp"
                     @popup-open-control="attendeeBookingReschedulePopUp = true"
@@ -302,7 +347,7 @@ onBeforeMount(() => {
                 <!-- Single Notification  -->
                 <MailNotifications 
                     title="Send Email to Attendee" 
-                    :label="$tfhb_trans['Booking Reminder']" 
+                    :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_reminder"  
                     :ispopup="attendeeBookingReminderPopUp"

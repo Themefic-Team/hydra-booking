@@ -16,11 +16,7 @@ class AppleCalendar {
 				'password' => $appSpecificPassword,
 			)
 		);
-		// echo '<pre>';
-		// print_r( $this->client);
-		// echo '</pre>';
-		// exit;
-		// $this->getCalendars();
+		 
 		$this->addEvent();
 	}
 

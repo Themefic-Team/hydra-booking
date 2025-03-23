@@ -12,6 +12,7 @@ const props = defineProps([
     'description', 
     'limit',
     'disabled', 
+    'readonly', 
     'errors',
     'tooltip',
     'tooltipText'
@@ -29,7 +30,7 @@ const emit = defineEmits(['update:modelValue'])
          
         <label class="tfhb-flexbox tfhb-gap-4" v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span>  
           <span v-if="tooltip" class="tfhb-tooltip">
-            <Icon name="Info" size="15" />
+            <Icon name="Info" size=15 />
             <span class="tfhb-tooltiptext"> 
               {{ tooltipText }}
             </span>
@@ -48,6 +49,7 @@ const emit = defineEmits(['update:modelValue'])
           :type="type || 'text'"
           :placeholder="placeholder"
           :disabled="disabled"
+          :readonly="readonly"
           :class="errors ? 'tfhb-required' : ''"
           :min="limit"
         /> 

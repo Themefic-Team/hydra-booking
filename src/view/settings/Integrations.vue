@@ -1,8 +1,10 @@
 <script setup> 
+import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
 import { toast } from "vue3-toastify"; 
+import { useRouter, useRoute, RouterView } from 'vue-router' 
 
 // component
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
@@ -20,6 +22,8 @@ import GravityFormsIntegrations from '@/components/integrations/GravityFormsInte
 import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
+import PabblyIntegrations from '@/components/integrations/PabblyIntegrations.vue'; 
+import ZapierIntegrations from '@/components/integrations/ZapierIntegrations.vue';
 
 // import Form Field 
 import Icon from '@/components/icon/LucideIcon.vue' 
@@ -95,7 +99,7 @@ const ispaypalPopupOpen = () => {
 const ispaypalPopupClose = (data) => {
     paypalpopup.value = false;
 }
-
+const preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
         type: 'payment', 
@@ -169,15 +173,23 @@ const Integration = reactive( {
         status: 0, 
     },
     webhook : {
-        type: 'others', 
+        type: 'webhook', 
         status: 0, 
     },
     fluent_crm : {
-        type: 'others', 
+        type: 'marketing-tools', 
         status: 0, 
     },
     zoho_crm : {
-        type: 'others', 
+        type: 'marketing-tools', 
+        status: 0, 
+    },
+    pabbly : {
+        type: 'marketing-tools', 
+        status: 0, 
+    },
+    zapier : {
+        type: 'marketing-tools', 
         status: 0, 
     }
 });
@@ -188,7 +200,7 @@ const Integration = reactive( {
 const fetchIntegration = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/integration', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -202,10 +214,18 @@ const fetchIntegration = async () => {
             Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
             Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
             Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
+            Integration.webhook= response.data.integration_settings.webhook ? response.data.integration_settings.webhook : Integration.webhook;
+            Integration.fluent_crm= response.data.integration_settings.fluent_crm ? response.data.integration_settings.fluent_crm : Integration.fluent_crm;
+            Integration.zoho_crm= response.data.integration_settings.zoho_crm ? response.data.integration_settings.zoho_crm : Integration.zoho_crm;
+            Integration.pabbly= response.data.integration_settings.pabbly ? response.data.integration_settings.pabbly : Integration.pabbly;
+            Integration.zapier= response.data.integration_settings.zapier ? response.data.integration_settings.zapier : Integration.zapier;
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
+            Integration.cf7= response.data.integration_settings.cf7 ? response.data.integration_settings.cf7 : Integration.cf7;
+            Integration.fluent= response.data.integration_settings.fluent ? response.data.integration_settings.fluent : Integration.fluent;
+            Integration.gravity= response.data.integration_settings.gravity ? response.data.integration_settings.gravity : Integration.gravity;
 
             skeleton.value = false;
         }
@@ -219,7 +239,7 @@ const UpdateIntegration = async (key, value) => {
         value: value
     }; 
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/integration/update', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration/update', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -233,22 +253,24 @@ const UpdateIntegration = async (key, value) => {
                 "autoClose": 1500,
             }); 
 
-            Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
-            Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
-            Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
-            Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
-            Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
-
-            Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
-            Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
-            Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
-
             popup.value = false;
             gpopup.value = false;
             spopup.value = false;
             spopup.value = false;
             mailpopup.value = false;
             paypalpopup.value = false;
+            
+            Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
+            Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
+            Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
+            Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
+            Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
+            Integration.webhook= response.data.integration_settings.webhook ? response.data.integration_settings.webhook : Integration.webhook;
+            Integration.fluent_crm= response.data.integration_settings.fluent_crm ? response.data.integration_settings.fluent_crm : Integration.fluent_crm;
+
+            Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
+            Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
+            Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             
         }else{
             toast.error(response.data.message, {
@@ -260,9 +282,9 @@ const UpdateIntegration = async (key, value) => {
             outlookpopup.value = false;
         }
     } catch (error) {
-        toast.error('Action successful', {
-            position: 'bottom-right', // Set the desired position
-        });
+        // toast.error('Action successful', {
+        //     position: 'bottom-right', // Set the desired position
+        // });
     }
 }
 onBeforeMount(() => {  
@@ -277,13 +299,30 @@ onBeforeMount(() => {
     <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard "> 
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans['Integrations'] }}</h1> 
-                <p>{{ $tfhb_trans['Configure integration for conferencing, calendar and payment'] }}</p>
+                <h1 >{{ $tfhb_trans('Integrations') }}</h1> 
+                <p>{{ $tfhb_trans('Configure integration for conferencing, calendar and payment') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans['View Documentation'] }}<Icon name="ArrowUpRight" size="20" /></a>
+                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div>
+         <nav v-if="$front_end_dashboard == true" class="tfhb-booking-tabs tfhb-integrations-settings-menu"> 
+            <ul>
+                <!-- to route example like hosts/profile/13/information -->
+                
+                <li><router-link to="/settings/integrations#all" :class="{ 'active': $route.hash === '#all' }" class="integrations-submenu" data-filter="all"> <Icon name="GalleryVerticalEnd" /> {{ $tfhb_trans('All') }}</router-link></li>
+                            
+                <li><router-link to="/settings/integrations#conference" :class="{ 'active': $route.hash === '#conference' }" class="integrations-submenu" data-filter="conference"> <Icon name="Video" /> {{ $tfhb_trans('Conference') }}</router-link></li>
+
+                <li><router-link to="/settings/integrations#calendars" :class="{ 'active': $route.hash === '#calendars' }" class="integrations-submenu" data-filter="calendars"> <Icon name="CalendarDays" /> {{ $tfhb_trans('Calendars') }}</router-link></li>
+
+                <li><router-link to="/settings/integrations#payments" :class="{ 'active': $route.hash === '#payments' }" class="integrations-submenu" data-filter="payments"> <Icon name="HandCoins" /> {{ $tfhb_trans('Payments') }}</router-link></li> 
+
+                <li><router-link to="/settings/integrations#marketing-tools" :class="{ 'active': $route.hash === '#marketing-tools' }" class="integrations-submenu" data-filter="marketing-tools"> <Icon name="BadgePercent" /> {{ $tfhb_trans('Marketing Tools') }}</router-link></li> 
+                <li><router-link to="/settings/integrations#forms" :class="{ 'active': $route.hash === '#forms' }" class="integrations-submenu" data-filter="forms"> <Icon name="BookText" /> {{ $tfhb_trans('Forms') }}</router-link></li> 
+               
+            </ul>  
+        </nav>
         <div class="tfhb-content-wrap"> 
             <!-- {{ Integration }} -->
             <div class="tfhb-integrations-wrap tfhb-flexbox">
@@ -296,7 +335,7 @@ onBeforeMount(() => {
 
                 <!-- zoom intrigation -->
                 <ZoomIntregration 
-                :zoom_meeting="Integration.zoom_meeting" 
+                :zoom_meeting="Integration.zoom_meeting"  
                 @update-integrations="UpdateIntegration" 
                 :ispopup="popup"
                 @popup-open-control="isPopupOpen"
@@ -378,11 +417,11 @@ onBeforeMount(() => {
                 <!-- CF7 -->
 
                 <!-- Forminator -->
-                <ForminatorIntegrations 
+                <!-- <ForminatorIntegrations 
                 :forminator_data="Integration.forminator" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
-                />
+                /> -->
                 <!-- CF7 -->
 
                 <!-- gravity -->
@@ -397,7 +436,7 @@ onBeforeMount(() => {
                 <WebhookIntegrations 
                 :webhook_data="Integration.webhook" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- webhook -->
           
@@ -408,7 +447,7 @@ onBeforeMount(() => {
                 :ispopup="mailpopup"
                 @popup-open-control="ismailchimpPopupOpen"
                 @popup-close-control="ismailchimpPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Mailchimp intrigation -->
 
@@ -416,7 +455,7 @@ onBeforeMount(() => {
                 <FluentCRMIntegrations 
                 :fluent_crm_data="Integration.fluent_crm" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Fluent CRM -->
                 
@@ -424,9 +463,25 @@ onBeforeMount(() => {
                 <ZohoCRMIntegrations 
                 :zoho_crm_data="Integration.zoho_crm" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Zoho CRM -->
+
+                <!-- Pabbly -->
+                <PabblyIntegrations 
+                :pabbly_data="Integration.pabbly" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- Pabbly -->
+
+                <!-- Zapier -->
+                <ZapierIntegrations 
+                :zapier_data="Integration.zapier" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- Zapier -->
           
 
             </div> 

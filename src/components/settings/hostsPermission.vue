@@ -1,5 +1,5 @@
 <script setup>
-
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router'  
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
@@ -26,32 +26,32 @@ const questions_data =  reactive({});
 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_dashboard"
-                :label="$tfhb_trans['Host Can Manage Dashboard']"
+                :label="$tfhb_trans('Allow host to manage the dashboard.')"
                 name="tfhb_manage_dashboard"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_meetings"
-                :label="$tfhb_trans['Host Can Manage Meetings']"
+                :label="$tfhb_trans('Allow host to create and manage meetings.')"
                 name="tfhb_manage_meetings"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_booking"
-                :label="$tfhb_trans['Host Can Manage Booking']"
+                :label="$tfhb_trans('Allow host to manage bookings and reservations.')"
                 name="tfhb_manage_booking"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_settings"
-                :label="$tfhb_trans['Host Can Manage Settings']"
+                :label="$tfhb_trans('Allow host to adjust system and personal settings.')"
                 name="tfhb_manage_settings"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_custom_availability"
-                :label="$tfhb_trans['Host Can Manage Custom Availability']"
+                :label="$tfhb_trans('Allow host to manage custom availability settings.')"
                 name="tfhb_manage_custom_availability"
             /> 
             <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_integrations"
-                :label="$tfhb_trans['Host Can Manage Integrations']"
+                :label="$tfhb_trans('Allow host to manage integrations and external services.')"
                 name="tfhb_manage_integrations"
             /> 
         </div>

@@ -3,8 +3,9 @@ import { reactive } from 'vue';
 const Host = reactive({
     hosts: [],
     hostInfo: "",
+    fatech_host_status: false,
     async fetchHosts() {
-        const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/lists';
+        const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/lists';
         try {
             const response = await fetch(apiUrl, {
                 method: 'GET',
@@ -21,16 +22,17 @@ const Host = reactive({
             this.hosts = hostsData.hosts.map(host => {
                 return {
                     name: host.first_name + ' ' + host.last_name,
-                    value: host.user_id.toString()
+                    value: host.id.toString()
                 };
             });
+            this.fatech_host_status = true; 
         } catch (error) {
             console.error('Error fetching Hosts:', error);
         }
     },
 
     async fetchHost(HostId){
-        const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/' + HostId;
+        const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/' + HostId;
         try {
             const response = await fetch(apiUrl, {
                 method: 'GET',

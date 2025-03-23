@@ -28,12 +28,23 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  class: {
+    type: String,
+    default: ''
+  }
 });
 const emit = defineEmits([ "modal-close" ]); 
 const showData = ref(false);
 
 // onBeforeMount(() => {
 //     showData.value = props.isOpen;
+// });
+
+// clicke outside of .tfhb-popup-wrap then close the modal
+// document.addEventListener('click', (event) => {
+//   if (event.target.closest('.tfhb-popup-wrap') === null) {
+//     emit('modal-close');
+//   }
 // });
 
 
@@ -53,19 +64,20 @@ const showData = ref(false);
  
 
 
-    <div  v-show="props.isOpen"  class="tfhb-popup" :class="{'tfhb-popup-open': props.isOpen, 'tfhb-popup-close': !props.isOpen, 'tfhb-availability-popup': enableAvailabilityClass}" > 
-        <div class="tfhb-popup-wrap" :style="{ 'max-width': max_width }">
+    <div  v-show="props.isOpen"  class="tfhb-popup "  :class="props.class, {'tfhb-popup-open': props.isOpen, 'tfhb-popup-close': !props.isOpen, 'tfhb-availability-popup': enableAvailabilityClass}" > 
+      <span class="tfhb-popup-overlay" @click.stop="emit('modal-close')"></span>  
+      <div class="tfhb-popup-wrap tfhb-scrollbar" :style="{ 'max-width': max_width }">
           <div v-if="props.isOpen" >
             <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-m-0">
                 <div class="tfhb-admin-title"> 
                     <slot name="header">  </slot>
                 </div>
                 <div class="thb-admin-btn"> 
-                    <span class="tfhb-popup-close tfhb-cursor-pointer" @click.stop="emit('modal-close')"><Icon name="X" size="20" /> </span> 
+                    <span class="tfhb-popup-close tfhb-cursor-pointer" @click.stop="emit('modal-close')"><Icon name="X" size=20 /> </span> 
                 </div> 
             </div>
             <div class="tfhb-content-wrap tfhb-flexbox" :style="{ 'gap': gap }">  
-                <slot name="content"> default content </slot>
+                <slot name="content"> {{$tfhb_trans('default content')}} </slot>
             </div> 
           </div>
           

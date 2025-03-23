@@ -1,14 +1,16 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
-import { RouterView } from 'vue-router' 
-import HbText from '@/components/form-fields/HbText.vue'
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbDateTime from '@/components/form-fields/HbDateTime.vue';
+import { useRouter, useRoute, RouterView } from 'vue-router'  
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import { setupWizard } from '@/store/setupWizard';
+import useValidators from '@/store/validator'; 
+import { LicenseBase } from '@/store/license'; 
+const router = useRouter();
 
+const { errors } = useValidators();
 
 // component
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
@@ -26,6 +28,9 @@ import GravityFormsIntegrations from '@/components/integrations/GravityFormsInte
 import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';  
+
 // Toast
 import { toast } from "vue3-toastify"; 
 //  Load Time Zone 
@@ -76,19 +81,9 @@ const FilterBySearch = (e) => {
     });
     //
 
-
-    console.log(e.target.value);
+ 
 }
  
-const RedirectToDeshboard = () => {
-    // redirect with windows reload 
-    // remove body class
-    document.querySelector('body').classList.remove('tfhb-setup-wizard-body');
-
-    window.location.href = $tfhb_hydra_admin_url; 
-    // w
-}
-
  
 const isPopupOpen = () => {
     popup.value = true;
@@ -128,7 +123,7 @@ const ispaypalPopupOpen = () => {
 const ispaypalPopupClose = (data) => {
     paypalpopup.value = false;
 }
-
+const submit_preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
         type: 'payment', 
@@ -221,7 +216,13 @@ const Integration = reactive( {
 const fetchIntegration = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/integration');
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration',
+        {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
         if (response.data.status) { 
             
             // console.log(response.data.integration_settings);
@@ -241,15 +242,53 @@ const fetchIntegration = async () => {
         console.log(error);
     } 
 }
-const UpdateIntegration = async (key, value) => { 
+
+const UpdateIntegration = async (key, value, validator_field) => { 
+     // Clear the errors object
+     Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+   
+   
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!Integration[key][fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!Integration[key][fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return
+    }
+    submit_preloader.value = true;
     let data = {
         key: key,
         value: value
     }; 
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/integration/update', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/integration/update', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
             } 
         } );
     
@@ -276,19 +315,47 @@ const UpdateIntegration = async (key, value) => {
             gpopup.value = false;
             outlookpopup.value = false;
         }
+        submit_preloader.value = false;
     } catch (error) {
         toast.error('Action successful', {
             position: 'bottom-right', // Set the desired position
         });
     }
 }
-onBeforeMount(() => {  
+onBeforeMount(() => {   
+    LicenseBase.GetLicense();
     fetchIntegration();
-    // if currentHash == all 
-   
 });
 
+const activeDropdown = ref(false);
 
+const toggleDropdown = () => {
+    
+    activeDropdown.value = !activeDropdown.value;
+}
+
+const pre_loader = ref(false);
+const gotoDashboard = () => {
+    
+    // weit for 2 sec
+    pre_loader.value = true;
+    setTimeout(() => {
+        pre_loader.value = false;
+        router.push({ name: 'dashboard' });
+        props.setupWizard.currentStep = 'getting-start'
+    }, 500);  
+    
+}
+
+window.addEventListener('click', function(e) { 
+    if( props.setupWizard.currentStep == 'step-end' ){
+        if (!document.querySelector('.tfhb-s-w-integrations-dropdown').contains(e.target)) {
+            
+            activeDropdown.value = 0;
+        }
+    }
+    
+});
 </script>
 
 <template>
@@ -298,26 +365,33 @@ onBeforeMount(() => {
     <div  class="tfhb-setup-wizard-content-wrap tfhb-hydra-dasboard-content tfhb-s-w-step-end tfhb-flexbox">
         <div class="tfhb-s-w-icon-text">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
-            <h2>{{$tfhb_trans['Congratulations! You are All Set Up!']}}</h2>
-            <p>{{$tfhb_trans['You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.']}}</p> 
+            <h2>{{ $tfhb_trans('Congratulations! You are All Set Up!') }}</h2>
+            <p>{{ $tfhb_trans('You have successfully installed and activated Hydrabooking, configured your settings, connected your calendar, customized your booking forms, and embedded them on your website.') }}</p> 
        
         </div>
-        <div class="tfhb-s-w-step-end tfhb-flexbox">
+ 
+        <div class="tfhb-s-w-step-end tfhb-flexbox tfhb-full-width">
 
-            <div class="tfhb-s-w-integrations-bar tfhb-flexbox">
-                <div class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
-                    <span>All Integrations </span>  <Icon name="ChevronDown" size="20" /> 
-                    <div class="tfhb-dropdown-wrap"> 
-                        <span @click="selectedFilterIntegrations" data-filter="all"> All Integrations</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="conference"> Conference</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="calendars"> Calendars</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="payments"> Payments</span>
-                        <span @click="selectedFilterIntegrations"  data-filter="forms"> Froms</span>
-                    </div>
+            <div class="tfhb-s-w-integrations-bar tfhb-flexbox  tfhb-justify-between">
+                <div  @click.stop="toggleDropdown"  class="tfhb-s-w-integrations-dropdown tfhb-dropdown tfhb-flexbox tfhb-gap-8 ">
+                    <span class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('All Integrations') }} 
+                        <Icon v-if="activeDropdown == false" @click.stop="toggleDropdown"  name="ChevronDown" size=20 /> 
+                        <Icon v-else name="ChevronUp"  @click.stop="toggleDropdown"  size=20 /> 
+                    </span> 
+                     
+                    <transition name="tfhb-dropdown-transition">
+                        <div v-show="activeDropdown == true" class="tfhb-dropdown-wrap"> 
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="all"> {{ $tfhb_trans('All Integrations') }} </span>
+                            <span @click="selectedFilterIntegrations"  class="tfhb-dropdown-single" data-filter="conference"> {{ $tfhb_trans('Conference') }}</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="calendars"> {{ $tfhb_trans('Calendars') }}</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="payments"> {{ $tfhb_trans('Payments') }}</span>
+                            <span @click="selectedFilterIntegrations" class="tfhb-dropdown-single" data-filter="forms">{{ $tfhb_trans('Forms') }} </span>
+                        </div>
+                    </transition>
                 </div>
                 <div class="tfhb-integrations-searchbar">
-                    <input @keyup="FilterBySearch" type="text" placeholder="Search Integrations">
-                    <Icon name="Search" size="20" /> 
+                    <input @keyup="FilterBySearch" type="text" :placeholder="$tfhb_trans('Search Integrations')">
+                    <Icon name="Search" size=20 /> 
                 </div>
             </div>
 
@@ -327,13 +401,14 @@ onBeforeMount(() => {
 
                 <WooIntegrations
                 display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :woo_payment="Integration.woo_payment" @update-integrations="UpdateIntegration" v-if="currentHash === 'all' || currentHash === 'payments'"/>
+                :woo_payment="Integration.woo_payment" :pre_loader="submit_preloader" @update-integrations="UpdateIntegration" v-if="currentHash === 'all' || currentHash === 'payments'"/>
 
                 <!-- Woo Integrations  -->
 
                 <!-- zoom intrigation -->
-                <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :zoom_meeting="Integration.zoom_meeting" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="popup"
                 @popup-open-control="isPopupOpen"
@@ -343,8 +418,9 @@ onBeforeMount(() => {
                 <!-- zoom intrigation -->
 
                 <!-- zoom intrigation -->
-                <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :google_calendar="Integration.google_calendar" 
+                <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
+                :google_calendar="Integration.google_calendar"
+                :pre_loader="submit_preloader"  
                 @update-integrations="UpdateIntegration"
                 :ispopup="gpopup"
                 @popup-open-control="isgPopupOpen"
@@ -354,8 +430,9 @@ onBeforeMount(() => {
                 <!-- zoom intrigation -->
                 
                 <!-- Outlook intrigation -->
-                <OutlookCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <OutlookCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :outlook_calendar="Integration.outlook_calendar" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"
                 :ispopup="outlookpopup"
                 @popup-open-control="isOutlookPopupOpen"
@@ -368,8 +445,9 @@ onBeforeMount(() => {
                 <!-- Apple intrigation -->
 
                 <!-- stripe intrigation -->
-                <StripeIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <StripeIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :stripe_data="Integration.stripe" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="spopup"
                 @popup-open-control="isstripePopupOpen"
@@ -380,8 +458,9 @@ onBeforeMount(() => {
  
 
                 <!-- paypal intrigation -->
-                <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :paypal_data="Integration.paypal" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="paypalpopup"
                 @popup-open-control="ispaypalPopupOpen"
@@ -391,48 +470,48 @@ onBeforeMount(() => {
                 <!-- paypal intrigation -->
 
                <!-- CF7 -->
-               <CF7Integrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+               <CF7Integrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :cf7_data="Integration.cf7" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
                 <!-- CF7 -->
 
                 <!-- Fluent -->
-                <FluentFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <FluentFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :fluent_data="Integration.fluent" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
                 <!-- CF7 -->
 
-                <!-- Forminator -->
-                <ForminatorIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
-                :forminator_data="Integration.forminator" 
-                @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'forms'"
-                />
+                
                 <!-- CF7 -->
 
                 <!-- gravity -->
-                <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :gravity_data="Integration.gravity" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
                 <!-- gravity -->
 
                 <!-- webhook -->
-                <WebhookIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <WebhookIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :webhook_data="Integration.webhook" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'others'"
                 />
                 <!-- webhook -->
           
                 <!-- Mailchimp intrigation -->
-                <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :mail_data="Integration.mailchimp" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration" 
                 :ispopup="mailpopup"
                 @popup-open-control="ismailchimpPopupOpen"
@@ -442,16 +521,18 @@ onBeforeMount(() => {
                 <!-- Mailchimp intrigation -->
 
                 <!-- Fluent CRM -->
-                <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :fluent_crm_data="Integration.fluent_crm" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'others'"
                 />
                 <!-- Fluent CRM -->
                 
                 <!-- Zoho CRM -->
-                <ZohoCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"
+                <ZohoCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :zoho_crm_data="Integration.zoho_crm" 
+                :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'others'"
                 />
@@ -464,8 +545,16 @@ onBeforeMount(() => {
             
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
-             <a @click="RedirectToDeshboard" :href="$tfhb_hydra_admin_url + ''"  class="tfhb-btn boxed-btn tfhb-flexbox tfhb-flexbox tfhb-gap-8" > Visit Dashboard <Icon name="ChevronRight" size="20" /> </a>
-            
+             
+             <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 icon-left tfhb-icon-hover-animation" 
+                @click="gotoDashboard" 
+                :buttonText="$tfhb_trans('Visit Dashboard')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :hover_animation="true"  
+                :pre_loader="pre_loader" 
+            /> 
         </div>
      </div>
      <!-- Step End-->

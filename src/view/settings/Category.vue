@@ -1,14 +1,17 @@
 <script setup> 
+import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount, computed } from 'vue';
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
 import { Meeting } from '@/store/meetings';
-
+import useValidators from '@/store/validator'
+const { errors } = useValidators();
 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'; 
+import HbButton from '@/components/form-fields/HbButton.vue';
 
 const itemsPerPage = ref(5);
 const currentPage = ref(1);
@@ -19,10 +22,48 @@ const CategoryData = reactive({
   description: '',
 });
 
+const update_preloader = ref(false);
 // Create and Update Category
-const UpdateCategory = async () => { 
+const UpdateCategory = async (validator_field) => { 
+
+
+    // Clear the errors object
+    Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!CategoryData[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!CategoryData[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return
+    }
+
+
+    update_preloader.value = true;
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/categories/create-update', CategoryData, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories/create-update', CategoryData, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -43,11 +84,13 @@ const UpdateCategory = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             }); 
+            update_preloader.value = false;
         }
     } catch (error) {
         toast.error('Action successful', {
             position: 'bottom-right', // Set the desired position
         });
+        update_preloader.value = false;
     }
 }
 
@@ -64,7 +107,11 @@ const removeCategory = async (key) => {
         id: key
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/categories/delete', DeleteData, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories/delete', DeleteData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
         } );
       
         if (response.data.status) {    
@@ -124,38 +171,47 @@ const prevPage = () => {
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
-                <h1 >{{ $tfhb_trans['Meeting Category'] }}</h1> 
-                <p>{{ $tfhb_trans['Manage your time zone settings and bookings'] }}</p>
+                <h1 >{{ $tfhb_trans('Meeting Category') }}</h1> 
+                <p>{{ $tfhb_trans('Create and edit Meeting Category to organize your meetings.') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="#" target="_blank" class="tfhb-btn"> {{ $tfhb_trans['View Documentation'] }}<Icon name="ArrowUpRight" size="15" /></a>
+                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
 
-            <div class="tfhb-category-warp tfhb-flexbox tfhb-align-baseline tfhb-gap-0">
+            <div class="tfhb-category-warp tfhb-flexbox tfhb-align-flex-start tfhb-gap-0 tfhb-justify-between">
                 <div class="tfhb-admin-card-box tfhb-category-create-box tfhb-flexbox tfhb-gap-tb-24">  
                     <HbText  
                         v-model="CategoryData.title"
                         required= "true"  
-                        :label="$tfhb_trans['Category Title']"  
+                        :label="$tfhb_trans('Category Title')" 
+                        :errors="errors.title"
                         name="title"
                     /> 
                     <HbTextarea  
                         v-model="CategoryData.description"
-                        required= "true"  
+                        required= "false"  
                         name="description"
-                        :label="$tfhb_trans['Description']"  
+                        :label="$tfhb_trans('Description')"  
                     /> 
-                    <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ CategoryData.id ? $tfhb_trans['Update Category'] : $tfhb_trans['Save Category'] }}</button>
-                </div>  
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                        @click="UpdateCategory(['title'])" 
+                        :buttonText="CategoryData.id ? $tfhb_trans('Update Category'): $tfhb_trans('Save Category')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :pre_loader="update_preloader"
+                        :hover_animation="true"
+                    />    
+                 </div>  
                 <div class="tfhb-category-list">
                     <table class="table" cellpadding="0" :cellspacing="0">
                         <thead>
                             <tr>
-                                <th width="180">{{ $tfhb_trans['Name'] }}</th>
-                                <th>{{ $tfhb_trans['Description'] }}</th>
-                                <th width="120">{{ $tfhb_trans['Action'] }}</th>
+                                <th width="180">{{ $tfhb_trans('Name') }}</th>
+                                <th>{{ $tfhb_trans('Description') }}</th>
+                                <th width="120">{{ $tfhb_trans('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody v-if="paginatedCategories">
@@ -182,7 +238,7 @@ const prevPage = () => {
 
                     <div class="tfhb-booking-details-pagination tfhb-flexbox tfhb-mt-32" v-if="totalPages > 1">
                         <div class="tfhb-prev-next-button">
-                            <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === 1"><Icon name="ArrowLeft" width="20" />{{ $tfhb_trans['Previous'] }}</a>
+                            <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === 1"><Icon name="ArrowLeft" width="20" />{{ $tfhb_trans('Previous') }}</a>
                         </div>
                         <div class="tfhb-pagination">
                             <ul class="tfhb-flexbox tfhb-gap-0 tfhb-justify-normal">
@@ -192,7 +248,7 @@ const prevPage = () => {
                             </ul>
                         </div>
                         <div class="tfhb-prev-next-button">
-                            <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === totalPages">{{ $tfhb_trans['Next'] }}<Icon name="ArrowRight" width="20" /></a>
+                            <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="currentPage === totalPages">{{ $tfhb_trans('Next') }}<Icon name="ArrowRight" width="20" /></a>
                         </div>
                     </div>
                     

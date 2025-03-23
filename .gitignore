@@ -9,6 +9,18 @@ lerna-debug.log*
 
 # Git ignore src
 # src
+# sass
+.vite
+# vendor
+
+# Git ignore file name:
+composer.lock
+index.html
+jsconfig.json
+package-lock.json
+package.json
+phpcs.xml
+vite.config.js
 
 node_modules
 .DS_Store
@@ -16,11 +28,10 @@ node_modules
 dist-ssr
 coverage
 *.local 
-/cypress/videos/
-/cypress/screenshots/
 
 # Editor directories and files 
 .vscode/*
+.vite/*
 !.vscode/extensions.json
 .idea
 *.suo

@@ -1,30 +1,70 @@
 .tfhb-question-box{
     width: 100%;
+    .tfhb-single-question-box{
+        .tfhb-question-label{
+            margin: 4px 0;
+            label{
+                margin: 0 !important;
+            }
+        }
+        .status{ 
+            display: inline-block;
+            background: $success-background ;
+            color: $success-text !important;
+            padding: 2px 8px;
+            border-radius: 16px;
+            font-size: 11px !important;
+            &.disabled{
+                background-color: $warning-background;
+                color: $warning-text !important;
+            }
+            &.info{
+                background-color: $info-background;
+                color: $info-text !important;   
+            }
+        }
+        
+        &.tfhb-disable{
+            opacity: 0.7;
+        }
+        .tfhb-question-type{ 
+            position: relative;
+            .tfhb-question-type-tags{
+                position: absolute;
+                right: 8px;
+                top: 4px;
+               
+            }
+            
+        }
+       
+    }
     .tfhb-flexbox{
         flex-wrap: nowrap !important;
         select{
             padding: 0px 8px 0px 12px;
             min-width: calc(100% - 88px);
             margin-top: 4px;
-            border-radius: 4px;
+            border-radius: $border-radius-small;
             height: 40px;
-            border: 1px solid $ui50;
+            border: $border-reguler $border-type $surface-border;
             &:focus, &:active {
                 outline: none;
                 box-shadow: none; 
-                color : $primaryi950 !important;
+                color : $primary-color !important;
             }
         }
         button{
-            border-radius: 4px;
-            border: 1px solid $ui50;
-            background: #fff;
+            border-radius: $border-radius-small;
+            border: $border-reguler $border-type $surface-border;
+            background: $surface-secondary;
             height: 24px;
             width: 24px;
             padding: 4px; 
             display: flex;
             align-items: center;
             justify-content: center;
+            color:  $secondary-default;
         }
     }
     .tfhb-single-form-field.tfhb-flexbox{

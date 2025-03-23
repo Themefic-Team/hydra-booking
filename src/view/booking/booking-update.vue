@@ -1,8 +1,10 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
-import HbText from '@/components/form-fields/HbText.vue'
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbText from '@/components/form-fields/HbText.vue';
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
@@ -41,7 +43,7 @@ const flatpickr_date= reactive({
 }); 
 const fetchPreBookingData = async () => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/pre',{
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/pre',{
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -67,7 +69,7 @@ const MeetingChangeCallback = async (e) => {
         meeting_id: e.value,
     };  
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/meeting', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/meeting', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -119,7 +121,7 @@ const bookingSlot = async (date) => {
     };  
 
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/availabletime', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/availabletime', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -141,12 +143,14 @@ const bookingSlot = async (date) => {
     }
 }
 
+const create_meeting_preLoader = ref(false);
 // Add New Booking
 const createBooking = async () => {
+    create_meeting_preLoader.value = true;
     // Api Submission
     try { 
 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/create', booking, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/create', booking, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -160,11 +164,13 @@ const createBooking = async () => {
                 "autoClose": 1500,
             });  
             router.push({ name: 'BookingLists' });
+            create_meeting_preLoader.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
+            create_meeting_preLoader.value = false;
         }
 
     } catch (error) {
@@ -184,7 +190,7 @@ const MeetingGetEndTime = (e) => {
 const bookingId = route.params.id;
 const fetchSingleBooking = async () => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/'+bookingId, {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/'+bookingId, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -230,45 +236,45 @@ onBeforeMount(() => {
         <div class="tfhb-booking-box tfhb-flexbox">
             <div class="tfhb-meeting-heading tfhb-flexbox tfhb-gap-8">
                 <div class="prev-navigator tfhb-cursor-pointer" @click="TfhbPrevNavigator()">
-                    <Icon name="ArrowLeft" size="20" /> 
+                    <Icon name="ArrowLeft" size=20 /> 
                 </div>
-                <h3>{{ $tfhb_trans['Back to Booking'] }}</h3>
+                <h3>{{ $tfhb_trans('Back to Booking') }}</h3>
             </div>
             
             <HbText  
                 v-model="booking.name"
                 required= "true"  
-                :label="$tfhb_trans['Customer name']"  
+                :label="$tfhb_trans('Customer name')"  
                 name="name"
                 selected = "1"
-                :placeholder="$tfhb_trans['Jhon Deo']" 
+                :placeholder="$tfhb_trans('Jhon Deo')" 
             /> 
             <HbText  
                 v-model="booking.email"
                 required= "true"  
-                :label="$tfhb_trans['Customer email']"  
+                :label="$tfhb_trans('Customer email')"  
                 name="email"
                 selected = "1"
-                :placeholder="$tfhb_trans['name@yourmail.com']" 
+                :placeholder="$tfhb_trans('name@yourmail.com')" 
             /> 
 
             <HbDropdown
                 v-model="booking.time_zone"
                 required= "true"  
-                :label="$tfhb_trans['Client Time zone']" 
+                :label="$tfhb_trans('Client Time zone')" 
                 :filter="true"
                 selected = "1"
-                placeholder="Select Time Zone"  
+                :placeholder="$tfhb_trans('Select Time Zone')"  
                 :option = "timeZone.value" 
             />  
 
             <HbDropdown
                 v-model="booking.meeting"
                 required= "true"  
-                :label="$tfhb_trans['Select Meeting']" 
+                :label="$tfhb_trans('Select Meeting')" 
                 :filter="true"
                 selected = "1"
-                placeholder="Select Your Meeting"  
+                :placeholder="$tfhb_trans('Select Your Meeting')"  
                 :option = "meetings.value" 
                 @tfhb-onchange="MeetingChangeCallback"
             />  
@@ -277,7 +283,7 @@ onBeforeMount(() => {
                 v-if="booking.meeting"
                 v-model="booking.host"
                 required= "true"  
-                :label="$tfhb_trans['Select Team Member']" 
+                :label="$tfhb_trans('Select Team Member')" 
                 :filter="true"
                 selected = "1"
                 :option = "meeting_hosts.value" 
@@ -287,7 +293,7 @@ onBeforeMount(() => {
                 v-if="booking.meeting"
                 v-model="booking.location"
                 required= "true"  
-                :label="$tfhb_trans['Select Location']" 
+                :label="$tfhb_trans('Select Location')" 
                 :filter="true"
                 selected = "1"
                 :option = "meeting_locations.value" 
@@ -296,41 +302,50 @@ onBeforeMount(() => {
             <HbDateTime   
                 v-if="booking.meeting"
                 v-model="booking.date"
-                :label="$tfhb_trans['Select Date']" 
+                :label="$tfhb_trans('Select Date')" 
                 selected = "1" 
                 :config="flatpickr_date"
-                placeholder="Type your schedule title"   
+                :placeholder="$tfhb_trans('Enter schedule title')"   
                 :change = true
                 @dateChange="bookingSlot"
             />
 
-            <h4 v-if="previousBookedTime.value">{{ $tfhb_trans['Your Previous Booking Time:'] }} {{ previousBookedTime.value.start }} - {{ previousBookedTime.value.end }}</h4>
+            <h4 v-if="previousBookedTime.value">{{ $tfhb_trans('Your Previous Booking Time:') }} {{ previousBookedTime.value.start }} - {{ previousBookedTime.value.end }}</h4>
 
             <HbDropdown  
                 v-if="booking.date"
                 v-model="booking.time"
-                :label="$tfhb_trans['Select Time']" 
+                :label="$tfhb_trans('Select Time')" 
                 required= "true" 
                 :selected = "1"
-                placeholder="Select Booking Time"   
+                :placeholder="$tfhb_trans('Select Booking Time')"   
                 :option = "booking_time_data.value" 
                 @tfhb-onchange="MeetingGetEndTime"
             />   
             <HbDropdown  
                 v-model="booking.status"
-                :label="$tfhb_trans['Status']" 
+                :label="$tfhb_trans('Status')" 
                 required= "true" 
                 :selected = "1"
-                placeholder="Select Booking status"   
+                :placeholder="$tfhb_trans('Select Booking status')"   
                 :option = "[
                     {'name': 'Pending', 'value': 'pending'},  
                     {'name': 'Confirmed', 'value': 'confirmed'},   
-                    {'name': 'Canceled', 'value': 'canceled'}
+                    {'name': 'Canceled', 'value': 'canceled'},
+                    {'name': 'schedule', 'value': 'schedule'}
                 ]" 
             />  
 
             <div class="tfhb-submission-btn">
-                <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="createBooking">{{ $tfhb_trans['Create Booking'] }} </button>
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                    @click="createBooking"
+                    :buttonText="$tfhb_trans('Update Booking')"
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true"
+                    :pre_loader="create_meeting_preLoader"
+                />    
             </div>
         </div>
     </div>

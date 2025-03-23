@@ -23,12 +23,13 @@ class Availability {
                 id INT(11) NOT NULL AUTO_INCREMENT,
                 host INT(11) NULL,
                 title VARCHAR(100) NOT NULL,
-                time_zone VARCHAR(50) NULL,
+                time_zone VARCHAR(50) NULL, 
                 override VARCHAR(255) NULL,
                 time_slots LONGTEXT NULL, 
                 date_status LONGTEXT NULL, 
                 date_slots LONGTEXT NULL, 
                 status VARCHAR(20) NULL,
+				default_status INT(11) NULL, 
                 created_at DATE NOT NULL,
                 updated_at DATE NOT NULL, 
                 PRIMARY KEY (id)
@@ -56,7 +57,9 @@ class Availability {
 
 		$table_name            = $wpdb->prefix . $this->table;
 		$request['time_slots'] = maybe_serialize( $request['time_slots'] );
-		$request['date_slots'] = maybe_serialize( $request['date_slots'] );
+		if(isset($request['date_status'])){
+			$request['date_status'] = maybe_serialize( $request['date_status'] );
+		} 
 
 		// insert availability
 		$result = $wpdb->insert(
@@ -102,15 +105,38 @@ class Availability {
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $id = null ) {
+	public function get( $where = null, $join = false, $FirstOrFaill = false, $limit = false ) {
 
 		global $wpdb;
 
-		if ( $id ) {
+		if ( $where  != null && !is_array($where) ) {
 			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_availability WHERE id = %d", $id )
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_availability WHERE id = %d", $where )
 			);
-		} else {
+		}elseif ( $where  != null && is_array($where) ) {
+			$sql = "SELECT * FROM {$wpdb->prefix}tfhb_availability WHERE ";
+			$i   = 0;
+			foreach ( $where as $k => $v ) {
+				if ( $i == 0 ) {
+					$sql .= " $k = $v";
+				} else {
+					$sql .= " AND $k = $v";
+				}
+				++$i;
+			}
+
+			if($FirstOrFaill == true){
+				$data = $wpdb->get_row(
+					$wpdb->prepare( $sql )
+				);
+			}else{
+				$data = $wpdb->get_results(
+					$wpdb->prepare( $sql )
+				);
+			}
+			
+		}
+		 else {
 			$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_availability");
 		}
 

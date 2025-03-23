@@ -5,7 +5,8 @@ const Availability = reactive({
     GeneralSettings: {},
 
     async fetchAvailability() {
-        const apiUrl = tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/settings/availability';
+       
+        const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability';
         try {
             const response = await fetch(apiUrl, {
                 method: 'GET',
@@ -18,16 +19,10 @@ const Availability = reactive({
                 throw new Error('Network response was not ok');
             }
             const availabilityData = await response.json();
-
-            // with index
-            availabilityData.availability.forEach((available, index) => {
-                this.availabilities.push(
-                    {
-                        name: available.title,
-                        value: available.id,
-                    }
-                );
-            } );
+            
+            if(this.availabilities.length == 0){
+                this.availabilities = availabilityData.availability;
+            }
  
             // this.availabilities = availabilityData.availability.reduce((acc, available) => {
             //     acc[available.id] = available.title;
@@ -38,11 +33,12 @@ const Availability = reactive({
             console.error('Error fetching Availability:', error);
         }
     },
+  
     getGeneralSettings() {  
         this.fetchAvailability(); 
         return this.GeneralSettings;
     },
-    RearraingeWeekStart(week_start_from, time_slots) {  
+    RearraingeWeekStart(week_start_from, time_slots) {   
    
         let week_start_from_index = time_slots.findIndex( x => x.day == week_start_from );
         let week_start_from_data = time_slots.splice(week_start_from_index, time_slots.length);

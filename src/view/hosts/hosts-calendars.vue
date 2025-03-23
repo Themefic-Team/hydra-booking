@@ -7,6 +7,8 @@ import { toast } from "vue3-toastify";
 // Get Current Route url
 const currentRoute = useRouter().currentRoute.value.path;
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import GoogleCalendarIntegrations from '@/components/hosts/GoogleCalendarIntegrations.vue';
 import OutlookCalendarIntegrations from '@/components/hosts/OutlookCalendarIntegrations.vue';
 import AppleCalendarIntegrations from '@/components/hosts/AppleCalendarIntegrations.vue';
@@ -14,6 +16,7 @@ import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 
 const route = useRoute();
+const router = useRouter();
 //  Load Time Zone 
 const skeleton = ref(true);
 const props = defineProps({
@@ -122,13 +125,14 @@ const Integration = reactive( {
 
  // Fetch generalSettings
 const fetchIntegration = async () => { 
+    let host_id = route.params.id != undefined? route.params.id : props.hostId; 
     let data = {
-        id: route.params.id,
+        id: host_id,
         user_id: props.host.user_id,
     };  
     try { 
 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/integration', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/integration', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_integrations'
@@ -142,7 +146,7 @@ const fetchIntegration = async () => {
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
             Integration.stripe = response.data.stripe  ? response.data.stripe  : Integration.stripe ;  
-            console.log(response.data);
+           
             
 
             skeleton.value = false;
@@ -152,14 +156,15 @@ const fetchIntegration = async () => {
     } 
 }
 const UpdateIntegration = async (key, value) => { 
+    let host_id = route.params.id != undefined? route.params.id : props.hostId; 
     let data = {
         key: key,
         value: value,
-        id: route.params.id,
+        id: host_id,
         user_id: props.host.user_id,
     };   
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/integration/update', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/integration/update', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_integrations'
@@ -194,10 +199,25 @@ onBeforeMount(() => {
 </script>
 
 <template>
+    <HbInfoBox v-if="$user.role != 'tfhb_host'" name="first-modal">
+        
+        <template #content>
+            <span>{{$tfhb_trans('Before connecting make sure you provide the necessary credentials to')}}
+                <HbButton 
+                        classValue="tfhb-btn" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                        :buttonText="$tfhb_trans('Settings  Integrations')"
+                    />  
+            </span>
+            
+        </template>
+    </HbInfoBox>
     <div class="tfhb-admin-card-box tfhb-m-0">     
+
+        
         <!-- Host Integration -->
-        <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
-        <OutlookCalendarIntegrations  display="list" class="tfhb-flexbox tfhb-host-integrations" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
+        <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
+        <OutlookCalendarIntegrations  display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
         <!-- <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" /> -->
  
 

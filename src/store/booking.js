@@ -5,7 +5,20 @@ import interactionPlugin from '@fullcalendar/interaction'
 import axios from 'axios'  
 
 const Booking = reactive({
-    bookings: [],
+    bookings: [], 
+    FilterPreview: false,
+    filter_data: {
+        filter_type: 'upcoming',
+        filter_search: '',
+        host_ids: [],
+        meeting_ids: [],
+        status: [],
+        date_range: {
+            from: '',
+            to: ''
+        }
+
+    },
     calendarbooking: {
         plugins: [ 
             dayGridPlugin,
@@ -21,14 +34,18 @@ const Booking = reactive({
         },
         dayMaxEvents: 3,
         allDaySlot: false,
-        dayMaxEventRows: true,
     },
     skeleton : ref(true),
+    filter_skeleton : ref(false),
 
     // booking List
     async fetchBookings() {
 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/booking/lists', {
+        this.filter_skeleton = true;
+        let data = { 
+            filter_data: this.filter_data, 
+        }
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/lists', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -38,6 +55,7 @@ const Booking = reactive({
         if (response.data.status) { 
             this.bookings = response.data.bookings;
             this.calendarbooking.events = response.data.booking_calendar;
+            this.filter_skeleton = false; 
             this.skeleton = false;
         }
     }

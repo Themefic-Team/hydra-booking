@@ -1,10 +1,17 @@
 <script setup>
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbText from '@/components/form-fields/HbText.vue'
-import HbTextarea from '@/components/form-fields/HbTextarea.vue'
+import { __ } from '@wordpress/i18n';
+import { onBeforeMount, onMounted, ref } from 'vue'; 
+import { useRouter} from 'vue-router' 
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import HbText from '@/components/form-fields/HbText.vue';
+import HbTextarea from '@/components/form-fields/HbTextarea.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
-import useValidators from '@/store/validator'
+import HbPopup from '@/components/widgets/HbPopup.vue';
+import useValidators from '@/store/validator';
+import { toast } from "vue3-toastify"; 
+import axios from 'axios' 
 const { errors, isEmpty } = useValidators();
 
 const emit = defineEmits(["add-more-location", "remove-meeting-location", "update-meeting"]); 
@@ -29,8 +36,18 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    update_preloader: {
+        type: Boolean,
+        required: true
+    }
 
 });
+const createMeetingPopup = ref(false);
+
+
+// Router
+const router = useRouter();
+
 
 const tfhbValidateInput = (fieldName) => {
     
@@ -48,33 +65,81 @@ const tfhbValidateInput = (fieldName) => {
     }
 };
 
-// const google_calendar_status =  integrations.google_calendar_status == 1 ? 0 : 1;
-// const zoom_meeting_status = integrations.zoom_meeting_status == 1 ? 0 : 1;
+const CategoryData = {
+    id: '',
+    title: '',
+    description: '',
+};
+
+// Create and Update Category
+const UpdateCategory = async () => {  
+    try { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories/create-update', CategoryData, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                'capability': 'tfhb_manage_options'
+            } 
+        } );
+      
+        if (response.data.status) {  
+   
+            let category = response.data.category;
+            let categoryList = [];
+            category.forEach(element => {
+                categoryList.push({name: element.name, value: element.id});
+            });
+            props.meetingCategory.value = categoryList; 
+
+            // Set Default
+            CategoryData.id = '';
+            CategoryData.title = '';
+            CategoryData.description = '';
+            createMeetingPopup.value = false;
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            }); 
+        }
+    } catch (error) {
+        toast.error('Action successful', {
+            position: 'bottom-right', // Set the desired position
+        });
+    }
+}
+
+// close popup
+const closePopup = () => {
+    createMeetingPopup.value = false;
+}
+onMounted(() => {   
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Optional: Use 'auto' for instant scroll
+      });
+   
+});
+
 
 </script>
 
 <template> 
     <div class="meeting-create-details tfhb-gap-24">
+        
         <HbText  
             v-model="meeting.title" 
             required= "true"  
-            :label="$tfhb_trans['Meeting title']"  
+            :label="$tfhb_trans('Meeting title')"  
             name="title"
             selected = "1"
-            :placeholder="$tfhb_trans['Type meeting title']" 
-            @keyup="() => tfhbValidateInput('title')"
-            @click="() => tfhbValidateInput('title')"
+            :placeholder="$tfhb_trans('Type meeting title')" 
             :errors="errors.title"
         /> 
         <HbTextarea  
             v-model="meeting.description" 
-            required= "true"  
+            required= "false"  
             name="description"
-            :label="$tfhb_trans['Description']"  
-            :placeholder="$tfhb_trans['Describe about meeting']"
-            @keyup="() => tfhbValidateInput('description')"
-            @click="() => tfhbValidateInput('description')"
-            :errors="errors.description"
+            :label="$tfhb_trans('Description')"  
+            :placeholder="$tfhb_trans('Describe about meeting')" 
         /> 
 
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-16 tfhb-m-0 tfhb-full-width"> 
@@ -82,7 +147,7 @@ const tfhbValidateInput = (fieldName) => {
             <HbDropdown 
                 v-model="meeting.duration" 
                 required= "true" 
-                :label="$tfhb_trans['Duration']"  
+                :label="$tfhb_trans('Duration')"  
                 :selected = "1"
                 name="duration"
                 placeholder="Select Meetings Duration"  
@@ -93,67 +158,75 @@ const tfhbValidateInput = (fieldName) => {
                     {name: '60 minutes', value: '60'},
                     {name: 'Custom', value: 'custom'} 
                 ]" 
-                @add-change="tfhbValidateInput('duration')" 
-                @add-click="tfhbValidateInput('duration')" 
                 :errors="errors.duration"
             />
             <!-- Duration -->
             <!-- Custom Duration -->
             <HbText  
                 v-model="meeting.custom_duration"  
-                :label="$tfhb_trans['Custom Duration']"  
+                :label="$tfhb_trans('Custom Duration')"  
                 name="title"
                 type="number"
                 selected = "1"
-                :placeholder="$tfhb_trans['Type Custom Duration']"  
+                :placeholder="$tfhb_trans('Type Custom Duration')"  
                 v-if="'custom'==meeting.duration"
             /> 
-             <!-- Custom Duration -->
-            <!-- <HbSwitch 
-                type="checkbox" 
-                required= "true" 
-                :label="$tfhb_trans['Allow attendee to select duration']" 
-            /> -->
+        
         </div>
 
         <div class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width"> 
-            <div class="tfhb-flexbox tfhb-gap-16 tfhb-mb-24" v-for="(slocation, index) in meeting.meeting_locations" :key="index">
+            <div class="tfhb-flexbox  tfhb-mb-24" style="gap:4px 16px"  v-for="(slocation, index) in meeting.meeting_locations" :key="index">
                 <div class="tfhb-meeting-location tfhb-flexbox tfhb-gap-16" :style="meeting.meeting_locations.length<2 ?'width:100%' : '' ">
-                    <!-- Location -->
-                    <HbDropdown 
+                  
+                    <HbDropdown  
                         v-model="slocation.location" 
                         required= "true" 
-                        :label="$tfhb_trans['Location']"  
+                        :label="$tfhb_trans('Location')"  
                         :selected = "1"
-                        :placeholder="$tfhb_trans['Location']" 
+                        :placeholder="$tfhb_trans('Location')" 
                         :option = "[
-                            {name: 'Zoom', value: 'zoom', disable:  integrations.zoom_meeting_status}, 
-                            {name: 'Google Meet', value: 'meet', disable: integrations.google_calendar_status}, 
+                            {name: 'Zoom', value: 'zoom',  icon: $tfhb_url+'/assets/images/zoom-icon-small.svg', }, 
+                            {name: 'Google Meet', value: 'meet',  icon: $tfhb_url+'/assets/images/google-meet-small.svg', }, 
+                            {name: 'MS Teams / Outlook', value: 'MS Teams',  icon: $tfhb_url+'/assets/images/ms_teams-logo.svg', }, 
                             {name: 'In Person (Attendee Address)', value: 'In Person (Attendee Address)',},
                             {name: 'In Person (Organizer Address)', value: 'In Person (Organizer Address)'},
                             {name: 'Attendee Phone Number', value: 'Attendee Phone Number'},
                             {name: 'Organizer Phone Number', value: 'Organizer Phone Number'},
-                            {name: 'Online Meeting', value: 'Online Meeting'}
+                            {name: 'Add Custom', value: 'Custom'}
                         ]" 
-                        :width= "50"
+                        :width= "
+                        slocation.location ==  'Custom' ||
+                        slocation.location ==  'In Person (Organizer Address)' ||
+                        slocation.location ==  'Organizer Phone Number' 
+                        ? 50 : 100"
                     />
+ 
                     <!-- Address -->
                     <HbText  
                         v-model="slocation.address" 
                         required= "true"  
-                        :label="$tfhb_trans['Address']"  
+                        :label="$tfhb_trans('Address')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type Location Address']" 
+                        :placeholder="$tfhb_trans('Enter Address')" 
                         :width= "50"
-                        v-if="'In Person (Organizer Address)'==slocation.location  || 'Online Meeting'==slocation.location"
+                        v-if="'In Person (Organizer Address)'== slocation.location "
+                    /> 
+                    <HbText  
+                        v-model="slocation.address" 
+                        required= "true"  
+                        :label="$tfhb_trans('Add Custom Location')"  
+                        selected = "1"
+                        :placeholder="$tfhb_trans('Enter Address')" 
+                        :width= "50"
+                        v-if="'Custom'==slocation.location"
                     /> 
                     <HbText  
                         v-model="slocation.address" 
                         type="number"
                         required= "true"  
-                        :label="$tfhb_trans['Phone Number']"  
+                        :label="$tfhb_trans('Phone Number')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type Location Phone Number']" 
+                        :placeholder="$tfhb_trans('Enter Phone Number')" 
                         :width= "50"
                         v-if="'Organizer Phone Number'==slocation.location"
                     /> 
@@ -161,54 +234,121 @@ const tfhbValidateInput = (fieldName) => {
                 <div class="tfhb-meeting-location-removed" v-if="meeting.meeting_locations.length>1" @click="emit('remove-meeting-location', index)">
                     <Icon name="Trash" :width="16" />
                 </div>
+                <div  v-if="slocation.location == 'zoom' && props.integrations.zoom_meeting_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Zoom is not connected.')}} 
+                    <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                        :buttonText="$tfhb_trans('Please Configure')"
+                    />  
+                </div>
+                <div  v-if="slocation.location == 'Attendee Phone Number' " class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
+                    {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Phone"')}}  
+                   
+                </div>
+                <div  v-if="slocation.location == 'In Person (Attendee Address)' " class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">
+                    {{$tfhb_trans(' Note: For use this location, you need to add a extra field in booking form. Field label should be "Address"')}}  
+                
+                </div>
+                <div  v-if="slocation.location == 'meet' && props.integrations.google_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Google Meet is not connected.')}}  
+                    <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                        :buttonText="$tfhb_trans('Please Configure')"
+                    />  
+                </div> 
+                <div  v-if="slocation.location == 'MS Teams' && props.integrations.outlook_calendar_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">{{$tfhb_trans('Outlook Calendar is not connected.')}}  
+                    <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsAntegrations' })" 
+                        :buttonText="$tfhb_trans('Please Configure')"
+                    />  
+                </div>
             </div>
             <div class="tfhb-add-new-question">
-                <div class="new-location tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" @click="emit('add-more-location')">
+             
+                <button @click="emit('add-more-location')" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                     <Icon name="PlusCircle" :width="20"/>
-                    {{ $tfhb_trans['Add Another Location'] }}
-                </div>
+                    {{ $tfhb_trans('Add Another Location') }}
+                </button> 
             </div>
         </div>
 
         <div v-if="meeting.meeting_type == 'one-to-group'" class="tfhb-admin-card-box tfhb-no-flexbox tfhb-m-0 tfhb-full-width">  
             <div class="tfhb-meeting-location tfhb-flexbox tfhb-gap-16" > 
-                <HbText  
+                    <HbText  
                         v-model="meeting.max_book_per_slot"  
                         type= "number"
-                        :label="$tfhb_trans['Max invitees in a spot']"   
-                        :placeholder="'Max invitees in a spot'" 
+                        :label="$tfhb_trans('Max invitees in a spot')"   
+                        :placeholder="$tfhb_trans('Max invitees in a spot')" 
                         :width= "100"
                        
-                    /> 
-
+                    />  
                     <HbSwitch 
                         v-model="meeting.is_display_max_book_slot" 
                         type="checkbox" 
                         required= "true" 
-                        :label="$tfhb_trans['Display remaining spots on booking page']" 
+                        :label="$tfhb_trans('Display remaining spots on booking page')" 
                     />
             </div>  
         </div>
 
 
-        <!-- Category -->
+        <!-- Category --> 
         <HbDropdown 
             v-model="meeting.meeting_category" 
             required= "true" 
-            :label="$tfhb_trans['Select Category']"  
+            :label="$tfhb_trans('Select Category')"  
             :selected = "meeting.meeting_category"
-            :placeholder="$tfhb_trans['Select Category']" 
-            :option = "meetingCategory" 
+            :placeholder="$tfhb_trans('Select Category')" 
+            :option = "props.meetingCategory.value" 
         />
         <div class="tfhb-add-moreinfo tfhb-full-width" >
-            <router-link :to="'/settings/category'" exact :class="'tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto'">
+            
+
+            <button @click="createMeetingPopup = !createMeetingPopup" class="tfhb-btn tfhb-inline-flex tfhb-gap-8 tfhb-justify-normal tfhb-height-auto">
                 <Icon name="PlusCircle" :width="20"/>
-                {{ $tfhb_trans['Create Category'] }}
-            </router-link>
+                {{ $tfhb_trans('Create Category') }}
+            </button> 
         </div>
         <div class="tfhb-submission-btn">
-            <button class="tfhb-btn boxed-btn tfhb-flexbox" @click="emit('update-meeting', ['title', 'description', 'duration'])">{{ $tfhb_trans['Save & Continue'] }} </button>
+            
+            <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                @click="emit('update-meeting', ['title',  'duration'])"
+                :buttonText="$tfhb_trans('Save & Continue')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :pre_loader="props.update_preloader"
+                :hover_animation="true"
+                
+            />  
         </div>
         <!--Bookings -->
+
+        <HbPopup :isOpen="createMeetingPopup" @modal-close="closePopup" max_width="600px" name="first-modal">
+            <template #header> 
+                <h2>{{ $tfhb_trans('Create Meeting Category') }}</h2>
+                
+            </template>
+
+            <template #content>   
+                <HbText  
+                    v-model="CategoryData.title"
+                    required= "true"  
+                    :label="$tfhb_trans('Category Title')"  
+                    name="ctg-title"
+                /> 
+                <HbTextarea  
+                    v-model="CategoryData.description"
+                    required= "true"  
+                    name="ctg-description"
+                    :label="$tfhb_trans('Description')"  
+                /> 
+                <button class="tfhb-btn boxed-btn" @click="UpdateCategory">{{ $tfhb_trans('Save Category') }}</button> 
+            </template> 
+        </HbPopup>
     </div>
 </template>

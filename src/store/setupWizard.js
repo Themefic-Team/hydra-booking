@@ -6,19 +6,33 @@ const setupWizard = reactive({
     skeleton: true,
     // currentStep: 'step-end',
     time_zone: {},
-    pre_loader: 'false',
+    pre_loader: false,
+    skip_preloader: false,
     currentStep: 'getting-start',
     data: {
         email: '',
         enable_recevie_updates: 1,
         business_type : '',
+        skip_import: false,
         meeting : {},
         availabilityDataSingle: { 
             id: 0,
             title: '',
-            time_zone: '',
+            time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             date_status: 0,
+            default_status: true,
             time_slots: [
+
+                { 
+                    day: 'Sunday', 
+                    status: 1,
+                    times: [
+                        {
+                            start: '09:00',
+                            end: '17:00',
+                        }
+                    ]
+                },
                 { 
                     day: 'Monday',
                     status: 1,
@@ -78,16 +92,6 @@ const setupWizard = reactive({
                             end: '17:00',
                         }
                     ]
-                },
-                { 
-                    day: 'Sunday', 
-                    status: 1,
-                    times: [
-                        {
-                            start: '09:00',
-                            end: '17:00',
-                        }
-                    ]
                 }
             ],
             date_slots: [
@@ -98,7 +102,7 @@ const setupWizard = reactive({
     // Other Information 
     async fetchSetupWizard() {   
         try {  
-            const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/setup-wizard/fetch', {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/setup-wizard/fetch', {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -119,10 +123,9 @@ const setupWizard = reactive({
 
 
     // Other Information 
-    async importDemoMeeting() {   
-        this.pre_loader = 'true';
+    async importDemoMeeting() {    
         try {  
-            const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/setup-wizard/import-meeting', this.data, {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/setup-wizard/import-meeting', this.data, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                     'capability': 'tfhb_manage_options'
@@ -130,9 +133,22 @@ const setupWizard = reactive({
             } );
     
             if (response.data.status) { 
-                this.pre_loader = 'false';
-                this.data.meeting = response.data.meeting;
-                this.currentStep = 'step-four'; 
+
+                this.data.meeting = response.data.meeting; 
+
+                if(this.skip_preloader == false) {
+                    this.pre_loader = false;
+                    this.currentStep = 'step-four'; 
+                }else{
+
+                    this.skip_preloader = false;
+                    if(this.currentStep == 'step-two') {
+                        this.currentStep = 'step-four';
+                    }else{
+                        this.currentStep = 'step-end';
+                    } 
+                }
+                
             }
         } catch (error) {
 

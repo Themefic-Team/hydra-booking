@@ -1,16 +1,22 @@
 <script setup>
-import { reactive, onBeforeMount, ref } from 'vue';
+import { __ } from '@wordpress/i18n';
+import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import { useRouter, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import Icon from '@/components/icon/LucideIcon.vue'
 import Header from '@/components/Header.vue'; 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
+import HbButton from '@/components/form-fields/HbButton.vue';
 import HbSelect from  '@/components/form-fields/HbSelect.vue';
 import HbText from  '@/components/form-fields/HbText.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 // Import for redirect route   
 import { Notification } from '@/store/notification'; 
 import { toast } from "vue3-toastify"; 
+
+import useValidators from '@/store/validator'
+const { errors } = useValidators();
+
 const router = useRouter();
 const isModalOpened = ref(false);
 const skeleton = ref(true);
@@ -27,7 +33,7 @@ const usersData = reactive({});
 const fetchHosts = async () => {
 
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/lists',{
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/lists',{
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -43,12 +49,46 @@ const fetchHosts = async () => {
     } 
 } 
 // Hosts
-const CreateHosts = async () => {    
+const create_host_preloader = ref(false);
+const CreateHosts = async (validator_field) => {    
+
+    // Clear the errors object
+    Object.keys(errors).forEach(key => {
+        delete errors[key];
+    });
+    
+    // Errors Added
+    if(validator_field){
+        validator_field.forEach(field => {
+
+        const fieldParts = field.split('___'); // Split the field into parts
+        if(fieldParts[0] && !fieldParts[1]){
+            if(!host[fieldParts[0]]){
+                errors[fieldParts[0]] = 'Required this field';
+            }
+        }
+        if(fieldParts[0] && fieldParts[1]){
+            if(!host[fieldParts[0]][fieldParts[1]]){
+                errors[fieldParts[0]+'___'+[fieldParts[1]]] = 'Required this field';
+            }
+        }
+            
+        });
+    }
+    // Errors Checked
+    const isEmpty = Object.keys(errors).length === 0;
+    if(!isEmpty && host.id == 0){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        return
+    }
     // redirect with router argument
-   
+   create_host_preloader.value = true;
     try { 
         // axisos sent dataHeader Nonce Data
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/create', host, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/create', host, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -61,9 +101,17 @@ const CreateHosts = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });  
+            create_host_preloader.value = false;
             closeModal(); 
-            hosts.data = response.data.hosts;  
-            router.push({ name: 'HostsProfile', params: { id: response.data.id} });
+            hosts.data = response.data.hosts;   
+            router.push({ name: 'HostsProfile', params: { id: response.data.id} }).then(() => {
+                    nextTick(() => {
+                        toast.success(response.data.message, {
+                            position: 'bottom-right',
+                            autoClose: 1500,
+                        });
+                    });
+                }); 
             // Redirecto to Other Route
             // router.push({ name: 'HostsProfile' });
         }else{
@@ -71,6 +119,7 @@ const CreateHosts = async () => {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
+            create_host_preloader.value = false;
         }
     } catch (error) {
         console.log(error);
@@ -84,7 +133,7 @@ const deleteHost = async ($id, $user_id) => {
         user_id: $user_id
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/delete', deleteHost, { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/delete', deleteHost, { 
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -110,7 +159,7 @@ const updateHostStatus = async ($id, $user_id, $status) => {
         status: $status
     }
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/update-status', HostData, { 
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/update-status', HostData, { 
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -142,7 +191,7 @@ const Tfhb_Host_Filter = async (e) =>{
     filterData.name=e.target.value;
     skeleton.value = true;
     try {
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/filter', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/filter', {
             params: {
                 filterData
             },
@@ -162,26 +211,33 @@ const Tfhb_Host_Filter = async (e) =>{
     }
 }
 
+
 </script>
 
 <template>
-
-    <!-- {{ tfhbClass }} -->
-    <div :class="{ 'tfhb-skeleton': skeleton }"  class="tfhb-admin-hosts">
-        <Header title="Hosts" :notifications="Notification.Data" />
-        <div class="tfhb-dashboard-heading tfhb-flexbox">
+ 
+    <div :class="{ 'tfhb-skeleton': skeleton, 'tfhb-admin-frontend-end-wrap': $route.path === '/hosts/list' }"  class="tfhb-admin-hosts">
+        <Header v-if="$front_end_dashboard == false"  :title="$tfhb_trans('Hosts')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
+        <div v-if="$user.role != 'tfhb_host'" class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 
-                <span><Icon name="Search" size="20" /></span>
+                <span><Icon name="Search" size=20 /></span>
            </div>
-            <div class="thb-admin-btn right">
-               <button class="tfhb-btn boxed-btn flex-btn" @click="openModal"><Icon name="PlusCircle" size="20" /> {{ $tfhb_trans['Add New Host'] }}</button> 
+            <div class="thb-admin-btn right"> 
+               <HbButton 
+                    classValue="tfhb-btn boxed-btn flex-btn " 
+                    @click="openModal"
+                    :buttonText="$tfhb_trans('Add New Host')"
+                    icon="PlusCircle"  
+                    icon_position="left"
+
+                />  
             </div> 
         </div>
         <div class="tfhb-hosts-content">  
-            <HbPopup :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
+            <HbPopup v-if="$user.role != 'tfhb_host'" :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
                 <template #header> 
-                    <h2>{{$tfhb_trans['Add New Host']}}</h2>   
+                    <h2>{{ $tfhb_trans('Add New Host') }}</h2>   
                 </template>
 
                 <template #content>  
@@ -189,10 +245,12 @@ const Tfhb_Host_Filter = async (e) =>{
                     <HbDropdown    
                         v-model="host.id"  
                         required= "true"  
-                        :label="$tfhb_trans['Select User']"  
+                        :label="$tfhb_trans('Select User')"  
+                        name="id"
                         selected = "1"
-                        :placeholder="$tfhb_trans['Select User']" 
+                        :placeholder="$tfhb_trans('Select User')" 
                         :option = "usersData.data" 
+                        :errors="errors.id"
                     /> 
                     <!-- Select User --> 
                     <!-- UsernName -->
@@ -200,9 +258,11 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-if="host.id == 0"
                         v-model="host.username"  
                         required= "true"  
-                        :label="$tfhb_trans['Username']"  
+                        :label="$tfhb_trans('Username')"  
+                        name="username"
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type Username']"  
+                        :placeholder="$tfhb_trans('Type Username')"  
+                        :errors="errors.username"
                     /> 
                     <!-- UsernName -->
                     <!-- Email -->
@@ -211,9 +271,11 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-model="host.email"  
                         required= "true"  
                         type= "email"  
-                        :label="$tfhb_trans['Email']"  
+                        name="email"
+                        :label="$tfhb_trans('Email')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type User Email']"  
+                        :placeholder="$tfhb_trans('Type User Email')"  
+                        :errors="errors.email"
                     /> 
                     <!-- Email -->
 
@@ -223,18 +285,29 @@ const Tfhb_Host_Filter = async (e) =>{
                         v-if="host.id == 0"
                         v-model="host.password"  
                         required= "true"  
+                        name="password"
                         type= "password"  
-                        :label="$tfhb_trans['Password']"  
+                        :label="$tfhb_trans('Password')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans['Type User Password']"  
+                        :placeholder="$tfhb_trans('Type User Password')"  
+                        :errors="errors.password"
                     /> 
                     <!-- Password -->
                     
 
-                    <!-- Create Or Update Availability -->
-                    <button class="tfhb-btn boxed-btn" @click="CreateHosts">{{ $tfhb_trans['Create Hosts'] }}</button>
+                    <!-- Create Or Update Availability --> 
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn " 
+                        @click="CreateHosts( ['username', 'email', 'password'] )"
+                        :buttonText="$tfhb_trans('Create Hosts')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true"
+                        :pre_loader="create_host_preloader"
+                    />   
                 </template> 
             </HbPopup>
+
              <router-view :host_list="hosts.data" @update-host-status="updateHostStatus" @delete-host="deleteHost" :host_skeleton="skeleton" /> 
         </div> 
     </div>

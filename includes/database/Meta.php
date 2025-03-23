@@ -71,30 +71,64 @@ class Meta {
 	 * Update the database availability.
 	 */
 	public function update( $request ) {
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table; 
+		
+		$id = $request['id'];
+		unset( $request['id'] );
+
+		// Update availability
+
+		$result = $wpdb->update(
+			$table_name,
+			$request,
+			array( 'id' => $id )
+		);
+
+		if ( $result === false ) {
+			return false;
+		} else {
+			return array(
+				'status'    => true,
+				'update_id' => $wpdb->insert_id,
+			);
+		}
 	}
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $where = null, $join = false, $FirstOrFaill = false, $limit = false ) {
+	public function get( $where = null, $limit = false ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->table;
 		$sql        = "SELECT * FROM $table_name";
+		$data = [];
 		if ( $where != null ) {
-			foreach ( $where as $key => $value ) {
-				$sql .= ' WHERE ' . $value['column'] . ' ' . $value['operator'] . ' ' . $value['value'] . '';
+			foreach ( $where as $key => $condition ) {
+				$field =  $condition[0]; 
+				$operator = $condition[1];
+				$value = $condition[2];  
+				if($key == 0){
+					$sql .= " WHERE $field $operator %s";
+                    $data[] = $value;
+				}else{
+                    $sql .= " AND $field $operator %s";
+                    $data[] = $value;
+                }
 
 			}
 
 			 
 
-		} else {
-			$sql .= ' ORDER BY id DESC';
-		}
+		}  
+		$sql .= ' ORDER BY id DESC';
 		// limit
 		if ( $limit != false ) {
-			$sql .= ' LIMIT ' . $limit;
-		} 
-		$data = $wpdb->get_results( $sql );
+			$sql .= " LIMIT $limit";
+		}   
+		$query = $wpdb->prepare($sql, $data);
+		$data = $wpdb->get_results( $query ); 
 		return $data;
 	}
 

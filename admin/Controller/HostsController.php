@@ -20,6 +20,8 @@ class HostsController {
 
 	// constaract
 	public function __construct() { 
+
+
 	}
 
 	public function init() {
@@ -162,6 +164,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterHosts' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -198,7 +201,7 @@ class HostsController {
 			'status'  => true,
 			'users'   => $userData,
 			'hosts'   => $HostsList,
-			'message' => 'General Settings Updated Successfully',
+			'message' =>  __( 'General Settings Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -214,7 +217,7 @@ class HostsController {
 		$data = array(
 			'status'  => true,
 			'hosts'   => $HostsList,
-			'message' => 'Host Data Successfully Retrieve!',
+			'message' =>  __( 'General Settings Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -228,7 +231,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Select User',
+					'message' =>  __( 'Select User', 'hydra-booking' ),
 				)
 			);
 		}
@@ -239,7 +242,7 @@ class HostsController {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Please fill all fields',
+						'message' =>  __( 'Please fill all the fields', 'hydra-booking' ),
 					)
 				);
 			}
@@ -268,7 +271,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid User',
+					'message' =>  __( 'Invalid User', 'hydra-booking' ),
 				)
 			);
 		}
@@ -281,7 +284,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'This User is already a host',
+					'message' =>  __( 'This User is already a host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -299,13 +302,30 @@ class HostsController {
 			'status'         => 'activate',
 		);
 
+		// get Default Availability
+		$Availability = new Availability();
+		
+		// get default availability
+		$getAvailability = $Availability->get(
+			array(
+				'default_status' => true,
+			),
+			false,
+			true,
+		);
+		if($getAvailability){
+			 $data['availability_type'] = 'settings';
+			 $data['availability_id'] = $getAvailability->id;
+		}  
+
+
 		// Insert Host
 		$hostInsert = $host->add( $data );
 		if ( ! $hostInsert['status'] ) {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while creating host',
+					'message' =>  __( 'Error while creating host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -313,6 +333,12 @@ class HostsController {
 		unset( $data['user_id'] );
 		$data['host_id'] = $hostInsert['insert_id'];
 
+
+		
+
+		// $data['host_id'] = $hostInsert['insert_id'];
+
+	
 		// Update user Option
 		update_user_meta( $user_id, '_tfhb_host', $data );
 
@@ -324,7 +350,7 @@ class HostsController {
 			'status'  => true,
 			'hosts'   => $HostsList,
 			'id'      => $hosts_id,
-			'message' => 'General Settings Updated Successfully',
+			'message' => __( 'General Settings Updated Successfully', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -340,7 +366,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -351,7 +377,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while deleting host',
+					'message' => __( 'Error while deleting host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -372,27 +398,28 @@ class HostsController {
 		$data = array(
 			'status'  => true,
 			'hosts'   => $HostsList,
-			'message' => 'Host Deleted Successfully',
+			'message' => __( 'Host Deleted Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
 
 	// Delete Host
 	public function getTheHostData( $request ) {
+		
 		$id = $request['id'];
+		
 		// Check if user is selected
 		if ( empty( $id ) || $id == 0 ) {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $id );
-
+		$HostData = $host->getHostById( $id ); 
 		$_tfhb_host_availability_settings = get_user_meta( $HostData->user_id, '_tfhb_host', true );
 		if ( ! empty( $_tfhb_host_availability_settings['availability'] ) ) {
 			$HostData->availability = $_tfhb_host_availability_settings['availability'];
@@ -401,7 +428,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' => __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -415,13 +442,31 @@ class HostsController {
 		// Hosts Global Settings.
 		$_tfhb_hosts_settings = get_option( '_tfhb_hosts_settings' );
 
+		// host global availability
+		$availability     = get_option( '_tfhb_availability_settings' ); 
+		$count = 0;
+		$availabilityData = array();
+		foreach ( $availability as $key => $value ) {
+			$title = isset($value['default_status']) && $value['default_status'] == true ? $value['title'] . '( ' . 'Default' . ' )' : $value['title'];
+			$availabilityData[$count]['name'] = $title;
+			$availabilityData[ $count ]['value'] =  "" . $value['id'] . "";
+			$count++;
+		}
+
+		// Availability
+		$integrations = array();
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
+		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
+
 		// Return response
 		$data = array(
 			'status'         => true,
 			'host'           => $HostData,
 			'time_zone'      => $time_zone,
+			'settingsAvailabilityData'      => $availabilityData,
 			'hosts_settings' => $_tfhb_hosts_settings,
-			'message'        => 'Host Data',
+			'integrations' => $integrations,
+			'message'        =>  __( 'Host Data', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -432,13 +477,12 @@ class HostsController {
 
 		// return rest_ensure_response($request['others_information']);
 		// Check if user is selected
-		// $host_id = $request['id'];
-		$host_id = $request['user_id'];
+		$host_id = $request['id'];
 		if ( empty( $host_id ) || $host_id == 0 ) {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -450,7 +494,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' => __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -476,20 +520,20 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while updating host',
+					'message' =>  __( 'Error while updating host', 'hydra-booking' ),
 				)
 			);
 		}
 		// Update user Option
 		$data['host_id']      = $host_id;
-		$data['availability'] = $request['availability'];
+		$data['availability'] = isset($request['availability']) ? $request['availability'] : array();
 		update_user_meta( $host_id, '_tfhb_host', $data );
 		// Hosts Lists
 		$HostsList = $host->get();
 		// Return response
 		$data = array(
 			'status'  => true,
-			'message' => 'Host Updated Successfully',
+			'message' =>  __( 'Host Information Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -497,7 +541,7 @@ class HostsController {
 	public function UpdateHostsStatus() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 
-		$host_id = $request['user_id'];
+		$host_id = $request['id'];
 		if ( $request['status'] == 1 || 'deactivate' == $request['status'] ) {
 			$status = 'activate';
 		}
@@ -509,20 +553,21 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
 
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $host_id );
+		$HostData =  $host->getHostById( $host_id );
+		$user_id = $HostData->user_id;
 
 		if ( empty( $HostData ) ) {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
@@ -537,17 +582,17 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while updating host',
+					'message' =>  __( 'Error while updating host', 'hydra-booking' ),
 				)
 			);
 		}
 
 		// Get User MEta
-		$_tfhb_host           = get_user_meta( $host_id, '_tfhb_host', true );
+		$_tfhb_host           = get_user_meta( $user_id, '_tfhb_host', true );
 		$_tfhb_host['status'] = $status;
 
 		// Update user Option
-		update_user_meta( $host_id, '_tfhb_host', $_tfhb_host );
+		update_user_meta( $user_id, '_tfhb_host', $_tfhb_host );
 
 		// Hosts Lists
 		$HostsList = $host->get();
@@ -556,7 +601,7 @@ class HostsController {
 		$data = array(
 			'status'  => true,
 			'hosts'   => $HostsList,
-			'message' => 'Host Status Updated Successfully',
+			'message' =>  __( 'Host Status Updated Successfully', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -571,16 +616,20 @@ class HostsController {
 		$host     = new Host();
 		$hostData = $host->get( $host_id );
 		$user_id  = $hostData->user_id;
+		
+		
 
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 
+		
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 
 		// Google Calendar API
 		$google_calendar = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 
+		
 
-		if ( $_tfhb_integration_settings['google_calendar']['status']  ) {
+		if ( isset($_tfhb_integration_settings['google_calendar']['status']) && $_tfhb_integration_settings['google_calendar']['status']  ) {
 
 			$google_calendar['type']              = 'google_calendar';
 			$GoogleCalendar                       = new GoogleCalendar();
@@ -590,27 +639,33 @@ class HostsController {
 
 		}else{
 			$google_calendar['type']              = 'google_calendar';
-			$google_calendar['status']            = $_tfhb_integration_settings['google_calendar']['status'];
-			$google_calendar['connection_status'] = $_tfhb_integration_settings['google_calendar']['connection_status'];
+			$google_calendar['status']            = false;
+			$google_calendar['connection_status'] = false;
 		}
 
-		// Outlook Calendar API
-		$outlook_calendar = isset( $_tfhb_host_integration_settings['outlook_calendar'] ) ? $_tfhb_host_integration_settings['outlook_calendar'] : array();
 
-		if ( $_tfhb_integration_settings['outlook_calendar']['status'] == true ) {
+		// Zoom
+		$zoom_meeting = isset( $_tfhb_host_integration_settings['zoom_meeting'] ) ? $_tfhb_host_integration_settings['zoom_meeting'] : array();
+		
+		
+		
+		if ( isset($_tfhb_integration_settings['zoom_meeting']['status']) && $_tfhb_integration_settings['zoom_meeting']['status']  ) {
+		
+			$zoom_meeting['type']              = 'zoom_meeting';  
+			$zoom_meeting['connection_status'] = $_tfhb_integration_settings['zoom_meeting']['connection_status'];
 
-			$outlook_calendar['type']              = 'outlook_calendar';
-			$OutlookCalendar                       = new OutlookCalendar();
-			$outlook_calendar['access_url']        = $OutlookCalendar->GetAccessTokenUrl( $user_id );
-			$outlook_calendar['status']            = $_tfhb_integration_settings['outlook_calendar']['status'];
-			$outlook_calendar['connection_status'] = $_tfhb_integration_settings['outlook_calendar']['connection_status'];
-
+		}else{
+			$zoom_meeting['type']              = 'zoom_meeting';
+			$zoom_meeting['status']            = false;
+			$zoom_meeting['connection_status'] = false;
 		}
+
+		
 
 		// Apple Calendar
 		$apple_calendar = isset( $_tfhb_host_integration_settings['apple_calendar'] ) ? $_tfhb_host_integration_settings['apple_calendar'] : array();
 
-		if ( $_tfhb_integration_settings['apple_calendar']['connection_status'] == true ) {
+		if ( isset($_tfhb_integration_settings['apple_calendar']['connection_status']) && $_tfhb_integration_settings['apple_calendar']['connection_status'] == true ) {
 
 			$apple_calendar['type']              = 'calendar';
 			$apple_calendar['status']            = $_tfhb_integration_settings['apple_calendar']['status'];
@@ -619,37 +674,9 @@ class HostsController {
 			$apple_calendar['app_password']      = isset( $apple_calendar['app_password'] ) ? $apple_calendar['app_password'] : '';
 		}
 
-		// Stripe API
-		$stripe = isset( $_tfhb_host_integration_settings['stripe'] ) ? $_tfhb_host_integration_settings['stripe'] : array();
-		if ( $_tfhb_integration_settings['stripe']['status'] == true ) {
-
-			$stripe['type']              = 'stripe';
-			$stripe['status']            = $_tfhb_host_integration_settings['stripe']['status'];
-			$stripe['connection_status'] = $_tfhb_integration_settings['stripe']['status'];
-			$stripe['public_key']        = $_tfhb_host_integration_settings['stripe']['public_key'];
-			$stripe['secret_key']        = $_tfhb_host_integration_settings['stripe']['secret_key'];
-
-		}
-
-		// Paypal API
-		$paypal = isset( $_tfhb_host_integration_settings['paypal'] ) ? $_tfhb_host_integration_settings['paypal'] : array();
-		if ( $_tfhb_integration_settings['paypal']['status'] == true ) {
-
-			$paypal['type']              = 'paypal';
-			$paypal['status']            = $_tfhb_host_integration_settings['paypal']['status'];
-			$paypal['connection_status'] = $_tfhb_integration_settings['paypal']['status'];
-			$paypal['client_id']         = $_tfhb_host_integration_settings['paypal']['client_id'];
-			$paypal['secret_key']        = $_tfhb_host_integration_settings['paypal']['secret_key'];
-			$paypal['environment']       = $_tfhb_host_integration_settings['paypal']['environment'];
-
-		}else{
-			$paypal['type']              = 'paypal';
-			$paypal['status']            = 0; 
-		}
-
 		// Mailchimp API
 		$mailchimp = isset( $_tfhb_host_integration_settings['mailchimp'] ) ? $_tfhb_host_integration_settings['mailchimp'] : array();
-		if ( $_tfhb_integration_settings['mailchimp']['status'] == true ) {
+		if (isset($_tfhb_integration_settings['mailchimp']['status']) && $_tfhb_integration_settings['mailchimp']['status'] == true ) {
 
 			$mailchimp['type']              = 'mailchimp';
 			$mailchimp['status']            = $_tfhb_host_integration_settings['mailchimp']['status'];
@@ -664,19 +691,20 @@ class HostsController {
 
 		// Zoho
 		$zoho = isset( $_tfhb_host_integration_settings['zoho'] ) ? $_tfhb_host_integration_settings['zoho'] : array();
-		if ( $_tfhb_integration_settings['zoho']['status'] ) {
+		if (isset($_tfhb_integration_settings['zoho']['status']) && $_tfhb_integration_settings['zoho']['status'] ) {
 
 			$zoho['type']          = 'zoho';
 			$zoho['status']        = $_tfhb_host_integration_settings['zoho']['status'];
 			$zoho['client_id']     = $_tfhb_host_integration_settings['zoho']['client_id'];
 			$zoho['client_secret'] = $_tfhb_host_integration_settings['zoho']['client_secret'];
-			$zoho['redirect_url']  = $_tfhb_host_integration_settings['zoho']['redirect_url'];
+			$zoho['redirect_url']  = !empty($_tfhb_host_integration_settings['zoho']['redirect_url']) ? $_tfhb_host_integration_settings['zoho']['redirect_url'] : site_url('/wp-json/hydra-booking/v1/integration/zoho-api');
 			$zoho['access_token']  = $_tfhb_host_integration_settings['zoho']['access_token'];
 			$zoho['modules']       = json_decode( $_tfhb_host_integration_settings['zoho']['modules'] );
 			$zoho['refresh_token'] = json_decode( $_tfhb_host_integration_settings['zoho']['refresh_token'] );
 
 		}else{
 			$zoho['type']              = 'zoho';
+			$zoho['redirect_url']  = site_url('/wp-json/hydra-booking/v1/integration/zoho-api');
 			$zoho['status']            = 0; 
 			$zoho['connection_status'] = 0;
 		}
@@ -686,14 +714,14 @@ class HostsController {
 			'status'                     => true,
 			'integration_settings'       => $_tfhb_host_integration_settings,
 			'google_calendar'            => $google_calendar,
-			'outlook_calendar'           => $outlook_calendar,
+			'zoom_meeting'            => $zoom_meeting, 
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
-			'stripe'                     => $stripe,
 			'zoho'                       => $zoho,
-			'paypal'                     => $paypal,
 			'_tfhb_integration_settings' => $_tfhb_integration_settings,
 		);
+
+		$data = apply_filters( 'tfhb_get_host_integration_settings', $data, $user_id);
 		return rest_ensure_response( $data );
 	}
 
@@ -704,19 +732,23 @@ class HostsController {
 		$key     = sanitize_text_field( $request['key'] );
 		$data    = $request['value'];
 		$host_id = $request['id'];
-		$user_id = $request['user_id'];
-
+		$user_id = $request['user_id'];  
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
 
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$responseData = array();
 		if ( $key == 'zoom_meeting' ) {
 
-			$zoom = new ZoomServices(
-				sanitize_text_field( $data['account_id'] ),
-				sanitize_text_field( $data['app_client_id'] ),
-				sanitize_text_field( $data['app_secret_key'] )
-			);
-			return rest_ensure_response( $zoom->updateHostsZoomSettings( $data, $user_id ) );
+			$zoom = new ZoomServices();
+			$response = $zoom->updateHostsZoomSettings( $data, $user_id );
+			$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings', true );
+			if($response['status'] == false){
+				return rest_ensure_response( $response );
+			}
+			$responseData['status'] = true;
+			$responseData['type'] =  'zoom_meeting';
+			$responseData['message'] = $response['message']; 
+		
 
 		} elseif ( $key == 'woo_payment' ) {
 			$_tfhb_host_integration_settings['woo_payment']['type']        = sanitize_text_field( $data['type'] );
@@ -726,12 +758,9 @@ class HostsController {
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
 
-			// woocommerce payment
-			$data = array(
-				'status'  => true,
-				'message' => 'Integration Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
+			 
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Integration Settings Updated Successfully', 'hydra-booking')); 
 		} elseif ( $key == 'google_calendar' ) {
 			// Get Global Settings
 			$_tfhb_host_integration_settings['google_calendar']['type']                 = sanitize_text_field( $data['type'] );
@@ -742,13 +771,9 @@ class HostsController {
 
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-			// woocommerce payment
-			$data = array(
-				'status'  => true,
-				'message' => 'Google Calendar Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
+ 
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Google Calendar Settings Updated Successfully', 'hydra-booking')); 
 		} elseif ( $key == 'outlook_calendar' ) {
 			// Get Global Settings
 			$_tfhb_host_integration_settings['outlook_calendar']['type']                  = sanitize_text_field( $data['type'] );
@@ -759,13 +784,9 @@ class HostsController {
 
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-			// woocommerce payment
-			$data = array(
-				'status'  => true,
-				'message' => 'Outlook Calendar Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
+ 
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Outlook Calendar Settings Updated Successfully', 'hydra-booking')); 
 		} elseif ( $key == 'apple_calendar' ) {
 			// Get Global Settings
 			$_tfhb_host_integration_settings['apple_calendar']['type']              = sanitize_text_field( $data['type'] );
@@ -776,28 +797,9 @@ class HostsController {
 
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-			// woocommerce payment
-			$data = array(
-				'status'  => true,
-				'message' => 'Apple Calendar Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
-		} elseif ( $key == 'stripe' ) {
-			$_tfhb_host_integration_settings['stripe']['type']       = 'stripe';
-			$_tfhb_host_integration_settings['stripe']['status']     = sanitize_text_field( $data['status'] );
-			$_tfhb_host_integration_settings['stripe']['public_key'] = sanitize_text_field( $data['public_key'] );
-			$_tfhb_host_integration_settings['stripe']['secret_key'] = sanitize_text_field( $data['secret_key'] );
-
-			// update User Meta
-			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-			// stripe payment
-			$data = array(
-				'status'  => true,
-				'message' => 'Stripe Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
+ 
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Apple Calendar Settings Updated Successfully', 'hydra-booking'));   
 		} elseif ( $key == 'mailchimp' ) {
 			$_tfhb_host_integration_settings['mailchimp']['type']   = 'mailchimp';
 			$_tfhb_host_integration_settings['mailchimp']['status'] = sanitize_text_field( $data['status'] );
@@ -806,11 +808,9 @@ class HostsController {
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
 
-			$data = array(
-				'status'  => true,
-				'message' => 'Mailchimp Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
+			 
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Mailchimp Settings Updated Successfully', 'hydra-booking'));   
 		} elseif ( $key == 'zoho' ) {
 			$_tfhb_host_integration_settings['zoho']['type']          = 'zoho';
 			$_tfhb_host_integration_settings['zoho']['status']        = sanitize_text_field( $data['status'] );
@@ -820,31 +820,21 @@ class HostsController {
 			$_tfhb_host_integration_settings['zoho']['access_token']  = sanitize_text_field( $data['access_token'] );
 			$_tfhb_host_integration_settings['zoho']['refresh_token'] = sanitize_text_field( $data['refresh_token'] );
 			$_tfhb_host_integration_settings['zoho']['modules']       = wp_json_encode( $data['modules'] );
-
+			
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
 
-			$data = array(
-				'status'  => true,
-				'message' => 'Zoho Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
-		} elseif ( $key == 'paypal' ) {
-			$_tfhb_host_integration_settings['paypal']['type']        = 'paypal';
-			$_tfhb_host_integration_settings['paypal']['status']      = sanitize_text_field( $data['status'] );
-			$_tfhb_host_integration_settings['paypal']['client_id']   = sanitize_text_field( $data['client_id'] );
-			$_tfhb_host_integration_settings['paypal']['secret_key']  = sanitize_text_field( $data['secret_key'] );
-			$_tfhb_host_integration_settings['paypal']['environment'] = sanitize_text_field( $data['environment'] );
-
-			// update User Meta
-			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-			$data = array(
-				'status'  => true,
-				'message' => 'Paypal Settings Updated Successfully',
-			);
-			return rest_ensure_response( $data );
+			 
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Zoho Settings Updated Successfully', 'hydra-booking')); 
+			 
 		}
+		
+		// Get Updated Data
+		$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings', true );
+		 
+		$responseData['host_integration_settings'] = $_tfhb_host_integration_settings; 
+		return rest_ensure_response( $responseData );
 	}
 
 		// Get Availability Settings
@@ -855,12 +845,12 @@ class HostsController {
 		$time_zone    = $DateTimeZone->TimeZone();
 
 		// Get Host Data
-		$_tfhb_host_availability_settings = get_user_meta( $request['id'], '_tfhb_host', true );
+		$_tfhb_host_availability_settings = !empty( get_user_meta( $request['id'], '_tfhb_host', true ) ) ? get_user_meta( $request['id'], '_tfhb_host', true ) : array();
 		// var_dump($_tfhb_host_availability_settings); exit();
 		$data = array(
 			'status'       => true,
 			'time_zone'    => $time_zone,
-			'availability' => $_tfhb_host_availability_settings['availability'],
+			'availability' =>  isset($_tfhb_host_availability_settings['availability']) ? $_tfhb_host_availability_settings['availability'] : array(),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -874,7 +864,7 @@ class HostsController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Host id is Empty',
+					'message' =>  __( 'Host id is Empty', 'hydra-booking' ),
 				)
 			);
 		}
@@ -926,6 +916,7 @@ class HostsController {
 		// Response
 		$data = array(
 			'status'       => true,
+			'message'     =>  __( 'Availability Settings Deleted Successfully', 'hydra-booking' ),
 			'availability' => $_tfhb_host_availability_settings['availability'],
 		);
 		return rest_ensure_response( $data );
@@ -941,17 +932,18 @@ class HostsController {
 			// response
 			$data = array(
 				'status'  => false,
-				'message' => 'Something Went Wrong, Please Try Again Later.',
+				'message' =>  __( 'Something Went Wrong, Please Try Again Later.', 'hydra-booking' ),
 			);
 			return rest_ensure_response( $data );
 		}
 
-		$_tfhb_host_info        = get_user_meta( $request['user_id'], '_tfhb_host', true );
+		$_tfhb_host_info        = !empty(get_user_meta( $request['user_id'], '_tfhb_host', true )) ? get_user_meta( $request['user_id'], '_tfhb_host', true ) : array();
 		$tfhb_host_availability = ! empty( $_tfhb_host_info['availability'] ) ? $_tfhb_host_info['availability'] : array();
 
 		$availability['id']          = isset( $request['id'] ) ? sanitize_text_field( $request['id'] ) : '';
 		$availability['user_id']     = isset( $request['user_id'] ) ? sanitize_text_field( $request['user_id'] ) : '';
 		$availability['title']       = sanitize_text_field( $request['title'] );
+		$availability['default_status']       = false;
 		$availability['time_zone']   = sanitize_text_field( $request['time_zone'] );
 		$availability['date_status'] = sanitize_text_field( $request['date_status'] );
 		$availability['override']    = '';
@@ -981,6 +973,10 @@ class HostsController {
 			}
 		}
 
+		if( empty($request['date_slots']) ){
+			$availability['date_slots'] = array();
+		}
+
 		if ( $availability['id'] == '' ) {
 
 			$_tfhb_host_info['availability'][] = $availability;
@@ -994,11 +990,12 @@ class HostsController {
 				}
 			}
 		}
-		if ( $availability['id'] == '' ) {
+		if ( $availability['id'] == ''  ) {
 			// Host Availability DB
 			$availbility_data = array(
 				'host'        => isset( $request['host'] ) ? sanitize_text_field( $request['host'] ) : '',
 				'title'       => $availability['title'],
+				'default_status'       => false,
 				'time_zone'   => $availability['time_zone'],
 				'override'    => '',
 				'time_slots'  => $request['time_slots'],
@@ -1016,11 +1013,12 @@ class HostsController {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Error while creating host',
+						'message' =>  __( 'Error while creating host', 'hydra-booking' ),
 					)
 				);
 			}
 			$host_insert_availablekey = count( $tfhb_host_availability );
+			$_tfhb_host_info['availability'][ $host_insert_availablekey ]['id'] = $insert['insert_id'];
 			$_tfhb_host_info['availability'][ $host_insert_availablekey ]['available_id'] = $insert['insert_id'];
 		} else {
 			// Host Availability DB
@@ -1028,6 +1026,7 @@ class HostsController {
 				'id'          => $request['available_id'],
 				'host'        => isset( $request['host'] ) ? sanitize_text_field( $request['host'] ) : '',
 				'title'       => $availability['title'],
+				'default_status'       => false,
 				'time_zone'   => $availability['time_zone'],
 				'override'    => '',
 				'time_slots'  => serialize( $request['time_slots'] ),
@@ -1052,7 +1051,7 @@ class HostsController {
 		$data = array(
 			'status'       => true,
 			'availability' => $_tfhb_host_info['availability'],
-			'message'      => 'Availability Updated Successfully',
+			'message'      =>  __( 'Availability Updated Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -1066,4 +1065,34 @@ class HostsController {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		echo 'fetch';
 	}
+
+
+	/**
+	 * Update Host Mail 
+	 * 
+	 */
+
+	public function update_host_email($user_id, $old_user_data) {
+		// Get the updated user data
+		$user = get_userdata($user_id);
+	
+		// Check if the email has changed
+		if ($old_user_data->user_email !== $user->user_email) {
+			 // Get
+			 $host = new Host();
+			 $HostData = $host->getHostByUserId( $user_id );
+
+			 if($HostData == false){
+				 return false;
+			 }
+
+			 $HostData->email = $user->user_email;
+			 $host->update( (array) $HostData );
+
+			 // Update user Option
+			 return true;
+
+		}
+	}
+
 }

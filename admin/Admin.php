@@ -1,13 +1,15 @@
 <?php
 namespace HydraBooking\Admin;
 
-use HydraBooking\Admin\Controller\Enqueue;
 use HydraBooking\Admin\Controller\AdminMenu;
 use HydraBooking\Admin\Controller\AvailabilityController;
 use HydraBooking\Admin\Controller\Notification;
+use HydraBooking\Admin\Controller\UpdateController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Migration\Migration;
-
+use HydraBooking\Admin\Controller\NoticeController;
+use HydraBooking\Admin\Controller\licenseController;
+use HydraBooking\License\HydraBooking; 
 // Load Migrator
 use HydraBooking\DB\Migrator;
 
@@ -18,12 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Admin {
 
 	// constaract
-	public function __construct() {
-
+	public function __construct() { 
 		// run migrator
 		new Migrator();
-		// enqueue
-		new Enqueue();
+	
 
 		// admin menu
 		new AdminMenu();
@@ -31,15 +31,29 @@ class Admin {
 		// availability controller
 		new AvailabilityController();
 
+		// update controller
+		new UpdateController();
+		
+		// notice controller
+		new NoticeController();
+
 		// Notification controller
 		// new Notification();
 
 		// activation hooks
-		register_activation_hook( THB_URL, array( $this, 'activate' ) );
+		register_activation_hook( TFHB_URL, array( $this, 'activate' ) );
 
 		Migration::instance();
 
+		// license controller
+        new  HydraBooking();
+		new licenseController();
+		
+
 		add_action( 'admin_init', array( $this, 'tfhb_hydra_activation_redirect' ) );
+
+		// Update Existing User Role
+		add_action( 'admin_init', array( $this, 'plugins_update_v_1_0_10' ) );
 	}
 
 	public function activate() {
@@ -55,5 +69,28 @@ class Admin {
 
 			// exit;
 		}
+	}
+
+	public function plugins_update_v_1_0_10(){
+
+ 
+		if( TFHB_VERSION == '1.0.10' && get_option( 'tfhb_update_status' ) != '1.0.10' ) {
+			$role = get_role( 'tfhb_host' );
+			// remove capabilities
+			$role->remove_cap( 'edit_posts' );
+			$role->remove_cap( 'edit_pages' );
+			$role->remove_cap( 'edit_others_posts' );
+			$role->remove_cap( 'create_posts' );
+			$role->remove_cap( 'manage_categories' );
+			$role->remove_cap( 'publish_posts' );
+			$role->remove_cap( 'edit_themes' );
+			$role->remove_cap( 'install_plugins' );
+			$role->remove_cap( 'update_plugin' );
+			$role->remove_cap( 'update_core' );
+			$role->remove_cap( 'manage_options' );
+
+			// Tfhb Update Status
+			update_option( 'tfhb_update_status', '1.0.10' );
+		} 
 	}
 }

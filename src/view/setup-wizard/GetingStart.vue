@@ -1,11 +1,8 @@
 <script setup>
-import { RouterView } from 'vue-router' 
-import HbText from '@/components/form-fields/HbText.vue'
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbDateTime from '@/components/form-fields/HbDateTime.vue';
-import Icon from '@/components/icon/LucideIcon.vue'
+import { __ } from '@wordpress/i18n'; 
+import HbText from '@/components/form-fields/HbText.vue' 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
-import { setupWizard } from '@/store/setupWizard';
+// import { setupWizard } from '@/store/setupWizard';
 import HbButton from '@/components/form-fields/HbButton.vue'
 
 // Toast
@@ -19,12 +16,6 @@ const props = defineProps({
 }); 
 
 const GettingStart = () => {
-    if(props.setupWizard.data.email == ''){
-        toast.error('Email is required');
-        return;
-
-    }
-    
     props.setupWizard.currentStep = 'step-one';
 }
 
@@ -36,36 +27,38 @@ const GettingStart = () => {
     <div class="tfhb-setup-wizard-content-wrap tfhb-s-w-geting-start tfhb-flexbox">
         <div class="tfhb-s-w-icon-text">
             <img :src="$tfhb_url+'/assets/images/hydra-booking-logo.png'" alt="">
-            <h2>{{ $tfhb_trans['Welcome to Hydrabooking!'] }}</h2>
-            <p>{{ $tfhb_trans['Thank you for choosing Hydrabooking, the ultimate solution for seamless appointment and meeting bookings.'] }}</p>
+            <h2>{{ $tfhb_trans('Welcome to HydraBooking!') }}</h2>
+            <p>{{ $tfhb_trans('Thank you for choosing HydraBooking, the premier solution for effortless appointment and booking scheduling') }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
 
              <!-- Custom Duration -->
              <HbText  
                 v-model="props.setupWizard.data.email"  
-                :label="$tfhb_trans['Email']"  
+                :label="$tfhb_trans('Email')"  
                 name="title"
                 type="email"
                 selected = "1"
-                :placeholder="$tfhb_trans['Enter your email']"  
+                :placeholder="$tfhb_trans('Enter your email')"  
             /> 
              <!-- Custom Duration -->
-            <HbCheckbox 
-                v-model="props.setupWizard.data.enable_recevie_updates"  
-                type="checkbox" 
-                required= "true"  
-                :label="$tfhb_trans['Receive updates and promotions']"  
-            />
+            <div class="tfhb-recevie-updates">
+                    <HbCheckbox 
+                    v-model="props.setupWizard.data.enable_recevie_updates"  
+                    type="checkbox"  
+                    :label="$tfhb_trans('Receive updates and promotions')"  
+                />
+            </div>
         </div>
         <div class="tfhb-submission-btn tfhb-flexbox">
             <HbButton 
-                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                classValue="tfhb-btn boxed-btn flex-btn" 
                 @click="GettingStart" 
-                :buttonText="$tfhb_trans['Get Started in a Minute']"
+                :buttonText="$tfhb_trans('Get Started in a Minute')"
                 icon="ChevronRight" 
                 hover_icon="ArrowRight" 
                 :hover_animation="true"
+                icon_position="right"  
             />   
  
         </div>

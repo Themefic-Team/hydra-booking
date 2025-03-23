@@ -1,4 +1,5 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
 const props = defineProps([
     'name',
     'modelValue',
@@ -23,8 +24,7 @@ const UploadImage = () => {
       wp.media.editor.open();
 
 }
-const imageChange = (attachment) => { 
-  console.log(attachment);
+const imageChange = (attachment) => {  
     const image = document.querySelector('.'+props.name+'_display'); 
     image.src = attachment.url; 
     // props.modelValue = attachment.url;
@@ -40,7 +40,7 @@ const imageChange = (attachment) => {
     <div class="tfhb-single-form-field-wrap tfhb-flexbox">
         <div class="tfhb-field-image" > 
             <img  :class="name+'_display'"  :src="props.modelValue">
-            <button class="tfhb-image-btn tfhb-btn" @click="UploadImage">{{ $tfhb_trans['Change'] }}</button> 
+            <button class="tfhb-image-btn" @click="UploadImage">{{ $tfhb_trans('Change') }}</button> 
             <input  
               :value="props.modelValue" 
               :required= "required"

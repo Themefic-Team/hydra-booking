@@ -34,8 +34,8 @@ class Host {
                 availability_id INT(11) NULL, 
                 others_information text NULL, 
                 status VARCHAR(11) NOT NULL,
-                created_at DATE NOT NULL,
-                updated_at DATE NOT NULL, 
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 PRIMARY KEY (id)
             ) $charset_collate";
 
@@ -85,7 +85,9 @@ class Host {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-				$request['others_information'] = wp_json_encode( $request['others_information'] );
+		if( isset($request['others_information']) && is_array($request['others_information'])){ 
+			$request['others_information'] = wp_json_encode( $request['others_information'] );
+		}
 
 		$id = $request['id'];
 		unset( $request['id'] );
@@ -103,14 +105,14 @@ class Host {
 		} else {
 			return array(
 				'status'    => true,
-				'update_id' => $wpdb->insert_id,
+				'update_id' => $id,
 			);
 		}
 	}
 	/**
 	 * Get all  availability Data.
 	 */
-	public function get( $where = null, $filterData = '' ) {
+	public function get( $where = null, $filterData = ''  ) {
 
 		global $wpdb;
 
@@ -132,7 +134,7 @@ class Host {
 			);
 		} elseif ( $where != null ) {
 			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE user_id = %d",$where )
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE id = %d",$where )
 			);
 		} elseif ( ! empty( $filterData['name'] ) ) {
 			// Corrected SQL query for searching by name
@@ -142,6 +144,31 @@ class Host {
 			$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_hosts");
 		}
 		// Get all data
+
+		return $data;
+	}
+
+	// Get Host By User ID
+	public function getHostByUserId( $user_id ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id )
+		);
+
+		return $data;
+	}
+
+	// Get Host By ID
+	public function getHostById( $id ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;  
+		$data = $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $id )
+		);
 
 		return $data;
 	}

@@ -6,6 +6,7 @@ use HydraBooking\Admin\Controller\RouteController;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\Admin\Controller\CountryController;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
+use HydraBooking\Admin\Controller\Helper;
 
 // Use DB
 use HydraBooking\DB\Meeting;
@@ -74,6 +75,16 @@ class MeetingController {
 
 		register_rest_route(
 			'hydra-booking/v1',
+			'/meetings/clone',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'cloneMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
+		register_rest_route(
+			'hydra-booking/v1',
 			'/meetings/webhook/update',
 			array(
 				'methods'  => 'POST',
@@ -90,6 +101,7 @@ class MeetingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+	 
 
 		register_rest_route(
 			'hydra-booking/v1',
@@ -114,7 +126,7 @@ class MeetingController {
 			'/meetings/integration/fields',
 			array(
 				'methods'  => 'POST',
-				'callback' => array( $this, 'getZohoModulsFields' ),
+				'callback' => array( $this, 'getIntegrationModulsFields' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
@@ -125,6 +137,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterMeetings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -182,6 +195,17 @@ class MeetingController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+
+		register_rest_route(
+			'hydra-booking/v1',
+			'/meetings/payment/payment-method',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'fetchMeetingsPaymentIntegration' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 	}
 	public function getMeetingList() {
 		$current_user = wp_get_current_user();
@@ -194,11 +218,20 @@ class MeetingController {
 
 		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
 			$MeetingsList = $meeting->get();
-		}
+		} 
 
 		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
 			$MeetingsList = $meeting->get( null, null, $current_user_id );
 		}
+
+		// add meeting permalink key into the meeting list using post id using array map
+		$MeetingsList = array_map(
+			function ( $meeting ) {
+				$meeting->permalink = get_permalink( $meeting->post_id );
+				return $meeting;
+			},
+			$MeetingsList
+		);
 		return $MeetingsList;
 	}
 	// Meeting List
@@ -210,7 +243,7 @@ class MeetingController {
 		$data = array(
 			'status'   => true,
 			'meetings' => $MeetingsList,
-			'message'  => 'Meeting Data Successfully Retrieve!',
+			'message'  => __( 'Meeting Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -239,7 +272,7 @@ class MeetingController {
 		$data = array(
 			'status'   => true,
 			'category' => $term_array,
-			'message'  => 'Meeting Category Data Successfully Retrieve!',
+			'message'  =>  __( 'Meeting Category Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -257,7 +290,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid taxonomy.',
+					'message' => __( 'Invalid taxonomy.', 'hydra-booking' ),
 				)
 			);
 		}
@@ -328,7 +361,7 @@ class MeetingController {
 			array(
 				'status'   => true,
 				'category' => $term_array,
-				'message'  => empty( $request['id'] ) ? 'Meeting Category Successfully Added!' : 'Meeting Category Successfully Updated!',
+				'message'  => empty( $request['id'] ) ? __('Meeting Category Successfully Added!', 'hydra-booking') : __('Meeting Category Successfully Updated!', 'hydra-booking'),
 			)
 		);
 	}
@@ -386,7 +419,7 @@ class MeetingController {
 			array(
 				'status'  => true,
 				'webhook' => $updateMeetingData->webhook,
-				'message' => 'Webhook Successfully Updated!',
+				'message' =>  __( 'Webhook Successfully Updated!', 'hydra-booking' ),
 			)
 		);
 	}
@@ -425,18 +458,19 @@ class MeetingController {
 				array(
 					'status'  => true,
 					'webhook' => $updateMeetingData->webhook,
-					'message' => 'Webhook Successfully Deleted!',
+					'message' =>  __( 'Webhook Successfully Deleted!', 'hydra-booking' ),
 				)
 			);
 		} else {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Webhook key does not exist!',
+					'message' =>  __( 'Webhook key does not exist!', 'hydra-booking' ),
 				)
 			);
 		}
 	}
+
 
 	// Integrations
 	public function updateMeetingIntegration() {
@@ -457,12 +491,14 @@ class MeetingController {
 			'webhook'  => ! empty( $request['webhook'] ) ? $request['webhook'] : '',
 			'bodys'    => ! empty( $request['bodys'] ) ? $request['bodys'] : '',
 			'events'   => ! empty( $request['events'] ) ? $request['events'] : '',
+			'url'      => ! empty( $request['url'] ) ? $request['url'] : '',
 			'audience' => 'Mailchimp' == $request['webhook'] && ! empty( $request['audience'] ) ? $request['audience'] : '',
 			'tags'     => 'FluentCRM' == $request['webhook'] && ! empty( $request['tags'] ) ? $request['tags'] : '',
 			'lists'    => 'FluentCRM' == $request['webhook'] && ! empty( $request['lists'] ) ? $request['lists'] : '',
 			'modules'  => 'ZohoCRM' == $request['webhook'] && ! empty( $request['modules'] ) ? $request['modules'] : '',
 			'fields'   => ! empty( $request['fields'] ) ? $request['fields'] : '',
 			'status'   => ! empty( $request['status'] ) ? $request['status'] : '',
+			'request_body'   => ! empty( $request['request_body'] ) ? $request['request_body'] : '',
 		);
 
 		if ( $key !== '' && isset( $Integrationsdata[ $key ] ) ) {
@@ -491,7 +527,7 @@ class MeetingController {
 			array(
 				'status'       => true,
 				'integrations' => $updateMeetingData->integrations,
-				'message'      => 'Integrations Successfully Updated!',
+				'message'      =>  __( 'Integrations Successfully Updated!', 'hydra-booking' ),
 			)
 		);
 	}
@@ -530,14 +566,14 @@ class MeetingController {
 				array(
 					'status'       => true,
 					'integrations' => $updateMeetingData->integrations,
-					'message'      => 'Integrations Successfully Deleted!',
+					'message'      =>  __( 'Integrations Successfully Deleted!', 'hydra-booking' ),
 				)
 			);
 		} else {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Integrations key does not exist!',
+					'message' =>  __( 'Integrations key does not exist!', 'hydra-booking' ),
 				)
 			);
 		}
@@ -551,7 +587,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Term ID is required.',
+					'message' =>  __( 'Term ID is required.', 'hydra-booking' ),
 				)
 			);
 		}
@@ -579,14 +615,14 @@ class MeetingController {
 			array(
 				'status'   => true,
 				'category' => $term_array,
-				'message'  => 'Meeting Category Successfully Deleted!',
+				'message'  =>  __( 'Meeting Category Successfully Deleted!', 'hydra-booking' ),
 			)
 		);
 	}
 
 	// Meeting Filter
 	public function filterMeetings( $request ) {
-		$filterData = $request->get_param( 'filterData' );
+		$filterData = $request->get_param( 'filterData' ); 
 		// Meeting Lists
 		$meeting      = new Meeting();
 		$MeetingsList = $meeting->get( '', $filterData );
@@ -595,7 +631,7 @@ class MeetingController {
 		$data = array(
 			'status'   => true,
 			'meetings' => $MeetingsList,
-			'message'  => 'Meeting Data Successfully Retrieve!',
+			'message'  =>  __( 'Meeting Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -608,6 +644,28 @@ class MeetingController {
 		$current_user = wp_get_current_user();
 		// get user id
 		$current_user_id = $current_user->ID;
+		$host = new Host ();
+		$host_data = $host->getHostByUserId( $current_user_id ); 
+		
+		// if host is not found, return error 
+		if( empty($host_data) ){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __( 'Host not found', 'hydra-booking' ),
+				)
+			);
+		}
+
+		if(tfhb_is_pro_active() == false && $request_data['meeting_type'] == 'one-to-group'){
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' =>  __( 'Please activate the pro version to create one to group meeting', 'hydra-booking' ),
+				)
+			);
+		}
+ 
 
 		// Create an array to store the post data for meeting the current row
 		$meeting_post_data = array(
@@ -617,9 +675,10 @@ class MeetingController {
 			'post_author' => $current_user_id,
 		);
 		$meeting_post_id   = wp_insert_post( $meeting_post_data );
-
+		
 		$data = array(
 			'user_id'      => $current_user_id,
+			'host_id'      => $host_data->id,
 			'meeting_type' => isset( $request_data['meeting_type'] ) ? sanitize_text_field( $request_data['meeting_type'] ) : '',
 			'post_id'      => $meeting_post_id,
 			'created_by'   => $current_user_id,
@@ -637,7 +696,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while creating meeting',
+					'message' =>  __( 'Error while creating meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -654,7 +713,7 @@ class MeetingController {
 			'status'   => true,
 			'meetings' => $meetingsList,
 			'id'       => $meetings_id,
-			'message'  => 'Meeting Created Successfully',
+			'message'  => __( 'Meeting Created Successfully!', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -670,7 +729,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -688,7 +747,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false, 
-					'message' => 'Error while deleting meeting',
+					'message' =>  __( 'Error while deleting meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -708,7 +767,7 @@ class MeetingController {
 			'status'   => true,
 			'meetings' => $MeetingsList,
 			'data'     => $current_user_id,
-			'message'  => 'Meeting Deleted Successfully',
+			'message'  => __( 'Meeting Deleted Successfully!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -721,7 +780,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -736,7 +795,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -744,11 +803,16 @@ class MeetingController {
 		// Notification
 		if ( empty( $MeetingData->notification ) ) {
 			$_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+
+			if(empty($_tfhb_notification_settings)){
+				$default_notification =  new Helper();
+				$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
+			}
 			$MeetingData->notification   = $_tfhb_notification_settings;
 		}
 
 		// Integration
-		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
 		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'woocommerce/woocommerce.php' ) ) {
 			$woo_connection_status = 0;
 
@@ -777,35 +841,25 @@ class MeetingController {
 		$woo_commerce = new WooBooking();
 		$wc_product   = $woo_commerce->getAllProductList();
 
-		// google  Meeting
-		if ( $_tfhb_integration_settings['google_calendar'] ) {
-			$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
-		}
+		// Webhook status
+		$setting_webhook = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
+
+		// google  Meeting 
+		$integrations['google_calendar_status'] = isset( $_tfhb_integration_settings['google_calendar']['status'] ) ? $_tfhb_integration_settings['google_calendar']['status'] : 0;
+		$integrations['outlook_calendar_status'] = isset( $_tfhb_integration_settings['outlook_calendar']['status'] ) ? $_tfhb_integration_settings['outlook_calendar']['status'] : 0;
+		
 		// Zoom Meeting
-		if ( $_tfhb_integration_settings['zoom_meeting'] ) {
-			$integrations['zoom_meeting_status'] = isset( $_tfhb_integration_settings['zoom_meeting']['status'] ) ? $_tfhb_integration_settings['zoom_meeting']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['cf7'] ) {
-			$integrations['cf7_status'] = isset( $_tfhb_integration_settings['cf7']['status'] ) ? $_tfhb_integration_settings['cf7']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['fluent'] ) {
-			$integrations['fluent_status'] = isset( $_tfhb_integration_settings['fluent']['status'] ) ? $_tfhb_integration_settings['fluent']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['forminator'] ) {
-			$integrations['forminator_status'] = isset( $_tfhb_integration_settings['forminator']['status'] ) ? $_tfhb_integration_settings['forminator']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['gravity'] ) {
-			$integrations['gravity_status'] = isset( $_tfhb_integration_settings['gravity']['status'] ) ? $_tfhb_integration_settings['gravity']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['webhook'] ) {
-			$integrations['webhook_status'] = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['fluent_crm'] ) {
-			$integrations['fluent_crm_status'] = isset( $_tfhb_integration_settings['fluent_crm']['status'] ) ? $_tfhb_integration_settings['fluent_crm']['status'] : 0;
-		}
-		if ( $_tfhb_integration_settings['zoho_crm'] ) {
-			$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
-		}
+		$integrations['zoom_meeting_status'] = isset( $_tfhb_integration_settings['zoom_meeting']['status'] ) ? $_tfhb_integration_settings['zoom_meeting']['status'] : 0;
+		$integrations['cf7_status'] = isset( $_tfhb_integration_settings['cf7']['status'] ) ? $_tfhb_integration_settings['cf7']['status'] : 0;
+		$integrations['fluent_status'] = isset( $_tfhb_integration_settings['fluent']['status'] ) ? $_tfhb_integration_settings['fluent']['status'] : 0;
+		$integrations['forminator_status'] = isset( $_tfhb_integration_settings['forminator']['status'] ) ? $_tfhb_integration_settings['forminator']['status'] : 0;
+		$integrations['gravity_status'] = isset( $_tfhb_integration_settings['gravity']['status'] ) ? $_tfhb_integration_settings['gravity']['status'] : 0;
+		$integrations['webhook_status'] = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
+		$integrations['fluent_crm_status'] = isset( $_tfhb_integration_settings['fluent_crm']['status'] ) ? $_tfhb_integration_settings['fluent_crm']['status'] : 0;
+		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
+		$integrations['pabbly_status'] = isset( $_tfhb_integration_settings['pabbly']['status'] ) ? $_tfhb_integration_settings['pabbly']['status'] : 0;
+		$integrations['zapier_status'] = isset( $_tfhb_integration_settings['zapier']['status'] ) ? $_tfhb_integration_settings['zapier']['status'] : 0;
+		 
 
 		// Meeting Category
 		$terms = get_terms(
@@ -843,13 +897,18 @@ class MeetingController {
 
 		// FluentCRM
 		$fluentcrm_Data = array();
-		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'fluent-crm/fluent-crm.php' ) ) {
-			$fluentcrm_Data['status'] = false;
-
-		} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
-			$fluentcrm_Data['status'] = false;
+		if(!empty($integrations['fluent_crm_status'])){
+			if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'fluent-crm/fluent-crm.php' ) ) {
+				$fluentcrm_Data['status'] = false;
+				$fluentcrm_Data['error_msg'] =  __( 'Install and activate the Fluent CRM plugin.', 'hydra-booking' );
+			} elseif ( ! is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
+				$fluentcrm_Data['status'] = false;
+				$fluentcrm_Data['error_msg'] =  __( 'Activate the Fluent CRM plugin.', 'hydra-booking' );
+			}else{
+				$fluentcrm_Data['status'] = true;
+			}
 		} else {
-			$fluentcrm_Data['status'] = true;
+			$fluentcrm_Data['status'] = false;
 		}
 		if ( $fluentcrm_Data['status'] ) {
 			global $wpdb;
@@ -918,6 +977,12 @@ class MeetingController {
 			$formsList = $this->getQuestionFormsData( $questions_form_type );
 		}
 
+		// add permalink into getMeetingData 
+		$meetingData = (array) $MeetingData;
+		$meetingData['permalink'] = get_permalink($MeetingData->post_id);
+		// again array to object
+		$MeetingData = (object) $meetingData;
+
 		// Return response
 		$data = array(
 			'status'           => true,
@@ -930,7 +995,7 @@ class MeetingController {
 			'zohocrm'          => $zohocrm_Data,
 			'formsList'        => $formsList,
 			'integrations'     => $integrations,
-			'message'          => 'Meeting Data',
+			'message'          =>  __( 'Meeting Data','hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -945,7 +1010,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' =>  __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -957,7 +1022,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Meeting',
+					'message' => __( 'Invalid Meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -966,7 +1031,7 @@ class MeetingController {
 		$current_user = wp_get_current_user();
 		// get user id
 		$current_user_id = $current_user->ID; 
-
+		 
 		// Update Meeting
 		$data = array(
 			'id'                       => $request['id'],
@@ -1008,11 +1073,39 @@ class MeetingController {
 			'updated_at'               => gmdate( 'Y-m-d' ),
 			'updated_by'               => $current_user_id,
 		);
+		$host = new Host ();
+		$host_data = $host->getHostById( $data['host_id'] );
+		if($host_data){ 
+			$data['user_id'] = $host_data->user_id;
+		} 
+
+		// this is a temporay fix it will be removed in version 2.0.0 or higher version
+		foreach($data['questions'] as $key => $question){
+
+			if(!isset($question['name']) || empty($question['name'])){
+				$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
+
+				 
+                $count = count( array_filter( array_map( function($item) use ($baseName) { return $item['name'] == $baseName; }, $data['questions'] ) ) );
+                if ( $count > 0 ) {
+                    $uniqueName = $baseName. '_'. substr( md5( mt_rand() ), 0, 2 );
+                } else {
+                    $uniqueName = $baseName;
+                } 
+                $data['questions'][$key]['name'] = $uniqueName; 
+			}
+			if(!isset($question['enable']) ) {
+				$data['questions'][$key]['enable'] = 1;
+			}
+
+		}
+		// ******** end of fix
 
 		// if Payment Methood is woo_payment
-		if ( 'woo_payment' == $data['payment_method'] ) {
-			$products              = wc_get_product( $data['payment_meta']['product_id'] );
+		if ( 'woo_payment' == $data['payment_method'] &&  class_exists( 'WooCommerce' ) ) {
+			$products              = wc_get_product( $data['payment_meta']['product_id'] ); 
 			$data['meeting_price'] = $products->price;
+			$data['payment_currency'] = get_woocommerce_currency();
 
 		}
 
@@ -1033,7 +1126,7 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Error while updating Meeting',
+					'message' =>  __( 'Error while updating meeting', 'hydra-booking' ),
 				)
 			);
 		}
@@ -1045,17 +1138,84 @@ class MeetingController {
 			update_post_meta( $MeetingData->post_id, '__tfhb_meeting_opt', $data );
 
 		}
-		$MeetingData = $meeting->get( $meeting_id );
+		$GetMeeting =  (array) $meeting->get( $meeting_id ); 
+
+		
+		$GetMeeting['permalink'] = get_permalink($GetMeeting['post_id']); 
 		// Return response
 		$data = array(
 			'status'  => true,
-			'message' => 'Meeting Updated Successfully',
+			'message' =>  __( 'Meeting Updated Successfully', 'hydra-booking' ),
 			'data'    => $data,
-			'meeting' => $MeetingData,
+			'meeting' => $GetMeeting,
 		);
 		return rest_ensure_response( $data );
 	}
 
+	/*
+	 *  Clone Meeting
+	 */
+	public function cloneMeeting( ){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+
+		$current_user = wp_get_current_user();
+		// get user id
+		$current_user_id = $current_user->ID;
+
+		$get_meeting_id = $request['id'];
+		$meeting = new Meeting();
+		$meeting_data = (array) $meeting->getWithID( $get_meeting_id );
+		unset($meeting_data['id']);
+		$meeting_data['created_by'] = $current_user_id;
+		$meeting_data['updated_by'] = $current_user_id;
+		$meeting_data['created_at'] = gmdate( 'Y-m-d' );
+		$meeting_data['updated_at'] = gmdate( 'Y-m-d' );
+
+
+		// Create an array to store the post data for meeting the current row
+		$meeting_post_data = array(
+			'post_type'   => 'tfhb_meeting',
+			'post_title'  => $meeting_data['title'] . esc_html( '( Clone )' ),
+			'post_status' => 'publish',
+			'post_author' => $current_user_id,
+		);
+		$meeting_post_id   = wp_insert_post( $meeting_post_data ); 
+
+		$meeting_data['post_id'] = $meeting_post_id;
+		$meeting_data['slug'] = get_post_field( 'post_name', $meeting_post_id );
+		$meeting_data['title'] =  $meeting_data['title'] . esc_html( '( Clone )' );
+	
+		$meetingInsert = $meeting->add( $meeting_data ); 
+		$meetings_id = $meetingInsert['insert_id'];
+			// Meetings Id into Post Meta
+		update_post_meta( $meeting_post_id, '__tfhb_meeting_id', $meetings_id );
+ 
+		// Updated post meta
+		$meeting_data['id'] = $meetings_id;
+
+		// Set the meeting data
+		$meeting_data['meeting_locations'] = !is_array($meeting_data['meeting_locations']) ? json_decode($meeting_data['meeting_locations'], true) : $meeting_data['meeting_locations'];
+		$meeting_data['availability_range'] =  !is_array($meeting_data['availability_range']) ? json_decode($meeting_data['availability_range'] , true) : $meeting_data['availability_range'];
+		$meeting_data['availability_custom'] =  !is_array($meeting_data['availability_custom']) ? json_decode($meeting_data['availability_custom'], true) : $meeting_data['availability_custom'];
+		$meeting_data['booking_frequency'] = !is_array($meeting_data['booking_frequency']) ? json_decode($meeting_data['booking_frequency'], true) : $meeting_data['booking_frequency'];
+		$meeting_data['recurring_repeat'] = !is_array($meeting_data['recurring_repeat']) ? json_decode($meeting_data['recurring_repeat'], true) : $meeting_data['recurring_repeat'];
+		$meeting_data['questions'] = !is_array($meeting_data['questions']) ? json_decode($meeting_data['questions'], true) : $meeting_data['questions'];
+		$meeting_data['notification'] =  !is_array($meeting_data['notification']) ? json_decode($meeting_data['notification'], true) : $meeting_data['notification'];
+		$meeting_data['payment_meta'] =  !is_array($meeting_data['payment_meta']) ? json_decode($meeting_data['payment_meta'], true) : $meeting_data['payment_meta'];
+
+		update_post_meta( $meeting_post_id, '__tfhb_meeting_opt', $meeting_data );
+
+		$MeetingsList = $this->getMeetingList(); 
+
+		// Return response
+		$data = array(
+			'status'   => true,
+			'meetings' => $MeetingsList,
+			'message'  =>  __( 'Meeting Cloned Successfully', 'hydra-booking' ),
+		);
+
+		return rest_ensure_response( $data );
+	} 
 	// Host availability
 	public function getTheHostAvailabilityData( $request ) {
 
@@ -1065,13 +1225,13 @@ class MeetingController {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
-					'message' => 'Invalid Host',
+					'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 				)
 			);
 		}
 		// Get Host
 		$host     = new Host();
-		$HostData = $host->get( $id );
+		$HostData = $host->getHostById( $id ); 
 
 		if ( 'settings' == $HostData->availability_type ) {
 			if ( ! empty( $HostData->availability_id ) ) {
@@ -1091,15 +1251,19 @@ class MeetingController {
 				$HostData->availability = '';
 			}
 		} else {
+			
 			$_tfhb_host_availability_settings = get_user_meta( $HostData->user_id, '_tfhb_host', true );
+			
 			if ( ! empty( $_tfhb_host_availability_settings['availability'] ) ) {
 				$HostData->availability = $_tfhb_host_availability_settings['availability'];
+
 			}
+			
 			if ( empty( $HostData ) ) {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
-						'message' => 'Invalid Host',
+						'message' =>  __( 'Invalid Host', 'hydra-booking' ),
 					)
 				);
 			}
@@ -1107,14 +1271,14 @@ class MeetingController {
 
 		$DateTimeZone = new DateTimeController( 'UTC' );
 		$time_zone    = $DateTimeZone->TimeZone();
-
+	
 		// Return response
 		$data = array(
 			'status'        => true,
 			'host'          => $HostData,
 			'host_availble' => $HostData->availability_type,
 			'time_zone'     => $time_zone,
-			'message'       => 'Host Data',
+			'message'       =>  __( 'Host Availability Data', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -1170,7 +1334,7 @@ class MeetingController {
 	}
 
 	/* Modules Fileds */
-	public function getZohoModulsFields( $request ) {
+	public function getIntegrationModulsFields( $request ) {
 		$host      = ! empty( $request['host_id'] ) ? $request['host_id'] : '';
 		$hook_type = ! empty( $request['webhook'] ) ? $request['webhook'] : '';
 
@@ -1377,6 +1541,29 @@ class MeetingController {
 		);
 		return rest_ensure_response( $data );
 	}
+
+	// Fetch Meeting integrations Settings
+	public function fetchMeetingsPaymentIntegration(){
+		// Gett intrigations settings
+		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+		$integrations = array();
+		$integrations['woo_payment'] = isset( $_tfhb_integration_settings['woo_payment']['status'] ) && $_tfhb_integration_settings['woo_payment']['status'] == true ? false : true;
+		$integrations['paypal'] = isset( $_tfhb_integration_settings['paypal']['status'] ) && !empty($_tfhb_integration_settings['paypal']['client_id'] ) && $_tfhb_integration_settings['paypal']['status'] == true ? false : true;
+		$integrations['stripe'] = isset( $_tfhb_integration_settings['stripe']['status'] ) && !empty($_tfhb_integration_settings['stripe']['public_key'] ) && $_tfhb_integration_settings['stripe']['status'] == true ? false : true;
+		
+		$country = new CountryController();
+		$currency_list = $country->currency_list();
+
+		$data = array(
+			'status'        => true,
+			'integrations' => $integrations, 
+			'_tfhb_integration_settings' => $_tfhb_integration_settings, 
+			'currency_list' => $currency_list, 
+		);
+		return rest_ensure_response( $data );
+
+
+	}
 	// Fetch Forms list based on form Types
 	public function getQuestionFormsData( $form_type ) {
 		$questionForms = array();
@@ -1393,7 +1580,7 @@ class MeetingController {
 					'value' => $form->ID,
 				);
 			}
-		} elseif ( $form_type == 'fluent-forms' ) {
+		} elseif ( $form_type == 'forminator-forms' ) {
 			$args  = array(
 				'post_type'      => 'forminator_forms',
 				'posts_per_page' => -1,

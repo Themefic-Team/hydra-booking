@@ -6,6 +6,8 @@ import { toast } from "vue3-toastify";
 
 // Get Current Route url
 const currentRoute = useRouter().currentRoute.value.path;
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
+import HbButton from '@/components/form-fields/HbButton.vue';
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue';
@@ -13,6 +15,7 @@ import MailchimpIntegrations from '@/components/integrations/MailchimpIntegratio
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
 
 const route = useRoute();
+const router = useRouter();
 //  Load Time Zone 
 const skeleton = ref(true);
 const props = defineProps({
@@ -24,7 +27,11 @@ const props = defineProps({
         type: Object,
         required: true
     },
-    time_zone:{}
+    time_zone:{},
+    settings_zoho:{
+        type: Object,
+        required: true,
+    }
 
 });
 
@@ -105,21 +112,6 @@ const Integration = reactive( {
         app_password: '',
 
     },
-    stripe : {
-        type: 'stripe', 
-        status: 0, 
-        connection_status: 0, 
-        public_key: '',
-        secret_key: ''
-    },
-    paypal : {
-        type: 'paypal', 
-        environment: '',
-        status: 0, 
-        connection_status: 0, 
-        client_id: '',
-        secret_key: '',
-    },
     mailchimp : {
         type: 'mailchimp', 
         status: 0, 
@@ -141,13 +133,14 @@ const Integration = reactive( {
 
  // Fetch generalSettings
 const fetchIntegration = async () => { 
+    let host_id = route.params.id != undefined? route.params.id : props.hostId; 
     let data = {
-        id: route.params.id,
+        id: host_id,
         user_id: props.host.user_id,
     };  
     try { 
 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/integration', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/integration', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_integrations'
@@ -155,15 +148,12 @@ const fetchIntegration = async () => {
         } );
 
         if (response.data.status) {   
-            Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
+            Integration.zoom_meeting= response.data.zoom_meeting ? response.data.zoom_meeting : Integration.zoom_meeting;
             Integration.google_calendar= response.data.google_calendar ? response.data.google_calendar : Integration.google_calendar;  
             Integration.outlook_calendar = response.data.outlook_calendar  ? response.data.outlook_calendar  : Integration.outlook_calendar ;  
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
-            Integration.stripe = response.data.stripe  ? response.data.stripe  : Integration.stripe ;  
-            Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ;  
-            Integration.paypal = response.data.paypal  ? response.data.paypal  : Integration.paypal ;  
-            Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ;  
+            Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
             
 
             skeleton.value = false;
@@ -173,22 +163,25 @@ const fetchIntegration = async () => {
     } 
 }
 const UpdateIntegration = async (key, value) => { 
+    let host_id = route.params.id != undefined? route.params.id : props.hostId; 
     let data = {
         key: key,
         value: value,
-        id: route.params.id,
+        id: host_id,
         user_id: props.host.user_id,
     };  
   
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/hosts/integration/update', data, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/integration/update', data, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_integrations'
             } 
         } );
 
-        if (response.data.status) {     
+        if (response.data.status) {  
+              
+            Integration.zoom_meeting = response.data.host_integration_settings.zoom_meeting  ? response.data.host_integration_settings.zoom_meeting : Integration.zoom_meeting; 
             toast.success(response.data.message, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
@@ -217,9 +210,24 @@ onBeforeMount(() => {
 </script>
 
 <template>
+ 
+    <HbInfoBox v-if="$user.role != 'tfhb_host'" name="first-modal">
+        
+        <template #content>
+            <span>{{$tfhb_trans('Before connecting make sure you provide the necessary credentials to')}} 
+                <HbButton 
+                        classValue="tfhb-btn" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                        buttonText="Settings  Integrations"
+                    />  
+            </span>
+            
+        </template>
+    </HbInfoBox>
+            
     <div class="tfhb-admin-card-box tfhb-m-0">    
         <!-- Woo  Integrations  --> 
-        <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations" 
+        <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" 
         :zoom_meeting="Integration.zoom_meeting"  
         @update-integrations="UpdateIntegration"
         from="host"
@@ -229,28 +237,10 @@ onBeforeMount(() => {
         />
 
 
-        <StripeIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"   
-        :stripe_data="Integration.stripe" 
-        @update-integrations="UpdateIntegration"
-        from="host"
-        :ispopup="spopup"
-        @popup-open-control="isstripePopupOpen"
-        @popup-close-control="isstripePopupClose"
-        />
-
-        <!-- paypal intrigation -->
-        <PaypalIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" 
-        :paypal_data="Integration.paypal" 
-        @update-integrations="UpdateIntegration" 
-        from="host"
-        :ispopup="paypalpopup"
-        @popup-open-control="ispaypalPopupOpen"
-        @popup-close-control="ispaypalPopupClose" 
-        />
-        <!-- paypal intrigation -->
+ 
 
         <!-- Mailchimp intrigation -->
-        <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"  
+        <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :mail_data="Integration.mailchimp" 
         @update-integrations="UpdateIntegration" 
         from="host"
@@ -261,8 +251,9 @@ onBeforeMount(() => {
         <!-- Mailchimp intrigation -->
 
         <!-- Zoho intrigation -->
-        <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations"  
+        <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :zoho_data="Integration.zoho"  
+        :zoho_crm_status="settings_zoho.zoho_crm_status"  
         @update-integrations="UpdateIntegration" 
         from="host"
         :ispopup="zohopopup"

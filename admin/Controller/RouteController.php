@@ -9,11 +9,11 @@ use HydraBooking\Admin\Controller\BookingController;
 use HydraBooking\Admin\Controller\AuthController;
 use HydraBooking\Admin\Controller\DashboardController;
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
-use HydraBooking\Services\Integrations\OutlookCalendar\OutlookCalendar;
-use HydraBooking\Services\Integrations\Zoho\Zoho;
 use HydraBooking\Admin\Controller\SetupWizard;
 use HydraBooking\Admin\Controller\ImportExport;
 use HydraBooking\Admin\Controller\Notification;
+use HydraBooking\Admin\Controller\FrontendDashboard;
+use HydraBooking\Admin\Controller\licenseController;
 
 
 // Use DB
@@ -34,11 +34,12 @@ class RouteController {
 		$this->create( new BookingController(), 'create_endpoint' );
 		$this->create( new AuthController(), 'create_endpoint' );
 		$this->create( new GoogleCalendar(), 'create_endpoint' );
-		$this->create( new OutlookCalendar(), 'create_endpoint' );
 		$this->create( new DashboardController(), 'create_endpoint' );
-		$this->create( new Zoho(), 'create_endpoint' );
-		$this->create( new SetupWizard(), 'create_endpoint' ); 
+		$this->create( new SetupWizard(), 'create_endpoint' );
+		$this->create( new ImportExport(), 'create_endpoint' );
 		$this->create( new Notification(), 'create_endpoint' );
+		$this->create( new FrontendDashboard(), 'create_endpoint' );
+		$this->create( new licenseController(), 'create_endpoint' ); 
 	}
 
 	public function create( $class, $function ) {

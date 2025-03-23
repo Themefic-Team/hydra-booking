@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage HydraBooking/app
  */
 
-
+ use HydraBooking\Admin\Controller\TransStrings;
 $meeting             = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $questions           = isset( $meeting['questions'] ) ? $meeting['questions'] : array();
 $questions_type      = isset( $meeting['questions_type'] ) ? $meeting['questions_type'] : 'custom';
@@ -21,7 +21,10 @@ $questions_form_type = isset( $meeting['questions_form_type'] ) ? $meeting['ques
 $questions_form      = isset( $meeting['questions_form'] ) ? $meeting['questions_form'] : '';
 $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : array();
 
-
+// Integration Settings
+$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+$tfhb_paypal = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array(); 
+$tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integration_settings['stripe'] : array(); 
 
 ?> 
 <div class="tfhb-meeting-booking-form" style="display:none">
@@ -56,25 +59,48 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 			} elseif ( $questions_form_type == 'forminator' ) {
 					echo do_shortcode( '[forminator_form id="' . $questions_form . '"]' );
 			}
-					// elseif($questions_form_type == 'gravityforms'){
-					// echo do_shortcode('[gravityform id="'.$questions_form.'" title="false" description="false" ajax="true"]');
-
-					// }
+			
+			if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 ):
+			?> 
+				<div class="tfhb-paypal-button-container"></div>
+			<?php
+				endif;
+				if(isset($tfhb_stripe['status']) && $tfhb_stripe['status'] == 1 ):
+			?>
+			<div class="tfhb-stripe-button-container"></div>
+			<?php
+			endif;
 
 		} else {
 			echo '<form  method="post" action="" class="tfhb-meeting-form ajax-submit"  enctype="multipart/form-data">';
 			if ( is_array( $questions ) && ! empty( $questions ) ) {
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
 
-				foreach ( $questions as $key => $question ) :
-					$name = 2 >= $key ? $question['label'] : 'question[' . $question['label'] . ']';
-					// $value = !empty($booking_data) ? $booking_data->data[$question['label']] : '';
+				foreach ( $questions as $key => $question ) :  
+					if(isset($question['enable']) && $question['enable'] == 0){ 
+						continue;
+					}
 
+					// this is a temporay fix it will be removed in version 2.0.0 or higher version 
+					if(!isset($question['name']) || empty($question['name'])){
+						$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
+						$question['name']  = $baseName; 
+					}
+					// ******** end of fix
+
+					$name = 1 >= $key ? $question['name'] : 'question[' . $question['name'] . ']'; 
+					$placehoder = isset( $question['placeholder'] )? $question['placeholder'] : ''; 
+					$label = ucfirst($question['label']);  
+
+					if( $question['name'] == 'Address'){
+						$name = 'address';
+					}
+					
 					if ( $name == 'email' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->email : '';
 					} elseif ( $name == 'name' ) {
 						$value = ! empty( $booking_data ) ? $booking_data->attendee_name : '';
-					} elseif ( $name == 'address' ) {
+					} elseif ( $name == 'Address' || $name == 'address'  ) {
 						$value = ! empty( $booking_data ) ? $booking_data->address : '';
 					} else {
 						$value = '';
@@ -83,33 +109,52 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 						continue;
 					}
 
+					if($question['type'] == 'phone'){
+						$question['type'] ='tel';
+					}
+ 
 					$required_star = $question['required'] == 1 ? '*' : '';
 					$required      = $question['required'] == 1 ? 'required' : '';
 
 					echo '<div class="tfhb-single-form">
-                                <label for="' . esc_attr($name) . '">' . esc_attr($question['placeholder']) . ' ' . esc_attr($required_star) . '</label>';
+                                <label for="' . esc_attr($name) . '">' . esc_attr(TransStrings::tfhbTranslate($label)) . ' ' . esc_attr($required_star) . '</label>';
 					if ( $question['type'] == 'select' ) {
 
 						echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>';
 						foreach ( $question['options'] as $option ) {
-							echo '<option value="' . esc_attr($option['value']) . '">' . esc_attr($option['label']) . '</option>';
+							echo '<option value="' . esc_attr($option) . '">' . esc_attr($option) . '</option>';
 						}
 						echo '</select>';
 
 					} elseif ( $question['type'] == 'textarea' ) {
 
-						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>' . esc_html($value) . '</textarea>';
+						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . 'placeholder="' . esc_attr(TransStrings::tfhbTranslate($placehoder)) . '">' . esc_html($value) . '</textarea>';
 
-					} elseif ( $question['type'] == 'checkbox' ) {
-
-						echo '<label for="' . esc_attr($name) . '">
-                                            <input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
-                                            <span class="checkmark"></span> ' . esc_attr($question['placeholder']) . '
+					} elseif ( $question['type'] == 'checkbox' ) { 
+						echo '<div class="tfhb-checkbox-group">';
+						foreach ( $question['options'] as $key => $option ) { 
+							echo '<label class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name)  .'_'.$key.'">
+                                            <input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.$key.'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' >
+                                            <span class="checkmark"></span> ' . esc_attr($option) . '
                                         </label>';
+						}
+						echo '</div>';
+						
 
-					} else {
+					}elseif ( $question['type'] == 'radio' ) { 
+						echo '<div class="tfhb-radio-group">';
+						foreach ( $question['options'] as $key => $option ) {  
+							echo '<label  class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name) .'_'.$key.'">
+										<input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.$key.'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
+										<span class="checkmark"></span> ' . esc_attr($option) . '
+									</label>';
+						}
+						echo '</div>';
+						
 
-						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr($question['placeholder']) . '">';
+					}  else {
+
+						echo '<input name="' . esc_attr($name) . '" id="' . esc_attr($name) . '"  value="' . esc_attr($value) . '" type="' . esc_attr($question['type']) . '" ' . esc_attr($required) . ' ' . esc_attr($disable) . ' placeholder="' . esc_attr(TransStrings::tfhbTranslate($placehoder)) . '">';
 					}
 							echo '</div>';
 
@@ -129,30 +174,32 @@ $booking_data        = isset( $args['booking_data'] ) ? $args['booking_data'] : 
 
 						<textarea name="reason" required id="reason"></textarea>
 					</div> 
+				</div> 
+			<?php endif;
+			
+		
+			?> 
+				<div class="tfhb-confirmation-button tfhb-mt-32">
+					<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
+					<?php echo ! empty( $booking_data ) ? 'Reschedule' : 'Confirm'; ?>  
+						<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
+					</button>
 				</div>
-			<?php else : ?>
-				<div class="tfhb-confirmation-box tfhb-flexbox">
-					<div class="tfhb-swicher-wrap tfhb-flexbox tfhb-gap-8">
-						<label class="switch">
-							<input required name="tfhb_booking_checkbox" type="checkbox">
-							<div class="slider"></div>
-						</label>
-						<label class="swicher-label"><?php echo esc_html__( 'Booking Confirmation', 'hydra-booking' ); ?></label>
-					</div>
-	
-				</div>
-			<?php endif ?> 
-			<div class="tfhb-confirmation-button">
-				<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
-				<?php echo ! empty( $booking_data ) ? 'Reschedule' : 'Confirm'; ?>  
-					<img src="<?php echo esc_url(THB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
-				</button>
-			</div>
 			<?php
+				if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 ):
+			?> 
+				<div class="tfhb-paypal-button-container"></div>
+			<?php
+				endif;
+				if(isset($tfhb_stripe['status']) && $tfhb_stripe['status'] == 1 ):
+			?>
+			<div class="tfhb-stripe-button-container"></div>
+			<?php
+			endif;
 			echo '</form>';
 		}
 		?>
-  
+ 
 	</div>
 
 	<?php

@@ -1,4 +1,6 @@
 <script setup>
+import { __ } from '@wordpress/i18n';
+import { ref, reactive, onBeforeMount } from 'vue';
 import { RouterView } from 'vue-router' 
 import HbText from '@/components/form-fields/HbText.vue'
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
@@ -11,6 +13,7 @@ import { setupWizard } from '@/store/setupWizard';
 // Toast
 import { toast } from "vue3-toastify"; 
 
+const pre_loader = ref(false);
 const props = defineProps({
     setupWizard : {
         type: Object,
@@ -19,6 +22,27 @@ const props = defineProps({
 }); 
 
 
+const StepThree = () => {
+    
+    if(props.setupWizard.pre_loader == true){
+        return;
+    }
+    props.setupWizard.pre_loader = true;
+   
+
+
+    props.setupWizard.importDemoMeeting(); 
+}
+
+ 
+const sikpStepThree = () => { 
+    if(props.setupWizard.skip_preloader == true){
+        return;
+    } 
+    props.setupWizard.skip_import = true;
+    props.setupWizard.skip_preloader = true; 
+    props.setupWizard.importDemoMeeting();
+}
 </script>
 
 <template>
@@ -34,30 +58,45 @@ const props = defineProps({
                 <span class="tfhb-step-bar step-1 active"></span>
                 <span class="tfhb-step-bar step-1 "></span>
             </div>
-            <h2>{{$tfhb_trans['Experience Hydrabooking in Action (Instantly!)']}}</h2>
-            <p>{{$tfhb_trans['Hydrabooking allows you to tailor the booking experience to perfectly suit your workflow.']}}</p>
+            <h2>{{ $tfhb_trans('Experience HydraBooking in Action (Instantly!)') }}</h2>
+            <p>{{ $tfhb_trans('It helps you customize the booking process to fit your workflow and make things run more smoothly.') }}</p>
+        </div>
+        <div class="tfhb-s-w-import-data">
+            <img :src="$tfhb_url+'/assets/images/Import.svg'" style="height: 96px;" alt="">
         </div>
         <div class="tfhb-s-w-getting-email">
-
-            <button class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="props.setupWizard.importDemoMeeting" >Import demo data
-               
-                <Icon v-if="props.setupWizard.pre_loader == 'false'"  name="ChevronRight" size="20" />   
-                <svg class="tfhb-s-w-preloader" v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle fill="none" stroke-opacity="1" stroke="#FFFFFF" stroke-width=".5" cx="100" cy="100" r="0"><animate attributeName="r" calcMode="spline" dur="2" values="1;80" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-width" calcMode="spline" dur="2" values="0;25" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" calcMode="spline" dur="2" values="1;0" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate></circle></svg>
             
-            </button>
+            <HbButton 
+                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-import-demo" 
+                @click="StepThree"
+                :buttonText="$tfhb_trans('Create demo meeting')"
+                icon="ChevronRight" 
+                hover_icon="ArrowRight" 
+                :pre_loader="props.setupWizard.pre_loader"
+                :hover_animation="true" 
+            />  
              
         </div>
-        <div class="tfhb-submission-btn tfhb-flexbox tfhb-gap-8"> 
+        <div class="tfhb-submission-btn tfhb-flexbox"> 
             <HbButton 
-                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 icon-left" 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8 left" 
                 @click="props.setupWizard.currentStep = 'step-two'" 
-                :buttonText="$tfhb_trans['Back']"
-                icon="ChevronLeft" 
+                :buttonText="$tfhb_trans('Back')"
+                icon="ChevronLeft"  
                 hover_icon="ArrowLeft" 
                 :hover_animation="true" 
-                icon_position="left"
+                icon_position="left" 
             /> 
-            <button  @click="props.setupWizard.currentStep = 'step-end'"  class="tfhb-btn  tfhb-flexbox tfhb-gap-8" >Skip </button>
+            <HbButton 
+                classValue="tfhb-btn tfhb-flexbox tfhb-gap-8 " 
+                @click="sikpStepThree" 
+                :buttonText="$tfhb_trans('Skip')"  
+                :hover_animation="true"  
+                :pre_loader="props.setupWizard.skip_preloader"
+                pre_loader_color="#2E6B38"
+                icon="ChevronRight"  
+                hover_icon="ArrowRight"  
+            />  
         </div>
      </div>
      <!-- Step Three -->

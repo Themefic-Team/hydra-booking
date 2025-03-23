@@ -1,23 +1,37 @@
+.tfhb-scrollbar,
+.fc-scroller,
+.p-dropdown-items-wrapper {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #273F2B #F3F6F4;
+  padding-right: 10px;
 
-.tfhb-scrollbar {
-    ::-webkit-scrollbar {
-        width: 5px;
-      }
-      
-      /* Track */
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1; 
-      }
-       
-      /* Handle */
-      ::-webkit-scrollbar-thumb {
-        background: $warning200; 
-        border-radius: 4px;
-      }
-      
-      /* Handle on hover */
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555; 
-      }
+  /* For Chrome, Edge, and Safari */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+
+  ::-webkit-scrollbar-track {
+    background: #F3F6F4;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #273F2B;
+    border-radius: 10px;
+    border: 3px solid #F3F6F4;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* For Firefox */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+  }
+
+  /* Optional: To target specific elements */
+
 }
- 

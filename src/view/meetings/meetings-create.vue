@@ -1,12 +1,15 @@
 <script setup>
-import { reactive, onBeforeMount, ref } from 'vue';
+import { __ } from '@wordpress/i18n';
+import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import { toast } from "vue3-toastify"; 
-import useValidators from '@/store/validator'
+
+import HbPreloader from '@/components/icon/HbPreloader.vue'
 import { Availability } from '@/store/availability';
 import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
+import useValidators from '@/store/validator'
 const { errors } = useValidators();
 
 const route = useRoute();
@@ -17,6 +20,7 @@ const meetingCategory = reactive({});
 const wcProduct = reactive({});
 const integrations = reactive({
     google_calendar_status : 1,
+    outlook_calendar_status : 1,
     zoom_meeting_status : 1,
     cf7_status : 1,
     fluent_status : 1,
@@ -24,8 +28,12 @@ const integrations = reactive({
     gravity_status : 1,
     fluent_crm_status : 1,
     zoho_status : 1,
+    pabbly_status : 1,
+    zapier_status : 1,
 });
 const formsList = reactive({});
+
+const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const meetingData = reactive({
     id: 0,
     user_id: 0,
@@ -54,7 +62,7 @@ const meetingData = reactive({
     availability_custom: 
         {
         title: '',
-        time_zone: '',
+        time_zone: local_time_zone,
         date_status: 0,
         time_slots: [
             { 
@@ -131,16 +139,16 @@ const meetingData = reactive({
         date_slots: [
         ]
     },
-    buffer_time_before: '',
-    buffer_time_after: '',
+    buffer_time_before: '5',
+    buffer_time_after: '5',
     booking_frequency: [
         {
-            limit: 1,
-            times:'Year'
+            limit: 5,
+            times:'days'
         }
     ],
-    meeting_interval: '',
-    recurring_status: 1,
+    meeting_interval: '10',
+    recurring_status: 0,
     recurring_repeat:[
         {
             limit: 1,
@@ -155,32 +163,45 @@ const meetingData = reactive({
     form_id: '',
     questions: [
         {
-            label: 'name',
+            label: 'Name',
             type:'Text',
+            name: 'name',
             placeholder:'Name',
             options: [],
-            required: 1
+            required: 1,
+            enable: 1,
         },
         {
-            label: 'email',
+            label: 'Email',
             type:'Email',
+            name: 'email',
             options: [],
-            placeholder:'Email',
-            options: [],
-            required: 1
+            placeholder:'Email', 
+            required: 1,
+            enable: 1,
         },
         {
-            label: 'address',
-            type:'Text', 
-            placeholder:'Address',
+            label: 'Comment',
+            type:'textarea', 
+            name: 'comment',
+            placeholder:'Comment',
             options: [],
-            required: 1
+            required: 0,
+            enable: 1,
         }
     ],
     notification: {
         host: {
             booking_confirmation: {
-                status : 0,
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_pending: {
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -188,7 +209,7 @@ const meetingData = reactive({
 
             },
             booking_cancel: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -196,7 +217,7 @@ const meetingData = reactive({
 
             },
             booking_reschedule: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -204,7 +225,7 @@ const meetingData = reactive({
 
             },
             booking_reminder: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -214,14 +235,21 @@ const meetingData = reactive({
         },
         attendee : {
             booking_confirmation: {
-                status : 0,
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+            },
+            booking_pending: {
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
                 body : '',
             },
             booking_cancel: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -229,7 +257,7 @@ const meetingData = reactive({
 
             },
             booking_reschedule: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -237,7 +265,7 @@ const meetingData = reactive({
 
             },
             booking_reminder: {
-                status : 0,
+                status : 1,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -250,6 +278,7 @@ const meetingData = reactive({
     meeting_price: '',
     payment_currency: '',
     payment_method: '',
+    permalink	: '',
     payment_meta: {
         product_id: '',
     },
@@ -327,9 +356,9 @@ const AvailabilityTabs = (type) => {
 
 const meetingId = route.params.id;
 
- const fetchMeeting = async () => {
+const fetchMeeting = async () => {
     try { 
-        const response = await axios.get(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/'+meetingId, {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/'+meetingId, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
@@ -339,14 +368,17 @@ const meetingId = route.params.id;
             // Time Zone = 
             timeZone.value = response.data.time_zone;   
             integrations.google_calendar_status = response.data.integrations.google_calendar_status && response.data.integrations.google_calendar_status == 1 ? false : true;  
+            integrations.outlook_calendar_status = response.data.integrations.outlook_calendar_status && response.data.integrations.outlook_calendar_status == 1 ? false : true;  
             integrations.zoom_meeting_status = response.data.integrations.zoom_meeting_status && response.data.integrations.zoom_meeting_status == 1  ? false : true;  
             integrations.cf7_status = response.data.integrations.cf7_status && response.data.integrations.cf7_status == 1  ? false : true;  
             integrations.fluent_status = response.data.integrations.fluent_status && response.data.integrations.fluent_status == 1  ? false : true;  
             integrations.forminator_status = response.data.integrations.forminator_status && response.data.integrations.forminator_status == 1  ? false : true;  
             integrations.gravity_status = response.data.integrations.gravity_status && response.data.integrations.gravity_status == 1  ? false : true;  
-            integrations.webhook_status = response.data.integrations.webhook_status && response.data.integrations.webhook_status == 1  ? false : true;  
+            integrations.webhook_status = response.data.integrations.webhook_status;
             integrations.fluent_crm_status = response.data.integrations.fluent_crm_status && response.data.integrations.fluent_crm_status == 1  ? false : true;  
             integrations.zoho_crm_status = response.data.integrations.zoho_crm_status && response.data.integrations.zoho_crm_status == 1  ? false : true;  
+            integrations.pabbly_status = response.data.integrations.pabbly_status && response.data.integrations.pabbly_status == 1  ? true : false;
+            integrations.zapier_status = response.data.integrations.zapier_status && response.data.integrations.zapier_status == 1  ? true : false;
 
             wcProduct.value = response.data.wc_product;  
             formsList.value = response.data.formsList;  
@@ -364,6 +396,8 @@ const meetingId = route.params.id;
             meetingData.custom_duration = response.data.meeting.custom_duration
             meetingData.meeting_category = response.data.meeting.meeting_category
             meetingData.payment_method = response.data.meeting.payment_method
+            meetingData.max_book_per_slot = response.data.meeting.max_book_per_slot
+            meetingData.is_display_max_book_slot = response.data.meeting.is_display_max_book_slot
 
             if(response.data.meeting.meeting_locations){
                 meetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
@@ -412,8 +446,17 @@ const meetingId = route.params.id;
                 meetingData.questions_form_type = response.data.meeting.questions_form_type
             }
 
+            console.log('questions', meetingData.questions)
             if(response.data.meeting.questions){
-                meetingData.questions = JSON.parse(response.data.meeting.questions)
+                meetingData.questions = JSON.parse(response.data.meeting.questions) 
+                
+                // **** this is a temporay fix it will be removed in version 2.0.0 or higher version
+                meetingData.questions.forEach((question, index) => {
+                    if(!question.enable ){
+                        meetingData.questions[index].enable = 1;
+                    }
+                })
+                // **** end fix *****
             }
             if(response.data.meeting.questions_form){
                 meetingData.questions_form = response.data.meeting.questions_form
@@ -442,6 +485,7 @@ const meetingId = route.params.id;
             meetingData.mailchimp = response.data.mailchimp ? response.data.mailchimp : '';
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
+            meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
 
             skeleton.value = false
         }else{ 
@@ -452,13 +496,13 @@ const meetingId = route.params.id;
     } 
 } 
 
-onBeforeMount(() => { 
-
+onBeforeMount(() => {  
     fetchMeeting();
-    Availability.getGeneralSettings();
+    Availability.getGeneralSettings(); 
+   
 });
 
-
+const update_preloader = ref(false);
 const UpdateMeetingData = async (validator_field) => {
     
     // Clear the errors object
@@ -487,77 +531,115 @@ const UpdateMeetingData = async (validator_field) => {
 
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
-    if(!isEmpty){
-        toast.error('Fill Up The Required Fields'); 
+    if(!isEmpty){ 
+        toast.error('Fill Up The Required Fields', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
         return
     }
 
+    update_preloader.value = true;
     // Api Submission
     try { 
-        const response = await axios.post(tfhb_core_apps.admin_url + '/wp-json/hydra-booking/v1/meetings/details/update', meetingData, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/details/update', meetingData, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_options'
             } 
         });
         if (response.data.status == true) { 
-            meetingData.slug = response.data.meeting.slug;
-            toast.success(response.data.message); 
-            if("MeetingsCreateDetails"==route.name){
-                router.push({ name: 'MeetingsCreateAvailability' });
+            meetingData.slug = response.data.meeting.slug; 
+           
+            meetingData.permalink = response.data.meeting.permalink; 
+            // toast.success(response.data.message, {
+            //         position: 'bottom-right', // Set the Fdesired position
+            //         "autoClose": 1500,
+            //     });
+            let nextRouteName = '';
+            if("MeetingsCreateDetails"==route.name){ 
+                nextRouteName = 'MeetingsCreateAvailability';
             }
-            if("MeetingsCreateAvailability"==route.name){
-                router.push({ name: 'MeetingsCreateLimits' });
+            if("MeetingsCreateAvailability"==route.name){ 
+                nextRouteName = 'MeetingsCreateLimits';
             }
-            if("MeetingsCreateLimits"==route.name){
-                router.push({ name: 'MeetingsCreateQuestions' });
+            if("MeetingsCreateLimits"==route.name){ 
+                nextRouteName = 'MeetingsCreateQuestions';
             }
-            if("MeetingsCreateQuestions"==route.name){
-                router.push({ name: 'MeetingsCreateNotifications' });
+            if("MeetingsCreateQuestions"==route.name){ 
+                nextRouteName = 'MeetingsCreateNotifications';
             }
             if("MeetingsCreateNotifications"==route.name){
-                router.push({ name: 'MeetingsCreateIntegrations' });
+                // router.push({ name: 'MeetingsCreateIntegrations' });
+                nextRouteName = 'MeetingsCreateIntegrations';
             }
-            if("MeetingsCreateIntegrations"==route.name){
-                router.push({ name: 'MeetingsCreateWebhook' });
+            if("MeetingsCreateIntegrations"==route.name){ 
+                nextRouteName = 'MeetingsCreatePayment';
             }
-            if("MeetingsCreateWebhook"==route.name){
-                router.push({ name: 'MeetingsCreatePayment' });
+            if("MeetingsCreatePayment"==route.name){ 
+                sharePopupData();
+                // window.open(meetingData.permalink, '_blank'); 
+
+
             }
-            
+            if (nextRouteName) {
+                router.push({ name: nextRouteName }).then(() => {
+                    nextTick(() => {
+                        toast.success(response.data.message, {
+                            position: 'bottom-right',
+                            autoClose: 1500,
+                        });
+                    });
+                });
+            }else{
+                toast.success(response.data.message, {
+                    position: 'bottom-right',
+                    autoClose: 1500,
+                });
+            }
+            update_preloader.value = false;
             // if("MeetingsCreateIntegrations"==route.name){
             //     router.push({ name: 'MeetingsCreatePayment' });
             // }
-        }else{
-            toast.error(response.data.message); 
+        }else{ 
+            toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
         }
     } catch (error) {
         console.log(error);
     } 
 }
+const beck_to_prev = ref(false);
+const TfhbPrevNavigator = () => { 
+    beck_to_prev.value = true;
+   
 
-const TfhbPrevNavigator = () => {
-    if("MeetingsCreateDetails"==route.name){
+    setTimeout(() => {
+        if("MeetingsCreateDetails"==route.name){
         router.push({ name: 'MeetingsLists' });
-    }
-    if("MeetingsCreateAvailability"==route.name){
-        router.push({ name: 'MeetingsCreateDetails' });
-    }
-    if("MeetingsCreateLimits"==route.name){
-        router.push({ name: 'MeetingsCreateAvailability' });
-    }
-    if("MeetingsCreateQuestions"==route.name){
-        router.push({ name: 'MeetingsCreateLimits' });
-    }
-    if("MeetingsCreateNotifications"==route.name){
-        router.push({ name: 'MeetingsCreateQuestions' });
-    }
-    if("MeetingsCreatePayment"==route.name){
-        router.push({ name: 'MeetingsCreateNotifications' });
-    }
-    if("MeetingsCreateWebhook"==route.name){
-        router.push({ name: 'MeetingsCreatePayment' });
-    }
+        }
+        if("MeetingsCreateAvailability"==route.name){
+            router.push({ name: 'MeetingsCreateDetails' });
+        }
+        if("MeetingsCreateLimits"==route.name){
+            router.push({ name: 'MeetingsCreateAvailability' });
+        }
+        if("MeetingsCreateQuestions"==route.name){
+            router.push({ name: 'MeetingsCreateLimits' });
+        }
+        if("MeetingsCreateNotifications"==route.name){
+            router.push({ name: 'MeetingsCreateQuestions' });
+        }
+        if("MeetingsCreatePayment"==route.name){
+            router.push({ name: 'MeetingsCreateNotifications' });
+        }
+        if("MeetingsCreateWebhook"==route.name){
+            router.push({ name: 'MeetingsCreatePayment' });
+        }
+        beck_to_prev.value = false;
+    }, 500);
 }
 
 const sharePopup = reactive({
@@ -573,67 +655,79 @@ const shareData = reactive({
     shortcode: '',
     embed: ''
 })
-const sharePopupData = (data) => { 
+const sharePopupData = () => {   
     shareData.share_type = 'link'
     shareData.title = meetingData.title
     shareData.time = meetingData.duration
     shareData.meeting_type = meetingData.meeting_type
     shareData.shortcode = '[hydra_booking id="'+meetingData.id+'"]'
-    shareData.link = tfhb_core_apps.admin_url + '/' + meetingData.slug
-    shareData.embed = '<iframe src="'+ tfhb_core_apps.admin_url +'/?hydra-booking=meeting&meeting-id='+meetingData.id+'&type=iframe" title="description"  height="600" width="100%" ></iframe>'
+    shareData.link = meetingData.permalink
+    shareData.embed = ' <div class="hydra-booking-embed-container" data-url="'+tfhb_core_apps.admin_url+'" data-meeting-id="'+meetingData.id+'"></div> '+tfhb_core_apps.embed_script_link+''
+ 
 
     // Popup open
     sharePopup.value = true; 
 }
 
+// trunkate string 
+const truncateString = (str, num) => {
+    if (str.length <= num) {
+        return str
+    }
+    return str.slice(0, num) + '...'
+}
 </script>
 
-<template>
+<template> 
     <div class="tfhb-meeting-create" :class="{ 'tfhb-skeleton': skeleton }">
-        <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32">
-            <div class="tfhb-meeting-heading-wrap">
+        <div class="tfhb-meeting-create-notice tfhb-flexbox tfhb-mb-32 tfhb-justify-between">
+            <div class="tfhb-meeting-heading-wrap tfhb-flexbox tfhb-gap-8">
+                <div class="prev-navigator" @click="TfhbPrevNavigator()">
+                    <Icon v-if="beck_to_prev == false" name="ArrowLeft" size=20 /> 
+                    <HbPreloader v-else color="#2E6B38" />
+                </div>
                 <div class="tfhb-meeting-heading tfhb-flexbox">
-                    <div class="prev-navigator" @click="TfhbPrevNavigator()">
-                        <Icon name="ArrowLeft" size="20" /> 
-                    </div>
-                    <h3 v-if="meetingData.title != ''">{{ meetingData.title }}</h3>
-                    <h3 v-else >{{ $tfhb_trans['Create One-to-One booking type'] }}</h3>
+                  
+                    <h3 v-if="meetingData.title != '' && meetingData.title != null">{{ truncateString(meetingData.title, 110) }}</h3>
+                    <h3 v-else-if="meetingData.type == 'one-to-one'" >{{ $tfhb_trans('Create One-to-One booking') }}</h3>
+                    <h3 v-else >{{ $tfhb_trans('Create One-to-Group booking') }}</h3>
                 </div> 
                 <!-- <div  class="tfhb-meeting-subtitle">
-                    {{ $tfhb_trans['Create and manage booking/appointment form'] }}
+                    {{ $tfhb_trans('Create and manage booking/appointment form') }}
                 </div> -->
             </div>
            
             <div class="thb-admin-btn right"> 
-                <button  @click="sharePopupData(smeeting)" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans['Share'] }}  <Icon name="ArrowUpRight" size="20" /></button>
+                <button  @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size=20 /></button>
             </div> 
         </div>
         <nav class="tfhb-booking-tabs tfhb-meeting-tabs tfhb-mb-32"> 
             <ul>
                 <!-- to route example like meetings/create/13/details -->
                 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/details'" exact :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/details' }">{{ $tfhb_trans['Details'] }}</router-link></li> 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/availability'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/availability' }">{{ $tfhb_trans['Availability'] }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/limits'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/limits' }">{{ $tfhb_trans['Limits'] }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/questions'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/questions' }"> {{ $tfhb_trans['Questions'] }}</router-link></li>  
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/notifications'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/notifications' }"> {{ $tfhb_trans['Notifications'] }}</router-link></li>   
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/integrations' }">{{ $tfhb_trans['Integrations'] }}</router-link></li> 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/webhook'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/webhook' }">{{ $tfhb_trans['Webhook'] }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/details'" exact :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/details' }">{{ $tfhb_trans('Details') }}</router-link></li> 
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/availability'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/availability' }">{{ $tfhb_trans('Availability') }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/limits'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/limits' }">{{ $tfhb_trans('Limits') }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/questions'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/questions' }"> {{ $tfhb_trans('Questions') }}</router-link></li>  
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/notifications'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/notifications' }"> {{ $tfhb_trans('Notifications') }}</router-link></li>   
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/integrations' }">{{ $tfhb_trans('Integrations') }}</router-link></li> 
+                <!-- <li><router-link :to="'/meetings/single/'+ $route.params.id +'/webhook'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/webhook' }">{{ $tfhb_trans('Webhook') }}</router-link></li>   -->
 
-                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/payment'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/payment' }">{{ $tfhb_trans['Payment'] }}</router-link></li> 
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/payment'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/payment' }">{{ $tfhb_trans('Payment') }}</router-link></li> 
 
             </ul>  
         </nav>
 
-        <div class="tfhb-hydra-dasboard-content">  
+        <div class="tfhb-hydra-dasboard-content">   
             <router-view 
             :meetingId ="meetingId" 
             :meeting="meetingData" 
             :integrations="integrations" 
             :timeZone="timeZone.value" 
             :wcProduct="wcProduct.value" 
-            :formsList="formsList.value" 
-            :meetingCategory="meetingCategory.value" 
+            :formsList="formsList" 
+            :update_preloader="update_preloader" 
+            :meetingCategory="meetingCategory" 
             @add-more-location="addMoreLocations" 
             @remove-meeting-location="removeLocations" 
             @update-meeting="UpdateMeetingData" 
