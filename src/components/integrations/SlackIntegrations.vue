@@ -71,15 +71,15 @@ const closePopup = () => {
                         {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get Access Token from Slack Account') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                     </p>
                     <HbText  
-                        v-model="slack_data.channel"  
+                        v-model="slack_data.endpoint"  
                         required= "true"  
-                        name="channel"
-                        :errors="errors.channel"
-                        :label="$tfhb_trans('Channel Name')"  
+                        name="endpoint"
+                        :errors="errors.endpoint"
+                        :label="$tfhb_trans('Endpoint Name')"  
                         selected = "1"
-                        :placeholder="$tfhb_trans('Enter Your Channel Name')"  
+                        :placeholder="$tfhb_trans('Enter Your Endpoint Name')"  
                     /> 
-                    <HbText  
+                    <!-- <HbText  
                         v-model="slack_data.token"  
                         required= "true"  
                         name="token"
@@ -87,11 +87,11 @@ const closePopup = () => {
                         :label="$tfhb_trans('Access Token')"  
                         selected = "1"
                         :placeholder="$tfhb_trans('Enter Your Access Token')"  
-                    /> 
+                    />  -->
 
                     
                     <HbButton  
-                         @click.stop="emit('update-integrations', 'slack_data', slack_data, ['channel', 'token'])"
+                         @click.stop="emit('update-integrations', 'slack_data', slack_data, ['endpoint'])"
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
                         :buttonText="'Save & Validate' "
                         icon="ChevronRight" 

@@ -175,8 +175,7 @@ const Integration = reactive( {
     slack : {
         type: 'meeting', 
         status: 0, 
-        channel: '',
-        token: '',
+        endpoint: ''
     },
     google_calendar : {
         type: 'calendar', 

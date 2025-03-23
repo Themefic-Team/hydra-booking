@@ -628,8 +628,7 @@ class SettingsController {
 		} elseif ( $key == 'slack_data' ) {
 			$_tfhb_integration_settings['slack']['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['slack']['status']      = sanitize_text_field( $data['status'] );
-			$_tfhb_integration_settings['slack']['channel']   = sanitize_text_field( $data['channel'] );
-			$_tfhb_integration_settings['slack']['token']   = sanitize_text_field( $data['token'] );
+			$_tfhb_integration_settings['slack']['endpoint']   = sanitize_text_field( $data['endpoint'] );
 
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
