@@ -1394,6 +1394,40 @@
                     }
                 }
             }
+
+            .tfhb-meeting-bookmark-action {
+                text-align: center;
+                margin-top: 16px;
+                padding: 16px;
+                p {
+                    font-size: 15px;
+                    margin-bottom: 8px;
+                }
+                .tfhb-meeting-bookmark-list {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 16px;
+                    a {
+                        display: inline-block;
+                        width: 30px;
+                        height: 30px; 
+                        box-shadow: 0px 15px 30px 0px rgba(16, 40, 20, 0.10);
+                        border-radius: 4px;
+                        transition: 0.4s;
+                        &:hover { 
+                            background-color:  $surface-primary;
+                        }
+                        &:focus{ 
+                            outline: none; 
+                        }
+                        img {
+                            padding: 5px;
+                        }
+                    }
+                }
+            }  
+             
         }
     }
 }
