@@ -17,6 +17,7 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 
 //  Load Time Zone 
 const skeleton = ref(true);   
+const ntskeleton = ref(false);   
 const currentTabs = ref('host');
 const popup = ref(false);
 const update_preloader = ref(false);
@@ -112,9 +113,13 @@ const Notification = reactive(  {
 
 // Update Notification 
 const changeTab = (e) => {  
+    ntskeleton.value = true;
     // get data-tab attribute value of clicked button
     const tab = e.target.getAttribute('data-tab'); 
     currentTabs.value = tab;
+    setTimeout(() => {
+        ntskeleton.value = false;
+    }, 1000);
 }
 
 
@@ -220,7 +225,7 @@ onBeforeMount(() => {
                 <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
  
-            <div v-if="currentTabs=='host' && !$route.params.id" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+            <div v-if="currentTabs=='host' && !$route.params.id" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box " :class="{ 'tfhb-skeleton': ntskeleton }"> 
  
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -285,7 +290,7 @@ onBeforeMount(() => {
                 <!-- <router-view :notifications="Notification" /> -->
  
             </div> 
-            <div v-if="currentTabs=='attendee' && !$route.params.id"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box "> 
+            <div v-if="currentTabs=='attendee' && !$route.params.id"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box " :class="{ 'tfhb-skeleton': ntskeleton }"> 
 
                 <!-- Single Notification  -->
                 <MailNotifications 
