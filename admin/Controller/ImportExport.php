@@ -15,10 +15,12 @@ class ImportExport {
 
 	// constaract
 	public function __construct() {
+		
  
 	}
 
 	public function create_endpoint() {
+		// tfhb_print_r('hello world');
 		register_rest_route(
 			'hydra-booking/v1',
 			'/settings/import-export',
@@ -30,7 +32,7 @@ class ImportExport {
 		);
 		register_rest_route(
 			'hydra-booking/v1',
-			'/settings/import-export/export-meeting-csv',
+			'/settings/import-export/export-meetings',
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ExportMeeting' ),
@@ -38,25 +40,25 @@ class ImportExport {
 			)
 		);
 
-		register_rest_route(
-			'hydra-booking/v1',
-			'/import-export/import-meeting',
-			array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'ImportMeeting' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
-			)
-		);
-		// Import Booking
-		register_rest_route(
-			'hydra-booking/v1',
-			'/settings/import-export/import-booking',
-			array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'ImportBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
-			)
-		);
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/import-export/import-meeting',
+		// 	array(
+		// 		'methods'  => 'POST',
+		// 		'callback' => array( $this, 'ImportMeeting' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+		// 	)
+		// );
+		// // Import Booking
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/settings/import-export/import-booking',
+		// 	array(
+		// 		'methods'  => 'POST',
+		// 		'callback' => array( $this, 'ImportBooking' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+		// 	)
+		// );
 	}
 
 	public function GetImportExportData() {
@@ -100,5 +102,18 @@ class ImportExport {
 			'message' =>  __( 'Booking Data Imported Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
+	}
+
+	/**
+	 * Export Meetings Data
+	 * --------------------------------
+	 * @param array $data
+	 * @return array
+	 * @since 1.1.0
+	 * @author Sydur Rahman 
+	 */
+	public function ExportMeeting(){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+		tfhb_print_r( $request );
 	}
 }

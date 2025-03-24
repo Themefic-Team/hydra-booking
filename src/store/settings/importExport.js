@@ -13,6 +13,15 @@ const importExport = reactive({
         import_status: false,
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
+    meetings: {
+        column: {},  
+        import_column: {},  
+        import_file: null,
+        import_data: {},
+        rearrange_column: {},
+        import_status: false,
+        import_progress: 0, // shuld be 0 to 100 dynamically
+    }, 
     async GetImportExportData() { 
         try {  
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export', {
@@ -130,9 +139,52 @@ const importExport = reactive({
             console.log(error);
         }  
     },
-    async exportBookingAsCSV() { 
+
+    // export Meetings Data
+    async exportMeetings(data) {
+        console.log(data);
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-meetings', exportData, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {  
  
-    },
+                // export csv file data
+                const url = window.URL.createObjectURL(new Blob([response.data.data]));
+                const link = document.createElement('a');
+                const file_name = response.data.file_name;
+    
+                link.href = url;
+    
+                link.setAttribute('download', file_name);
+    
+                // Append to the DOM
+                document.body.appendChild(link);
+                link.click();
+    
+                // Clean up
+                link.remove();
+                window.URL.revokeObjectURL(url);
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+            }else{
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }  
+    }
+   
+
 })
 
 export { importExport }

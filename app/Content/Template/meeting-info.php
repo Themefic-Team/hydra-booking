@@ -28,7 +28,7 @@ $_tfhb_host_integration_settings = get_user_meta( $host['user_id'], '_tfhb_host_
 $stripePublicKey                 = ! empty( $_tfhb_host_integration_settings['stripe']['public_key'] ) ? $_tfhb_host_integration_settings['stripe']['public_key'] : $stripePublicKey;
 $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['paypal']['client_id'] ) ? $_tfhb_host_integration_settings['paypal']['client_id'] : $paypalPublicKey;
 
-// display short 
+// display short.
 
 $selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $meeting['availability_custom']['time_zone'] : 'UTC';
 if ( 'settings' === $meeting['availability_type'] ) {

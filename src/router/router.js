@@ -287,6 +287,32 @@ const routes = [
                 component: () => import('../view/settings/Category.vue')
             },
             {
+                path: 'import-export',
+                name: 'SettingsImportExport',
+                component: () => import('../view/settings/ImportExport.vue'),
+                redirect: { name: 'MeetingImportExport' },
+                children: [ 
+                    {
+                        path: 'general',
+                        name: 'MeetingImportExport',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/import-export/MeetingImportExport.vue')
+                    },
+                    // {
+                    //     path: 'login',
+                    //     name: 'FrontendDashboardLogin',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/login.vue')
+                    // },
+                    // {
+                    //     path: 'signup',
+                    //     name: 'FrontendDashboardSignup',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/Signup.vue')
+                    // }
+                ]
+            },
+            {
                 path: 'license',
                 name: 'LicenseCategory',
                 component: () => import('../view/settings/License.vue')

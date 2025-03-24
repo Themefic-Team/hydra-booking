@@ -31,7 +31,7 @@ const updateHosts = async () => {
              <nav class="tfhb-booking-tabs"> 
                 <ul>
                     <!-- to route example like hosts/profile/13/information -->
-                    <li><router-link to="/settings/import-export/booking" exact :class="{ 'active': $route.path === '/settings/import-export/booking' }"> <Icon name="UserRound" /> {{ $tfhb_trans['Booking'] }}</router-link></li>  
+                    <li><router-link to="/settings/import-export/meetings" exact :class="{ 'active': $route.path === '/settings/import-export/meetings' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Meetings') }}</router-link></li>  
                     
                 </ul>  
             </nav>

@@ -8,6 +8,7 @@ namespace HydraBooking\Admin\Controller;
 
      public static function getTransStrings(){
         return array(
+         
             //  Dashboard 
             'Dashboard' =>  __('Dashboard', 'hydra-booking'),
             'Booking Overview' =>  __('Booking Overview', 'hydra-booking'),
