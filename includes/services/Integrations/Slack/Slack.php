@@ -103,7 +103,6 @@ class Slack {
             ];
         
             $response = wp_remote_post($slack_endpoint, $args);
-            var_dump($response); exit();
         
             if (is_wp_error($response)) {
                 return "Error: " . $response->get_error_message();

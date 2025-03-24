@@ -34,6 +34,8 @@ onMounted(() => {
 
                             <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.hash === '#twilio' }" class="notification-submenu" data-filter="twilio"> <Icon name="Video" /> {{ $tfhb_trans('Twilio') }}</router-link></li>
 
+                            <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.hash === '#slack' }" class="notification-submenu" data-filter="slack"> <Icon name="Video" /> {{ $tfhb_trans('Slack') }}</router-link></li>
+
                         </ul>
                     </li>
                  

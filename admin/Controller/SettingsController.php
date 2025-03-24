@@ -872,6 +872,15 @@ class SettingsController {
 			}
 		}
 
+		// Sanitize Slack Notification
+		if ( isset( $request['slack'] ) ) {
+			foreach ( $request['slack'] as $key => $value ) {
+				$data['slack'][ $key ]['status']   = sanitize_text_field( $value['status'] );
+				$data['slack'][ $key ]['body']     = wp_kses_post( $value['body'] );
+				$data['slack'][ $key ]['builder']  = $value['builder'];
+			}
+		}
+
 		// update option
 		update_option( '_tfhb_notification_settings', $data );
 

@@ -167,6 +167,28 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         }
+    },
+    slack : {
+        booking_confirmation: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_pending: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_cancel: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reschedule: {
+            status : 0,
+            body : '',
+            builder: ''
+        }
     }
 });
 
@@ -193,6 +215,7 @@ const fetchNotification = async () => {
             Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
             Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
             Notification.twilio = response.data.notification_settings.twilio ? response.data.notification_settings.twilio : Notification.twilio;
+            Notification.slack = response.data.notification_settings.slack ? response.data.notification_settings.slack : Notification.slack;
             skeleton.value = false;
         }
     } catch (error) {
@@ -258,13 +281,16 @@ onBeforeMount(() => {
         <div  class="tfhb-dashboard-heading  ">
             <div class="tfhb-admin-title tfhb-m-0" v-if="$route.params.id"> 
                 <div class="tfhb-flexbox tfhb-gap-4">
-                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#email" v-if="$route.params.id && $route.params.type!='telegram' && $route.params.type!='twilio'">
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#email" v-if="$route.params.id && $route.params.type!='telegram' && $route.params.type!='twilio' && $route.params.type!='slack'">
                         <Icon name="ArrowLeft" :width="20"/>
                     </router-link>
                     <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#telegram" v-if="$route.params.id && $route.params.type=='telegram'">
                         <Icon name="ArrowLeft" :width="20"/>
                     </router-link>
                     <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#twilio" v-if="$route.params.id && $route.params.type=='twilio'">
+                        <Icon name="ArrowLeft" :width="20"/>
+                    </router-link>
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#slack" v-if="$route.params.id && $route.params.type=='slack'">
                         <Icon name="ArrowLeft" :width="20"/>
                     </router-link>
                     <h1 class="tfhb-capitalize">{{ $route.params.type }}</h1> 
@@ -524,6 +550,61 @@ onBeforeMount(() => {
                 <!-- Single Integrations  -->
 
             </div> 
+
+            <!-- Slack Notification -->
+            <div v-if="!$route.params.id && $route.hash === '#slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+ 
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host for Booking Confirmation" 
+                :label="$tfhb_trans('Booking Confirmation')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_confirmation"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_confirmation"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host for Booking Pending" 
+                :label="$tfhb_trans('Booking Pending')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_pending"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_pending"
+            /> 
+            <!-- Single Integrations  -->
+
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host for Booking Cancels" 
+                :label="$tfhb_trans('Booking Cancel')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_cancel"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_cancel"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                title="Send Email to Host" 
+                :label="$tfhb_trans('Booking Reschedule')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_reschedule"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_reschedule"
+            /> 
+            <!-- Single Integrations  -->
+
+            </div> 
+
             <router-view 
             v-if="$route.params" 
             :mediaurl="$tfhb_url"
