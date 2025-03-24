@@ -13,6 +13,7 @@ import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
 import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
+import SlackIntegration from '@/components/integrations/SlackIntegrations.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -43,6 +44,7 @@ const zohopopup = ref(false);
 const mailpopup = ref(false);
 const telepopup = ref(false);
 const twpopup = ref(false);
+const skpopup = ref(false);
 const isPopupOpen = () => {
     popup.value = true;
 }
@@ -66,6 +68,12 @@ const istelePopupOpen = () => {
 }
 const istelePopupClose = (data) => {
     telepopup.value = false;
+}
+const isskPopupOpen = () => {
+    skpopup.value = true;
+}
+const isskPopupClose = (data) => {
+    skpopup.value = false;
 }
 const ismailchimpPopupOpen = () => {
     mailpopup.value = true;
@@ -147,6 +155,12 @@ const Integration = reactive( {
         sid: '',
         token: '',
     },
+    slack : {
+        type: 'slack', 
+        status: 0, 
+        connection_status: 0, 
+        endpoint: '',
+    },
 });
  
 
@@ -175,6 +189,7 @@ const fetchIntegration = async () => {
             Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
             Integration.telegram = response.data.telegram  ? response.data.telegram  : Integration.telegram ; 
             Integration.twilio = response.data.twilio  ? response.data.twilio  : Integration.twilio ; 
+            Integration.slack = response.data.slack  ? response.data.slack  : Integration.slack ; 
             
 
             skeleton.value = false;
@@ -215,7 +230,7 @@ const UpdateIntegration = async (key, value) => {
             twpopup.value = false;
             mailpopup.value = false;
             zohopopup.value = false;
-            
+            skpopup.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
@@ -307,6 +322,17 @@ onBeforeMount(() => {
         @popup-close-control="istwPopupClose" 
         />
         <!-- twilio intrigation -->
+
+        <!-- slack intrigation -->
+        <SlackIntegration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        :slack_data="Integration.slack" 
+        @update-integrations="UpdateIntegration" 
+        from="host"
+        :ispopup="skpopup"
+        @popup-open-control="isskPopupOpen"
+        @popup-close-control="isskPopupClose" 
+        />
+        <!-- slack intrigation -->
 
     </div> 
 </template>

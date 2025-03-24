@@ -32,35 +32,10 @@ class Slack {
 
 	// If booking Status is Complted
 	public function pushBookingToConfirmed( $attendees ) {
-
-		
-		$webhook_url = ""; // Replace with your Webhook URL
-		$message = "Ki obosta re sydur vaio";
-		$payload = json_encode(["text" => $message, "username" => "Anonymous"]);
-	
-		$args = [
-			'body'        => $payload,
-			'headers'     => ['Content-Type' => 'application/json'],
-			'method'      => 'POST',
-			'data_format' => 'body',
-		];
-	
-		$response = wp_remote_post($webhook_url, $args);
-		var_dump($response); exit();
-	
-		if (is_wp_error($response)) {
-			return "Error: " . $response->get_error_message();
-		}
-	
-		return wp_remote_retrieve_body($response);
-		
-		
-		// Example Usage:
-		send_slack_message("Hello, this is an anonymous message from WordPress!");
 		
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_confirmation']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_confirmation']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['slack']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['slack']['booking_confirmation']['body'])){
+            $slack_data = $this->tfhb_slack_callback($_tfhb_notification_settings['slack']['booking_confirmation']['body'], $attendees);
         }
        
 	}
@@ -70,8 +45,8 @@ class Slack {
 	public function pushBookingToPending( $attendees ) {
 
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_pending']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_pending']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_pending']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['slack']['booking_pending']['status']) && !empty($_tfhb_notification_settings['slack']['booking_pending']['body'])){
+            $slack_data = $this->tfhb_slack_callback($_tfhb_notification_settings['slack']['booking_pending']['body'], $attendees);
         }
 
 	}
@@ -80,8 +55,8 @@ class Slack {
 	public function pushBookingToCanceled( $attendees ) {
 
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_cancel']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_cancel']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['slack']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['slack']['booking_cancel']['body'])){
+            $slack_data = $this->tfhb_slack_callback($_tfhb_notification_settings['slack']['booking_cancel']['body'], $attendees);
         }
 
 	}
@@ -90,55 +65,51 @@ class Slack {
 	public function pushBookingToscheduled( $attendees ) {
 		
         $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['telegram']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_reschedule']['body'])){
-            $telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_reschedule']['body'], $attendees);
+        if(!empty($_tfhb_notification_settings['slack']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['slack']['booking_reschedule']['body'])){
+            $slack_data = $this->tfhb_slack_callback($_tfhb_notification_settings['slack']['booking_reschedule']['body'], $attendees);
         }
 
 	}
 
-    function tfhb_telegram_callback($body, $attendees) {
+    function tfhb_slack_callback($body, $attendees) {
 
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) : array();
         $_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
         
 		if(!empty($_tfhb_host_integration_settings)){
-			$telegram_status = !empty($_tfhb_host_integration_settings['telegram']['status']) ? $_tfhb_host_integration_settings['telegram']['status'] : '';
-			$telegram_bot_token = !empty($_tfhb_host_integration_settings['telegram']['bot_token']) ? $_tfhb_host_integration_settings['telegram']['bot_token'] : '';
-			$telegram_chat_id = !empty($_tfhb_host_integration_settings['telegram']['chat_id']) ? $_tfhb_host_integration_settings['telegram']['chat_id'] : '';
+			$slack_status = !empty($_tfhb_host_integration_settings['slack']['status']) ? $_tfhb_host_integration_settings['slack']['status'] : '';
+			$slack_endpoint = !empty($_tfhb_host_integration_settings['slack']['endpoint']) ? $_tfhb_host_integration_settings['slack']['endpoint'] : '';
 		}
 
-		$global_telegram_status = !empty($_tfhb_integration_settings['telegram']['status']) ? $_tfhb_integration_settings['telegram']['status'] : '';
-		$global_telegram_bot_token = !empty($_tfhb_integration_settings['telegram']['bot_token']) ? $_tfhb_integration_settings['telegram']['bot_token'] : '';
-		$global_telegram_chat_id = !empty($_tfhb_integration_settings['telegram']['chat_id']) ? $_tfhb_integration_settings['telegram']['chat_id'] : '';
+		$global_slack_status = !empty($_tfhb_integration_settings['slack']['status']) ? $_tfhb_integration_settings['slack']['status'] : '';
+		$global_slack_endpoint = !empty($_tfhb_integration_settings['slack']['endpoint']) ? $_tfhb_integration_settings['slack']['endpoint'] : '';
 
-		$telegram_status = $telegram_status ? $telegram_status : $global_telegram_status;
-		$telegram_bot_token = $telegram_bot_token ? $telegram_bot_token : $global_telegram_bot_token;
-		$telegram_chat_id = $telegram_chat_id ? $telegram_chat_id : $global_telegram_chat_id;
+		$slack_status = $slack_status ? $slack_status : $global_slack_status;
+		$slack_endpoint = $slack_endpoint ? $slack_endpoint : $global_slack_endpoint;
 
-        if(!empty($telegram_status) && !empty($telegram_bot_token) && !empty($telegram_chat_id)){
+        if(!empty($slack_status) && !empty($slack_endpoint)){
 
             $mailbody = $this->replace_mail_tags($body, $attendees->id);
             $plain_text = preg_replace('/<\/?p>/', "\n", $mailbody);
             $plain_text = wp_strip_all_tags($plain_text);
             $plain_text = trim($plain_text);
 
-            $api_url = "https://api.telegram.org/bot$telegram_bot_token/sendMessage";
-			$args = array(
-				'chat_id' => $telegram_chat_id,
-				'text' => $plain_text,
-                'parse_mode' => 'MarkdownV2'
-			);
-
-			$response = wp_remote_post( $api_url, array(
-				'body' => json_encode( $args ),
-				'headers' => array( 'Content-Type' => 'application/json' ),
-			) );
-            return $response;
-
-
-			if ( is_wp_error( $response ) ) {
-				error_log( 'Telegram API request failed: ' . $response->get_error_message() );
-			}
+            $payload = json_encode(["text" => $plain_text, "username" => "Anonymous"]);
+            $args = [
+                'body'        => $payload,
+                'headers'     => ['Content-Type' => 'application/json'],
+                'method'      => 'POST',
+                'data_format' => 'body',
+            ];
+        
+            $response = wp_remote_post($slack_endpoint, $args);
+            var_dump($response); exit();
+        
+            if (is_wp_error($response)) {
+                return "Error: " . $response->get_error_message();
+            }
+        
+            return wp_remote_retrieve_body($response);
         }
     }
 

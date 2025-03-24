@@ -50,13 +50,13 @@ const closePopup = () => {
             <HbButton 
                 v-else @click="emit('popup-open-control')" 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="slack_data.status == 1 ? 'Connected' : 'Connect'" 
+                :buttonText="slack_data.status == 1 && slack_data.endpoint != '' ? 'Connected' : 'Connect'" 
                 hover_icon="ArrowRight" 
                 :hover_animation="false"    
             />  
             <!-- Checkbox swicher --> 
-            <HbSwitch v-if="slack_data.status && slack_data.token !='' && display != 'list'" @change="emit('update-integrations', 'slack_data', slack_data)" v-model="slack_data.status"    /> 
-            <HbSwitch v-if="slack_data.token && display == 'list' && slack_data.connection_status == '1'" @change="emit('update-integrations', 'slack_data', slack_data)" v-model="slack_data.status"    /> 
+            <HbSwitch v-if="slack_data.status && slack_data.endpoint !='' && display != 'list'" @change="emit('update-integrations', 'slack_data', slack_data)" v-model="slack_data.status"    /> 
+            <HbSwitch v-if="slack_data.endpoint && display == 'list' && slack_data.connection_status == '1'" @change="emit('update-integrations', 'slack_data', slack_data)" v-model="slack_data.status"    /> 
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->

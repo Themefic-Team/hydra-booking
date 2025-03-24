@@ -50,7 +50,7 @@ const closePopup = () => {
             <HbButton 
                 v-else @click="emit('popup-open-control')" 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="twilio_data.status == 1 ? 'Connected' : 'Connect'" 
+                :buttonText="twilio_data.status == 1 && twilio_data.token !='' && twilio_data.sid !='' && twilio_data.from_number !='' && twilio_data.receive_number != '' ? 'Connected' : 'Connect'" 
                 hover_icon="ArrowRight" 
                 :hover_animation="false"    
             />  

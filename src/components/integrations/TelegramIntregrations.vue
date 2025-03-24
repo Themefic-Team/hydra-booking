@@ -49,7 +49,7 @@ const closePopup = () => {
             <HbButton 
                 v-else @click="emit('popup-open-control')" 
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="telegram_data.status == 1 ? 'Connected' : 'Connect'" 
+                :buttonText="telegram_data.status == 1 && telegram_data.bot_token != '' && telegram_data.chat_id != '' ? 'Connected' : 'Connect'" 
                 hover_icon="ArrowRight" 
                 :hover_animation="false"    
             />  
