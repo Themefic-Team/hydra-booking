@@ -602,6 +602,7 @@ namespace HydraBooking\Admin\Controller;
             'Mail Body' =>  __('Mail Body', 'hydra-booking'), 
             'Update' =>  __('Update', 'hydra-booking'),
             'Greetings' => __('Greetings', 'hydra-booking'), 
+            'Buttons'  => __('Buttons', 'hydra-booking'),
 
             // Activity Logs
             'Booking has been completed' =>  __('Booking has been completed', 'hydra-booking'), 

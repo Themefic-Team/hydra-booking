@@ -293,17 +293,36 @@ const contentVisibility = reactive({
 });
 
 const ContentBox = (key, subKey = null) => {
+    if (!contentVisibility.hasOwnProperty(key)) return; // Ensure the key exists
+
     if (subKey) {
-        if (emailBuilder[key].content[subKey].status) {
-            contentVisibility[key][subKey] = !contentVisibility[key][subKey];
+        if (emailBuilder[key]?.content?.[subKey]?.status) {
+            // Ensure parent stays open and toggle sub-item
+            if (typeof contentVisibility[key] === "object") {
+                contentVisibility[key].main = true;
+                contentVisibility[key][subKey] = !contentVisibility[key][subKey];
+            }
         }
     } else {
-        if (emailBuilder[key].status) {
-            if (typeof contentVisibility[key] === 'boolean') {
-                contentVisibility[key] = !contentVisibility[key];
-            } else {
-                contentVisibility[key].main = !contentVisibility[key].main;
+        // Close all other parents first
+        Object.keys(contentVisibility).forEach(parentKey => {
+            if (parentKey !== key) {
+                if (typeof contentVisibility[parentKey] === "object") {
+                    contentVisibility[parentKey].main = false;
+                    Object.keys(contentVisibility[parentKey]).forEach(sub => {
+                        if (sub !== "main") contentVisibility[parentKey][sub] = false;
+                    });
+                } else {
+                    contentVisibility[parentKey] = false;
+                }
             }
+        });
+
+        // Toggle the clicked section
+        if (typeof contentVisibility[key] === "boolean") {
+            contentVisibility[key] = !contentVisibility[key];
+        } else if (typeof contentVisibility[key] === "object") {
+            contentVisibility[key].main = !contentVisibility[key].main;
         }
     }
 };
@@ -939,7 +958,7 @@ onBeforeMount(() => {
                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
                     <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('cancel_reschedule')">
                         <Icon name="GripVertical" :width="20"/> 
-                        {{ $tfhb_trans('Cancel & Reschedule') }}
+                        {{ $tfhb_trans('Buttons') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.cancel_reschedule.status" />
                 </div>
