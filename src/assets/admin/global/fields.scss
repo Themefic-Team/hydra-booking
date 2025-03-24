@@ -651,6 +651,9 @@
                             box-shadow: 0px 1px 3px 0px rgba(16, 40, 20, 0.10), 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
                         }
                     }
+                    .tools-content{
+                        padding-left: 28px;
+                    }
                 }
                 .tfhb-single-form-field{
                     .tfhb-field-input{
@@ -660,7 +663,7 @@
             }
         }
         button.boxed-btn{
-            margin-top: 24px;
+            margin-top: 24px !important;
         }
     }
     .tfhb-email-preview{

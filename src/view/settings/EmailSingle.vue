@@ -579,16 +579,7 @@ onBeforeMount(() => {
         <div class="tfhb-builder-tools">
 
             <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32">
-                <HbDropdown 
-                    v-model="Notification[$route.params.type][$route.params.id].template"  
-                    required= "true" 
-                    :label="$tfhb_trans('Select Template')"  
-                    :selected = "1"
-                    :placeholder="$tfhb_trans('Select Template')"   
-                    :option = "[
-                        {'name': 'Default', 'value': 'default'},  
-                    ]"  
-                /> 
+                
                 <HbText  
                     v-model="Notification[$route.params.type][$route.params.id].from"   
                     type="email"
@@ -640,7 +631,7 @@ onBeforeMount(() => {
                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
                     <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('gratitude')">
                         <Icon name="GripVertical" :width="20"/> 
-                        {{ $tfhb_trans('Gratitude') }}
+                        {{ $tfhb_trans('Greetings') }}
                     </div>
                     <HbSwitch v-model="emailBuilder.gratitude.status" />
                 </div>
