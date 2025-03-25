@@ -349,7 +349,6 @@ const CheckDateRangeEnd = (date) => {
     <div class="meeting-create-details tfhb-gap-24"> 
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title" >
-                {{ props.meeting.availability_range.start }}
                 <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
                 <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
             </div>
