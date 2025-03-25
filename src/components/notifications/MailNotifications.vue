@@ -489,7 +489,6 @@ const closePopup = () => {
                                 {'name': 'Default', 'value': 'default'},  
                             ]"  
                         />  -->
-                        {{ data.body }}
                         <HbText  
                             v-model="data.from"   
                             type="email"

@@ -176,7 +176,7 @@ const IntegrationsValue = reactive({
 
     async updateHookStatus (e, data, key){
         this.integrationsData.key = key;
-        this.integrationsData.meeting_id = this.meeting.meetingId;
+        this.integrationsData.meeting_id = this.meeting.id;
         this.integrationsData.webhook = data.webhook;
         this.integrationsData.title = data.title;
         this.integrationsData.events = data.events;
