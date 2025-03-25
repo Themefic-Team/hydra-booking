@@ -156,6 +156,7 @@ class ShortcodeBuilder {
         $atts = shortcode_atts([
             'title'        => '',
             'subtitle'    => '', 
+            'hosts'        => 'all', // Comma-separated host IDs
             'sort_by'      => 'id',
             'order_by'     => 'DESC',
             'limit' => '10',
@@ -165,8 +166,13 @@ class ShortcodeBuilder {
         // get all meetings based on given parameters
         $host = new Host();
         $query = array( ); 
+        // meeting_host
+        if('all'!= $atts['hosts'] && !empty($atts['hosts'])) {
+            $query[] = array('id', 'IN', $atts['hosts']);
+        } 
         $limit = $atts['limit'] ? $atts['limit'] : 10; 
         $hostData = $host->getAll( $query, $atts['sort_by'], $atts['order_by'], $limit ); 
+        
         ob_start();
         ?>
         <div class="tfhb-hosts-list">
@@ -230,10 +236,21 @@ class ShortcodeBuilder {
      * */
     public function tfhb_categories_callback($atts){
 
+        $atts = shortcode_atts([
+            'title'        => '',
+            'subtitle'    => '', 
+            'sort_by'      => 'id', // id or title
+            'order_by'     => 'DESC',
+            'limit' => '10',
+        ], $atts, 'tfhb_categories');
+
         $terms = get_terms(
 			array(
 				'taxonomy'   => 'meeting_category',
 				'hide_empty' => false, // Set to true to hide empty terms
+                'orderby'    => $atts['sort_by'],
+                'order'       => $atts['order_by'],
+                'number'     => $atts['limit'], // Limit the number of returned terms (default: -1)
 			)
 		);  
         ob_start();

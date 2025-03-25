@@ -113,7 +113,7 @@ onBeforeMount(() => {
                     v-model="shortCodeField.subtitle"   
                     :label="$tfhb_trans('Shortcode sub-title')"    
                     selected = "1"
-                    :placeholder="$tfhb_trans(' Type a sub-title for your shortcode')"  
+                    :placeholder="$tfhb_trans('Type a sub-title for your shortcode')"  
                     @change="generateShortcode()"
                 />   
                 <HbDropdown 
@@ -125,7 +125,7 @@ onBeforeMount(() => {
                     :placeholder="$tfhb_trans('Sort by meetings')"   
                     :option = "[
                         {'name': 'ID', 'value': 'id'}, 
-                        {'name': 'Title', 'value': 'tittle'}, 
+                        {'name': 'Name', 'value': 'name'}, 
                     ]" 
                 />
                 <!-- Time format -->
@@ -147,7 +147,7 @@ onBeforeMount(() => {
                     v-model="shortCodeField.limit"   
                     type="number"  
                     @change="generateShortcode()"
-                    :label="$tfhb_trans(' Display Limit')"  
+                    :label="$tfhb_trans('Display Limit')"  
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a number to limit the number of meetings displayed')"  
                 />  

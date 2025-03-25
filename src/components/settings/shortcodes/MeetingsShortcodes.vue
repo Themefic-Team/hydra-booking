@@ -119,7 +119,7 @@ onBeforeMount(() => {
                     v-model="shortCodeField.subtitle"   
                     :label="$tfhb_trans('Shortcode sub-title')"    
                     selected = "1"
-                    :placeholder="$tfhb_trans(' Type a sub-title for your shortcode')"
+                    :placeholder="$tfhb_trans('Type a sub-title for your shortcode')"
                     @change = "generateShortcode()"  
                 />  
                 <HbMultiSelect  
@@ -127,7 +127,7 @@ onBeforeMount(() => {
                     :selected = "1"  
                     :label="$tfhb_trans('Select meeting category')"  
                     @add-change="generateShortcode()"
-                    :placeholder="$tfhb_trans(' Meeting category : All')"  
+                    :placeholder="$tfhb_trans('Meeting category : All')"  
                     :option="ShortcodeData.categoryList"
 
                 /> 
@@ -172,7 +172,7 @@ onBeforeMount(() => {
                     v-model="shortCodeField.limit"   
                     type="number"   
                     @change="generateShortcode()"
-                    :label="$tfhb_trans(' Display Limit')"  
+                    :label="$tfhb_trans('Display Limit')"  
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a number to limit the number of meetings displayed')"  
                 />  

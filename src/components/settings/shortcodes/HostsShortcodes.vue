@@ -26,7 +26,7 @@ const shortCodeField = reactive({
     order_by: 'DESC',
     limit: '10',
 });
-const shortcode = ref(`[tfhb_hosts title="Title" subtitle="Sub title" sort_by="id" order_by="DESC" limit="9"]`)
+const shortcode = ref(`[tfhb_hosts title="Title" subtitle="Sub title" hosts="all" sort_by="id" order_by="DESC" limit="9"]`)
 
 // copy to clipboard
 function copyToClipboard(text) {
@@ -48,7 +48,11 @@ const generateShortcode = () => {
     ShortcodeData.preview_skeleton = true;
     let shortcode_field = `[tfhb_hosts`;
     Object.keys(shortCodeField).forEach(key => {
-        shortcode_field += ` ${key}="${shortCodeField[key]}"`;
+        if ((key === 'hosts' && shortCodeField[key].length == 0) ) { 
+            shortcode_field += ` ${key}="all"`;
+        }else{ 
+            shortcode_field += ` ${key}="${shortCodeField[key]}"`;
+        }
     });
     shortcode_field += ']';
     shortcode.value = shortcode_field;
@@ -114,9 +118,17 @@ onBeforeMount(() => {
                     v-model="shortCodeField.subtitle"   
                     :label="$tfhb_trans('Shortcode sub-title')"    
                     selected = "1"
-                    :placeholder="$tfhb_trans(' Type a sub-title for your shortcode')"  
+                    :placeholder="$tfhb_trans('Type a sub-title for your shortcode')"  
                     @change="generateShortcode()"
                 />   
+                 <HbMultiSelect  
+                    v-model="shortCodeField.hosts" 
+                    :selected = "1"  
+                    :label="$tfhb_trans('Select Host')"  
+                    @add-change="generateShortcode()"
+                    :placeholder="$tfhb_trans('Select host : All')"  
+                    :option="ShortcodeData.hostsList"
+                />  
                 <HbDropdown 
                     @add-change="generateShortcode()"
                     v-model="shortCodeField.short_by"   
@@ -126,7 +138,7 @@ onBeforeMount(() => {
                     :placeholder="$tfhb_trans('Sort by meetings')"   
                     :option = "[
                         {'name': 'ID', 'value': 'id'}, 
-                        {'name': 'Title', 'value': 'tittle'}, 
+                        {'name': 'Name', 'value': 'first_name'}, 
                     ]" 
                 />
                 <!-- Time format -->
@@ -148,7 +160,7 @@ onBeforeMount(() => {
                     v-model="shortCodeField.limit"   
                     type="number"  
                     @change="generateShortcode()"
-                    :label="$tfhb_trans(' Display Limit')"  
+                    :label="$tfhb_trans('Display Limit')"  
                     selected = "1"
                     :placeholder="$tfhb_trans(' Type a number to limit the number of meetings displayed')"  
                 />  
