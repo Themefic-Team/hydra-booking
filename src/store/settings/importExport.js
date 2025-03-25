@@ -153,19 +153,28 @@ const importExport = reactive({
     
             if (response.data.status) {  
  
+               
+                const fileContent = response.data.data; 
+                let blob; // Declare blob outside the if-else
+
+                if ('CSV' === exportData.type) {
+                    blob = new Blob([fileContent], { type: "text/csv" }); // Set correct CSV MIME type
+                } else {
+                    blob = new Blob([fileContent], { type: "text/calendar" }); // iCal MIME type
+                }
                 // export csv file data
-                const url = window.URL.createObjectURL(new Blob([response.data.data]));
+                const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 const file_name = response.data.file_name;
-    
+
                 link.href = url;
-    
+
                 link.setAttribute('download', file_name);
-    
+
                 // Append to the DOM
                 document.body.appendChild(link);
                 link.click();
-    
+
                 // Clean up
                 link.remove();
                 window.URL.revokeObjectURL(url);
@@ -173,6 +182,8 @@ const importExport = reactive({
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });   
+                exportAsPreloader.value = false;
+                ExportAsCSV.value = false;
             }else{
                 toast.error(response.data.message, {
                     position: 'bottom-right', // Set the desired position

@@ -229,6 +229,92 @@ class Meeting {
 		return $data;
 	}
 
+	// Get Booking with all attendees in one query
+	public function getMeetings($where = null, $limit = null, $orderBy = null) {
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+		// $attendee_table = $wpdb->prefix . 'tfhb_attendees';
+		// $meeting_table = $wpdb->prefix . 'tfhb_meetings';
+		// $host_table    = $wpdb->prefix . 'tfhb_hosts';
+
+		// echo $where;
+		// Define the SQL query
+		$sql = "SELECT * FROM  {$table_name} ";
+
+			$data = [];
+			if($where != null) {
+				
+				foreach ($where as $condition) {
+					$field =  $condition[0]; 
+					// if(strpos($field, '.') === false){
+					// 	$field = 'booking.'.$condition[0];
+					// } 
+
+					$operator = $condition[1];
+					$value = $condition[2]; 
+					if($operator == 'BETWEEN'){  
+						$sql .= " AND $field $operator %s AND %s";
+						$data[] = $value[0];
+						$data[] = $value[1]; 
+					}elseif($operator == 'IN'){   
+						// value is array 
+						$in = implode(',', array_fill(0, count($value), '%s')); 
+						$sql .= " AND $field $operator ($in)";
+						$data = array_merge($data, $value);
+					}elseif($operator == 'LIKE'){   
+						// if operator is like 
+						$like_conditions[] = "$field $operator %s";
+						$data[] = $value; 
+					}else{
+
+						$sql .= " AND $field $operator %s";
+						$data[] = $value;
+					}
+				} 
+			} 
+
+			// Add grouped `LIKE` conditions
+			if (!empty($like_conditions)) {
+				$sql .= " AND (" . implode(' OR ', $like_conditions) . ")";
+			}
+			
+			$sql .= "GROUP BY id ";
+			
+			if($orderBy != null) {
+				$sql .= " ORDER BY id $orderBy";
+			} else {
+				$sql .= " ORDER BY id DESC";
+			}
+
+			if($limit != null && $limit > 1) {
+				$sql .= " LIMIT $limit";
+			}   
+	
+			
+			// Prepare the SQL query 
+			$query = $wpdb->prepare($sql, $data);
+		
+			// Get the results
+			if($limit == 1) {
+				$results = $wpdb->get_row($query); 
+				
+			} else {
+				$results = $wpdb->get_results($query);
+			} 
+
+			
+			
+	
+			// echo $wpdb->last_query;
+			
+		// Return the results
+		return $results;
+
+
+	}
+
 	/**
 	 * Get with ID
 	 */
