@@ -159,12 +159,13 @@ class Post_Type {
 				'rewrite'               => array(
 					'slug'       => $tax_args['rewrite_slug'],
 					'with_front' => false,
+					'hierarchical' => true,
 				),
 				'show_admin_column'     => true,
 				'show_in_rest'          => true,
 				'rest_base'             => $tax_args['taxonomy'],
 				'rest_controller_class' => 'WP_REST_Terms_Controller',
-				'show_in_quick_edit'    => true,
+				'show_in_quick_edit'    => true, 
 			);
 			$tfhb_tax_args = apply_filters( 'tfhb_' . $tax_args['taxonomy'] . '_args', $tfhb_tax_args );
 
