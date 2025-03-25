@@ -532,9 +532,9 @@ namespace HydraBooking\Admin\Controller;
             'Categories Shortcode' =>  __('Categories Shortcode', 'hydra-booking'), 
             'Generate a shortcode to embed your meetings categories list on your website.' =>  __('Generate a shortcode to embed your meetings categories list on your website.', 'hydra-booking'), 
             'Meeting Categories' =>  __('Meeting Categories', 'hydra-booking'), 
-            'Shortcode' =>  __('Shortcode', 'hydra-booking'), 
-            'Shortcode' =>  __('Shortcode', 'hydra-booking'), 
-            'Shortcode' =>  __('Shortcode', 'hydra-booking'), 
+            'Export as .ics' =>  __('Export as .ics', 'hydra-booking'), 
+            'Download as .ics' =>  __('Download as .ics', 'hydra-booking'), 
+            'More' =>  __('More', 'hydra-booking'), 
             'Embed code' =>  __('Embed code', 'hydra-booking'), 
             'Copy Link' =>  __('Copy Link', 'hydra-booking'), 
 

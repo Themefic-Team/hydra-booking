@@ -31,6 +31,7 @@ const itemsPerPage = ref(10);
 const currentPage = ref(1);
 const bookingView = ref('list');
 const exportData = reactive({
+    type: 'CSV',
     date_range: 'days',
     start_date: '',
     end_dates: ''
@@ -42,7 +43,7 @@ const exportAsPreloader = ref(false);
 const ExportBookingAsCSV = async () => {
     exportAsPreloader.value = true;
     try { 
-        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/export-csv', exportData, {
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/export-as', exportData, {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
                 'capability': 'tfhb_manage_integrations'
@@ -51,11 +52,16 @@ const ExportBookingAsCSV = async () => {
 
         if (response.data.status) {  
 
-            // Booking.bookings = response.data.booking; 
-            // Booking.calendarbooking.events = response.data.booking_calendar;
-            // BookingEditPopup.value = false;
+            const fileContent = response.data.data; 
+            let blob; // Declare blob outside the if-else
+
+            if ('CSV' === exportData.type) {
+                blob = new Blob([fileContent], { type: "text/csv" }); // Set correct CSV MIME type
+            } else {
+                blob = new Blob([fileContent], { type: "text/calendar" }); // iCal MIME type
+            }
             // export csv file data
-            const url = window.URL.createObjectURL(new Blob([response.data.data]));
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             const file_name = response.data.file_name;
 
@@ -541,14 +547,24 @@ const changeToDate = (value) => {
             </div>
            
         </div> 
-        <HbButton 
-            classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
-            @click="ExportAsCSV = true"
-            :buttonText="$tfhb_trans('Export as CSV')"
-            icon="FileDown"   
-            :hover_animation="false" 
-            icon_position = 'left'
-        />
+        <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8">
+            <HbButton 
+                classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
+                @click="ExportAsCSV = true, exportData.type = 'CSV'"
+                :buttonText="$tfhb_trans('Export as CSV')"
+                icon="FileDown"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />
+            <HbButton 
+                classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
+                @click="ExportAsCSV = true, exportData.type = 'iCal'"
+                :buttonText="$tfhb_trans('Export as .ics')"
+                icon="Calendar"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />
+        </div>
     </div> 
     <!-- Dashboard Heading Wrap -->
     <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">   
@@ -725,7 +741,7 @@ const changeToDate = (value) => {
 <!-- Export CSV POPup -->
 <HbPopup  :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
     <template #header>  
-        <h3>{{$tfhb_trans('Export Bookings as CSV')}}</h3>
+        <h3>{{$tfhb_trans('Export Bookings as')}} {{$tfhb_trans(exportData.type)}}</h3>
     </template>
 
     <template #content> 
@@ -749,27 +765,25 @@ const changeToDate = (value) => {
         <label for="">{{ $tfhb_trans('Select Date Range') }}</label>
         <div class="tfhb-filter-dates tfhb-flexbox">
             
-            <div class="tfhb-filter-start-end-date">
-                <HbDateTime 
-                    v-model="exportData.start_date"
-                    :label="''" 
-                    enableTime='true'
-                    icon="CalendarDays"
-                    :placeholder="$tfhb_trans('From')"   
-                />  
-            </div>
+            <HbDateTime 
+                v-model="exportData.start_date"
+                :label="''" 
+                width="40"
+                enableTime='true'
+                icon="CalendarDays"
+                :placeholder="$tfhb_trans('From')"   
+            /> 
             <div class="tfhb-calender-move-icon">
                 <Icon name="MoveRight" size="20px" /> 
             </div>
-            <div class="tfhb-filter-start-end-date">
-                <HbDateTime 
+             <HbDateTime 
                     v-model="exportData.end_date"
                     :label="''" 
+                    width="40"
                     icon="CalendarDays"
                     enableTime='true'
                     :placeholder="$tfhb_trans('To')"  
                 />  
-            </div>
         </div> 
       </div>
 
