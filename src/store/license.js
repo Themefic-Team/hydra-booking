@@ -4,9 +4,11 @@ import { toast } from "vue3-toastify";
 const LicenseBase = reactive({
     license_key: '',
     skeleton: true,
+    License_loader: false,
     license_email: '',
     license_active: false,
     license_type: 'free',
+    path: '',
     LicenseData: {
         is_valid : false,
     }, 
@@ -43,6 +45,7 @@ const LicenseBase = reactive({
     }, 
     async UpdateLicense() {  
         this.skeleton = true;
+        this.License_loader = true;
         const data = {
             license_key: this.license_key,
             license_email: this.license_email
@@ -56,18 +59,24 @@ const LicenseBase = reactive({
                 } 
             } );
     
-            console.log(response.data.data.message);
+            
             if (response.data.data.status) {  
                 this.LicenseData = response.data.data.data;
                 this.license_key = response.data.data.license_key;
                 this.license_email = response.data.data.license_email; 
-                // possition bottom
+                // this.skeleton = false;
+                
+                const licenseTitle = response.data.data.data.license_title || "";
+                this.license_type = licenseTitle.toLowerCase().includes("free") ? 'free' : 'pro';
+                this.license_active = true;
        
                 toast.success(response.data.data.message, {
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
-                window.location.reload();
+                if(this.path!='/setup-wizard'){
+                    window.location.reload();
+                }
                 // this.skeleton = false;
 
 
@@ -78,8 +87,10 @@ const LicenseBase = reactive({
                 });
                  this.skeleton = false;
             }
-        } catch (error) {
+            this.License_loader = false;
 
+        } catch (error) {
+            this.License_loader = false;
             console.log(error);
 
         } 

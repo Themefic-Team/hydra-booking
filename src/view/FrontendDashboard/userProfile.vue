@@ -1,5 +1,5 @@
 <script setup> 
-import { reactive, onBeforeMount, ref, nextTick } from 'vue';
+import { reactive, onBeforeMount, onMounted, ref, nextTick } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router'
 import axios from 'axios'  
 import { toast } from "vue3-toastify";  
@@ -7,6 +7,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
 const { errors } = useValidators();
 
+import { Notification } from '@/store/notification';
 
 import { FdDashboard } from '@/store/frontend-dashboard.js';
 import HbButton from '@/components/form-fields/HbButton.vue'
@@ -104,6 +105,9 @@ const UpdateHostsInformation = async (validator_field) => {
             if("HostsAvailability"==route.name){ 
                 nextRouteName = 'HostsProfileCalendars';
             }
+            if("FrontendDashboardAvailability"==route.name){ 
+                nextRouteName = 'FrontendDashboardCalendars';
+            }
             if("HostsProfileCalendars"==route.name){ 
                 nextRouteName = 'HostsProfileIntegrations';
             }
@@ -180,12 +184,16 @@ onBeforeMount(() => {
     fetchHost();
 });
     
+onMounted(() => { 
+    Notification.fetchNotifications();
+}); 
 
 const imageChange = (attachment) => {   
     FdDashboard.userAuth.avatar = attachment.url; 
     const image = document.querySelector('.avatar_display'); 
     image.src = attachment.url; 
     activeProfileDropdown.value = false;
+    FdDashboard.updateUserProfile()
 }
 const UploadImage = () => {   
     wp.media.editor.send.attachment = (props, attachment) => { 
@@ -202,8 +210,10 @@ const EmptyImage = () => {
 
 const imageChangeFeature = (attachment) => {   
     FdDashboard.userAuth.featured_image = attachment.url; 
-    const image = document.querySelector('.featured_image_display'); 
-    image.src = attachment.url; 
+    // const image = document.querySelector('.featured_image_display'); 
+    // image.src = attachment.url; 
+    // alert(1);
+    FdDashboard.updateUserProfile();
 }
 const UploadImageFeature  = () => {   
     wp.media.editor.send.attachment = (props, attachment) => { 

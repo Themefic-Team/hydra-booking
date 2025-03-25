@@ -113,6 +113,8 @@
                 box-shadow: none;
                 color: $text-input;
                 font-family: "Inter", sans-serif;
+                
+                
 
                 &:focus,
                 &:active,
@@ -126,7 +128,7 @@
                 }
 
                 &::placeholder {
-                    color: $text-input !important; // Define this variable in your SCSS
+                    color: $text-input-placeholder !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
 
@@ -258,7 +260,7 @@
                 }
 
                 &::placeholder {
-                    color: $text-input !important; // Define this variable in your SCSS
+                    color: $text-input-placeholder !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
             }
@@ -542,25 +544,10 @@
     }
 }
 .tfhb-content-wrap{
-    .tfhb-license-message{
-        width: 100%;
-        text-align: center;
-        .success,
-        .error{
-            width: 100%;
-            text-align: center;
-            color: $success-text;
-            font-size: 17px;
-            line-height: 26px;
-            font-weight: 500;
-        }
-        .error{
-            color: $error-text;
-            border: 0px solid;
-            box-shadow: none;
-            margin: 0;
-            padding: 0;
-        }
+    .tfhb-license-url{
+        color: $primary-default;
+        font-size: 15px;
+        font-weight: 700;
     }
     .tfhb-license-email-field{
         width: 100%;
@@ -572,6 +559,9 @@
             &.valid{
                 color: $success-text;
             }
+            &.empty{
+                color: $surface-input-field;
+            }
         }
     }
     .tfhb-disable-btn{
@@ -582,11 +572,17 @@
         }
     }
 }
+.tfhb-blue-border{
+    border-color: $info-text !important;
+}
 .tfhb-unlock-box{
     flex-wrap: nowrap !important;
     gap: 16px !important;
     justify-content: space-between !important;
     width: 100%;
+    .tfhb-info-box-desc{
+        font-size: 15px;
+    }
     button{
         width: 190px !important;
         box-sizing: content-box;

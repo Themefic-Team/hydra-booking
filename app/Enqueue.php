@@ -1,8 +1,10 @@
 <?php
 namespace HydraBooking\App; 
-
+ 
 // exit
 if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+use HydraBooking\Admin\Controller\TransStrings;
 
 class Enqueue {
 	public function __construct() {
@@ -69,6 +71,7 @@ class Enqueue {
 				'site_url'         => site_url(),
 				'nonce'            => wp_create_nonce( 'tfhb_nonce' ),
 				'general_settings' => $general_settings,
+				'i18n' => TransStrings::calendarTransString(),
 			)
 		);
 	}

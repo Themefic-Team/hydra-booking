@@ -314,6 +314,16 @@ button.tfhb-btn.tfhb-preloader:before {
   padding: 38px 16px 16px 16px;
   border-radius: 16px 0 0 0;
   background-size: cover;
+  position: relative;
+  z-index: 1;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info::after,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info::after {
+  position: absolute;
+  content: "";
+  inset: 0;
+  background: linear-gradient(181deg, rgba(19, 25, 20, 0) 1.18%, rgba(19, 25, 20, 0.5) 98.83%);
+  z-index: -1;
 }
 @media only screen and (max-width: 991px) {
   .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-info .tfhb-host-info,
@@ -1523,6 +1533,10 @@ button.tfhb-btn.tfhb-preloader:before {
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .wpcf7 .wpcf7-submit:hover,
 .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .wpcf7 .wpcf7-submit:hover {
   background-color: #4C9959;
+}
+.tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-paypal-button-container,
+.tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-booking-form .tfhb-forms .tfhb-paypal-button-container {
+  width: 100%;
 }
 .tfhb-meeting-box .tfhb-meeting-card .tfhb-meeting-confirmation,
 .tfhb-booking-cencel .tfhb-meeting-card .tfhb-meeting-confirmation {

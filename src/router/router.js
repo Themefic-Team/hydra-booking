@@ -261,26 +261,26 @@ const routes = [
                 name: 'FrontendDashboard',
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/FrontendDashboard.vue'),
-                redirect: { name: 'FrontendDashboardGeneral' },
+                // redirect: { name: 'FrontendDashboardGeneral' },
                 children: [ 
-                    {
-                        path: 'general',
-                        name: 'FrontendDashboardGeneral',
-                        meta: { Capabilities: 'tfhb_manage_settings' },
-                        component: () => import('@/components/settings/fd-dashboard/General.vue')
-                    },
-                    {
-                        path: 'login',
-                        name: 'FrontendDashboardLogin',
-                        meta: { Capabilities: 'tfhb_manage_settings' },
-                        component: () => import('@/components/settings/fd-dashboard/login.vue')
-                    },
-                    {
-                        path: 'signup',
-                        name: 'FrontendDashboardSignup',
-                        meta: { Capabilities: 'tfhb_manage_settings' },
-                        component: () => import('@/components/settings/fd-dashboard/Signup.vue')
-                    }
+                    // {
+                    //     path: 'general',
+                    //     name: 'FrontendDashboardGeneral',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/General.vue')
+                    // },
+                    // {
+                    //     path: 'login',
+                    //     name: 'FrontendDashboardLogin',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/login.vue')
+                    // },
+                    // {
+                    //     path: 'signup',
+                    //     name: 'FrontendDashboardSignup',
+                    //     meta: { Capabilities: 'tfhb_manage_settings' },
+                    //     component: () => import('@/components/settings/fd-dashboard/Signup.vue')
+                    // }
                 ]
             },
 

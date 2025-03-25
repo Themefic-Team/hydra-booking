@@ -44,6 +44,7 @@ class ActivationHooks {
 				'Hydra Host',
 				array(
 					'read'                            => true, // true allows this capability 
+					'upload_files'                    => true, // true allows this capability 
 					// Custom Capabilities
 					'tfhb_manage_options'             => true, // true allows this capability.
 					'tfhb_manage_dashboard'           => true, // true allows this capability.

@@ -677,7 +677,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => $name . ' Settings Updated Successfully',
+				'message' => $name . __( ' Settings Updated Successfully', 'hydra-booking' ),
 			);
 
 			if($key == 'gravity' && !empty($data['status'])){
@@ -685,7 +685,7 @@ class SettingsController {
 			}
 			if($key == 'cf7' && !empty($data['status']) && $_tfhb_integration_settings[$key]['status'] == true){
 				if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
-					$data['message'] = 'Install and activate the Contact Form 7 plugin if it is not already installed or active.';
+					$data['message'] = __( 'Install and activate the Contact Form 7 plugin if it is not already installed or active.', 'hydra-booking' );
 			
 				}
 			}
@@ -740,12 +740,12 @@ class SettingsController {
 			if ( $install ) {
 				$data = array(
 					'status'  => true,
-					'message' => 'WooCommerce Installed Successfully',
+					'message' => __( 'WooCommerce Installed Successfully','hydra-booking' ),
 				);
 			} else {
 				$data = array(
 					'status'  => false,
-					'message' => 'WooCommerce Not Installed',
+					'message' => __( 'WooCommerce Not Installed','hydra-booking' ),
 				);
 			}
 		}
@@ -802,7 +802,7 @@ class SettingsController {
 		// woocommerce payment
 		$data = array(
 			'status'  => true,
-			'message' => 'Notification Settings Updated Successfully',
+			'message' => __( 'Notification Settings Updated Successfully','hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -880,7 +880,7 @@ class SettingsController {
 		// woocommerce payment
 		$data = array(
 			'status'  => true,
-			'message' => 'Hosts Settings Updated Successfully',
+			'message' => __( 'Hosts Settings Updated Successfully', 'hydra-booking' ),
 			'data'    => $_tfhb_hosts_settings,
 		);
 		return rest_ensure_response( $data );
@@ -910,7 +910,7 @@ class SettingsController {
 
 		$data = array(
 			'status'  => true,
-			'message' => 'Appearance Settings Updated Successfully',
+			'message' => __( 'Appearance Settings Updated Successfully', 'hydra-booking' ),
 			'data'    => $request,
 		);
 		return rest_ensure_response( $data );

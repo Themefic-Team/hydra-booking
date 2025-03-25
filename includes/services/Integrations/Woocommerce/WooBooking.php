@@ -46,7 +46,7 @@ class WooBooking {
 	}
 
 	// update order meta data
-	public function tfhb_apartment_custom_order_data( $item, $cart_item_key, $values, $order ) {
+	public function tfhb_booking_custom_order_data( $item, $cart_item_key, $values, $order ) {
 
 		// Assigning data into variables.
 		$booking_id  = ! empty( $values['tfhb_order_meta']['booking_id'] ) ? $values['tfhb_order_meta']['booking_id'] : '';
@@ -66,10 +66,68 @@ class WooBooking {
 	}
 
 	// Add order id to the hotel room meta field
-	public function tfhb_add_apartment_data_checkout_order_processed( $order_id, $posted_data, $order ) {
+	public function tfhb_add_booking_data_checkout_order_processed( $order_id, $posted_data, $order ) {
 
 		
 		$order = wc_get_order( $order_id );
+		$items = $order->get_items(); 
+		 
+		foreach ( $items as $item_id => $item ) { 
+			if ( ! empty( $item->get_meta( '_tfhb_booking_id' ) ) ) {
+				// Item Sales Price
+				$items_price = $item->get_total();
+
+				
+				$booking_id  = $item->get_meta( '_tfhb_booking_id' );
+				$attendee_id = $item->get_meta( '_tfhb_attendee_id' );
+				$appointment = $item->get_meta( 'tfhb_appointment' );
+				$order->update_meta_data(
+					'tfhb_order_meta',
+					array(
+						'booking_id'  => $booking_id,
+						'attendee_id'  => $attendee_id,
+						'Appointment' => $appointment,
+					)
+				);
+
+				
+				// Update Transaction ID Data 
+				$Attendees = new Attendees();
+				$get_attendee = $Attendees->getAttendeeWithBooking( $attendee_id  ); 
+								
+				$transactions = new Transactions();
+				$transation_history = array(
+					'wc_order_id' => $order_id, 
+					'item_id' => $item_id, 
+				);
+				// add transaction
+				$transactionData = array(
+					'booking_id' 	   => $booking_id,
+					'attendee_id' 	   => $attendee_id,
+					'meeting_id' 	   => $get_attendee->meeting_id,
+					'host_id' 	   => $get_attendee->host_id,
+					'customer_id' 	   => $attendee_id,
+					'payment_method' 	   => $get_attendee->payment_method,
+					'total' 	   => $items_price,
+					'status' 	   => $order->get_status(),
+					'transation_history' => json_encode($transation_history, true),
+				); 
+
+		
+
+				// add transaction
+				$transactions->add( $transactionData );  
+
+
+			}
+		}
+	}
+
+	/**
+	 * Block Checkout Transaction
+	 */
+	public function tfhb_add_booking_data_checkout_order_processed_block_checkout($order){
+		$order_id = $order->get_id();
 		$items = $order->get_items(); 
 		 
 		foreach ( $items as $item_id => $item ) { 

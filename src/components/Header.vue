@@ -93,7 +93,7 @@ onBeforeRouteLeave((to, from, next) => {
                 </svg>    
             </span>
 
-            <span v-if="props.total_unread && props.total_unread != 0" class="tfhb-header-notification-count">
+            <span v-if="props.total_unread && props.total_unread != 0" @click="displayNotification = !displayNotification" class="tfhb-header-notification-count">
                 {{props.total_unread}}
             </span>
 
@@ -116,7 +116,7 @@ onBeforeRouteLeave((to, from, next) => {
                             </div> 
                             <div class="tfhb-single-notification-content"> 
                                 <h4>{{notification.value.attendee_name}}</h4>
-                                <p> {{notification.value.message}}</p>
+                                <p>{{ $tfhb_trans(notification.value.message) }}</p>
 
                             <span class="tfhb-notification-time">{{ timeAgo(notification.created_at) }} ago </span>
                             </div>
