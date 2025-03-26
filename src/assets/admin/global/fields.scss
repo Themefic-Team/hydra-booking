@@ -640,6 +640,16 @@
                 padding-top: 8px;
                 background:  $surface-primary;
                 margin-top: 1px;
+                .tfhb-socail-repeater{
+                    .tfhb-single-form-field{
+                        .tfhb-field-input{
+                            margin: 0;
+                            input{
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
                 .single-tools{
                     padding: 0px 8px 8px 8px;
                     margin-bottom: 0;

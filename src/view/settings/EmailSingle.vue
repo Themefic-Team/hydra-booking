@@ -171,10 +171,12 @@ const TfhbOnFocus = (event) => {
 const emailBuilder = reactive({ 
     header: {
         status: 1,
+        title: 'Header',
         content: '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>'
     },
     gratitude: {
         status: 1,
+        title: 'Greetings',
         content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
     },
     meeting_details: {
@@ -183,22 +185,27 @@ const emailBuilder = reactive({
         content: {
             data_time: {
                 status: 1,
+                title: 'Date & Time:',
                 content: '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
             },
             host: {
                 status: 1,
+                title: 'Host:',
                 content: '<strong>{{host.name}}</strong>'
             },
             about: {
                 status: 1,
+                title: 'About:',
                 content: '<strong>{{meeting.title}}</strong>'
             },
             description: {
                 status: 1,
+                title: 'Description:',
                 content: '{{meeting.content}}'
             },
             location: {
                 status: 1,
+                title: 'Location:',
                 content: '<strong>{{booking.location_details_html}}</strong>'
             }
         },
@@ -228,6 +235,7 @@ const emailBuilder = reactive({
     },
     cancel_reschedule: {
         status: 1,
+        title: 'Buttons',
         content: {
             description: {
                 status: 1,
@@ -245,6 +253,7 @@ const emailBuilder = reactive({
     },
     footer: {
         status: 1,
+        title: 'Footer',
         content: {
             description: {
                 status: 1,
@@ -252,9 +261,20 @@ const emailBuilder = reactive({
             },
             social: {
                 status: 1,
-                facebook: '#',
-                x: '#',
-                youtube: '#',
+                data: [
+                    {
+                        title: 'Facebook',
+                        url: '#'
+                    },
+                    {
+                        title: 'Twitter',
+                        url: '#'
+                    },
+                    {
+                        title: 'Youtube',
+                        url: '#'
+                    },
+                ]
             },
         }
     },
@@ -457,24 +477,17 @@ const emailTemplate = computed(() => {
                         }
                         if (emailBuilder.footer.content.social) {
                         emailContent += `<td align="right" class="social" style="vertical-align: baseline;">
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                                <tr>`;
-                                    if (emailBuilder.footer.content.social.facebook) {
-                                    emailContent += `<td style="padding-left: 24px;">
-                                        <a href="${emailBuilder.footer.content.social.facebook}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/facebook-logo.png" alt="Facebook"></a>
-                                    </td>`;
-                                    }
-                                    if (emailBuilder.footer.content.social.x) {
-                                    emailContent += `<td style="padding-left: 24px;">
-                                        <a href="${emailBuilder.footer.content.social.x}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/twitter-x-logo.png" alt="twitter"></a>
-                                    </td>`;
-                                    }
-                                    if (emailBuilder.footer.content.social.youtube) {
-                                    emailContent += `<td style="padding-left: 24px;">
-                                        <a href="${emailBuilder.footer.content.social.youtube}" style="text-decoration: none;"><img src="${props.mediaurl}assets/images/youtube-logo.png" alt="youtube"></a>
-                                    </td>`;
-                                    }
-                        emailContent += `</tr>
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">`;
+                                emailBuilder.footer.content.social.data.forEach(social => {
+                                if (social.url && social.title) {
+                                    emailContent += `<tr><td style="padding-bottom: 4px;">
+                                        <a href="${social.url}" style="text-decoration: none; color: #FFF;">
+                                            ${social.title}
+                                        </a>
+                                    </td></tr>`;
+                                }
+                            });
+                        emailContent += `
                             </table>
                         </td>`;
                         }
@@ -589,6 +602,18 @@ onBeforeMount(() => {
     fetchNotification();
 });
 
+// Remove Social
+const removeSocial = (key) => {
+    emailBuilder.footer.content.social.data.splice(key, 1);
+}
+// Add new Social
+const addSocial = (key) => {
+    emailBuilder.footer.content.social.data.push({
+        title: '',
+        url: '',
+    });
+}
+
 </script>
 
 <template>
@@ -622,6 +647,72 @@ onBeforeMount(() => {
                 </div>
             </div>
             
+            <div class="single-tools" v-for="(email, key) in emailBuilder" :key="key">
+                <!-- Dynamic Heading -->
+                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox(key)">
+                        <Icon name="GripVertical" :width="20"/> 
+                        {{ email.title }} 
+                    </div>
+                    <HbSwitch v-model="emailBuilder[key].status" />
+                </div>
+
+                <!-- Dynamic Content -->
+                <div class="tools-content" v-show="contentVisibility[key] && emailBuilder[key].status">
+                    <div class="tfhb-shortcode-box tfhb-full-width">
+                        <div @click="TfhbOnFocus">
+                            <Editor 
+                                v-model="emailBuilder[key].content"  
+                                :placeholder="$tfhb_trans('Mail Body')"    
+                                editorStyle="height: 180px" 
+                            />
+                        </div>
+                        <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                            <span  class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                {{ value }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tools-content" v-show="contentVisibility[key].main && emailBuilder[key].status" v-if="key === 'meeting_details'">
+                    <HbText 
+                        v-model="emailBuilder[key].title"  
+                        :placeholder="$tfhb_trans('Heading')"    
+                    />
+                    <div class="single-tools" v-for="(section, subKey) in emailBuilder[key].content" :key="subKey">
+                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                            <Icon name="GripVertical" @click="ContentBox('meeting_details', subKey)" :width="20"/> 
+                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('meeting_details', subKey)">
+                                <div class="tfhb-flexbox tfhb-head">
+                                    {{ emailBuilder.meeting_details.content[subKey].title }}
+                                </div>
+                                <HbSwitch v-model="emailBuilder.meeting_details.content[subKey].status" />
+                            </div>
+                        </div>
+
+                        <div class="tools-content" v-show="contentVisibility.meeting_details[subKey] && emailBuilder.meeting_details.content[subKey].status">
+                            <div class="tfhb-shortcode-box tfhb-full-width">
+                                <div @click="TfhbOnFocus">
+                                    <Editor 
+                                        v-model="emailBuilder.meeting_details.content[subKey].content"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 100px" 
+                                    />
+                                </div>
+                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                    <span class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                        {{ value }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+
             <div class="single-tools">
                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
                     <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox('header')">
@@ -1092,18 +1183,26 @@ onBeforeMount(() => {
                         </div>
                         <div class="tools-content" 
                             v-show="contentVisibility.footer.social && emailBuilder.footer.content.social.status">
-                            <HbText 
-                                v-model="emailBuilder.footer.content.social.facebook"  
-                                :placeholder="$tfhb_trans('Facebook URL:')"    
-                            />
-                            <HbText 
-                                v-model="emailBuilder.footer.content.social.x"  
-                                :placeholder="$tfhb_trans('X (previously twitter)')"    
-                            />
-                            <HbText 
-                                v-model="emailBuilder.footer.content.social.youtube"  
-                                :placeholder="$tfhb_trans('Youtube')"    
-                            />
+                            <div class="tfhb-socail-repeater tfhb-flexbox tfhb-gap-8">
+                                <div v-for="(social, skey) in emailBuilder.footer.content.social.data" :key="skey" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
+                                    <HbText 
+                                        v-model="social.title"
+                                        :placeholder="$tfhb_trans('Social Title')"  
+                                        width="45"  
+                                    />
+                                    <HbText 
+                                        v-model="social.url"
+                                        :placeholder="$tfhb_trans('Social URL:')"   
+                                        width="45"   
+                                    />
+                                    <div v-if="skey == 0" class="tfhb-availability-schedule-clone-single">
+                                        <button class="tfhb-availability-schedule-btn" @click="addSocial()"><Icon name="Plus" size=20 /> </button> 
+                                    </div>
+                                    <div v-else class="tfhb-availability-schedule-clone-single">
+                                        <button class="tfhb-availability-schedule-btn" @click="removeSocial(skey)"><Icon name="X" size=20 /> </button> 
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
