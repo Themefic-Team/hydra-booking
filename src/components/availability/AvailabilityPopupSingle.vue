@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount } from 'vue'; 
+import { ref, reactive, onBeforeMount, computed } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -277,6 +277,18 @@ const tfhbValidateInput = (fieldName) => {
     }
 };
 
+const filteredDateSlots = computed(() => {
+    let slots = props.availabilityDataSingle?.date_slots;
+
+    // Convert object to array if necessary
+    if (slots && typeof slots === "object" && !Array.isArray(slots)) {
+        slots = Object.values(slots);
+    }
+
+    // Ensure it's an array before filtering
+    return Array.isArray(slots) ? slots.filter(slot => slot?.date && slot.date.trim() !== "") : [];
+});
+
 </script>
  
 
@@ -390,8 +402,8 @@ const tfhbValidateInput = (fieldName) => {
                                 <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
                             </div> 
                         </div>
-
-                        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in props.availabilityDataSingle.date_slots" :key="key">
+                        
+                        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                             <div class="tfhb-flexbox">
                                 <div class="tfhb-overrides-date">
                                     <h4>{{ date_slot.date }}</h4>
@@ -473,7 +485,7 @@ const tfhbValidateInput = (fieldName) => {
                             </div>
 
                             <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                                <!-- <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ $tfhb_trans('Cancel') }}</button> --> 
+                                <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ $tfhb_trans('Cancel') }}</button> 
                                 <HbButton 
                                     classValue="tfhb-btn boxed-btn flex-btn" 
                                     @click="addAvailabilityDate(key)"

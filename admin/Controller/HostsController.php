@@ -964,12 +964,14 @@ class HostsController {
 		// Date Slots
 		foreach ( $request['date_slots'] as $key => $value ) {
 
-			$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
-			$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
+			if(!empty($value['date'])){
+				$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
+				$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
 
-			foreach ( $value['times'] as $key2 => $value2 ) {
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				foreach ( $value['times'] as $key2 => $value2 ) {
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				}
 			}
 		}
 

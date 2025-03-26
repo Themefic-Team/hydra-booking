@@ -1043,7 +1043,24 @@ class MeetingController {
 		$current_user = wp_get_current_user();
 		// get user id
 		$current_user_id = $current_user->ID; 
-		 
+		
+		// Custom Availability
+		if (isset($request['availability_custom'])) {
+			$availability_custom = $request['availability_custom'];
+		
+			// Remove empty date_slots
+			if (isset($availability_custom['date_slots'])) {
+				$availability_custom['date_slots'] = array_filter($availability_custom['date_slots'], function ($slot) {
+					return !empty($slot['date']); // Keep only if 'date' is not empty
+				});
+		
+				// Re-index array to maintain sequential keys (optional)
+				$availability_custom['date_slots'] = array_values($availability_custom['date_slots']);
+			}
+		}else{
+			$availability_custom = '';
+		}
+
 		// Update Meeting
 		$data = array(
 			'id'                       => $request['id'],
@@ -1060,7 +1077,7 @@ class MeetingController {
 			'availability_range_type'  => isset( $request['availability_range_type'] ) ? sanitize_text_field( $request['availability_range_type'] ) : '',
 			'availability_range'       => isset( $request['availability_range'] ) ? $request['availability_range'] : '',
 			'availability_id'          => isset( $request['availability_id'] ) ? sanitize_text_field( $request['availability_id'] ) : '',
-			'availability_custom'      => isset( $request['availability_custom'] ) ? $request['availability_custom'] : '',
+			'availability_custom'      => $availability_custom,
 			'buffer_time_before'       => isset( $request['buffer_time_before'] ) ? sanitize_text_field( $request['buffer_time_before'] ) : '',
 			'buffer_time_after'        => isset( $request['buffer_time_after'] ) ? sanitize_text_field( $request['buffer_time_after'] ) : '',
 			'booking_frequency'        => isset( $request['booking_frequency'] ) ? $request['booking_frequency'] : '',
