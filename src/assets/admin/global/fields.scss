@@ -671,6 +671,15 @@
                     }
                 }
             }
+            &.draggable{
+                .tools-heading{
+                    .tfhb-flexbox{
+                        &.tfhb-head{
+                            cursor: move !important
+                        }
+                    }
+                }
+            }
         }
         button.boxed-btn{
             margin-top: 24px !important;

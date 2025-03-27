@@ -363,16 +363,29 @@ let draggedKey = null;
 
 // Start dragging function
 const dragStart = (key) => {
+  if (key === "header" || key === "footer") return;
   draggedKey = key;
 };
 
 // Drop function to reorder
 const drop = (key) => {
-  if (draggedKey !== null) {
-    const temp = emailBuilder[draggedKey].order;
-    emailBuilder[draggedKey].order = emailBuilder[key].order;
-    emailBuilder[key].order = temp;
+  if (!draggedKey || draggedKey === "header" || draggedKey === "footer") return;
+
+  const keys = Object.keys(emailBuilder);
+  const headerIndex = keys.indexOf("header");
+  const footerIndex = keys.indexOf("footer");
+  const targetIndex = keys.indexOf(key);
+  
+  if (targetIndex <= headerIndex || targetIndex >= footerIndex) {
+    draggedKey = null;
+    return;
   }
+
+  // Swap the order values
+  const temp = emailBuilder[draggedKey].order;
+  emailBuilder[draggedKey].order = emailBuilder[key].order;
+  emailBuilder[key].order = temp;
+
   draggedKey = null;
 };
 
@@ -407,14 +420,14 @@ const emailTemplate = computed(() => {
         }
 
         if (section.status && key === 'gratitude') {
-            emailContent += `<tr><td style="padding: 32px 32px 0 32px;">${emailBuilder.gratitude.content}</td></tr>`;
+            emailContent += `<tr><td style="padding: 16px 32px;">${emailBuilder.gratitude.content}</td></tr>`;
         }
 
         if (section.status && key === 'meeting_details') {
             emailContent += `
                 <tr>
-                    <td style="padding: 0 32px;">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; margin-top: 32px">
+                    <td style="padding: 16px 32px;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; background: #fff;">
                             <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.meeting_details.title}</td></tr>
             `;
 
@@ -446,8 +459,8 @@ const emailTemplate = computed(() => {
         if (section.status && key === 'host_details') {
             emailContent += `
                 <tr>
-                    <td style="padding: 32px 32px 0 32px">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px;">
+                    <td style="padding: 16px 32px">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; background: #fff;">
                             <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.host_details.title}</td></tr>
             `;
 
@@ -477,16 +490,27 @@ const emailTemplate = computed(() => {
         }
 
         if (section.status && key === 'instructions') {
-            emailContent += `
+
+            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+
+            if (emailBuilder.instructions.title) {
+                emailContent += `
                 <tr>
-                    <td style="font-weight: bold; font-size: 17px; padding: 32px 32px 24px 32px;">${emailBuilder.instructions.title}</td>
-                </tr>
-                <tr>
-                    <td style="font-size: 15px; padding: 0 32px 0 32px;">${emailBuilder.instructions.content}</td>
+                    <td style="font-weight: bold; font-size: 17px; padding-bottom: 24px;" bgcolor="#fff">${emailBuilder.instructions.title}</td>
                 </tr>`;
+            }
+            if (emailBuilder.instructions.content) {
+                emailContent += `
+                <tr>
+                    <td style="font-size: 15px;">${emailBuilder.instructions.content}</td>
+                </tr>`;
+            }
+
+            emailContent += `</table></td></tr></table>`;
+            
         }
         if (section.status && key === 'cancel_reschedule') {
-            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 32px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
                 if (emailBuilder.cancel_reschedule.content.description.content) {
                     emailContent += ` <tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
@@ -688,12 +712,13 @@ const addSocial = (key) => {
                     </div>
                 </div>
             </div>
-            
+
             <div class="single-tools" v-for="(email, key) in sortedEmailBuilder" :key="key"
-            :draggable="key!='header' && key!='footer' ? true : ''"
+            :draggable="key!='header' && key!='footer' ? true : false"
             @dragstart="dragStart(key)"
             @dragover.prevent
             @drop="drop(key)"
+            :class="key!='header' && key!='footer' ? 'draggable' : ''"
             >
                 <!-- Dynamic Heading -->
                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
