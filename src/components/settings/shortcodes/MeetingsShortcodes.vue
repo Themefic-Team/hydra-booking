@@ -22,7 +22,7 @@ const shortCodeField = reactive({
     subtitle: '',
     category: [],
     hosts: [],
-    short_by: 'id',
+    sort_by: 'id',
     order_by: 'DESC',
     limit: '10',
 });
@@ -66,7 +66,7 @@ const resetShortcode =  () => {
     shortCodeField.subtitle = '';
     shortCodeField.category = [];
     shortCodeField.hosts = [];
-    shortCodeField.short_by = 'id';
+    shortCodeField.sort_by = 'id';
     shortCodeField.order_by = 'DESC';
     shortCodeField.limit = '10';
     shortcode.value = `[tfhb_meetings title="Title" subtitle="Sub title" category="all" hosts="all" sort_by="id" order_by="DESC" limit="9"]`;
@@ -142,7 +142,7 @@ onBeforeMount(() => {
                 />  
                 <HbDropdown 
                     
-                    v-model="shortCodeField.short_by"   
+                    v-model="shortCodeField.sort_by"   
                     :label="$tfhb_trans('Sort By')"   
                     :selected = "1"
                     @add-change="generateShortcode()"
@@ -150,7 +150,7 @@ onBeforeMount(() => {
                     :placeholder="$tfhb_trans('Sort by meetings')"   
                     :option = "[
                         {'name': 'ID', 'value': 'id'}, 
-                        {'name': 'Title', 'value': 'tittle'}, 
+                        {'name': 'Title', 'value': 'title'}, 
                     ]" 
                 />
                 <!-- Time format -->

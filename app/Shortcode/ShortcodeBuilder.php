@@ -95,7 +95,7 @@ class ShortcodeBuilder {
                         <?php endif; ?>
                         <div class="tfhb-meeting-list__wrap__items__wrap__content">
                             <h3>
-                                <a href="<?php echo esc_url($permalink) ?>"><?php echo esc_html($meeting->title) ?></a>
+                                <a href="<?php echo esc_url($permalink) ?>"><?php echo $meeting->title ? esc_html($meeting->title) : esc_html(__('No Title', 'hydra_booking')); ?></a>
                             </h3>
                             <!-- <p><?php echo esc_html($meeting->description) ?></p> -->
                             <div class="tfhb-meeting-list__wrap__items__wrap__content__tags"> 
@@ -235,7 +235,7 @@ class ShortcodeBuilder {
      * 
      * */
     public function tfhb_categories_callback($atts){
-
+        
         $atts = shortcode_atts([
             'title'        => '',
             'subtitle'    => '', 
@@ -244,6 +244,7 @@ class ShortcodeBuilder {
             'limit' => '10',
         ], $atts, 'tfhb_categories');
 
+       
         $terms = get_terms(
 			array(
 				'taxonomy'   => 'meeting_category',

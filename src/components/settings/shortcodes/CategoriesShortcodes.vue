@@ -20,9 +20,7 @@ import { ShortcodeData } from '@/store/settings/shortcode';
 const shortCodeField = reactive({
     title: '',
     subtitle: '',
-    category: [],
-    hosts: [],
-    short_by: 'id',
+    sort_by: 'id',
     order_by: 'DESC',
     limit: '10',
 });
@@ -60,10 +58,10 @@ const resetShortcode =  () => {
     ShortcodeData.preview_skeleton_reset = true;
     shortCodeField.title = '';
     shortCodeField.subtitle = ''; 
-    shortCodeField.short_by = 'id';
+    shortCodeField.sort_by = 'id';
     shortCodeField.order_by = 'DESC';
     shortCodeField.limit = '10';
-    shortcode.value = `[tfhb_categories title="Title" subtitle="Sub title" category="all" hosts="all" sort_by="id" order_by="DESC" limit="9"]`;
+    shortcode.value = `[tfhb_categories title="Title" subtitle="Sub title" sort_by="id" order_by="DESC" limit="9"]`;
     ShortcodeData.generateShortPreview(shortcode.value);
 
 };
@@ -118,7 +116,7 @@ onBeforeMount(() => {
                 />   
                 <HbDropdown 
                     @add-change="generateShortcode()"
-                    v-model="shortCodeField.short_by"   
+                    v-model="shortCodeField.sort_by"   
                     :label="$tfhb_trans('Sort By')"   
                     :selected = "1"
                     width="50"
