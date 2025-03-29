@@ -287,6 +287,9 @@ class BookingBookmarks {
      // Convert date and time to UTC format
 	 public function formatToUTC($date, $time, $timezone)
 	 {
+        if($timezone == ''){
+            $timezone = 'UTC';
+        }
 		 $datetime = \DateTime::createFromFormat('Y-m-d h:i A', "$date $time", new \DateTimeZone($timezone));
 		 $datetime->setTimezone(new \DateTimeZone("UTC"));
 		 return $datetime->format("Ymd\THis\Z");
