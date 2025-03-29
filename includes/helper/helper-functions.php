@@ -5,7 +5,7 @@ if ( ! function_exists( 'tfhb_print_r' ) ) {
 		echo '<pre>';
 		print_r( $data );
 		echo '</pre>';
-		exit;
+		// exit;
 	}
 }
 

@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import {ref, onBeforeMount, onMounted, reactive} from 'vue'
+import {ref, onBeforeMount, onMounted, reactive, computed} from 'vue'
 import axios from 'axios'  
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -342,6 +342,11 @@ const CheckDateRangeEnd = (date) => {
         });   
     }
 }
+
+const filteredDateSlots = computed(() => {
+    return props.meeting?.availability_custom?.date_slots?.filter(slot => slot.date) ?? [];
+});
+
 </script>
 
 <template>
@@ -349,7 +354,6 @@ const CheckDateRangeEnd = (date) => {
     <div class="meeting-create-details tfhb-gap-24"> 
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title" >
-                {{ props.meeting.availability_range.start }}
                 <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
                 <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
             </div>
@@ -615,7 +619,7 @@ const CheckDateRangeEnd = (date) => {
                 </div> 
             </div>
 
-            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in meeting.availability_custom.date_slots" :key="key">
+            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                 <div class="tfhb-flexbox tfhb-full-width">
                     <div class="tfhb-overrides-date">
                         <h4>{{ date_slot.date }}</h4>
@@ -702,7 +706,7 @@ const CheckDateRangeEnd = (date) => {
             </div>
 
 
-            <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
+            <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()" v-if="!OverridesOpen">
                 <Icon name="PlusCircle" :width="20"/>
                 {{ $tfhb_trans('Add an override') }}
             </button>
