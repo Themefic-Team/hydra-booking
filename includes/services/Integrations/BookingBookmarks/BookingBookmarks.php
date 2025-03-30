@@ -202,8 +202,13 @@ class BookingBookmarks {
         $ical .= "METHOD:PUBLISH\r\n";
         foreach ($data as $meeting) { 
             $uid = uniqid();
-            $dtStart = $this->formatToUTC($meeting->meeting_dates, $meeting->start_time, $meeting->availability_time_zone);
-            $dtEnd = $this->formatToUTC($meeting->meeting_dates, $meeting->end_time, $meeting->availability_time_zone);
+            if($meeting->meeting_dates == '' || $meeting->start_time == ''){
+                continue;
+            }
+            
+            $time_zone = !empty($meeting->availability_time_zone) ? $meeting->availability_time_zone : $meeting->host_time_zone;
+            $dtStart = $this->formatToUTC($meeting->meeting_dates, $meeting->start_time, $time_zone);
+            $dtEnd = $this->formatToUTC($meeting->meeting_dates, $meeting->end_time, $time_zone);
         
             $ical .= "BEGIN:VEVENT\r\n";
             $ical .= "UID:$uid\r\n";
@@ -285,14 +290,26 @@ class BookingBookmarks {
     }
 
      // Convert date and time to UTC format
-	 public function formatToUTC($date, $time, $timezone)
-	 {
-        if($timezone == ''){
+	 public function formatToUTC($date, $time, $timezone){
+        if (empty($timezone)) {
             $timezone = 'UTC';
         }
-		 $datetime = \DateTime::createFromFormat('Y-m-d h:i A', "$date $time", new \DateTimeZone($timezone));
-		 $datetime->setTimezone(new \DateTimeZone("UTC"));
-		 return $datetime->format("Ymd\THis\Z");
-	 }
+
+        // Determine the format based on the presence of AM/PM
+        $format = (stripos($time, 'AM') !== false || stripos($time, 'PM') !== false) ? 'Y-m-d h:i A' : 'Y-m-d H:i';
+
+        // Create DateTime object with detected format
+        $datetime = \DateTime::createFromFormat($format, "$date $time", new \DateTimeZone($timezone));
+
+        if ($datetime === false) {
+            return false; // Return false if date parsing fails
+        }
+
+        // Convert to UTC
+        $datetime->setTimezone(new \DateTimeZone("UTC"));
+
+        return $datetime->format("Ymd\THis\Z");
+    }
+
  
 }
