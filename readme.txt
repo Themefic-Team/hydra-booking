@@ -209,7 +209,7 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
-= 1.1.2 – March 29, 2025 =
+= 1.1.2 – April 02, 2025 =
 
 - Added: iCal export feature introduced.
 - Added: Shortcode generator feature introduced.
