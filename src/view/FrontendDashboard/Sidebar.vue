@@ -132,6 +132,13 @@ const toggleSidebarResponsive= () => {
                                     <span >{{ $tfhb_trans('Host Settings') }}</span>
                                 </router-link>
                             </li> 
+
+                            <li>
+                                <router-link to="/settings/shortcodes" exact :class="{ 'active': $route.path.startsWith('/settings/shortcodes') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
+                                    <Icon name="Braces" size="20" /> 
+                                    <span >{{ $tfhb_trans('Shortcodes') }}</span>
+                                </router-link>
+                            </li> 
                             <li>
                                 <router-link to="/settings/license" exact :class="{ 'active': $route.path.startsWith('/settings/license') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
                                     <Icon name="FileLock2" size="20" /> 

@@ -113,7 +113,7 @@ const TfhbMeetingType = (type, router) => {
         });
         return;
     }
-    if((type == 'one-to-group' && tfhb_core_apps_pro.tfhb_license_status !=true)) {  
+    if((type == 'one-to-group' && tfhb_core_apps_pro.tfhb_is_pro !=true)) {  
         toast.error('This feature is only available in pro version', {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,

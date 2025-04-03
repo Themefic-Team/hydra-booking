@@ -339,8 +339,7 @@ class DateTimeController extends \DateTimeZone {
 	public function GetAvailabilityData ($MeetingsData){
 		// if $MeetingsData is object make it array
 		$meeting_data =  !empty($MeetingsData) && is_array($MeetingsData) ? $MeetingsData : (array) $MeetingsData;
-		$availability_data = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
-		
+		$availability_data = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array(); 
 		if ( isset( $meeting_data['availability_type'] ) && 'settings' === $meeting_data['availability_type'] ) {
 
 			$host = new Host();

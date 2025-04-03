@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -208,6 +208,14 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 12. Notification Controls
 
 == Changelog ==
+
+= 1.1.2 – April 02, 2025 =
+
+- Added: iCal export feature introduced.
+- Added: Shortcode generator feature introduced.
+- Fixed: The integration auto-hide issue has been resolved.
+- Fixed: The date overrides issue has been resolved.
+- Fixed: Group meeting creation issue in the PRO version.
 
 = 1.1.1 – March 24, 2025 =
 
