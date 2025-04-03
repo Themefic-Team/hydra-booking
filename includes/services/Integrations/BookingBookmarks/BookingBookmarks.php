@@ -201,9 +201,67 @@ class BookingBookmarks {
         $ical .= "CALSCALE:GREGORIAN\r\n";
         $ical .= "METHOD:PUBLISH\r\n";
         foreach ($data as $meeting) { 
+           
+            if($meeting->meeting_dates == '' || $meeting->start_time == ''){
+                continue;
+            }
+            $meeting_dates = explode( ',', $meeting->meeting_dates );
+            foreach ( $meeting_dates as $meeting_date ) {
+                $uid = uniqid();
+                $time_zone = !empty($meeting->availability_time_zone) ? $meeting->availability_time_zone : $meeting->host_time_zone;
+                $dtStart = $this->formatToUTC($meeting_date, $meeting->start_time, $time_zone);
+                $dtEnd = $this->formatToUTC($meeting_date, $meeting->end_time, $time_zone);
+            
+                $ical .= "BEGIN:VEVENT\r\n";
+                $ical .= "UID:$uid\r\n";
+                $ical .= "DTSTAMP:" . gmdate("Ymd\THis\Z") . "\r\n";
+                $ical .= "DTSTART:$dtStart\r\n";
+                $ical .= "DTEND:$dtEnd\r\n";
+                $ical .= "SUMMARY:" . $meeting->title . "\r\n";
+                $ical .= "STATUS:" . strtoupper($meeting->status) . "\r\n";
+
+                // Decode meeting locations
+                $locations = json_decode($meeting->meeting_locations, true);
+                if (!empty($locations)) {
+                    $locationString = [];
+                    foreach ($locations as $key => $location) {
+                        $locationString[] = "{$location['location']} - {$location['address']}";
+                    }
+                    $ical .= "LOCATION:" . implode(", ", $locationString) . "\r\n";
+                }
+                
+                // Add attendees
+                if (!empty($meeting->attendees)) {
+                    foreach ($meeting->attendees as $attendee) {
+                        $ical .= "ATTENDEE;CN={$attendee->attendee_name}:mailto:{$attendee->email}\r\n";
+                    }
+                }
+            
+                $ical .= "END:VEVENT\r\n";
+            }
+            
+        }
+            
+        // iCal footer
+        $ical .= "END:VCALENDAR\r\n";
+
+        return $ical;
+    }
+
+    // Get booking ICS URL for the current user
+    public function generateSingleBookingICS($meeting){ 
+        // Start iCal file
+        $ical = "BEGIN:VCALENDAR\r\n";
+        $ical .= "VERSION:2.0\r\n";
+        $ical .= "PRODID:-//Your Company//Meeting Scheduler//EN\r\n";
+        $ical .= "CALSCALE:GREGORIAN\r\n";
+        $ical .= "METHOD:PUBLISH\r\n"; 
+        $meeting_dates = explode( ',', $meeting->meeting_dates );
+        foreach ( $meeting_dates as $meeting_date ) {
             $uid = uniqid();
-            $dtStart = $this->formatToUTC($meeting->meeting_dates, $meeting->start_time, $meeting->availability_time_zone);
-            $dtEnd = $this->formatToUTC($meeting->meeting_dates, $meeting->end_time, $meeting->availability_time_zone);
+        
+            $dtStart = $this->formatToUTC($meeting_date, $meeting->start_time, $meeting->availability_time_zone);
+            $dtEnd = $this->formatToUTC($meeting_date, $meeting->end_time, $meeting->availability_time_zone);
         
             $ical .= "BEGIN:VEVENT\r\n";
             $ical .= "UID:$uid\r\n";
@@ -212,7 +270,7 @@ class BookingBookmarks {
             $ical .= "DTEND:$dtEnd\r\n";
             $ical .= "SUMMARY:" . $meeting->title . "\r\n";
             $ical .= "STATUS:" . strtoupper($meeting->status) . "\r\n";
-
+    
             // Decode meeting locations
             $locations = json_decode($meeting->meeting_locations, true);
             if (!empty($locations)) {
@@ -230,54 +288,11 @@ class BookingBookmarks {
                 }
             }
         
-            $ical .= "END:VEVENT\r\n";
-        }
-            
-        // iCal footer
-        $ical .= "END:VCALENDAR\r\n";
+            $ical .= "END:VEVENT\r\n"; 
+                
 
-        return $ical;
-    }
-
-    // Get booking ICS URL for the current user
-    public function generateSingleBookingICS($meeting){ 
-        // Start iCal file
-        $ical = "BEGIN:VCALENDAR\r\n";
-        $ical .= "VERSION:2.0\r\n";
-        $ical .= "PRODID:-//Your Company//Meeting Scheduler//EN\r\n";
-        $ical .= "CALSCALE:GREGORIAN\r\n";
-        $ical .= "METHOD:PUBLISH\r\n"; 
-        $uid = uniqid();
-        $dtStart = $this->formatToUTC($meeting->meeting_dates, $meeting->start_time, $meeting->availability_time_zone);
-        $dtEnd = $this->formatToUTC($meeting->meeting_dates, $meeting->end_time, $meeting->availability_time_zone);
-    
-        $ical .= "BEGIN:VEVENT\r\n";
-        $ical .= "UID:$uid\r\n";
-        $ical .= "DTSTAMP:" . gmdate("Ymd\THis\Z") . "\r\n";
-        $ical .= "DTSTART:$dtStart\r\n";
-        $ical .= "DTEND:$dtEnd\r\n";
-        $ical .= "SUMMARY:" . $meeting->title . "\r\n";
-        $ical .= "STATUS:" . strtoupper($meeting->status) . "\r\n";
-
-        // Decode meeting locations
-        $locations = json_decode($meeting->meeting_locations, true);
-        if (!empty($locations)) {
-            $locationString = [];
-            foreach ($locations as $key => $location) {
-                $locationString[] = "{$location['location']} - {$location['address']}";
-            }
-            $ical .= "LOCATION:" . implode(", ", $locationString) . "\r\n";
         }
-        
-        // Add attendees
-        if (!empty($meeting->attendees)) {
-            foreach ($meeting->attendees as $attendee) {
-                $ical .= "ATTENDEE;CN={$attendee->attendee_name}:mailto:{$attendee->email}\r\n";
-            }
-        }
-    
-        $ical .= "END:VEVENT\r\n"; 
-            
+       
         // iCal footer
         $ical .= "END:VCALENDAR\r\n";
 
@@ -285,11 +300,26 @@ class BookingBookmarks {
     }
 
      // Convert date and time to UTC format
-	 public function formatToUTC($date, $time, $timezone)
-	 {
-		 $datetime = \DateTime::createFromFormat('Y-m-d h:i A', "$date $time", new \DateTimeZone($timezone));
-		 $datetime->setTimezone(new \DateTimeZone("UTC"));
-		 return $datetime->format("Ymd\THis\Z");
-	 }
+	 public function formatToUTC($date, $time, $timezone){
+        if (empty($timezone)) {
+            $timezone = 'UTC';
+        }
+
+        // Determine the format based on the presence of AM/PM
+        $format = (stripos($time, 'AM') !== false || stripos($time, 'PM') !== false) ? 'Y-m-d h:i A' : 'Y-m-d H:i';
+
+        // Create DateTime object with detected format
+        $datetime = \DateTime::createFromFormat($format, "$date $time", new \DateTimeZone($timezone));
+
+        if ($datetime === false) {
+            return false; // Return false if date parsing fails
+        }
+
+        // Convert to UTC
+        $datetime->setTimezone(new \DateTimeZone("UTC"));
+
+        return $datetime->format("Ymd\THis\Z");
+    }
+
  
 }
