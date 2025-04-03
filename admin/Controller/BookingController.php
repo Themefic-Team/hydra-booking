@@ -1105,7 +1105,7 @@ class BookingController {
 		);
 		 $bookingsList = $booking->getBookingWithAttendees(  
 			$where,
-			limit: 1,  
+			1,  
 		); 
 		
 		if( empty( $bookingsList ) ){
