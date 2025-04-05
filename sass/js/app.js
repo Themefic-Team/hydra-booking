@@ -157,12 +157,7 @@
 				var selected_date_format_day = tfhbTranslateNumber(new Date(selected_date).toLocaleDateString('en-US', { day: 'numeric' }));  
 				// Format like tat "Tuesday, March 4"
 				var selected_date_format =  selected_date_format_weekday+', '+selected_date_format_month+ ' '+selected_date_format_day;
-                // Set the date in the select box
-				// selected_date_format_day 
-				// translate the selected
-				// alert(selected_date_format_day);
-
-				 
+ 
 
 				$this.find('.tfhb-meeting-times .tfhb-select-date').html(selected_date_format); 
 				// get selected date calenderData.calander_available_time_slot
@@ -205,7 +200,7 @@
 				var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
 			 
 				// Get the first day of the month 
-				tfhb_times_manipulate( $this, current_date, calenderData);    
+				tfhb_times_manipulate( $this, current_date, calenderData);
 				
 			});
             $this.find('input[name="tfhb_time_format"]').on('change', function (e) { 
@@ -744,12 +739,11 @@
 
 		}
 
-		// Function to generate the tfhb-calendar
 		function tfhb_date_manipulate($this, calenderData, year, month, date, months) {
-
 			const day = $this.find(".tfhb-calendar-dates");
+			const weekdays = $this.find(".tfhb-calendar-weekdays");
 			const currdate = $this.find(".tfhb-calendar-current-date");
-  
+		
 			let calender_data = calenderData;
 			let availability = calender_data.availability;
 			let date_slots = availability.date_slots;  
@@ -758,90 +752,90 @@
 			let availability_range_type = calender_data.availability_range_type;   
 			let availabilitys_range_start = calender_data.availability_range.start;   
 			let availabilitys_range_end = calender_data.availability_range.end;   
+		
 			let dayNameText = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			let dayShortText = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 			let DisableDays = [];
-  
-			// Get Disable Days 
-				for (var i = 0; i < time_slots.length; i++) { 
-					if(time_slots[i].status == false){
-						DisableDays.push(time_slots[i].day);
-					}
-				}  
-			
-			 
-
-			// Get the first day of the month
-			let dayone = new Date(year, month, 1).getDay();
-
-			// Get the last date of the month
+		
+			// Use dynamic start day if available 
+			let week_start_from = tfhb_app_booking.general_settings.week_start_from || 'Sunday';
+			let weekStartIndex = dayNameText.indexOf(week_start_from);
+			if (weekStartIndex === -1) weekStartIndex = 0;
+		
+			//  Update Weekday DOM Based on week_start_from
+			let adjustedWeekdays = [];
+			for (let i = 0; i < 7; i++) {
+				let index = (weekStartIndex + i) % 7;
+				adjustedWeekdays.push(`<li>${tfhbTranslate(dayShortText[index])}</li>`);
+			}
+			weekdays.html(adjustedWeekdays.join(""));
+		
+			//  Disable Days
+			for (let i = 0; i < time_slots.length; i++) { 
+				if (time_slots[i].status === false) {
+					DisableDays.push(time_slots[i].day);
+				}
+			}
+		
+			//  Day logic based on week start
+			let actualDayOne = new Date(year, month, 1).getDay();
+			let dayone = (actualDayOne - weekStartIndex + 7) % 7;
 			let lastdate = new Date(year, month + 1, 0).getDate();
-	
-			// Get the day of the last date of the month
-			let dayend = new Date(year, month, lastdate).getDay();
-	
-			// Get the last date of the previous month
+			let actualDayEnd = new Date(year, month, lastdate).getDay();
+			let dayend = (actualDayEnd - weekStartIndex + 7) % 7;
 			let monthlastdate = new Date(year, month, 0).getDate();
-	
-			// Variable to store the generated tfhb-calendar HTML
+		
 			let lit = "";
-	
-			// If Time slots status is not true disbale that day 
-			// Loop to add the last dates of the previous month
-			for (let i = dayone; i > 0; i--) { 
+		
+			//  Previous month's trailing days
+			for (let i = dayone; i > 0; i--) {
 				lit += `<li class="inactive">${tfhbTranslateNumber(monthlastdate - i + 1)}</li>`;
 			}
-	
-			// Loop to add the dates of the current month
+		
+			//  Current month dates
 			for (let i = 1; i <= lastdate; i++) {
-	
-				// Check if the current date is today
 				let isToday = i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? "active" : "";
-
-				// Check if the current date has availability slots
-				let dateKey = year + "-" + (month + 1).toString().padStart(2, '0') + "-" + i.toString().padStart(2, '0'); 
-				let dateSlot = typeof date_slots !== 'undefined'  ? date_slots.find(slot => slot.date.match(dateKey) ) : "";
-				let availabilityClass = typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available == true   ? "inactive " : " ";
+				let dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+				let dateSlot = typeof date_slots !== 'undefined' ? date_slots.find(slot => slot.date.match(dateKey)) : "";
+				let availabilityClass = (typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available === true) ? "inactive " : " ";
 				let dataAvailable = "available";
-				
-				// Before today Days Disable 
-				if(new Date() > new Date(year, month, i) && i !== date.getDate() ){
+		
+				if (new Date() > new Date(year, month, i) && i !== date.getDate()) {
 					availabilityClass = "inactive ";
 					dataAvailable = "unavailable";
 				}
-
-				// if current date day is disable then disable that day.
-				if(DisableDays.includes(dayNameText[new Date(year, month, i).getDay()])){
+		
+				let currentDayName = dayNameText[new Date(year, month, i).getDay()];
+				if (DisableDays.includes(currentDayName)) {
 					availabilityClass = "inactive ";
 					dataAvailable = "unavailable";
 				}
-				// if current date is out of range then disable that day.
-
-				if(availability_range_type != 'indefinitely'){
-					if(new Date(year, month, i) < new Date(availabilitys_range_start) || new Date(year, month, i) > new Date(availabilitys_range_end)){
+		
+				if (availability_range_type !== 'indefinitely') {
+					let currDate = new Date(year, month, i);
+					if (currDate < new Date(availabilitys_range_start) || currDate > new Date(availabilitys_range_end)) {
 						availabilityClass = "inactive ";
 						dataAvailable = "unavailable";
 						isToday = "";
 					}
 				}
-				if('active' == isToday){
-					availabilityClass = " "; 
+		
+				if ('active' === isToday) {
+					availabilityClass = " ";
 				}
- 
+		
 				lit += `<li data-date="${dateKey}" data-available="${dataAvailable}" class="${isToday} current ${availabilityClass}">${tfhbTranslateNumber(i)}</li>`;
-		   }
-	
-			// Loop to add the first dates of the next month
+			}
+		
+			// ➕ Next month's leading days
 			for (let i = dayend; i < 6; i++) {
 				lit += `<li class="inactive">${tfhbTranslateNumber(i - dayend + 1)}</li>`;
 			}
-			// console.log(calendarLabels.months);
+		
 			currdate.text(`${tfhbTranslate(months[month])} ${tfhbTranslateNumber(year)}`);
-			// currdate.text(`${months[month]} ${year}`);
-	
-			// update the HTML of the dates element 
-			// with the generated tfhb-calendar
 			day.html(lit);
 		}
+		
 
 		// Function to generate the tfhb-calendar
 		function tfhb_times_manipulate($this, current_date, calenderData, callback = null) {

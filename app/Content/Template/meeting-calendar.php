@@ -41,13 +41,7 @@ use HydraBooking\Admin\Controller\TransStrings;
 
 		<div class="tfhb-calendar-body">
 			<ul class="tfhb-calendar-weekdays">
-				<li><?php echo esc_html(TransStrings::tfhbTranslate('Sun')) ?></li> 
-				<li><?php echo esc_html(TransStrings::tfhbTranslate('Mon')) ?></li>
-				<li><?php echo esc_html(TransStrings::tfhbTranslate('Tue')) ?></li>
-				<li><?php echo esc_html(TransStrings::tfhbTranslate('Wed')) ?></li>
-				<li><?php echo esc_html(TransStrings::tfhbTranslate('Thu')) ?></li>
-				<li><?php echo esc_html(TransStrings::tfhbTranslate('Fri')) ?></li>
-				<li><?php echo esc_html(TransStrings::tfhbTranslate('Sat')) ?></li>
+				 
 			</ul>
 			<ul class="tfhb-calendar-dates"></ul>
 		</div>
