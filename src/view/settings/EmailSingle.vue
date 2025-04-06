@@ -6,7 +6,6 @@ import { useRoute, useRouter, RouterView,} from 'vue-router'
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
-import draggable from 'vuedraggable';
 
 // import Form Field 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
