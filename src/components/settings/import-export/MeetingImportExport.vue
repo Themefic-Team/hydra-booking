@@ -13,23 +13,14 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 
 // Store 
 import { importExport } from '@/store/settings/importExport';
-// const informationPopup = ref(false);
-// const emit = defineEmits(["update-meeting", "limits-frequency-add"]); 
-// const props = defineProps({
-//     importExport : {
-//         type: Object,
-//         required: true
-//     }
-// }); 
- 
- 
+
 
 // Extra Qestion Data
 const questions_data =  reactive({});
 
 // Import Data Function 
 const readImportDdata = (event) => { 
-   importExport.readBookingImportData(event);
+   importExport.readMeetingImportData(event);
    
 }
 const ExportAsCSV = ref(false);
@@ -48,7 +39,7 @@ const exportData = reactive({
 <!-- Export CSV POPup -->
     <HbPopup  :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
         <template #header>  
-            <h3>{{$tfhb_trans('Export Bookings as')}} {{$tfhb_trans(exportData.type)}}</h3>
+            <h3>{{$tfhb_trans('Export Meeting as')}} {{$tfhb_trans(exportData.type)}}</h3>
         </template>
 
         <template #content> 
@@ -111,7 +102,8 @@ const exportData = reactive({
     </HbPopup>
 <!-- Export CSV POPup -->
     <div class="tfhb-admin-card-box"  >   
-        {{ importExport }}
+        <!-- {{ importExport }} -->
+        {{ importExport.booking.column }}
         <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-mb-16">
             <div class="tfhb-admin-title "> 
                 <h3 >{{ $tfhb_trans('Import/Export Meetings from a CSV file') }}</h3> 
@@ -132,7 +124,7 @@ const exportData = reactive({
            <div class="tfhb-upload-csv tfhb-flexbox tfhb-gap-16">
                 <div class="tfhb-hydra-content-wrap">      
                     <HbText  
-                        v-model="importExport.booking.import_file"
+                        v-model="importExport.meeting.import_file"
                         type="file"
                         required= "true"  
                         :label="$tfhb_trans('Select the file to import')"  
@@ -147,29 +139,29 @@ const exportData = reactive({
                 </div>  
            </div>
            <!-- Export Column -->
-            <div v-if="importExport.booking.import_column.length > 0"  class="tfhb-import-column-data tfhb-admin-card-box">
-                {{importExport.booking.rearrange_column}}
+            <div v-if="importExport.meeting.import_column.length > 0"  class="tfhb-import-column-data tfhb-admin-card-box">
+                {{importExport.meeting.rearrange_column}}
                 <div class="tfhb-admin-title "> 
                     <h3 >{{ $tfhb_trans('Map CSV fields to Booking') }}</h3> 
                     <p>{{ $tfhb_trans('Select fields from your CSV file to map against booking fields, or to ignore during import.') }}</p>
                 </div> 
                 <!-- Time format -->
-                <div class="tfhb-import-export-column-wrap tfhb-flexbox tfhb-gap-8" v-for="(item, index) in importExport.booking.import_column">
+                <div class="tfhb-import-export-column-wrap tfhb-flexbox tfhb-gap-8" v-for="(item, index) in importExport.meeting.import_column">
                    
                     <HbDropdown 
                    
-                    v-model="importExport.booking.rearrange_column[item]"   
-                    :label="item"
-                    width="100"
-                    :selected = "item"
-                    :placeholder="$tfhb_trans('Select Time Format')"   
-                    :option = "importExport.booking.column"  
-                />
+                        v-model="importExport.meeting.rearrange_column[item]"   
+                        :label="item"
+                        width="100"
+                        :selected = "item"
+                        :placeholder="$tfhb_trans('Select Time Format')"   
+                        :option = "importExport.meeting.column"  
+                    />
                  
                    
                 </div>
                 <br>
-                <button @click="importExport.importBooking" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ $tfhb_trans('Run The Import') }}</button> 
+                <button @click="importExport.importMeeting" class="tfhb-btn boxed-btn flex-btn"><Icon name="Download" size=20 /> {{ $tfhb_trans('Run The Import') }}</button> 
                 <!-- Time format --> 
             </div>
               

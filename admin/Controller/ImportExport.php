@@ -40,39 +40,98 @@ class ImportExport {
 			)
 		);
 
-		// register_rest_route(
-		// 	'hydra-booking/v1',
-		// 	'/import-export/import-meeting',
-		// 	array(
-		// 		'methods'  => 'POST',
-		// 		'callback' => array( $this, 'ImportMeeting' ),
-		// 		'permission_callback' =>  array(new RouteController() , 'permission_callback'),
-		// 	)
-		// );
-		// // Import Booking
-		// register_rest_route(
-		// 	'hydra-booking/v1',
-		// 	'/settings/import-export/import-booking',
-		// 	array(
-		// 		'methods'  => 'POST',
-		// 		'callback' => array( $this, 'ImportBooking' ),
-		// 		'permission_callback' =>  array(new RouteController() , 'permission_callback'),
-		// 	)
-		// );
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/import-export/import-meeting',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'ImportMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		// Import Booking
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/import-export/import-booking',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'ImportBooking' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 	}
 
 	public function GetImportExportData() {
 		// Get booking Data
 		$booking  = new Booking();
-		$bookings = $booking->getColumns();
-
+		$bookings = $booking->getColumns(); 
+		// Meeting 
+		$meeting = new Meeting();
+		$meetings = $meeting->getColumns();
 		$data = array(
 			'status'         => true,
 			'booking_column' => $bookings,
+			'meeting_column' => $meetings,
 		);
 		return rest_ensure_response( $data );
 	}
 
+	// Export booking Data
+	public function ImportMeeting() {
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+		$data    = isset( $request['data'] ) ? $request['data'] : array();
+		$columns = isset( $request['column'] ) ? $request['column'] : array();
+	
+		if ( empty( $data ) || empty( $columns ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __( 'Invalid data provided.', 'hydra-booking' ),
+			) );
+		} 
+		$header = $data[0];
+		$data_rows = array_slice($data, 1);
+		
+		// Map header to index
+		$header_map = array_flip($header);
+	
+		$final_data = [];
+		
+		$meeting = new Meeting();
+		foreach ($data_rows as $row) {
+			$new_row = []; 
+			$data = []; 
+			if (empty(array_filter($row))) {
+				continue;
+			}
+			// tfhb_print_r($row);
+			foreach ($columns as $key => $column) {
+				if($column == '' || $key == 'id'){
+					continue; // skip empty column
+				}
+				if (isset($header_map[$column])) {
+					$data[] = $row[$header_map[$column]];
+					$new_row[$key] = $row[$header_map[$column]];
+				} else {
+					$data[] = null; // or empty string
+					$new_row[$key] = null; // or empty string
+				}
+			}
+			
+			// tfhb_print_r($new_row);
+			$meeting->add($new_row);
+			$final_data[] = $new_row;
+		}
+
+
+		$data = array(
+			'status'  => true,
+			'data'    => true,
+			'message' =>  __( 'Booking Data Imported Successfully', 'hydra-booking' ),
+		);
+		return rest_ensure_response( $data );
+ 
+	}
+	
 	// Export booking Data
 	public function ImportBooking() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );

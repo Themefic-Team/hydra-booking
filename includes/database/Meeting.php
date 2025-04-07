@@ -355,6 +355,55 @@ class Meeting {
 		$data = $wpdb->get_results( $wpdb->prepare( $sql )); 
 		return $data;
 	}
+	
+	// Get Only column list as array
+	public function getColumns() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . $this->table;
+		$sql        = "SHOW COLUMNS FROM $table_name";
+		$data       = $wpdb->get_results( $sql );
+		$columns    = array();
+
+	 
+		foreach ( $data as $key => $value ) {
+			if ( $value->Field == 'id' ) {
+				continue;
+			}  
+			$columns[] = array(
+				'name'  => $value->Field,
+				'value' => $value->Field,
+			);
+		}
+		return $columns;
+	}
+
+	
+	public function importMeeting( $data ){
+		global $wpdb;
+		
+		$table_name = $wpdb->prefix . $this->table;
+		// Define column names (ensure these match your database table structure)
+		 
+		$columns = $data[0]; 
+		unset($data[0]);  
+		// Build the SQL query
+		$values = [];
+		foreach ($data as $row) { 
+			$escaped_values = array_map([$wpdb, 'prepare'], array_values($row));
+			$values[] = '(' . implode(',', $escaped_values) . ')';
+		}
+		tfhb_print_r($data);
+		
+		$sql = "
+			INSERT INTO $table_name (" . implode(',', $columns) . ")
+			VALUES " . implode(', ', $values);
+
+			echo $sql;
+			exit;
+		// Execute the query
+		$wpdb->query($sql); 
+		
+	}
 
 
 	// delete

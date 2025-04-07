@@ -13,7 +13,7 @@ const importExport = reactive({
         import_status: false,
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
-    meetings: {
+    meeting: {
         column: {},  
         import_column: {},  
         import_file: null,
@@ -23,6 +23,7 @@ const importExport = reactive({
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
     async GetImportExportData() { 
+      
         try {  
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export', {
                 headers: {
@@ -33,6 +34,7 @@ const importExport = reactive({
     
             if (response.data.status) {  
                 this.booking.column = response.data.booking_column;
+                this.meeting.column = response.data.meeting_column;
                 
             }else{
                 toast.error(response.data.message, {
@@ -111,8 +113,61 @@ const importExport = reactive({
             }
         });    
     },
+    // Other Information 
+    async readMeetingImportData(event) {   
+        const file = event.target.files[0];
+        Papa.parse(file, { 
+            header: false,
+            json: true,
+            complete: function(results) { 
+                importExport.meeting.import_data = results.data;
+                // get first row as column
+                if (results.data.length > 0) {
+                    importExport.meeting.import_column = results.data[0];
+                } 
+                
+
+                for (let i = 0; i < importExport.meeting.import_column.length; i++) { 
+
+                   
+                    let element = importExport.meeting.import_column[i];
+                    importExport.meeting.rearrange_column[element] = importExport.meeting.import_column[i];
+                    
+                } 
+                 
+            }
+        });    
+    },
     // Run The booking import
-    async importBooking() { 
+    async importMeeting() { 
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-meeting', {
+                data: this.meeting.import_data,
+                column: this.meeting.rearrange_column
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {  
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+            }else{
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }  
+    },
+     // Run The booking import
+     async importBooking() { 
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-booking', {
                 data: this.booking.import_data,
@@ -141,8 +196,7 @@ const importExport = reactive({
     },
 
     // export Meetings Data
-    async exportMeetings(data) {
-        console.log(data);
+    async exportMeetings(exportData) { 
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-meetings', exportData, {
                 headers: {
