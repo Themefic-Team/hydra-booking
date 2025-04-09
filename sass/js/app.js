@@ -778,7 +778,7 @@
 		
 			//  Disable Days
 			for (let i = 0; i < time_slots.length; i++) { 
-				if (time_slots[i].status === false) {
+				if (time_slots[i].status === false || time_slots[i].status == false) {
 					DisableDays.push(time_slots[i].day);
 				}
 			}
