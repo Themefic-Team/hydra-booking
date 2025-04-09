@@ -285,44 +285,23 @@ const getLatestEndTime = (day) => {
     }
     return latestEndTime;
 }
-
+ 
 const TfhbStartDataEvent = (key, skey, startTime) => {
-    const day = props.meeting.availability_custom.time_slots[key];
-    const latestEndTime = getLatestEndTime(day);
-
-    if (startTime <= latestEndTime) {
-        toast.error("Your start time will be over the: " + latestEndTime, {
-            position: 'bottom-right', // Set the desired position
-            "autoClose": 1500,
-        });  
-        return latestEndTime;
-    }
-}
-
-// const TfhbEndDataEvent = (key, skey, endTime) => {
-//     const day = props.meeting.availability_custom.time_slots[key];
-//     const nextDate = skey+1;
-//     const NextdayData = day.times[nextDate] ? day.times[nextDate].start : '';
-
-//     if(NextdayData){
-//         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-//             toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayDatas, {
-//                 position: 'bottom-right', // Set the desired position
-//                 "autoClose": 1500,
-//             });   
-//             return;
-//         }
-//     }else{
-//         if (day.times[skey].start >= endTime) {
-//             toast.error("Your End time will be over the: " + day.times[[skey]].start, {
-//                 position: 'bottom-right', // Set the desired position
-//                 "autoClose": 1500,
-//             });  
-//             return;
-//         }
-//     }
-// }
-const TfhbEndDataEvent = (key, skey, endTime) => {
+      
+     const day = props.meeting.availability_custom.time_slots[key];
+     const latestEndTime = getLatestEndTime(day);  
+ 
+     if (startTime >= latestEndTime){
+         toast.error("Your start time will be over the: " + latestEndTime, {
+                 position: 'bottom-right', // Set the desired position
+                 "autoClose": 1500,
+             });
+         return latestEndTime;
+     }
+ }
+ 
+ 
+const TfhbEndDataEvent = (key, skey, endTime) => { 
     const day = props.meeting.availability_custom.time_slots[key];
     const nextDate = skey+1;
     const NextdayData = day.times[nextDate] ? day.times[nextDate].start : '';

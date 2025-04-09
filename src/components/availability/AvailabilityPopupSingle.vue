@@ -236,14 +236,15 @@ const getLatestEndTime = (day) => {
 
 const TfhbStartDataEvent = (key, skey, startTime) => {
      
-    if(skey == 0){
-        return;
-    }
+ 
     const day = props.availabilityDataSingle.time_slots[key];
-    const latestEndTime = getLatestEndTime(day);
+    const latestEndTime = getLatestEndTime(day); 
 
-    if (startTime <= latestEndTime) {
-        toast.error("Your start time will be over the: " + latestEndTime);
+    if (startTime >= latestEndTime) {
+        toast.error("Your start time will be over the: " + latestEndTime, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
         return latestEndTime;
     }
 }

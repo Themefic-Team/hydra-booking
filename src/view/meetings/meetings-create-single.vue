@@ -388,6 +388,29 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
     }
     
 }
+const TfhbStartDataEvent = (key, skey, startTime) => {
+      
+    const day = Meeting.singleMeeting.MeetingData.availability_custom.time_slots[key];
+    const latestEndTime = getLatestEndTime(day);  
+
+    if (startTime >= latestEndTime){
+        toast.error("Your start time will be over the: " + latestEndTime, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+        return latestEndTime;
+    }
+}
+const getLatestEndTime = (day) => {
+    let latestEndTime = day.times[0].end;
+    for (let i = 1; i < day.times.length; i++) {
+        const endTime = day.times[i].end;
+        if (endTime > latestEndTime) {
+            latestEndTime = endTime;
+        }
+    }
+    return latestEndTime;
+}
 </script>
 
 <template>  
