@@ -799,10 +799,11 @@
 			}
 		
 			//  Current month dates
-			for (let i = 1; i <= lastdate; i++) {
+			for (let i = 1; i <= lastdate; i++) { 
 				let isToday = i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? "active" : "";
 				let dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
 				let dateSlot = typeof date_slots !== 'undefined' ? date_slots.find(slot => slot.date.match(dateKey)) : "";
+				
 				let availabilityClass = (typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available === true) ? "inactive " : " ";
 				let dataAvailable = "available";
 		
@@ -811,10 +812,11 @@
 					dataAvailable = "unavailable";
 				}
 		
-				let currentDayName = dayNameText[new Date(year, month, i).getDay()];
+				let currentDayName = dayNameText[new Date(year, month, i).getDay()]; 
 				if (DisableDays.includes(currentDayName)) {
 					availabilityClass = "inactive ";
 					dataAvailable = "unavailable";
+					isToday = '';
 				}
 		
 				if (availability_range_type !== 'indefinitely') {

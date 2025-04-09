@@ -255,12 +255,18 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
             return;
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
             return;
         }
     }
@@ -381,6 +387,7 @@ const filteredDateSlots = computed(() => {
                                         />     
 
                                     </div>
+                                   
                                     <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
                                         <button class="tfhb-availability-schedule-btn" @click="addAvailabilityTime(key)"><Icon name="Plus" size=20 /> </button> 
                                     </div>
@@ -389,6 +396,9 @@ const filteredDateSlots = computed(() => {
                                     </div>
                                 </div>
                                 
+                            </div>
+                            <div v-else class="tfhb-availability-schedule-wrap" style="width: 75%;"> 
+                                <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
                             </div>
                         </div> 
                     </div>  

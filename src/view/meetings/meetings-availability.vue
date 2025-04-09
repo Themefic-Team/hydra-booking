@@ -173,6 +173,10 @@ onBeforeMount(() => {
             if(props.meeting.host_id!=0){
                 fetchHostAvailability(props.meeting.host_id);
                 fetchSingleAvailabilitySettings(props.meeting.host_id, props.meeting.availability_id);
+                if('settings'==props.meeting.availability_type && host_availble_type != 'settings'){
+
+                    Settings_Avalibility_Callback(props.meeting.availability_id)
+                }
             }
         }, 2000);
        
@@ -295,6 +299,29 @@ const TfhbStartDataEvent = (key, skey, startTime) => {
     }
 }
 
+// const TfhbEndDataEvent = (key, skey, endTime) => {
+//     const day = props.meeting.availability_custom.time_slots[key];
+//     const nextDate = skey+1;
+//     const NextdayData = day.times[nextDate] ? day.times[nextDate].start : '';
+
+//     if(NextdayData){
+//         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
+//             toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayDatas, {
+//                 position: 'bottom-right', // Set the desired position
+//                 "autoClose": 1500,
+//             });   
+//             return;
+//         }
+//     }else{
+//         if (day.times[skey].start >= endTime) {
+//             toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+//                 position: 'bottom-right', // Set the desired position
+//                 "autoClose": 1500,
+//             });  
+//             return;
+//         }
+//     }
+// }
 const TfhbEndDataEvent = (key, skey, endTime) => {
     const day = props.meeting.availability_custom.time_slots[key];
     const nextDate = skey+1;
@@ -302,10 +329,10 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayDatas, {
+            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
-            });   
+            });
             return;
         }
     }else{
@@ -313,10 +340,11 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
             toast.error("Your End time will be over the: " + day.times[[skey]].start, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
-            });  
+            });
             return;
         }
     }
+    
 }
 
 const isobjectempty = (data) => {
@@ -522,7 +550,7 @@ const filteredDateSlots = computed(() => {
                     
                 </div>
                 <div v-else class="tfhb-availability-schedule-wrap"> 
-                   <h6 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h6>
+                   <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
                 </div>
             </div> 
         </div>  
@@ -566,7 +594,7 @@ const filteredDateSlots = computed(() => {
                     <label class="tfhb-schedule-swicher" for="swicher"> {{time_slot.day}}</label>
                     <!-- Swicher -->
                 </div>
-                <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
+                <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap" > 
                     <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-no-wrap tfhb-gap-8">
 
@@ -605,6 +633,9 @@ const filteredDateSlots = computed(() => {
                         </div>
                     </div>
                     
+                </div>
+                <div v-else class="tfhb-availability-schedule-wrap"> 
+                    <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
                 </div>
             </div> 
         </div>  
