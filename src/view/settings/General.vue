@@ -173,7 +173,7 @@ onBeforeMount(() => {
                 <p>{{ $tfhb_trans('Manage your time zone settings and bookings') }}</p>
             </div>
             <div class="thb-admin-btn right"> 
-                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-docs-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}  <Icon name="ArrowUpRight" size=20 /></a>
+                <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/general-settings/" target="_blank" class="tfhb-btn tfhb-docs-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}  <Icon name="ArrowUpRight" size=20 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
