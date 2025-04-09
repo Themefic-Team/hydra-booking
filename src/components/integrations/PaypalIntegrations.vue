@@ -71,7 +71,7 @@ const closePopup = () => {
             <template #content>  
                 <p>
                     {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Paypal Account') }}
-                    <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
+                    <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/paypal-integration/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                 </p>
                 <HbDropdown 
                     v-model="paypal_data.environment"

@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -209,6 +209,11 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
+= 1.1.4 – April 09, 2025 =
+
+- Fixed: The availability issue has been resolved.
+- Updated: Documentation URL in the settings.
+
 = 1.1.3 – April 06, 2025 =
 
 - Fixed: "Week starts from" setting issue has been resolved.
@@ -368,46 +373,6 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 - Fixed: Resolved issues related to booking status updates.
 - Fixed: Fixed PayPal payment processing issues.
 - Fixed: Fixed various design issues and improved overall user interface.
-
-= 1.0.7 - 27/11/2024 =  
-
-- Added: Integration with Pabbly and Zapier Webhooks (Pro).
-- Added: One-to-one recurring Zoom meeting feature (Pro).
-- Added: An option for hosts to disconnect Google Calendar.
-- Added: Updated currency support.
-- Fixed: Resolved availability issue.
-- Fixed: Multi-language translation issue.
-- Fixed: Addressed Google Calendar integration issue.
-- Fixed: Resolved the issue with host email updates after user information changes.
-- Fixed: Multiple bugs and general issues addressed for improved stability.
-- Improvement: Enhanced Stripe integration functionality.
-
-= 1.0.6 - 20/11/2024 =  
-
-- Update: Updated the plugin's Readme.txt file information.
-- Fix: Addressed minor bugs and implemented general improvements
-
-= 1.0.5 - 17/11/2024 =  
-- Enhancements: Improved and Optimized overall codebase and design for a better user experience. 
-- Added: Appsero Integration
-
-= 1.0.4 - 16/11/2024 =  
-- Enhancements: Improved overall design and responsiveness for a smoother user experience.
-- Fixed: Resolved design issues with the question fields.
-- Fixed: Fixed recurring meeting email notification functionality.
-- Added: Pro license control introduced for better management of premium features.
-- Added: Integrations for Fluent CRM, Zoho CRM, WebHook, and Stripe (Pro version).
-
-= 1.0.3 - 13/11/2024 =  
-- Fixed: Compatibility issue with block themes
-- Fixed: Time zone handling corrected 
-- Improved: System stability enhanced for more reliable performance.
-
-= 1.0.2 - 11/11/2024 =  
-- Screenshots Updated
-
-= 1.0.1 - 11/11/2024 =  
-- Readme updated
 
 = 1.0.0 - 11/11/2024 =  
 - Initial stable release

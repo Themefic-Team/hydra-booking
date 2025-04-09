@@ -153,8 +153,10 @@ class HydraBookingShortcode {
 			return;
 		}
 
+		
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
 			$_tfhb_availability_settings = get_user_meta( $user_id, '_tfhb_host', true ); 
+			
 			if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] == 'settings'){
 				$host_settings_availability_id = $_tfhb_availability_settings['availability_id'];
 				$_tfhb_availability_settings =  get_option( '_tfhb_availability_settings' );
@@ -172,7 +174,10 @@ class HydraBookingShortcode {
 					$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
 				} 
 			}elseif (isset($_tfhb_availability_settings['availability']) &&  in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+				
 				$availability_data = $_tfhb_availability_settings['availability'][ $data['availability_id'] ];
+				
+				
 			} else {
 				$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
 			}
@@ -180,7 +185,6 @@ class HydraBookingShortcode {
 
 			$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
 		}
-
 		// Availability Range
 		$availability_range      = isset( $data['availability_range'] ) ? $data['availability_range'] : array();
 		$availability_range_type = isset( $data['availability_range_type'] ) ? $data['availability_range_type'] : array();
@@ -226,25 +230,26 @@ class HydraBookingShortcode {
 		wp_enqueue_script( 'tfhb-app-script-app', TFHB_URL . 'assets/app/js/app.js', array( 'jquery', 'tfhb-app-script', 'wp-i18n' ), TFHB_VERSION, true );
 		wp_set_script_translations( 'tfhb-app-script-app', 'hydra-booking'  );
 		
+		$data = array(
+			'meeting_id'              => $id,
+			'host_id'                 => $host_id,
+			'calander_available_time_slot'                 => array(),
+			'duration'                => $duration,
+			'payment_status'          => $payment_status,
+			'meeting_interval'        => $meeting_interval,
+			'buffer_time_before'      => $buffer_time_before,
+			'buffer_time_after'       => $buffer_time_after,
+			'availability'            => $availability_data,
+			'availability_range'      => $availability_range,
+			'availability_range_type' => $availability_range_type,
+		);
 		
 
 		// Localize Script
 		wp_localize_script(
 			'tfhb-app-script-app',
 			'tfhb_app_booking_' . $id,
-			array(
-				'meeting_id'              => $id,
-				'host_id'                 => $host_id,
-				'calander_available_time_slot'                 => array(),
-				'duration'                => $duration,
-				'payment_status'          => $payment_status,
-				'meeting_interval'        => $meeting_interval,
-				'buffer_time_before'      => $buffer_time_before,
-				'buffer_time_after'       => $buffer_time_after,
-				'availability'            => $availability_data,
-				'availability_range'      => $availability_range,
-				'availability_range_type' => $availability_range_type,
-			)
+			$data
 		);
 	}
 

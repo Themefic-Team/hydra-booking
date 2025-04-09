@@ -69,6 +69,8 @@ const closePopup = () => {
             <template #content>  
                 <p>
                     {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Mailchimp Account') }}
+
+                    <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/mailchimp/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                 </p>
                 <HbText  
                     v-model="mail_data.key"  
