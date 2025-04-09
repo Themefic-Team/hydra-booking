@@ -45,7 +45,7 @@ const closePopup = () => {
 
             <div class="cartbox-text">
                 <h3>{{ $tfhb_trans('Stripe') }}</h3>
-                <p>{{ $tfhb_trans('ntegrate Stripe API for secure payment processing.') }}</p>
+                <p>{{ $tfhb_trans('Integrate Stripe API for secure payment processing.') }}</p>
             </div>
         </div>
         <div v-if="$tfhb_is_pro == false  || $tfhb_license_status == false"  class="tfhb-integrations-single-block-btn tfhb-flexbox"> 
@@ -80,6 +80,8 @@ const closePopup = () => {
             <template #content>  
                 <p>
                     {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Stripe Account') }}
+                    
+                    <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/stripe/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                 </p>
                 <HbText  
                     v-model="stripe_data.public_key"  
