@@ -350,7 +350,7 @@ class HostsController {
 			'status'  => true,
 			'hosts'   => $HostsList,
 			'id'      => $hosts_id,
-			'message' => __( 'General Settings Updated Successfully', 'hydra-booking' ),
+			'message' => __( 'Host Created Successfully', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -386,7 +386,7 @@ class HostsController {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 		$user_meta  = get_userdata( $user_id );
 		$user_roles = ! empty( $user_meta->roles[0] ) ? $user_meta->roles[0] : '';
-		if ( ! empty( $user_roles ) && 'administrator' != $user_roles ) {
+		if ( ! empty( $user_roles ) && 'tfhb_host' == $user_roles ) {
 			$deleted = wp_delete_user( $user_id );
 		}
 
