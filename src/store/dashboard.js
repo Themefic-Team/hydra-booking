@@ -49,6 +49,8 @@ const Dashboard = reactive({
         to_date: '',
         statistics_days: 7,
     },
+
+ 
     // Other Information 
     async fetcDashboard() { 
 
