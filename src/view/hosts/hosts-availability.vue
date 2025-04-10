@@ -366,17 +366,21 @@ const deletePopupToggle = (key, id, user_id) => {
     <!-- Duration -->
 
     <!-- Settings Data -->
-    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24 tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'==host.availability_type">  
+    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24 tfhb-mt-24 tfhb-mb-24 tfhb-availability-details-wrap" v-if="Settings_avalibility && 'settings'== host.availability_type">  
         <div  class="tfhb-availability-schedule-single tfhb-schedule-heading tfhb-flexbox tfhb-full-width tfhb-justify-between">
             <div class="tfhb-admin-title"> 
-                <h3> {{ $tfhb_trans('Weekly hours') }} </h3>  
+                <h3> {{ $tfhb_trans('Schedule Preview') }} </h3>  
             </div>
             <div class="thb-admin-btn right"> 
                 <span>{{ Settings_avalibility.availability.time_zone }}</span> 
             </div> 
         </div>
         
-        <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-full-width tfhb-justify-between">
+        <div v-for="(time_slot, key) in Settings_avalibility.availability.time_slots" :key="key" class="tfhb-availability-schedule-single tfhb-flexbox tfhb-align-baseline tfhb-full-width tfhb-gap-16"
+            :class="{
+                'tfhb-justify-between' : 1,
+            }"
+        >
             <div class="tfhb-swicher-wrap  tfhb-flexbox tfhb-gap-8">
                  <!-- Checkbox swicher -->
                  <label class="switch">
@@ -386,7 +390,7 @@ const deletePopupToggle = (key, id, user_id) => {
                 <label class="tfhb-schedule-swicher" for="swicher"> {{time_slot.day}}</label>
                 <!-- Swicher -->
             </div>
-            <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
+            <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"  style="width: 75%;"> 
                 <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox">
                     <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         
@@ -413,10 +417,12 @@ const deletePopupToggle = (key, id, user_id) => {
                     </div>
                 </div>
             </div>
+            <div v-else class="tfhb-availability-schedule-wrap" style="width: 75%;"> 
+                <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
+            </div>
         </div>
-
-    
         
+ 
 
     </div>  
 

@@ -124,6 +124,45 @@ const openOverridesCalendarDate = () => {
 
     OverridesOpen.value = true;
 }
+
+// Add new time slot
+const addAvailabilityTime = (key) => {
+    Meeting.singleMeeting.MeetingData.availability_custom.time_slots[key].times.push({
+        start: '09:00',
+        end: '17:00',
+    });
+}
+
+// Remove time slot
+const removeAvailabilityTime = (key, tkey = null) => {
+    Meeting.singleMeeting.MeetingData.availability_custom.time_slots[key].times.splice(tkey, 1);
+}
+
+// Add new date slot
+const addAvailabilityDate = (key) => {
+    Meeting.singleMeeting.MeetingData.availability_custom.date_slots.push({
+        date: '',
+        available: '',
+        times: [
+            {
+                start: '09:00',
+                end: '17:00',
+            }
+        ]
+    });
+}
+const editAvailabilityDate = (key) => {
+    props.meeting.availability_custom.date_slots.forEach((available, qkey) => {
+        if (qkey === key) {
+            OverridesDates.key = key;
+            OverridesDates.date = available.date;
+            OverridesDates.available = available.available;
+            OverridesDates.times = available.times;
+            
+            OverridesOpen.value = true;
+        }
+    });
+}
  // Remove Single Availability
 const removeAvailabilityTDate = (key) => {
     Meeting.singleMeeting.MeetingData.availability_custom.date_slots.splice(key, 1);
@@ -322,6 +361,55 @@ const TfhbPrevNavigator = () => {
 // Meeting Type
 const AvailabilityTabs = (type) => {
     Meeting.singleMeeting.MeetingData.availability_type = type
+}
+
+
+const TfhbEndDataEvent = (key, skey, endTime) => {
+    const day = Meeting.singleMeeting.MeetingData.availability_custom.time_slots[key];
+    const nextDate = skey+1;
+    const NextdayData = day.times[nextDate] ? day.times[nextDate].start : '';
+
+    if(NextdayData){
+        if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
+            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+            return;
+        }
+    }else{
+        if (day.times[skey].start >= endTime) {
+            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+            return;
+        }
+    }
+    
+}
+const TfhbStartDataEvent = (key, skey, startTime) => {
+      
+    const day = Meeting.singleMeeting.MeetingData.availability_custom.time_slots[key];
+    const latestEndTime = getLatestEndTime(day);  
+
+    if (startTime >= latestEndTime){
+        toast.error("Your start time will be over the: " + latestEndTime, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+        return latestEndTime;
+    }
+}
+const getLatestEndTime = (day) => {
+    let latestEndTime = day.times[0].end;
+    for (let i = 1; i < day.times.length; i++) {
+        const endTime = day.times[i].end;
+        if (endTime > latestEndTime) {
+            latestEndTime = endTime;
+        }
+    }
+    return latestEndTime;
 }
 </script>
 
@@ -708,10 +796,10 @@ const AvailabilityTabs = (type) => {
 
                                     </div>
                                     <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
-                                        <button class="tfhb-availability-schedule-btn" @click="emit('availability-time',key)"><Icon name="Plus" size=20 /> </button> 
+                                        <button class="tfhb-availability-schedule-btn" @click="addAvailabilityTime(key)"><Icon name="Plus" size=20 /> </button> 
                                     </div>
                                     <div v-else class="tfhb-availability-schedule-clone-single">
-                                        <button class="tfhb-availability-schedule-btn" @click="emit('availability-time-del',key, tkey)"><Icon name="X" size=20 /> </button> 
+                                        <button class="tfhb-availability-schedule-btn" @click="removeAvailabilityTime(key, tkey)"><Icon name="X" size=20 /> </button> 
                                     </div>
                                 </div>
                                 
