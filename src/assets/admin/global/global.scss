@@ -2031,7 +2031,10 @@ button.question-edit-btn {
     }
 }
 
-
+// Color Picker Panel Z-Index
+.lv-overlaypanel{
+    z-index: 9999999 !important
+}
 // Host Profile Section
 .tfhb-host-profile-image-wrap{
     // height: 120px; 
