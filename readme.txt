@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -209,10 +209,11 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
-= 1.1.4 – April 09, 2025 =
+= 1.1.4 – April 10, 2025 =
 
 - Fixed: The availability issue has been resolved.
-- Updated: Documentation URL in the settings.
+- Fixed: Host selection notice issue has been resolved.
+- Updated: Documentation URL in the settings has been updated.
 
 = 1.1.3 – April 06, 2025 =
 
@@ -338,41 +339,6 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 - Fixed: Updated reason for cancellation functionality.
 - Fixed: Addressed Hydra Booking host role issue.
 - Improved: System stability for better performance.
-
-= 1.0.12 - 31/12/2024 =  
-
-- Updated: Readme.txt file and plugin information.
-- Fixed: Resolved minor compatibility issues with Contact Form 7.
-
-= 1.0.11 - 19/12/2024 =  
-
-- Improved: System stability for better performance.
-- Fixed: Mintor bugs and design issues resolved.
-
-= 1.0.10 - 03/12/2024 =  
-
-- Improved: System stability for better performance.
-- Improved: Accessibility control for host profile.
-
-= 1.0.9 - 03/12/2024 =  
-
-- Updated: Updated the readme.txt file for better clarity.
-- Fixed: Mintor bugs and design issues resolved.
-
-= 1.0.8 - 02/12/2024 =  
-
-- Introduced: Script based meeting sharing option for external websites.
-- Introduced: Host profiles, allowing hosts to manage bookings, availability, meetings, and more directly from their profile.
-- Improvement: Cancellation handling for a smoother user experience.
-- Improvement: Rescheduling feature for better flexibility.
-- Improvement: Optimized notification order for clarity and effectiveness.
-- Improvement: Added improvements for using attendee phone numbers as meeting locations.
-- Improvement: Refined booking frequency options for better control.
-- Improved overall system stability for a seamless experience.
-- Improvement: Improved cancellation email formatting and delivery.
-- Fixed: Resolved issues related to booking status updates.
-- Fixed: Fixed PayPal payment processing issues.
-- Fixed: Fixed various design issues and improved overall user interface.
 
 = 1.0.0 - 11/11/2024 =  
 - Initial stable release
