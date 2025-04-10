@@ -420,7 +420,7 @@ namespace HydraBooking\Admin\Controller;
             'Upload logo' =>  __('Upload logo', 'hydra-booking'),  
             'Upload Responsive logo' =>  __('Upload Responsive logo', 'hydra-booking'),  
             'Type login sub-title' =>  __('Type login sub-title', 'hydra-booking'),  
-            // 'License' =>  __('License', 'hydra-booking'),  
+            'Header Background' =>  __('Header Background', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
 

@@ -778,7 +778,7 @@ const closePopup = () => {
                                     <div class="tools-content" 
                                         v-show="contentVisibility.footer.social && emailBuilder.footer.content.social.status">
                                         <div class="tfhb-socail-repeater tfhb-flexbox tfhb-gap-8">
-                                            <div v-for="(social, skey) in emailBuilder.footer.content.social.data" :key="skey" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
+                                            <div v-for="(social, skey) in emailBuilder.footer.content.social.data" :key="skey" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-full-width">
                                                 <HbText 
                                                     v-model="social.title"
                                                     :placeholder="$tfhb_trans('Social Title')"  

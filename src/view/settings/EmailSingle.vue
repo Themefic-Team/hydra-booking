@@ -13,6 +13,8 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbButton from '@/components/form-fields/HbButton.vue'
 import Editor from 'primevue/editor';
+import HbFileUpload from '@/components/form-fields/HbFileUpload.vue'; 
+import HbColor from '@/components/form-fields/HbColor.vue'; 
 const route = useRoute();
 //  Load Time Zone 
 const skeleton = ref(false);
@@ -172,7 +174,9 @@ const emailBuilder = reactive({
         order: 0,
         status: 1,
         title: 'Header',
-        content: '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>'
+        content: '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+        logo: '',
+        background: '#215732'
     },
     gratitude: {
         order: 1,
@@ -184,6 +188,7 @@ const emailBuilder = reactive({
         order: 2,
         status: 1,
         title: 'Meeting Details',
+        border_color: '#C0D8C4',
         content: {
             data_time: {
                 status: 1,
@@ -216,6 +221,7 @@ const emailBuilder = reactive({
         order: 3,
         status: 1,
         title: 'Host Details',
+        border_color: '#C0D8C4',
         content: {
             name: {
                 status: 1,
@@ -244,6 +250,7 @@ const emailBuilder = reactive({
         order: 5,
         status: 1,
         title: 'Buttons',
+        border_color: '#C0D8C4',
         content: {
             description: {
                 status: 1,
@@ -406,13 +413,20 @@ const emailTemplate = computed(() => {
         const section = sortedEmailBuilder.value[key];
         if (section.status && key === 'header') {
             emailContent += `<tr>
-                <td bgcolor="#215732" style="padding: 16px 32px; text-align: left; border-radius: 8px 8px 0 0;">
+                <td bgcolor="${emailBuilder.header.background}" style="padding: 16px 32px; text-align: left; border-radius: 8px 8px 0 0;">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                        <tr>
-                            <td style="vertical-align: middle;">
-                                ${emailBuilder.header.content}
-                            </td>
-                        </tr>
+                        <tr>`;
+                            if (emailBuilder.header.logo) {
+                                 emailContent += `<td style="vertical-align: middle; width: 36px; padding-right: 8px">
+                                    <img src="${emailBuilder.header.logo}" alt="HydraBooking"  style="max-height: 36px;display: block;">
+                                </td>`;
+                            }
+                            if (emailBuilder.header.content) {
+                                emailContent += `<td style="vertical-align: middle;">
+                                    ${emailBuilder.header.content}
+                                </td>`;
+                            }
+                    emailContent += `</tr>
                     </table>
                 </td>
             </tr>`;
@@ -426,7 +440,7 @@ const emailTemplate = computed(() => {
             emailContent += `
                 <tr>
                     <td style="padding: 16px 32px;">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; background: #fff;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.meeting_details.border_color}; border-radius: 8px; padding: 24px; background: #fff;">
                             <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.meeting_details.title}</td></tr>
             `;
 
@@ -459,7 +473,7 @@ const emailTemplate = computed(() => {
             emailContent += `
                 <tr>
                     <td style="padding: 16px 32px">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed #C0D8C4; border-radius: 8px; padding: 24px; background: #fff;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.host_details.border_color}; border-radius: 8px; padding: 24px; background: #fff;">
                             <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.host_details.title}</td></tr>
             `;
 
@@ -509,7 +523,7 @@ const emailTemplate = computed(() => {
             
         }
         if (section.status && key === 'cancel_reschedule') {
-            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.cancel_reschedule.border_color};border-bottom: 1px dashed ${emailBuilder.cancel_reschedule.border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
                 if (emailBuilder.cancel_reschedule.content.description.content) {
                     emailContent += ` <tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
@@ -519,10 +533,10 @@ const emailTemplate = computed(() => {
                     emailContent += `<tr>
                     <td style="font-size: 15px; padding-bottom: 24px;">`;
                         if (emailBuilder.cancel_reschedule.content.cancel.content){
-                            emailContent += `<a href="${emailBuilder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
+                            emailContent += `<a href="${emailBuilder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.cancel_reschedule.border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
                         }
                         if (emailBuilder.cancel_reschedule.content.reschedule.content){
-                            emailContent += `<a href="${emailBuilder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
+                            emailContent += `<a href="${emailBuilder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.cancel_reschedule.border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
                         }
                     emailContent += `</td></tr>`;
                 }
@@ -731,6 +745,27 @@ const addSocial = (key) => {
                 <!-- Dynamic Content header/gratitude/instructions -->
                 <div class="tools-content" v-show="contentVisibility[key] && emailBuilder[key].status" v-if="key === 'header' || key === 'gratitude' || key === 'instructions'">
                     <div class="tfhb-shortcode-box tfhb-full-width">
+                        <div class="tfhb-header-logo">
+                            <HbFileUpload
+                                name="logo"
+                                v-model= "emailBuilder[key].logo"
+                                :label = "$tfhb_trans('Choose images or drag & drop it here.')"
+                                :subtitle = "$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+                                :btn_label = "$tfhb_trans('Upload logo')"
+                                file_size ="5"
+                                file_format ="jpg,jpeg,png"
+                                v-if="key === 'header'"
+                            />
+                        </div>
+                        <div class="tfhb-header-bg">
+                            <HbColor  
+                                v-model= "emailBuilder[key].background" 
+                                :label="$tfhb_trans('Header Background')"
+                                name="background"
+                                selected = "1" 
+                                v-if="key === 'header'"
+                            />  
+                        </div>
                         <div @click="TfhbOnFocus">
                             <Editor 
                                 v-model="emailBuilder[key].content"  
@@ -752,6 +787,14 @@ const addSocial = (key) => {
                         v-model="emailBuilder[key].title"  
                         :placeholder="$tfhb_trans('Heading')"    
                     />
+                    <div class="tfhb-header-bg">
+                        <HbColor  
+                            v-model= "emailBuilder[key].border_color" 
+                            :label="$tfhb_trans('Border Color')"
+                            name="border_color"
+                            selected = "1" 
+                        />  
+                    </div>
                     <div class="single-tools" v-for="(section, subKey) in emailBuilder[key].content" :key="subKey">
                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
                             <Icon name="GripVertical" @click="ContentBox(key, subKey)" :width="20"/> 
@@ -786,6 +829,14 @@ const addSocial = (key) => {
                 <!-- Dynamic Content cancel_reschedule -->
                 <div class="tools-content" v-show="contentVisibility[key].main && emailBuilder[key].status" v-if="key === 'cancel_reschedule'">
                     
+                    <div class="tfhb-header-bg">
+                        <HbColor  
+                            v-model= "emailBuilder[key].border_color" 
+                            :label="$tfhb_trans('Border Color')"
+                            name="border_color"
+                            selected = "1" 
+                        /> 
+                    </div>
                     <!-- Description -->
                     <div class="single-tools">
                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
@@ -907,7 +958,7 @@ const addSocial = (key) => {
                         <div class="tools-content" 
                             v-show="contentVisibility.footer.social && emailBuilder.footer.content.social.status">
                             <div class="tfhb-socail-repeater tfhb-flexbox tfhb-gap-8">
-                                <div v-for="(social, skey) in emailBuilder.footer.content.social.data" :key="skey" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
+                                <div v-for="(social, skey) in emailBuilder.footer.content.social.data" :key="skey" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-full-width">
                                     <HbText 
                                         v-model="social.title"
                                         :placeholder="$tfhb_trans('Social Title')"  
