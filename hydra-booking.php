@@ -60,7 +60,6 @@ class THB_INIT {
 
  
 
-
 	public function init() {
 
 		
