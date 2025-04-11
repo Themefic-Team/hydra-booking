@@ -209,6 +209,10 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
+= 1.1.5 – April 11, 2025 =
+
+- Fixed: The Update issue has been resolved.
+
 = 1.1.4 – April 10, 2025 =
 
 - Fixed: The availability issue has been resolved.
