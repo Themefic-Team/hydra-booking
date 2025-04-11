@@ -55,31 +55,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 				add_action( 'init', [$this,"init_action_handler"]);
 
 			}
-			if(function_exists("add_filter")) {
-				if($this->is_theme){
-					add_filter('pre_set_site_transient_update_themes', [$this, "plugin_update"]);
-					add_filter('themes_api', [$this, 'check_update_info'], 10, 3);
-					add_action('admin_menu',function(){
-						add_theme_page( 'Update Check', 'Update Check', 'edit_theme_options', 'update_check', [$this,"theme_force_update"] );
-					},999);
-				}else{
-					add_filter('pre_set_site_transient_update_plugins', [$this, "plugin_update"]);
-					add_filter('plugins_api', [$this, 'check_update_info'], 10, 3);
-					add_filter( 'plugin_row_meta', function($links, $plugin_file ){
-						if (  plugin_basename( $this->plugin_file ) == $plugin_file ) {
-							$links[] = " <a class='edit coption' href='" . esc_url( admin_url( 'admin-post.php' ) . '?action=hydra-booking_fupc' ) . "'>Update Check</a>";
-						}
-						return $links;
-					}, 10, 2 );
-					add_action( "in_plugin_update_message-".plugin_basename( $this->plugin_file ), [$this,'update_message_cb'], 20, 2 );
-				}
-
-				add_action( 'upgrader_process_complete', function($upgrader_object, $options){
-					update_option('_site_transient_update_plugins','');
-					update_option('_site_transient_update_themes','');
-					set_site_transient('update_themes', null);
-				},10,2);
-			}
 
 
 		}
