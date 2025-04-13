@@ -1047,13 +1047,11 @@ class MeetingController {
 		// Custom Availability
 		if (isset($request['availability_custom'])) {
 			$availability_custom = $request['availability_custom'];
-		
 			// Remove empty date_slots
 			if (isset($availability_custom['date_slots'])) {
 				$availability_custom['date_slots'] = array_filter($availability_custom['date_slots'], function ($slot) {
 					return !empty($slot['date']); // Keep only if 'date' is not empty
 				});
-		
 				// Re-index array to maintain sequential keys (optional)
 				$availability_custom['date_slots'] = array_values($availability_custom['date_slots']);
 			}

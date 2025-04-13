@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.5
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -209,6 +209,29 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
+= 1.1.4 – April 10, 2025 =
+
+- Fixed: The availability issue has been resolved.
+- Fixed: Host selection notice issue has been resolved.
+- Updated: Documentation URL in the settings has been updated.
+
+= 1.1.3 – April 06, 2025 =
+
+- Fixed: "Week starts from" setting issue has been resolved.
+- Improved: System stability for improved performance.
+
+= 1.1.2 – April 02, 2025 =
+
+- Added: iCal export feature introduced.
+- Added: Shortcode generator feature introduced.
+- Fixed: The integration auto-hide issue has been resolved.
+- Fixed: The date overrides issue has been resolved.
+- Fixed: Group meeting creation issue in the PRO version.
+
+= 1.1.1 – March 24, 2025 =
+
+- Fixed: The availability issue has been resolved.
+
 = 1.1.0 – March 20, 2025 =
 
 - Introduced: Frontend dashboard for host and admin.
@@ -316,81 +339,6 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 - Fixed: Updated reason for cancellation functionality.
 - Fixed: Addressed Hydra Booking host role issue.
 - Improved: System stability for better performance.
-
-= 1.0.12 - 31/12/2024 =  
-
-- Updated: Readme.txt file and plugin information.
-- Fixed: Resolved minor compatibility issues with Contact Form 7.
-
-= 1.0.11 - 19/12/2024 =  
-
-- Improved: System stability for better performance.
-- Fixed: Mintor bugs and design issues resolved.
-
-= 1.0.10 - 03/12/2024 =  
-
-- Improved: System stability for better performance.
-- Improved: Accessibility control for host profile.
-
-= 1.0.9 - 03/12/2024 =  
-
-- Updated: Updated the readme.txt file for better clarity.
-- Fixed: Mintor bugs and design issues resolved.
-
-= 1.0.8 - 02/12/2024 =  
-
-- Introduced: Script based meeting sharing option for external websites.
-- Introduced: Host profiles, allowing hosts to manage bookings, availability, meetings, and more directly from their profile.
-- Improvement: Cancellation handling for a smoother user experience.
-- Improvement: Rescheduling feature for better flexibility.
-- Improvement: Optimized notification order for clarity and effectiveness.
-- Improvement: Added improvements for using attendee phone numbers as meeting locations.
-- Improvement: Refined booking frequency options for better control.
-- Improved overall system stability for a seamless experience.
-- Improvement: Improved cancellation email formatting and delivery.
-- Fixed: Resolved issues related to booking status updates.
-- Fixed: Fixed PayPal payment processing issues.
-- Fixed: Fixed various design issues and improved overall user interface.
-
-= 1.0.7 - 27/11/2024 =  
-
-- Added: Integration with Pabbly and Zapier Webhooks (Pro).
-- Added: One-to-one recurring Zoom meeting feature (Pro).
-- Added: An option for hosts to disconnect Google Calendar.
-- Added: Updated currency support.
-- Fixed: Resolved availability issue.
-- Fixed: Multi-language translation issue.
-- Fixed: Addressed Google Calendar integration issue.
-- Fixed: Resolved the issue with host email updates after user information changes.
-- Fixed: Multiple bugs and general issues addressed for improved stability.
-- Improvement: Enhanced Stripe integration functionality.
-
-= 1.0.6 - 20/11/2024 =  
-
-- Update: Updated the plugin's Readme.txt file information.
-- Fix: Addressed minor bugs and implemented general improvements
-
-= 1.0.5 - 17/11/2024 =  
-- Enhancements: Improved and Optimized overall codebase and design for a better user experience. 
-- Added: Appsero Integration
-
-= 1.0.4 - 16/11/2024 =  
-- Enhancements: Improved overall design and responsiveness for a smoother user experience.
-- Fixed: Resolved design issues with the question fields.
-- Fixed: Fixed recurring meeting email notification functionality.
-- Added: Pro license control introduced for better management of premium features.
-- Added: Integrations for Fluent CRM, Zoho CRM, WebHook, and Stripe (Pro version).
-
-= 1.0.3 - 13/11/2024 =  
-- Fixed: Compatibility issue with block themes
-- Fixed: Time zone handling corrected 
-- Improved: System stability enhanced for more reliable performance.
-
-= 1.0.2 - 11/11/2024 =  
-- Screenshots Updated
-
-= 1.0.1 - 11/11/2024 =  
-- Readme updated
 
 = 1.0.0 - 11/11/2024 =  
 - Initial stable release

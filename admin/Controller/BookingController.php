@@ -14,6 +14,7 @@ use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\BookingMeta;
+use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks;
 
 class BookingController {
 
@@ -188,10 +189,10 @@ class BookingController {
 		// Export Booking Data as csv
 		register_rest_route(
 			'hydra-booking/v1',
-			'/booking/export-csv',
+			'/booking/export-as',
 			array(
 				'methods'  => 'POST',
-				'callback' => array( $this, 'exportBookingDataCSV' ),
+				'callback' => array( $this, 'exportBookingDataAs' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
@@ -1104,7 +1105,7 @@ class BookingController {
 		);
 		 $bookingsList = $booking->getBookingWithAttendees(  
 			$where,
-			limit: 1,  
+			1,  
 		); 
 		
 		if( empty( $bookingsList ) ){
@@ -1492,7 +1493,7 @@ class BookingController {
 	}
 
 	// Export Booking Data as CSV.
-	public function exportBookingDataCSV() {
+	public function exportBookingDataAs() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		// 2024-07-03 23:48:25
 		$time         = '00:00:00';
@@ -1523,10 +1524,10 @@ class BookingController {
 			$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( 'first day of last year', strtotime( $current_time ) ) );
 		}
 		if ( $request['date_range'] == 'all' ) {
-			$file_name = 'booking-data.csv';
+			$file_name = 'booking-data';
 
 		} else {
-			$file_name = 'booking-data-' . gmdate( 'Y-m-d', strtotime( $previous_date ) ) . '-' . gmdate( 'Y-m-d', strtotime( $current_date ) ) . '.csv';
+			$file_name = 'booking-data-' . gmdate( 'Y-m-d', strtotime( $previous_date ) ) . '-' . gmdate( 'Y-m-d', strtotime( $current_date ) ) . '';
 
 		}
 
@@ -1537,62 +1538,74 @@ class BookingController {
 			$host     = new Host();
 			$HostData = $host->getHostByUserId( $current_user_id ); 
 	 
-
-		if ( $request['date_range'] == 'all' ) {
-			$bookingsList = $booking->export(
-				array( 
-					array(
-						'column'   => 'host_id',
-						'operator' => '=',
-						'value'    => $HostData->id,
-					),
-				)
-			);
-		} else {
-			$bookingsList = $booking->export(
-				array(
-					array(
-						'column'   => 'created_at',
-						'operator' => 'BETWEEN',
-						'value'    => "'" . $previous_date . "' AND  '" . $current_date . "'",
-					),
-					array(
-						'column'   => 'host_id',
-						'operator' => '=',
-						'value'    => $HostData->id,
-					),
-				), 
-			);
-		}
-
-		$booking_array  = array();
-		$booking_column = array();
-		foreach ( $bookingsList as $key => $book ) {
-			if ( $key == 0 ) {
-				foreach ( $book as $c_key => $c_value ) {
-					$booking_column[] = $c_key;
-				}
-			}
-			$booking_array[] = (array) $book;
+		$where = array();
+		if($current_user_role != 'administrator'){
+			$where[] = array('host_id', '=', $HostData->id);
 		} 
+		if ( $request['date_range'] == 'all' ) {
+			
+			$bookingsList = $booking->getBookingWithAttendees($where);
+		} else { 
+			$where[] = array('created_at', 'BETWEEN', [$previous_date, $current_date]);
+			 $bookingsList = $booking->getBookingWithAttendees(  
+				$where,
+				NULL,
+				'DESC',
+			);  
+		}
+ 
+		
+		if('CSV' == $request['type']){
+			$booking_array  = array();
+			$booking_column = array();
+			foreach ( $bookingsList as $key => $book ) {
+				
+				if ( $key == 0 ) {
+					foreach ( $book as $c_key => $c_value ) {
+						$booking_column[] = $c_key;
+					}
+				}
+				$book->attendees = json_encode($book->attendees); 
+				$booking_array[] = (array) $book;
+			} 
 
-		ob_start();
-		$file = fopen( 'php://output', 'w' );
-		fputcsv( $file, $booking_column );
+			ob_start();
+			$file = fopen( 'php://output', 'w' );
+			fputcsv( $file, $booking_column );
 
-		foreach ( $booking_array as $booking ) {
-			fputcsv( $file, $booking );
+			foreach ( $booking_array as $booking ) {
+				fputcsv( $file, $booking );
+			}
+
+			fclose( $file );
+			$data = ob_get_clean();
+			// Return response
+			$data = array(
+				'status'    => true,
+				'data'      => $data,
+				'file_name' => $file_name.'.csv',
+				'message'   =>  __('Booking Data Exported Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
+		}elseif('iCal' == $request['type']){
+			// Set the correct headers for .ics file
+			$BookingBookmarks = new BookingBookmarks();
+			$ical = $BookingBookmarks->generateFullBookingICS($bookingsList);
+			
+			 
+			// Return response
+			$data = array(
+				'status'    => true,
+				'data'      => $ical,
+				'file_name' => $file_name.'.ics',
+				'message'   =>  __('Booking Data Exported Successfully!', 'hydra-booking'),
+			);
+			return rest_ensure_response( $data );
+
 		}
 
-		fclose( $file );
-		$data = ob_get_clean();
-		// Return response
-		$data = array(
-			'status'    => true,
-			'data'      => $data,
-			'file_name' => $file_name,
-			'message'   =>  __('Booking Data Exported Successfully!', 'hydra-booking'),
-		);
-		return rest_ensure_response( $data );
+		
 	}
+
+	
 }

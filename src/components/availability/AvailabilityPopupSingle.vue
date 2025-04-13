@@ -236,14 +236,15 @@ const getLatestEndTime = (day) => {
 
 const TfhbStartDataEvent = (key, skey, startTime) => {
      
-    if(skey == 0){
-        return;
-    }
+ 
     const day = props.availabilityDataSingle.time_slots[key];
-    const latestEndTime = getLatestEndTime(day);
+    const latestEndTime = getLatestEndTime(day); 
 
-    if (startTime <= latestEndTime) {
-        toast.error("Your start time will be over the: " + latestEndTime);
+    if (startTime >= latestEndTime) {
+        toast.error("Your start time will be over the: " + latestEndTime, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
         return latestEndTime;
     }
 }
@@ -255,12 +256,18 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
             return;
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
             return;
         }
     }
@@ -382,6 +389,7 @@ const filteredDateSlots = computed(() => {
                                         />     
 
                                     </div>
+                                   
                                     <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
                                         <button class="tfhb-availability-schedule-btn" @click="addAvailabilityTime(key)"><Icon name="Plus" size=20 /> </button> 
                                     </div>
@@ -390,6 +398,9 @@ const filteredDateSlots = computed(() => {
                                     </div>
                                 </div>
                                 
+                            </div>
+                            <div v-else class="tfhb-availability-schedule-wrap" style="width: 75%;"> 
+                                <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
                             </div>
                         </div> 
                     </div>  
@@ -403,6 +414,7 @@ const filteredDateSlots = computed(() => {
                             </div> 
                         </div>
                         
+
                         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                             <div class="tfhb-flexbox">
                                 <div class="tfhb-overrides-date">

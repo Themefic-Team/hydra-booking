@@ -76,6 +76,8 @@ const closePopup = () => {
             <template #content>  
                 <p>
                     {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Zoho Account') }}
+                    <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/zohocrm/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
+                    
                 </p>
                 <HbText  
                     v-model="zoho_data.client_id"  

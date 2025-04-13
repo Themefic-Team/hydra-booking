@@ -1,0 +1,87 @@
+.tfhb-meeting-list, .tfhb-hosts-list, .tfhb-category-list{
+    // padding: 50px 0px;
+    h1, h2, h3, h4, p{
+        margin: 0;
+    } 
+    a{ 
+        text-decoration: none !important;
+    }
+    max-width: 800px !important;
+
+    margin: 0 auto;
+    &__heading {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    &__wrap{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px; 
+        width: 100% !important;
+        margin-top: 24px;  
+        &__items{ 
+            display: flex; 
+            gap: 16px;
+            padding: 16px; 
+            width: 100%;
+            // border: 1px solid #C0D8C4;
+            border-radius: 12px;
+            background-color: #F9FBF9;
+            align-items: center;
+            justify-content: space-between;
+            &__wrap{
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                &__img {
+                    img {
+                        max-width: 84px;
+                        border-radius: 8px;
+                    }
+                }
+                &__content {
+                    h3 {
+                        font-size: 17px;
+                        font-weight: 700;
+                        a{
+                            color: #141915 !important;
+                        }
+                    }
+                    p {
+                        font-size: 15px;
+                    }
+                    &__tags {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 24px;
+                        margin-top: 8px;
+                        span {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            flex-wrap: wrap;
+                            gap: 8px; 
+                            border-radius: 12px;
+                            font-size: 15px;
+                            // background-color: #C0D8C4;
+                            color: #273F2B;
+                        }
+                    } 
+                } 
+                
+            }
+           
+        }
+    }
+}
+.tfhb-meeting-archive{
+    padding: 50px 0px;
+}
+.tfhb-hosts-list, .tfhb-category-list{
+    &__wrap{
+        &__items{ 
+            width: calc(50% - 16px);
+        }
+        
+    }
+}
