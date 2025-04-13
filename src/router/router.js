@@ -130,6 +130,12 @@ const routes = [
                 meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-list.vue')
             }, 
+            {
+                path: 'import',
+                name: 'MeetingsExport',
+                meta: { Capabilities: 'tfhb_manage_meetings' },
+                component: () => import('../view/meetings/meetings-import.vue')
+            }, 
             
             {
                 path: 'single/:id',

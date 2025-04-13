@@ -3,7 +3,10 @@ import axios from 'axios';
 import { toast } from "vue3-toastify"; 
 import Papa from 'papaparse';
 const importExport = reactive({
-    skeleton: false,
+    skeleton: false, 
+    progress: 0,
+    importing: false,
+    progressInterval: null,
     booking: {
         column: {},  
         import_column: {},  
@@ -14,9 +17,11 @@ const importExport = reactive({
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
     meeting: {
+        steps: 'start',
         column: {},  
         import_column: {},  
         import_file: null,
+        is_overwrite: false,
         import_data: {},
         rearrange_column: {},
         import_status: false,
@@ -115,7 +120,8 @@ const importExport = reactive({
     },
     // Other Information 
     async readMeetingImportData(event) {   
-        const file = event.target.files[0];
+        const file = event;
+        // const file = event.target.files[0];
         Papa.parse(file, { 
             header: false,
             json: true,
@@ -140,6 +146,15 @@ const importExport = reactive({
     },
     // Run The booking import
     async importMeeting() { 
+        this.importing = true;
+        this.progress = 0;
+        // Simulate progress
+        this.progressInterval = setInterval(() => {
+            if (this.progress < 90) {
+            this.progress += 1;
+            }
+        }, 100);
+
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-meeting', {
                 data: this.meeting.import_data,
@@ -152,17 +167,28 @@ const importExport = reactive({
             } );
     
             if (response.data.status) {  
+                this.progress = 100;
+                this.meeting.steps = 'completed';
+                this.importing = false;
+                // scrool to top
+                window.scrollTo(0, 0);
                 toast.success(response.data.message, {
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });   
             }else{
+
+                this.importing = false;
+                this.progress = 100;
                 toast.error(response.data.message, {
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
             }
         } catch (error) {
+
+            this.importing = false;
+            this.progress = 100;
             console.log(error);
         }  
     },
