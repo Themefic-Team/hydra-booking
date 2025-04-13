@@ -1,7 +1,7 @@
 <script setup> 
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
-import { ref, reactive, onBeforeMount, watch, computed, nextTick } from 'vue';
+import { ref, reactive, watch, computed, nextTick } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
 
@@ -105,7 +105,7 @@ const contentVisibility = reactive({
 const defaultEmailBuilder = reactive({ 
     header: {
         order: 0,
-        status: 0,
+        status: 1,
         title: 'Header',
         content: '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
         logo: '',
@@ -113,13 +113,13 @@ const defaultEmailBuilder = reactive({
     },
     gratitude: {
         order: 1,
-        status: 0,
+        status: 1,
         title: 'Greetings',
         content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
     },
     meeting_details: {
         order: 2,
-        status: 0,
+        status: 1,
         title: 'Meeting Details',
         border_color: '#C0D8C4',
         content: {
@@ -152,7 +152,7 @@ const defaultEmailBuilder = reactive({
     },
     host_details: {
         order: 3,
-        status: 0,
+        status: 1,
         title: 'Host Details',
         border_color: '#C0D8C4',
         content: {
@@ -175,13 +175,13 @@ const defaultEmailBuilder = reactive({
     },
     instructions: {
         order: 4,
-        status: 0,
+        status: 1,
         title: 'Instructions',
         content: '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
     },
     cancel_reschedule: {
         order: 5,
-        status: 0,
+        status: 1,
         title: 'Buttons',
         border_color: '#C0D8C4',
         content: {
@@ -201,7 +201,7 @@ const defaultEmailBuilder = reactive({
     },
     footer: {
         order: 6,
-        status: 0,
+        status: 1,
         title: 'Footer',
         content: {
             description: {
@@ -229,11 +229,7 @@ const defaultEmailBuilder = reactive({
     },
 });
 
-const emailBuilder = reactive(
-  props.data.builder && Object.keys(props.data.builder).length 
-    ? props.data.builder 
-    : defaultEmailBuilder
-);
+const emailBuilder = reactive({...defaultEmailBuilder});
 
 const TfhbOnFocus = (event) => {
     nextTick(() => {
@@ -254,7 +250,7 @@ const TfhbOnFocus = (event) => {
 }
 
 const ContentBox = (key, subKey = null) => {
-    const builder = emailBuilder.value;
+    const builder = emailBuilder;
     if (!contentVisibility.hasOwnProperty(key)) return; // Ensure the key exists
 
     if (subKey) {
@@ -451,7 +447,7 @@ const emailTemplate = computed(() => {
         }
         if (section.status && key === 'cancel_reschedule') {
             emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.cancel_reschedule.border_color};border-bottom: 1px dashed ${emailBuilder.cancel_reschedule.border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
-                if (emailBuilder.cancel_reschedule.content.description.content) {
+                if (emailBuilder.cancel_reschedule.content.description.content && emailBuilder.cancel_reschedule.content.description.status) {
                     emailContent += ` <tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
                     </tr>`;
@@ -459,10 +455,10 @@ const emailTemplate = computed(() => {
                 if (emailBuilder.cancel_reschedule.content.cancel.content || emailBuilder.cancel_reschedule.content.reschedule.content) {
                     emailContent += `<tr>
                     <td style="font-size: 15px; padding-bottom: 24px;">`;
-                        if (emailBuilder.cancel_reschedule.content.cancel.content){
+                        if (emailBuilder.cancel_reschedule.content.cancel.content && emailBuilder.cancel_reschedule.content.cancel.status){
                             emailContent += `<a href="${emailBuilder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.cancel_reschedule.border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
                         }
-                        if (emailBuilder.cancel_reschedule.content.reschedule.content){
+                        if (emailBuilder.cancel_reschedule.content.reschedule.content && emailBuilder.cancel_reschedule.content.reschedule.status){
                             emailContent += `<a href="${emailBuilder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.cancel_reschedule.border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
                         }
                     emailContent += `</td></tr>`;
@@ -475,12 +471,12 @@ const emailTemplate = computed(() => {
                 <td align="center">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tr>`;
-                            if (emailBuilder.footer.content.description.content) {
+                            if (emailBuilder.footer.content.description.content && emailBuilder.footer.content.description.status) {
                             emailContent += `<td align="left">
                                 ${emailBuilder.footer.content.description.content}
                             </td>`;
                             }
-                            if (emailBuilder.footer.content.social) {
+                            if (emailBuilder.footer.content.social.data && emailBuilder.footer.content.social.status) {
                             emailContent += `<td align="right" class="social" style="vertical-align: baseline;">
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0">`;
                                     emailBuilder.footer.content.social.data.forEach(social => {
@@ -534,6 +530,17 @@ const formatLabel = (key) => {
     };
     return labels[key] || key;
 };
+
+watch(() => props.data.builder, (newBuilder) => {
+  if (newBuilder && Object.keys(newBuilder).length) {
+    Object.assign(emailBuilder, JSON.parse(JSON.stringify(newBuilder)));
+  } else {
+    const defaults = JSON.parse(JSON.stringify(defaultEmailBuilder));
+    Object.assign(emailBuilder, defaults);
+    props.data.builder = defaults;
+    props.data.body = emailTemplate.value;
+  }
+}, { immediate: true });
 
 watch(emailTemplate, (newTemplate) => {
     props.data.body = newTemplate;
