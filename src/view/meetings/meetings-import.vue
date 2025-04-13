@@ -33,7 +33,8 @@ const clickToNextMapping = () => {
     // file is empty 
     if(importExport.meeting.import_file == '' || importExport.meeting.import_file == null){
         toast.error('Please choose file to import!', {
-            autoClose: 2000,
+            position: 'bottom-right', // Set the desired position
+            autoClose: 1500,
         });
         return false;
     }
@@ -52,8 +53,8 @@ const clickToNextMapping = () => {
     <!-- Getting start with imported data -->
     <div v-if="importExport.meeting.steps =='start'" class="tfhb-import-wrap tfhb-flexbox tfhb-gap-24">     
         <div class="tfhb-admin-title" > 
-            <h3>{{ $tfhb_trans('Let’s get your data in!') }}</h3> 
-            <p>{{ $tfhb_trans('Need a sample template? ') }} <a href="#">Download one</a> here.</p>
+            <h3>{{ $tfhb_trans(`Let’s get your data in!`) }}</h3> 
+            <p>{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p>
         </div>
         <HbFileUpload
             name="dashboard_logo"
@@ -96,16 +97,16 @@ const clickToNextMapping = () => {
         <div class="tfhb-flexbox tfhb-gap-12 tfhb-full-width">
             <div class="tfhb-import-export-column-wrap tfhb-flexbox  tfhb-gap-4 tfhb-justify-between tfhb-full-width">
                 
-                <div style="width:43%" ><h4>Column in your file</h4></div>
+                <div style="width:43%" ><h4>{{$tfhb_trans('Column in your file')}}</h4></div>
                 <div style="width:6%" ></div>
-                <div style="width:43%" ><h4>Attributes</h4></div>
+                <div style="width:43%" ><h4>{{$tfhb_trans('Attributes')}}</h4></div>
                 <div class="import-column-status"></div>
                 
             </div>
             <div class="tfhb-import-export-column-wrap tfhb-flexbox  tfhb-gap-4 tfhb-justify-between tfhb-full-width" v-for="(item, index) in importExport.meeting.import_column">
 
                 <div style="width:43%" class="tfhb-import-export-column-name"><span>{{ item }}</span></div>
-                <div style="width:6%" class="import-column-arrow"><Icon name="MoveRight" /></div>
+                <div style="width:6%" class="import-column-arrow"><Icon name="MoveRight" /></div>  
                 <HbDropdown   
                     v-model="importExport.meeting.rearrange_column[item]"    
                     width="43"
@@ -113,11 +114,20 @@ const clickToNextMapping = () => {
                     :placeholder="$tfhb_trans('Select Time Format')"   
                     :option = "importExport.meeting.column"  
                 /> 
-                <div class="import-column-status">
+                <!-- in array importExport.meeting.column is item -->
+                <div v-if="importExport.meeting.column.some(field => field.name === item)" class="import-column-status ">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#E6FAEE"/>
                         <path d="M9 12L11 14L15 10" stroke="#17723F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
+                </div>
+                <div v-else class="import-column-status ">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#FEECEE"/>
+                        <path d="M15 9L9 15" stroke="#AC0C22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 9L15 15" stroke="#AC0C22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+
                 </div>
                 
             </div>
@@ -125,15 +135,17 @@ const clickToNextMapping = () => {
         
         <div class="tfhb-import-btn-wrap tfhb-flexbox tfhb-justify-end tfhb-full-width">
             <div class="tfhb-flexbox tfhb-gap-8">
-                <span v-if="importExport.importing" >Importing.. {{ importExport.progress }} %</span>
+                <!--   -->
+                <h3 v-if="importExport.importing"> {{ $tfhb_trans('Importing..') }}  {{ importExport.progress }} %</h3>
                 <HbButton 
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                     @click="importExport.importMeeting()"
-                    :buttonText="$tfhb_trans('Go to dashboard')"
+                    :buttonText="$tfhb_trans('Looks Good, Start Import')"
                     icon="ChevronRight"   
                     hover_icon="ArrowRight"
-                    :pre_loader="importExport.import_pre_loader"
+                    :pre_loader="importExport.importing"
                     :hover_animation="true" 
+                    :disabled="importExport.importing"
                     icon_position = 'right'
                 /> 
             </div>
@@ -152,15 +164,13 @@ const clickToNextMapping = () => {
         </div> 
         
         <div class="tfhb-import-btn-wrap tfhb-flexbox tfhb-justify-center tfhb-full-width">
-            <div>
-                <span v-if="importExport.importing">Importing.. {{ importExport.progress }} %</span>
+            <div> 
                 <HbButton 
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="readImportFileData"
-                    :buttonText="$tfhb_trans('Go to dashboard')"
+                    @click="router.push({ name: 'MeetingsList' })"
+                    :buttonText="$tfhb_trans('Go to meetings')"
                     icon="ChevronRight"   
-                    hover_icon="ArrowRight"
-                    :pre_loader="importExport.import_pre_loader"
+                    hover_icon="ArrowRight" 
                     :hover_animation="true" 
                     icon_position = 'right'
                 /> 
@@ -182,6 +192,12 @@ const clickToNextMapping = () => {
         background: var(--Surface-Secondary, #FFF);
         .tfhb-admin-title{
             margin-bottom: 0 !important;
+            p {
+                a{
+                    color: #2E6B38;
+                    text-decoration: underline !important;
+                }
+            }
         }
         .tfhb-import-export-column-wrap{
             .import-column-status, .import-column-arrow {

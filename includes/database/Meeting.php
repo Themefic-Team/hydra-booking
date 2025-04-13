@@ -366,9 +366,9 @@ class Meeting {
 
 	 
 		foreach ( $data as $key => $value ) {
-			if ( $value->Field == 'id' ) {
-				continue;
-			}  
+			// if ( $value->Field == 'id' ) {
+			// 	continue;
+			// }  
 			$columns[] = array(
 				'name'  => $value->Field,
 				'value' => $value->Field,

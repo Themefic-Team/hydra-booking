@@ -158,7 +158,8 @@ const importExport = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-meeting', {
                 data: this.meeting.import_data,
-                column: this.meeting.rearrange_column
+                column: this.meeting.rearrange_column,
+                is_overwrite: this.meeting.is_overwrite,
             }, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce,

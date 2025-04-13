@@ -81,6 +81,8 @@ class ImportExport {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		$data    = isset( $request['data'] ) ? $request['data'] : array();
 		$columns = isset( $request['column'] ) ? $request['column'] : array();
+		$is_overwrite = isset( $request['is_overwrite'] ) ? $request['is_overwrite'] : false;
+		 
 	
 		if ( empty( $data ) || empty( $columns ) ) {
 			return rest_ensure_response( array(
@@ -93,9 +95,7 @@ class ImportExport {
 		
 		// Map header to index
 		$header_map = array_flip($header);
-	
-		$final_data = [];
-		
+	 
 		$meeting = new Meeting();
 		foreach ($data_rows as $row) {
 			$new_row = []; 
@@ -105,7 +105,7 @@ class ImportExport {
 			}
 			// tfhb_print_r($row);
 			foreach ($columns as $key => $column) {
-				if($column == '' || $key == 'id'){
+				if($column == '' || ( $key == 'id' && $is_overwrite == false)){
 					continue; // skip empty column
 				}
 				if (isset($header_map[$column])) {
@@ -115,18 +115,21 @@ class ImportExport {
 					$data[] = null; // or empty string
 					$new_row[$key] = null; // or empty string
 				}
+ 
 			}
-			
-			// tfhb_print_r($new_row);
-			$meeting->add($new_row);
-			$final_data[] = $new_row;
+			 
+			if($is_overwrite == true){
+				$meeting->update($new_row);
+			}else{
+				$meeting->add($new_row);
+			}   
 		}
 
 
 		$data = array(
 			'status'  => true,
 			'data'    => true,
-			'message' =>  __( 'Booking Data Imported Successfully', 'hydra-booking' ),
+			'message' =>  __( 'Meetings Imported Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
  
