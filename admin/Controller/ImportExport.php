@@ -30,12 +30,33 @@ class ImportExport {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		// Import export Meeting
 		register_rest_route(
 			'hydra-booking/v1',
 			'/settings/import-export/export-meetings',
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ExportMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/import-export/import-meeting',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'ImportMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		// import export host
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/import-export/export-hosts',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'ExportHosts' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
@@ -82,7 +103,9 @@ class ImportExport {
 		$data    = isset( $request['data'] ) ? $request['data'] : array();
 		$columns = isset( $request['column'] ) ? $request['column'] : array();
 		$is_overwrite = isset( $request['is_overwrite'] ) ? $request['is_overwrite'] : false;
-		 
+		 // current user host id 
+		$host = new Host();
+		$host_id = $host->getHostByUserId( get_current_user_id() );
 	
 		if ( empty( $data ) || empty( $columns ) ) {
 			return rest_ensure_response( array(
@@ -117,6 +140,19 @@ class ImportExport {
 				}
  
 			}
+			// Check if host is not available in the row
+			 if($new_row['host_id'] !='' ){
+				$check_host = $host->getHostById($new_row['host_id']);
+				if(empty($check_host)){
+					$new_row['host_id'] = $host_id;
+					$new_row['user_id'] = get_current_user_id();
+				}else{
+					$new_row['user_id'] = $check_host->user_id;
+				}
+			 }else{
+				$new_row['host_id'] = $host_id;
+				$new_row['user_id'] = get_current_user_id();
+			 } 
 			 
 			if($is_overwrite == true){
 				$meeting->update($new_row);
@@ -140,6 +176,19 @@ class ImportExport {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		$data    = isset( $request['data'] ) ? $request['data'] : array();
 		$columns = isset( $request['columns'] ) ? $request['columns'] : array();
+
+		// current user host id 
+		$host = new Host();
+		$host_id = $host->getHostByUserId( get_current_user_id() );
+	 
+		// tfhb_print_r($columns);
+		// tfhb_print_r($data);
+		if ( empty( $data ) || empty( $columns ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __( 'Invalid data provided.', 'hydra-booking' ),
+			) );
+		}
 
 		// rearrange data first array value based on columns
 		$firstData = $data[0];
@@ -265,5 +314,55 @@ class ImportExport {
 			);
 			return rest_ensure_response( $data );
 		}
+	}
+
+	/**
+	 * Export Hosts Data 
+	 * @since 1.1.0
+	 * @author Sydur Rahman
+	 * */
+	public function ExportHosts(){
+		$host = new Host();
+		$hostsLists = $host->get(); 
+		$file_name = 'hydra-hosts-data';
+		// check if current has manage option caps
+		if ( ! current_user_can( 'tfhb_manage_options' ) ) {
+			$data = array(
+				'status'  => false,
+				'message' =>  __('You do not have permission to export hosts data!', 'hydra-booking' ),
+			);
+			return rest_ensure_response( $data );
+		} 
+		$data_array  = array();
+		$data_column = array();
+		foreach ( $hostsLists as $key => $book ) {
+			
+			if ( $key == 0 ) {
+				foreach ( $book as $c_key => $c_value ) {
+					$data_column[] = $c_key;
+				}
+			}
+			$book->attendees = json_encode($book->attendees); 
+			$data_array[] = (array) $book;
+		} 
+
+		ob_start();
+		$file = fopen( 'php://output', 'w' );
+		fputcsv( $file, $data_column );
+
+		foreach ( $data_array as $booking ) {
+			fputcsv( $file, $booking );
+		}
+
+		fclose( $file );
+		$data = ob_get_clean();
+		// Return response
+		$data = array(
+			'status'    => true,
+			'data'      => $data,
+			'file_name' => $file_name.'.csv',
+			'message'   =>  __('Hosts Data Exported Successfully!', 'hydra-booking'),
+		);
+		return rest_ensure_response( $data );
 	}
 }

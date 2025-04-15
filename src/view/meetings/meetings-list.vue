@@ -244,7 +244,7 @@ const exportData = reactive({
             />   
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                @click="router.push({ name: 'MeetingsExport' })"
+                @click="router.push({ name: 'MeetingsImport' })"
                 :buttonText="$tfhb_trans('Import')"
                 icon="FileUp"   
                 :hover_animation="false" 

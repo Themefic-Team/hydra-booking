@@ -6,6 +6,7 @@ const importExport = reactive({
     skeleton: false, 
     progress: 0,
     importing: false,
+    host_preloader: false,
     progressInterval: null,
     booking: {
         column: {},  
@@ -17,6 +18,17 @@ const importExport = reactive({
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
     meeting: {
+        steps: 'start',
+        column: {},  
+        import_column: {},  
+        import_file: null,
+        is_overwrite: false,
+        import_data: {},
+        rearrange_column: {},
+        import_status: false,
+        import_progress: 0, // shuld be 0 to 100 dynamically
+    }, 
+    host: {
         steps: 'start',
         column: {},  
         import_column: {},  
@@ -92,7 +104,7 @@ const importExport = reactive({
         } catch (error) {
             console.log(error);
         }  
-    },
+    }, 
     // Other Information 
     async readBookingImportData(event) {   
         const file = event.target.files[0];
@@ -270,6 +282,57 @@ const importExport = reactive({
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });
+            }
+        } catch (error) {
+            console.log(error);
+        }  
+    },
+
+     // export Meetings Data
+     async exportHosts() { 
+        this.host_preloader = true;
+        try {  
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-hosts',{
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {  
+ 
+               
+                const fileContent = response.data.data; 
+                let blob; // Declare blob outside the if-else
+
+                blob = new Blob([fileContent], { type: "text/csv" }); // Set correct CSV MIME type
+                // export csv file data
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const file_name = response.data.file_name;
+
+                link.href = url;
+
+                link.setAttribute('download', file_name);
+
+                // Append to the DOM
+                document.body.appendChild(link);
+                link.click();
+
+                // Clean up
+                link.remove();
+                window.URL.revokeObjectURL(url);
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+                this.host_preloader = false;
+            }else{
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+                this.host_preloader = false;
             }
         } catch (error) {
             console.log(error);

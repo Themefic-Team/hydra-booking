@@ -71,6 +71,13 @@ const routes = [
                 component: () => import('../view/hosts/hosts-list.vue')
             }, 
             {
+                path: 'import',
+                name: 'HostsImport',
+                meta: { Capabilities: 'tfhb_manage_meetings' },
+                component: () => import('../view/hosts/hosts-import.vue')
+            }, 
+            
+            {
                 path: 'profile/:id',
                 name: 'HostsProfile',
                 meta: { Capabilities: 'tfhb_manage_hosts' },
@@ -132,7 +139,7 @@ const routes = [
             }, 
             {
                 path: 'import',
-                name: 'MeetingsExport',
+                name: 'MeetingsImport',
                 meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-import.vue')
             }, 

@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { reactive, onBeforeMount, ref, nextTick } from 'vue';
+import { reactive, onBeforeMount, computed, ref, nextTick } from 'vue';
 import { useRouter, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -10,6 +10,7 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import HbSelect from  '@/components/form-fields/HbSelect.vue';
 import HbText from  '@/components/form-fields/HbText.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
+import { importExport } from '@/store/settings/importExport';
 // Import for redirect route   
 import { Notification } from '@/store/notification'; 
 import { toast } from "vue3-toastify"; 
@@ -26,6 +27,7 @@ const closeModal = () => {
 const openModal = () => {
   isModalOpened.value = true;
 };
+ 
 const hosts = reactive({});
 const host  = reactive({});
 const usersData = reactive({});
@@ -210,7 +212,7 @@ const Tfhb_Host_Filter = async (e) =>{
         console.error('Error:', error);
     }
 }
-
+ 
 
 </script>
 
@@ -218,12 +220,29 @@ const Tfhb_Host_Filter = async (e) =>{
  
     <div :class="{ 'tfhb-skeleton': skeleton, 'tfhb-admin-frontend-end-wrap': $route.path === '/hosts/list' }"  class="tfhb-admin-hosts">
         <Header v-if="$front_end_dashboard == false"  :title="$tfhb_trans('Hosts')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" />
-        <div v-if="$user.role != 'tfhb_host'" class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
-           <div class="tfhb-header-filters">
+        <div v-if="$user.role != 'tfhb_host' && $route.name == 'HostsLists'" class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
+         
+            <div class="tfhb-header-filters">
                 <input type="text" @keyup="Tfhb_Host_Filter" placeholder="Search by host name" /> 
                 <span><Icon name="Search" size=20 /></span>
            </div>
-            <div class="thb-admin-btn right"> 
+            <div class="thb-admin-btn right tfhb-flexbox tfhb-gap-16"> 
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                    @click="importExport.exportHosts()"
+                    :buttonText="$tfhb_trans('Export')"
+                    icon="FileDown"   
+                    :hover_animation="false" 
+                    icon_position = 'left'
+                />   
+                <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                    @click="router.push({ name: 'HostsImport' })"
+                    :buttonText="$tfhb_trans('Import')"
+                    icon="FileUp"   
+                    :hover_animation="false" 
+                    icon_position = 'left'
+                />   
                <HbButton 
                     classValue="tfhb-btn boxed-btn flex-btn " 
                     @click="openModal"
@@ -233,6 +252,8 @@ const Tfhb_Host_Filter = async (e) =>{
 
                 />  
             </div> 
+
+             
         </div>
         <div class="tfhb-hosts-content">  
             <HbPopup v-if="$user.role != 'tfhb_host'" :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">
