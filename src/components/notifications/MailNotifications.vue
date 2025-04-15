@@ -547,6 +547,18 @@ watch(emailTemplate, (newTemplate) => {
     props.data.builder = emailBuilder;
 });
 
+// Remove Social
+const removeSocial = (key) => {
+    emailBuilder.footer.content.social.data.splice(key, 1);
+}
+// Add new Social
+const addSocial = (key) => {
+    emailBuilder.footer.content.social.data.push({
+        title: '',
+        url: '',
+    });
+}
+
 const closePopup = () => { 
     emit('popup-close-control', false)
 }
