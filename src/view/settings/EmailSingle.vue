@@ -2,7 +2,7 @@
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
 import { ref, reactive, onBeforeMount, computed, watch, nextTick } from 'vue';
-import { useRoute, useRouter, RouterView,} from 'vue-router' 
+import { useRoute} from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
@@ -707,7 +707,6 @@ const fetchNotification = async () => {
             } 
         });
         if (response.data.status) { 
-            // console.log(response.data.integration_settings);
             Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
             Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
             Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
@@ -777,7 +776,7 @@ const addSocial = (key) => {
 </script>
 
 <template>
-    <!-- {{ Notification[route.params.type][route.params.id] }} -->
+    <!-- {{ Notification[route.params.type][route.params.id].body }} -->
       <!-- {{ route.params.type }} -->
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap">

@@ -2,6 +2,7 @@
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
 import { ref, reactive, watch, computed, nextTick } from 'vue';
+import { useRoute} from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
 
@@ -17,7 +18,7 @@ import HbColor from '@/components/form-fields/HbColor.vue';
 
 //  Load Time Zone 
 const skeleton = ref(false);
-
+const route = useRoute();
 
 const props = defineProps([
     'title', 
@@ -532,14 +533,17 @@ const formatLabel = (key) => {
 };
 
 watch(() => props.data.builder, (newBuilder) => {
-  if (newBuilder && Object.keys(newBuilder).length) {
-    Object.assign(emailBuilder, JSON.parse(JSON.stringify(newBuilder)));
-  } else {
-    const defaults = JSON.parse(JSON.stringify(defaultEmailBuilder));
-    Object.assign(emailBuilder, defaults);
-    props.data.builder = defaults;
-    props.data.body = emailTemplate.value;
-  }
+    if (newBuilder && Object.keys(newBuilder).length) {
+        Object.assign(emailBuilder, JSON.parse(JSON.stringify(newBuilder)));
+        console.log(props.data.builder);
+    } else {
+        if(props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'){
+            const defaults = JSON.parse(JSON.stringify(defaultEmailBuilder));
+            Object.assign(emailBuilder, defaults);
+            props.data.builder = defaults;
+            props.data.body = emailTemplate.value;
+        }
+    }
 }, { immediate: true });
 
 watch(emailTemplate, (newTemplate) => {
