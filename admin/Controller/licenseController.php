@@ -81,7 +81,7 @@ class licenseController {
             'status' => true,
             'message' => 'License Data',
             'data' => $response,
-            'license_key' => $license_key,
+            'license_key' => $this->decryptKey($license_key, $license_email),
             'license_email' => $license_email,
         ) );
 
@@ -97,6 +97,7 @@ class licenseController {
         $request = json_decode( file_get_contents( 'php://input' ), true );
         $license_key = !empty($request['license_key'])?sanitize_text_field(wp_unslash($request['license_key'])):"";
         $license_email = !empty($request['license_email'])?sanitize_email(wp_unslash($request['license_email'])):"";
+        $license_key = $this->encryptKey($license_key, $license_email);
         $main_lic_key="HydraBooking_lic_Key";
 
       
@@ -208,6 +209,20 @@ class licenseController {
             }
         } 
         return self::$cached_result;
+    }
+
+    // Function to encrypt the key
+    public function encryptKey($plainText, $email) {
+        $iv = openssl_random_pseudo_bytes(16); // 16 bytes for AES-256-CBC
+        $encrypted = openssl_encrypt($plainText, 'AES-256-CBC', $email, 0, $iv);
+        // Combine encrypted text and IV with '::' separator
+        return base64_encode($encrypted . '::' . $iv);
+    }
+    // Function to decrypt the key
+    public function decryptKey($encryptedText, $email) {
+        $data = base64_decode($encryptedText);
+        list($encrypted, $iv) = explode('::', $data, 2);
+        return openssl_decrypt($encrypted, 'AES-256-CBC', $email, 0, $iv);
     }
     
     
