@@ -1175,6 +1175,7 @@
                     text-align: center;
                     margin-right: 8px;
                     border: $fields-border $border-type $surface-input-field;
+                    height: 30px;
 
                     &:focus,
                     &:active,
@@ -2030,7 +2031,10 @@ button.question-edit-btn {
     }
 }
 
-
+// Color Picker Panel Z-Index
+.lv-overlaypanel{
+    z-index: 9999999 !important
+}
 // Host Profile Section
 .tfhb-host-profile-image-wrap{
     // height: 120px; 

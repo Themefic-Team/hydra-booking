@@ -196,7 +196,7 @@
         border-radius: $border-radius-medium;
         background: $surface-secondary;
         padding: 24px;
-        width: 710px;
+        width: 790px;
         margin: 0 auto;
 
         @media #{$max1240} {
@@ -672,6 +672,10 @@
                     width: auto !important;
                 }
             }
+        }
+        a{
+            cursor: not-allowed !important;
+            pointer-events: none !important;
         }
     }
 }

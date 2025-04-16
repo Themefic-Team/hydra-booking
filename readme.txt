@@ -1,18 +1,18 @@
-=== Hydra Booking - All in One Appointment Scheduling and Booking Calendar Solution | WooCommerce Bookings ===  
+=== Hydra Booking - All in One Appointment Booking System | Appointment Scheduling, Booking Calendar & WooCommerce Bookings ===  
 Contributors: themefic, hasanet, mdrejon, kamrul0424, jahidcse, akanda22
 Tags: appointments, booking, booking system, scheduling, appointment booking 
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.12
+Stable tag: 1.1.5
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
-Automated Scheduling & Appointment booking plugin with unlimited appointments, booking calendar, form integration, and payment system support.
+Appointment Booking Plugin with Automated Scheduling - Apple/Outlook/ Google Calendar, Woo, Zoom, Fluent Forms, Zapier, Mailchimp & CRM Integration.
 
 == Description ==
 
-## The Best WordPress Appointment Booking Plugin with Booking Calendar - HYDRA BOOKING
+## The Best WordPress Booking Plugin with Appointment Calendar - HYDRA BOOKING
 
 👉 Our Official Website: [Click Here](https://hydrabooking.com/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=website)
 👉 Live Demo Link: [Click Here](https://demo.hydrabooking.com/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=demo_link)
@@ -22,11 +22,11 @@ Automated Scheduling & Appointment booking plugin with unlimited appointments, b
 👉 Get Support: [Click Here](https://portal.themefic.com/support/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=plugin_support)
 👉 Join Our [Facebook Group](https://www.facebook.com/groups/hydra-booking)
 
-Hydra Booking is a powerful WordPress booking plugin for creating an advanced appointment booking and calendar management system. This WordPress scheduling plugin supports unlimited appointments and integrates with WooCommerce to build a robust booking system for WordPress. With a user-friendly WordPress booking calendar, Hydra Booking ensures an intuitive experience for your clients. Perfect for businesses of all sizes, it’s the ideal choice for WordPress appointment booking. 
+Hydra Booking is a powerful WordPress booking plugin for creating an advanced appointment book option and calendar management system for booking appointment. This WordPress scheduling plugin supports unlimited appointments and integrates with WooCommerce to build a robust WordPress booking system. With a user-friendly WordPress booking calendar, Hydra Booking ensures an intuitive experience for your clients. Perfect for businesses of all sizes, it’s the ideal choice for WordPress appointment booking. 
 
 = 🎉 WHO SHOULD USE HYDRA BOOKING  =
 
-Hydra Booking is a versatile appointment management solution tailored for a wide range of industries. Here’s how it fits seamlessly into various business needs:
+Hydra Booking is a versatile WP Booking system & appointment management solution tailored for a wide range of industries. Here’s how it fits seamlessly into various business needs:
 
 * **Freelancers**: Ideal for freelancers offering personal services such as consulting, coaching, or creative work. Hydra Booking helps manage client appointments, ensuring a professional and hassle-free scheduling experience.
 
@@ -71,7 +71,8 @@ Choose the best format and location for your appointments:
 = 🎉 FORM INTEGRATION =  
 * **[Contact Form 7 Compatibility](https://demo.hydrabooking.com/meeting-with-contact-form-7/)**: Enable appointment scheduling with the widely-used Contact Form 7 plugin. 
 * **[Fluent Forms Integration](https://demo.hydrabooking.com/meeting-with-fluent-form-integration/)**: Effortlessly connect Hydra Booking with Fluent Forms for smooth booking management.   
-* **Upcoming Integrations**: Support for Gravity Forms and more is coming soon, expanding flexibility and options.
+* **Gravity Forms Integration**: Extend the functionality of your booking forms with easy integration between Hydra Booking and Gravity Forms.
+* **Upcoming Integrations**: Support for Sure Forms Integration, expanding flexibility and options.
 
 = 🎉 AUTOMATED NOTIFICATIONS and REMINDERS =
 Say goodbye to no-shows and cancellations with automated notifications for all bookings.
@@ -113,7 +114,7 @@ Create and customize appointment booking forms to simplify the booking process.
 * Use form insights to enhance customer service.
 
 = 🎉 ADVANCED AVAILABILITY & SCHEDULING OPTION =
-Effortlessly set and manage your availability for appointments, so you can focus on delivering quality service.
+Effortlessly set and manage your availability for appointments & schedule booking so you can focus on delivering quality service.
 
 * Define weekly availability hours and days for appointments.
 * Set availability for specific date ranges or open-ended future dates.
@@ -124,6 +125,9 @@ Effortlessly set and manage your availability for appointments, so you can focus
 * Limit booking frequency and lock time zones if required.
 * Add custom questions to gather details about attendee needs.
 * Automatically adjust time zones for attendees, ensuring accuracy.
+* Create Booking page with the power of WordPress Shortcode.
+* Manage all your online booking system in one go.
+* Booking schedule with Online Booking Calendar
 
 = 🎉 ADVANCED SETTINGS AND MANAGEMENTS =
 Easily manage hosts and accessibility settings
@@ -131,7 +135,7 @@ Easily manage hosts and accessibility settings
 * Hosts can easily manage meetings, bookings, availability, integrations, and much more
 * Admins now have full control over host access permissions.
 
-To summarize, this appointment plugin is the all-in-one solution to streamline your scheduling process and take your booking system to the next level which makes it the best WordPress reservation plugin.
+To summarize, this appointment online plugin is the all-in-one solution to streamline your scheduling process and take your booking system to the next level which makes it the best WordPress reservation plugin.
 
 ### Join our Community to stay updated
 Join our [Facebook group](https://www.facebook.com/groups/hydra-booking) to stay informed with latest news and updates about Hydra Booking.
@@ -167,8 +171,11 @@ Hydra Booking uses [Appsero](https://appsero.com/) SDK to collect some telemetry
 = Can Hydra Booking be used for multiple business types? =
 Yes, Hydra Booking is designed to be versatile, making it suitable for businesses like spas, salons, medical practices, and beyond.
 
+= Is the Free version really free, or are there limitations? =
+Yes, Hydra is a WordPress booking plugin free of cost and available on WordPress.org. The free version will always remain free. However, there is also a Pro version with additional features available for purchase on our official website.
+
 =  Does Hydra Booking integrate with third-party CRM and scheduling calendar services? =
-Yes, it supports CRM integrations such as Zoho and FluentCRM , and calendar syncing with Google and Outlook.
+Yes, it supports CRM integrations such as Zoho and FluentCRM and calendar syncing with Google Calendar, Apple Calendar and Outlook Calendar. Such versatile integration makes Hydra Booking the best wordpress calendar booking plugin.
 
 =  Can I create forms with different WordPress Forms plugins? =
 Hydra Booking integrates with popular form plugins like Fluent Forms and Contact Form 7, with support for Gravity Forms and more coming soon for enhanced flexibility.
@@ -180,7 +187,10 @@ You can configure bookings as free or paid and accept payments through WooCommer
 Yes, Hydra Booking allows host assignments with specific roles and permissions for a flexible booking management experience.
 
 =  Can I migrate from other Appointment Booking plugins? =
-Currently, No. But we are working on this to offer seamless migration from plugins like Amelia, BookingPress, Fluent Booking etc. 
+Currently, No. But we are working on this to offer seamless migration from Amelia plugin, BookingPress, Fluent Booking, LatePoint, WP Timetics etc. 
+
+=  Suggest some of the best appointment booking plugin WordPress & Calendar plugin WordPress? =
+Although there are some good WordPress appointment plugin like "Amelia Booking plugin", "Simply Schedule Appointments Booking Plugin" but we would still say Hydra Booking is the best booking plugin WordPress because it's easy to build, flexible and have a massive list of integration option with other tools. 
 
 == Screenshots ==
 
@@ -199,80 +209,136 @@ Currently, No. But we are working on this to offer seamless migration from plugi
 
 == Changelog ==
 
-= 1.0.12 - 31/12/2024 =  
+= 1.1.4 – April 10, 2025 =
+
+- Fixed: The availability issue has been resolved.
+- Fixed: Host selection notice issue has been resolved.
+- Updated: Documentation URL in the settings has been updated.
+
+= 1.1.3 – April 06, 2025 =
+
+- Fixed: "Week starts from" setting issue has been resolved.
+- Improved: System stability for improved performance.
+
+= 1.1.2 – April 02, 2025 =
+
+- Added: iCal export feature introduced.
+- Added: Shortcode generator feature introduced.
+- Fixed: The integration auto-hide issue has been resolved.
+- Fixed: The date overrides issue has been resolved.
+- Fixed: Group meeting creation issue in the PRO version.
+
+= 1.1.1 – March 24, 2025 =
+
+- Fixed: The availability issue has been resolved.
+
+= 1.1.0 – March 20, 2025 =
+
+- Introduced: Frontend dashboard for host and admin.
+- Introduced: Free license creation settings.
+- Fixed: PayPal payment issue resolved.
+- Enhanced: Security for import/export functionality.
+
+= 1.0.31 – March 13, 2025 =
+
+- Fixed: The Timezone issue has been resolved.
+
+= 1.0.30 – March 08, 2025 =
+
+- Fixed: Woocommerce Block theme Checkout issue fixed.
+- Fixed: Meeting forms translate issue fixed on frontend.
+
+= 1.0.29 – February 25, 2025 =
+
+- Fixed: Stripe currency data processing issue resolved.
+- Fixed: Translate string functionality issue corrected.
+
+= 1.0.28 – February 16, 2025 =
+
+- Fixed: The booking schedule error has now been resolved.
+- Improved: Booking question field control options updated.
+- Improved: The Host banner image control settings added.
+
+= 1.0.27 - 09/02/2025 =  
+
+- Improved: The mandatory address field has been removed from the booking form.
+- Added: A booking comment/message field with flexible control settings.
+
+= 1.0.26 - 08/02/2025 =  
 
 - Updated: Readme.txt file and plugin information.
-- Fixed: Resolved minor compatibility issues with Contact Form 7.
+- Compatibility: Compatible with WooCommerce (v9.6.1).
+- Compatibility: Compatible with Contact Form 7 (v6.0.3).
 
-= 1.0.11 - 19/12/2024 =  
+= 1.0.25 - 06/02/2025 =  
+
+- Fixed: Single meeting host and data migration issues.
+
+= 1.0.24 - 06/02/2025 =  
+
+- Fixed: The host availability issue has been resolved.
+
+= 1.0.23 - 06/02/2025 =  
+
+- Fixed: Resolved issue with host selection.
+
+= 1.0.22 - 03/02/2025 =  
+
+- Updated: Readme.txt file and plugin information.
+- Fixed: Various issues for a smoother experience.
+
+= 1.0.21 - 03/02/2025 =  
+
+- Added: Booking details page.
+- Added: Filter feature for the booking list page.
+- Improved: Revamped the booking list page design.
+
+= 1.0.20 - 30/01/2025 =  
+
+- Compatibility: Compatible with WooCommerce (v9.6.0).
+- Improved: Woo Payments integration feature.
+
+= 1.0.19 - 19/01/2025 =  
+
+- Compatibility: Compatible with Fluent Forms (v5.2.10).
+- Fixed: Resolved minor bugs and design inconsistencies.
+- Improved: Enhanced system stability for improved performance.
+
+= 1.0.18 - 12/01/2025 =  
+
+- Compatibility: Compatible with Contact Form 7 (v6.0.2).
+- Compatibility: Compatible with WooCommerce (v9.5.2).
+
+= 1.0.17 - 09/01/2025 =  
 
 - Improved: System stability for better performance.
-- Fixed: Mintor bugs and design issues resolved.
+- Compatibility: Resolved minor compatible issues with Fluent Forms.
 
-= 1.0.10 - 03/12/2024 =  
+= 1.0.16 - 06/01/2025 =  
 
+- Fixed: The license functionality issue has been resolved.
+- Compatibility: Resolved minor compatible issues with WooCommerce.
+
+= 1.0.15 - 02/01/2025 =  
+
+- Improved: The language .pot file for better translations.
+- Fixed: Addressed the Outlook API issue.
+ 
+= 1.0.14 - 01/01/2025 =  
+
+- Fixed: The dashboard card loading issue is resolved.
+
+= 1.0.13 - 01/01/2025 =  
+
+- Introduced: Added Display Remaining Slot for group bookings (PRO).
+- Introduced: Added Outlook Calendar and Team features (PRO).
+- Improved: Revamped the booking database.
+- Improved: Added new attendee table for group bookings.
+- Fixed: Timezone and date/time functionality in the booking form.
+- Fixed: Resolved front-page translation compatibility.
+- Fixed: Updated reason for cancellation functionality.
+- Fixed: Addressed Hydra Booking host role issue.
 - Improved: System stability for better performance.
-- Improved: Accessibility control for host profile.
-
-= 1.0.9 - 03/12/2024 =  
-
-- Updated: Updated the readme.txt file for better clarity.
-- Fixed: Mintor bugs and design issues resolved.
-
-= 1.0.8 - 02/12/2024 =  
-
-- Introduced: Script based meeting sharing option for external websites.
-- Introduced: Host profiles, allowing hosts to manage bookings, availability, meetings, and more directly from their profile.
-- Improvement: Cancellation handling for a smoother user experience.
-- Improvement: Rescheduling feature for better flexibility.
-- Improvement: Optimized notification order for clarity and effectiveness.
-- Improvement: Added improvements for using attendee phone numbers as meeting locations.
-- Improvement: Refined booking frequency options for better control.
-- Improved overall system stability for a seamless experience.
-- Improvement: Improved cancellation email formatting and delivery.
-- Fixed: Resolved issues related to booking status updates.
-- Fixed: Fixed PayPal payment processing issues.
-- Fixed: Fixed various design issues and improved overall user interface.
-
-= 1.0.7 - 27/11/2024 =  
-
-- Added: Integration with Pabbly and Zapier Webhooks (Pro).
-- Added: One-to-one recurring Zoom meeting feature (Pro).
-- Added: An option for hosts to disconnect Google Calendar.
-- Added: Updated currency support.
-- Fixed: Resolved availability issue.
-- Fixed: Multi-language translation issue.
-- Fixed: Addressed Google Calendar integration issue.
-- Fixed: Resolved the issue with host email updates after user information changes.
-- Fixed: Multiple bugs and general issues addressed for improved stability.
-- Improvement: Enhanced Stripe integration functionality.
-
-= 1.0.6 - 20/11/2024 =  
-
-- Update: Updated the plugin's Readme.txt file information.
-- Fix: Addressed minor bugs and implemented general improvements
-
-= 1.0.5 - 17/11/2024 =  
-- Enhancements: Improved and Optimized overall codebase and design for a better user experience. 
-- Added: Appsero Integration
-
-= 1.0.4 - 16/11/2024 =  
-- Enhancements: Improved overall design and responsiveness for a smoother user experience.
-- Fixed: Resolved design issues with the question fields.
-- Fixed: Fixed recurring meeting email notification functionality.
-- Added: Pro license control introduced for better management of premium features.
-- Added: Integrations for Fluent CRM, Zoho CRM, WebHook, and Stripe (Pro version).
-
-= 1.0.3 - 13/11/2024 =  
-- Fixed: Compatibility issue with block themes
-- Fixed: Time zone handling corrected 
-- Improved: System stability enhanced for more reliable performance.
-
-= 1.0.2 - 11/11/2024 =  
-- Screenshots Updated
-
-= 1.0.1 - 11/11/2024 =  
-- Readme updated
 
 = 1.0.0 - 11/11/2024 =  
 - Initial stable release

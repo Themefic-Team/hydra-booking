@@ -5,10 +5,13 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Classes
 use HydraBooking\App\Shortcode\HydraBookingShortcode;
+use HydraBooking\App\Shortcode\ShortcodeBuilder;
+use HydraBooking\App\Content\Archive;
 use HydraBooking\FdDashboard\FrontendDashboard;
 use HydraBooking\App\Enqueue;
 use HydraBooking\App\BookingLocation;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
+use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Attendees;
 
@@ -25,9 +28,15 @@ class App {
 
 		// Load Shortcode Class
 		new HydraBookingShortcode();
+
+		// Load meeting shortcode Class
+		new ShortcodeBuilder();
+
  
 
 		new FrontendDashboard();
+		// use this class
+		new Archive();
 
 
 		add_filter( 'query_vars', array( $this, 'tfhb_single_query_vars' ) );
@@ -103,6 +112,7 @@ class App {
 
 	public function tfhb_single_query_vars( $query_vars ) {
 		$query_vars[] = 'hydra-booking';
+		$query_vars[] = 'username';
 		$query_vars[] = 'meeting';
 		$query_vars[] = 'meeting-id';
 		$query_vars[] = 'meetingId';
@@ -125,14 +135,19 @@ class App {
 			return $custom_template;
 		} 
 
+ 
 		// Reschedule Page
 		if ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'reschedule' ) {
 			$custom_template = load_template( TFHB_PATH . '/app/Content/Template/reschedule.php', false );
 			return $custom_template;
 
-		}
-		// Cenceled Page
-		if ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'cancel' ) {
+		} 
+		// Cenceled And Confirmation Page and download ics
+		if (( 
+			get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'cancel' ) // Cenceled  Page
+			|| ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'confirmation' ) // Confirmation  Page
+			|| ( get_query_var( 'hydra-booking' ) === 'booking' && get_query_var( 'hash' ) && get_query_var( 'type' ) === 'download_ics' ) // Download Ics
+		) {
 			 
 			if ( ! wp_script_is( 'tfhb-app-script', 'enqueued' ) ) {
 				wp_enqueue_script( 'tfhb-app-script' );
@@ -142,7 +157,7 @@ class App {
 			$Attendee = new Attendees();
 			$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
 				array(
-					array('hash', '=',get_query_var( 'hash' )),
+					array('hash', '=', get_query_var( 'hash' )),
 				),
 				1,
 				'DESC'
@@ -150,13 +165,31 @@ class App {
 			if ( ! $attendeeBooking ) {
 				return $template;
 			} 
-			$custom_template = load_template(
-				TFHB_PATH . '/app/Content/Template/meeting-cencel.php',
-				false,
-				array(
-					'attendeeBooking'         => $attendeeBooking, 
-				)
-			);
+			if('confirmation' == get_query_var( 'type' )){
+				$custom_template = load_template(
+					TFHB_PATH . '/app/Content/Template/meeting-confirmation.php',
+					false,
+					array(
+						'attendeeBooking'         => $attendeeBooking, 
+						'confirmation_page'         => true, 
+					)
+				);
+			}
+			if('cancel' == get_query_var( 'type' )){
+				$custom_template = load_template(
+					TFHB_PATH . '/app/Content/Template/meeting-cencel.php',
+					false,
+					array(
+						'attendeeBooking'         => $attendeeBooking, 
+					)
+				);
+			}
+			if('download_ics' == get_query_var( 'type' )){
+				$bookmark = new BookingBookmarks();
+				$bookmark->generateBookingICS($attendeeBooking);
+				return $template;
+			}
+			
 			return $custom_template;
 
 		}

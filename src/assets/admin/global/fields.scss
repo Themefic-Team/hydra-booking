@@ -113,6 +113,8 @@
                 box-shadow: none;
                 color: $text-input;
                 font-family: "Inter", sans-serif;
+                
+                
 
                 &:focus,
                 &:active,
@@ -126,7 +128,7 @@
                 }
 
                 &::placeholder {
-                    color: $text-input !important; // Define this variable in your SCSS
+                    color: $text-input-placeholder !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
 
@@ -258,7 +260,7 @@
                 }
 
                 &::placeholder {
-                    color: $text-input !important; // Define this variable in your SCSS
+                    color: $text-input-placeholder !important; // Define this variable in your SCSS
                     opacity: 1; // Ensures full visibility
                 }
             }
@@ -638,6 +640,25 @@
                 padding-top: 8px;
                 background:  $surface-primary;
                 margin-top: 1px;
+                .tfhb-header-logo{
+                    padding: 0px 8px 8px 8px;
+                }
+                .tfhb-header-bg{
+                    padding: 0px 8px 8px 8px;
+                    .tfhb-single-colorbox{
+                        background-color: $surface-secondary;
+                    } 
+                }
+                .tfhb-socail-repeater{
+                    .tfhb-single-form-field{
+                        .tfhb-field-input{
+                            margin: 0;
+                            input{
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
                 .single-tools{
                     padding: 0px 8px 8px 8px;
                     margin-bottom: 0;
@@ -649,6 +670,9 @@
                             box-shadow: 0px 1px 3px 0px rgba(16, 40, 20, 0.10), 0px 1px 2px 0px rgba(16, 40, 20, 0.06);
                         }
                     }
+                    .tools-content{
+                        padding-left: 28px;
+                    }
                 }
                 .tfhb-single-form-field{
                     .tfhb-field-input{
@@ -656,9 +680,18 @@
                     }
                 }
             }
+            &.draggable{
+                .tools-heading{
+                    .tfhb-flexbox{
+                        &.tfhb-head{
+                            cursor: move !important
+                        }
+                    }
+                }
+            }
         }
         button.boxed-btn{
-            margin-top: 24px;
+            margin-top: 24px !important;
         }
     }
     .tfhb-email-preview{
@@ -680,6 +713,10 @@
                     width: auto !important;
                 }
             }
+        }
+        a{
+            cursor: not-allowed !important;
+            pointer-events: none !important;
         }
     }
 

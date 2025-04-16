@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount } from 'vue'; 
+import { ref, reactive, onBeforeMount, computed } from 'vue'; 
 import { useRouter, RouterView,} from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -236,14 +236,15 @@ const getLatestEndTime = (day) => {
 
 const TfhbStartDataEvent = (key, skey, startTime) => {
      
-    if(skey == 0){
-        return;
-    }
+ 
     const day = props.availabilityDataSingle.time_slots[key];
-    const latestEndTime = getLatestEndTime(day);
+    const latestEndTime = getLatestEndTime(day); 
 
-    if (startTime <= latestEndTime) {
-        toast.error("Your start time will be over the: " + latestEndTime);
+    if (startTime >= latestEndTime) {
+        toast.error("Your start time will be over the: " + latestEndTime, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
         return latestEndTime;
     }
 }
@@ -255,12 +256,18 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
             return;
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start);
+            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
             return;
         }
     }
@@ -276,6 +283,18 @@ const tfhbValidateInput = (fieldName) => {
         isEmpty(fieldParts[0]+'___'+[fieldParts[1]], props.availabilityDataSingle[fieldParts[0]][fieldParts[1]]);
     }
 };
+
+const filteredDateSlots = computed(() => {
+    let slots = props.availabilityDataSingle?.date_slots;
+
+    // Convert object to array if necessary
+    if (slots && typeof slots === "object" && !Array.isArray(slots)) {
+        slots = Object.values(slots);
+    }
+
+    // Ensure it's an array before filtering
+    return Array.isArray(slots) ? slots.filter(slot => slot?.date && slot.date.trim() !== "") : [];
+});
 
 </script>
  
@@ -370,6 +389,7 @@ const tfhbValidateInput = (fieldName) => {
                                         />     
 
                                     </div>
+                                   
                                     <div v-if="tkey == 0" class="tfhb-availability-schedule-clone-single">
                                         <button class="tfhb-availability-schedule-btn" @click="addAvailabilityTime(key)"><Icon name="Plus" size=20 /> </button> 
                                     </div>
@@ -378,6 +398,9 @@ const tfhbValidateInput = (fieldName) => {
                                     </div>
                                 </div>
                                 
+                            </div>
+                            <div v-else class="tfhb-availability-schedule-wrap" style="width: 75%;"> 
+                                <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
                             </div>
                         </div> 
                     </div>  
@@ -390,8 +413,9 @@ const tfhbValidateInput = (fieldName) => {
                                 <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
                             </div> 
                         </div>
+                        
 
-                        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in props.availabilityDataSingle.date_slots" :key="key">
+                        <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                             <div class="tfhb-flexbox">
                                 <div class="tfhb-overrides-date">
                                     <h4>{{ date_slot.date }}</h4>
@@ -473,7 +497,7 @@ const tfhbValidateInput = (fieldName) => {
                             </div>
 
                             <div class="tfhb-overrides-store tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width">
-                                <!-- <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ $tfhb_trans('Cancel') }}</button> --> 
+                                <button class="tfhb-btn secondary-btn" @click="OverridesOpen=false">{{ $tfhb_trans('Cancel') }}</button> 
                                 <HbButton 
                                     classValue="tfhb-btn boxed-btn flex-btn" 
                                     @click="addAvailabilityDate(key)"

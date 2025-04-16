@@ -42,12 +42,8 @@ $availability_time_zone = isset($availability_data['time_zone']) ? $availability
     }else{
  
     ?>
-        <div class="tfhb-meeting-box tfhb-meeting-<?php echo esc_attr( $calendar_id ); ?>" data-calendar="<?php echo esc_attr( $calendar_id ); ?>">
-            
-            <?php
-
-            
-
+        <div class="tfhb-meeting-box tfhb-meeting-<?php echo esc_attr( $calendar_id ); ?>" data-calendar="<?php echo esc_attr( $calendar_id ); ?>"> 
+            <?php 
             if ( ! empty( $booking_data ) && 'reschedule' == $atts['type'] ) {
             
                 

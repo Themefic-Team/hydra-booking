@@ -10,6 +10,7 @@ use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Admin\Controller\ScheduleController;
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
 use HydraBooking\Admin\Controller\Helper;
+use HydraBooking\DB\Host;
 // Use DB
 use HydraBooking\DB\Availability;
 // exit
@@ -177,6 +178,27 @@ class SettingsController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+		// Short Code Settings.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/shortcode',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'getShortcodeSettings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/shortcode/preview',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'generateShortPreview' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
 	} 
 	// permission_callback
 	public function GetGeneralSettings() {
@@ -299,12 +321,14 @@ class SettingsController {
 		// Date Slots
 		foreach ( $request['date_slots'] as $key => $value ) {
 
-			$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
-			$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
+			if( !empty($value['date']) ){
+				$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
+				$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
 
-			foreach ( $value['times'] as $key2 => $value2 ) {
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				foreach ( $value['times'] as $key2 => $value2 ) {
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				}
 			}
 		}
 
@@ -705,7 +729,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' => $name . ' Settings Updated Successfully',
+				'message' => $name . __( ' Settings Updated Successfully', 'hydra-booking' ),
 			);
 
 			if($key == 'gravity' && !empty($data['status'])){
@@ -713,7 +737,7 @@ class SettingsController {
 			}
 			if($key == 'cf7' && !empty($data['status']) && $_tfhb_integration_settings[$key]['status'] == true){
 				if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
-					$data['message'] = 'Install and activate the Contact Form 7 plugin if it is not already installed or active.';
+					$data['message'] = __( 'Install and activate the Contact Form 7 plugin if it is not already installed or active.', 'hydra-booking' );
 			
 				}
 			}
@@ -768,12 +792,12 @@ class SettingsController {
 			if ( $install ) {
 				$data = array(
 					'status'  => true,
-					'message' => 'WooCommerce Installed Successfully',
+					'message' => __( 'WooCommerce Installed Successfully','hydra-booking' ),
 				);
 			} else {
 				$data = array(
 					'status'  => false,
-					'message' => 'WooCommerce Not Installed',
+					'message' => __( 'WooCommerce Not Installed','hydra-booking' ),
 				);
 			}
 		}
@@ -871,7 +895,7 @@ class SettingsController {
 		// woocommerce payment
 		$data = array(
 			'status'  => true,
-			'message' => 'Notification Settings Updated Successfully',
+			'message' => __( 'Notification Settings Updated Successfully','hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -949,7 +973,7 @@ class SettingsController {
 		// woocommerce payment
 		$data = array(
 			'status'  => true,
-			'message' => 'Hosts Settings Updated Successfully',
+			'message' => __( 'Hosts Settings Updated Successfully', 'hydra-booking' ),
 			'data'    => $_tfhb_hosts_settings,
 		);
 		return rest_ensure_response( $data );
@@ -979,9 +1003,86 @@ class SettingsController {
 
 		$data = array(
 			'status'  => true,
-			'message' => 'Appearance Settings Updated Successfully',
+			'message' => __( 'Appearance Settings Updated Successfully', 'hydra-booking' ),
 			'data'    => $request,
 		);
 		return rest_ensure_response( $data );
+	}
+
+
+	/**
+     * ShortCode for Get Booking Details
+     */
+	public function getShortcodeSettings(){
+
+		// hosts list  
+		$host      = new Host();
+		$getHosts = $host->get();
+		$hostsList = array();
+		if($getHosts){
+			foreach($getHosts as $host){
+				$hostsList[] = array(
+                    'value'          => $host->id,
+                    'name'        => $host->first_name.' '. $host->last_name, 
+                );
+            }
+		}
+
+
+		// meeting Category list
+	    $category = get_terms(
+			array(
+				'taxonomy'   => 'meeting_category',
+				'hide_empty' => false, // Set to true to hide empty terms
+			)
+		);
+		// Prepare the response data
+		$categoryList = array();
+		foreach ( $category as $term ) {
+			$categoryList[] = array(
+				'value'          => $term->term_id,
+				'name'        => $term->name, 
+			);
+		}
+
+		// 
+		$data = array(
+			'status'  => true,
+            'message' => 'Shortcode Settings',
+            'hostsList' => $hostsList,
+            'categoryList' => $categoryList, 
+		);
+
+		return rest_ensure_response( $data );
+
+
+		
+	}
+
+	/**
+     * ShortCode for Preview
+	 * 
+     */
+	public function generateShortPreview(){
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$shortcode = isset($request['shortcode']) ? $request['shortcode'] : '';
+		if($shortcode){
+			ob_start();
+			echo do_shortcode( $shortcode );
+			$shortcodeHTML = ob_get_clean();
+			$data = array(
+                'status'  => true,
+                'message' => 'Shortcode Preview',
+                'output' => $shortcodeHTML, 
+            );
+
+		}  else {
+			$data = array(
+                'status'  => false,
+                'message' => 'No Shortcode provided',
+            );
+        }
+		return rest_ensure_response( $data );
+		 
 	}
 }

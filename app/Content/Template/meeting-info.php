@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */
-
+use HydraBooking\Admin\Controller\TransStrings;
 $meeting      = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host         = isset( $args['host'] ) ? $args['host'] : array(); 
 $time_zone    = isset( $args['time_zone'] ) ? $args['time_zone'] : array();
@@ -31,11 +31,11 @@ $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['pa
 // display short 
 
 $selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $meeting['availability_custom']['time_zone'] : 'UTC';
+
 if ( 'settings' === $meeting['availability_type'] ) {
 	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
 	// tfhb_print_r( $host );
-		
-	if($_tfhb_availability_settings['availability_type'] === 'settings' ){
+	if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] === 'settings' ){
 		// Get Global Settings
 		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
 		
@@ -46,11 +46,12 @@ if ( 'settings' === $meeting['availability_type'] ) {
 		}
 
 
-	}elseif ( in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+	}elseif ( isset($_tfhb_availability_settings['availability']) && in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
 		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
 	}
 		
 }
+
 
 $host_feature_image_link = isset($host['featured_image']) && !empty($host['featured_image']) ? $host['featured_image'] : TFHB_URL . 'assets/app/images/meeting-cover.png';
 ?> 
@@ -105,7 +106,7 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
         <div class="tfhb-full-description">
             <?php 
                 echo ! empty( $meeting['description'] ) ? '<p>' . wp_kses_post( $meeting['description'] ) . '</p>' : '';
-                echo '<span class="tfhb-see-less-description">See less</span>';
+                echo '<span class="tfhb-see-less-description">'.esc_html(__('See less', 'hydra-booking')).'</span>';
             ?>
         </div>
 		
@@ -127,7 +128,7 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
 					</defs>
 					</svg>
 				</div>
-				<?php echo ! empty( $meeting['duration'] ) ? esc_html( $meeting['duration'] . ' minutes' ) : '0 minutes'; ?>
+				<?php echo ! empty( $meeting['duration'] ) ? esc_html( TransStrings::tfhbTranslateNumber($meeting['duration']) . ' minutes' ) : '0 minutes'; ?>
 				
 			</li>
 			<?php
@@ -136,17 +137,20 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
 
 					$location_value = $location['address'];
 					if($location['location'] == 'zoom'){
-						$location_value = 'Zoom';
+						$location_value = __('Zoom', 'hydra-booking');
 					}elseif($location['location'] == 'meet'){
-						$location_value = 'Google Meet';
+						$location_value = __('Google Meet', 'hydra-booking');
 					}
 					elseif($location['location'] == 'Attendee Phone Number'){
-						$location_value = 'Attendee Phone Number';
+						$location_value = __('Attendee Phone Number', 'hydra-booking');
 					}elseif($location['location'] == 'Organizer Phone Number'){
-						$location_value = 'Organizer Phone Number';
+						$location_value = __('Organizer Phone Number', 'hydra-booking');
 					
+					}elseif($location['location'] == 'In Person (Organizer Address)'){
+						$location_value = __('In Person (Organizer Address)', 'hydra-booking');
+					 
 					}elseif($location['location'] == 'In Person (Attendee Address)'){
-						$location_value = 'In Person (Attendee Address)';
+						$location_value = __('In Person (Attendee Address)', 'hydra-booking');
 					}else{
 						$location_value = $location['location'];
 					}

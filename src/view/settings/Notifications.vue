@@ -17,6 +17,7 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 
 //  Load Time Zone 
 const skeleton = ref(true);   
+const ntskeleton = ref(false);   
 const currentTabs = ref('host');
 const popup = ref(false);
 const update_preloader = ref(false);
@@ -194,9 +195,13 @@ const Notification = reactive(  {
 
 // Update Notification 
 const changeTab = (e) => {  
+    ntskeleton.value = true;
     // get data-tab attribute value of clicked button
     const tab = e.target.getAttribute('data-tab'); 
     currentTabs.value = tab;
+    setTimeout(() => {
+        ntskeleton.value = false;
+    }, 1000);
 }
 
 
@@ -302,7 +307,7 @@ onBeforeMount(() => {
                 <p>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
             </div>
             <div class="thb-admin-btn"> 
-                <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
+                <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/notifications/" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
         <div class="tfhb-content-wrap">
@@ -312,7 +317,8 @@ onBeforeMount(() => {
                 <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
 
-            <div v-if="currentTabs=='host' && !$route.params.id && $route.hash === '#email'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+            <div v-if="currentTabs=='host' && !$route.params.id && $route.hash === '#email'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="{ 'tfhb-skeleton': ntskeleton }"> 
+ 
  
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -378,7 +384,7 @@ onBeforeMount(() => {
  
             </div> 
 
-            <div v-if="currentTabs=='attendee' && !$route.params.id && $route.hash === '#email'"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box "> 
+            <div v-if="currentTabs=='attendee' && !$route.params.id && $route.hash === '#email'"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box" :class="{ 'tfhb-skeleton': ntskeleton }"> 
 
                 <!-- Single Notification  -->
                 <MailNotifications 

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */
-
+use HydraBooking\Admin\Controller\TransStrings;
 
 ?> 
 <div class="tfhb-meeting-calendar">
@@ -41,13 +41,13 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="tfhb-calendar-body">
 			<ul class="tfhb-calendar-weekdays">
-				<li><?php echo esc_html(__('Sun', 'hydra-booking')) ?></li> 
-				<li><?php echo esc_html(__('Mon', 'hydra-booking')) ?></li>
-				<li><?php echo esc_html(__('Tue', 'hydra-booking')) ?></li>
-				<li><?php echo esc_html(__('Wed', 'hydra-booking')) ?></li>
-				<li><?php echo esc_html(__('Thu', 'hydra-booking')) ?></li>
-				<li><?php echo esc_html(__('Fri', 'hydra-booking')) ?></li>
-				<li><?php echo esc_html(__('Sat', 'hydra-booking')) ?></li>
+				<li><?php echo esc_html(TransStrings::tfhbTranslate('Sun')) ?></li> 
+				<li><?php echo esc_html(TransStrings::tfhbTranslate('Mon')) ?></li>
+				<li><?php echo esc_html(TransStrings::tfhbTranslate('Tue')) ?></li>
+				<li><?php echo esc_html(TransStrings::tfhbTranslate('Wed')) ?></li>
+				<li><?php echo esc_html(TransStrings::tfhbTranslate('Thu')) ?></li>
+				<li><?php echo esc_html(TransStrings::tfhbTranslate('Fri')) ?></li>
+				<li><?php echo esc_html(TransStrings::tfhbTranslate('Sat')) ?></li>
 			</ul>
 			<ul class="tfhb-calendar-dates"></ul>
 		</div>

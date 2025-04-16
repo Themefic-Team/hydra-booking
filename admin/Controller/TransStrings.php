@@ -1,5 +1,6 @@
 <?php 
 namespace HydraBooking\Admin\Controller;
+
   // exit
   if ( ! defined( 'ABSPATH' ) ) { exit; }
 
@@ -52,6 +53,8 @@ namespace HydraBooking\Admin\Controller;
             'Status' =>  __('Status', 'hydra-booking'), 
             'Select Booking status' =>  __('Select Booking status', 'hydra-booking'), 
             'Create Booking' =>  __('Create Booking', 'hydra-booking'), 
+            'Has booked a meeting' =>  __('Has booked a meeting', 'hydra-booking'), 
+            
 
             'Delete' =>  __('Delete', 'hydra-booking'), 
             'Export as CSV' =>  __('Export as CSV', 'hydra-booking'), 
@@ -417,7 +420,7 @@ namespace HydraBooking\Admin\Controller;
             'Upload logo' =>  __('Upload logo', 'hydra-booking'),  
             'Upload Responsive logo' =>  __('Upload Responsive logo', 'hydra-booking'),  
             'Type login sub-title' =>  __('Type login sub-title', 'hydra-booking'),  
-            // 'License' =>  __('License', 'hydra-booking'),  
+            'Header Background' =>  __('Header Background', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
 
@@ -465,6 +468,7 @@ namespace HydraBooking\Admin\Controller;
             'You already used this email. Use another email address or click on the following link to obtain the previous license key.' => __('You already used this email. Use another email address or click on the following link to obtain the previous license key.', 'hydra-booking'),
             'Check your inbox and set a password for your security then paste the license key below.' => __('Check your inbox and set a password for your security then paste the license key below.', 'hydra-booking'),
             'Sent successfully!' => __('Sent successfully!', 'hydra-booking'),
+            'Unlock Features' => __('Unlock Features', 'hydra-booking'),
 
             // Component : availability 
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 
@@ -506,6 +510,31 @@ namespace HydraBooking\Admin\Controller;
             'Enter Your Redirect URL' =>  __('Enter Your Redirect URL', 'hydra-booking'), 
             'Save & Validate' =>  __('Save & Validate', 'hydra-booking'), 
             'Shortcode' =>  __('Shortcode', 'hydra-booking'), 
+            'Shortcodes' =>  __('Shortcodes', 'hydra-booking'), 
+            'Shortcodes Settings' =>  __('Shortcodes Settings', 'hydra-booking'), 
+            'Manage and customize your shortcodes for Hydrabooking.' =>  __('Manage and customize your shortcodes for Hydrabooking.', 'hydra-booking'), 
+            'Meetings Shortcode' =>  __('Meetings Shortcode', 'hydra-booking'), 
+            'Generate a shortcode to embed your meetings on your website.' =>  __('Generate a shortcode to embed your meetings on your website.', 'hydra-booking'), 
+            'Shortcode title' =>  __('Shortcode title', 'hydra-booking'), 
+            'Shortcode sub-title' =>  __('Shortcode sub-title', 'hydra-booking'), 
+            'Type a title for your shortcode' =>  __('Type a title for your shortcode', 'hydra-booking'), 
+            'Type a sub-title for your shortcode' =>  __('Type a sub-title for your shortcode', 'hydra-booking'), 
+            'Select meeting category' =>  __('Select meeting category', 'hydra-booking'), 
+            'Sort By' =>  __('Sort By', 'hydra-booking'), 
+            'Order By' =>  __('Order By', 'hydra-booking'), 
+            'Reset' =>  __('Reset', 'hydra-booking'), 
+            'Generate' =>  __('Generate', 'hydra-booking'), 
+            'Display Limit' =>  __('Display Limit', 'hydra-booking'), 
+            'Meeting category : All' =>  __('Meeting category : All', 'hydra-booking'), 
+            'Select host : All' =>  __('Select host : All', 'hydra-booking'), 
+            'Hosts Shortcode' =>  __('Hosts Shortcode', 'hydra-booking'), 
+            'Generate a shortcode to embed your meeting hosts list on your website.' =>  __('Generate a shortcode to embed your meeting hosts list on your website.', 'hydra-booking'), 
+            'Categories Shortcode' =>  __('Categories Shortcode', 'hydra-booking'), 
+            'Generate a shortcode to embed your meetings categories list on your website.' =>  __('Generate a shortcode to embed your meetings categories list on your website.', 'hydra-booking'), 
+            'Meeting Categories' =>  __('Meeting Categories', 'hydra-booking'), 
+            'Export as .ics' =>  __('Export as .ics', 'hydra-booking'), 
+            'Download as .ics' =>  __('Download as .ics', 'hydra-booking'), 
+            'More' =>  __('More', 'hydra-booking'), 
             'Embed code' =>  __('Embed code', 'hydra-booking'), 
             'Copy Link' =>  __('Copy Link', 'hydra-booking'), 
 
@@ -546,7 +575,7 @@ namespace HydraBooking\Admin\Controller;
             'Paypal Secret Key' =>  __('Paypal Secret Key', 'hydra-booking'), 
             'Enter Your Paypal Secret' =>  __('Enter Your Paypal Secret', 'hydra-booking'), 
             'Stripe' =>  __('Stripe', 'hydra-booking'), 
-            'ntegrate Stripe API for secure payment processing.' =>  __('ntegrate Stripe API for secure payment processing.', 'hydra-booking'), 
+            'Integrate Stripe API for secure payment processing.' =>  __('Integrate Stripe API for secure payment processing.', 'hydra-booking'), 
             'Connect Your Stripe Account' =>  __('Connect Your Stripe Account', 'hydra-booking'), 
             'Please read the documentation here for step by step guide to know how you can get api credentials from Stripe Account' =>  __('Please read the documentation here for step by step guide to know how you can get api credentials from Stripe Account', 'hydra-booking'), 
             'Stripe Public Key' =>  __('Stripe Public Key', 'hydra-booking'), 
@@ -629,7 +658,30 @@ namespace HydraBooking\Admin\Controller;
             'Enter Mail Subject' =>  __('Enter Mail Subject', 'hydra-booking'), 
             'Subject' =>  __('Subject', 'hydra-booking'), 
             'Mail Body' =>  __('Mail Body', 'hydra-booking'), 
-            'Update' =>  __('Update', 'hydra-booking'), 
+            'Update' =>  __('Update', 'hydra-booking'),
+            'Greetings' => __('Greetings', 'hydra-booking'), 
+            'Buttons'  => __('Buttons', 'hydra-booking'),
+
+            // Activity Logs
+            'Booking has been completed' =>  __('Booking has been completed', 'hydra-booking'), 
+            'Confirmation Email Sent' =>  __('Confirmation Email Sent', 'hydra-booking'), 
+            'Confirmation Email Sent to Host' =>  __('Confirmation Email Sent to Host', 'hydra-booking'), 
+            'Confirmation Email Sent to Attendee' =>  __('Confirmation Email Sent to Attendee', 'hydra-booking'), 
+            'Pending Email Sent' =>  __('Pending Email Sent', 'hydra-booking'), 
+            'Pending Email Sent to Host' =>  __('Pending Email Sent to Host', 'hydra-booking'), 
+            'Pending Email Sent to Attendee' =>  __('Pending Email Sent to Attendee', 'hydra-booking'), 
+            'Canceled Email Sent' =>  __('Canceled Email Sent', 'hydra-booking'), 
+            'Canceled Email Sent to Host' =>  __('Canceled Email Sent to Host', 'hydra-booking'), 
+            'Canceled Email Sent to Attendee' =>  __('Canceled Email Sent to Attendee', 'hydra-booking'), 
+            'ReSchedule Email Sent' =>  __('ReSchedule Email Sent', 'hydra-booking'), 
+            'ReSchedule Email Sent to Host' =>  __('ReSchedule Email Sent to Host', 'hydra-booking'), 
+            'ReSchedule Email Sent to Attendee' =>  __('ReSchedule Email Sent to Attendee', 'hydra-booking'), 
+            'Reminder Email Sent' =>  __('Reminder Email Sent', 'hydra-booking'), 
+            'Reminder Email Sent to Attendee' =>  __('Reminder Email Sent to Attendee', 'hydra-booking'), 
+            'Booking Has Been Confirmed' =>  __('Booking Has Been Confirmed', 'hydra-booking'),  
+            'Booking Has Been Pending' =>  __('Booking Has Been Pending', 'hydra-booking'), 
+            'Booking Has Been Canceled' =>  __('Booking Has Been Canceled', 'hydra-booking'), 
+            'Booking Has Been Rescheduled' =>  __('Booking Has Been Rescheduled', 'hydra-booking'),  
 
             //
             'Import bookings from a CSV file' =>  __('Import bookings from a CSV file', 'hydra-booking'), 
@@ -656,5 +708,104 @@ namespace HydraBooking\Admin\Controller;
            
         );
      } 
+
+   /* *
+    * Calendar Trans String
+    * 
+    */ 
+
+    public static function calendarTransString(){
+       return array(
+            'January' =>  _x('January', 'Calendar full month', 'hydra-booking'),   
+            'February' =>  _x('February', 'Calendar full month', 'hydra-booking'),   
+            'March' =>  _x('March', 'Calendar full month', 'hydra-booking'),   
+            'April' =>  _x('April', 'Calendar full month', 'hydra-booking'),   
+            'May' =>  _x('May', 'Calendar full month', 'hydra-booking'),
+            'June' =>  _x('June', 'Calendar full month', 'hydra-booking'),   
+            'July' =>  _x('July', 'Calendar full month', 'hydra-booking'),   
+            'August' =>  _x('August', 'Calendar full month', 'hydra-booking'),   
+            'September' =>  _x('September', 'Calendar full month', 'hydra-booking'),
+            'October' =>  _x('October', 'Calendar full month', 'hydra-booking'),   
+            'November' =>  _x('November', 'Calendar full month', 'hydra-booking'),   
+            'December' =>  _x('December', 'Calendar full month', 'hydra-booking'),
+            'Sunday' =>  _x('Sunday', 'Calendar day', 'hydra-booking'),   
+            'Monday' =>  _x('Monday', 'Calendar day', 'hydra-booking'),   
+            'Tuesday' =>  _x('Tuesday', 'Calendar day', 'hydra-booking'),   
+            'Wednesday' =>  _x('Wednesday', 'Calendar day', 'hydra-booking'),
+            'Thursday' =>  _x('Thursday', 'Calendar day', 'hydra-booking'),   
+            'Friday' =>  _x('Friday', 'Calendar day', 'hydra-booking'),   
+            'Saturday' =>  _x('Saturday', 'Calendar day', 'hydra-booking'), 
+            'Sun' =>  _x('Sun', 'Calendar short day', 'hydra-booking'),
+            'Mon' =>  _x('Mon', 'Calendar short day', 'hydra-booking'),   
+            'Tue' =>  _x('Tue', 'Calendar short day', 'hydra-booking'),   
+            'Wed' =>  _x('Wed', 'Calendar short day', 'hydra-booking'),
+            'Thu' =>  _x('Thu', 'Calendar short day', 'hydra-booking'),
+            'Fri' =>  _x('Fri', 'Calendar short day', 'hydra-booking'),   
+            'Sat' =>  _x('Sat', 'Calendar short day', 'hydra-booking'),
+            'Today' =>  _x('Today', 'Calendar today', 'hydra-booking'),   
+            'seats left' =>  _x('seats left', 'Calendar seats left', 'hydra-booking'),   
+            'Previous' =>  _x('Previous', 'Calendar previous', 'hydra-booking'),
+            'Next' =>  _x('Next', 'Calendar next', 'hydra-booking'),
+            'Name' =>  _x('Name', 'Calendar form name field', 'hydra-booking'),
+            'Email' =>  _x('Email', 'Calendar form email field', 'hydra-booking'),
+            'AM' =>  _x('AM', 'Calendar Time Format AM', 'hydra-booking'),
+            'PM' =>  _x('PM', 'Calendar Time Format PM', 'hydra-booking'),
+            'Bookings' =>  _x('Bookings', 'Calendar bookings', 'hydra-booking'),
+            'Add New' =>  _x('Add New', 'Calendar add new', 'hydra-booking'),
+            'View Details' =>  _x('View Details', 'Calendar view details', 'hydra-booking'),
+            // number
+            '0' => _x('0', 'Calendar number', 'hydra-booking'),
+            '1' => _x('1', 'Calendar number', 'hydra-booking'),
+            '2' => _x('2', 'Calendar number', 'hydra-booking'),
+            '3' => _x('3', 'Calendar number', 'hydra-booking'),
+            '4' => _x('4', 'Calendar number', 'hydra-booking'),
+            '5' => _x('5', 'Calendar number', 'hydra-booking'),
+            '6' => _x('6', 'Calendar number', 'hydra-booking'),
+            '7' => _x('7', 'Calendar number', 'hydra-booking'),
+            '8' => _x('8', 'Calendar number', 'hydra-booking'),
+            '9' => _x('9', 'Calendar number', 'hydra-booking'),
+
+       );
+    }
+
+    public static function tfhbTranslate($key) {
+         $translations = self::calendarTransString();
+         return $translations[$key] ?? $key;
+   }
+
+   public static function tfhbTranslateNumber($key) {
+      return implode('', array_map(function ($letter) {
+         return self::tfhbTranslate($letter);
+      }, str_split((string) $key)));
+   }
+
+   public static function tfhbTranslateTimeSlot($key) {
+      return self::tfhbTranslateNumber(substr($key, 0, 2)) . ':' .
+            self::tfhbTranslateNumber(substr($key, 3, 2)) . ' ' .
+            self::tfhbTranslate(substr($key, 6, 2));
+   }
+   public static function tfhbTranslateDateSlot($key) {
+      // Example input: 'Tuesday, March 4'
+      $dateParts = explode(', ', $key);  // Split by comma (weekday and date)
+      if (count($dateParts) < 2) {
+         return $key; // Return original string if format is incorrect
+      }
+      
+      $weekday = $dateParts[0]; // 'Tuesday'
+      $monthDay = $dateParts[1]; // 'March 4'
+   
+      // Split month and day
+      $monthDayParts = explode(' ', $monthDay);
+      $month = $monthDayParts[0]; // 'March'
+      $day = $monthDayParts[1]; // '4'
+   
+      // Translate each part
+      $translatedWeekday = self::tfhbTranslate($weekday);
+      $translatedMonth = self::tfhbTranslate($month);
+      $translatedDay = self::tfhbTranslate($day);
+   
+      // Return the translated string in the format 'Weekday, Month Day'
+      return $translatedWeekday . ', ' . $translatedMonth . ' ' . $translatedDay;
+   }
 
 }

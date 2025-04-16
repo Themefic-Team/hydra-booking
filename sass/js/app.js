@@ -1,8 +1,35 @@
 (function ($) {
-	const { __, _x } = wp.i18n;
+	  
     $(document).ready(function () { 
-		const tfhb_local_timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		
+		let tfhb_local_timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		const tfhb_i18n = tfhb_app_booking.i18n;
+
+		// Check if
+		if( 'Asia/Calcutta' == tfhb_local_timeZone ){
+			tfhb_local_timeZone = 'Asia/Kolkata'; // convert to Indian Standard Time (IST)
+		}
+
+		// function tfhb translate 
+		function tfhbTranslate(key) {
+            return tfhb_i18n[key] || key + 'not found';
+        }
+		function tfhbTranslateNumber(key) { 
+			// provided key like 2025 breack down and replace each letter with translation
+			return key.toString().split('').map(function (letter) { 
+                return tfhbTranslate(letter);
+            }).join('');
+        }
+		function tfhbTranslateTimeSlot(key) {  
+			// key like "09:00 AM " AM string   
+			if(key.slice(6, 8) != ''){
+				return tfhbTranslateNumber(key.slice(0, 2)) + ':' + tfhbTranslateNumber(key.slice(3, 5)) +' ' + tfhbTranslate(key.slice(6, 8));
+
+			}else{
+				return tfhbTranslateNumber(key.slice(0, 2)) + ':' + tfhbTranslateNumber(key.slice(3, 5));
+			}
+        }
+
+        // Initialize the Date Picker
         /**
          * Time Zone Change
          * @author Jahid
@@ -35,25 +62,7 @@
 			let year = date.getFullYear();
 			let month = date.getMonth();
 		 
-			const tfhb_calendar_navs = $this.find(".tfhb-calendar-navigation span") 
-
-			const calendarLabels = {
-				months: {
-					'January' :__('January', 'hydra-booking'), 
-					'February' :__('February', 'hydra-booking'),
-					'March' :__('March', 'hydra-booking'),
-					'April' :__('April', 'hydra-booking'),
-					'May' :__('May', 'hydra-booking'),
-					'June' :__('June', 'hydra-booking'),
-					'July' :__('July', 'hydra-booking'),
-					'August' :__('August', 'hydra-booking'),
-					'September' :__('September', 'hydra-booking'),
-					'October' :__('October', 'hydra-booking'),
-					'November' :__('November', 'hydra-booking'),
-					'December' :__('December', 'hydra-booking'),
-
-				}, 
-			} 
+			const tfhb_calendar_navs = $this.find(".tfhb-calendar-navigation span")  
 			// Array of month names
 			const months = [
 				"January",
@@ -71,7 +80,7 @@
 			]; 
 
 
-			tfhb_date_manipulate( $this, calenderData, year, month, date, months, calendarLabels );
+			tfhb_date_manipulate( $this, calenderData, year, month, date, months);
 
 
 			// Attach a click event listener to each icon
@@ -109,7 +118,7 @@
 					
 					// Call the tfhb_date_manipulate function to 
 					// update the tfhb-calendar display
-					tfhb_date_manipulate( $this, calenderData, year, month, date, months, calendarLabels );
+					tfhb_date_manipulate( $this, calenderData, year, month, date, months);
 				
 					// first date of the month exp: 
 					// 2021-04-01
@@ -141,7 +150,18 @@
 				$this.find('.tfhb-available-times').append('<ul></ul>');
 				var selected_date = $this_li.attr('data-date'); 
 				$this.find("#meeting_dates").val(selected_date);
-				selected_date_format = new Date(selected_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+				// selected_date_format = new Date(selected_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+				// Get Only Day 
+				var selected_date_format_weekday = tfhbTranslate(new Date(selected_date).toLocaleDateString('en-US', { weekday: 'long' }));  
+				var selected_date_format_month = tfhbTranslate(new Date(selected_date).toLocaleDateString('en-US', { month: 'long' }));  
+				var selected_date_format_day = tfhbTranslateNumber(new Date(selected_date).toLocaleDateString('en-US', { day: 'numeric' }));  
+				// Format like tat "Tuesday, March 4"
+				var selected_date_format =  selected_date_format_weekday+', '+selected_date_format_month+ ' '+selected_date_format_day;
+                // Set the date in the select box
+				// selected_date_format_day 
+				// translate the selected
+				// alert(selected_date_format_day);
+
 				 
 
 				$this.find('.tfhb-meeting-times .tfhb-select-date').html(selected_date_format); 
@@ -155,11 +175,11 @@
 						var remaining = '';
 						// if selected_date_time_slot[i].remaining is not undefined then show the time slot
  						if(selected_date_time_slot[i].remaining != undefined){
-							 remaining = '<span class="tfhb-time-slot-remaining tfhb-flexbox"><span></span>'+selected_date_time_slot[i].remaining+' seats left</span>';
+							 remaining = '<span class="tfhb-time-slot-remaining tfhb-flexbox"><span></span>'+tfhbTranslateNumber(selected_date_time_slot[i].remaining)+' '+tfhbTranslate('seats left') +'</span>';
 						}
 						// Remove 
 						// Add with animation when data available
-						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + selected_date_time_slot[i].start + remaining + ' </div> </li>');
+						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + tfhbTranslateTimeSlot(selected_date_time_slot[i].start) + remaining + ' </div> </li>');
 
 					}
 				}else{
@@ -230,7 +250,7 @@
 				$this.find("input[name='meeting_time_start']").val(selected_time_start);
 				$this.find("input[name='meeting_time_end']").val(selected_time_end);
 			
-				$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> Next<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
+				$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> '+tfhbTranslate('Next')+'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
 				$this_time.addClass('active');
 				
 
@@ -260,14 +280,19 @@
 							</svg>
 						</div> 
 						<div>
-							`+time_zone+`(`+meeting_time_start+`)
+							`+time_zone+`(`+tfhbTranslateTimeSlot(meeting_time_start)+`)
 						</div>
 					</li>`;
 					// date time format like that  9:00pm, Saturday, April 25
 					
 				var date_time = new Date(meeting_dates);
-				var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-				
+				// var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+				var selected_date_format_weekday = tfhbTranslate(date_time.toLocaleDateString('en-US', { weekday: 'long' }));  
+				var selected_date_format_month = tfhbTranslate(date_time.toLocaleDateString('en-US', { month: 'long' }));  
+				var selected_date_format_day = tfhbTranslateNumber(date_time.toLocaleDateString('en-US', { day: 'numeric' }));  
+				var selected_date_format_year = tfhbTranslateNumber(date_time.toLocaleDateString('en-US', { year: 'numeric' }));  
+				// Format like tat "Tuesday, March 4"
+				var selected_date_format =  selected_date_format_weekday+', '+selected_date_format_month+ ' '+selected_date_format_day +', ' + selected_date_format_year;
 				var date_time_html = `<li class="tfhb-flexbox tfhb_date_time_info tfhb-gap-8">
 						<input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
 						<div class="tfhb-icon">  
@@ -281,7 +306,7 @@
 						</div> 
 						<div>
 							`
-							+date_time.toLocaleDateString('en-US', options)+
+							+selected_date_format+
 							`
 						</div>
 					</li>`;
@@ -446,6 +471,7 @@
 			var confirmation_template = responseData.confirmation_template;
 			// hide the form .tfhb-confirmation-button
 			$this.find('.tfhb-confirmation-button').hide(); 
+			$this.find('.wpcf7').hide(); 
 			let currency = typeof tfhb_app_booking.general_settings.currency !== 'undefined' && tfhb_app_booking.general_settings.currency != '' ? tfhb_app_booking.general_settings.currency : 'USD';
 		 
 			// Render PayPal button into the container
@@ -514,7 +540,9 @@
 
 		function tfhb_render_stripe_payment($this, responseData, stripe_public_key, meeting_title) {
 			$this.find('.tfhb-confirmation-button').hide();
-		
+			let currency = typeof tfhb_app_booking.general_settings.currency !== 'undefined' && tfhb_app_booking.general_settings.currency != '' ? tfhb_app_booking.general_settings.currency : 'USD';
+		 
+			$this.find('.wpcf7').hide(); 
 			// Add Stripe Payment Button
 			const stripeButtonContainer = $this.find('.tfhb-stripe-button-container');
 			stripeButtonContainer.html("<a href='#' class='tfhb-stripe-payment-btn'>Pay With Stripe</a>");
@@ -716,12 +744,12 @@
 
 		}
 
-		// Function to generate the tfhb-calendar
-		function tfhb_date_manipulate($this, calenderData, year, month, date, months, calendarLabels) {
-
+		
+		function tfhb_date_manipulate($this, calenderData, year, month, date, months) {
 			const day = $this.find(".tfhb-calendar-dates");
+			const weekdays = $this.find(".tfhb-calendar-weekdays");
 			const currdate = $this.find(".tfhb-calendar-current-date");
-  
+		
 			let calender_data = calenderData;
 			let availability = calender_data.availability;
 			let date_slots = availability.date_slots;  
@@ -730,91 +758,91 @@
 			let availability_range_type = calender_data.availability_range_type;   
 			let availabilitys_range_start = calender_data.availability_range.start;   
 			let availabilitys_range_end = calender_data.availability_range.end;   
+		
 			let dayNameText = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			let dayShortText = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 			let DisableDays = [];
-  
-			// Get Disable Days 
-				for (var i = 0; i < time_slots.length; i++) { 
-					if(time_slots[i].status == false){
-						DisableDays.push(time_slots[i].day);
-					}
-				}  
-			
-			 
-
-			// Get the first day of the month
-			let dayone = new Date(year, month, 1).getDay();
-
-			// Get the last date of the month
-			let lastdate = new Date(year, month + 1, 0).getDate();
-	
-			// Get the day of the last date of the month
-			let dayend = new Date(year, month, lastdate).getDay();
-	
-			// Get the last date of the previous month
-			let monthlastdate = new Date(year, month, 0).getDate();
-	
-			// Variable to store the generated tfhb-calendar HTML
-			let lit = "";
-	
-			// If Time slots status is not true disbale that day 
-			// Loop to add the last dates of the previous month
-			for (let i = dayone; i > 0; i--) {
-				lit += `<li class="inactive">${monthlastdate - i + 1}</li>`;
+		
+			// Use dynamic start day if available 
+			let week_start_from = tfhb_app_booking.general_settings.week_start_from || 'Sunday';
+			let weekStartIndex = dayNameText.indexOf(week_start_from);
+			if (weekStartIndex === -1) weekStartIndex = 0;
+		
+			//  Update Weekday DOM Based on week_start_from
+			let adjustedWeekdays = [];
+			for (let i = 0; i < 7; i++) {
+				let index = (weekStartIndex + i) % 7;
+				adjustedWeekdays.push(`<li>${tfhbTranslate(dayShortText[index])}</li>`);
 			}
-	
-			// Loop to add the dates of the current month
-			for (let i = 1; i <= lastdate; i++) {
-	
-				// Check if the current date is today
+			weekdays.html(adjustedWeekdays.join(""));
+		
+			//  Disable Days
+			for (let i = 0; i < time_slots.length; i++) { 
+				if (time_slots[i].status === false || time_slots[i].status == false) {
+					DisableDays.push(time_slots[i].day);
+				}
+			}
+		
+			//  Day logic based on week start
+			let actualDayOne = new Date(year, month, 1).getDay();
+			let dayone = (actualDayOne - weekStartIndex + 7) % 7;
+			let lastdate = new Date(year, month + 1, 0).getDate();
+			let actualDayEnd = new Date(year, month, lastdate).getDay();
+			let dayend = (actualDayEnd - weekStartIndex + 7) % 7;
+			let monthlastdate = new Date(year, month, 0).getDate();
+		
+			let lit = "";
+		
+			//  Previous month's trailing days
+			for (let i = dayone; i > 0; i--) {
+				lit += `<li class="inactive">${tfhbTranslateNumber(monthlastdate - i + 1)}</li>`;
+			}
+		
+			//  Current month dates
+			for (let i = 1; i <= lastdate; i++) { 
 				let isToday = i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? "active" : "";
-
-				// Check if the current date has availability slots
-				let dateKey = year + "-" + (month + 1).toString().padStart(2, '0') + "-" + i.toString().padStart(2, '0'); 
-				let dateSlot = typeof date_slots !== 'undefined'  ? date_slots.find(slot => slot.date.match(dateKey) ) : "";
-				let availabilityClass = typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available == true   ? "inactive " : " ";
-				let dataAvailable = "available";
+				let dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+				let dateSlot = typeof date_slots !== 'undefined' ? date_slots.find(slot => slot.date.match(dateKey)) : "";
 				
-				// Before today Days Disable 
-				if(new Date() > new Date(year, month, i) && i !== date.getDate() ){
+				let availabilityClass = (typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available === true) ? "inactive " : " ";
+				let dataAvailable = "available";
+		
+				if (new Date() > new Date(year, month, i) && i !== date.getDate()) {
 					availabilityClass = "inactive ";
 					dataAvailable = "unavailable";
 				}
-
-				// if current date day is disable then disable that day.
-				if(DisableDays.includes(dayNameText[new Date(year, month, i).getDay()])){
+		
+				let currentDayName = dayNameText[new Date(year, month, i).getDay()]; 
+				if (DisableDays.includes(currentDayName)) {
 					availabilityClass = "inactive ";
 					dataAvailable = "unavailable";
+					isToday = '';
 				}
-				// if current date is out of range then disable that day.
-
-				if(availability_range_type != 'indefinitely'){
-					if(new Date(year, month, i) < new Date(availabilitys_range_start) || new Date(year, month, i) > new Date(availabilitys_range_end)){
+		
+				if (availability_range_type !== 'indefinitely') {
+					let currDate = new Date(year, month, i);
+					if (currDate < new Date(availabilitys_range_start) || currDate > new Date(availabilitys_range_end)) {
 						availabilityClass = "inactive ";
 						dataAvailable = "unavailable";
 						isToday = "";
 					}
 				}
-				if('active' == isToday){
-					availabilityClass = " "; 
+		
+				if ('active' === isToday) {
+					availabilityClass = " ";
 				}
- 
-				lit += `<li data-date="${dateKey}" data-available="${dataAvailable}" class="${isToday} current ${availabilityClass}">${i}</li>`;
-		   }
-	
-			// Loop to add the first dates of the next month
-			for (let i = dayend; i < 6; i++) {
-				lit += `<li class="inactive">${i - dayend + 1}</li>`;
+		
+				lit += `<li data-date="${dateKey}" data-available="${dataAvailable}" class="${isToday} current ${availabilityClass}">${tfhbTranslateNumber(i)}</li>`;
 			}
-	 
-			currdate.text(`${calendarLabels.months[months[month]]} ${year}`);
-			// currdate.text(`${months[month]} ${year}`);
-	
-			// update the HTML of the dates element 
-			// with the generated tfhb-calendar
+		
+			// ➕ Next month's leading days
+			for (let i = dayend; i < 6; i++) {
+				lit += `<li class="inactive">${tfhbTranslateNumber(i - dayend + 1)}</li>`;
+			}
+		
+			currdate.text(`${tfhbTranslate(months[month])} ${tfhbTranslateNumber(year)}`);
 			day.html(lit);
 		}
-
 		// Function to generate the tfhb-calendar
 		function tfhb_times_manipulate($this, current_date, calenderData, callback = null) {
 			  

@@ -154,7 +154,7 @@ class SetupWizard {
 		} 
 		$data = array(
 			'status'                => true,
-			'message'               => 'General Settings Updated Successfully',
+			'message'               => __( 'General Settings Updated Successfully', 'hydra-booking' ),
 			'meeting'               => $meeting,
 			'email_subscribe'       => $email_subscribe,
 			'availability_settings' => $availability_settings,
