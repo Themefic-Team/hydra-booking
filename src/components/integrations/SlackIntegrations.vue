@@ -35,7 +35,7 @@ const closePopup = () => {
       <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
-                <img :src="$tfhb_url+'/assets/images/Zoom.png'" alt="">
+                <img :src="$tfhb_url+'/assets/images/Slack.png'" alt="">
             </span>  
             <div class="cartbox-text"> 
                 <h3>{{ $tfhb_trans('Slack') }}</h3>
