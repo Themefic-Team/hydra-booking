@@ -173,6 +173,29 @@ class Host {
 		return $data;
 	}
 
+	// get column 
+	// Get Only column list as array
+	public function getColumns() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . $this->table;
+		$sql        = "SHOW COLUMNS FROM $table_name";
+		$data       = $wpdb->get_results( $sql );
+		$columns    = array();
+
+	 
+		foreach ( $data as $key => $value ) {
+			// if ( $value->Field == 'id' ) {
+			// 	continue;
+			// }  
+			$columns[] = array(
+				'name'  => $value->Field,
+				'value' => $value->Field,
+			);
+		}
+		return $columns;
+	}
+
+
 	// delete
 	public function delete( $id ) {
 		global $wpdb;

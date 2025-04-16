@@ -63,10 +63,10 @@ class ImportExport {
 
 		register_rest_route(
 			'hydra-booking/v1',
-			'/settings/import-export/import-meeting',
+			'/settings/import-export/import-host',
 			array(
 				'methods'  => 'POST',
-				'callback' => array( $this, 'ImportMeeting' ),
+				'callback' => array( $this, 'ImportHost' ),
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
@@ -89,10 +89,15 @@ class ImportExport {
 		// Meeting 
 		$meeting = new Meeting();
 		$meetings = $meeting->getColumns();
+		// Host
+		$host = new Host();
+		$hosts = $host->getColumns();
+
 		$data = array(
 			'status'         => true,
 			'booking_column' => $bookings,
 			'meeting_column' => $meetings,
+			'host_column'    => $hosts,
 		);
 		return rest_ensure_response( $data );
 	}
@@ -157,6 +162,8 @@ class ImportExport {
 			if($is_overwrite == true){
 				$meeting->update($new_row);
 			}else{
+				// unset id 
+				unset($new_row['id']);
 				$meeting->add($new_row);
 			}   
 		}
@@ -166,6 +173,97 @@ class ImportExport {
 			'status'  => true,
 			'data'    => true,
 			'message' =>  __( 'Meetings Imported Successfully', 'hydra-booking' ),
+		);
+		return rest_ensure_response( $data );
+ 
+	}
+	// Export booking Data
+	public function ImportHost() {
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+		$data    = isset( $request['data'] ) ? $request['data'] : array();
+		$columns = isset( $request['column'] ) ? $request['column'] : array();
+		$is_overwrite = isset( $request['is_overwrite'] ) ? $request['is_overwrite'] : false;
+		$is_create_new_user = isset( $request['is_create_new_user'] ) ? $request['is_create_new_user'] : false;
+		 // current user host id 
+		$host = new Host();
+		$host_id = $host->getHostByUserId( get_current_user_id() );
+	
+		if ( empty( $data ) || empty( $columns ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __( 'Invalid data provided.', 'hydra-booking' ),
+			) );
+		} 
+		$header = $data[0];
+		$data_rows = array_slice($data, 1);
+		
+		// Map header to index
+		$header_map = array_flip($header);
+	 
+		$host = new Host();
+		foreach ($data_rows as $row) {
+			$new_row = []; 
+			$data = []; 
+			if (empty(array_filter($row))) {
+				continue;
+			}
+			// tfhb_print_r($row);
+			foreach ($columns as $key => $column) {
+				if($column == '' || ( $key == 'id' && $is_overwrite == false)){
+					continue; // skip empty column
+				}
+				if (isset($header_map[$column])) {
+					$data[] = $row[$header_map[$column]];
+					$new_row[$key] = $row[$header_map[$column]];
+				} else {
+					$data[] = null; // or empty string
+					$new_row[$key] = null; // or empty string
+				}
+ 
+			}  
+			$user_id = $new_row['user_id'];
+			// Check if user is not available in the row using id 
+			if($user_id !='' ){ 
+				$check_user = get_user_by( 'id', $user_id ); 
+				
+					if(empty($check_user)){
+						// create new user
+						// check user by email
+						$check_user = get_user_by( 'email', $new_row['email'] );
+						if(empty($check_user)){
+							if($is_create_new_user == true){
+							// create new user
+								$user_id = wp_create_user( $new_row['email'], 'password', $new_row['email'] );
+								$new_row['user_id'] = $user_id;
+
+							}else{
+								continue;
+							}
+						}else{
+							$new_row['user_id'] = $check_user->ID;
+						} 
+					}else{
+						$new_row['user_id'] = $check_user->ID;
+					}
+				
+			 }else{
+				$user_id = wp_create_user( $new_row['email'], 'password', $new_row['email'] );
+				$new_row['user_id'] = $user_id;
+			 }
+
+			if($is_overwrite == true){
+				$host->update($new_row);
+			}else{
+				unset($new_row['id']);
+				$host->add($new_row);
+			}   
+		}
+
+
+		$data = array(
+			'status'  => true,
+			'data'    => true,
+			'message' =>  __( 'Host Imported Successfully', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
  

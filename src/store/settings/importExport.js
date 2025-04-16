@@ -33,7 +33,8 @@ const importExport = reactive({
         column: {},  
         import_column: {},  
         import_file: null,
-        is_overwrite: false,
+        is_overwrite: true,
+        is_create_new_user: true,
         import_data: {},
         rearrange_column: {},
         import_status: false,
@@ -52,6 +53,7 @@ const importExport = reactive({
             if (response.data.status) {  
                 this.booking.column = response.data.booking_column;
                 this.meeting.column = response.data.meeting_column;
+                this.host.column = response.data.host_column;
                 
             }else{
                 toast.error(response.data.message, {
@@ -156,6 +158,34 @@ const importExport = reactive({
             }
         });    
     },
+    // Other Information 
+    async readHostImportData(event) {   
+        const file = event;
+        // const file = event.target.files[0];
+        Papa.parse(file, { 
+            header: false,
+            json: true,
+            complete: function(results) { 
+                importExport.host.import_data = results.data;
+                // get first row as column
+                if (results.data.length > 0) {
+                    importExport.host.import_column = results.data[0];
+                } 
+                
+
+                for (let i = 0; i < importExport.host.import_column.length; i++) { 
+
+                   
+                    let element = importExport.host.import_column[i];
+                    importExport.host.rearrange_column[element] = importExport.host.import_column[i];
+                    
+                } 
+                 
+            }
+        });    
+    },
+
+
     // Run The booking import
     async importMeeting() { 
         this.importing = true;
@@ -182,6 +212,56 @@ const importExport = reactive({
             if (response.data.status) {  
                 this.progress = 100;
                 this.meeting.steps = 'completed';
+                this.importing = false;
+                // scrool to top
+                window.scrollTo(0, 0);
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+            }else{
+
+                this.importing = false;
+                this.progress = 100;
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+        } catch (error) {
+
+            this.importing = false;
+            this.progress = 100;
+            console.log(error);
+        }  
+    },
+    // Run The booking import
+    async importHost() { 
+        this.importing = true;
+        this.progress = 0;
+        // Simulate progress
+        this.progressInterval = setInterval(() => {
+            if (this.progress < 90) {
+            this.progress += 1;
+            }
+        }, 100);
+
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-host', {
+                data: this.host.import_data,
+                column: this.host.rearrange_column,
+                is_overwrite: this.host.is_overwrite,
+                is_create_new_user: this.host.is_create_new_user,
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {  
+                this.progress = 100;
+                this.host.steps = 'completed';
                 this.importing = false;
                 // scrool to top
                 window.scrollTo(0, 0);
