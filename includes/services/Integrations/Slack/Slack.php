@@ -76,16 +76,13 @@ class Slack {
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) : array();
         $_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
         
-		if(!empty($_tfhb_host_integration_settings)){
+		if(!empty($_tfhb_host_integration_settings['slack']) && !empty($_tfhb_host_integration_settings['slack']['status'])){
 			$slack_status = !empty($_tfhb_host_integration_settings['slack']['status']) ? $_tfhb_host_integration_settings['slack']['status'] : '';
 			$slack_endpoint = !empty($_tfhb_host_integration_settings['slack']['endpoint']) ? $_tfhb_host_integration_settings['slack']['endpoint'] : '';
+		}else{
+			$slack_status = !empty($_tfhb_integration_settings['slack']['status']) ? $_tfhb_integration_settings['slack']['status'] : '';
+			$slack_endpoint = !empty($_tfhb_integration_settings['slack']['endpoint']) ? $_tfhb_integration_settings['slack']['endpoint'] : '';
 		}
-
-		$global_slack_status = !empty($_tfhb_integration_settings['slack']['status']) ? $_tfhb_integration_settings['slack']['status'] : '';
-		$global_slack_endpoint = !empty($_tfhb_integration_settings['slack']['endpoint']) ? $_tfhb_integration_settings['slack']['endpoint'] : '';
-
-		$slack_status = $slack_status ? $slack_status : $global_slack_status;
-		$slack_endpoint = $slack_endpoint ? $slack_endpoint : $global_slack_endpoint;
 
         if(!empty($slack_status) && !empty($slack_endpoint)){
 

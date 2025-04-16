@@ -22,7 +22,7 @@ onMounted(() => {
                    
                     <li><router-link to="/settings/availability" :class="{ 'active': $route.path === '/settings/availability' }"> <Icon name="Clock" /> {{ $tfhb_trans('Availability') }}</router-link></li> 
 
-                    <li  :class="{ 'expand': $route.path === '/settings/notifications' }" class="tfhb-notification-settings-menu"><router-link to="/settings/notifications#email" class="notification-submenu" data-filter="email" :class="{ 'active': $route.path === '/settings/notifications' }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}
+                    <li  :class="{ 'expand': $route.path === '/settings/notifications' }" class="tfhb-notification-settings-menu"><router-link to="/settings/notifications#email" class="notification-submenu" data-filter="email" :class="{ 'active': $route.path.includes('notifications') }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}
                        <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size=20 /> </span>
                     </router-link>
                         <ul class="dropdown">

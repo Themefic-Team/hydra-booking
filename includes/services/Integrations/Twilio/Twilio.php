@@ -76,28 +76,22 @@ class Twilio {
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) : array();
         $_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
         
-		if(!empty($_tfhb_host_integration_settings)){
+		if(!empty($_tfhb_host_integration_settings['twilio']) && !empty($_tfhb_host_integration_settings['twilio']['status'])){
 			$twilio_status = !empty($_tfhb_host_integration_settings['twilio']['status']) ? $_tfhb_host_integration_settings['twilio']['status'] : '';
 			$twilio_number = !empty($_tfhb_host_integration_settings['twilio']['receive_number']) ? $_tfhb_host_integration_settings['twilio']['receive_number'] : '';
 			$twilio_from_number = !empty($_tfhb_host_integration_settings['twilio']['from_number']) ? $_tfhb_host_integration_settings['twilio']['from_number'] : '';
 			$twilio_sid = !empty($_tfhb_host_integration_settings['twilio']['sid']) ? $_tfhb_host_integration_settings['twilio']['sid'] : '';
 			$twilio_token = !empty($_tfhb_host_integration_settings['twilio']['token']) ? $_tfhb_host_integration_settings['twilio']['token'] : '';
 			$twilio_otp_type = !empty($_tfhb_host_integration_settings['twilio']['otp_type']) ? $_tfhb_host_integration_settings['twilio']['otp_type'] : '';
+		}else{
+			$twilio_status = !empty($_tfhb_integration_settings['twilio']['status']) ? $_tfhb_integration_settings['twilio']['status'] : '';
+			$twilio_number = !empty($_tfhb_integration_settings['twilio']['receive_number']) ? $_tfhb_integration_settings['twilio']['receive_number'] : '';
+			$twilio_from_number = !empty($_tfhb_integration_settings['twilio']['from_number']) ? $_tfhb_integration_settings['twilio']['from_number'] : '';
+			$twilio_sid = !empty($_tfhb_integration_settings['twilio']['sid']) ? $_tfhb_integration_settings['twilio']['sid'] : '';
+			$twilio_token = !empty($_tfhb_integration_settings['twilio']['token']) ? $_tfhb_integration_settings['twilio']['token'] : '';
+			$twilio_otp_type = !empty($_tfhb_integration_settings['twilio']['otp_type']) ? $_tfhb_integration_settings['twilio']['otp_type'] : '';
 		}
 
-		$global_twilio_status = !empty($_tfhb_integration_settings['twilio']['status']) ? $_tfhb_integration_settings['twilio']['status'] : '';
-		$global_twilio_number = !empty($_tfhb_integration_settings['twilio']['receive_number']) ? $_tfhb_integration_settings['twilio']['receive_number'] : '';
-		$global_twilio_from_number = !empty($_tfhb_integration_settings['twilio']['from_number']) ? $_tfhb_integration_settings['twilio']['from_number'] : '';
-		$global_twilio_sid = !empty($_tfhb_integration_settings['twilio']['sid']) ? $_tfhb_integration_settings['twilio']['sid'] : '';
-		$global_twilio_token = !empty($_tfhb_host_integration_settings['twilio']['token']) ? $_tfhb_host_integration_settings['twilio']['token'] : '';
-		$global_twilio_otp_type = !empty($_tfhb_host_integration_settings['twilio']['otp_type']) ? $_tfhb_host_integration_settings['twilio']['otp_type'] : '';
-
-		$twilio_status = $twilio_status ? $twilio_status : $global_twilio_status;
-		$twilio_number = $twilio_number ? $twilio_number : $global_twilio_number;
-		$twilio_from_number = $twilio_from_number ? $twilio_from_number : $global_twilio_from_number;
-		$twilio_sid = $twilio_sid ? $twilio_sid : $global_twilio_sid;
-		$twilio_token = $twilio_token ? $twilio_token : $global_twilio_token;
-		$twilio_otp_type = $twilio_otp_type ? $twilio_otp_type : $global_twilio_otp_type;
 
         if(!empty($twilio_status) && !empty($twilio_number) && !empty($twilio_sid) && !empty($twilio_token)){
 
@@ -121,7 +115,7 @@ class Twilio {
 			];
 			
 			$response = wp_remote_post('https://api.twilio.com/2010-04-01/Accounts/' . $twilio_sid . '/Messages.json', $args);
-			// var_dump($response); exit();
+
 			if (is_wp_error($response)) {
 				error_log('Twilio API Error: ' . $response->get_error_message());
 			}
