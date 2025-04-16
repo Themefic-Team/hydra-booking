@@ -590,22 +590,6 @@ class SettingsController {
 				'message' =>  __('Telegram Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
-		} elseif ( $key == 'whatsapp_data' ) {
-			$_tfhb_integration_settings['whatsapp']['type']        = sanitize_text_field( $data['type'] );
-			$_tfhb_integration_settings['whatsapp']['status']      = sanitize_text_field( $data['status'] );
-			$_tfhb_integration_settings['whatsapp']['number']      = sanitize_text_field( $data['number'] );
-			$_tfhb_integration_settings['whatsapp']['access_token']   = sanitize_text_field( $data['access_token'] );
-
-			// update option
-			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
-			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
-
-			$data = array(
-				'status'  => true,
-				'integration_settings'  => $option,
-				'message' =>  __('Whatsapp Settings Updated Successfully', 'hydra-booking')
-			);
-			return rest_ensure_response( $data );
 		} elseif ( $key == 'twilio_data' ) {
 			$_tfhb_integration_settings['twilio']['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['twilio']['status']      = sanitize_text_field( $data['status'] );

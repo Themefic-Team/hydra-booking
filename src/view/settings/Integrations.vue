@@ -25,7 +25,6 @@ import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.v
 import PabblyIntegrations from '@/components/integrations/PabblyIntegrations.vue'; 
 import ZapierIntegrations from '@/components/integrations/ZapierIntegrations.vue';
 import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
-import WhatsappIntegration from '@/components/integrations/WhatsappIntegrations.vue';
 import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
 import SlackIntegration from '@/components/integrations/SlackIntegrations.vue';
 
@@ -157,12 +156,6 @@ const Integration = reactive( {
         bot_token: '',
         chat_id: '',
     },
-    whatsapp : {
-        type: 'meeting', 
-        status: 0, 
-        number: '',
-        access_token: '',
-    },
     twilio : {
         type: 'meeting', 
         status: 0, 
@@ -289,7 +282,6 @@ const fetchIntegration = async () => {
             Integration.fluent= response.data.integration_settings.fluent ? response.data.integration_settings.fluent : Integration.fluent;
             Integration.gravity= response.data.integration_settings.gravity ? response.data.integration_settings.gravity : Integration.gravity;
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
-            Integration.whatsapp= response.data.integration_settings.whatsapp ? response.data.integration_settings.whatsapp : Integration.whatsapp;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
             Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
 
@@ -342,7 +334,6 @@ const UpdateIntegration = async (key, value) => {
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
-            Integration.whatsapp= response.data.integration_settings.whatsapp ? response.data.integration_settings.whatsapp : Integration.whatsapp;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
             Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
             
@@ -432,17 +423,6 @@ onBeforeMount(() => {
                 v-if="currentHash === 'all' || currentHash === 'conference'"
                 />
                 <!-- Telegram intrigation -->
-
-                <!-- Whatsapp intrigation -->
-                <WhatsappIntegration 
-                :whatsapp_data="Integration.whatsapp"  
-                @update-integrations="UpdateIntegration" 
-                :ispopup="wpopup"
-                @popup-open-control="iswPopupOpen"
-                @popup-close-control="iswPopupClose"
-                v-if="currentHash === 'all' || currentHash === 'conference'"
-                />
-                <!-- Whatsapp intrigation -->
                 
                 <!-- TwilioIntegration intrigation -->
                 <TwilioIntegration 
