@@ -274,7 +274,133 @@ const meetingData = reactive({
                 body : '',
                 builder: ''
             },
-        }
+        },
+        telegram: {
+            booking_confirmation: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_pending: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_cancel: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_reschedule: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_reminder: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+        },
+        slack: {
+            booking_confirmation: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_pending: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_cancel: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_reschedule: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_reminder: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+        },
+        twilio: {
+            booking_confirmation: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_pending: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_cancel: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_reschedule: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_reminder: {
+                status : 1,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+        },
     },
     payment_status: 1,
     meeting_price: '',

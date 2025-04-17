@@ -535,7 +535,6 @@ const formatLabel = (key) => {
 watch(() => props.data.builder, (newBuilder) => {
     if (newBuilder && Object.keys(newBuilder).length) {
         Object.assign(emailBuilder, JSON.parse(JSON.stringify(newBuilder)));
-        console.log(props.data.builder);
     } else {
         if(props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'){
             const defaults = JSON.parse(JSON.stringify(defaultEmailBuilder));
