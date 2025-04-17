@@ -416,7 +416,8 @@ const meetingData = reactive({
     is_display_max_book_slot: 0,
     mailchimp: '',
     fluentcrm: '',
-    zohocrm: ''
+    zohocrm: '',
+    telegram: ''
 });
 
 
@@ -614,6 +615,7 @@ const fetchMeeting = async () => {
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
             meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
+            meetingData.telegram = response.data.meeting.telegram.status ? response.data.meeting.telegram.status : '';
 
             skeleton.value = false
         }else{ 

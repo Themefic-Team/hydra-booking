@@ -981,6 +981,24 @@ class MeetingController {
 			$zohocrm_Data['status'] = false;
 		}
 
+		// Telegram
+		if(!empty($_tfhb_host_integration_settings['telegram']) && !empty($_tfhb_host_integration_settings['telegram']['status'])){
+			$telegram_status = ! empty( $_tfhb_host_integration_settings['telegram']['status'] ) ? $_tfhb_host_integration_settings['telegram']['status'] : '';
+			$telegram_bot_token = ! empty( $_tfhb_host_integration_settings['telegram']['bot_token'] ) ? $_tfhb_host_integration_settings['telegram']['bot_token'] : '';
+			$telegram_chat_id  = ! empty( $_tfhb_host_integration_settings['telegram']['chat_id'] ) ? $_tfhb_host_integration_settings['telegram']['chat_id'] : '';
+		}else{
+			$telegram_status = ! empty( $_tfhb_integration_settings['telegram']['status'] ) ? $_tfhb_integration_settings['telegram']['status'] : '';
+			$telegram_bot_token = ! empty( $_tfhb_integration_settings['telegram']['bot_token'] ) ? $_tfhb_integration_settings['telegram']['bot_token'] : '';
+			$telegram_chat_id  = ! empty( $_tfhb_integration_settings['telegram']['chat_id'] ) ? $_tfhb_integration_settings['telegram']['chat_id'] : '';
+		}
+
+		$telegram_Data = array();
+		if ( ! empty( $telegram_status ) && ! empty( $telegram_bot_token ) && ! empty( $telegram_chat_id ) ) {
+			$telegram_Data['status']  = true;
+		} else {
+			$telegram_Data['status'] = false;
+		}
+
 		// Fetch Questions Data
 		$questions_form_type = ! empty( $MeetingData->questions_form_type ) ? $MeetingData->questions_form_type : '';
 		$questions_form      = ! empty( $MeetingData->questions_form ) ? $MeetingData->questions_form : 0;
@@ -1007,6 +1025,7 @@ class MeetingController {
 			'zohocrm'          => $zohocrm_Data,
 			'formsList'        => $formsList,
 			'integrations'     => $integrations,
+			'telegram'     => $telegram_Data,
 			'message'          =>  __( 'Meeting Data','hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
