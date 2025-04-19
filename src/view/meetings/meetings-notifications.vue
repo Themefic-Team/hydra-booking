@@ -4,6 +4,7 @@ import {ref} from 'vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import MailNotifications from '@/components/notifications/MailNotifications.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 
 const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
@@ -114,154 +115,156 @@ const UpdateNotification = async () => {
                     </div>
                 </div>
 
-                <div v-if="currentTabs=='host'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                        title="Send Email to Host" 
-                        :label="$tfhb_trans('Booking Confirmation')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.host.booking_confirmation"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingConfirmPopUp"
-                        @popup-open-control="hostBookingConfirmPopUp = true"
-                        @popup-close-control="hostBookingConfirmPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                <div class="tfhb-integration-notification-box">
+                    <div v-if="currentTabs=='host'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                            title="Send Email to Host" 
+                            :label="$tfhb_trans('Booking Confirmation')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.host.booking_confirmation"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingConfirmPopUp"
+                            @popup-open-control="hostBookingConfirmPopUp = true"
+                            @popup-close-control="hostBookingConfirmPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                            :title="$tfhb_trans('Send Email to Host')" 
+                            :label="$tfhb_trans('Booking Pending')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.host.booking_pending"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingPendingPopUp"
+                            @popup-open-control="hostBookingPendingPopUp = true"
+                            @popup-close-control="hostBookingPendingPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
+
+                        <!-- Single Notification  -->
+                        <MailNotifications 
                         :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Pending')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.host.booking_pending"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingPendingPopUp"
-                        @popup-open-control="hostBookingPendingPopUp = true"
-                        @popup-close-control="hostBookingPendingPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                            :label="$tfhb_trans('Booking Cancel')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.host.booking_cancel"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingCencelPopUp"
+                            @popup-open-control="hostBookingCencelPopUp = true"
+                            @popup-close-control="hostBookingCencelPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Cancel')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.host.booking_cancel"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingCencelPopUp"
-                        @popup-open-control="hostBookingCencelPopUp = true"
-                        @popup-close-control="hostBookingCencelPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                        :title="$tfhb_trans('Send Email to Host')" 
+                            :label="$tfhb_trans('Booking Reschedule')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.host.booking_reschedule" 
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingReschedulePopUp"
+                            @popup-open-control="hostBookingReschedulePopUp = true"
+                            @popup-close-control="hostBookingReschedulePopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Reschedule')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.host.booking_reschedule" 
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingReschedulePopUp"
-                        @popup-open-control="hostBookingReschedulePopUp = true"
-                        @popup-close-control="hostBookingReschedulePopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                        :title="$tfhb_trans('Send Email to Host')" 
+                            :label="$tfhb_trans('Booking Reminder')"
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.host.booking_reminder"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingReminderPopUp"
+                            @popup-open-control="hostBookingReminderPopUp = true"
+                            @popup-close-control="hostBookingReminderPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
+        
+        
+                    </div> 
+                    <div v-if="currentTabs=='attendee'"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Reminder')"
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.host.booking_reminder"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingReminderPopUp"
-                        @popup-open-control="hostBookingReminderPopUp = true"
-                        @popup-close-control="hostBookingReminderPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
-    
-    
-                </div> 
-                <div v-if="currentTabs=='attendee'"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                            :title="$tfhb_trans('Send Email to Attendee')" 
+                            :label="$tfhb_trans('Booking Confirmation')"
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.attendee.booking_confirmation"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="attendeeBookingConfirmPopUp"
+                            @popup-open-control="attendeeBookingConfirmPopUp = true"
+                            @popup-close-control="attendeeBookingConfirmPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                        :title="$tfhb_trans('Send Email to Attendee')" 
-                        :label="$tfhb_trans('Booking Confirmation')"
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.attendee.booking_confirmation"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="attendeeBookingConfirmPopUp"
-                        @popup-open-control="attendeeBookingConfirmPopUp = true"
-                        @popup-close-control="attendeeBookingConfirmPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                            :title="$tfhb_trans('Send Email to Attendee')"
+                            :label="$tfhb_trans('Booking Pending')"
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.attendee.booking_pending"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="attendeeBookingPendingPopUp"
+                            @popup-open-control="attendeeBookingPendingPopUp = true"
+                            @popup-close-control="attendeeBookingPendingPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
+                        <!-- Single Notification  -->
+                        <MailNotifications 
                         :title="$tfhb_trans('Send Email to Attendee')"
-                        :label="$tfhb_trans('Booking Pending')"
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.attendee.booking_pending"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="attendeeBookingPendingPopUp"
-                        @popup-open-control="attendeeBookingPendingPopUp = true"
-                        @popup-close-control="attendeeBookingPendingPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                            :label="$tfhb_trans('Booking Cancel')"
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.attendee.booking_cancel"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="attendeeBookingCancelPopUp"
+                            @popup-open-control="attendeeBookingCancelPopUp = true"
+                            @popup-close-control="attendeeBookingCancelPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Attendee')"
-                        :label="$tfhb_trans('Booking Cancel')"
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.attendee.booking_cancel"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="attendeeBookingCancelPopUp"
-                        @popup-open-control="attendeeBookingCancelPopUp = true"
-                        @popup-close-control="attendeeBookingCancelPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    
-                    <!-- Single Integrations  -->
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                        :title="$tfhb_trans('Send Email to Attendee')"
+                            :label="$tfhb_trans('Booking Reschedule')"
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.attendee.booking_reschedule"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="attendeeBookingReschedulePopUp"
+                            @popup-open-control="attendeeBookingReschedulePopUp = true"
+                            @popup-close-control="attendeeBookingReschedulePopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Attendee')"
-                        :label="$tfhb_trans('Booking Reschedule')"
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.attendee.booking_reschedule"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="attendeeBookingReschedulePopUp"
-                        @popup-open-control="attendeeBookingReschedulePopUp = true"
-                        @popup-close-control="attendeeBookingReschedulePopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
-
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Attendee')"
-                        :label="$tfhb_trans('Booking Reminder')"
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.attendee.booking_reminder"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="attendeeBookingReminderPopUp"
-                        @popup-open-control="attendeeBookingReminderPopUp = true"
-                        @popup-close-control="attendeeBookingReminderPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
-    
-    
-                </div> 
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                        :title="$tfhb_trans('Send Email to Attendee')"
+                            :label="$tfhb_trans('Booking Reminder')"
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.attendee.booking_reminder"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="attendeeBookingReminderPopUp"
+                            @popup-open-control="attendeeBookingReminderPopUp = true"
+                            @popup-close-control="attendeeBookingReminderPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
+        
+        
+                    </div> 
+                </div>
             </div>
             
 
@@ -276,85 +279,95 @@ const UpdateNotification = async () => {
                     </div>
                 </div>
 
-                <div class="tfhb-notification-button-tabs tfhb-flexbox">
-                    <button @click="changeIntegrationTab" data-tab="telegram" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='telegram' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</button>
-                    <button @click="changeIntegrationTab" data-tab="slack" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='slack' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</button>
-                    <button @click="changeIntegrationTab" data-tab="twilio" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='twilio' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</button>
-                </div>
+                <div class="tfhb-integration-notification-box">
+                    <div class="tfhb-notification-button-tabs tfhb-flexbox">
+                        <button @click="changeIntegrationTab" data-tab="telegram" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='telegram' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</button>
+                        <button @click="changeIntegrationTab" data-tab="slack" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='slack' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</button>
+                        <button @click="changeIntegrationTab" data-tab="twilio" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='twilio' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</button>
+                    </div>
 
-                <div v-if="currentIntegrationTabs=='telegram'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': smsskeleton }"> 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                        title="Send Email to Host" 
-                        :label="$tfhb_trans('Booking Confirmation')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.telegram.booking_confirmation"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingConfirmPopUp"
-                        @popup-open-control="hostBookingConfirmPopUp = true"
-                        @popup-close-control="hostBookingConfirmPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                    <HbInfoBox name="first-modal">
+                        <template #content>
+                            <span>{{$tfhb_trans('Your aren’t connected with WhatsApp. Please go to Setting > Integration and connect.')}}  
+                            </span>
+                        </template>
+                    </HbInfoBox>
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
+                    <div v-if="currentIntegrationTabs=='telegram'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': smsskeleton }"> 
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                            title="Send Email to Host" 
+                            :label="$tfhb_trans('Booking Confirmation')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.telegram.booking_confirmation"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingConfirmPopUp"
+                            @popup-open-control="hostBookingConfirmPopUp = true"
+                            @popup-close-control="hostBookingConfirmPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
+
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                            :title="$tfhb_trans('Send Email to Host')" 
+                            :label="$tfhb_trans('Booking Pending')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.telegram.booking_pending"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingPendingPopUp"
+                            @popup-open-control="hostBookingPendingPopUp = true"
+                            @popup-close-control="hostBookingPendingPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
+
+                        <!-- Single Notification  -->
+                        <MailNotifications 
                         :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Pending')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.telegram.booking_pending"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingPendingPopUp"
-                        @popup-open-control="hostBookingPendingPopUp = true"
-                        @popup-close-control="hostBookingPendingPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                            :label="$tfhb_trans('Booking Cancel')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.telegram.booking_cancel"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingCencelPopUp"
+                            @popup-open-control="hostBookingCencelPopUp = true"
+                            @popup-close-control="hostBookingCencelPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Cancel')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.telegram.booking_cancel"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingCencelPopUp"
-                        @popup-open-control="hostBookingCencelPopUp = true"
-                        @popup-close-control="hostBookingCencelPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                        :title="$tfhb_trans('Send Email to Host')" 
+                            :label="$tfhb_trans('Booking Reschedule')" 
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.telegram.booking_reschedule" 
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingReschedulePopUp"
+                            @popup-open-control="hostBookingReschedulePopUp = true"
+                            @popup-close-control="hostBookingReschedulePopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Reschedule')" 
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.telegram.booking_reschedule" 
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingReschedulePopUp"
-                        @popup-open-control="hostBookingReschedulePopUp = true"
-                        @popup-close-control="hostBookingReschedulePopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
+                        <!-- Single Notification  -->
+                        <MailNotifications 
+                        :title="$tfhb_trans('Send Email to Host')" 
+                            :label="$tfhb_trans('Booking Reminder')"
+                            @update-notification="UpdateNotification"
+                            :data="meeting.notification.telegram.booking_reminder"  
+                            :update_preloader="props.update_preloader"  
+                            :ispopup="hostBookingReminderPopUp"
+                            @popup-open-control="hostBookingReminderPopUp = true"
+                            @popup-close-control="hostBookingReminderPopUp = false"
+                            :mediaurl="$tfhb_url"
+                        /> 
+                        <!-- Single Integrations  -->
+        
+        
+                    </div> 
 
-                    <!-- Single Notification  -->
-                    <MailNotifications 
-                    :title="$tfhb_trans('Send Email to Host')" 
-                        :label="$tfhb_trans('Booking Reminder')"
-                        @update-notification="UpdateNotification"
-                        :data="meeting.notification.telegram.booking_reminder"  
-                        :update_preloader="props.update_preloader"  
-                        :ispopup="hostBookingReminderPopUp"
-                        @popup-open-control="hostBookingReminderPopUp = true"
-                        @popup-close-control="hostBookingReminderPopUp = false"
-                        :mediaurl="$tfhb_url"
-                    /> 
-                    <!-- Single Integrations  -->
-    
-    
-                </div> 
+                </div>
                 
             </div>
 

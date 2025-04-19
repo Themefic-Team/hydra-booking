@@ -782,6 +782,45 @@ class MeetingController {
         }
     }
 
+	private function ensure_notification_channel_defaults( &$notification, $channel ) {
+		// Decode if it's a string
+		if ( ! isset( $notification ) || ! is_object( $notification ) ) {
+			if ( is_string( $notification ) ) {
+				$decoded = json_decode( $notification );
+				$notification = ( is_object( $decoded ) || is_array( $decoded ) ) ? (object) $decoded : new \stdClass();
+			} else {
+				$notification = new \stdClass();
+			}
+		}
+	
+		// Make sure the channel exists
+		if ( ! isset( $notification->$channel ) || ! is_object( $notification->$channel ) ) {
+			$notification->$channel = new \stdClass();
+		}
+	
+		$defaultKeys = [
+			'booking_confirmation',
+			'booking_pending',
+			'booking_cancel',
+			'booking_reschedule',
+			'booking_reminder',
+		];
+	
+		foreach ( $defaultKeys as $key ) {
+			if ( ! isset( $notification->{$channel}->$key ) ) {
+				$notification->{$channel}->$key = (object) [
+					'status' => 1,
+					'template' => 'default',
+					'form' => '',
+					'subject' => '',
+					'body' => '',
+					'builder' => '',
+				];
+			}
+		}
+	}
+	
+
 	// Get Single Meeting
 	public function getMeetingData( $request ) {
 		$id = $request['id'];
@@ -822,6 +861,12 @@ class MeetingController {
 		}
 
 		$this->ensureBuilderKeyExists($MeetingData->notification);
+
+
+		// Slack, Telegram, Twilio
+		$this->ensure_notification_channel_defaults( $MeetingData->notification, 'slack' );
+		$this->ensure_notification_channel_defaults( $MeetingData->notification, 'telegram' );
+		$this->ensure_notification_channel_defaults( $MeetingData->notification, 'twilio' );
 
 		// Integration
 		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
@@ -999,6 +1044,44 @@ class MeetingController {
 			$telegram_Data['status'] = false;
 		}
 
+		// Slack
+		if(!empty($_tfhb_host_integration_settings['slack']) && !empty($_tfhb_host_integration_settings['slack']['status'])){
+			$slack_status = ! empty( $_tfhb_host_integration_settings['slack']['status'] ) ? $_tfhb_host_integration_settings['slack']['status'] : '';
+			$slack_endpoint = ! empty( $_tfhb_host_integration_settings['slack']['endpoint'] ) ? $_tfhb_host_integration_settings['slack']['endpoint'] : '';
+		}else{
+			$slack_status = ! empty( $_tfhb_integration_settings['slack']['status'] ) ? $_tfhb_integration_settings['slack']['status'] : '';
+			$slack_endpoint = ! empty( $_tfhb_integration_settings['slack']['endpoint'] ) ? $_tfhb_integration_settings['slack']['endpoint'] : '';
+		}
+
+		$slack_Data = array();
+		if ( ! empty( $slack_status ) && ! empty( $slack_endpoint ) ) {
+			$slack_Data['status']  = true;
+		} else {
+			$slack_Data['status'] = false;
+		}
+
+		// Twilio
+		if(!empty($_tfhb_host_integration_settings['twilio']) && !empty($_tfhb_host_integration_settings['twilio']['status'])){
+			$twilio_status = ! empty( $_tfhb_host_integration_settings['twilio']['status'] ) ? $_tfhb_host_integration_settings['twilio']['status'] : '';
+			$twilio_receive_number = ! empty( $_tfhb_host_integration_settings['twilio']['receive_number'] ) ? $_tfhb_host_integration_settings['twilio']['receive_number'] : '';
+			$twilio_from_number = ! empty( $_tfhb_host_integration_settings['twilio']['from_number'] ) ? $_tfhb_host_integration_settings['twilio']['from_number'] : '';
+			$twilio_sid = ! empty( $_tfhb_host_integration_settings['twilio']['sid'] ) ? $_tfhb_host_integration_settings['twilio']['sid'] : '';
+			$twilio_token = ! empty( $_tfhb_host_integration_settings['twilio']['token'] ) ? $_tfhb_host_integration_settings['twilio']['token'] : '';
+		}else{
+			$twilio_status = ! empty( $_tfhb_integration_settings['twilio']['status'] ) ? $_tfhb_integration_settings['twilio']['status'] : '';
+			$twilio_receive_number = ! empty( $_tfhb_integration_settings['twilio']['receive_number'] ) ? $_tfhb_integration_settings['twilio']['receive_number'] : '';
+			$twilio_from_number = ! empty( $_tfhb_integration_settings['twilio']['from_number'] ) ? $_tfhb_integration_settings['twilio']['from_number'] : '';
+			$twilio_sid = ! empty( $_tfhb_integration_settings['twilio']['sid'] ) ? $_tfhb_integration_settings['twilio']['sid'] : '';
+			$twilio_token = ! empty( $_tfhb_integration_settings['twilio']['token'] ) ? $_tfhb_integration_settings['twilio']['token'] : '';
+		}
+
+		$twilio_Data = array();
+		if ( ! empty( $twilio_status ) && ! empty( $twilio_receive_number ) && ! empty( $twilio_from_number ) && ! empty( $twilio_sid ) && ! empty( $twilio_token ) ) {
+			$twilio_Data['status']  = true;
+		} else {
+			$twilio_Data['status'] = false;
+		}
+
 		// Fetch Questions Data
 		$questions_form_type = ! empty( $MeetingData->questions_form_type ) ? $MeetingData->questions_form_type : '';
 		$questions_form      = ! empty( $MeetingData->questions_form ) ? $MeetingData->questions_form : 0;
@@ -1025,7 +1108,9 @@ class MeetingController {
 			'zohocrm'          => $zohocrm_Data,
 			'formsList'        => $formsList,
 			'integrations'     => $integrations,
-			'telegram'     => $telegram_Data,
+			'telegram'     	   => $telegram_Data,
+			'slack'            => $slack_Data,
+			'twilio'           => $twilio_Data,
 			'message'          =>  __( 'Meeting Data','hydra-booking' ),
 		);
 		return rest_ensure_response( $data );

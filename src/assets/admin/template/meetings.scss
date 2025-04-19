@@ -316,15 +316,18 @@
                             margin: 0 !important;
                         }
                     }
+                    .tfhb-integration-notification-box{
+                        border: 1px solid $surface-border;
+                        border-top: 0px solid !important;
+                        border-radius: 0 0 8px 8px !important;
+                        padding: 16px;
+                    }
                     .tfhb-notification-button-tabs{
-                        padding: 16px 16px 0 16px;
-                        border-left: 1px solid $surface-border;
-                        border-right: 1px solid $surface-border;
+                        margin-bottom: 16px;
                     }
                     .tfhb-admin-card-box{
-                        border-radius: 0 0 8px 8px !important;
-                        padding: 16px !important;
-                        border-top: 0px solid !important;
+                        padding: 0px !important;
+                        border: 0px solid !important;
                     }
                 }
             }

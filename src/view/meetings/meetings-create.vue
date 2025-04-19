@@ -417,7 +417,9 @@ const meetingData = reactive({
     mailchimp: '',
     fluentcrm: '',
     zohocrm: '',
-    telegram: ''
+    telegram: '',
+    slack: '',
+    twilio: ''
 });
 
 
@@ -615,7 +617,9 @@ const fetchMeeting = async () => {
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
             meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
-            meetingData.telegram = response.data.meeting.telegram.status ? response.data.meeting.telegram.status : '';
+            meetingData.telegram = response.data.telegram.status ? response.data.telegram.status : '';
+            meetingData.slack = response.data.slack.status ? response.data.slack.status : '';
+            meetingData.twilio = response.data.twilio.status ? response.data.twilio.status : '';
 
             skeleton.value = false
         }else{ 
