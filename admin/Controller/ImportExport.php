@@ -83,6 +83,7 @@ class ImportExport {
 	}
 
 	public function GetImportExportData() {
+		
 		// Get booking Data
 		$booking  = new Booking();
 		$bookings = $booking->getColumns(); 
@@ -93,11 +94,26 @@ class ImportExport {
 		$host = new Host();
 		$hosts = $host->getColumns();
 
+		// Meeting List 
+		$meeting_data = $this->getMeetingList();
+		$meeting_list = [];
+		foreach($meeting_data as $key => $value){
+			$name = '#'.$value->id.' '.$value->title;
+			if($value->title == ''){
+				$name = '#'.$value->id.' No Title';
+			}
+			$meeting_list[] = array(
+				'name'  => $name,
+				'value' => $value->id,
+			);
+		} 
+	 
 		$data = array(
 			'status'         => true,
 			'booking_column' => $bookings,
 			'meeting_column' => $meetings,
 			'host_column'    => $hosts,
+			'meeting_list'    => $meeting_list,
 		);
 		return rest_ensure_response( $data );
 	}
@@ -269,41 +285,88 @@ class ImportExport {
  
 	}
 	
-	// Export booking Data
+	// Import booking Data
 	public function ImportBooking() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 		$data    = isset( $request['data'] ) ? $request['data'] : array();
 		$columns = isset( $request['columns'] ) ? $request['columns'] : array();
+		$is_overwrite = isset( $request['is_overwrite'] ) ? $request['is_overwrite'] : true;
+		$is_default_meeting = isset( $request['is_default_meeting'] ) ? $request['is_default_meeting'] : true;
+		$default_meeting_id = isset( $request['default_meeting_id'] ) ? $request['default_meeting_id'] : true;
 
 		// current user host id 
 		$host = new Host();
 		$host_id = $host->getHostByUserId( get_current_user_id() );
-	 
-		// tfhb_print_r($columns);
-		// tfhb_print_r($data);
-		if ( empty( $data ) || empty( $columns ) ) {
+	  
+		if ( empty( $data ) || empty( $columns ) ) { 
 			return rest_ensure_response( array(
 				'status'  => false,
 				'message' => __( 'Invalid data provided.', 'hydra-booking' ),
 			) );
 		}
 
-		// rearrange data first array value based on columns
-		$firstData = $data[0];
-		$newData   = array();
-		foreach ( $columns as $key => $column ) {
-			// if column name is match with first data value update that frist data value form column value
-			// get the first data key
-			$firstDataKey = array_search( $column, $firstData );
-			if ( $firstDataKey !== false ) {
-				$firstData[ $firstDataKey ] = $data[0][ $key ];
-			}
-		}
-		$data[0] = $newData;
-		 
-
 		$booking = new Booking();
-		$booking->importBooking( $data );
+		$header = $data[0];
+		$data_rows = array_slice($data, 1);
+		
+		// Map header to index
+		$header_map = array_flip($header);
+	 
+		foreach ($data_rows as $row) { 
+			$new_row = []; 
+			$data = []; 
+			if (empty(array_filter($row))) {
+				continue;
+			}
+			// tfhb_print_r($row);
+			foreach ($columns as $key => $column) {
+				if($column == '' ){
+					continue; // skip empty column
+				}
+				if (isset($header_map[$column])) {
+					$data[] = $row[$header_map[$column]];
+					$new_row[$key] = $row[$header_map[$column]];
+				} else {
+					$data[] = null; // or empty string
+					$new_row[$key] = null; // or empty string
+				} 
+			}  
+
+
+			// if meeting is not available in the row
+			if($is_default_meeting == true){
+				// check meeting is exisist or not 
+				$meeting = new Meeting();
+				$meetingData = $meeting->getWithID( $new_row['meeting_id'] );
+				if(empty($meetingData)){ 
+					$default_meeting = $meeting->getWithID( $default_meeting_id );	
+					$new_row['meeting_id'] = $default_meeting_id;
+					$new_row['host_id'] = $default_meeting->host_id;
+				}
+			}
+			
+			 
+			$attendees = $new_row['attendees'];
+			unset($new_row['attendees']);
+			// if current meeting id is exist and overwrite is true 
+		
+			if($is_overwrite == true){
+				$bookingData = $booking->get( $new_row['id'] );
+				if(!empty($bookingData)){   
+
+					unset($new_row['id']);
+					$booking->add($new_row);
+ 
+				}else{ 
+					$booking->update($new_row);
+				}
+			}else{  
+				unset($new_row['id']);
+				$booking->add($new_row);
+			}
+			
+		 
+		}
 		 
 		$data = array(
 			'status'  => true,
@@ -462,5 +525,34 @@ class ImportExport {
 			'message'   =>  __('Hosts Data Exported Successfully!', 'hydra-booking'),
 		);
 		return rest_ensure_response( $data );
+	}
+
+
+	public function getMeetingList() {
+		$current_user = wp_get_current_user();
+		// get user role
+		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
+		$current_user_id   = $current_user->ID;
+
+		// Meeting Lists
+		$meeting = new Meeting();
+
+		if ( ! empty( $current_user_role ) && 'administrator' == $current_user_role ) {
+			$MeetingsList = $meeting->get();
+		} 
+
+		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) {
+			$MeetingsList = $meeting->get( null, null, $current_user_id );
+		}
+
+		// add meeting permalink key into the meeting list using post id using array map
+		$MeetingsList = array_map(
+			function ( $meeting ) {
+				$meeting->permalink = get_permalink( $meeting->post_id );
+				return $meeting;
+			},
+			$MeetingsList
+		);
+		return $MeetingsList;
 	}
 }

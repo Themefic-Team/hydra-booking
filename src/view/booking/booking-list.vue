@@ -549,7 +549,7 @@ const changeToDate = (value) => {
         </div> 
         <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8">
             <HbButton 
-                classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="ExportAsCSV = true, exportData.type = 'CSV'"
                 :buttonText="$tfhb_trans('Export as CSV')"
                 icon="FileDown"   
@@ -557,13 +557,21 @@ const changeToDate = (value) => {
                 icon_position = 'left'
             />
             <HbButton 
-                classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="ExportAsCSV = true, exportData.type = 'iCal'"
                 :buttonText="$tfhb_trans('Export as .ics')"
                 icon="Calendar"   
                 :hover_animation="false" 
                 icon_position = 'left'
             />
+            <HbButton 
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                @click="router.push({ name: 'BookingImport' })"
+                :buttonText="$tfhb_trans('Import')"
+                icon="FileUp"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />   
         </div>
     </div> 
     <!-- Dashboard Heading Wrap -->

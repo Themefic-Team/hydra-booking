@@ -391,9 +391,7 @@ class Meeting {
 		foreach ($data as $row) { 
 			$escaped_values = array_map([$wpdb, 'prepare'], array_values($row));
 			$values[] = '(' . implode(',', $escaped_values) . ')';
-		}
-		tfhb_print_r($data);
-		
+		} 
 		$sql = "
 			INSERT INTO $table_name (" . implode(',', $columns) . ")
 			VALUES " . implode(', ', $values);

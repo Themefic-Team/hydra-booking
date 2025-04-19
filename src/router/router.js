@@ -37,6 +37,12 @@ const routes = [
                 component: () => import('../view/booking/booking-list.vue')
             }, 
             {
+                path: 'import',
+                name: 'BookingImport',
+                meta: { Capabilities: 'tfhb_manage_meetings' },
+                component: () => import('../view/booking/booking-import.vue')
+            }, 
+            {
                 path: 'create-new',
                 name: 'BookingCreate',
                 meta: { Capabilities: 'tfhb_manage_booking' },

@@ -72,13 +72,13 @@ class Booking {
 		// json encode meeting locations
 		// $request['others_info']       = wp_json_encode( $request['others_info'] );
 		$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] ); 
-
+	
 		// insert Booking
 		$result = $wpdb->insert(
 			$table_name,
 			$request
 		); 
- 
+	  
 		if ( $result === false ) {
 			return false;
 		} else {
@@ -542,14 +542,18 @@ class Booking {
 
 	 
 		foreach ( $data as $key => $value ) {
-			if ( $value->Field == 'id' ) {
-				continue;
-			}  
+			// if ( $value->Field == 'id' ) {
+			// 	continue;
+			// }  
 			$columns[] = array(
 				'name'  => $value->Field,
 				'value' => $value->Field,
 			);
 		}
+		$columns[] = array(
+			'name'  => 'attendees',
+			'value' => 'attendees',
+		);
 		return $columns;
 	}
 
