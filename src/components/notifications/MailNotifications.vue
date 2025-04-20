@@ -592,7 +592,7 @@ const closePopup = () => {
             <template #content>
                 <div class="tfhb-email-builder">
                     <div class="tfhb-builder-tools">
-                        <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32">
+                        <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32" :class="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack' ? 'tfhb-m-0' : ''">
 
                             <HbText  
                                 v-model="data.from"   
@@ -600,6 +600,7 @@ const closePopup = () => {
                                 :label="$tfhb_trans('From')"  
                                 selected = "1"
                                 :placeholder="$tfhb_trans('Enter From Email')"  
+                                v-if="props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'"
                             /> 
                             <div class="tfhb-shortcode-box tfhb-full-width" v-if="props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'">
                                 <HbText  
@@ -616,27 +617,18 @@ const closePopup = () => {
                                 </div>
                             </div>
                             
-                            <HbText  
-                                v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'" 
-                                v-model="props.data.subject"  
-                                required= "true"  
-                                :label="$tfhb_trans('Subject')"  
-                                selected = "1"
-                                type = "text"
-                                :placeholder="$tfhb_trans('Enter Mail Subject')"  
-                            /> 
                             <div class="tfhb-single-form-field" style="width: 100%;" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'">
                                 <div class="tfhb-single-form-field-wrap tfhb-field-input">
                                     <!--if has label show label with tag else remove tags  --> 
-                                    <label for="">{{ $tfhb_trans('Mail Body') }}</label>  
+                                    <label for="">{{ $tfhb_trans('Message Body') }}</label>  
                                     <Editor 
                                         v-model="props.data.body"  
-                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        :placeholder="$tfhb_trans('Message Body')"    
                                         editorStyle="height: 250px" 
                                     />
                                 </div> 
                             </div> 
-                            <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'"> 
+                            <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8 tfhb-m-0" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'"> 
                                 <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
                             </div>
                         </div>

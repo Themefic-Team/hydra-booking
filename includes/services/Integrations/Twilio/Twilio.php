@@ -33,10 +33,14 @@ class Twilio {
 	// If booking Status is Complted
 	public function pushBookingToConfirmed( $attendees ) {
 		
-        $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['twilio']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_confirmation']['body'])){
-            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_confirmation']['body'], $attendees);
-        }
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+			if(!empty($_tfhb_notification_settings['twilio']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_confirmation']['body'])){
+				$twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_confirmation']['body'], $attendees);
+			}
+		}
        
 	}
 
@@ -44,30 +48,42 @@ class Twilio {
 	// If booking Status is Pending
 	public function pushBookingToPending( $attendees ) {
 
-        $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['twilio']['booking_pending']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_pending']['body'])){
-            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_pending']['body'], $attendees);
-        }
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+			if(!empty($_tfhb_notification_settings['twilio']['booking_pending']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_pending']['body'])){
+				$twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_pending']['body'], $attendees);
+			}
+		}
 
 	}
 
 	// If booking Status is Cancel
 	public function pushBookingToCanceled( $attendees ) {
 
-        $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['twilio']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_cancel']['body'])){
-            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_cancel']['body'], $attendees);
-        }
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+			if(!empty($_tfhb_notification_settings['twilio']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_cancel']['body'])){
+				$twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_cancel']['body'], $attendees);
+			}
+		}
 
 	}
 
 	// If booking Status is ReSchedule
 	public function pushBookingToscheduled( $attendees ) {
 		
-        $_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-        if(!empty($_tfhb_notification_settings['twilio']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_reschedule']['body'])){
-            $twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_reschedule']['body'], $attendees);
-        }
+		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
+		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
+
+		if ( ! empty( $_tfhb_notification_settings ) ) {
+			if(!empty($_tfhb_notification_settings['twilio']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['twilio']['booking_reschedule']['body'])){
+				$twilio_data = $this->tfhb_twilio_callback($_tfhb_notification_settings['twilio']['booking_reschedule']['body'], $attendees);
+			}
+		}
 
 	}
 
