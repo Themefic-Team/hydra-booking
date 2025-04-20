@@ -30,6 +30,15 @@ class ImportExport {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/import-export/export-all-data',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'ExportAllData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 		// Import export Meeting
 		register_rest_route(
 			'hydra-booking/v1',
@@ -116,6 +125,90 @@ class ImportExport {
 			'meeting_list'    => $meeting_list,
 		);
 		return rest_ensure_response( $data );
+	}
+
+	// Export all data to Json fromat
+	public function ExportAllData(){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+		$select_export    = isset( $request['select_export'] ) ? $request['select_export'] : array();
+		$type    = isset( $request['type'] ) ? $request['type'] : array();
+		$file_name = 'hydra-full-data';
+		// check if current user has permission to export all data
+		if ( ! current_user_can( 'tfhb_manage_options' ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __( 'You do not have permission to export all data.', 'hydra-booking' ),
+			) );
+		}
+		// if $select_export is empty 
+		if ( empty($select_export) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' =>  __( 'Please select at least one option to export.', 'hydra-booking' ),
+			) );
+		}
+		$export_array = [];
+		if(in_array('Settings', $select_export)){ 
+			$_tfhb_general_settings = get_option( '_tfhb_general_settings' ); 
+			$_tfhb_availability_settings = get_option( '_tfhb_availability_settings' );
+			$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
+			$_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
+			$_tfhb_hosts_settings = get_option( '_tfhb_hosts_settings' );
+			$_tfhb_appearance_settings = get_option( '_tfhb_appearance_settings' );
+			$export_array['settings']['_tfhb_general_settings'] = $_tfhb_general_settings;
+			$export_array['settings'][ '_tfhb_availability_settings'] = $_tfhb_availability_settings;
+			$export_array['settings'][ '_tfhb_integration_settings'] = $_tfhb_integration_settings;
+			$export_array['settings'][ '_tfhb_notification_settings'] = $_tfhb_notification_settings;
+			$export_array['settings'][ '_tfhb_hosts_settings'] = $_tfhb_hosts_settings;
+			$export_array['settings'][ '_tfhb_appearance_settings'] = $_tfhb_appearance_settings; 
+		}
+		if(in_array('Hosts', $select_export)){
+			$host = new Host(); 
+			$host_data = (array) $host->get(); 
+			$host_data = json_decode(json_encode($host_data), true);
+			
+			foreach($host_data as $key => $value){
+				// get host user data
+				$_tfhb_host = get_user_meta( $value['user_id'], '_tfhb_host', true );
+				
+				$_tfhb_host_integration_settings = get_user_meta( $value['user_id'], '_tfhb_host_integration_settings', true );
+				
+				// added host user data 
+				$host_data[$key]['_tfhb_host'] = $_tfhb_host;
+				$host_data[$key]['_tfhb_host_integration_settings'] = $_tfhb_host_integration_settings;
+
+			} 
+			$export_array['tfhb_hosts'] =  $host_data;
+		}
+		if(in_array('Meetings', $select_export)){
+			$meeting = new Meeting(); 
+			// get data object to array 
+			$meeting_data = $meeting->getMeetings();
+			$meeting_data = json_decode(json_encode($meeting_data), true);
+			$export_array['tfhb_meetings'] =  $meeting_data;
+		}
+		if(in_array('Bookings', $select_export)){
+			$booking = new Booking();
+			// get booking with attendees
+			$bookings_data = $booking->getBookingWithAttendees();
+			
+			$bookings_data = json_decode(json_encode($bookings_data), true);
+		 
+			$export_array['tfhb_bookings'] =  $bookings_data;
+		} 
+	 
+	 
+
+		// return data as json format 
+		// Return response
+		$data = array(
+			'status'    => true,
+			'data'      =>  json_encode($export_array),
+			'file_name' => $file_name.'.json',
+			'message'   =>  __('Hosts Data Exported Successfully!', 'hydra-booking'),
+		);
+		return rest_ensure_response( $data );
+		
 	}
 
 	// Export booking Data

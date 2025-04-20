@@ -54,6 +54,20 @@ const importExport = reactive({
         import_status: false,
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
+    allData: {
+        steps: 'start',
+        column: [],  
+        import_column: {},  
+        select_import: [],  
+        import_file: null,
+        is_overwrite: true,
+        is_default_meeting: false,
+        default_meeting_id: 0,
+        import_data: {},
+        rearrange_column: {},
+        import_status: false,
+        import_progress: 0, // shuld be 0 to 100 dynamically
+    }, 
     async GetImportExportData() { 
       
         try {  
@@ -198,6 +212,54 @@ const importExport = reactive({
                  
             }
         });    
+    },
+
+    // Other Information 
+    async readAllImportData(file) {   
+        if (file && file.type === "application/json") {
+            const reader = new FileReader();
+        
+            reader.onload = (e) => {
+              try {
+                this.allData.import_file = JSON.parse(e.target.result);
+                // foreach data
+                console.log(this.allData.import_file);
+                Object.entries(this.allData.import_file).forEach(([key, value]) => {
+                    if(key == 'settings' || key == 'tfhb_hosts' || key == 'tfhb_meetings' || key == 'tfhb_bookings' ){
+                        var name ='';
+                        if(key == 'settings'){
+                            name = 'Settings';
+                        }
+                        if(key == 'tfhb_hosts'){
+                            name = 'Hosts'
+                        }
+                        if(key == 'tfhb_meetings'){
+                            name = 'Meetings'
+                        }
+                         if(key == 'tfhb_bookings'){
+                            name = 'Bookings'
+                        }
+                        this.allData.column.push(name)
+                        // add data into object 
+                        this.allData.import_column[name] = key;
+
+                    }
+                });
+                 
+                
+              } catch (err) {
+                console.error("Error parsing JSON:", err);
+              }
+            };
+        
+            reader.onerror = (e) => {
+              console.error("Error reading file:", e);
+            };
+        
+            reader.readAsText(file);
+          } else {
+            console.warn("Invalid file type. Please upload a .json file.");
+          }
     },
 
 
@@ -451,8 +513,69 @@ const importExport = reactive({
         } catch (error) {
             console.log(error);
         }  
+    },
+    
+     // Export All Data
+     async exportAllData(exportData) { 
+
+        // if exportData empty return the message
+        if (exportData.select_export == '') {
+            
+            toast.error('Please select the data to export', {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+            return false;
+        }
+        // this.host_preloader = true;
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-all-data', exportData, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {  
+                // make a json file based on this json return data
+                const fileContent = response.data.data; 
+                let blob; // Declare blob outside the if-else
+
+                blob = new Blob([fileContent], { type: "text/json" }); // Set correct json
+                // export csv file data
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const file_name = response.data.file_name;
+
+                link.href = url;
+
+                link.setAttribute('download', file_name);
+
+                // Append to the DOM
+                document.body.appendChild(link);
+                link.click();
+
+                // Clean up
+                link.remove();
+                window.URL.revokeObjectURL(url);
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                })
+
+  
+            }else{
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+                this.host_preloader = false;
+            }
+        } catch (error) {
+            console.log(error);
+        }  
     }
-   
+ 
 
 })
 

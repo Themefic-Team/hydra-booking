@@ -308,28 +308,8 @@ const routes = [
             {
                 path: 'import-export',
                 name: 'SettingsImportExport',
-                component: () => import('../view/settings/ImportExport.vue'),
-                redirect: { name: 'MeetingImportExport' },
-                children: [ 
-                    {
-                        path: 'general',
-                        name: 'MeetingImportExport',
-                        meta: { Capabilities: 'tfhb_manage_settings' },
-                        component: () => import('@/components/settings/import-export/MeetingImportExport.vue')
-                    },
-                    // {
-                    //     path: 'login',
-                    //     name: 'FrontendDashboardLogin',
-                    //     meta: { Capabilities: 'tfhb_manage_settings' },
-                    //     component: () => import('@/components/settings/fd-dashboard/login.vue')
-                    // },
-                    // {
-                    //     path: 'signup',
-                    //     name: 'FrontendDashboardSignup',
-                    //     meta: { Capabilities: 'tfhb_manage_settings' },
-                    //     component: () => import('@/components/settings/fd-dashboard/Signup.vue')
-                    // }
-                ]
+                component: () => import('../view/settings/ImportExport.vue'), 
+               
             },
             {
                 path: 'license',
