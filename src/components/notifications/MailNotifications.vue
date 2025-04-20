@@ -601,7 +601,7 @@ const closePopup = () => {
                                 selected = "1"
                                 :placeholder="$tfhb_trans('Enter From Email')"  
                             /> 
-                            <div class="tfhb-shortcode-box tfhb-full-width">
+                            <div class="tfhb-shortcode-box tfhb-full-width" v-if="props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'">
                                 <HbText  
                                     v-model="data.subject"  
                                     required= "true"  
@@ -615,9 +615,33 @@ const closePopup = () => {
                                     <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
                                 </div>
                             </div>
+                            
+                            <HbText  
+                                v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'" 
+                                v-model="props.data.subject"  
+                                required= "true"  
+                                :label="$tfhb_trans('Subject')"  
+                                selected = "1"
+                                type = "text"
+                                :placeholder="$tfhb_trans('Enter Mail Subject')"  
+                            /> 
+                            <div class="tfhb-single-form-field" style="width: 100%;" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'">
+                                <div class="tfhb-single-form-field-wrap tfhb-field-input">
+                                    <!--if has label show label with tag else remove tags  --> 
+                                    <label for="">{{ $tfhb_trans('Mail Body') }}</label>  
+                                    <Editor 
+                                        v-model="props.data.body"  
+                                        :placeholder="$tfhb_trans('Mail Body')"    
+                                        editorStyle="height: 250px" 
+                                    />
+                                </div> 
+                            </div> 
+                            <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'"> 
+                                <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                            </div>
                         </div>
 
-                        <div class="single-tools" v-for="(email, key) in sortedEmailBuilder" :key="key"
+                        <div class="single-tools" v-if="props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'" v-for="(email, key) in sortedEmailBuilder" :key="key"
                         :draggable="key!='header' && key!='footer' ? true : false"
                         @dragstart="dragStart(key)"
                         @dragover.prevent
@@ -886,7 +910,7 @@ const closePopup = () => {
                     :pre_loader="props.update_preloader"
                 />  
 
-                <div class="tfhb-email-preview" v-if="emailBuilder.header.status || emailBuilder.gratitude.status || emailBuilder.meeting_details.status || emailBuilder.host_details.status || emailBuilder.instructions.status || emailBuilder.cancel_reschedule.status || emailBuilder.footer.status" v-html="emailTemplate"></div>
+                <div class="tfhb-email-preview" v-if="(props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack') && (emailBuilder.header.status || emailBuilder.gratitude.status || emailBuilder.meeting_details.status || emailBuilder.host_details.status || emailBuilder.instructions.status || emailBuilder.cancel_reschedule.status || emailBuilder.footer.status)" v-html="emailTemplate"></div>
 
              </template> 
         </HbPopup>
