@@ -356,13 +356,16 @@ const emailTemplate = computed(() => {
         }
 
         if (section.status && key === 'gratitude') {
-            emailContent += `<tr><td style="padding: 16px 32px;">${emailBuilder.gratitude.content}</td></tr>`;
+            emailContent += `
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
+            <tr><td>${emailBuilder.gratitude.content}</td></tr> </table></td></tr></table>`;
         }
 
         if (section.status && key === 'meeting_details') {
             emailContent += `
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
                 <tr>
-                    <td style="padding: 16px 32px;">
+                    <td>
                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.meeting_details.border_color}; border-radius: 8px; padding: 24px; background: #fff;">
                             <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.meeting_details.title}</td></tr>
             `;
@@ -389,13 +392,14 @@ const emailTemplate = computed(() => {
                 }
             });
 
-            emailContent += `</table></td></tr>`;
+            emailContent += `</table></td></tr> </table></td></tr></table>`;
         }
 
         if (section.status && key === 'host_details') {
             emailContent += `
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
                 <tr>
-                    <td style="padding: 16px 32px">
+                    <td>
                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.host_details.border_color}; border-radius: 8px; padding: 24px; background: #fff;">
                             <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.host_details.title}</td></tr>
             `;
@@ -422,7 +426,7 @@ const emailTemplate = computed(() => {
                 }
             });
 
-            emailContent += `</table></td></tr>`;
+            emailContent += `</table></td></tr> </table></td></tr></table>`;
         }
 
         if (section.status && key === 'instructions') {
