@@ -277,7 +277,7 @@ const meetingData = reactive({
         },
         telegram: {
             booking_confirmation: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -285,7 +285,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_pending: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -293,7 +293,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_cancel: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -301,7 +301,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_reschedule: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -309,7 +309,7 @@ const meetingData = reactive({
 
             },
             booking_reminder: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -319,7 +319,7 @@ const meetingData = reactive({
         },
         slack: {
             booking_confirmation: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -327,7 +327,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_pending: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -335,7 +335,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_cancel: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -343,7 +343,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_reschedule: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -351,7 +351,7 @@ const meetingData = reactive({
 
             },
             booking_reminder: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -361,7 +361,7 @@ const meetingData = reactive({
         },
         twilio: {
             booking_confirmation: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -369,7 +369,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_pending: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -377,7 +377,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_cancel: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -385,7 +385,7 @@ const meetingData = reactive({
                 builder: ''
             },
             booking_reschedule: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
@@ -393,7 +393,7 @@ const meetingData = reactive({
 
             },
             booking_reminder: {
-                status : 1,
+                status : 0,
                 template : 'default',
                 form : '',
                 subject : '',
