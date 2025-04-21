@@ -211,7 +211,7 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 = 1.1.6 – April 21, 2025 =
 
-- Updated: Security isshe has been updated.
+- Updated: Security issue has been updated.
 - Compatibility: Compatible with WooCommerce (v9.8).
 - Compatibility: Compatible with WordPress (v6.8).
 
