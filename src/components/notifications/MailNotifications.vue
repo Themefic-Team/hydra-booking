@@ -296,23 +296,37 @@ const dragStart = (key) => {
 };
 
 // Drop function to reorder
-const drop = (key) => {
+const drop = (event, targetKey) => {
   if (!draggedKey || draggedKey === "header" || draggedKey === "footer") return;
 
+  const targetElement = event.currentTarget;
+  const rect = targetElement.getBoundingClientRect();
+  const dropY = event.clientY;
+  const middleY = rect.top + rect.height / 2;
+  const insertBefore = dropY < middleY;
+
   const keys = Object.keys(emailBuilder);
-  const headerIndex = keys.indexOf("header");
-  const footerIndex = keys.indexOf("footer");
-  const targetIndex = keys.indexOf(key);
-  
-  if (targetIndex <= headerIndex || targetIndex >= footerIndex) {
-    draggedKey = null;
-    return;
+  const draggedIndex = keys.indexOf(draggedKey);
+  const targetIndex = keys.indexOf(targetKey);
+
+  // Remove the dragged item
+  keys.splice(draggedIndex, 1);
+
+  // Calculate new index for insertion
+  let newIndex = insertBefore ? targetIndex : targetIndex + 1;
+
+  // Adjust index if necessary
+  if (draggedIndex < targetIndex) {
+    newIndex -= 1;
   }
 
-  // Swap the order values
-  const temp = emailBuilder[draggedKey].order;
-  emailBuilder[draggedKey].order = emailBuilder[key].order;
-  emailBuilder[key].order = temp;
+  // Insert the dragged item at the new position
+  keys.splice(newIndex, 0, draggedKey);
+
+  // Reassign order values based on new keys array
+  keys.forEach((k, index) => {
+    emailBuilder[k].order = index;
+  });
 
   draggedKey = null;
 };
@@ -620,7 +634,7 @@ const closePopup = () => {
                         :draggable="key!='header' && key!='footer' ? true : false"
                         @dragstart="dragStart(key)"
                         @dragover.prevent
-                        @drop="drop(key)"
+                        @drop="drop($event, key)"
                         :class="key!='header' && key!='footer' ? 'draggable' : ''"
                         >
                             <!-- Dynamic Heading -->
