@@ -28,6 +28,23 @@ class HydraBooking {
             }
         }
         $lice_email=get_option( "HydraBooking_lic_email","");
+
+        if(!empty($license_key)){
+            // if key is not encripted then encript it
+            $decoded = base64_decode($license_key, true);
+
+            if($decoded === false){
+                $license_key=$this->encryptKey($license_key,$lice_email);
+                update_option($main_lic_key,$license_key) || add_option($main_lic_key,$license_key);
+                update_option($lic_key_name,$license_key) || add_option($lic_key_name,$license_key);
+            }
+
+            // decrypt key
+            $license_key=$this->decryptKey($license_key,$lice_email);
+
+        }
+        
+
         HydraBookingBase::add_on_delete(function(){
            update_option("HydraBooking_lic_Key","");
         });
@@ -50,6 +67,20 @@ class HydraBooking {
             // add_action( 'admin_menu', [$this,'inactive_menu']);
             update_option("HydraBooking_lic_response_obj",false);
         }
+    }
+
+     // Function to encrypt the key
+     public function encryptKey($plainText, $email) {
+        $iv = openssl_random_pseudo_bytes(16); // 16 bytes for AES-256-CBC
+        $encrypted = openssl_encrypt($plainText, 'AES-256-CBC', $email, 0, $iv);
+        // Combine encrypted text and IV with '::' separator
+        return base64_encode($encrypted . '::' . $iv);
+    }
+    // Function to decrypt the key
+    public function decryptKey($encryptedText, $email) {
+        $data = base64_decode($encryptedText);
+        list($encrypted, $iv) = explode('::', $data, 2);
+        return openssl_decrypt($encrypted, 'AES-256-CBC', $email, 0, $iv);
     }
     public function set_plugin_data(){
 		if ( ! function_exists( 'get_plugin_data' ) ) {
