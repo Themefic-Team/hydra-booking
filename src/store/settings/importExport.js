@@ -58,13 +58,16 @@ const importExport = reactive({
         steps: 'start',
         column: [],  
         import_column: {},  
-        select_import: [],  
-        import_file: null,
-        is_overwrite: true,
-        is_default_meeting: false,
+        select_import: {},  
+        is_overwrite_settings: true,
+        is_overwrite_host: true,
+        is_create_new_user: true,
+        is_overwrite_meeting: true,
+        is_overwrite_booking: true,
+        is_default_meeting: true,
         default_meeting_id: 0,
-        import_data: {},
-        rearrange_column: {},
+        import_file: null, 
+        import_data: {}, 
         import_status: false,
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
@@ -221,10 +224,9 @@ const importExport = reactive({
         
             reader.onload = (e) => {
               try {
-                this.allData.import_file = JSON.parse(e.target.result);
-                // foreach data
-                console.log(this.allData.import_file);
-                Object.entries(this.allData.import_file).forEach(([key, value]) => {
+                this.allData.import_data = JSON.parse(e.target.result);
+                // foreach data 
+                Object.entries(this.allData.import_data).forEach(([key, value]) => {
                     if(key == 'settings' || key == 'tfhb_hosts' || key == 'tfhb_meetings' || key == 'tfhb_bookings' ){
                         var name ='';
                         if(key == 'settings'){
@@ -262,6 +264,55 @@ const importExport = reactive({
           }
     },
 
+     // Import All Data
+     async importAllData() { 
+        this.importing = true;
+        this.progress = 0;
+        // Simulate progress
+        this.progressInterval = setInterval(() => {
+            if (this.progress < 90) {
+            this.progress += 1;
+            }
+        }, 100);
+
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-all-data', {
+                import_data: this.allData.import_data, 
+                import_column: this.allData.import_column, 
+                select_import: this.allData.select_import,  
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {  
+                this.progress = 100;
+                this.meeting.steps = 'completed';
+                this.importing = false;
+                // scrool to top
+                window.scrollTo(0, 0);
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+            }else{
+
+                this.importing = false;
+                this.progress = 100;
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+        } catch (error) {
+
+            this.importing = false;
+            this.progress = 100;
+            console.log(error);
+        }  
+    },
 
     // Run The booking import
     async importMeeting() { 

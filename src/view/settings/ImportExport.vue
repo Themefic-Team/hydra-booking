@@ -12,8 +12,8 @@ const { errors, isEmpty } = useValidators();
 import HbFileUpload from '@/components/form-fields/HbFileUpload.vue';  
 import HbButton from '@/components/form-fields/HbButton.vue'; 
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue'; 
-import HbPopup from '@/components/widgets/HbPopup.vue'; 
-
+import HbPopup from '@/components/widgets/HbPopup.vue';  
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 
 // Store  
 import { importExport } from '@/store/settings/importExport';
@@ -151,20 +151,72 @@ onBeforeMount(() => {
                 <div class="tfhb-admin-title" > 
                     <h3>{{ $tfhb_trans('Which data you want to import') }}</h3> 
                     <p>{{ $tfhb_trans('Select data which data you want to import in your website') }}</p>
+                </div>  
+                <div class="tfhb-flexbox tfhb-gap-12 tfhb-full-width">  
+                    <div v-for="(item, index) in importExport.allData.import_column" :key="index" class="tfhb-admin-card-box tfhb-flexbox  tfhb-flexbox tfhb-gap-8tfhb-gap-12 tfhb-full-width">
+                        <HbCheckbox 
+                            class="tfhb-select-import-label "
+                            v-model="importExport.allData.select_import[item]"
+                            :label="index"
+                            :name="'mark_select_import'+index"
+                        />  
+
+                        <div v-if="index == 'Settings' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox tfhb-flexbox tfhb-gap-8"   style="margin-left: 30px;">
+                            <HbCheckbox  
+                                v-model="importExport.allData.is_overwrite_settings"
+                                :label="$tfhb_trans('Overwrite existing Settings Data')"
+                                :name="'mark_select_import'+index"
+                            />  
+                        </div>
+
+                        <div v-if="index == 'Hosts' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox  tfhb-flexbox tfhb-gap-8"  style="margin-left: 30px;">
+                            <HbCheckbox 
+                                v-model="importExport.allData.is_overwrite_host"
+                                :label="$tfhb_trans('Overwrite if host is already exists')"
+                                :name="'is_overwrite'+index"
+                            />
+                            <HbCheckbox 
+                                v-model="importExport.allData.is_create_new_user"
+                                :label="$tfhb_trans('Create new users if user id not exists')"
+                                :name="'is_create_new_user'+index"
+                            />
+                        </div>
+
+                         <div v-if="index == 'Meetings' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox  tfhb-flexbox tfhb-gap-8"  style="margin-left: 30px;">
+                            <HbCheckbox 
+                                v-model="importExport.allData.is_overwrite_meeting"
+                                :label="$tfhb_trans('Overwrite existing data')"
+                                name="meeting_is_overwrite"
+                            />
+                        </div>
+
+                         <div v-if="index == 'Bookings' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox  tfhb-flexbox tfhb-gap-8"  style="margin-left: 30px;">
+                            <HbCheckbox 
+                                v-model="importExport.allData.is_overwrite_booking"
+                                :label="$tfhb_trans('Overwrite if booking is already exists')"
+                                name="is_overwrite_booking"
+                            />
+                            <HbCheckbox 
+                                v-model="importExport.allData.is_default_meeting"
+                                :label="$tfhb_trans('Select default meeting if meeting id is not found')"
+                                name="is_create_new_user"
+                            /> 
+                            <HbDropdown   
+                                v-if="importExport.allData.is_default_meeting == true"
+                                v-model="importExport.allData.default_meeting_id"    
+                                width="100" 
+                                :filter="true"
+                                :placeholder="$tfhb_trans('Select Meeting')"   
+                                :option = "[]"
+
+                            /> 
+                        </div>
+
+                    </div>
+        
+
                 </div> 
-                <div class="tfhb-flexbox tfhb-gap-12 tfhb-full-width">
-                   {{importExport.allData.column}}
-                   {{ importExport.allData.select_import }}
-                    <HbCheckbox  
-                        required= "true"
-                        v-model="importExport.allData.select_import"
-                        name="request_header"
-                        :label="$tfhb_trans('Select What to Import')"
-                        :groups="true" 
-                        :width="100"
-                        :options="importExport.allData.column"  
-                    /> 
-                </div>
+               
                 
                 <div class="tfhb-import-btn-wrap tfhb-flexbox tfhb-justify-end tfhb-full-width">
                     <div class="tfhb-flexbox tfhb-gap-8">
@@ -172,7 +224,7 @@ onBeforeMount(() => {
                         <h3 v-if="importExport.importing"> {{ $tfhb_trans('Importing..') }}  {{ importExport.progress }} %</h3>
                         <HbButton 
                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                            @click="importExport.importMeeting()"
+                            @click="importExport.importAllData()"
                             :buttonText="$tfhb_trans('Looks Good, Start Import')"
                             icon="ChevronRight"   
                             hover_icon="ArrowRight"
@@ -217,36 +269,43 @@ onBeforeMount(() => {
 </template>
 
 <style scoped lang="scss">
- .tfhb-import-cotent{ 
-    .tfhb-import-wrap{
-        max-width: 670px;
-        width: 100%;
-        padding: 32px;
-        border-radius: 8px;
-        background: var(--Surface-Secondary, #FFF);
-        .tfhb-admin-title{
+  
+  .tfhb-select-import-label label {
+	font-size: 20px !important;
+}
+.tfhb-import-wrap{
+    max-width: 670px;
+    width: 100%;
+    padding: 32px;
+    border-radius: 8px;
+    background: var(--Surface-Secondary, #FFF);
+    .tfhb-admin-card-box{
             margin-bottom: 0 !important;
-            p {
-                a{
-                    color: #2E6B38;
-                    text-decoration: underline !important;
-                }
-            }
         }
-        .tfhb-import-export-column-wrap{
-            .import-column-status, .import-column-arrow {
-                text-align: center;
+    
+    .tfhb-admin-title{
+        margin-bottom: 0 !important;
+        p {
+            a{
+                color: #2E6B38;
+                text-decoration: underline !important;
             }
-            .tfhb-import-export-column-name{
-                padding: 8px 8px 8px 12px;
-                border-radius: 6px;
-                background: var(--Surface-Primary, #F9FBF9);
-                span{
-                    font-size: 15px;
-                }
-            }
-             
         }
     }
- }
+    .tfhb-import-export-column-wrap{
+        .import-column-status, .import-column-arrow {
+            text-align: center;
+        }
+        .tfhb-import-export-column-name{
+            padding: 8px 8px 8px 12px;
+            border-radius: 6px;
+            background: var(--Surface-Primary, #F9FBF9);
+            span{
+                font-size: 15px;
+            }
+        }
+            
+    }
+    
+} 
 </style>
