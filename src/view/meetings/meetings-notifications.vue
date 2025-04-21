@@ -28,6 +28,8 @@ const currentTabs = ref('host');
 const ntskeleton = ref(false);  
 const currentIntegrationTabs = ref('telegram');
 const smsskeleton = ref(false);  
+const SmsPreview = ref(true);
+const EmailPreview = ref(true);
 
 // Update Notification 
 const changeTab = (e) => {  
@@ -142,12 +144,13 @@ const UpdateNotification = async () => {
                     <div class="tfhb-flexbox  tfhb-gap-12">
                         <Icon name="Mail" size=20 /> <span> {{ $tfhb_trans('Email') }}</span>
                     </div>
-                    <div class="tfhb-arrow-collapse">
-                        <Icon name="ChevronDown" size=20 />
+                    <div class="tfhb-arrow-collapse" @click="EmailPreview=!EmailPreview">
+                        <Icon v-if="EmailPreview" name="ChevronUp" size=20 />
+                        <Icon v-else name="ChevronDown" size=20 />
                     </div>
                 </div>
 
-                <div class="tfhb-integration-notification-box">
+                <div class="tfhb-integration-notification-box" v-show="EmailPreview">
                     <div v-if="currentTabs=='host'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
                         <!-- Single Notification  -->
                         <MailNotifications 
@@ -306,12 +309,13 @@ const UpdateNotification = async () => {
                     <div class="tfhb-flexbox  tfhb-gap-12">
                         <Icon name="TextSelect" size=20 /> <span> {{ $tfhb_trans('SMS') }}</span>
                     </div>
-                    <div class="tfhb-arrow-collapse">
-                        <Icon name="ChevronDown" size=20 />
+                    <div class="tfhb-arrow-collapse" @click="SmsPreview=!SmsPreview">
+                        <Icon v-if="SmsPreview" name="ChevronUp" size=20 />
+                        <Icon v-else name="ChevronDown" size=20 />
                     </div>
                 </div>
 
-                <div class="tfhb-integration-notification-box">
+                <div class="tfhb-integration-notification-box" v-show="SmsPreview">
                     <div class="tfhb-notification-button-tabs tfhb-flexbox">
                         <button @click="changeIntegrationTab" data-tab="telegram" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='telegram' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</button>
                         <button @click="changeIntegrationTab" data-tab="slack" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='slack' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</button>
