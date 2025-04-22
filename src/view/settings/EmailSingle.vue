@@ -564,7 +564,7 @@ const emailTemplate = computed(() => {
         }
     });
 
-    return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" max-width="600" bgcolor="#FFFFFF" style="width: 100%; max-width: 600px; margin: 0 auto;">${emailContent}</table>`;
+    return `${emailContent}`;
 });
 
 // Utility Functions
