@@ -5,6 +5,9 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import MailNotifications from '@/components/notifications/MailNotifications.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
+import { useRouter } from 'vue-router' 
+
+const router = useRouter();
 
 const emit = defineEmits(["update-meeting"]); 
 const props = defineProps({
@@ -32,25 +35,22 @@ const SmsPreview = ref(true);
 const EmailPreview = ref(true);
 
 // Update Notification 
-const changeTab = (e) => {  
+const changeTab = (tab) => {  
     ntskeleton.value = true;
-    // get data-tab attribute value of clicked button
-    const tab = e.target.getAttribute('data-tab'); 
     currentTabs.value = tab;
     setTimeout(() => {
         ntskeleton.value = false;
     }, 1000);
 
 }
-const changeIntegrationTab = (e) => {
-    smsskeleton.value = true;
-    // get data-tab attribute value of clicked button
-    const tab = e.target.getAttribute('data-tab'); 
-    currentIntegrationTabs.value = tab;
-    setTimeout(() => {
-        smsskeleton.value = false;
-    }, 1000);
-}
+const changeIntegrationTab = (tab) => {
+  smsskeleton.value = true;
+  currentIntegrationTabs.value = tab;
+  setTimeout(() => {
+    smsskeleton.value = false;
+  }, 1000);
+};
+
 
 
 // Host Booking Confirm PopUp
@@ -134,8 +134,8 @@ const UpdateNotification = async () => {
 
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">
-                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }}</button>
-                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
+                <button @click="changeTab('host')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }}</button>
+                <button @click="changeTab('attendee')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
             
             <!-- Mail Notification -->
@@ -317,15 +317,21 @@ const UpdateNotification = async () => {
 
                 <div class="tfhb-integration-notification-box" v-show="SmsPreview">
                     <div class="tfhb-notification-button-tabs tfhb-flexbox">
-                        <button @click="changeIntegrationTab" data-tab="telegram" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='telegram' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</button>
-                        <button @click="changeIntegrationTab" data-tab="slack" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='slack' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</button>
-                        <button @click="changeIntegrationTab" data-tab="twilio" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='twilio' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</button>
+                        <button @click="changeIntegrationTab('telegram')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='telegram' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</button>
+                        <button @click="changeIntegrationTab('slack')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='slack' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</button>
+                        <button @click="changeIntegrationTab('twilio')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='twilio' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</button>
                     </div>
 
                     <!-- Telegram -->
                     <HbInfoBox name="first-modal" v-if="currentIntegrationTabs=='telegram' && meeting.telegram==''">
                         <template #content>
-                            <span>{{$tfhb_trans('Your aren’t connected with Telegram. Please go to Setting > Integration and connect.')}}  
+                            <span>{{$tfhb_trans('Your aren’t connected with Telegram. Please go to ')}}  
+                                <HbButton 
+                                    classValue="tfhb-btn" 
+                                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                                    buttonText="Setting > Integration"
+                                />  
+                                {{$tfhb_trans('and connect.')}}  
                             </span>
                         </template>
                     </HbInfoBox>
@@ -415,7 +421,13 @@ const UpdateNotification = async () => {
                     <!-- Slack -->
                     <HbInfoBox name="first-modal" v-if="currentIntegrationTabs=='slack' && meeting.slack==''">
                         <template #content>
-                            <span>{{$tfhb_trans('Your aren’t connected with Slack. Please go to Setting > Integration and connect.')}}  
+                            <span>{{$tfhb_trans('Your aren’t connected with Slack. Please go to ')}}  
+                                <HbButton 
+                                    classValue="tfhb-btn" 
+                                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                                    buttonText="Setting > Integration"
+                                />  
+                                {{$tfhb_trans('and connect.')}}  
                             </span>
                         </template>
                     </HbInfoBox>
@@ -504,7 +516,13 @@ const UpdateNotification = async () => {
                     <!-- Twilio -->
                     <HbInfoBox name="first-modal" v-if="currentIntegrationTabs=='twilio' && meeting.twilio==''">
                         <template #content>
-                            <span>{{$tfhb_trans('Your aren’t connected with Twilio. Please go to Setting > Integration and connect.')}}  
+                            <span>{{$tfhb_trans('Your aren’t connected with Twilio. Please go to ')}}  
+                                <HbButton 
+                                    classValue="tfhb-btn" 
+                                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                                    buttonText="Setting > Integration"
+                                />  
+                                {{$tfhb_trans('and connect.')}}  
                             </span>
                         </template>
                     </HbInfoBox>
