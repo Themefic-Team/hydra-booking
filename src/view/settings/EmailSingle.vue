@@ -6,6 +6,7 @@ import { useRoute, useRouter, RouterView,} from 'vue-router'
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
+import { useDragAndDrop } from "vue-fluid-dnd";
 
 // import Form Field 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
@@ -169,8 +170,9 @@ const TfhbOnFocus = (event) => {
     });
 }
 
-const emailBuilder = reactive({ 
-    header: {
+const emailBuilder = ref([
+    {
+        id: 'header',
         order: 0,
         status: 1,
         title: 'Header',
@@ -178,13 +180,15 @@ const emailBuilder = reactive({
         logo: '',
         background: '#215732'
     },
-    gratitude: {
+    {
+        id: 'gratitude',
         order: 1,
         status: 1,
         title: 'Greetings',
         content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
     },
-    meeting_details: {
+    {
+        id: 'meeting_details',
         order: 2,
         status: 1,
         title: 'Meeting Details',
@@ -217,7 +221,8 @@ const emailBuilder = reactive({
             }
         },
     },
-    host_details: {
+    {
+        id: 'host_details',
         order: 3,
         status: 1,
         title: 'Host Details',
@@ -240,13 +245,15 @@ const emailBuilder = reactive({
             },
         }
     },
-    instructions: {
+    {
+        id: 'instructions',
         order: 4,
         status: 1,
         title: 'Instructions',
         content: '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
     },
-    cancel_reschedule: {
+    {
+        id: 'cancel_reschedule',
         order: 5,
         status: 1,
         title: 'Buttons',
@@ -266,7 +273,8 @@ const emailBuilder = reactive({
             },
         }
     },
-    footer: {
+    {
+        id: 'footer',
         order: 6,
         status: 1,
         title: 'Footer',
@@ -294,7 +302,9 @@ const emailBuilder = reactive({
             },
         }
     },
-});
+]);
+
+const { parent } = useDragAndDrop(emailBuilder);
 
 // Initialize contentVisibility with a nested structure
 const contentVisibility = reactive({
@@ -328,11 +338,11 @@ const contentVisibility = reactive({
     },
 });
 
-const ContentBox = (key, subKey = null) => {
+const ContentBox = (key, subKey = null, index = null) => {
     if (!contentVisibility.hasOwnProperty(key)) return; // Ensure the key exists
 
     if (subKey) {
-        if (emailBuilder[key]?.content?.[subKey]?.status) {
+        if (emailBuilder.value[index]?.content?.[subKey]?.status) {
             // Ensure parent stays open and toggle sub-item
             if (typeof contentVisibility[key] === "object") {
                 contentVisibility[key].main = true;
@@ -363,55 +373,9 @@ const ContentBox = (key, subKey = null) => {
     }
 };
 
-
-// Dragging state
-let draggedKey = null;
-
-// Start dragging function
-const dragStart = (key) => {
-  if (key === "header" || key === "footer") return;
-  draggedKey = key;
-};
-
-// Drop function to reorder
-const drop = (event, targetKey) => {
-  if (!draggedKey || draggedKey === "header" || draggedKey === "footer") return;
-
-  const targetElement = event.currentTarget;
-  const rect = targetElement.getBoundingClientRect();
-  const dropY = event.clientY;
-  const middleY = rect.top + rect.height / 2;
-  const insertBefore = dropY < middleY;
-
-  const keys = Object.keys(emailBuilder);
-  const draggedIndex = keys.indexOf(draggedKey);
-  const targetIndex = keys.indexOf(targetKey);
-
-  // Remove the dragged item
-  keys.splice(draggedIndex, 1);
-
-  // Calculate new index for insertion
-  let newIndex = insertBefore ? targetIndex : targetIndex + 1;
-
-  // Adjust index if necessary
-  if (draggedIndex < targetIndex) {
-    newIndex -= 1;
-  }
-
-  // Insert the dragged item at the new position
-  keys.splice(newIndex, 0, draggedKey);
-
-  // Reassign order values based on new keys array
-  keys.forEach((k, index) => {
-    emailBuilder[k].order = index;
-  });
-
-  draggedKey = null;
-};
-
 // Computed sorted
 const sortedEmailBuilder = computed(() => {
-  return Object.entries(emailBuilder)
+  return Object.entries(emailBuilder.value)
     .sort((a, b) => a[1].order - b[1].order)
     .reduce((acc, [key, value]) => {
       acc[key] = value;
@@ -422,58 +386,64 @@ const sortedEmailBuilder = computed(() => {
 // Computed Property to Generate Email Preview
 const emailTemplate = computed(() => {
     let emailContent = '';
-
+    
     Object.keys(sortedEmailBuilder.value).forEach(key => {
         const section = sortedEmailBuilder.value[key];
-        if (section.status && key === 'header') {
-            emailContent += `<tr>
-                <td bgcolor="${emailBuilder.header.background}" style="padding: 16px 32px; text-align: left; border-radius: 8px 8px 0 0;">
+        if (section.status && section.id === 'header') {
+            emailContent += `<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;"><tr>
+                <td bgcolor="${emailBuilder.value[key].background}" style="padding: 16px 32px; text-align: left; border-radius: 8px 8px 0 0;">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                         <tr>`;
-                            if (emailBuilder.header.logo) {
+                            if (emailBuilder.value[key].logo) {
                                  emailContent += `<td style="vertical-align: middle; width: 36px; padding-right: 8px">
-                                    <img src="${emailBuilder.header.logo}" alt="HydraBooking"  style="max-height: 36px;display: block;">
+                                    <img src="${emailBuilder.value[key].logo}" alt="HydraBooking"  style="max-height: 36px;display: block;">
                                 </td>`;
                             }
-                            if (emailBuilder.header.content) {
+                            if (emailBuilder.value[key].content) {
                                 emailContent += `<td style="vertical-align: middle;">
-                                    ${emailBuilder.header.content}
+                                    ${emailBuilder.value[key].content}
                                 </td>`;
                             }
                     emailContent += `</tr>
                     </table>
                 </td>
-            </tr>`;
+            </tr></table>`;
         }
 
-        if (section.status && key === 'gratitude') {
+        if (section.status && section.id === 'gratitude') {
             emailContent += `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
-            <tr><td>${emailBuilder.gratitude.content}</td></tr> </table></td></tr></table>`;
+            <tr><td>${emailBuilder.value[key].content}</td></tr> </table></td></tr></table>`;
         }
 
-        if (section.status && key === 'meeting_details') {
+        if (section.status && section.id === 'meeting_details') {
             emailContent += `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
                 <tr>
                     <td>
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.meeting_details.border_color}; border-radius: 8px; padding: 24px; background: #fff;">
-                            <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.meeting_details.title}</td></tr>
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.
+                        
+                        value[key].border_color}; border-radius: 8px; padding: 24px; background: #fff;">
+                            <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.
+                                
+                                value[key].title}</td></tr>
             `;
 
-            Object.keys(emailBuilder.meeting_details.content).forEach(key => {
-                if (emailBuilder.meeting_details.content[key].status) {
+            Object.keys(emailBuilder.
+            
+            value[key].content).forEach(tkey => {
+                if (emailBuilder.value[key].content[tkey].status) {
                     emailContent += `
                         <tr>
                             <td>
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            ${getIcon(key)}
-                                            ${formatLabel(key)}
+                                            ${getIcon(tkey)}
+                                            ${formatLabel(tkey)}
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
-                                            ${emailBuilder.meeting_details.content[key].content}
+                                            ${emailBuilder.value[key].content[tkey].content}
                                         </td>
                                     </tr>
                                 </table>
@@ -486,28 +456,28 @@ const emailTemplate = computed(() => {
             emailContent += `</table></td></tr> </table></td></tr></table>`;
         }
 
-        if (section.status && key === 'host_details') {
+        if (section.status && section.id === 'host_details') {
             emailContent += `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
                 <tr>
                     <td>
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.host_details.border_color}; border-radius: 8px; padding: 24px; background: #fff;">
-                            <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.host_details.title}</td></tr>
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 2px dashed ${emailBuilder.value[key].border_color}; border-radius: 8px; padding: 24px; background: #fff;">
+                            <tr><td style="font-weight: bold; font-size: 16px;">${emailBuilder.value[key].title}</td></tr>
             `;
 
-            Object.keys(emailBuilder.host_details.content).forEach(key => {
-                if (emailBuilder.host_details.content[key].status) {
+            Object.keys(emailBuilder.value[key].content).forEach(tkey => {
+                if (emailBuilder.value[key].content[tkey].status) {
                     emailContent += `
                         <tr>
                             <td>
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            ${getIcon(key)}
-                                            ${formatLabel(key)}
+                                            ${getIcon(tkey)}
+                                            ${formatLabel(tkey)}
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
-                                            ${emailBuilder.host_details.content[key].content}
+                                            ${emailBuilder.value[key].content[tkey].content}
                                         </td>
                                     </tr>
                                 </table>
@@ -520,61 +490,61 @@ const emailTemplate = computed(() => {
             emailContent += `</table></td></tr> </table></td></tr></table>`;
         }
 
-        if (section.status && key === 'instructions') {
+        if (section.status && section.id === 'instructions') {
 
             emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
 
-            if (emailBuilder.instructions.title) {
+            if (emailBuilder.value[key].title) {
                 emailContent += `
                 <tr>
-                    <td style="font-weight: bold; font-size: 17px; padding-bottom: 24px;" bgcolor="#fff">${emailBuilder.instructions.title}</td>
+                    <td style="font-weight: bold; font-size: 17px; padding-bottom: 24px;" bgcolor="#fff">${emailBuilder.value[key].title}</td>
                 </tr>`;
             }
-            if (emailBuilder.instructions.content) {
+            if (emailBuilder.value[key].content) {
                 emailContent += `
                 <tr>
-                    <td style="font-size: 15px;">${emailBuilder.instructions.content}</td>
+                    <td style="font-size: 15px;">${emailBuilder.value[key].content}</td>
                 </tr>`;
             }
 
             emailContent += `</table></td></tr></table>`;
             
         }
-        if (section.status && key === 'cancel_reschedule') {
-            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.cancel_reschedule.border_color};border-bottom: 1px dashed ${emailBuilder.cancel_reschedule.border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
-                if (emailBuilder.cancel_reschedule.content.description.content && emailBuilder.cancel_reschedule.content.description.status) {
+        if (section.status && section.id === 'cancel_reschedule') {
+            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.value[key].border_color};border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+                if (emailBuilder.value[key].content.description.content && emailBuilder.value[key].content.description.status) {
                     emailContent += ` <tr>
-                        <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.cancel_reschedule.content.description.content}</td>
+                        <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.value[key].content.description.content}</td>
                     </tr>`;
                 }
-                if (emailBuilder.cancel_reschedule.content.cancel.content || emailBuilder.cancel_reschedule.content.reschedule.content) {
+                if (emailBuilder.value[key].content.cancel.content || emailBuilder.value[key].content.reschedule.content) {
                     emailContent += `<tr>
                     <td style="font-size: 15px; padding-bottom: 24px;">`;
-                        if (emailBuilder.cancel_reschedule.content.cancel.content && emailBuilder.cancel_reschedule.content.cancel.status){
-                            emailContent += `<a href="${emailBuilder.cancel_reschedule.content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.cancel_reschedule.border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
+                        if (emailBuilder.value[key].content.cancel.content && emailBuilder.value[key].content.cancel.status){
+                            emailContent += `<a href="${emailBuilder.value[key].content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
                         }
-                        if (emailBuilder.cancel_reschedule.content.reschedule.content && emailBuilder.cancel_reschedule.content.reschedule.status){
-                            emailContent += `<a href="${emailBuilder.cancel_reschedule.content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.cancel_reschedule.border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
+                        if (emailBuilder.value[key].content.reschedule.content && emailBuilder.value[key].content.reschedule.status){
+                            emailContent += `<a href="${emailBuilder.value[key].content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
                         }
                     emailContent += `</td></tr>`;
                 }
             emailContent += `</table></td></tr></table>`;
         }
 
-        if (section.status && key === 'footer') {
+        if (section.status && section.id === 'footer') {
             emailContent += `<tr>
                 <td align="center">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tr>`;
-                            if (emailBuilder.footer.content.description.content && emailBuilder.footer.content.description.status) {
+                            if (emailBuilder.value[key].content.description.content && emailBuilder.value[key].content.description.status) {
                             emailContent += `<td align="left">
-                                ${emailBuilder.footer.content.description.content}
+                                ${emailBuilder.value[key].content.description.content}
                             </td>`;
                             }
-                            if (emailBuilder.footer.content.social && emailBuilder.footer.content.social.status) {
+                            if (emailBuilder.value[key].content.social && emailBuilder.value[key].content.social.status) {
                             emailContent += `<td align="right" class="social" style="vertical-align: baseline;">
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0">`;
-                                    emailBuilder.footer.content.social.data.forEach(social => {
+                                    emailBuilder.value[key].content.social.data.forEach(social => {
                                     if (social.url && social.title) {
                                         emailContent += `<tr><td style="padding-bottom: 4px;">
                                             <a href="${social.url}" style="text-decoration: none; color: #FFF;">
@@ -629,7 +599,7 @@ const formatLabel = (key) => {
 watch(emailTemplate, (newTemplate) => {
   if (Notification[route.params.type] && Notification[route.params.type][route.params.id]) {
     Notification[route.params.type][route.params.id].body = newTemplate;
-    Notification[route.params.type][route.params.id].builder = emailBuilder;
+    Notification[route.params.type][route.params.id].builder = emailBuilder.value;
   }
 });
 
@@ -644,16 +614,12 @@ const fetchNotification = async () => {
             } 
         });
         if (response.data.status) { 
-            // console.log(response.data.integration_settings);
             Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
             Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
-            
             if(response.data.notification_settings[route.params.type][route.params.id].builder==''){
-                Notification[route.params.type][route.params.id].builder = emailBuilder;
+                Notification[route.params.type][route.params.id].builder = emailBuilder.value;
             }else{
-                // console.log(response.data.notification_settings[route.params.type][route.params.id].builder);
-
-                Object.assign(emailBuilder, response.data.notification_settings[route.params.type][route.params.id].builder);
+                emailBuilder.value = response.data.notification_settings[route.params.type][route.params.id].builder;
             }
             
             skeleton.value = false;
@@ -699,17 +665,28 @@ onBeforeMount(() => {
     fetchNotification();
 });
 
-// Remove Social
+const getFooterBlock = () => {
+  return emailBuilder.value.find(block => block.id === 'footer');
+};
+// Remove Socail
 const removeSocial = (key) => {
-    emailBuilder.footer.content.social.data.splice(key, 1);
-}
-// Add new Social
-const addSocial = (key) => {
-    emailBuilder.footer.content.social.data.push({
-        title: '',
-        url: '',
+  const footer = getFooterBlock();
+  if (footer?.content?.social?.data) {
+    footer.content.social.data.splice(key, 1);
+  }
+};
+
+// Add Social
+const addSocial = () => {
+  const footer = getFooterBlock();
+  if (footer?.content?.social?.data) {
+    footer.content.social.data.push({
+      title: '',
+      url: '',
     });
-}
+  }
+};
+
 
 </script>
 
@@ -718,7 +695,7 @@ const addSocial = (key) => {
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap">
         <div class="tfhb-builder-tools">
-            
+
             <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32">
                 
                 <HbText  
@@ -744,263 +721,260 @@ const addSocial = (key) => {
                 </div>
             </div>
 
-            <div class="single-tools" v-for="(email, key) in sortedEmailBuilder" :key="key"
-            :draggable="key!='header' && key!='footer' ? true : false"
-            @dragstart="dragStart(key)"
-            @dragover.prevent
-            @drop="drop($event, key)"
-            :class="key!='header' && key!='footer' ? 'draggable' : ''"
-            >
-                <!-- Dynamic Heading -->
-                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
-                    <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox(key)">
-                        <Icon name="GripVertical" :width="20"/> 
-                        {{ email.title }} 
-                    </div>
-                    <HbSwitch v-model="emailBuilder[key].status" />
-                </div>
-
-                <!-- Dynamic Content header/gratitude/instructions -->
-                <div class="tools-content" v-show="contentVisibility[key] && emailBuilder[key].status" v-if="key === 'header' || key === 'gratitude' || key === 'instructions'">
-                    <div class="tfhb-shortcode-box tfhb-full-width">
-                        <div class="tfhb-header-logo">
-                            <HbFileUpload
-                                name="logo"
-                                v-model= "emailBuilder[key].logo"
-                                :label = "$tfhb_trans('Choose images or drag & drop it here.')"
-                                :subtitle = "$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
-                                :btn_label = "$tfhb_trans('Upload logo')"
-                                file_size ="5"
-                                file_format ="jpg,jpeg,png"
-                                v-if="key === 'header'"
-                            />
+            <ul ref="parent" class="number-list">
+                <li class="single-tools" v-for="(email, key) in emailBuilder" :index="key" 
+                >
+                    <!-- Dynamic Heading -->
+                    <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
+                        <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox(email.id)">
+                            <Icon name="GripVertical" :width="20"/> 
+                            {{ email.title }} 
                         </div>
+                        <HbSwitch v-model="emailBuilder[key].status" />
+                    </div>
+
+                    <!-- Dynamic Content header/gratitude/instructions -->
+                    <div class="tools-content" v-show="contentVisibility[email.id] && emailBuilder[key].status" v-if="email.id === 'header' || email.id === 'gratitude' || email.id === 'instructions'">
+                        <div class="tfhb-shortcode-box tfhb-full-width">
+                            <div class="tfhb-header-logo">
+                                <HbFileUpload
+                                    name="logo"
+                                    v-model= "emailBuilder[key].logo"
+                                    :label = "$tfhb_trans('Choose images or drag & drop it here.')"
+                                    :subtitle = "$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+                                    :btn_label = "$tfhb_trans('Upload logo')"
+                                    file_size ="5"
+                                    file_format ="jpg,jpeg,png"
+                                    v-if="email.id === 'header'"
+                                />
+                            </div>
+                            <div class="tfhb-header-bg">
+                                <HbColor  
+                                    v-model= "emailBuilder[key].background" 
+                                    :label="$tfhb_trans('Header Background')"
+                                    name="background"
+                                    selected = "1" 
+                                    v-if="email.id === 'header'"
+                                />  
+                            </div>
+                            <div @click="TfhbOnFocus">
+                                <Editor 
+                                    v-model="emailBuilder[key].content"  
+                                    :placeholder="$tfhb_trans('Mail Body')"    
+                                    editorStyle="height: 180px" 
+                                />
+                            </div>
+                            <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                <span  class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                    {{ value }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Content meeting_details/host_details -->
+                    <div class="tools-content" v-show="contentVisibility[email.id].main && emailBuilder[key].status" v-if="email.id === 'meeting_details' || email.id === 'host_details'">
+                        <HbText 
+                            v-model="emailBuilder[key].title"  
+                            :placeholder="$tfhb_trans('Heading')"    
+                        />
                         <div class="tfhb-header-bg">
                             <HbColor  
-                                v-model= "emailBuilder[key].background" 
-                                :label="$tfhb_trans('Header Background')"
-                                name="background"
+                                v-model= "emailBuilder[key].border_color" 
+                                :label="$tfhb_trans('Border Color')"
+                                name="border_color"
                                 selected = "1" 
-                                v-if="key === 'header'"
                             />  
                         </div>
-                        <div @click="TfhbOnFocus">
-                            <Editor 
-                                v-model="emailBuilder[key].content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 180px" 
-                            />
-                        </div>
-                        <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                            <span  class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
-                                {{ value }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dynamic Content meeting_details/host_details -->
-                <div class="tools-content" v-show="contentVisibility[key].main && emailBuilder[key].status" v-if="key === 'meeting_details' || key === 'host_details'">
-                    <HbText 
-                        v-model="emailBuilder[key].title"  
-                        :placeholder="$tfhb_trans('Heading')"    
-                    />
-                    <div class="tfhb-header-bg">
-                        <HbColor  
-                            v-model= "emailBuilder[key].border_color" 
-                            :label="$tfhb_trans('Border Color')"
-                            name="border_color"
-                            selected = "1" 
-                        />  
-                    </div>
-                    <div class="single-tools" v-for="(section, subKey) in emailBuilder[key].content" :key="subKey">
-                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                            <Icon name="GripVertical" @click="ContentBox(key, subKey)" :width="20"/> 
-                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox(key, subKey)">
-                                <div class="tfhb-flexbox tfhb-head">
-                                    {{ emailBuilder[key].content[subKey].title }}
+                        <div class="single-tools" v-for="(section, subKey) in emailBuilder[key].content" :key="subKey">
+                            <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                                <Icon name="GripVertical" @click="ContentBox(email.id, subKey, key)" :width="20"/> 
+                                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox(email.id, subKey, key)">
+                                    <div class="tfhb-flexbox tfhb-head">
+                                        {{ emailBuilder[key].content[subKey].title }}
+                                    </div>
+                                    <HbSwitch v-model="emailBuilder[key].content[subKey].status" />
                                 </div>
-                                <HbSwitch v-model="emailBuilder[key].content[subKey].status" />
                             </div>
-                        </div>
 
-                        <div class="tools-content" v-show="contentVisibility[key][subKey] && emailBuilder[key].content[subKey].status">
-                            <div class="tfhb-shortcode-box tfhb-full-width">
-                                <div @click="TfhbOnFocus">
-                                    <Editor 
-                                        v-model="emailBuilder[key].content[subKey].content"  
-                                        :placeholder="$tfhb_trans('Mail Body')"    
-                                        editorStyle="height: 100px" 
-                                    />
-                                </div>
-                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                    <span class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
-                                        {{ value }}
-                                    </span>
+                            <div class="tools-content" v-show="contentVisibility[email.id][subKey] && emailBuilder[key].content[subKey].status">
+                                <div class="tfhb-shortcode-box tfhb-full-width">
+                                    <div @click="TfhbOnFocus">
+                                        <Editor 
+                                            v-model="emailBuilder[key].content[subKey].content"  
+                                            :placeholder="$tfhb_trans('Mail Body')"    
+                                            editorStyle="height: 100px" 
+                                        />
+                                    </div>
+                                    <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                        <span class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                            {{ value }}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                </div>
-
-                <!-- Dynamic Content cancel_reschedule -->
-                <div class="tools-content" v-show="contentVisibility[key].main && emailBuilder[key].status" v-if="key === 'cancel_reschedule'">
-                    
-                    <div class="tfhb-header-bg">
-                        <HbColor  
-                            v-model= "emailBuilder[key].border_color" 
-                            :label="$tfhb_trans('Border Color')"
-                            name="border_color"
-                            selected = "1" 
-                        /> 
-                    </div>
-                    <!-- Description -->
-                    <div class="single-tools">
-                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'description')" :width="20"/> 
-                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'description')">
-                                <div class="tfhb-flexbox tfhb-head">
-                                    {{ $tfhb_trans('Heading:') }}
-                                </div>
-                                <HbSwitch v-model="emailBuilder.cancel_reschedule.content.description.status" />
-                            </div>
-                        </div>
-                        <div class="tools-content" 
-                            v-show="contentVisibility.cancel_reschedule.description && emailBuilder.cancel_reschedule.content.description.status">
-                            <Editor 
-                                v-model="emailBuilder.cancel_reschedule.content.description.content"  
-                                :placeholder="$tfhb_trans('Mail Body')"    
-                                editorStyle="height: 100px" 
-                            />
-                        </div>
+                        
                     </div>
 
-                    <!-- Cancel -->
-                    <div class="single-tools">
-                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'cancel')" :width="20"/>
-                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'cancel')">
-                                <div class="tfhb-flexbox tfhb-head">
-                                    {{ $tfhb_trans('Cancel URL:') }}
-                                </div>
-                                <HbSwitch v-model="emailBuilder.cancel_reschedule.content.cancel.status" />
-                            </div>
+                    <!-- Dynamic Content cancel_reschedule -->
+                    <div class="tools-content" v-show="contentVisibility[email.id].main && emailBuilder[key].status" v-if="email.id === 'cancel_reschedule'">
+                        
+                        <div class="tfhb-header-bg">
+                            <HbColor  
+                                v-model= "emailBuilder[key].border_color" 
+                                :label="$tfhb_trans('Border Color')"
+                                name="border_color"
+                                selected = "1" 
+                            /> 
                         </div>
-                        <div class="tools-content" 
-                            v-show="contentVisibility.cancel_reschedule.cancel && emailBuilder.cancel_reschedule.content.cancel.status">
-                            <div class="tfhb-shortcode-box tfhb-full-width">
-                                <HbText 
-                                    v-model="emailBuilder.cancel_reschedule.content.cancel.content"  
-                                    :placeholder="$tfhb_trans('Cancel URL:')"    
-                                    @tfhb-onclick="TfhbOnFocus"
+                        <!-- Description -->
+                        <div class="single-tools">
+                            <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                                <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'description', key)" :width="20"/> 
+                                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'description', key)">
+                                    <div class="tfhb-flexbox tfhb-head">
+                                        {{ $tfhb_trans('Heading:') }}
+                                    </div>
+                                    <HbSwitch v-model="emailBuilder[key].content.description.status" />
+                                </div>
+                            </div>
+                            <div class="tools-content" 
+                                v-show="contentVisibility[email.id].description && emailBuilder[key].content.description.status">
+                                <Editor 
+                                    v-model="emailBuilder[key].content.description.content"  
+                                    :placeholder="$tfhb_trans('Mail Body')"    
+                                    editorStyle="height: 100px" 
                                 />
-                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                            </div>
+                        </div>
+
+                        <!-- Cancel -->
+                        <div class="single-tools">
+                            <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                                <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'cancel', key)" :width="20"/>
+                                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'cancel', key)">
+                                    <div class="tfhb-flexbox tfhb-head">
+                                        {{ $tfhb_trans('Cancel URL:') }}
+                                    </div>
+                                    <HbSwitch v-model="emailBuilder[key].content.cancel.status" />
+                                </div>
+                            </div>
+                            <div class="tools-content" 
+                                v-show="contentVisibility[email.id].cancel && emailBuilder[key].content.cancel.status">
+                                <div class="tfhb-shortcode-box tfhb-full-width">
+                                    <HbText 
+                                        v-model="emailBuilder[key].content.cancel.content"  
+                                        :placeholder="$tfhb_trans('Cancel URL:')"    
+                                        @tfhb-onclick="TfhbOnFocus"
+                                    />
+                                    <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Reschedule -->
+                        <div class="single-tools">
+                            <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                                <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'reschedule', key)" :width="20"/> 
+                                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'reschedule', key)">
+                                    <div class="tfhb-flexbox tfhb-head">
+                                        {{ $tfhb_trans('Reschedule URL:') }}
+                                    </div>
+                                    <HbSwitch v-model="emailBuilder[key].content.reschedule.status" />
+                                </div>
+                            </div>
+                            <div class="tools-content" 
+                                v-show="contentVisibility[email.id].reschedule && emailBuilder[key].content.reschedule.status">
+                                
+                                <div class="tfhb-shortcode-box tfhb-full-width">
+                                    <HbText 
+                                        v-model="emailBuilder[key].content.reschedule.content"  
+                                        :placeholder="$tfhb_trans('Reschedule URL:')"    
+                                        @tfhb-onclick="TfhbOnFocus"
+                                    />
+                                    <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <!-- Reschedule -->
-                    <div class="single-tools">
-                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'reschedule')" :width="20"/> 
-                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'reschedule')">
-                                <div class="tfhb-flexbox tfhb-head">
-                                    {{ $tfhb_trans('Reschedule URL:') }}
+                    <!-- Dynamic Content Footer -->
+                    <div class="tools-content" v-show="contentVisibility[email.id].main && emailBuilder[key].status" v-if="email.id === 'footer'">
+                        
+                        <!-- Description -->
+                        <div class="single-tools">
+                            <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                                <Icon name="GripVertical" @click="ContentBox('footer', 'description', key)" :width="20"/> 
+                                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'description', key)">
+                                    <div class="tfhb-flexbox tfhb-head">
+                                        {{ $tfhb_trans('Quick Content:') }}
+                                    </div>
+                                    <HbSwitch v-model="emailBuilder[key].content.description.status" />
                                 </div>
-                                <HbSwitch v-model="emailBuilder.cancel_reschedule.content.reschedule.status" />
                             </div>
-                        </div>
-                        <div class="tools-content" 
-                            v-show="contentVisibility.cancel_reschedule.reschedule && emailBuilder.cancel_reschedule.content.reschedule.status">
                             
-                            <div class="tfhb-shortcode-box tfhb-full-width">
-                                <HbText 
-                                    v-model="emailBuilder.cancel_reschedule.content.reschedule.content"  
-                                    :placeholder="$tfhb_trans('Reschedule URL:')"    
-                                    @tfhb-onclick="TfhbOnFocus"
-                                />
-                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Dynamic Content Footer -->
-                <div class="tools-content" v-show="contentVisibility[key].main && emailBuilder[key].status" v-if="key === 'footer'">
-                    
-                    <!-- Description -->
-                    <div class="single-tools">
-                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                            <Icon name="GripVertical" @click="ContentBox(key, 'description')" :width="20"/> 
-                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox(key, 'description')">
-                                <div class="tfhb-flexbox tfhb-head">
-                                    {{ $tfhb_trans('Quick Content:') }}
-                                </div>
-                                <HbSwitch v-model="emailBuilder.footer.content.description.status" />
-                            </div>
-                        </div>
-                        <div class="tools-content" 
-                            v-show="contentVisibility.footer.description && emailBuilder.footer.content.description.status">
-                            <div class="tfhb-shortcode-box tfhb-full-width">
-                                <div @click="TfhbOnFocus">
-                                    <Editor 
-                                        v-model="emailBuilder.footer.content.description.content"  
-                                        :placeholder="$tfhb_trans('Mail Body')"    
-                                        editorStyle="height: 100px" 
-                                    />
-                                </div>
-                                <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Socail -->
-                    <div class="single-tools">
-                        <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                            <Icon name="GripVertical" @click="ContentBox('footer', 'social')" :width="20"/> 
-                            <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'social')">
-                                <div class="tfhb-flexbox tfhb-head">
-                                    {{ $tfhb_trans('Social:') }}
-                                </div>
-                                <HbSwitch v-model="emailBuilder.footer.content.social.status" />
-                            </div>
-                        </div>
-                        <div class="tools-content" 
-                            v-show="contentVisibility.footer.social && emailBuilder.footer.content.social.status">
-                            <div class="tfhb-socail-repeater tfhb-flexbox tfhb-gap-8">
-                                <div v-for="(social, skey) in emailBuilder.footer.content.social.data" :key="skey" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-full-width">
-                                    <HbText 
-                                        v-model="social.title"
-                                        :placeholder="$tfhb_trans('Social Title')"  
-                                        width="45"  
-                                    />
-                                    <HbText 
-                                        v-model="social.url"
-                                        :placeholder="$tfhb_trans('Social URL:')"   
-                                        width="45"   
-                                    />
-                                    <div v-if="skey == 0" class="tfhb-availability-schedule-clone-single">
-                                        <button class="tfhb-availability-schedule-btn" @click="addSocial()"><Icon name="Plus" size=20 /> </button> 
+                            <div class="tools-content" 
+                                v-show="contentVisibility[email.id].description && emailBuilder[key].content.description.status">
+                                <div class="tfhb-shortcode-box tfhb-full-width">
+                                    <div @click="TfhbOnFocus">
+                                        <Editor 
+                                            v-model="emailBuilder[key].content.description.content"  
+                                            :placeholder="$tfhb_trans('Mail Body')"    
+                                            editorStyle="height: 100px" 
+                                        />
                                     </div>
-                                    <div v-else class="tfhb-availability-schedule-clone-single">
-                                        <button class="tfhb-availability-schedule-btn" @click="removeSocial(skey)"><Icon name="X" size=20 /> </button> 
+                                    <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
+                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Socail -->
+                        <div class="single-tools">
+                            <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
+                                <Icon name="GripVertical" @click="ContentBox('footer', 'social', key)" :width="20"/> 
+                                <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'social', key)">
+                                    <div class="tfhb-flexbox tfhb-head">
+                                        {{ $tfhb_trans('Social:') }}
+                                    </div>
+                                    <HbSwitch v-model="emailBuilder[key].content.social.status" />
+                                </div>
+                            </div>
+                            <div class="tools-content" 
+                                v-show="contentVisibility[email.id].social && emailBuilder[key].content.social.status">
+                                <div class="tfhb-socail-repeater tfhb-flexbox tfhb-gap-8">
+                                    <div v-for="(social, skey) in emailBuilder[key].content.social.data" :key="skey" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-full-width">
+                                        <HbText 
+                                            v-model="social.title"
+                                            :placeholder="$tfhb_trans('Social Title')"  
+                                            width="45"  
+                                        />
+                                        <HbText 
+                                            v-model="social.url"
+                                            :placeholder="$tfhb_trans('Social URL:')"   
+                                            width="45"   
+                                        />
+                                        <div v-if="skey == 0" class="tfhb-availability-schedule-clone-single">
+                                            <button class="tfhb-availability-schedule-btn" @click="addSocial()"><Icon name="Plus" size=20 /> </button> 
+                                        </div>
+                                        <div v-else class="tfhb-availability-schedule-clone-single">
+                                            <button class="tfhb-availability-schedule-btn" @click="removeSocial(skey)"><Icon name="X" size=20 /> </button> 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
-
+                </li>
+            </ul>
             <HbButton  
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="UpdateNotification"

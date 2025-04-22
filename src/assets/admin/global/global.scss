@@ -896,7 +896,12 @@
             // margin: 50px auto; 
             max-height: 90%;
             border-radius: $border-radius-medium;
-
+            overflow-x: hidden;
+            .tfhb-email-builder .tfhb-builder-tools .single-tools{
+                &.dragging{
+                left: 10px !important;
+                }
+            }
             .tfhb-dashboard-heading {
 
                 margin-bottom: 16px !important;
