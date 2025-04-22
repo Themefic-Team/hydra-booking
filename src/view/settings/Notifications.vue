@@ -194,10 +194,8 @@ const Notification = reactive(  {
 });
 
 // Update Notification 
-const changeTab = (e) => {  
+const changeTab = (tab) => {  
     ntskeleton.value = true;
-    // get data-tab attribute value of clicked button
-    const tab = e.target.getAttribute('data-tab'); 
     currentTabs.value = tab;
     setTimeout(() => {
         ntskeleton.value = false;
@@ -313,8 +311,8 @@ onBeforeMount(() => {
         <div class="tfhb-content-wrap">
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16" v-if="!$route.params.id && $route.hash === '#email'">
-                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }} </button>
-                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
+                <button @click="changeTab('host')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }} </button>
+                <button @click="changeTab('attendee')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
 
             <div v-if="currentTabs=='host' && !$route.params.id && $route.hash === '#email'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="{ 'tfhb-skeleton': ntskeleton }"> 
