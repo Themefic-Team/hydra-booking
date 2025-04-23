@@ -207,7 +207,139 @@ class Helper {
                     </tbody></table>
                 
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
             
         );
         $notification['host']['booking_cancel'] = array(
@@ -397,7 +529,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Booking Cancellation</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
         );
         
         $notification['host']['booking_pending'] = array(
@@ -588,7 +852,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was pending.</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
             
         );
         $notification['host']['booking_reschedule'] = array(
@@ -779,7 +1175,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Booking Rescheduled</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
         );
         $notification['host']['booking_reminder'] = array(
             'status' => 1,
@@ -968,7 +1496,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Reminder: Your meeting will start in {{booking.start_date_time_for_host}}</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
         );
 
         // Attendee Notification
@@ -1159,7 +1819,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Your booking has been scheduled</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
 
         );
         // Attendee Notification
@@ -1351,7 +2143,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Your Booking is Pending Approval</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
 
         );
         $notification['attendee']['booking_cancel'] = array(
@@ -1541,7 +2465,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
-            'builder' => ''
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Booking Cancellation</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
 
 
         );
@@ -1733,6 +2789,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Booking Rescheduled</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
         );
         $notification['attendee']['booking_reminder'] = array(
             'status' => 1,
@@ -1921,6 +3110,139 @@ class Helper {
                             </td></tr>
                     </tbody></table>
             ',
+            'builder' => array(
+                array(
+                    'id' => 'header',
+                    'order' => 0,
+                    'status' => 1,
+                    'title' => 'Header',
+                    'content' => '<span style="color: #FFF; font-size: 22px; font-weight: 600; margin: 0;">HydraBooking</span>',
+                    'logo' => '',
+                    'background' => '#215732'
+                ),
+                array(
+                    'id' => 'gratitude',
+                    'order' => 1,
+                    'status' => 1,
+                    'title' => 'Greetings',
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">Reminder: Your meeting will start in {{booking.start_date_time_for_attendee}}</p>'
+                ),
+                array(
+                    'id' => 'meeting_details',
+                    'order' => 2,
+                    'status' => 1,
+                    'title' => 'Meeting Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'data_time' => array(
+                            'status' => 1,
+                            'title' => 'Date & Time:',
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                        ),
+                        'host' => array(
+                            'status' => 1,
+                            'title' => 'Host:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'about' => array(
+                            'status' => 1,
+                            'title' => 'About:',
+                            'content' => '<strong>{{meeting.title}}</strong>'
+                        ),
+                        'description' => array(
+                            'status' => 1,
+                            'title' => 'Description:',
+                            'content' => '{{meeting.content}}'
+                        ),
+                        'location' => array(
+                            'status' => 1,
+                            'title' => 'Location:',
+                            'content' => '<strong>{{booking.location_details_html}}</strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'host_details',
+                    'order' => 3,
+                    'status' => 1,
+                    'title' => 'Host Details',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'name' => array(
+                            'status' => 1,
+                            'title' => 'Name:',
+                            'content' => '<strong>{{host.name}}</strong>'
+                        ),
+                        'email' => array(
+                            'status' => 1,
+                            'title' => 'Email:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.email}}</a></strong>'
+                        ),
+                        'phone' => array(
+                            'status' => 1,
+                            'title' => 'Phone:',
+                            'content' => '<strong><a href="" style="text-decoration: none; color: #2E6B38;">{{host.phone}}</a></strong>'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'instructions',
+                    'order' => 4,
+                    'status' => 1,
+                    'title' => 'Instructions',
+                    'content' => '<ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul>',
+                ),
+                array(
+                    'id' => 'cancel_reschedule',
+                    'order' => 5,
+                    'status' => 1,
+                    'title' => 'Buttons',
+                    'border_color' => '#C0D8C4',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => 'You can cancel or reschedule this event for any reason.'
+                        ),
+                        'cancel' => array(
+                            'status' => 1,
+                            'content' => '{{booking.cancel_link}}'
+                        ),
+                        'reschedule' => array(
+                            'status' => 1,
+                            'content' => '{{booking.rescheduled_link}}'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'footer',
+                    'order' => 6,
+                    'status' => 1,
+                    'title' => 'Footer',
+                    'content' => array(
+                        'description' => array(
+                            'status' => 1,
+                            'content' => '<span style="color: #FFF; font-size: 16.5px; font-weight: bold;">HydraBooking</span><p style="color: #FFF; font-size: 13px; margin: 8px 0 0 0;">The WordPress Plugin to <br>Supercharge Your Scheduling</p>'
+                        ),
+                        'social' => array(
+                            'status' => 1,
+                            'data' => array(
+                                array(
+                                    'title' => 'Facebook',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Twitter',
+                                    'url' => '#'
+                                ),
+                                array(
+                                    'title' => 'Youtube',
+                                    'url' => '#'
+                                ),
+                            )
+                        )
+                    )
+                ),
+            )
         );
 
 
