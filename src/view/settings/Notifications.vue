@@ -6,7 +6,7 @@ import { useRouter, useRoute, RouterView } from 'vue-router'
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
-const route = useRoute();
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 const router = useRouter();
 
 // import Form Field 
@@ -193,6 +193,13 @@ const Notification = reactive(  {
     }
 });
 
+// Integration Data
+const Integration = reactive( {
+    telegram: '',
+    slack: '',
+    twilio: ''
+});
+
 // Update Notification 
 const changeTab = (tab) => {  
     ntskeleton.value = true;
@@ -219,6 +226,11 @@ const fetchNotification = async () => {
             Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
             Notification.twilio = response.data.notification_settings.twilio ? response.data.notification_settings.twilio : Notification.twilio;
             Notification.slack = response.data.notification_settings.slack ? response.data.notification_settings.slack : Notification.slack;
+
+            Integration.telegram = response.data.telegram.status ? response.data.telegram.status : '';
+            Integration.slack = response.data.slack.status ? response.data.slack.status : '';
+            Integration.twilio = response.data.twilio.status ? response.data.twilio.status : '';
+
             skeleton.value = false;
         }
     } catch (error) {
@@ -448,7 +460,19 @@ onBeforeMount(() => {
             </div> 
 
             <!-- Telegram Notification -->
-            <div v-if="!$route.params.id && $route.hash === '#telegram'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#telegram' && Integration.telegram==''">
+                <template #content>
+                    <span>{{$tfhb_trans('Your aren’t connected with Telegram. Please go to ')}}  
+                        <HbButton 
+                            classValue="tfhb-btn" 
+                            @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                            buttonText="Setting > Integration"
+                        />  
+                        {{$tfhb_trans('and connect.')}}  
+                    </span>
+                </template>
+            </HbInfoBox>
+            <div v-if="!$route.params.id && $route.hash === '#telegram'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.telegram ? 'tfhb-pro' : ''"> 
  
             <!-- Single Notification  -->
             <MailNotifications 
@@ -502,7 +526,19 @@ onBeforeMount(() => {
             </div> 
 
             <!-- Twilio Notification -->
-            <div v-if="!$route.params.id && $route.hash === '#twilio'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#twilio' && Integration.twilio==''">
+                <template #content>
+                    <span>{{$tfhb_trans('Your aren’t connected with Twilio. Please go to ')}}  
+                        <HbButton 
+                            classValue="tfhb-btn" 
+                            @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                            buttonText="Setting > Integration"
+                        />  
+                        {{$tfhb_trans('and connect.')}}  
+                    </span>
+                </template>
+            </HbInfoBox>
+            <div v-if="!$route.params.id && $route.hash === '#twilio'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.twilio ? 'tfhb-pro' : ''"> 
  
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -556,7 +592,19 @@ onBeforeMount(() => {
             </div> 
 
             <!-- Slack Notification -->
-            <div v-if="!$route.params.id && $route.hash === '#slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box "> 
+            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#slack' && Integration.slack==''">
+                <template #content>
+                    <span>{{$tfhb_trans('Your aren’t connected with Slack. Please go to ')}}  
+                        <HbButton 
+                            classValue="tfhb-btn" 
+                            @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                            buttonText="Setting > Integration"
+                        />  
+                        {{$tfhb_trans('and connect.')}}  
+                    </span>
+                </template>
+            </HbInfoBox>
+            <div v-if="!$route.params.id && $route.hash === '#slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.slack ? 'tfhb-pro' : ''"> 
  
             <!-- Single Notification  -->
             <MailNotifications 

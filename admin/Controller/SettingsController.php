@@ -825,9 +825,49 @@ class SettingsController {
 
 		$this->ensureBuilderKeyExists($_tfhb_notification_settings);
 
+		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
+
+		// Telegram
+		$telegram_status = ! empty( $_tfhb_integration_settings['telegram']['status'] ) ? $_tfhb_integration_settings['telegram']['status'] : '';
+		$telegram_bot_token = ! empty( $_tfhb_integration_settings['telegram']['bot_token'] ) ? $_tfhb_integration_settings['telegram']['bot_token'] : '';
+		$telegram_chat_id  = ! empty( $_tfhb_integration_settings['telegram']['chat_id'] ) ? $_tfhb_integration_settings['telegram']['chat_id'] : '';
+		$telegram_Data = array();
+		if ( ! empty( $telegram_status ) && ! empty( $telegram_bot_token ) && ! empty( $telegram_chat_id ) ) {
+			$telegram_Data['status']  = true;
+		} else {
+			$telegram_Data['status'] = false;
+		}
+
+		// Slack
+		$slack_status = ! empty( $_tfhb_integration_settings['slack']['status'] ) ? $_tfhb_integration_settings['slack']['status'] : '';
+		$slack_endpoint = ! empty( $_tfhb_integration_settings['slack']['endpoint'] ) ? $_tfhb_integration_settings['slack']['endpoint'] : '';
+		$slack_Data = array();
+		if ( ! empty( $slack_status ) && ! empty( $slack_endpoint ) ) {
+			$slack_Data['status']  = true;
+		} else {
+			$slack_Data['status'] = false;
+		}
+
+		// Twilio
+		$twilio_status = ! empty( $_tfhb_integration_settings['twilio']['status'] ) ? $_tfhb_integration_settings['twilio']['status'] : '';
+		$twilio_receive_number = ! empty( $_tfhb_integration_settings['twilio']['receive_number'] ) ? $_tfhb_integration_settings['twilio']['receive_number'] : '';
+		$twilio_from_number = ! empty( $_tfhb_integration_settings['twilio']['from_number'] ) ? $_tfhb_integration_settings['twilio']['from_number'] : '';
+		$twilio_sid = ! empty( $_tfhb_integration_settings['twilio']['sid'] ) ? $_tfhb_integration_settings['twilio']['sid'] : '';
+		$twilio_token = ! empty( $_tfhb_integration_settings['twilio']['token'] ) ? $_tfhb_integration_settings['twilio']['token'] : '';
+
+		$twilio_Data = array();
+		if ( ! empty( $twilio_status ) && ! empty( $twilio_receive_number ) && ! empty( $twilio_from_number ) && ! empty( $twilio_sid ) && ! empty( $twilio_token ) ) {
+			$twilio_Data['status']  = true;
+		} else {
+			$twilio_Data['status'] = false;
+		}
+
 		$data                        = array(
 			'status'                => true,
 			'notification_settings' => $_tfhb_notification_settings,
+			'telegram'     	   		=> $telegram_Data,
+			'slack'            		=> $slack_Data,
+			'twilio'           		=> $twilio_Data,
 		);
 		return rest_ensure_response( $data );
 	}
