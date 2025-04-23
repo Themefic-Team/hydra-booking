@@ -50,6 +50,7 @@ const clickToNextMapping = () => {
 }
 
 onBeforeMount(() => {  
+    importExport.GetImportExportData();
 });
 
 
@@ -207,7 +208,7 @@ onBeforeMount(() => {
                                 width="100" 
                                 :filter="true"
                                 :placeholder="$tfhb_trans('Select Meeting')"   
-                                :option = "[]"
+                                :option = "importExport.meeting_list"
 
                             /> 
                         </div>

@@ -96,6 +96,115 @@ const importExport = reactive({
         } catch (error) {
             console.log(error);
         }  
+    }, 
+    // Other Information 
+    async readAllImportData(file) {   
+        if (file && file.type === "application/json") {
+            const reader = new FileReader();
+        
+            reader.onload = (e) => {
+              try {
+                this.allData.import_data = JSON.parse(e.target.result);
+                // foreach data 
+                Object.entries(this.allData.import_data).forEach(([key, value]) => {
+                    if(key == 'settings' || key == 'tfhb_hosts' || key == 'tfhb_meetings' || key == 'tfhb_bookings' ){
+                        var name ='';
+                        if(key == 'settings'){
+                            name = 'Settings';
+                        }
+                        if(key == 'tfhb_hosts'){
+                            name = 'Hosts'
+                        }
+                        if(key == 'tfhb_meetings'){
+                            name = 'Meetings'
+                        }
+                         if(key == 'tfhb_bookings'){
+                            name = 'Bookings'
+                        }
+                        this.allData.column.push(name)
+                        // add data into object 
+                        this.allData.import_column[name] = key;
+
+                    }
+                });
+                 
+                
+              } catch (err) {
+                console.error("Error parsing JSON:", err);
+              }
+            };
+        
+            reader.onerror = (e) => {
+              console.error("Error reading file:", e);
+            };
+        
+            reader.readAsText(file);
+          } else {
+            console.warn("Invalid file type. Please upload a .json file.");
+          }
+    },
+
+     // Import All Data
+     async importAllData() { 
+        // if this.allData.select_import is empty return mesage
+        if(Object.keys(this.allData.select_import).length === 0) {
+            toast.error('Please select at least one item to import', {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+        }
+        this.importing = true;
+        this.progress = 0;
+        // Simulate progress
+        this.progressInterval = setInterval(() => {
+            if (this.progress < 90) {
+            this.progress += 1;
+            }
+        }, 100);
+
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-all-data', {
+                import_data: this.allData.import_data,  
+                select_import: this.allData.select_import,  
+                is_overwrite_settings: this.allData.is_overwrite_settings,  
+                is_overwrite_host: this.allData.is_overwrite_host,  
+                is_create_new_user: this.allData.is_create_new_user,  
+                is_overwrite_meeting: this.allData.is_overwrite_meeting,  
+                is_overwrite_booking: this.allData.is_overwrite_booking,  
+                is_default_meeting: this.allData.is_default_meeting,  
+                default_meeting_id: this.allData.default_meeting_id,  
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                    'capability': 'tfhb_manage_options'
+                } 
+            } );
+    
+            if (response.data.status) {  
+                this.progress = 100;
+                this.meeting.steps = 'completed';
+                this.importing = false;
+                // scrool to top
+                window.scrollTo(0, 0);
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });   
+            }else{
+
+                this.importing = false;
+                this.progress = 100;
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
+            }
+        } catch (error) {
+
+            this.importing = false;
+            this.progress = 100;
+            console.log(error);
+        }  
     },
 
     // export Booking Data
@@ -215,103 +324,6 @@ const importExport = reactive({
                  
             }
         });    
-    },
-
-    // Other Information 
-    async readAllImportData(file) {   
-        if (file && file.type === "application/json") {
-            const reader = new FileReader();
-        
-            reader.onload = (e) => {
-              try {
-                this.allData.import_data = JSON.parse(e.target.result);
-                // foreach data 
-                Object.entries(this.allData.import_data).forEach(([key, value]) => {
-                    if(key == 'settings' || key == 'tfhb_hosts' || key == 'tfhb_meetings' || key == 'tfhb_bookings' ){
-                        var name ='';
-                        if(key == 'settings'){
-                            name = 'Settings';
-                        }
-                        if(key == 'tfhb_hosts'){
-                            name = 'Hosts'
-                        }
-                        if(key == 'tfhb_meetings'){
-                            name = 'Meetings'
-                        }
-                         if(key == 'tfhb_bookings'){
-                            name = 'Bookings'
-                        }
-                        this.allData.column.push(name)
-                        // add data into object 
-                        this.allData.import_column[name] = key;
-
-                    }
-                });
-                 
-                
-              } catch (err) {
-                console.error("Error parsing JSON:", err);
-              }
-            };
-        
-            reader.onerror = (e) => {
-              console.error("Error reading file:", e);
-            };
-        
-            reader.readAsText(file);
-          } else {
-            console.warn("Invalid file type. Please upload a .json file.");
-          }
-    },
-
-     // Import All Data
-     async importAllData() { 
-        this.importing = true;
-        this.progress = 0;
-        // Simulate progress
-        this.progressInterval = setInterval(() => {
-            if (this.progress < 90) {
-            this.progress += 1;
-            }
-        }, 100);
-
-        try {  
-            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-all-data', {
-                import_data: this.allData.import_data, 
-                import_column: this.allData.import_column, 
-                select_import: this.allData.select_import,  
-            }, {
-                headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
-                } 
-            } );
-    
-            if (response.data.status) {  
-                this.progress = 100;
-                this.meeting.steps = 'completed';
-                this.importing = false;
-                // scrool to top
-                window.scrollTo(0, 0);
-                toast.success(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });   
-            }else{
-
-                this.importing = false;
-                this.progress = 100;
-                toast.error(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });
-            }
-        } catch (error) {
-
-            this.importing = false;
-            this.progress = 100;
-            console.log(error);
-        }  
     },
 
     // Run The booking import

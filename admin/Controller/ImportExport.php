@@ -89,6 +89,16 @@ class ImportExport {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+		// Import Booking
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/import-export/import-all-data',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'ImportAllData' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
 	}
 
 	public function GetImportExportData() {
@@ -190,7 +200,20 @@ class ImportExport {
 		if(in_array('Bookings', $select_export)){
 			$booking = new Booking();
 			// get booking with attendees
-			$bookings_data = $booking->getBookingWithAttendees();
+			$bookings_data = $booking->getBookingWithAttendees(); 
+			foreach($bookings_data as $key => $value){
+				// unset some data
+				unset($bookings_data[$key]->title);
+				unset($bookings_data[$key]->meeting_price);
+				unset($bookings_data[$key]->payment_currency);
+				unset($bookings_data[$key]->meeting_payment_status);
+				unset($bookings_data[$key]->meeting_type);
+				unset($bookings_data[$key]->host_first_name);
+				unset($bookings_data[$key]->host_last_name);
+				unset($bookings_data[$key]->host_email);
+				unset($bookings_data[$key]->host_time_zone);
+			    
+			}
 			
 			$bookings_data = json_decode(json_encode($bookings_data), true);
 		 
@@ -209,6 +232,234 @@ class ImportExport {
 		);
 		return rest_ensure_response( $data );
 		
+	}
+
+	// Import All Data from Json format
+	public function ImportAllData(){
+		$request = json_decode( file_get_contents( 'php://input' ), true );
+		$import_data    = isset( $request['import_data'] ) ? $request['import_data'] : array();
+		$select_import = isset( $request['select_import'] ) ? $request['select_import'] : array();  
+		$is_overwrite_host = isset( $request['is_overwrite_host'] ) ? $request['is_overwrite_host'] : true; 
+		$is_create_new_user = isset( $request['is_create_new_user'] ) ? $request['is_create_new_user'] : true; 
+		$is_overwrite_meeting = isset( $request['is_overwrite_meeting'] ) ? $request['is_overwrite_meeting'] : true; 
+		$is_overwrite_booking = isset( $request['is_overwrite_booking'] ) ? $request['is_overwrite_booking'] : true; 
+		$is_default_meeting = isset( $request['is_default_meeting'] ) ? $request['is_default_meeting'] : true; 
+		$default_meeting_id = isset( $request['default_meeting_id'] ) ? $request['default_meeting_id'] : 0; 
+
+		$import_logs = [];
+		// if currect user dosent have permission to import all data
+		if ( !current_user_can( 'tfhb_manage_options' ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' =>  __( 'You do not have permission to import all data.', 'hydra-booking' ),
+			) );
+		}
+		// if $select_import is empty
+		if ( empty( $select_import ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' =>  __( 'Please select at least one option to import.', 'hydra-booking' ),
+			) );
+		}
+		// if $import_data is empty
+		if ( empty( $import_data ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' =>  __( 'Invalid data provided.', 'hydra-booking' ),
+			) );
+		}
+		// Select general settingss
+		if(isset($select_import['settings']) && $select_import['settings'] == true){
+			$settings = $import_data['settings'];
+			// update option settings
+			update_option( '_tfhb_general_settings', $settings['_tfhb_general_settings'] );
+			update_option( '_tfhb_availability_settings', $settings['_tfhb_availability_settings'] );
+			update_option( '_tfhb_integration_settings', $settings['_tfhb_integration_settings'] );
+			update_option( '_tfhb_notification_settings', $settings['_tfhb_notification_settings'] );
+			update_option( '_tfhb_hosts_settings', $settings['_tfhb_hosts_settings'] );
+			update_option( '_tfhb_appearance_settings', $settings['_tfhb_appearance_settings'] );
+			$import_logs['settings'] =  __( 'Settings imported successfully.', 'hydra-booking' );
+		}
+
+		// Import Host 
+		if(isset($select_import['tfhb_hosts']) && $select_import['tfhb_hosts'] == true){
+			$hosts_data = $import_data['tfhb_hosts'];
+			// tfhb_print_r($hosts_data);
+
+			$host = new Host();
+			foreach( $hosts_data as $key => $value){
+				$user_id = $value['user_id'];
+				// Check if user is not available in the row using id 
+				if($user_id !='' ){ 
+					$check_user = get_user_by( 'id', $user_id ); 
+					
+						if(empty($check_user)){
+							// create new user
+							// check user by email
+							$check_user = get_user_by( 'email', $value['email'] );
+							if(empty($check_user)){
+								if($is_create_new_user == true){
+								// create new user
+									$user_id = wp_create_user( $value['email'], 'password', $value['email'] );
+									$new_row['user_id'] = $user_id;
+
+								}else{
+									continue;
+								}
+							}else{
+								$new_row['user_id'] = $check_user->ID;
+							} 
+						}else{
+							$new_row['user_id'] = $check_user->ID;
+						}
+					
+				}else{
+					$user_id = wp_create_user( $value['email'], 'password', $value['email'] );
+					$value['user_id'] = $user_id;
+				}
+				$_tfhb_host = $value['_tfhb_host'];
+				$_tfhb_host_integration_settings = $value['_tfhb_host_integration_settings'];
+				// unset 
+				unset($value['_tfhb_host']);
+				unset($value['_tfhb_host_integration_settings']);
+ 
+				if($is_overwrite_host == true){
+					$hostData = $host->get( $value['id'] );
+					if(!empty($hostData)){   
+	
+						unset($value['id']);
+						$host->add($value);
+	 
+					}else{ 
+						$host->update($value);
+					}
+				}else{  
+ 
+					unset($value['id']);
+					$host->add($value);
+				} 
+				// update user meta
+				if($user_id !='' ){
+					update_user_meta( $user_id, '_tfhb_host', $_tfhb_host, true );
+					update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings, true );
+				}
+			}
+			$import_logs['hosts']=  __( 'Host imported successfully.', 'hydra-booking' );
+			 
+		} 
+
+		// Import Meeting Data
+		if(isset($select_import['tfhb_meetings']) && $select_import['tfhb_meetings'] == true){
+			$hosts_data = $import_data['tfhb_meetings'];
+			// tfhb_print_r($hosts_data);
+
+			$meeting = new Meeting();
+			$host = new Host();
+			$host_id = $host->getHostByUserId( get_current_user_id() );
+			foreach( $hosts_data as $key => $value){
+				// Check if host is not available in the row
+				if($value['host_id'] !='' ){
+					$check_host = $host->getHostById($value['host_id']);
+					if(empty($check_host)){
+						$value['host_id'] = $host_id;
+						$value['user_id'] = get_current_user_id();
+					}else{
+						$value['user_id'] = $check_host->user_id;
+					}
+				}else{
+					$value['host_id'] = $host_id;
+					$value['user_id'] = get_current_user_id();
+				} 
+				
+				if($is_overwrite_host == true){
+					$meeting->update($value);
+				}else{
+					// unset id 
+					unset($value['id']);
+					$meeting->add($value);
+				}  
+				if($is_overwrite_meeting == true){
+					$meetingData = $meeting->get( $value['id'] );
+					if(!empty($meetingData)){   
+	
+						unset($value['id']);
+						$meeting->add($value);
+	 
+					}else{ 
+						$meeting->update($value);
+					}
+				}else{  
+ 
+					unset($value['id']);
+					$host->add($value);
+				} 
+			}
+			
+			$import_logs['meeting']=  __( 'Host imported successfully.', 'hydra-booking' );
+			 
+		}
+
+
+		// Import Booking Data
+		if(isset($select_import['tfhb_bookings']) && $select_import['tfhb_bookings'] == true){
+			$bookinsg_data = $import_data['tfhb_bookings'];
+			// tfhb_print_r($hosts_data);
+
+			$booking = new Booking();
+			$host = new Host();
+			$meeting = new meeting();
+			$host_id = $host->getHostByUserId( get_current_user_id() );
+			foreach( $bookinsg_data as $key => $value){ 
+
+				// if meeting is not available in the row
+				if($is_default_meeting == true){
+					
+					// check meeting is exisist or not 
+					$meeting = new Meeting();
+					$meetingData = !empty($value['meeting_id']) ||  $value['meeting_id'] != null ? $meeting->getWithID( $value['meeting_id'] ) : '';
+					if(empty($meetingData)){ 
+						$default_meeting = $meeting->getWithID( $default_meeting_id );	
+						$value['meeting_id'] = $default_meeting_id;
+						$value['host_id'] = $default_meeting->host_id;
+					}
+				}
+				$attendees = $value['attendees'];
+				unset($value['attendees']);
+				// if current meeting id is exist and overwrite is true 
+				
+				if($is_overwrite_booking == true){
+					$bookingData = $booking->get( $value['id'] );
+					if(!empty($bookingData)){   
+
+						unset($value['id']);
+						$booking->add($value);
+
+					}else{ 
+						$booking->update($value);
+					}
+				}else{  
+					unset($value['id']);
+					$booking->add($value);
+				}
+					 
+			}
+			
+			$import_logs['booking'] =  __( 'Booking imported successfully.', 'hydra-booking' );
+				
+		}
+
+		// import meeting
+
+
+		// tfhb_print_r($select_import['settings']);
+		// return;
+		// return success message
+		$data = array(
+			'status'  => true,
+			'import_logs' => $import_logs,
+			'message' =>  __( 'Data imported successfully.', 'hydra-booking' ),
+		);
+		return rest_ensure_response( $data );
 	}
 
 	// Export booking Data
