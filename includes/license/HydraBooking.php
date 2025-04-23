@@ -29,21 +29,21 @@ class HydraBooking {
         }
         $lice_email=get_option( "HydraBooking_lic_email","");
 
-        if(empty($license_key)){
-            return;
+        if(!empty($license_key)){
+            // if key is not encripted then encript it
+            $decoded = base64_decode($license_key, true);
+
+            if($decoded === false){
+                $license_key=$this->encryptKey($license_key,$lice_email);
+                update_option($main_lic_key,$license_key) || add_option($main_lic_key,$license_key);
+                update_option($lic_key_name,$license_key) || add_option($lic_key_name,$license_key);
+            }
+
+            // decrypt key
+            $license_key=$this->decryptKey($license_key,$lice_email);
+
         }
-        // if key is not encripted then encript it
-        $decoded = base64_decode($license_key, true);
-
-        if($decoded === false){
-            $license_key=$this->encryptKey($license_key,$lice_email);
-            update_option($main_lic_key,$license_key) || add_option($main_lic_key,$license_key);
-            update_option($lic_key_name,$license_key) || add_option($lic_key_name,$license_key);
-        }
-
-        // decrypt key
-        $license_key=$this->decryptKey($license_key,$lice_email);
-
+        
 
         HydraBookingBase::add_on_delete(function(){
            update_option("HydraBooking_lic_Key","");
