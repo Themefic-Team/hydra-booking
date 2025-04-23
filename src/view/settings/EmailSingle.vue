@@ -691,7 +691,7 @@ const addSocial = () => {
 </script>
 
 <template>
-    <!-- {{ Notification[route.params.type][route.params.id] }} -->
+    <!-- {{ Notification[route.params.type][route.params.id].body }} -->
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-email-builder tfhb-flexbox tfhb-justify-between tfhb-flexbox-nowrap">
         <div class="tfhb-builder-tools">
