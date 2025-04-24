@@ -155,12 +155,6 @@ const upgradeToPro = async (key) => {
                 </template>
             </HbInfoBox> 
 
-            <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-else-if="!LicenseBase.license_active">
-                <template #content>
-                    {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
-                </template>
-            </HbInfoBox>
-
             <!-- Date And Time -->  
             <div  v-if="LicenseBase.license_active == false"  class="tfhb-admin-title" >
                 <h2>{{ $tfhb_trans('License Info') }}</h2> 
