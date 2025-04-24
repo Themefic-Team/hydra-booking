@@ -618,8 +618,7 @@ const closePopup = () => {
                             
                             <div class="tfhb-single-form-field" style="width: 100%;" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'">
                                 <div class="tfhb-single-form-field-wrap tfhb-field-input">
-                                    <!--if has label show label with tag else remove tags  --> 
-                                    <label for="">{{ $tfhb_trans('Message Body') }}</label>  
+                                    
                                     <Editor 
                                         v-model="props.data.body"  
                                         :placeholder="$tfhb_trans('Message Body')"    

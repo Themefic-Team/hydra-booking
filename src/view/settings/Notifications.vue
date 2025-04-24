@@ -145,7 +145,12 @@ const Notification = reactive(  {
             status : 0,
             body : '',
             builder: ''
-        }
+        },
+        booking_reminder: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
     },
     twilio : {
         booking_confirmation: {
@@ -167,7 +172,12 @@ const Notification = reactive(  {
             status : 0,
             body : '',
             builder: ''
-        }
+        },
+        booking_reminder: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
     },
     slack : {
         booking_confirmation: {
@@ -189,7 +199,12 @@ const Notification = reactive(  {
             status : 0,
             body : '',
             builder: ''
-        }
+        },
+        booking_reminder: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
     }
 });
 
@@ -314,7 +329,8 @@ onBeforeMount(() => {
             </div>
             <div class="tfhb-admin-title tfhb-m-0" v-else> 
                 <h1 >{{ $tfhb_trans('Notifications') }}</h1> 
-                <p>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
+                <p v-if="$route.hash!='#telegram' && $route.hash!='#twilio' && $route.hash!='#slack'">{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
+                <p v-else>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host') }}</p>
             </div>
             <div class="thb-admin-btn"> 
                 <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/notifications/" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
@@ -332,8 +348,8 @@ onBeforeMount(() => {
  
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Confirmation" 
-                   :label="$tfhb_trans('Booking Confirmation')" 
+                    :title="$tfhb_trans('Booking Confirmation to Host')"   
+                    :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_confirmation"  
                     :isSingle="true"
@@ -344,8 +360,8 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Pending" 
-                   :label="$tfhb_trans('Booking Pending')" 
+                    :title="$tfhb_trans('Booking Pending to Host')"  
+                    :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_pending"  
                     :isSingle="true"
@@ -357,7 +373,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Cancels" 
+                    :title="$tfhb_trans('Booking Cancel to Host')"  
                     :label="$tfhb_trans('Booking Cancel')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_cancel"  
@@ -369,7 +385,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host" 
+                    :title="$tfhb_trans('Booking Reschedule to Host')"  
                     :label="$tfhb_trans('Booking Reschedule')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reschedule"  
@@ -381,7 +397,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host" 
+                    :title="$tfhb_trans('Booking Reminder to Host')"  
                     :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reminder"  
@@ -398,7 +414,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Confirmation to Attendee')"  
                     :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_confirmation"  
@@ -410,7 +426,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Pending to Attendee')"  
                     :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_pending"  
@@ -423,7 +439,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Cancel to Attendee')"  
                     :label="$tfhb_trans('Booking Cancel')"  
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_cancel"  
@@ -435,7 +451,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Reschedule to Attendee')"  
                     :label="$tfhb_trans('Booking Reschedule')"
                     :data="Notification.attendee.booking_reschedule"  
                     :isSingle="true"
@@ -446,7 +462,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Reminder to Attendee')"   
                     :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_reminder"  
@@ -476,7 +492,7 @@ onBeforeMount(() => {
  
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host for Booking Confirmation" 
+                :title="$tfhb_trans('Booking Confirmation to Host')"  
                 :label="$tfhb_trans('Booking Confirmation')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.telegram.booking_confirmation"  
@@ -488,7 +504,7 @@ onBeforeMount(() => {
 
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host for Booking Pending" 
+                :title="$tfhb_trans('Booking Pending to Host')" 
                 :label="$tfhb_trans('Booking Pending')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.telegram.booking_pending"  
@@ -501,7 +517,7 @@ onBeforeMount(() => {
 
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host for Booking Cancels" 
+                :title="$tfhb_trans('Booking Cancel to Host')"  
                 :label="$tfhb_trans('Booking Cancel')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.telegram.booking_cancel"  
@@ -513,13 +529,25 @@ onBeforeMount(() => {
 
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host" 
+                :title="$tfhb_trans('Booking Reschedule to Host')"
                 :label="$tfhb_trans('Booking Reschedule')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.telegram.booking_reschedule"  
                 :isSingle="true"
                 categoryKey="telegram"
                 emailKey="booking_reschedule"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Reminder to Host')"
+                :label="$tfhb_trans('Booking Reminder')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_reminder"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_reminder"
             /> 
             <!-- Single Integrations  -->
 
@@ -542,7 +570,7 @@ onBeforeMount(() => {
  
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Confirmation" 
+                    :title="$tfhb_trans('Booking Confirmation to Host')"  
                     :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.twilio.booking_confirmation"  
@@ -554,7 +582,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Pending" 
+                    :title="$tfhb_trans('Booking Pending to Host')" 
                     :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.twilio.booking_pending"  
@@ -567,7 +595,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Cancels" 
+                    :title="$tfhb_trans('Booking Cancel to Host')" 
                     :label="$tfhb_trans('Booking Cancel')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.twilio.booking_cancel"  
@@ -579,13 +607,25 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host" 
+                    :title="$tfhb_trans('Booking Reschedule to Host')"
                     :label="$tfhb_trans('Booking Reschedule')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.twilio.booking_reschedule"  
                     :isSingle="true"
                     categoryKey="twilio"
                     emailKey="booking_reschedule"
+                /> 
+                <!-- Single Integrations  -->
+
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    :title="$tfhb_trans('Booking Reminder to Host')"
+                    :label="$tfhb_trans('Booking Reminder')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.twilio.booking_reminder"  
+                    :isSingle="true"
+                    categoryKey="twilio"
+                    emailKey="booking_reminder"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -608,7 +648,7 @@ onBeforeMount(() => {
  
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host for Booking Confirmation" 
+                :title="$tfhb_trans('Booking Confirmation to Host')"  
                 :label="$tfhb_trans('Booking Confirmation')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.slack.booking_confirmation"  
@@ -620,7 +660,7 @@ onBeforeMount(() => {
 
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host for Booking Pending" 
+                :title="$tfhb_trans('Booking Pending to Host')" 
                 :label="$tfhb_trans('Booking Pending')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.slack.booking_pending"  
@@ -633,7 +673,7 @@ onBeforeMount(() => {
 
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host for Booking Cancels" 
+                :title="$tfhb_trans('Booking Cancel to Host')" 
                 :label="$tfhb_trans('Booking Cancel')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.slack.booking_cancel"  
@@ -645,13 +685,25 @@ onBeforeMount(() => {
 
             <!-- Single Notification  -->
             <MailNotifications 
-                title="Send Email to Host" 
+                :title="$tfhb_trans('Booking Reschedule to Host')"
                 :label="$tfhb_trans('Booking Reschedule')" 
                 @update-notification="UpdateNotification"
                 :data="Notification.slack.booking_reschedule"  
                 :isSingle="true"
                 categoryKey="slack"
                 emailKey="booking_reschedule"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Reminder to Host')"
+                :label="$tfhb_trans('Booking Reminder')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_reminder"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_reminder"
             /> 
             <!-- Single Integrations  -->
 
