@@ -26,13 +26,13 @@ onMounted(() => {
                        <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size=20 /> </span>
                     </router-link>
                         <ul class="dropdown">
-                            <li><router-link to="/settings/notifications#email" :class="{ 'active': $route.hash === '#email' }" class="notification-submenu" data-filter="email"> <Icon name="GalleryVerticalEnd" /> {{ $tfhb_trans('Email') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#email" :class="{ 'active': $route.hash === '#email' }" class="notification-submenu" data-filter="email"> <Icon name="Mail" size=18 /> {{ $tfhb_trans('Email') }}</router-link></li>
                             
-                            <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.hash === '#telegram' }" class="notification-submenu" data-filter="telegram"> <Icon name="Video" /> {{ $tfhb_trans('Telegram') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.hash === '#telegram' }" class="notification-submenu" data-filter="telegram"> <img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</router-link></li>
 
-                            <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.hash === '#twilio' }" class="notification-submenu" data-filter="twilio"> <Icon name="Video" /> {{ $tfhb_trans('Twilio') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.hash === '#twilio' }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
 
-                            <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.hash === '#slack' }" class="notification-submenu" data-filter="slack"> <Icon name="Video" /> {{ $tfhb_trans('Slack') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.hash === '#slack' }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
 
                         </ul>
                     </li>
@@ -41,16 +41,16 @@ onMounted(() => {
                        <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size=20 /> </span>
                     </router-link>
                         <ul class="dropdown">
-                            <li><router-link to="/settings/integrations#all" :class="{ 'active': $route.hash === '#all' }" class="integrations-submenu" data-filter="all"> <Icon name="GalleryVerticalEnd" /> {{ $tfhb_trans('All') }}</router-link></li>
+                            <li><router-link to="/settings/integrations#all" :class="{ 'active': $route.hash === '#all' }" class="integrations-submenu" data-filter="all"> <Icon name="GalleryVerticalEnd" size=18 /> {{ $tfhb_trans('All') }}</router-link></li>
                             
-                            <li><router-link to="/settings/integrations#conference" :class="{ 'active': $route.hash === '#conference' }" class="integrations-submenu" data-filter="conference"> <Icon name="Video" /> {{ $tfhb_trans('Conference') }}</router-link></li>
+                            <li><router-link to="/settings/integrations#conference" :class="{ 'active': $route.hash === '#conference' }" class="integrations-submenu" data-filter="conference"> <Icon name="Video" size=18 /> {{ $tfhb_trans('Conference') }}</router-link></li>
 
-                            <li><router-link to="/settings/integrations#calendars" :class="{ 'active': $route.hash === '#calendars' }" class="integrations-submenu" data-filter="calendars"> <Icon name="CalendarDays" /> {{ $tfhb_trans('Calendars') }}</router-link></li>
+                            <li><router-link to="/settings/integrations#calendars" :class="{ 'active': $route.hash === '#calendars' }" class="integrations-submenu" data-filter="calendars"> <Icon name="CalendarDays" size=18 /> {{ $tfhb_trans('Calendars') }}</router-link></li>
 
-                            <li><router-link to="/settings/integrations#payments" :class="{ 'active': $route.hash === '#payments' }" class="integrations-submenu" data-filter="payments"> <Icon name="HandCoins" /> {{ $tfhb_trans('Payments') }}</router-link></li> 
+                            <li><router-link to="/settings/integrations#payments" :class="{ 'active': $route.hash === '#payments' }" class="integrations-submenu" data-filter="payments"> <Icon name="HandCoins" size=18 /> {{ $tfhb_trans('Payments') }}</router-link></li> 
 
-                            <li><router-link to="/settings/integrations#marketing-tools" :class="{ 'active': $route.hash === '#marketing-tools' }" class="integrations-submenu" data-filter="marketing-tools"> <Icon name="BadgePercent" /> {{ $tfhb_trans('Marketing Tools') }}</router-link></li> 
-                            <li><router-link to="/settings/integrations#forms" :class="{ 'active': $route.hash === '#forms' }" class="integrations-submenu" data-filter="forms"> <Icon name="BookText" /> {{ $tfhb_trans('Forms') }}</router-link></li> 
+                            <li><router-link to="/settings/integrations#marketing-tools" :class="{ 'active': $route.hash === '#marketing-tools' }" class="integrations-submenu" data-filter="marketing-tools"> <Icon name="BadgePercent" size=18 /> {{ $tfhb_trans('Marketing Tools') }}</router-link></li> 
+                            <li><router-link to="/settings/integrations#forms" :class="{ 'active': $route.hash === '#forms' }" class="integrations-submenu" data-filter="forms"> <Icon name="BookText" size=18 /> {{ $tfhb_trans('Forms') }}</router-link></li> 
 
                         </ul>
                     </li>
