@@ -32,8 +32,15 @@ const closePopup = () => {
 <template>
     <!-- {{ slack_data }} -->
       
-      <div :class="props.class" class="tfhb-integrations-single-block tfhb-admin-card-box ">
-         <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
+    <div class="tfhb-integrations-single-block tfhb-admin-card-box" 
+        :class="props.class,{
+            'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
+        }"
+    >
+
+        <span v-if="props.from != 'host' && ($tfhb_is_pro == false  || $tfhb_license_status == false)" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+
+        <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
                 <img :src="$tfhb_url+'/assets/images/Slack.png'" alt="">
             </span>  
@@ -42,7 +49,15 @@ const closePopup = () => {
                 <p>{{ $tfhb_trans('Connect Slack API to configure virtual meetings.') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+
+        <div v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-integrations-single-block-btn tfhb-flexbox">
+            <a href="#" v-if="props.from != 'host'" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+                <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+            </div>
+        </div>
+
+        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
 
             <button  v-if=" props.from == 'host' && slack_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Configured') }} </button>
             <router-link  v-else-if=" props.from == 'host' && slack_data.connection_status != '1'" to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
@@ -60,47 +75,37 @@ const closePopup = () => {
             <!-- Swicher --> 
         </div>
         <!-- <Transition name="zoom-in"> -->
-            <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
-                <template #header> 
-                    <h2>{{ $tfhb_trans('Add Slack Option') }}</h2>
-                    
-                </template>
+        <HbPopup v-if="$tfhb_is_pro == true || $tfhb_license_status == true" :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
+            <template #header> 
+                <h2>{{ $tfhb_trans('Add Slack Option') }}</h2>
+                
+            </template>
 
-                <template #content>  
-                    <p>
-                        {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get Access Token from Slack Account') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
-                    </p>
-                    <HbText  
-                        v-model="slack_data.endpoint"  
-                        required= "true"  
-                        name="endpoint"
-                        :errors="errors.endpoint"
-                        :label="$tfhb_trans('Endpoint Name')"  
-                        selected = "1"
-                        :placeholder="$tfhb_trans('Enter Your Endpoint Name')"  
-                    /> 
-                    <!-- <HbText  
-                        v-model="slack_data.token"  
-                        required= "true"  
-                        name="token"
-                        :errors="errors.token"
-                        :label="$tfhb_trans('Access Token')"  
-                        selected = "1"
-                        :placeholder="$tfhb_trans('Enter Your Access Token')"  
-                    />  -->
+            <template #content>  
+                <p>
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get Access Token from Slack Account') }} <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
+                </p>
+                <HbText  
+                    v-model="slack_data.endpoint"  
+                    required= "true"  
+                    name="endpoint"
+                    :errors="errors.endpoint"
+                    :label="$tfhb_trans('Endpoint Name')"  
+                    selected = "1"
+                    :placeholder="$tfhb_trans('Enter Your Endpoint Name')"  
+                /> 
 
-                    
-                    <HbButton  
-                         @click.stop="emit('update-integrations', 'slack_data', slack_data, ['endpoint'])"
-                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
-                        :buttonText="'Save & Validate' "
-                        icon="ChevronRight" 
-                        hover_icon="ArrowRight" 
-                        :hover_animation="true" 
-                        :pre_loader="props.pre_loader"
-                    />   
-                </template> 
-            </HbPopup>
+                <HbButton  
+                        @click.stop="emit('update-integrations', 'slack_data', slack_data, ['endpoint'])"
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
+                    :buttonText="'Save & Validate' "
+                    icon="ChevronRight" 
+                    hover_icon="ArrowRight" 
+                    :hover_animation="true" 
+                    :pre_loader="props.pre_loader"
+                />   
+            </template> 
+        </HbPopup>
         <!-- </Transition > -->
 
     </div>  
