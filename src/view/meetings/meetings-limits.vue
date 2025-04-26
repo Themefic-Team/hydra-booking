@@ -136,13 +136,13 @@ const removeExtraFrequency = (key) => {
        </div>
 
        <div class="tfhb-meeting-limit tfhb-flexbox tfhb-gap-16">
-            <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0  tfhb-pro" >
+            <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0" >
                 <div class=" tfhb-pro">
                     <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                     {{$tfhb_trans('Recurring Event')}}
                         <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
                     </h2> 
-                    <!-- <p>Set up a repeating schedule</p>  -->
+                    <p> {{$tfhb_trans('Set up a repeating schedule')}}</p>
                 </div> 
             
             </div>
@@ -157,13 +157,13 @@ const removeExtraFrequency = (key) => {
             </div> 
             <div
             :class="{'tfhb-pro': $tfhb_is_pro == false || $tfhb_license_status == false}"
-            class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="meeting.recurring_status == true">  
+            class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="($tfhb_is_pro == false || $tfhb_license_status == false) || meeting.recurring_status == true">  
 
                 <!-- Meeting interval -->
 
                 <HbCounter
                     :label="$tfhb_trans('Repeats every')"
-                    width="100" 
+                    width="60" 
                     :repater="false"
                     :counter_value="meeting.recurring_repeat"
                     limit="1"
@@ -176,7 +176,7 @@ const removeExtraFrequency = (key) => {
                         :label="$tfhb_trans('Maximum number of bookings')"   
                         selected = "1"
                         :placeholder="$tfhb_trans('Use meeting length (default)')" 
-                        width="50"  
+                        width="40"  
                         limit="1"
                     /> 
 

@@ -41,7 +41,7 @@ const hover_icon_status = ref(false)
             <HbPreloader  v-if="props.pre_loader == true"  :color="pre_loader_color ?? '#ffffff'" />
             <Icon v-else class="tfhb-btn-icon"  :name="icon"  size=20 /> 
         </span>
-        <span class="tfhb-button-text">{{ buttonText }} </span>
+        <span v-if="props.buttonText" class="tfhb-button-text">{{ buttonText }} </span>
          
          <!-- {{ hover_icon_status }} -->
          <span  class="tfhb-button-icon" :class="icon_position" v-if="icon_position != 'left' && icon" >

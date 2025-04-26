@@ -446,7 +446,7 @@ const fetchMeeting = async () => {
                 meetingData.questions_form_type = response.data.meeting.questions_form_type
             }
 
-            console.log('questions', meetingData.questions)
+            
             if(response.data.meeting.questions){
                 meetingData.questions = JSON.parse(response.data.meeting.questions) 
                 

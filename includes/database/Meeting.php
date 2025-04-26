@@ -319,6 +319,83 @@ class Meeting {
 	}
 
 	/**
+	 * Get all  meeting Data.
+	 */
+	public function getAll($where = null, $sort_by = 'id', $order_by = 'DESC', $limit = false){
+		global $wpdb;
+
+		$host_table    = $wpdb->prefix . 'tfhb_hosts';
+		$table_name = $wpdb->prefix . $this->table;
+		$sql        = "SELECT tfhb_meetings.*, 
+					host.first_name AS host_first_name,
+					host.last_name AS host_last_name,
+					host.email AS host_email,
+					host.time_zone AS host_time_zone,
+					host.featured_image AS host_featured_image
+					FROM $table_name As tfhb_meetings LEFT JOIN {$host_table} AS host  ON host.id = tfhb_meetings.host_id ";	 
+		$data = [];
+ 
+			if($where != null) { 
+				foreach ($where as $key => $condition) {
+					$field =  $condition[0]; 
+					if(strpos($field, '.') === false){
+						$field = 'tfhb_meetings.'.$condition[0];
+					} 
+
+					$operator = $condition[1];
+					$value = $condition[2]; 
+					if($key == 0){
+						$sql .= " WHERE ";
+					}else{
+						$sql .= " AND ";
+					}
+					if($operator == 'BETWEEN'){  
+						$sql .= " $field $operator %s AND %s";
+						$data[] = $value[0];
+						$data[] = $value[1]; 
+					}elseif($operator == 'IN'){   
+						// value is array 
+						$values_array = is_array($value) ? $value : explode(',', $value);
+						$in = implode(',', array_fill(0, count($values_array), '%d')); // Numeric values
+ 
+						$sql .= " $field $operator ($in)";
+						$data = array_merge($data, array_map('intval', $values_array));
+					}elseif($operator == 'LIKE'){   
+						// if operator is like 
+						$like_conditions[] = "$field $operator %s";
+						$data[] = $value; 
+					}else{
+
+						$sql .= " $field $operator %s";
+						$data[] = $value;
+					}
+				} 
+			} 
+
+		
+		// Sort and order
+		$sql .= " ORDER BY tfhb_meetings.$sort_by $order_by";
+
+		// Limit
+		if ($limit !== false) {
+			$sql .= " LIMIT $limit";
+		}
+
+		// Prepare and execute
+		if(!empty($data)){
+
+			$query = $wpdb->prepare($sql, ...$data);
+		}else{
+			$query = $sql;
+		}
+		$data = $wpdb->get_results($query);  
+ 
+
+		return $data;
+
+	}
+
+	/**
 	 * Get with ID
 	 */
 

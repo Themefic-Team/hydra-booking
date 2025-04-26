@@ -330,8 +330,7 @@ class Booking {
 			INNER JOIN {$host_table} AS host  ON host.id = booking.host_id ";
 
 			$data = [];
-			if($where != null) {
-				
+			if($where != null) { 
 				foreach ($where as $condition) {
 					$field =  $condition[0]; 
 					if(strpos($field, '.') === false){

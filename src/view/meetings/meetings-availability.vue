@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import {ref, onBeforeMount, onMounted, reactive} from 'vue'
+import {ref, onBeforeMount, onMounted, reactive, computed} from 'vue'
 import axios from 'axios'  
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -173,6 +173,10 @@ onBeforeMount(() => {
             if(props.meeting.host_id!=0){
                 fetchHostAvailability(props.meeting.host_id);
                 fetchSingleAvailabilitySettings(props.meeting.host_id, props.meeting.availability_id);
+                if('settings'==props.meeting.availability_type && host_availble_type != 'settings'){
+
+                    Settings_Avalibility_Callback(props.meeting.availability_id)
+                }
             }
         }, 2000);
        
@@ -281,31 +285,33 @@ const getLatestEndTime = (day) => {
     }
     return latestEndTime;
 }
-
+ 
 const TfhbStartDataEvent = (key, skey, startTime) => {
-    const day = props.meeting.availability_custom.time_slots[key];
-    const latestEndTime = getLatestEndTime(day);
-
-    if (startTime <= latestEndTime) {
-        toast.error("Your start time will be over the: " + latestEndTime, {
-            position: 'bottom-right', // Set the desired position
-            "autoClose": 1500,
-        });  
-        return latestEndTime;
-    }
-}
-
-const TfhbEndDataEvent = (key, skey, endTime) => {
+      
+     const day = props.meeting.availability_custom.time_slots[key];
+     const latestEndTime = getLatestEndTime(day);  
+ 
+     if (startTime >= latestEndTime){
+         toast.error("Your start time will be over the: " + latestEndTime, {
+                 position: 'bottom-right', // Set the desired position
+                 "autoClose": 1500,
+             });
+         return latestEndTime;
+     }
+ }
+ 
+ 
+const TfhbEndDataEvent = (key, skey, endTime) => { 
     const day = props.meeting.availability_custom.time_slots[key];
     const nextDate = skey+1;
     const NextdayData = day.times[nextDate] ? day.times[nextDate].start : '';
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayDatas, {
+            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
-            });   
+            });
             return;
         }
     }else{
@@ -313,10 +319,11 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
             toast.error("Your End time will be over the: " + day.times[[skey]].start, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
-            });  
+            });
             return;
         }
     }
+    
 }
 
 const isobjectempty = (data) => {
@@ -342,6 +349,11 @@ const CheckDateRangeEnd = (date) => {
         });   
     }
 }
+
+const filteredDateSlots = computed(() => {
+    return props.meeting?.availability_custom?.date_slots?.filter(slot => slot.date) ?? [];
+});
+
 </script>
 
 <template>
@@ -349,7 +361,6 @@ const CheckDateRangeEnd = (date) => {
     <div class="meeting-create-details tfhb-gap-24"> 
         <div class="tfhb-meeting-range tfhb-full-width">
             <div class="tfhb-admin-title" >
-                {{ props.meeting.availability_range.start }}
                 <h2>{{ $tfhb_trans('Availability Range for this Booking') }}</h2> 
                 <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
             </div>
@@ -518,7 +529,7 @@ const CheckDateRangeEnd = (date) => {
                     
                 </div>
                 <div v-else class="tfhb-availability-schedule-wrap"> 
-                   <h6 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h6>
+                   <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
                 </div>
             </div> 
         </div>  
@@ -562,7 +573,7 @@ const CheckDateRangeEnd = (date) => {
                     <label class="tfhb-schedule-swicher" for="swicher"> {{time_slot.day}}</label>
                     <!-- Swicher -->
                 </div>
-                <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap"> 
+                <div v-if="time_slot.status == 1" class="tfhb-availability-schedule-wrap" > 
                     <div v-for="(time, tkey) in time_slot.times" :key="tkey" class="tfhb-availability-schedule-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
                         <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-no-wrap tfhb-gap-8">
 
@@ -602,6 +613,9 @@ const CheckDateRangeEnd = (date) => {
                     </div>
                     
                 </div>
+                <div v-else class="tfhb-availability-schedule-wrap"> 
+                    <h5 class="tfhb-availability-schedule">{{ $tfhb_trans('Unavailable') }}</h5>
+                </div>
             </div> 
         </div>  
 
@@ -615,7 +629,7 @@ const CheckDateRangeEnd = (date) => {
                 </div> 
             </div>
 
-            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in meeting.availability_custom.date_slots" :key="key">
+            <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                 <div class="tfhb-flexbox tfhb-full-width">
                     <div class="tfhb-overrides-date">
                         <h4>{{ date_slot.date }}</h4>
@@ -702,7 +716,7 @@ const CheckDateRangeEnd = (date) => {
             </div>
 
 
-            <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()">
+            <button class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-p-0 tfhb-height-auto" @click="openOverridesCalendarDate()" v-if="!OverridesOpen">
                 <Icon name="PlusCircle" :width="20"/>
                 {{ $tfhb_trans('Add an override') }}
             </button>

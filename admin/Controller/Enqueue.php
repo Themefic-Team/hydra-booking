@@ -56,8 +56,8 @@ class Enqueue {
 		// if its load in frontend then get page template
 		if ( ! is_admin() ) {
 			// get current page and page template
-			$current_page = get_queried_object();
-			if($current_page){
+			$current_page = get_queried_object(); 
+			if($current_page && isset($current_page->ID)){
 				$page_template = get_page_template_slug( $current_page->ID );
 				if ( 'tfhb-frontend-dashboard.php' !== $page_template ) {
 					return;

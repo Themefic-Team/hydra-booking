@@ -10,6 +10,7 @@ use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Admin\Controller\ScheduleController;
 use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
 use HydraBooking\Admin\Controller\Helper;
+use HydraBooking\DB\Host;
 // Use DB
 use HydraBooking\DB\Availability;
 // exit
@@ -178,6 +179,27 @@ class SettingsController {
 				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
 			)
 		);
+
+		// Short Code Settings.
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/shortcode',
+			array(
+				'methods'  => 'GET',
+				'callback' => array( $this, 'getShortcodeSettings' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/settings/shortcode/preview',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'generateShortPreview' ),
+				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+			)
+		);
+
 	} 
 	// permission_callback
 	public function GetGeneralSettings() {
@@ -300,12 +322,14 @@ class SettingsController {
 		// Date Slots
 		foreach ( $request['date_slots'] as $key => $value ) {
 
-			$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
-			$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
+			if( !empty($value['date']) ){
+				$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
+				$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
 
-			foreach ( $value['times'] as $key2 => $value2 ) {
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				foreach ( $value['times'] as $key2 => $value2 ) {
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				}
 			}
 		}
 
@@ -893,5 +917,82 @@ class SettingsController {
 			'data'    => $request,
 		);
 		return rest_ensure_response( $data );
+	}
+
+
+	/**
+     * ShortCode for Get Booking Details
+     */
+	public function getShortcodeSettings(){
+
+		// hosts list  
+		$host      = new Host();
+		$getHosts = $host->get();
+		$hostsList = array();
+		if($getHosts){
+			foreach($getHosts as $host){
+				$hostsList[] = array(
+                    'value'          => $host->id,
+                    'name'        => $host->first_name.' '. $host->last_name, 
+                );
+            }
+		}
+
+
+		// meeting Category list
+	    $category = get_terms(
+			array(
+				'taxonomy'   => 'meeting_category',
+				'hide_empty' => false, // Set to true to hide empty terms
+			)
+		);
+		// Prepare the response data
+		$categoryList = array();
+		foreach ( $category as $term ) {
+			$categoryList[] = array(
+				'value'          => $term->term_id,
+				'name'        => $term->name, 
+			);
+		}
+
+		// 
+		$data = array(
+			'status'  => true,
+            'message' => 'Shortcode Settings',
+            'hostsList' => $hostsList,
+            'categoryList' => $categoryList, 
+		);
+
+		return rest_ensure_response( $data );
+
+
+		
+	}
+
+	/**
+     * ShortCode for Preview
+	 * 
+     */
+	public function generateShortPreview(){
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$shortcode = isset($request['shortcode']) ? $request['shortcode'] : '';
+		if($shortcode){
+			ob_start();
+			echo do_shortcode( $shortcode );
+			$shortcodeHTML = ob_get_clean();
+			$data = array(
+                'status'  => true,
+                'message' => 'Shortcode Preview',
+                'output' => $shortcodeHTML, 
+            );
+
+		}  else {
+			$data = array(
+                'status'  => false,
+                'message' => 'No Shortcode provided',
+            );
+        }
+		return rest_ensure_response( $data );
+		 
 	}
 }

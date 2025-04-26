@@ -33,7 +33,7 @@ class Meeting_CPT extends \HydraBooking\PostType\Post_Type {
 			'menu_icon'     => 'dashicons-admin-home',
 			'supports'      => apply_filters( 'tfhb_meeting_supports', array( 'title', 'editor', 'thumbnail', 'comments', 'author' ) ),
 			'capability'    => 'post',
-			'rewrite_slug'  => '',
+			'rewrite_slug'  => 'tfhb-meeting',
 			'show_ui'       => true,
 			'show_in_menu'  => false,
 		);
@@ -42,9 +42,12 @@ class Meeting_CPT extends \HydraBooking\PostType\Post_Type {
 			array(
 				'name'          => 'Categories',
 				'singular_name' => 'Category',
+				'hierarchical'  => true,
 				'taxonomy'      => 'meeting_category',
-				'rewrite_slug'  => apply_filters( 'meeting_category_slug', 'meeting-category' ),
+				// 'rewrite_slug'  => apply_filters( 'meeting_category_slug', 'tfhb-meeting' ),
+				'rewrite_slug'  => 'tfhb-meeting-category',
 				'show_ui'       => true,
+				'public'       => true,
 				'show_in_menu'  => true,
 			),
 		);

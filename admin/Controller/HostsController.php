@@ -350,7 +350,7 @@ class HostsController {
 			'status'  => true,
 			'hosts'   => $HostsList,
 			'id'      => $hosts_id,
-			'message' => __( 'General Settings Updated Successfully', 'hydra-booking' ),
+			'message' => __( 'Host Created Successfully', 'hydra-booking' ),
 		);
 
 		return rest_ensure_response( $data );
@@ -386,7 +386,7 @@ class HostsController {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 		$user_meta  = get_userdata( $user_id );
 		$user_roles = ! empty( $user_meta->roles[0] ) ? $user_meta->roles[0] : '';
-		if ( ! empty( $user_roles ) && 'administrator' != $user_roles ) {
+		if ( ! empty( $user_roles ) && 'tfhb_host' == $user_roles ) {
 			$deleted = wp_delete_user( $user_id );
 		}
 
@@ -964,12 +964,14 @@ class HostsController {
 		// Date Slots
 		foreach ( $request['date_slots'] as $key => $value ) {
 
-			$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
-			$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
+			if( !empty($value['date']) ){
+				$availability['date_slots'][ $key ]['date']      = sanitize_text_field( $value['date'] );
+				$availability['date_slots'][ $key ]['available'] = sanitize_text_field( $value['available'] );
 
-			foreach ( $value['times'] as $key2 => $value2 ) {
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
-				$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				foreach ( $value['times'] as $key2 => $value2 ) {
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['start'] = sanitize_text_field( $value2['start'] );
+					$availability['date_slots'][ $key ]['times'][ $key2 ]['end']   = sanitize_text_field( $value2['end'] );
+				}
 			}
 		}
 

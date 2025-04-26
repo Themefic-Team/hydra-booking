@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Use Classes
 use HydraBooking\App\Shortcode\HydraBookingShortcode;
+use HydraBooking\App\Shortcode\ShortcodeBuilder;
+use HydraBooking\App\Content\Archive;
 use HydraBooking\FdDashboard\FrontendDashboard;
 use HydraBooking\App\Enqueue;
 use HydraBooking\App\BookingLocation;
@@ -26,9 +28,15 @@ class App {
 
 		// Load Shortcode Class
 		new HydraBookingShortcode();
+
+		// Load meeting shortcode Class
+		new ShortcodeBuilder();
+
  
 
 		new FrontendDashboard();
+		// use this class
+		new Archive();
 
 
 		add_filter( 'query_vars', array( $this, 'tfhb_single_query_vars' ) );
@@ -104,6 +112,7 @@ class App {
 
 	public function tfhb_single_query_vars( $query_vars ) {
 		$query_vars[] = 'hydra-booking';
+		$query_vars[] = 'username';
 		$query_vars[] = 'meeting';
 		$query_vars[] = 'meeting-id';
 		$query_vars[] = 'meetingId';
