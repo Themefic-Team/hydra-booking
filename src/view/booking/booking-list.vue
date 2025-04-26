@@ -11,6 +11,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbMultiSelect from '@/components/form-fields/HbMultiSelect.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbProPopup from '@/components/widgets/HbProPopup.vue'; 
 import { toast } from "vue3-toastify"; 
 import useDateFormat from '@/store/dateformat'
 const { Tfhb_Date, Tfhb_Time } = useDateFormat();
@@ -27,6 +28,7 @@ const router = useRouter()
 const BookingDetailsPopup = ref(false);
 const BookingEditPopup = ref(false);
 const ExportAsCSV = ref(false);
+const ProPopup = ref(false);
 const itemsPerPage = ref(10);
 const currentPage = ref(1);
 const bookingView = ref('list');
@@ -535,9 +537,9 @@ const changeToDate = (value) => {
 }
 </script>
 <template>
+  <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />   
 
-<div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24">
-    
+  <div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24"> 
     <!-- Dashboard Heading Wrap -->
     <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
         <div class="tfhb-filter-box tfhb-flexbox"> 
@@ -566,7 +568,7 @@ const changeToDate = (value) => {
             />
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                @click="router.push({ name: 'BookingImport' })"
+                @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'BookingImport' })"
                 :buttonText="$tfhb_trans('Import')"
                 icon="FileUp"   
                 :hover_animation="false" 

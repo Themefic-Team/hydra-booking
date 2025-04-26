@@ -9,6 +9,7 @@ import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import HbPreloader from '@/components/icon/HbPreloader.vue'
 import ShareMeeting from '@/components/meetings/ShareMeeting.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
+import HbProPopup from '@/components/widgets/HbProPopup.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
 import HbRadio from '@/components/form-fields/HbRadio.vue'; 
 import { Host } from '@/store/hosts'
@@ -19,7 +20,7 @@ import { importExport } from '@/store/settings/importExport';
 const FilterPreview = ref(false);
 const FilterHostPreview = ref(true);
 const FilterCatgoryPreview = ref(true); 
-
+const ProPopup = ref(false);
 const deletePopup = ref(false)
 const deleteItem = reactive({
     id: 0,
@@ -169,6 +170,7 @@ const exportData = reactive({
 <template>
 <!-- {{ filterData }} -->
 
+    <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />   
     <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between" >
         <div class="tfhb-filter-box tfhb-flexbox">
             <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
@@ -236,15 +238,15 @@ const exportData = reactive({
         <div class="thb-admin-btn tfhb-flexbox tfhb-gap-16">
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                @click="ExportAsCSV = true"
+                @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true"
                 :buttonText="$tfhb_trans('Export')"
                 icon="FileDown"   
                 :hover_animation="false" 
                 icon_position = 'left'
-            />   
+            />    
             <HbButton 
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                @click="router.push({ name: 'MeetingsImport' })"
+                @click="tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'MeetingsImport' })"
                 :buttonText="$tfhb_trans('Import')"
                 icon="FileUp"   
                 :hover_animation="false" 

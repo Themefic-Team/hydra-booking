@@ -14,12 +14,13 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue'; 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
-
+import HbProPopup from '@/components/widgets/HbProPopup.vue'; 
 // Store  
 import { importExport } from '@/store/settings/importExport';
 
  
 const ExportAsCSV = ref(false);
+const ProPopup = ref(false);
 const exportData = reactive({
     type: 'Json',
     select_export: [], 
@@ -56,7 +57,7 @@ onBeforeMount(() => {
 
 </script>
 <template>
-    
+        <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />
     <div :class="{ 'tfhb-skeleton': false }" class="thb-event-dashboard">
   
         <div  class="tfhb-dashboard-heading ">
@@ -67,7 +68,7 @@ onBeforeMount(() => {
             <div class="thb-admin-btn right"> 
                 <HbButton 
                     classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="ExportAsCSV = true"
+                    @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true"
                     :buttonText="$tfhb_trans('Export')"
                     icon="FileDown"   
                     :hover_animation="false" 
@@ -76,7 +77,7 @@ onBeforeMount(() => {
             </div> 
         </div>
         <!-- Export CSV POPup -->
-        <HbPopup  :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
+        <HbPopup v-if="$tfhb_is_pro == true && $tfhb_license_status == true " :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
             <template #header>  
                 <h3>{{$tfhb_trans('Export Hydra Booking Data as Json')}}</h3>
             </template>
@@ -107,11 +108,24 @@ onBeforeMount(() => {
             </template> 
         </HbPopup>
     <!-- Export CSV POPup -->
-        <div class=" tfhb-flexbox tfhb-justify-center tfhb-full-width">
+        <div :class="{'tfhb-pro': $tfhb_is_pro == false || $tfhb_license_status == false}" class=" tfhb-flexbox tfhb-justify-center tfhb-full-width">
             <!-- Getting start with imported data -->
+           
             <div v-if="importExport.allData.steps =='start'" class="tfhb-import-wrap tfhb-full-width tfhb-flexbox tfhb-gap-24">     
-                <div class="tfhb-admin-title" > 
-                    <h3>{{ $tfhb_trans(`Let’s get your data in!`) }}</h3> 
+                <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-meeting-limit tfhb-flexbox tfhb-gap-16" >
+                    <div class=" tfhb-pro">
+                        <h3 class="fhb-flexbox tfhb-gap-8 tfhb-justify-normal">
+                            {{ $tfhb_trans(`Let’s get your data in!`) }}  
+                            <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+                        </h3> 
+                        <p>{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p>
+                    
+                    </div> 
+                
+                </div>
+                <div v-else class="tfhb-admin-title" > 
+                    <h3 class="fhb-flexbox tfhb-gap-8 tfhb-justify-normal">
+                        {{ $tfhb_trans(`Let’s get your data in!`) }}   </h3> 
                     <p>{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p>
                 </div>
                 {{importExport.allData.import_column}}
@@ -128,14 +142,10 @@ onBeforeMount(() => {
                     :wp_media = "false" 
 
                     width="100"
-                />
-                <!-- <HbCheckbox 
-                    v-model="importExport.meeting.is_overwrite"
-                    :label="$tfhb_trans('Overwrite existing data')"
-                    name="meeting_is_overwrite"
-                /> -->
+                /> 
                 <div class="tfhb-import-btn-wrap tfhb-flexbox tfhb-justify-end tfhb-full-width">
                     <HbButton 
+                        v-if="$tfhb_is_pro == true && $tfhb_license_status == true"
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                         @click="clickToNextMapping"
                         :buttonText="$tfhb_trans('Next step')"

@@ -1,5 +1,6 @@
 
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { getCurrentInstance } from 'vue';
 import Dashboard from '../view/dashboard/Dashboard.vue';  
 import Booking from '../view/booking/booking.vue'; 
 import Settings from '../view/settings/Settings.vue';
@@ -13,6 +14,12 @@ const user = tfhb_core_apps.user || '';
 const user_id = user.id || '';
 const host_id = user.host_id || ''; 
 const user_role = user.role[0] || '';
+
+const tfhb_license_type =  tfhb_core_apps.tfhb_license_type || false;   
+const tfhb_is_valid =  tfhb_core_apps.tfhb_is_valid || false;   
+const tfhb_core_apps_pro_data = typeof tfhb_core_apps_pro !== 'undefined' ? tfhb_core_apps_pro : '';
+const tfhb_is_pro = tfhb_core_apps_pro_data.tfhb_is_pro ? true : false;
+const tfhb_license_status = tfhb_license_type == 'pro' ? true : false; 
 
 const routes = [
     // Define your routes here
@@ -389,7 +396,7 @@ const router = createRouter({
 
 // Navigation guards to check authentication status
 router.beforeEach(async (to, from, next) => { 
- 
+  
     if (to.name == 'setupWizard') { 
         document.body.classList.add('tfhb-setup-wizard-body');
     }else{ 
@@ -399,6 +406,12 @@ router.beforeEach(async (to, from, next) => {
         // If no capabilities are defined for the route, proceed to the next route
         next();
         return;
+    }
+    if(tfhb_is_pro == false ||  tfhb_license_status == false){ 
+        // if current route is MeetingsImport then return to dashboard
+        if(to.name == 'MeetingsImport' || to.name == 'HostsImport' || to.name == 'BookingImport' ){
+            next({ name: 'dashboard' });
+        }
     }
 
     try {

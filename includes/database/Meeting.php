@@ -96,16 +96,19 @@ class Meeting {
 			$request
 		);
 
- 
-
+		
+		 
 		if ( $result === false ) {
 			return false;
 		} else {
+			
 			return array(
 				'status'    => true,
 				'insert_id' => $wpdb->insert_id,
 			);
 		}
+
+		
 	}
 	/**
 	 * Update the database meeting.

@@ -181,7 +181,7 @@ class Host {
 		$sql        = "SHOW COLUMNS FROM $table_name";
 		$data       = $wpdb->get_results( $sql );
 		$columns    = array();
-
+		
 	 
 		foreach ( $data as $key => $value ) {
 			// if ( $value->Field == 'id' ) {
@@ -192,6 +192,15 @@ class Host {
 				'value' => $value->Field,
 			);
 		}
+
+		$columns[] = array(
+			'name'  =>'_tfhb_host',
+			'value' => '_tfhb_host',
+		);
+		$columns[] = array(
+			'name'  => '_tfhb_host_integration_settings',
+			'value' => '_tfhb_host_integration_settings',
+		);
 		return $columns;
 	}
 
