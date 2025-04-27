@@ -346,7 +346,7 @@ const routes = [
             },
             {
                 path: 'license',
-                name: 'LicenseCategory',
+                name: 'LicenseRoute',
                 component: () => import('../view/settings/License.vue')
             },
              

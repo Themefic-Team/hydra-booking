@@ -123,28 +123,28 @@ class Meeting {
 		unset( $request['id'] );
 
 		// encode json in array data
-		if ( $request['meeting_locations'] ) {
+		if ( isset($request['meeting_locations']) && is_array($request['meeting_locations']) ) {
 			$request['meeting_locations'] = wp_json_encode( $request['meeting_locations'] );
 		}
-		if ( $request['availability_range'] ) {
+		if ( isset($request['availability_range'] ) && is_array($request['availability_range'] )) {
 			$request['availability_range'] = wp_json_encode( $request['availability_range'] );
 		}
-		if ( $request['availability_custom'] ) {
+		if ( isset( $request['availability_custom']) && is_array( $request['availability_custom']) ) {
 			$request['availability_custom'] = wp_json_encode( $request['availability_custom'] );
 		}
-		if ( $request['booking_frequency'] ) {
+		if ( isset($request['booking_frequency']) && is_array($request['booking_frequency']) ) {
 			$request['booking_frequency'] = wp_json_encode( $request['booking_frequency'] );
 		}
-		if ( $request['recurring_repeat'] ) {
+		if ( isset($request['recurring_repeat']) && is_array($request['recurring_repeat']) ) {
 			$request['recurring_repeat'] = wp_json_encode( $request['recurring_repeat'] );
 		}
-		if ( $request['questions'] ) {
+		if ( isset($request['questions'] ) && is_array($request['questions'] )) { 
 			$request['questions'] = wp_json_encode( $request['questions'] );
 		}
-		if ( $request['notification'] ) {
+		if ( isset($request['notification']) && is_array($request['notification']) ) {
 			$request['notification'] = wp_json_encode( $request['notification'] );
 		}
-		if ( $request['payment_meta'] ) {
+		if ( isset($request['payment_meta']) && is_array($request['payment_meta']) ) {
 			$request['payment_meta'] = wp_json_encode( $request['payment_meta'] );
 		}
 

@@ -8,9 +8,7 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import HbText from '../form-fields/HbText.vue';
 import HbSelect from '../form-fields/HbSelect.vue';
 import HbDateTime from '../form-fields/HbDateTime.vue';
-import { toast } from "vue3-toastify";  
- 
-
+import { toast } from "vue3-toastify";   
 const props = defineProps({
   isOpen: {
         type: Boolean,
@@ -40,6 +38,8 @@ const showData = ref(false);
 
  
 
+const router = useRouter();
+
 </script>
  
  
@@ -68,7 +68,7 @@ const showData = ref(false);
                     <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16">  
                         <HbButton  
                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                            @click="deleteItemConfirm"
+                            @click="router.push({ name: 'LicenseRoute' })"
                             :buttonText="$tfhb_trans('Upgrade to Hydra Booking Pro')"
                             icon="LockKeyholeOpen"   
                             :hover_animation="false" 
