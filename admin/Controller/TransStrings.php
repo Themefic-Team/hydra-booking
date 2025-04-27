@@ -709,7 +709,7 @@ namespace HydraBooking\Admin\Controller;
             'Unlock Pro Feature' =>  __('Unlock Pro Feature', 'hydra-booking'),
             'This feature is available in the Pro version of Hydra Booking. Upgrade now to access advanced booking options and premium support.' =>  __('This feature is available in the Pro version of Hydra Booking. Upgrade now to access advanced booking options and premium support.', 'hydra-booking'),
             'Upgrade to Hydra Booking Pro' =>  __('Upgrade to Hydra Booking Pro', 'hydra-booking'),
-            'Import' =>  __('Import', 'hydra-booking'),
+            'Export Now' =>  __('Export Now', 'hydra-booking'),
             'Import' =>  __('Import', 'hydra-booking'),
             'Import' =>  __('Import', 'hydra-booking'),
            

@@ -114,7 +114,7 @@ onBeforeMount(() => {
             <div v-if="importExport.allData.steps =='start'" class="tfhb-import-wrap tfhb-full-width tfhb-flexbox tfhb-gap-24">     
                 <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-meeting-limit tfhb-flexbox tfhb-gap-16" >
                     <div class=" tfhb-pro">
-                        <h3 class="fhb-flexbox tfhb-gap-8 tfhb-justify-normal">
+                        <h3 class="tfhb-flexbox align-ceter tfhb-gap-8 tfhb-justify-normal">
                             {{ $tfhb_trans(`Let’s get your data in!`) }}  
                             <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
                         </h3> 
@@ -127,8 +127,7 @@ onBeforeMount(() => {
                     <h3 class="fhb-flexbox tfhb-gap-8 tfhb-justify-normal">
                         {{ $tfhb_trans(`Let’s get your data in!`) }}   </h3> 
                     <p>{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p>
-                </div>
-                {{importExport.allData.import_column}}
+                </div> 
                 <HbFileUpload
                     name="dashboard_logo"
                     v-model= "importExport.allData.import_file"
@@ -171,14 +170,7 @@ onBeforeMount(() => {
                             :label="index"
                             :name="'mark_select_import'+index"
                         />  
-
-                        <div v-if="index == 'Settings' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox tfhb-flexbox tfhb-gap-8"   style="margin-left: 30px;">
-                            <HbCheckbox  
-                                v-model="importExport.allData.is_overwrite_settings"
-                                :label="$tfhb_trans('Overwrite existing Settings Data')"
-                                :name="'mark_select_import'+index"
-                            />  
-                        </div>
+ 
 
                         <div v-if="index == 'Hosts' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox  tfhb-flexbox tfhb-gap-8"  style="margin-left: 30px;">
                             <HbCheckbox 

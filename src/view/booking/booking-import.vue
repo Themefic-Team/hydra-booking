@@ -17,6 +17,8 @@ import { importExport } from '@/store/settings/importExport';
 const router = useRouter();
 onBeforeMount(() => {   
     importExport.GetImportExportData();
+    importExport.booking.steps = 'start';
+    importExport.booking.import_file = null;
 });
 
 const changeImportFileData = (event) => {    

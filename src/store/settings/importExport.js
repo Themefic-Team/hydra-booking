@@ -58,8 +58,7 @@ const importExport = reactive({
         steps: 'start',
         column: [],  
         import_column: {},  
-        select_import: {},  
-        is_overwrite_settings: true,
+        select_import: {},   
         is_overwrite_host: true,
         is_create_new_user: true,
         is_overwrite_meeting: true,
@@ -165,8 +164,7 @@ const importExport = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-all-data', {
                 import_data: this.allData.import_data,  
-                select_import: this.allData.select_import,  
-                is_overwrite_settings: this.allData.is_overwrite_settings,  
+                select_import: this.allData.select_import,   
                 is_overwrite_host: this.allData.is_overwrite_host,  
                 is_create_new_user: this.allData.is_create_new_user,  
                 is_overwrite_meeting: this.allData.is_overwrite_meeting,  

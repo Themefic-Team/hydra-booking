@@ -18,6 +18,8 @@ import { importExport } from '@/store/settings/importExport';
 const router = useRouter();
 onBeforeMount(() => {   
     importExport.GetImportExportData();
+    importExport.host.steps = 'start';
+    importExport.host.import_file = null;
 });
 
 const changeImportFileData = (event) => {    
