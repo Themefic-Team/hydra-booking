@@ -798,6 +798,9 @@ class MeetingController {
 			$notification->$channel = new \stdClass();
 		}
 	
+		$default_notification_data =  new Helper();
+		$_tfhb_default_notification_settings = $default_notification_data->get_default_notification_template(); 
+		
 		$defaultKeys = [
 			'booking_confirmation',
 			'booking_pending',
@@ -809,11 +812,8 @@ class MeetingController {
 		foreach ( $defaultKeys as $key ) {
 			if ( ! isset( $notification->{$channel}->$key ) ) {
 				$notification->{$channel}->$key = (object) [
-					'status' => 1,
-					'template' => 'default',
-					'form' => '',
-					'subject' => '',
-					'body' => '',
+					'status' => 0,
+					'body' => !empty($_tfhb_default_notification_settings[$channel][$key]['body']) ? $_tfhb_default_notification_settings[$channel][$key]['body'] : '',
 					'builder' => '',
 				];
 			}
@@ -861,12 +861,31 @@ class MeetingController {
 		}
 
 		$this->ensureBuilderKeyExists($MeetingData->notification);
+		
 
-
-		// Slack, Telegram, Twilio
-		$this->ensure_notification_channel_defaults( $MeetingData->notification, 'slack' );
-		$this->ensure_notification_channel_defaults( $MeetingData->notification, 'telegram' );
-		$this->ensure_notification_channel_defaults( $MeetingData->notification, 'twilio' );
+		if(is_array( $MeetingData->notification)){
+			if(empty($MeetingData->notification['slack'])){
+				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'slack' );
+			}
+			if(empty($MeetingData->notification['telegram'])){
+				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'telegram' );
+			}
+			if(empty($MeetingData->notification['twilio'])){
+				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'twilio' );
+			}
+		}
+		if( is_object($MeetingData->notification) ){
+			if(empty($MeetingData->notification->slack)){
+				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'slack' );
+			}
+			if(empty($MeetingData->notification->telegram)){
+				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'telegram' );
+			}
+			if(empty($MeetingData->notification->twilio)){
+				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'twilio' );
+			}
+		}
+		
 
 		// Integration
 		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();

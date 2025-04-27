@@ -821,6 +821,18 @@ class SettingsController {
 		if(empty($_tfhb_notification_settings)){
 			$default_notification =  new Helper();
 			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
+		}else{
+			$default_notification =  new Helper();
+			$_tfhb_default_notification_settings = $default_notification->get_default_notification_template(); 
+			if(empty($_tfhb_notification_settings['telegram'])){
+				$_tfhb_notification_settings['telegram'] = !empty($_tfhb_default_notification_settings['telegram']) ? $_tfhb_default_notification_settings['telegram'] : '';
+			}
+			if(empty($_tfhb_notification_settings['twilio'])){
+				$_tfhb_notification_settings['twilio'] = !empty($_tfhb_default_notification_settings['twilio']) ? $_tfhb_default_notification_settings['twilio'] : '';
+			}
+			if(empty($_tfhb_notification_settings['slack'])){
+				$_tfhb_notification_settings['slack'] = !empty($_tfhb_default_notification_settings['slack']) ? $_tfhb_default_notification_settings['slack'] : '';
+			}
 		}
 
 		$this->ensureBuilderKeyExists($_tfhb_notification_settings);

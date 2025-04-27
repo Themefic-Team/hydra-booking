@@ -25,14 +25,14 @@ onMounted(() => {
                     <li  :class="{ 'expand': $route.path === '/settings/notifications' }" class="tfhb-notification-settings-menu"><router-link to="/settings/notifications#email" class="notification-submenu" data-filter="email" :class="{ 'active': $route.path.includes('notifications') }"> <Icon name="BellDot" /> {{ $tfhb_trans('Notifications') }}
                        <span class="setings-taps-dropdown-arrow"> <Icon name="ChevronDown" size=20 /> </span>
                     </router-link>
-                        <ul class="dropdown">
-                            <li><router-link to="/settings/notifications#email" :class="{ 'active': $route.hash === '#email' }" class="notification-submenu" data-filter="email"> <Icon name="Mail" size=18 /> {{ $tfhb_trans('Email') }}</router-link></li>
+                        <ul class="dropdown" :style="$route.fullPath.includes('email') || $route.fullPath.includes('host') || $route.fullPath.includes('attendee') || $route.fullPath.includes('telegram') || $route.fullPath.includes('twilio') || $route.fullPath.includes('slack') ? {display: 'block !important', visibility: 'visible !important'} : ''">
+                            <li><router-link to="/settings/notifications#email" :class="{ 'active': $route.fullPath.includes('email') || $route.fullPath.includes('host') || $route.fullPath.includes('attendee') }" class="notification-submenu" data-filter="email"> <Icon name="Mail" size=18 /> {{ $tfhb_trans('Email') }}</router-link></li>
                             
-                            <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.hash === '#telegram' }" class="notification-submenu" data-filter="telegram"> <img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.fullPath.includes('telegram') }" class="notification-submenu" data-filter="telegram"> <img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</router-link></li>
 
-                            <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.hash === '#twilio' }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.fullPath.includes('twilio') }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
 
-                            <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.hash === '#slack' }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
+                            <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.fullPath.includes('slack') }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
 
                         </ul>
                     </li>

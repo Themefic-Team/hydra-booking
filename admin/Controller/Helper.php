@@ -16,10 +16,13 @@ class Helper {
         $notification = array(
             'host' => array(),
             'attendee' => array(),
+            'telegram' => array(),
+            'twilio' => array(),
+            'slack' => array(),
         );
 
         //  Host Notification
-         $notification['host']['booking_confirmation'] = array(
+        $notification['host']['booking_confirmation'] = array(
             'status' => 1,
             'template' => 'default',
             'from' =>  '{{wp.admin_email}}',
@@ -1954,7 +1957,6 @@ class Helper {
             )
 
         );
-        // Attendee Notification
         $notification['attendee']['booking_pending'] = array(
             'status' => 1,
             'template' => 'default',
@@ -3245,6 +3247,146 @@ class Helper {
             )
         );
 
+        // Telegram Notification
+        $notification['telegram']['booking_confirmation'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A new Booking has been scheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['telegram']['booking_pending'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A Booking is Pending Approval</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['telegram']['booking_cancel'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Cancellation</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['telegram']['booking_reschedule'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Rescheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['telegram']['booking_reminder'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Reminder: Your meeting will start in {{booking.start_date_time_for_host}}</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+
+        // Twilio Notification
+        $notification['twilio']['booking_confirmation'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A new Booking has been scheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['twilio']['booking_pending'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A Booking is Pending Approval</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['twilio']['booking_cancel'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Cancellation</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['twilio']['booking_reschedule'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Rescheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['twilio']['booking_reminder'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Reminder: Your meeting will start in {{booking.start_date_time_for_host}}</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        
+        // Slack Notification
+        $notification['slack']['booking_confirmation'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A new Booking has been scheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['slack']['booking_pending'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A Booking is Pending Approval</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['slack']['booking_cancel'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Cancellation</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['slack']['booking_reschedule'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Rescheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['slack']['booking_reminder'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Reminder: Your meeting will start in {{booking.start_date_time_for_host}}</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
 
         return $notification;
         

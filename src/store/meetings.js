@@ -180,7 +180,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_pending: {
                         status : 0,
@@ -188,7 +188,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_cancel: {
                         status : 0,
@@ -196,7 +196,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reschedule: {
                         status : 0,
@@ -204,7 +204,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reminder: {
                         status : 0,
@@ -212,7 +212,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                 },
                 attendee : {
@@ -222,6 +222,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
+                        builder: ''
                     },
                     booking_pending: {
                         status : 0,
@@ -229,6 +230,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
+                        builder: ''
                     },
                     booking_cancel: {
                         status : 0,
@@ -236,7 +238,49 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
+                    },
+                    booking_reschedule: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_reminder: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                },
+                telegram: {
+                    booking_confirmation: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_pending: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_cancel: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
                     },
                     booking_reschedule: {
                         status : 0,
@@ -252,9 +296,93 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
+                        builder: ''
+                    },
+                },
+                slack: {
+                    booking_confirmation: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_pending: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_cancel: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_reschedule: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
         
                     },
-                }
+                    booking_reminder: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                },
+                twilio: {
+                    booking_confirmation: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_pending: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_cancel: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                    booking_reschedule: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+        
+                    },
+                    booking_reminder: {
+                        status : 0,
+                        template : 'default',
+                        form : '',
+                        subject : '',
+                        body : '',
+                        builder: ''
+                    },
+                },
             },
             payment_status: 0,
             meeting_price: '',
@@ -270,7 +398,10 @@ const Meeting = reactive({
             is_display_max_book_slot: 0,
             mailchimp: '',
             fluentcrm: '',
-            zohocrm: ''
+            zohocrm: '',
+            telegram: '',
+            slack: '',
+            twilio: ''
         },
         integrations: {},
     },
@@ -325,6 +456,9 @@ const Meeting = reactive({
                 this.singleMeeting.MeetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
                 this.singleMeeting.MeetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
                 this.singleMeeting.MeetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
+                this.singleMeeting.MeetingData.telegram = response.data.telegram.status ? response.data.telegram.status : '';
+                this.singleMeeting.MeetingData.slack = response.data.slack.status ? response.data.slack.status : '';
+                this.singleMeeting.MeetingData.twilio = response.data.twilio.status ? response.data.twilio.status : '';
 
                 this.singleMeeting.integrations.google_calendar_status = response.data.integrations.google_calendar_status && response.data.integrations.google_calendar_status == 1 ? false : true;  
                 this.singleMeeting.integrations.outlook_calendar_status = response.data.integrations.outlook_calendar_status && response.data.integrations.outlook_calendar_status == 1 ? false : true;  
