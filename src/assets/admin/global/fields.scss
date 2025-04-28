@@ -630,6 +630,9 @@
                     &.tfhb-head{
                         width: calc(100% - 40px);
                         cursor: pointer;
+                        .tfhb-icon-drag{
+                            height: 24px;
+                        }
                     }
                 }
             }
@@ -684,7 +687,9 @@
                 .tools-heading{
                     .tfhb-flexbox{
                         &.tfhb-head{
-                            cursor: move !important
+                            .tfhb-icon-drag{
+                                cursor: move !important;
+                            }
                         }
                     }
                 }

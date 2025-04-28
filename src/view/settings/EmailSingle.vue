@@ -304,7 +304,10 @@ const emailBuilder = ref([
     },
 ]);
 
-const { parent } = useDragAndDrop(emailBuilder);
+const handlerSelector = ".tfhb-icon-drag";
+const { parent } = useDragAndDrop(emailBuilder,{  
+    handlerSelector
+});
 
 // Initialize contentVisibility with a nested structure
 const contentVisibility = reactive({
@@ -727,7 +730,9 @@ const addSocial = () => {
                     <!-- Dynamic Heading -->
                     <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
                         <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox(email.id)">
-                            <Icon name="GripVertical" :width="20"/> 
+                            <div class="tfhb-icon-drag">
+                                <Icon name="GripVertical" :width="20"/> 
+                            </div>
                             {{ email.title }} 
                         </div>
                         <HbSwitch v-model="emailBuilder[key].status" />
