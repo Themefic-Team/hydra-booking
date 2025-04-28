@@ -55,21 +55,6 @@ const meetingShortcode = ref([
     "{{booking.rescheduled_link}}",
     "{{booking.location_details_html}}",
 ])
-const copyShortcode = (value) => { 
-    //  copy to clipboard without navigator 
-    const textarea = document.createElement('textarea');
-    textarea.value = value;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'absolute';
-    textarea.style.left = '-9999px';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    
-    // Show a toast notification or perform any other action
-    toast.success(value + ' is Copied');
-}
 
 // Initialize contentVisibility with a nested structure
 const contentVisibility = reactive({
@@ -243,6 +228,21 @@ const handlerSelector = ".tfhb-icon-drag";
 const { parent } = useDragAndDrop(emailBuilder,{  
     handlerSelector
 });
+
+const copySubjectShortcode = (value) => {
+  const current = props.data.subject || '';
+  props.data.subject = current + ' ' + value;
+};
+
+const copyShortcode = (value, key) => {
+  const current = emailBuilder.value[key].content || '';
+  emailBuilder.value[key].content = current + ' ' + value;
+};
+
+const copySubShortcode = (value, key, subKey) => {
+    const current = emailBuilder.value[key].content[subKey].content || '';
+    emailBuilder.value[key].content[subKey].content = current + ' ' + value;
+}
 
 const TfhbOnFocus = (event) => {
     nextTick(() => {
@@ -609,7 +609,7 @@ const closePopup = () => {
                                     @tfhb-onclick="TfhbOnFocus"
                                 /> 
                                 <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copySubjectShortcode(value)" >{{ value}}</span>
                                 </div>
                             </div>
                         </div>
@@ -660,7 +660,7 @@ const closePopup = () => {
                                             />
                                         </div>
                                         <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                            <span  class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                            <span  class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value, key)">
                                                 {{ value }}
                                             </span>
                                         </div>
@@ -701,7 +701,7 @@ const closePopup = () => {
                                                     />
                                                 </div>
                                                 <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                                    <span class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                                    <span class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copySubShortcode(value, key, subKey)">
                                                         {{ value }}
                                                     </span>
                                                 </div>
@@ -761,7 +761,7 @@ const closePopup = () => {
                                                     @tfhb-onclick="TfhbOnFocus"
                                                 />
                                                 <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, skey) in meetingShortcode" :key="skey" @click="copySubShortcode(value, key, 'cancel')" >{{ value}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -787,7 +787,7 @@ const closePopup = () => {
                                                     @tfhb-onclick="TfhbOnFocus"
                                                 />
                                                 <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, skey) in meetingShortcode" :key="skey" @click="copySubShortcode(value, key, 'reschedule')" >{{ value}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -819,7 +819,7 @@ const closePopup = () => {
                                                     />
                                                 </div>
                                                 <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                                    <span  class="tfhb-mail-shortcode-badge"  v-for="(value, skey) in meetingShortcode" :key="skey" @click="copySubShortcode(value, key, 'description')" >{{ value}}</span>
                                                 </div>
                                             </div>
                                         </div>
