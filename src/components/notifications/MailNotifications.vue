@@ -683,7 +683,6 @@ const closePopup = () => {
                                     </div>
                                     <div class="single-tools" v-for="(section, subKey) in emailBuilder[key].content" :key="subKey">
                                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                            <Icon name="GripVertical" @click="ContentBox(email.id, subKey, key)" :width="20"/> 
                                             <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox(email.id, subKey, key)">
                                                 <div class="tfhb-flexbox tfhb-head">
                                                     {{ emailBuilder[key].content[subKey].title }}
@@ -726,7 +725,6 @@ const closePopup = () => {
                                     <!-- Description -->
                                     <div class="single-tools">
                                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'description', key)" :width="20"/> 
                                             <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'description', key)">
                                                 <div class="tfhb-flexbox tfhb-head">
                                                     {{ $tfhb_trans('Heading:') }}
@@ -747,7 +745,6 @@ const closePopup = () => {
                                     <!-- Cancel -->
                                     <div class="single-tools">
                                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'cancel', key)" :width="20"/>
                                             <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'cancel', key)">
                                                 <div class="tfhb-flexbox tfhb-head">
                                                     {{ $tfhb_trans('Cancel URL:') }}
@@ -773,7 +770,6 @@ const closePopup = () => {
                                     <!-- Reschedule -->
                                     <div class="single-tools">
                                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                            <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'reschedule', key)" :width="20"/> 
                                             <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'reschedule', key)">
                                                 <div class="tfhb-flexbox tfhb-head">
                                                     {{ $tfhb_trans('Reschedule URL:') }}
@@ -805,7 +801,6 @@ const closePopup = () => {
                                     <!-- Description -->
                                     <div class="single-tools">
                                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                            <Icon name="GripVertical" @click="ContentBox('footer', 'description', key)" :width="20"/> 
                                             <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'description', key)">
                                                 <div class="tfhb-flexbox tfhb-head">
                                                     {{ $tfhb_trans('Quick Content:') }}
@@ -833,7 +828,6 @@ const closePopup = () => {
                                     <!-- Socail -->
                                     <div class="single-tools">
                                         <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                            <Icon name="GripVertical" @click="ContentBox('footer', 'social', key)" :width="20"/> 
                                             <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'social', key)">
                                                 <div class="tfhb-flexbox tfhb-head">
                                                     {{ $tfhb_trans('Social:') }}
