@@ -706,11 +706,13 @@ namespace HydraBooking\Admin\Controller;
             'Which data you want to import ' =>  __('Which data you want to import ', 'hydra-booking'),
             'Select data which data you want to import in your website' =>  __('Select data which data you want to import in your website', 'hydra-booking'),
             'Select default meeting if meeting id is not found ' =>  __('Select default meeting if meeting id is not found ', 'hydra-booking'),
-            'Unlock Pro Feature' =>  __('Unlock Pro Feature', 'hydra-booking'),
-            'This feature is available in the Pro version of Hydra Booking. Upgrade now to access advanced booking options and premium support.' =>  __('This feature is available in the Pro version of Hydra Booking. Upgrade now to access advanced booking options and premium support.', 'hydra-booking'),
+            'Unlock Pro Feature!' =>  __('Unlock Pro Feature!', 'hydra-booking'),
+            'Upgrade to Hydra Booking Pro for smarter booking tools and priority support.' =>  __('Upgrade to Hydra Booking Pro for smarter booking tools and priority support', 'hydra-booking'),
             'Upgrade to Hydra Booking Pro' =>  __('Upgrade to Hydra Booking Pro', 'hydra-booking'),
             'Export Now' =>  __('Export Now', 'hydra-booking'),
-            'Import' =>  __('Import', 'hydra-booking'),
+            'Take control today!' =>  __('Take control today!', 'hydra-booking'),
+            'Export Meeting as' =>  __('Export Meeting as', 'hydra-booking'),
+            'Export Bookings as' =>  __('Export Bookings as', 'hydra-booking'),
             'Import' =>  __('Import', 'hydra-booking'),
            
         );

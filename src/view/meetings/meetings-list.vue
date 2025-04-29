@@ -237,6 +237,7 @@ const exportData = reactive({
         </div>
         <div class="thb-admin-btn tfhb-flexbox tfhb-gap-16">
             <HbButton 
+                v-if="$user.role != 'tfhb_host'"
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true"
                 :buttonText="$tfhb_trans('Export')"
@@ -245,6 +246,7 @@ const exportData = reactive({
                 icon_position = 'left'
             />    
             <HbButton 
+                v-if="$user.role != 'tfhb_host'"
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'MeetingsImport' })"
                 :buttonText="$tfhb_trans('Import')"

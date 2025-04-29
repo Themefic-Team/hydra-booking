@@ -54,7 +54,10 @@ onBeforeMount(() => {
     importExport.GetImportExportData();
 });
 
-
+const exportAsJson = () => {
+    importExport.exportAllData(exportData)
+    ExportAsCSV.value= false;
+}
 </script>
 <template>
         <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />
@@ -95,7 +98,7 @@ onBeforeMount(() => {
                 <div class="tfhb-popup-actions tfhb-flexbox tfhb-full-width"> 
                     <HbButton 
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="importExport.exportAllData(exportData)"
+                        @click="exportAsJson"
                         :buttonText="$tfhb_trans('Export Now')"
                         icon="ChevronRight"   
                         hover_icon="ArrowRight"

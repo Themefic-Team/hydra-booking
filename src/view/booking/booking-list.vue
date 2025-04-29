@@ -552,14 +552,6 @@ const changeToDate = (value) => {
         <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8">
             <HbButton 
                 classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
-                @click="ExportAsCSV = true, exportData.type = 'CSV'"
-                :buttonText="$tfhb_trans('Export as CSV')"
-                icon="FileDown"   
-                :hover_animation="false" 
-                icon_position = 'left'
-            />
-            <HbButton 
-                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="ExportAsCSV = true, exportData.type = 'iCal'"
                 :buttonText="$tfhb_trans('Export as .ics')"
                 icon="Calendar"   
@@ -567,6 +559,17 @@ const changeToDate = (value) => {
                 icon_position = 'left'
             />
             <HbButton 
+                v-if="$user.role != 'tfhb_host'"
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
+                @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true, exportData.type = 'CSV'"
+                :buttonText="$tfhb_trans('Export as CSV')"
+                icon="FileDown"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />
+            
+            <HbButton 
+                v-if="$user.role != 'tfhb_host'"
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'BookingImport' })"
                 :buttonText="$tfhb_trans('Import')"
