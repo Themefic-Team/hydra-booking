@@ -105,14 +105,17 @@ class Telegram {
         if(!empty($telegram_status) && !empty($telegram_bot_token) && !empty($telegram_chat_id)){
 
             $mailbody = $this->replace_mail_tags($body, $attendees->id);
-            $plain_text = preg_replace('/<\/?p>/', "\n", $mailbody);
-            $plain_text = wp_strip_all_tags($plain_text);
-            $plain_text = trim($plain_text);
+			$html = preg_replace('/<\s*(br|hr)\s*\/?>/i', "\n", $mailbody);
+			$html = preg_replace('/<\/?(p|div|h[1-6])[^>]*>/i', "\n", $html);
+			$text = strip_tags($html);
+			$text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
+			$lines = array_filter(array_map('trim', explode("\n", $text)));
+			$mailbody = implode("\n", $lines);
 
             $api_url = "https://api.telegram.org/bot$telegram_bot_token/sendMessage";
 			$args = array(
 				'chat_id' => $telegram_chat_id,
-				'text' => $plain_text,
+				'text' => $mailbody,
                 'parse_mode' => 'MarkdownV2'
 			);
 
