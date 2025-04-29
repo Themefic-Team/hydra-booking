@@ -217,21 +217,6 @@ const meetingShortcode = ref([
     "{{booking.rescheduled_link}}",
     "{{booking.location_details_html}}",
 ])
-const copyShortcode = (value) => { 
-    //  copy to clipboard without navigator 
-    const textarea = document.createElement('textarea');
-    textarea.value = value;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'absolute';
-    textarea.style.left = '-9999px';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    
-    // Show a toast notification or perform any other action
-    toast.success(value + ' is Copied');
-}
 
 const TfhbOnFocus = (event) => {
     nextTick(() => {
@@ -385,7 +370,30 @@ const emailBuilder = ref([
     },
 ]);
 
-const { parent } = useDragAndDrop(emailBuilder);
+const handlerSelector = ".tfhb-icon-drag";
+const { parent } = useDragAndDrop(emailBuilder,{  
+    handlerSelector
+});
+
+const copyBodyShortcode = (value) => {
+  const current = Notification[route.params.type][route.params.id].body || '';
+  Notification[route.params.type][route.params.id].body = current + ' ' + value;
+};
+
+const copySubjectShortcode = (value) => {
+  const current = Notification[route.params.type][route.params.id].subject || '';
+  Notification[route.params.type][route.params.id].subject = current + ' ' + value;
+};
+
+const copyShortcode = (value, key) => {
+  const current = emailBuilder.value[key].content || '';
+  emailBuilder.value[key].content = current + ' ' + value;
+};
+
+const copySubShortcode = (value, key, subKey) => {
+    const current = emailBuilder.value[key].content[subKey].content || '';
+    emailBuilder.value[key].content[subKey].content = current + ' ' + value;
+}
 
 // Initialize contentVisibility with a nested structure
 const contentVisibility = reactive({
@@ -802,7 +810,7 @@ const addSocial = () => {
                         @tfhb-onclick="TfhbOnFocus"
                     /> 
                     <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, skey) in meetingShortcode" :key="skey" @click="copySubjectShortcode(value)" >{{ value}}</span>
                     </div>
                 </div>
             </div>
@@ -813,7 +821,9 @@ const addSocial = () => {
                     <!-- Dynamic Heading -->
                     <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
                         <div class="tfhb-flexbox tfhb-head tfhb-gap-8" @click="ContentBox(email.id)">
-                            <Icon name="GripVertical" :width="20"/> 
+                            <div class="tfhb-icon-drag">
+                                <Icon name="GripVertical" :width="20"/> 
+                            </div>
                             {{ email.title }} 
                         </div>
                         <HbSwitch v-model="emailBuilder[key].status" />
@@ -851,7 +861,7 @@ const addSocial = () => {
                                 />
                             </div>
                             <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                <span  class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                <span  class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value, key)">
                                     {{ value }}
                                 </span>
                             </div>
@@ -874,7 +884,6 @@ const addSocial = () => {
                         </div>
                         <div class="single-tools" v-for="(section, subKey) in emailBuilder[key].content" :key="subKey">
                             <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                <Icon name="GripVertical" @click="ContentBox(email.id, subKey, key)" :width="20"/> 
                                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox(email.id, subKey, key)">
                                     <div class="tfhb-flexbox tfhb-head">
                                         {{ emailBuilder[key].content[subKey].title }}
@@ -893,7 +902,7 @@ const addSocial = () => {
                                         />
                                     </div>
                                     <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                        <span class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copyShortcode(value)">
+                                        <span class="tfhb-mail-shortcode-badge" v-for="(value, shortcodeKey) in meetingShortcode" :key="shortcodeKey" @click="copySubShortcode(value, key, subKey)">
                                             {{ value }}
                                         </span>
                                     </div>
@@ -917,7 +926,6 @@ const addSocial = () => {
                         <!-- Description -->
                         <div class="single-tools">
                             <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'description', key)" :width="20"/> 
                                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'description', key)">
                                     <div class="tfhb-flexbox tfhb-head">
                                         {{ $tfhb_trans('Heading:') }}
@@ -938,7 +946,6 @@ const addSocial = () => {
                         <!-- Cancel -->
                         <div class="single-tools">
                             <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'cancel', key)" :width="20"/>
                                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'cancel', key)">
                                     <div class="tfhb-flexbox tfhb-head">
                                         {{ $tfhb_trans('Cancel URL:') }}
@@ -955,7 +962,7 @@ const addSocial = () => {
                                         @tfhb-onclick="TfhbOnFocus"
                                     />
                                     <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, skey) in meetingShortcode" :key="skey" @click="copySubShortcode(value, key, 'cancel')" >{{ value}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -964,7 +971,6 @@ const addSocial = () => {
                         <!-- Reschedule -->
                         <div class="single-tools">
                             <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                <Icon name="GripVertical" @click="ContentBox('cancel_reschedule', 'reschedule', key)" :width="20"/> 
                                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('cancel_reschedule', 'reschedule', key)">
                                     <div class="tfhb-flexbox tfhb-head">
                                         {{ $tfhb_trans('Reschedule URL:') }}
@@ -982,7 +988,7 @@ const addSocial = () => {
                                         @tfhb-onclick="TfhbOnFocus"
                                     />
                                     <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, skey) in meetingShortcode" :key="skey" @click="copySubShortcode(value, key, 'reschedule')" >{{ value}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -996,7 +1002,6 @@ const addSocial = () => {
                         <!-- Description -->
                         <div class="single-tools">
                             <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                <Icon name="GripVertical" @click="ContentBox('footer', 'description', key)" :width="20"/> 
                                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'description', key)">
                                     <div class="tfhb-flexbox tfhb-head">
                                         {{ $tfhb_trans('Quick Content:') }}
@@ -1016,7 +1021,7 @@ const addSocial = () => {
                                         />
                                     </div>
                                     <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8" style="display: none;"> 
-                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                                        <span  class="tfhb-mail-shortcode-badge"  v-for="(value, skey) in meetingShortcode" :key="skey" @click="copySubShortcode(value, key, 'description')" >{{ value}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -1025,7 +1030,6 @@ const addSocial = () => {
                         <!-- Socail -->
                         <div class="single-tools">
                             <div class="tfhb-sub-tools tfhb-flexbox tfhb-gap-8">
-                                <Icon name="GripVertical" @click="ContentBox('footer', 'social', key)" :width="20"/> 
                                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8" @click="ContentBox('footer', 'social', key)">
                                     <div class="tfhb-flexbox tfhb-head">
                                         {{ $tfhb_trans('Social:') }}
@@ -1092,7 +1096,7 @@ const addSocial = () => {
 
         <div class="tfhb-email-shortcodes-list" v-if="route.params.type=='telegram' || route.params.type=='twilio' || route.params.type=='slack'">
             <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8"> 
-                <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyShortcode(value)" >{{ value}}</span>
+                <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyBodyShortcode(value)" >{{ value}}</span>
             </div>
         </div>
     </div>

@@ -645,7 +645,7 @@ class SettingsController {
 			$data = array(
 				'status'  => true,
 				'integration_settings'  => $option,
-				'message' =>  __('Twilio Settings Updated Successfully', 'hydra-booking')
+				'message' =>  __('Slack Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'webhook' ) {

@@ -160,7 +160,7 @@ class Telegram {
 			'{{meeting.content}}'    => ! empty( $attendeeBooking->meeting_content ) ? $attendeeBooking->meeting_content : '',
 			'{{meeting.date}}'     => ! empty( $attendeeBooking->meeting_dates ) ? $attendeeBooking->meeting_dates : '',
 			'{{meeting.location}}' => implode( ', ', $locations ),
-			'{{meeting.duration}}' => $attendeeBooking->meeting_duration,
+			'{{meeting.duration}}' => $attendeeBooking->duration,
 			'{{meeting.time}}'     => $attendeeBooking->start_time . '-' . $attendeeBooking->end_time,
 			'{{host.name}}'        => $attendeeBooking->host_first_name . ' ' . $attendeeBooking->host_last_name,
 			'{{host.email}}'       => ! empty( $attendeeBooking->host_email ) ? $attendeeBooking->host_email : '',

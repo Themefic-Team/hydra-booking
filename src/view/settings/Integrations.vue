@@ -152,13 +152,13 @@ const Integration = reactive( {
     },
     telegram : {
         type: 'meeting', 
-        status: 0, 
+        status: 1, 
         bot_token: '',
         chat_id: '',
     },
     twilio : {
         type: 'meeting', 
-        status: 0, 
+        status: 1, 
         otp_type: 'whatsapp',
         receive_number: '',
         from_number: '',
@@ -167,7 +167,7 @@ const Integration = reactive( {
     },
     slack : {
         type: 'meeting', 
-        status: 0, 
+        status: 1, 
         endpoint: ''
     },
     google_calendar : {
