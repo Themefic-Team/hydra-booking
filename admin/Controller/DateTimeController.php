@@ -154,6 +154,7 @@ class DateTimeController extends \DateTimeZone {
 		$where = array(
 			array('meeting_id', '=', $meeting_id),
 			array('meeting_dates', '=', $selected_date), 
+			array('status', '!=', 'canceled'),
 		);
 		$bookings = $booking->getBookingWithAttendees( 
 			$where,
