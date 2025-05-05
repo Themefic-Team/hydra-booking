@@ -249,10 +249,10 @@ const TfhbPrevNavigator = () => {
                     <span>{{$tfhb_trans('Timeframe:')}} <b>{{ Tfhb_Date(BookingDetails.booking.meeting_dates) }}, {{ BookingDetails.booking.start_time }} - {{ BookingDetails.booking.end_time }}</b> </span>
                 </div> 
                 <div class="tfhb-details-status" >
-                    <div v-if="'one-to-one' == BookingDetails.booking.meeting_type" class="status" :class="BookingDetails.attendees[0].status "  > 
+                    <!-- <div v-if="'one-to-one' == BookingDetails.booking.meeting_type" class="status" :class="BookingDetails.attendees[0].status "  > 
                         {{BookingDetails.attendees[0].status}} 
-                    </div>
-                    <div v-else class="status" :class="BookingDetails.booking.status "  > 
+                    </div> -->
+                    <div class="status" :class="BookingDetails.booking.status "  > 
                         {{BookingDetails.booking.status}} 
                     </div>
                 </div>
@@ -268,9 +268,13 @@ const TfhbPrevNavigator = () => {
                         <div v-show="activeBookingAction == true" class="tfhb-dropdown-wrap "> 
                              
                             <span class="tfhb-dropdown-single " @click="BookingDetails.ChangeBookingStatus('completed')"><Icon name="FileCheck" size=16 />{{ $tfhb_trans('Mark as Complete') }}</span>
+                            
                             <span class="tfhb-dropdown-single " @click="BookingDetails.DownloadAsIcs(BookingDetails.booking.id)"><Icon name="Calendar" size=16 />{{ $tfhb_trans('Download as .ics') }}</span>
+
                             <span class="tfhb-dropdown-single "  v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="goForReschedule(BookingDetails.attendees[0])"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
+
                             <span class="tfhb-dropdown-single " v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="cancelAttendee(BookingDetails.attendees[0])"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span>
+
                             <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="BookingDetails.deletePopup = true"><Icon name="Trash" size=16 />{{ $tfhb_trans('Delete') }}</span>
                             
                         </div>
@@ -423,6 +427,16 @@ const TfhbPrevNavigator = () => {
                                 </div>
                             </div>  
                             <!-- Booking Details Icon Box -->
+                            <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                <Icon name="Contact" size=20 /> 
+                                <div class="tfhb-b-d-icon-content tfhb-details-status">
+                                    <h5>{{ $tfhb_trans('Status') }}</h5>
+                                    <div class="status" style="display: inline-block;" :class="BookingDetails.attendees[0].status">
+                                        {{ BookingDetails.attendees[0].status }}  
+                                    </div> 
+                                    
+                                </div>
+                            </div>
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="Globe" size=20 /> 
                                 <div class="tfhb-b-d-icon-content">

@@ -42,7 +42,7 @@ onBeforeMount(() => {
         </div> 
         <HbInfoBox :isblocked="true" :btntext="$tfhb_trans('Create a Free License Key')" v-if="$tfhb_is_valid != true">
             <template #content>
-                {{ $tfhb_trans('You’re currently using HydraBooking in limited mode. To access advanced features, provide your license key now!') }} 
+                {{ $tfhb_trans('The Frontend Dashboard feature requires a free license key to activate.') }} 
             </template>
         </HbInfoBox>
 
