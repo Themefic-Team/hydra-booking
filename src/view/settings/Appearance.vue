@@ -9,11 +9,14 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 import axios from 'axios' 
 import { toast } from "vue3-toastify";
 import LvColorpicker from 'lightvue/color-picker';
+import HbColor from '@/components/form-fields/HbColor.vue'; 
+import HbColorPalette from '@/components/form-fields/HbColorPalette.vue'; 
 const router = useRouter();
 
 
 const appearanceSettings = reactive({
   themes: 'System default',
+  colors_palette: 'default',
   primary_color: '#2E6B38',
   secondary_color: '#273F2B',
   paragraph_color: '#273F2B',
@@ -35,6 +38,7 @@ try {
     if (response.data.status) { 
         // Set Appearance Settings
         appearanceSettings.themes = response.data.appearance_settings.themes ? response.data.appearance_settings.themes : 'System default';
+        appearanceSettings.colors_palette = response.data.appearance_settings.colors_palette ? response.data.appearance_settings.colors_palette : 'default';
         appearanceSettings.primary_color = response.data.appearance_settings.primary_color ? response.data.appearance_settings.primary_color : '#2E6B38';
         appearanceSettings.secondary_color = response.data.appearance_settings.secondary_color ? response.data.appearance_settings.secondary_color : '#273F2B';
         appearanceSettings.paragraph_color = response.data.appearance_settings.paragraph_color ? response.data.appearance_settings.paragraph_color : '#273F2B';
@@ -74,6 +78,17 @@ const UpdateAppearanceSettings = async () => {
     }
 }
 
+const ChangeColors = (value,  colors) => {
+
+    appearanceSettings.colors_palette = value;  
+    if('custom' != appearanceSettings.colors_palette){  
+        appearanceSettings.primary_color = colors.primary; 
+        appearanceSettings.secondary_color = colors.secondary; 
+        appearanceSettings.paragraph_color = colors.text_title;  
+    }
+    
+}
+ 
 onBeforeMount(() => { 
     fetchAppearanceSettings();
 });
@@ -120,25 +135,61 @@ onBeforeMount(() => {
                 <h2>{{ $tfhb_trans('Custom brand colors') }}</h2> 
                 <p>{{ $tfhb_trans('Customize your own brand color into your booking page') }}</p>
             </div>
-
-            <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
+              <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16"> 
+                <HbColorPalette  
+                    v-model="appearanceSettings.colors_palette"   
+                    :label="$tfhb_trans('Default Palette')"  
+                    selected = "1" 
+                    name="default-palellte"
+                    width="33" 
+                    :class="{ 'active': appearanceSettings.colors_palette == 'default' }"
+                    value="default"
+                    @click="ChangeColors('default',{  primary: '#2E6B38', secondary: '#273F2B', text_title: '#273F2B', })"
+                    :colors ="{  primary: '#2E6B38', secondary: '#273F2B', text_title: '#273F2B', }"
+                />  
+                <HbColorPalette  
+                    v-model="appearanceSettings.colors_palette"   
+                    :label="$tfhb_trans('Custom Palette')"  
+                    selected = "1" 
+                    name="custom-palellte"
+                    value="custom"
+                    :class="{ 'active': appearanceSettings.colors_palette == 'custom' }"
+                    width="33"
+                    @click="ChangeColors('custom',{  primary: '', secondary: '', paragraph_color: '', text_title: '',  })"
+                    :colors ="{  primary: '', secondary: '', paragraph_color: '', text_title: '',  }"
+                />  
+                
+            </div>
+            <div  v-if="appearanceSettings.colors_palette == 'custom'"  @click.stop class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
                 <div class="tfhb-colorbox tfhb-full-width">
+                     
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
                             {{ $tfhb_trans('Primary Color') }}
                             
                         </label>
                         <div class="color-select">
-                            <LvColorpicker :value="appearanceSettings.primary_color" v-model="appearanceSettings.primary_color" :withoutInput="true"/>
+                            <LvColorpicker 
+                                label="Choose Color"
+                                v-if="!skeleton"
+                                key="primary_color"   
+                                v-model="appearanceSettings.primary_color"
+                                :withoutInput="true"  
+                            />
                             <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
-                    </div>
+                    </div> 
                     <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
                             {{ $tfhb_trans('Secondary Color') }}
                         </label>
                         <div class="color-select">
-                            <LvColorpicker :value="appearanceSettings.secondary_color" v-model="appearanceSettings.secondary_color" :withoutInput="true" />
+                            <LvColorpicker 
+                                v-if="!skeleton"
+                                key="secondary_color"  
+                                v-model="appearanceSettings.secondary_color" 
+                                :withoutInput="true" 
+                            />
                             <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
@@ -147,7 +198,11 @@ onBeforeMount(() => {
                             {{ $tfhb_trans('Paragraph Color') }}
                         </label>
                         <div class="color-select">
-                            <LvColorpicker :value="appearanceSettings.paragraph_color" v-model="appearanceSettings.paragraph_color" :withoutInput="true" />
+                            <LvColorpicker 
+                                v-if="!skeleton"
+                                key="paragraph_color" 
+                                v-model="appearanceSettings.paragraph_color" 
+                                :withoutInput="true" />
                             <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
                     </div>
@@ -203,3 +258,6 @@ onBeforeMount(() => {
     </div>
  
 </template>
+
+<style>
+ </style>

@@ -779,7 +779,7 @@ class MailHooks {
 		); 
 		 
 		// Meeting Location Check
-		$meeting_locations = json_decode( $attendeeBooking->meeting_location );
+		$meeting_locations = !is_array($attendeeBooking->meeting_location) ? json_decode( $attendeeBooking->meeting_location ) : $attendeeBooking->meeting_location;
 		$locations         = array();
 		if ( is_array( $meeting_locations ) ) {
 			foreach ( $meeting_locations as $location ) {
