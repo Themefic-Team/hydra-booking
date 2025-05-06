@@ -420,7 +420,7 @@ namespace HydraBooking\Admin\Controller;
             'Upload logo' =>  __('Upload logo', 'hydra-booking'),  
             'Upload Responsive logo' =>  __('Upload Responsive logo', 'hydra-booking'),  
             'Type login sub-title' =>  __('Type login sub-title', 'hydra-booking'),  
-            // 'License' =>  __('License', 'hydra-booking'),  
+            'Header Background' =>  __('Header Background', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
 
@@ -625,7 +625,9 @@ namespace HydraBooking\Admin\Controller;
             'Enter Mail Subject' =>  __('Enter Mail Subject', 'hydra-booking'), 
             'Subject' =>  __('Subject', 'hydra-booking'), 
             'Mail Body' =>  __('Mail Body', 'hydra-booking'), 
-            'Update' =>  __('Update', 'hydra-booking'), 
+            'Update' =>  __('Update', 'hydra-booking'),
+            'Greetings' => __('Greetings', 'hydra-booking'), 
+            'Buttons'  => __('Buttons', 'hydra-booking'),
 
             // Activity Logs
             'Booking has been completed' =>  __('Booking has been completed', 'hydra-booking'), 

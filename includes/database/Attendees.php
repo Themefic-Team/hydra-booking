@@ -137,6 +137,7 @@ class Attendees {
 			booking.meeting_locations as meeting_locations,
 			booking.booking_type as booking_type,
 			meeting.title as meeting_title, 
+			meeting.description as meeting_content,
 			meeting.attendee_can_cancel as attendee_can_cancel, 
 			meeting.attendee_can_reschedule as attendee_can_reschedule, 
 			meeting.availability_custom as availability_custom, 
@@ -148,7 +149,8 @@ class Attendees {
 			meeting.meeting_interval as meeting_interval,
 			host.first_name as host_first_name,
 			host.last_name as host_last_name,
-			host.email as host_email
+			host.email as host_email,
+			host.phone_number as host_phone
 			FROM $table_name as attendees
 			LEFT JOIN $booking_table as booking ON attendees.booking_id = booking.id
 			LEFT JOIN $meeting_table as meeting ON booking.meeting_id = meeting.id

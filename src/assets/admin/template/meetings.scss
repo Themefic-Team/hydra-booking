@@ -654,4 +654,28 @@
             }
         }
     }
+    .tfhb-email-builder{
+        width: 100%;
+        .tfhb-builder-tools{
+            width: 100%;
+        }
+    }
+    .tfhb-email-preview{
+        width: 100%;
+        background-color: $secondary-hover;
+        padding: 16px;
+        table{
+            width: 100% !important;
+            max-width: none !important;
+            td.social{
+                table{
+                    width: auto !important;
+                }
+            }
+        }
+        a{
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+        }
+    }
 }
