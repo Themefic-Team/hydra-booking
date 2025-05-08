@@ -838,9 +838,9 @@ class HydraBookingShortcode {
 			1,
 			'DESC'
 		); 
-
  
-		do_action( 'hydra_booking/after_booking_schedule', $old_booking_id, $attendeeBooking );
+ 
+		do_action( 'hydra_booking/after_booking_schedule',  $attendeeBooking );
 
 	 
 

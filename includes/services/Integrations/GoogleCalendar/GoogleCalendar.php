@@ -272,11 +272,7 @@ class GoogleCalendar {
 		if ( isset( $google_calender['connection_status'] ) && $google_calender['connection_status'] == 0 ) {
 			return $value;
 		}
-		
-		
-		if($booking->meeting_calendar){ 
-			return; 
-		}
+ 
 		// set event data google meet shedule
 		
 		$meeting_dates = $booking->meeting_dates; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
