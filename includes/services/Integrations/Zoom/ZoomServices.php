@@ -99,7 +99,7 @@ class ZoomServices {
 		
 		$BookingMeta = new BookingMeta();
 		// check if the meeting id is available
-		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'zoom_meeting' ); 
+		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'zoom_meeting', 1 ); 
 		
 
 		if ( $get_booking_meta ) { 
@@ -175,7 +175,7 @@ class ZoomServices {
 		$this->setHostApiDetails( $booking_data->host_id );
 		$access_response = $this->generateAccessToken();
 		$BookingMeta = new BookingMeta();
-		$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'zoom_meeting' );
+		$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'zoom_meeting', 1 );
 		$events = json_decode( $booking_meta->value, true );
 
 		$new_events_data = array();
@@ -222,7 +222,7 @@ class ZoomServices {
 		$this->setHostApiDetails( $single_booking_meta->host_id );
 		$access_response = $this->generateAccessToken();
 		$BookingMeta = new BookingMeta();
-		$booking_meta = $BookingMeta->getWithIdKey( $single_booking_meta->id, 'zoom_calendar' );
+		$booking_meta = $BookingMeta->getWithIdKey( $single_booking_meta->id, 'zoom_calendar', 1 );
 		
 
 
@@ -291,7 +291,7 @@ class ZoomServices {
 		$meeting_data = $meeting->get( $single_booking_meta->meeting_id );
 		$host_meta = $host->get( $single_booking_meta->host_id );
 
-		$booking_meta = $BookingMeta->getWithIdKey( $single_booking_meta->id, 'zoom_calendar' );
+		$booking_meta = $BookingMeta->getWithIdKey( $single_booking_meta->id, 'zoom_calendar', 1 );
 	
 		if ( ! $booking_meta ) {
 			return false;

@@ -19,7 +19,7 @@ class MailHooks {
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 ); 
 		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 20, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 20, 1 );
-		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 2 );
 		add_action( 'hydra_booking/send_booking_reminder', array( $this, 'send_booking_reminder' ), 20, 1 );
 
 		// Send Mail Booking with All attendees
@@ -80,8 +80,7 @@ class MailHooks {
 			
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
-
-				// tfhb_print_r($body);
+ 
 				// Host Email
 				$mailto = ! empty( $hostData->email ) ? $hostData->email : '';
 
@@ -128,8 +127,7 @@ class MailHooks {
 			
 				// Result after Shortcode replce
 				$body = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
-
-				// tfhb_print_r($body);
+ 
 				// Host Email
 				$mailto = ! empty( $attendees->email ) ? $attendees->email : '';
 
@@ -357,7 +355,8 @@ class MailHooks {
 	}
 
 	// If booking Status is ReSchedule
-	public function pushBookingToscheduled( $attendees ) {
+	public function pushBookingToscheduled( $old_booking_id,  $attendees ) { 
+		 
 		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
@@ -693,8 +692,7 @@ class MailHooks {
 		$hostData                    = $this->getHostData( $booking->host_id );
 		 
 		$attendees = $booking->attendees;
-
-		// tfhb_print_r($attendees);
+ 
 
 		if ( ! empty( $_tfhb_notification_settings ) ) { 
 			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
@@ -776,10 +774,10 @@ class MailHooks {
 			),
 			1,
 			'DESC'
-		); 
+		);  
 		 
 		// Meeting Location Check
-		$meeting_locations = !is_array($attendeeBooking->meeting_location) ? json_decode( $attendeeBooking->meeting_location ) : $attendeeBooking->meeting_location;
+		$meeting_locations =  !is_array($attendeeBooking->meeting_locations) ?  json_decode( $attendeeBooking->meeting_locations ) : $attendeeBooking->meeting_locations;
 		$locations         = array();
 		if ( is_array( $meeting_locations ) ) {
 			foreach ( $meeting_locations as $location ) {
@@ -795,7 +793,7 @@ class MailHooks {
 			'{{meeting.content}}'    => ! empty( $attendeeBooking->meeting_content ) ? $attendeeBooking->meeting_content : '',
 			'{{meeting.date}}'     => ! empty( $attendeeBooking->meeting_dates ) ? $attendeeBooking->meeting_dates : '',
 			'{{meeting.location}}' => implode( ', ', $locations ),
-			'{{meeting.duration}}' => $attendeeBooking->meeting_duration,
+			'{{meeting.duration}}' => $attendeeBooking->duration,
 			'{{meeting.time}}'     => $attendeeBooking->start_time . '-' . $attendeeBooking->end_time,
 			'{{host.name}}'        => $attendeeBooking->host_first_name . ' ' . $attendeeBooking->host_last_name,
 			'{{host.email}}'       => ! empty( $attendeeBooking->host_email ) ? $attendeeBooking->host_email : '',
@@ -840,11 +838,11 @@ class MailHooks {
 		// Full start end time with timezone for host
 		$dateTime = new DateTimeController( 'UTC' );
 		$metting_dates = explode(',', $attendeeBooking->meeting_dates);
-		if($attendeeBooking->host_time_zone != ''){
-			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->host_time_zone,  $metting_dates[0], 'full' );  
+		if($attendeeBooking->availability_time_zone != ''){
+			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'full' );  
 			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
 
-			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->host_time_zone,  $metting_dates[0], 'start' );
+			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'start' );
 			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
 		}else{
 			$replacements['{{booking.full_start_end_host_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';

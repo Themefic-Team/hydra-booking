@@ -268,7 +268,7 @@ class SetupWizard {
 			$default_notification =  new Helper();
 			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
 		}
-		$data['notification']   = json_encode($_tfhb_notification_settings);
+		$data['notification']   = $_tfhb_notification_settings;
 
 		// Check if user is already a meeting
 		$meeting = new Meeting();

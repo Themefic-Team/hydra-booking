@@ -34,7 +34,7 @@ class Helper {
                 </td>
             </tr></tbody></table>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
-            <tbody><tr><td><p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p></td></tr> </tbody></table></td></tr></tbody></table>
+            <tbody><tr><td><p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with {{host.name}} was confirmed.</p></td></tr> </tbody></table></td></tr></tbody></table>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
                 <tbody><tr>
                     <td>
@@ -222,7 +222,7 @@ class Helper {
                     'order' => 1,
                     'status' => 1,
                     'title' => 'Greetings',
-                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>'
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with {{host.name}} was confirmed.</p>'
                 ),
                 array(
                     'id' => 'meeting_details',
@@ -680,7 +680,7 @@ class Helper {
                 </td>
             </tr></tbody></table>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
-            <tbody><tr><td><p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was pending.</p></td></tr> </tbody></table></td></tr></tbody></table>
+            <tbody><tr><td><p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with {{host.name}} was pending.</p></td></tr> </tbody></table></td></tr></tbody></table>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 32px;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
                 <tbody><tr>
                     <td>
@@ -867,7 +867,7 @@ class Helper {
                     'order' => 1,
                     'status' => 1,
                     'title' => 'Greetings',
-                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was pending.</p>'
+                    'content' => '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with {{host.name}} was pending.</p>'
                 ),
                 array(
                     'id' => 'meeting_details',

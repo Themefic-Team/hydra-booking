@@ -76,13 +76,15 @@ class BookingLocation {
 	 */
 
 	 public function pushBookingToscheduled( $old_booking_id, $attendee ) { 
+		
 		if($old_booking_id !=0 ){
 			$booking_id = $old_booking_id; 
 			//  Get Booking With Attendee
 			$booking = new Booking();
 			$booking_data = $booking->get( $booking_id ); 
 				// if is not array or not object json decode
-			$locations = !empty($attendee->meeting_locations) ? $attendee->meeting_locations : array();
+			$locations = !is_array($attendee->meeting_locations) ? json_decode($attendee->meeting_locations) : $attendee->meeting_locations;
+		 
 			$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 			foreach($locations as $key => $location){ 
 				if($key == 'zoom'){ // Booking Location is Zoom
