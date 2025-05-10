@@ -19,7 +19,7 @@ class MailHooks {
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 ); 
 		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 20, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 20, 1 );
-		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 2 );
 		add_action( 'hydra_booking/send_booking_reminder', array( $this, 'send_booking_reminder' ), 20, 1 );
 
 		// Send Mail Booking with All attendees
@@ -355,8 +355,8 @@ class MailHooks {
 	}
 
 	// If booking Status is ReSchedule
-	public function pushBookingToscheduled( $attendees ) { 
-		tfhb_print_r($attendees);
+	public function pushBookingToscheduled( $old_booking_id,  $attendees ) { 
+		 
 		$bookingMeta                 = new BookingMeta();
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';

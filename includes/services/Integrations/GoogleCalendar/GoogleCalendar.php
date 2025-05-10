@@ -474,7 +474,7 @@ class GoogleCalendar {
 			return;
 		}
 		$BookingMeta = new BookingMeta();
-		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'booking_calendar' );  
+		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'booking_calendar', 1 );  
 		 
 		if($get_booking_meta){
 			$this->addAttendeeGoogleCalender($booking, $get_booking_meta);	
@@ -509,11 +509,12 @@ class GoogleCalendar {
 			$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 			 
 			$BookingMeta = new BookingMeta();
-			$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'booking_calendar' );
+			$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'booking_calendar', 1);
+			
 			
 			if($booking_meta){
 
-				$events = json_decode( $booking_meta->value );
+				$events = json_decode( $booking_meta->value ); 
 				$events = $events->google_calendar;
 				
 				$host = new Host();

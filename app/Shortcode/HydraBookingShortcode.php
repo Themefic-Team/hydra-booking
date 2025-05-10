@@ -464,7 +464,7 @@ class HydraBookingShortcode {
  
 		}
 
-		
+		// Meeting Location
 		$data['meeting_locations'] = array();
 		$meeting_location = is_array($meta_data['meeting_locations']) ? $meta_data['meeting_locations'] : array();
 		if ( isset( $meeting_location ) && ! empty( $meeting_location ) ) {
@@ -485,7 +485,7 @@ class HydraBookingShortcode {
 		}
 		
 		$data['cancelled_by'] = '';
-		$data['reason']       = '';
+		$data['reason']       = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
 		$data['booking_type'] = $meta_data['meeting_type'];
 
 		// Payment Method
@@ -757,6 +757,11 @@ class HydraBookingShortcode {
 			1,
 			'DESC'
 		); 
+		if('rescheduled' == $attendeeBooking->status){
+			wp_send_json_error( array( 'message' => esc_html(__('Booking is already rescheduled', 'hydra-booking')) ) );
+		}
+		 
+ 
 		
 		$old_booking_id = 0;
 
@@ -774,9 +779,7 @@ class HydraBookingShortcode {
 		if($attendeeBooking->status == 'cancelled'){
 			wp_send_json_error( array( 'message' => esc_html(__('Booking is already cancelled', 'hydra-booking')) ) );
 		}
-		// if($attendeeBooking->status == 'rescheduled'){
-		// 	wp_send_json_error( array( 'message' => esc_html(__('Booking is already rescheduled', 'hydra-booking')) ) );
-		// }
+ 
 		// Get Post Meta
 		$booking_meta = get_post_meta( $attendeeBooking->post_id, '_tfhb_booking_opt', true );
 		
@@ -801,7 +804,8 @@ class HydraBookingShortcode {
 				}
 			}
 		}
-	
+		
+		
 		$attendee_update = array();
 		if($check_booking){
 			// update attende booking id
@@ -809,20 +813,30 @@ class HydraBookingShortcode {
 			// update booking id into attendee
 
 		}else{
-			// Create a New Booking Into Post Type
-			$meeting_post_id = $this->tfhb_create_custom_post_booking($data);
-			$data['post_id'] = $meeting_post_id; // set post id into booking data
-			$result          = $booking->add( $data );  // add booking data into booking table
-			$attendee_update['booking_id'] = $result['insert_id'];
-			if ( $result === false ) {
-				wp_send_json_error( array( 'message' => esc_html(__('Booking Failed', 'hydra-booking')) ) );
+		
+			if('one-to-one' == $attendeeBooking->booking_type){ 
+				
+				$updat_booking['id'] = $attendeeBooking->booking_id;
+				$updat_booking['meeting_dates'] = $data['meeting_dates'];
+				$updat_booking['start_time'] = $data['start_time'];
+				$updat_booking['end_time'] = $data['end_time']; 
+				// update booking
+				$booking->update( $updat_booking );
+			}else{
+				// Create a New Booking Into Post Type
+				$meeting_post_id = $this->tfhb_create_custom_post_booking($data);
+				$data['post_id'] = $meeting_post_id; // set post id into booking data
+				$result          = $booking->add( $data );  // add booking data into booking table
+				$attendee_update['booking_id'] = $result['insert_id'];
+				if ( $result === false ) {
+					wp_send_json_error( array( 'message' => esc_html(__('Booking Failed', 'hydra-booking')) ) );
+				} 
 			} 
-
 
 		}  
 		$attendee_update['id'] = $attendeeBooking->id; 
 		$attendee_update['status'] = 'rescheduled'; 
-		$attendee_update['reason'] =  __('Rescheduled by Attendee', 'hydra-booking');
+		$attendee_update['reason'] =  $data['reason'];
 		
 		$Attendee->update( $attendee_update );
 		
@@ -840,7 +854,7 @@ class HydraBookingShortcode {
 		); 
  
  
-		do_action( 'hydra_booking/after_booking_schedule',  $attendeeBooking );
+		do_action( 'hydra_booking/after_booking_schedule',  $old_booking_id, $attendeeBooking );
 
 	 
 
