@@ -170,7 +170,7 @@ const emailBuilder = ref([
         order: 1,
         status: 1,
         title: 'Greetings',
-        content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with Host Name was confirmed.</p>',
+        content: '<p style="font-weight: bold;margin: 0; font-size: 17px;">Hey {{attendee.name}},</p><p style="font-weight: bold; margin: 8px 0 0 0; font-size: 17px;">A new booking with {{host.name}} was confirmed.</p>',
     },
     {
         id: 'meeting_details',
