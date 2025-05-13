@@ -535,6 +535,7 @@ class HydraBookingShortcode {
 			array('meeting_dates', '=', $data['meeting_dates']),
 			array('start_time', '=', $data['start_time']),
 			array('end_time', '=', $data['end_time']),
+			array('status', '!=', 'canceled'),
 		);
 		$check_booking = $booking->getBookingWithAttendees( 
 			$where,

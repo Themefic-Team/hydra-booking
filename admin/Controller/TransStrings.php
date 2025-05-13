@@ -54,6 +54,13 @@ namespace HydraBooking\Admin\Controller;
             'Select Booking status' =>  __('Select Booking status', 'hydra-booking'), 
             'Create Booking' =>  __('Create Booking', 'hydra-booking'), 
             'Has booked a meeting' =>  __('Has booked a meeting', 'hydra-booking'), 
+            'Re-Booking' =>  __('Re-Booking', 'hydra-booking'), 
+            'You are Re-book the booking:' =>  __('You are Re-book the booking:', 'hydra-booking'), 
+            'Re-book' =>  __('Re-book', 'hydra-booking'), 
+            'Select Status' =>  __('Select Status', 'hydra-booking'), 
+            'Re-book Now' =>  __('Re-book Now', 'hydra-booking'), 
+            'Select Time Slot' =>  __('Select Time Slot', 'hydra-booking'), 
+            'Booking' =>  __('Booking', 'hydra-booking'), 
             
 
             'Delete' =>  __('Delete', 'hydra-booking'), 
