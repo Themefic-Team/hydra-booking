@@ -448,8 +448,42 @@ class BookingController {
 		$meeting = new Meeting();
 		$meeting_data = $meeting->get( $meeting_id );  
 		$meeting_data = (array) $meeting_data;
-		$AvailabilityData = $date_time->GetAvailabilityData( $meeting_data ); 
+		$user_id = $meeting_data['user_id'];
+		
+		// $AvailabilityData = $date_time->GetAvailabilityData( $meeting_data ); 
+		if ( isset( $meeting_data['availability_type'] ) && 'settings' === $meeting_data['availability_type'] ) {
+			$_tfhb_availability_settings = get_user_meta( $user_id, '_tfhb_host', true ); 
+			
+			if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] == 'settings'){
+				$host_settings_availability_id = $_tfhb_availability_settings['availability_id'];
+				$_tfhb_availability_settings =  get_option( '_tfhb_availability_settings' );
 
+				if ( is_array($_tfhb_availability_settings)  ) { 
+					$key = array_search($host_settings_availability_id, array_column($_tfhb_availability_settings, 'id'));
+					//  _tfhb_availability_settings index id wich is match with host settings availability id
+					if(isset($_tfhb_availability_settings[ $key ])){
+
+						$AvailabilityData = $_tfhb_availability_settings[ $key ];
+					}else{
+						$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+					} 
+				} else {
+					$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+				} 
+			}elseif (isset($_tfhb_availability_settings['availability']) &&  in_array( $meeting_data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+				
+				$AvailabilityData = $_tfhb_availability_settings['availability'][ $meeting_data['availability_id'] ];
+				
+				
+			} else {
+				$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+			}
+		} else {
+
+			$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+		}
+		$AvailabilityData = !is_array( $AvailabilityData ) && !empty( $AvailabilityData ) ? json_decode( $AvailabilityData, true )  : $AvailabilityData;
+	 
 
 		// Map weekdays to numeric keys
 		$dayMap = [
