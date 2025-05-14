@@ -180,7 +180,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_pending: {
                         status : 0,
@@ -188,7 +188,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_cancel: {
                         status : 0,
@@ -196,7 +196,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reschedule: {
                         status : 0,
@@ -204,7 +204,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reminder: {
                         status : 0,
@@ -212,7 +212,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                 },
                 attendee : {
@@ -222,6 +222,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
+                        builder: ''
                     },
                     booking_pending: {
                         status : 0,
@@ -229,6 +230,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
+                        builder: ''
                     },
                     booking_cancel: {
                         status : 0,
@@ -236,7 +238,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reschedule: {
                         status : 0,
@@ -244,7 +246,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reminder: {
                         status : 0,
@@ -252,7 +254,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                 }
             },
@@ -315,7 +317,10 @@ const Meeting = reactive({
                     this.singleMeeting.MeetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
                 }
              
-                if(response.data.meeting.notification){
+                if(response.data.meeting.notification && "string" == typeof response.data.meeting.notification){
+                    this.singleMeeting.MeetingData.notification = JSON.parse(response.data.meeting.notification)
+                }
+                if(response.data.meeting.notification && "object" == typeof response.data.meeting.notification){
                     this.singleMeeting.MeetingData.notification = response.data.meeting.notification
                 }
 

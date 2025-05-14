@@ -198,7 +198,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
-
+                builder: ''
             },
             booking_pending: {
                 status : 1,
@@ -206,7 +206,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
-
+                builder: ''
             },
             booking_cancel: {
                 status : 1,
@@ -214,7 +214,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
-
+                builder: ''
             },
             booking_reschedule: {
                 status : 1,
@@ -230,7 +230,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
-
+                builder: ''
             },
         },
         attendee : {
@@ -240,6 +240,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
+                builder: ''
             },
             booking_pending: {
                 status : 1,
@@ -247,6 +248,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
+                builder: ''
             },
             booking_cancel: {
                 status : 1,
@@ -254,7 +256,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
-
+                builder: ''
             },
             booking_reschedule: {
                 status : 1,
@@ -262,7 +264,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
-
+                builder: ''
             },
             booking_reminder: {
                 status : 1,
@@ -270,7 +272,7 @@ const meetingData = reactive({
                 form : '',
                 subject : '',
                 body : '',
-
+                builder: ''
             },
         }
     },

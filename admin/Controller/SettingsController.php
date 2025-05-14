@@ -753,6 +753,16 @@ class SettingsController {
 		}
 	}
 
+	private function ensureBuilderKeyExists(&$notifications) {
+        foreach ($notifications as $role => &$notificationsData) {
+            foreach ($notificationsData as $key => &$notification) {
+                if (!isset($notification['builder'])) {
+                    $notification['builder'] = '';
+                }
+            }
+        }
+    }
+
 	// Get Notification Settings
 	public function GetNotificationSettings() {
 		// $_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
@@ -762,6 +772,8 @@ class SettingsController {
 			$default_notification =  new Helper();
 			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
 		}
+
+		$this->ensureBuilderKeyExists($_tfhb_notification_settings);
 
 		$data                        = array(
 			'status'                => true,
@@ -784,6 +796,7 @@ class SettingsController {
 				$data['host'][ $key ]['from']     = sanitize_text_field( $value['from'] );
 				$data['host'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['host'][ $key ]['body']     = wp_kses_post( $value['body'] );
+				$data['host'][ $key ]['builder']  = $value['builder'];
 			}
 		}
 
@@ -795,6 +808,7 @@ class SettingsController {
 				$data['attendee'][ $key ]['form']     = sanitize_text_field( $value['from'] );
 				$data['attendee'][ $key ]['subject']  = sanitize_text_field( $value['subject'] );
 				$data['attendee'][ $key ]['body']     = wp_kses_post( $value['body'] );
+				$data['attendee'][ $key ]['builder']  = $value['builder'];
 			}
 		}
 
