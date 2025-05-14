@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.7
+Stable tag: 1.1.9
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -208,6 +208,20 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 12. Notification Controls
 
 == Changelog ==
+
+= 1.1.9 – May 05, 2025 =
+
+- Added: Customizable email template system.
+- Added: Rebooking option after booking cancellation.
+- Fixed: Booking reschedule functionality issue.
+- Fixed: Display issue on booking details page.
+- Fixed: Color picker default data not loading properly.
+- Fixed: Time slot visibility issue when related booking was canceled.
+
+= 1.1.8 – May 05, 2025 =
+
+- Compatibility: Compatible with WooCommerce (v9.8.3).
+- Compatibility: Compatible with Contact Form 7 (v6.0.6).
 
 = 1.1.7 – April 24, 2025 =
 
