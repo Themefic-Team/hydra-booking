@@ -703,7 +703,7 @@ class GoogleCalendar {
 		}
 		
 		$bookingMeta = new BookingMeta(); 
-		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
+		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar' , 1);
 		
 
 		// if booking calendar data is not found then return false
@@ -937,7 +937,7 @@ class GoogleCalendar {
 		}
 		
 		$bookingMeta = new BookingMeta(); 
-		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
+		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar', 1 );
 
 
 		// if booking calendar data is not found then return false 
