@@ -32,7 +32,6 @@ class THB_INIT {
 
 		// Load Vendor Auto Load
 		if ( file_exists( TFHB_PATH . '/vendor/autoload.php' ) ) {
-
 			require_once TFHB_PATH . '/vendor/autoload.php';
 		}
 
@@ -43,12 +42,9 @@ class THB_INIT {
 			require_once TFHB_PATH . '/includes/Includes.php';
 		}
 		
-
 	
 		add_action( 'init', array( $this, 'init' ) ); 
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
-
-
 		
 		add_action('plugins_loaded', array($this, 'tfhb_load_textdomain'));
  
