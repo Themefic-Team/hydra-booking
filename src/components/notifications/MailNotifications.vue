@@ -506,7 +506,7 @@ const getIcon = (key) => {
         email: 'mail.png',
         phone: 'phone.png',
     };
-    return `<img src="${props.mediaurl}assets/images/${icons[key] || 'default.svg'}" alt="${key}" style="float: left;margin-right: 8px;">`;
+    return `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHESURBVHgBpVTdbdswEP6OduFXjaA+NFIiB/AEFbOBPUHjCexO0HaCthOkG1QbhNlAQG3UzUs0goo8JIhtXY6O5MiOiETJB4i6H95HHnlHwAFfD7zX+JQroMerq0N9PNz3HYitx8srFynVlVD3tZh8RuGB8Z2BX4rUxW5IETPjFExTUvS/APJL8yd5QngQR2einOIVYFByeTEbWXmT8gcdDTZkhM9E6/dEdFIuV+qPnxLbxiVzrC7CTwIPI+Gw9q4dOiCP7TqgdGEWmZgySd8Aq6TUt5BAIyTJXzMz5TElcjSTtXBsCZuwMLOTJvvczFP5jVxx3d2zKIahPvbRCuw7CeXmJkKKt2CHUEpkxFimaIV3mrk4aySUi8mrS7CFm5k0b6Ko++RSsp1NuQLqnRLE/fNAH22K97lOaSS0qzPR+AbXxupEq3EX9NXKd+gYJjV27d5ZNvV2qtdiSZS44pTLEcRHv6vqDz72J4E+nFo51AM/iKPzVilbEClvjfVDWoqpmtrB0lNEeeuU653yz8x/VPKLOuUW3bSHJaSeJm07RWI+PUirzI7b5yvQ0VQ65YtM8dAKlIP4W5UF7btDHfpogf3X6B6J6cGMrcAOfgAAAABJRU5ErkJggg==" alt="${key}" style="float: left;margin-right: 8px;">`;
 };
 
 const formatLabel = (key) => {
