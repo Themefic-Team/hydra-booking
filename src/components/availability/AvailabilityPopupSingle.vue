@@ -286,6 +286,7 @@ const tfhbValidateInput = (fieldName) => {
 
 const filteredDateSlots = computed(() => {
     let slots = props.availabilityDataSingle?.date_slots;
+
     // Convert object to array if necessary
     if (slots && typeof slots === "object" && !Array.isArray(slots)) {
         slots = Object.values(slots);
@@ -412,6 +413,7 @@ const filteredDateSlots = computed(() => {
                                 <p>{{ $tfhb_trans('Add dates when your availability changes from your daily hours') }}</p>
                             </div> 
                         </div>
+                        
 
                         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                             <div class="tfhb-flexbox">

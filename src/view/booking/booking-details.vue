@@ -246,13 +246,13 @@ const TfhbPrevNavigator = () => {
                     <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M7.26676 1.66602V4.99935M13.9334 1.66602V4.99935M3.1001 8.33268H18.1001M7.26676 11.666H7.2751M10.6001 11.666H10.6084M13.9334 11.666H13.9418M7.26676 14.9993H7.2751M10.6001 14.9993H10.6084M13.9334 14.9993H13.9418M4.76676 3.33268H16.4334C17.3539 3.33268 18.1001 4.07887 18.1001 4.99935V16.666C18.1001 17.5865 17.3539 18.3327 16.4334 18.3327H4.76676C3.84629 18.3327 3.1001 17.5865 3.1001 16.666V4.99935C3.1001 4.07887 3.84629 3.33268 4.76676 3.33268Z" stroke="#002AB3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>{{$tfhb_trans('Timeframe:')}} <b>{{ Tfhb_Date(BookingDetails.booking.meeting_dates) }}, {{ BookingDetails.booking.start_time }} - {{ BookingDetails.booking.end_time }}</b> </span>
+                    <span  :style="BookingDetails.booking.status == 'canceled' ? 'text-decoration: line-through': ''">{{$tfhb_trans('Timeframe:')}} <b>{{ Tfhb_Date(BookingDetails.booking.meeting_dates) }}, {{ BookingDetails.booking.start_time }} - {{ BookingDetails.booking.end_time }}</b> </span>
                 </div> 
                 <div class="tfhb-details-status" >
-                    <div v-if="'one-to-one' == BookingDetails.booking.meeting_type" class="status" :class="BookingDetails.attendees[0].status "  > 
+                    <!-- <div v-if="'one-to-one' == BookingDetails.booking.meeting_type" class="status" :class="BookingDetails.attendees[0].status "  > 
                         {{BookingDetails.attendees[0].status}} 
-                    </div>
-                    <div v-else class="status" :class="BookingDetails.booking.status "  > 
+                    </div> -->
+                    <div class="status" :class="BookingDetails.booking.status "  > 
                         {{BookingDetails.booking.status}} 
                     </div>
                 </div>
@@ -267,10 +267,14 @@ const TfhbPrevNavigator = () => {
                     <transition name="tfhb-dropdown-transition">
                         <div v-show="activeBookingAction == true" class="tfhb-dropdown-wrap "> 
                              
-                            <span class="tfhb-dropdown-single " @click="BookingDetails.ChangeBookingStatus('completed')"><Icon name="FileCheck" size=16 />{{ $tfhb_trans('Mark as Complete') }}</span>
-                            <span class="tfhb-dropdown-single " @click="BookingDetails.DownloadAsIcs(BookingDetails.booking.id)"><Icon name="Calendar" size=16 />{{ $tfhb_trans('Download as .ics') }}</span>
-                            <span class="tfhb-dropdown-single "  v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="goForReschedule(BookingDetails.attendees[0])"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
-                            <span class="tfhb-dropdown-single " v-if="'one-to-one' == BookingDetails.booking.meeting_type" @click.stop="cancelAttendee(BookingDetails.attendees[0])"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span>
+                            <span v-if="'canceled' != BookingDetails.booking.status" class="tfhb-dropdown-single " @click="BookingDetails.ChangeBookingStatus('completed')"><Icon name="FileCheck" size=16 />{{ $tfhb_trans('Mark as Complete') }}</span>
+                            
+                            <span  v-if="'canceled' != BookingDetails.booking.status" class="tfhb-dropdown-single " @click="BookingDetails.DownloadAsIcs(BookingDetails.booking.id)"><Icon name="Calendar" size=16 />{{ $tfhb_trans('Download as .ics') }}</span>
+
+                            <span  class="tfhb-dropdown-single "  v-if="'one-to-one' == BookingDetails.booking.meeting_type && 'canceled' != BookingDetails.booking.status" @click.stop="goForReschedule(BookingDetails.attendees[0])"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
+
+                            <span class="tfhb-dropdown-single " v-if="'one-to-one' == BookingDetails.booking.meeting_type && 'canceled' != BookingDetails.booking.status" @click.stop="cancelAttendee(BookingDetails.attendees[0])"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span>
+
                             <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="BookingDetails.deletePopup = true"><Icon name="Trash" size=16 />{{ $tfhb_trans('Delete') }}</span>
                             
                         </div>
@@ -423,6 +427,16 @@ const TfhbPrevNavigator = () => {
                                 </div>
                             </div>  
                             <!-- Booking Details Icon Box -->
+                            <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
+                                <Icon name="Contact" size=20 /> 
+                                <div class="tfhb-b-d-icon-content tfhb-details-status">
+                                    <h5>{{ $tfhb_trans('Status') }}</h5>
+                                    <div class="status" style="display: inline-block;" :class="BookingDetails.attendees[0].status">
+                                        {{ BookingDetails.attendees[0].status }}  
+                                    </div> 
+                                    
+                                </div>
+                            </div>
                             <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal">
                                 <Icon name="Globe" size=20 /> 
                                 <div class="tfhb-b-d-icon-content">
@@ -608,7 +622,7 @@ const TfhbPrevNavigator = () => {
                                     </span>
                                 
                                 </div> 
-                                <div class="tfhb-b-d-icon-cta ">  
+                                <div v-if="'canceled' != BookingDetails.booking.status" class="tfhb-b-d-icon-cta ">  
                                     <div  @click="activeSingleAttendeeAction(attendees.id)"  class="tfhb-booking-details-action tfhb-dropdown "> 
                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M9.99984 10.8327C10.4601 10.8327 10.8332 10.4596 10.8332 9.99935C10.8332 9.53911 10.4601 9.16602 9.99984 9.16602C9.5396 9.16602 9.1665 9.53911 9.1665 9.99935C9.1665 10.4596 9.5396 10.8327 9.99984 10.8327Z" stroke="#273F2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

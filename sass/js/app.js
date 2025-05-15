@@ -753,6 +753,7 @@
 			let calender_data = calenderData;
 			let availability = calender_data.availability;
 			let date_slots = availability.date_slots;  
+			
 			let time_slots = availability.time_slots;   
 			let availability_range = calender_data.availability_range;   
 			let availability_range_type = calender_data.availability_range_type;   
@@ -802,9 +803,8 @@
 			for (let i = 1; i <= lastdate; i++) { 
 				let isToday = i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? "active" : "";
 				let dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
-				let dateSlot = typeof date_slots !== 'undefined' ? date_slots.find(slot => slot.date.match(dateKey)) : "";
-				
-				let availabilityClass = (typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available === true) ? "inactive " : " ";
+				let dateSlot = typeof date_slots !== 'undefined' ? date_slots.find(slot => slot.date.match(dateKey)) : ""; 
+				let availabilityClass = (typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available == true) ? "inactive " : " ";
 				let dataAvailable = "available";
 		
 				if (new Date() > new Date(year, month, i) && i !== date.getDate()) {

@@ -90,7 +90,7 @@ class Enqueue {
 		// Localize the script
 		 
 		$embed_script_link = esc_html('<script src="' .TFHB_URL . 'assets/app/js/widget.js"></script>');
-		 $trans_string = array_merge(TransStrings::getTransStrings(), TransStrings::calendarTransString());
+		$trans_string = array_merge(TransStrings::getTransStrings(), TransStrings::calendarTransString());
 		$license = LicenseController::getInstance()->check_license();
 	
 		wp_localize_script(

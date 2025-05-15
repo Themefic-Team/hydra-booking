@@ -3,7 +3,7 @@
  * Plugin Name: Hydra Booking - All in One Appointment Booking System with Automated Appointment Scheduling.
  * Plugin URI: https://hydrabooking.com/
  * Description: Appointment Booking Plugin with Automated Scheduling - Apple/Outlook/ Google Calendar, WooCommerce, Zoom, Fluent Forms, Zapier, Mailchimp & CRM Integration.
- * Version: 1.1.8
+ * Version: 1.1.9
  * Tested up to: 6.8
  * Author: Themefic
  * Author URI: https://themefic.com/
@@ -26,13 +26,12 @@ class THB_INIT {
 		define( 'TFHB_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'TFHB_URL', plugin_dir_url( __FILE__ ) );
 
-		define( 'TFHB_VERSION', '1.1.8' );
+		define( 'TFHB_VERSION', '1.1.9' );
 		define( 'TFHB_BASE_FILE', __FILE__);
 
 
 		// Load Vendor Auto Load
 		if ( file_exists( TFHB_PATH . '/vendor/autoload.php' ) ) {
-
 			require_once TFHB_PATH . '/vendor/autoload.php';
 		}
 
@@ -43,12 +42,9 @@ class THB_INIT {
 			require_once TFHB_PATH . '/includes/Includes.php';
 		}
 		
-
 	
 		add_action( 'init', array( $this, 'init' ) ); 
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
-
-
 		
 		add_action('plugins_loaded', array($this, 'tfhb_load_textdomain'));
  
