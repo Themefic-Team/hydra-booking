@@ -582,7 +582,7 @@ const getIcon = (key) => {
         email: 'mail.png',
         phone: 'phone.png',
     };
-    return `<img src="${props.mediaurl}assets/images/calendar-days.webp}" alt="${key}" style="float: left;margin-right: 8px;">`;
+    return `<img src="${props.mediaurl}assets/images/${icons[key] || 'default.svg'}" alt="${key}" style="float: left;margin-right: 8px;">`;
 };
 
 const formatLabel = (key) => {
