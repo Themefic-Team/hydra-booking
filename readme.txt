@@ -209,6 +209,7 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 == Changelog ==
 
+
 = 1.1.9 – May 15, 2025 =
 
 - Added: Customizable email template system.
