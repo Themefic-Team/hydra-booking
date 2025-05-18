@@ -757,9 +757,12 @@ class HydraBookingShortcode {
 			),
 			1,
 			'DESC'
-		); 
+		);  
 		if('rescheduled' == $attendeeBooking->status){
 			wp_send_json_error( array( 'message' => esc_html(__('Booking is already rescheduled', 'hydra-booking')) ) );
+		}
+		if('canceled' == $attendeeBooking->status){
+			wp_send_json_error( array( 'message' => esc_html(__('Booking is already Canceled', 'hydra-booking')) ) );
 		}
 		 
  
