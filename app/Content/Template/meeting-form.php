@@ -75,7 +75,8 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 			echo '<form  method="post" action="" class="tfhb-meeting-form ajax-submit"  enctype="multipart/form-data">';
 			if ( is_array( $questions ) && ! empty( $questions ) ) {
 				$disable = ! empty( $booking_data ) ? 'disabled' : '';
-
+				$others_info = isset( $booking_data->others_info ) ? $booking_data->others_info : '';
+				$others_info = !is_array($others_info) ? json_decode( $others_info, true ) : $others_info; 
 				foreach ( $questions as $key => $question ) :  
 					if(isset($question['enable']) && $question['enable'] == 0){ 
 						continue;
@@ -102,9 +103,13 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 						$value = ! empty( $booking_data ) ? $booking_data->attendee_name : '';
 					} elseif ( $name == 'Address' || $name == 'address'  ) {
 						$value = ! empty( $booking_data ) ? $booking_data->address : '';
+					}elseif ( isset( $others_info[ $question['name'] ] ) ) { 
+						$value = $others_info[ $question['name']];
 					} else {
-						$value = '';
-					}
+							$value = '';
+						}
+				
+					
 					if ( empty( $question['type'] ) ) {
 						continue;
 					}
