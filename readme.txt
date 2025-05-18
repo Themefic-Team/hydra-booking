@@ -210,14 +210,14 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 == Changelog ==
 
 
-= 1.1.9 – May 15, 2025 =
+= 1.1.9 – May 18, 2025 =
 
 - Added: Customizable email template system.
 - Added: Rebooking option after booking cancellation.
 - Fixed: Booking reschedule functionality issue.
 - Fixed: Display issue on booking details page.
 - Fixed: Color picker default data not loading properly.
-- Fixed: Time slot visibility issue when related booking was canceled.
+- Fixed: Time slot visibility issue when the related booking is canceled.
 
 = 1.1.8 – May 05, 2025 =
 
