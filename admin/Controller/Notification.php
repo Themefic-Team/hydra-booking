@@ -20,7 +20,7 @@ class Notification {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getNotification' ),
-                'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+                'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -30,7 +30,7 @@ class Notification {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'MarkAsRead' ),
-                'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+                'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 	}
