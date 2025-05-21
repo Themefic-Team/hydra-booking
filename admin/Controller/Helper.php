@@ -21,6 +21,16 @@ class Helper {
             'slack' => array(),
         );
 
+        // Get image URL dynamically
+        $calendar_image_url = plugins_url('assets/images/calendar-days.png', dirname(__FILE__, 2));
+        $user_image_url = plugins_url('assets/images/user.png', dirname(__FILE__, 2));
+        $meeting_image_url = plugins_url('assets/images/Meeting.png', dirname(__FILE__, 2));
+        $file_image_url = plugins_url('assets/images/file-text.png', dirname(__FILE__, 2));
+        $location_image_url = plugins_url('assets/images/Location.png', dirname(__FILE__, 2));
+        $mail_image_url = plugins_url('assets/images/mail.png', dirname(__FILE__, 2));
+        $phone_image_url = plugins_url('assets/images/phone.png', dirname(__FILE__, 2));
+        
+
         //  Host Notification
         $notification['host']['booking_confirmation'] = array(
             'status' => 1,
@@ -49,7 +59,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="'.esc_url($calendar_image_url).'" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -65,7 +75,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -81,7 +91,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -97,7 +107,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -113,7 +123,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -135,7 +145,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -151,7 +161,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -167,7 +177,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -372,7 +382,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -388,7 +398,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -404,7 +414,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -420,7 +430,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -436,7 +446,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -458,7 +468,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -474,7 +484,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -490,7 +500,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -695,7 +705,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -711,7 +721,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -727,7 +737,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -743,7 +753,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -759,7 +769,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -781,7 +791,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -797,7 +807,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -813,7 +823,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1018,7 +1028,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1034,7 +1044,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1050,7 +1060,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1066,7 +1076,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1082,7 +1092,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1104,7 +1114,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1120,7 +1130,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1136,7 +1146,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1339,7 +1349,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1355,7 +1365,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1371,7 +1381,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1387,7 +1397,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1403,7 +1413,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1425,7 +1435,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1441,7 +1451,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1457,7 +1467,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1662,7 +1672,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1678,7 +1688,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1694,7 +1704,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1710,7 +1720,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1726,7 +1736,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1748,7 +1758,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1764,7 +1774,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1780,7 +1790,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -1985,7 +1995,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2001,7 +2011,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2017,7 +2027,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2033,7 +2043,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2049,7 +2059,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2071,7 +2081,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2087,7 +2097,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2103,7 +2113,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2307,7 +2317,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2323,7 +2333,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2339,7 +2349,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2355,7 +2365,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2371,7 +2381,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2393,7 +2403,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2409,7 +2419,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2425,7 +2435,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2631,7 +2641,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2647,7 +2657,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2663,7 +2673,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2679,7 +2689,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2695,7 +2705,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2717,7 +2727,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2733,7 +2743,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2749,7 +2759,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2952,7 +2962,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/calendar-days.png" alt="data_time" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($calendar_image_url) . '" alt="data_time" style="float: left;margin-right: 8px;">
                                             Date &amp; Time:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2968,7 +2978,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="host" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="host" style="float: left;margin-right: 8px;">
                                             Host:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -2984,7 +2994,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Meeting.png" alt="about" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($meeting_image_url) . '" alt="about" style="float: left;margin-right: 8px;">
                                             About:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -3000,7 +3010,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/file-text.png" alt="description" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($file_image_url) . '" alt="description" style="float: left;margin-right: 8px;">
                                             Description:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -3016,7 +3026,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/Location.png" alt="location" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($location_image_url) . '" alt="location" style="float: left;margin-right: 8px;">
                                             Location:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -3038,7 +3048,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/user.png" alt="name" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($user_image_url) . '" alt="name" style="float: left;margin-right: 8px;">
                                             Name:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -3054,7 +3064,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/mail.png" alt="email" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($mail_image_url) . '" alt="email" style="float: left;margin-right: 8px;">
                                             Email:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
@@ -3070,7 +3080,7 @@ class Helper {
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 24px;">
                                     <tbody><tr>
                                         <td style="vertical-align: top; font-size: 15px; width: 120px; min-width: 120px;">
-                                            <img src="http://tourfic-development-site.local/wp-content/plugins/hydra-booking/assets/images/phone.png" alt="phone" style="float: left;margin-right: 8px;">
+                                            <img src="' . esc_url($phone_image_url) . '" alt="phone" style="float: left;margin-right: 8px;">
                                             Phone:
                                         </td>
                                         <td style="padding-left: 32px;font-size: 15px; line-height: 24px; word-wrap: anywhere;">
