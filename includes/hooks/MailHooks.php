@@ -830,6 +830,46 @@ class MailHooks {
 			$rescheduled_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id . '&type=reschedule' );
 			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
 		}
+		
+		// Full start end time with timezone for attendee 
+		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
+		$replacements['{{booking.start_date_time_for_attendee}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
+		
+	
+		// Full start end time with timezone for host
+		$dateTime = new DateTimeController( 'UTC' );
+		$metting_dates = explode(',', $attendeeBooking->meeting_dates);
+		if($attendeeBooking->availability_time_zone != ''){
+			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'full' );  
+			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
+
+			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'start' );
+			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
+		}else{
+			$replacements['{{booking.full_start_end_host_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
+
+			$replacements['{{booking.start_date_time_for_host}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
+		}
+ 
+		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
+			$booking_locations = json_decode($attendeeBooking->meeting_locations); 
+			
+			$booking_locations_html = '';
+			foreach ($booking_locations as $key => $value) { 
+				if($key == 'zoom'){
+					$link = $value->address->link;
+					$password = $value->address->password;  
+					$booking_locations_html .= '<b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'<br>';
+				}else{
+					$booking_locations_html .= '<b>'.$value->location.' :</b> '.$value->address.'<br>'; 
+				}
+			}
+
+			$replacements['{{booking.location_details_html}}'] = $booking_locations_html;
+		}  
+		$tags   = array_keys( $replacements );
+		$values = array_values( $replacements ); 
+		$template = str_replace( $tags, $values, $template );
 
 		if ($attendeeBooking->attendee_can_cancel != 1 && $attendeeBooking->attendee_can_reschedule != 1) {
 			libxml_use_internal_errors(true); // Suppress warnings for invalid HTML
@@ -870,45 +910,8 @@ class MailHooks {
 			$template = $dom->saveHTML($dom->getElementsByTagName('body')->item(0));
 			$template = preg_replace('/^<body>|<\/body>$/', '', $template);
 		}
-		
-		// Full start end time with timezone for attendee 
-		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
-		$replacements['{{booking.start_date_time_for_attendee}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
-		
-	
-		// Full start end time with timezone for host
-		$dateTime = new DateTimeController( 'UTC' );
-		$metting_dates = explode(',', $attendeeBooking->meeting_dates);
-		if($attendeeBooking->availability_time_zone != ''){
-			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'full' );  
-			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
 
-			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'start' );
-			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
-		}else{
-			$replacements['{{booking.full_start_end_host_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
+		return $template;
 
-			$replacements['{{booking.start_date_time_for_host}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
-		}
- 
-		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
-			$booking_locations = json_decode($attendeeBooking->meeting_locations); 
-			
-			$booking_locations_html = '';
-			foreach ($booking_locations as $key => $value) { 
-				if($key == 'zoom'){
-					$link = $value->address->link;
-					$password = $value->address->password;  
-					$booking_locations_html .= '<b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'<br>';
-				}else{
-					$booking_locations_html .= '<b>'.$value->location.' :</b> '.$value->address.'<br>'; 
-				}
-			}
-
-			$replacements['{{booking.location_details_html}}'] = $booking_locations_html;
-		}  
-		$tags   = array_keys( $replacements );
-		$values = array_values( $replacements ); 
-		return str_replace( $tags, $values, $template );
 	}
 }
