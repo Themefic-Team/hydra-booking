@@ -600,7 +600,7 @@ const emailTemplate = computed(() => {
             
         }
         if (section.status && section.id === 'cancel_reschedule') {
-            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.value[key].border_color};border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.value[key].border_color};border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
                 if (emailBuilder.value[key].content.description.content && emailBuilder.value[key].content.description.status) {
                     emailContent += ` <tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.value[key].content.description.content}</td>
@@ -610,10 +610,10 @@ const emailTemplate = computed(() => {
                     emailContent += `<tr>
                     <td style="font-size: 15px; padding-bottom: 24px;">`;
                         if (emailBuilder.value[key].content.cancel.content && emailBuilder.value[key].content.cancel.status){
-                            emailContent += `<a href="${emailBuilder.value[key].content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
+                            emailContent += `<a href="${emailBuilder.value[key].content.cancel.content}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
                         }
                         if (emailBuilder.value[key].content.reschedule.content && emailBuilder.value[key].content.reschedule.status){
-                            emailContent += `<a href="${emailBuilder.value[key].content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
+                            emailContent += `<a href="${emailBuilder.value[key].content.reschedule.content}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
                         }
                     emailContent += `</td></tr>`;
                 }

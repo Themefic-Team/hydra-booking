@@ -826,10 +826,51 @@ class MailHooks {
 			$cancel_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id  . '&type=cancel' );
 			$replacements['{{booking.cancel_link}}'] = $cancel_link;
 		}
-		if( $attendeeBooking->attendee_can_cancel == 1){ 
+		if( $attendeeBooking->attendee_can_reschedule == 1){ 
 			$rescheduled_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id . '&type=reschedule' );
 			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
 		}
+
+		if ($attendeeBooking->attendee_can_cancel != 1 && $attendeeBooking->attendee_can_reschedule != 1) {
+			libxml_use_internal_errors(true); // Suppress warnings for invalid HTML
+			$dom = new \DOMDocument();
+			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+
+			$xpath = new \DOMXPath($dom);
+			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-cancel-reschedule-btn ')]") as $node) {
+				$node->parentNode->removeChild($node);
+			}
+
+			$template = $dom->saveHTML($dom->getElementsByTagName('body')->item(0));
+			$template = preg_replace('/^<body>|<\/body>$/', '', $template); // Strip body tags
+		} elseif ($attendeeBooking->attendee_can_cancel == 1 && $attendeeBooking->attendee_can_reschedule != 1) {
+			// Remove only cancel button
+			libxml_use_internal_errors(true);
+			$dom = new \DOMDocument();
+			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+
+			$xpath = new \DOMXPath($dom);
+			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-reschedule-btn ')]") as $node) {
+				$node->parentNode->removeChild($node);
+			}
+
+			$template = $dom->saveHTML($dom->getElementsByTagName('body')->item(0));
+			$template = preg_replace('/^<body>|<\/body>$/', '', $template);
+		} elseif ($attendeeBooking->attendee_can_cancel != 1 && $attendeeBooking->attendee_can_reschedule == 1) {
+			// Remove only cancel button
+			libxml_use_internal_errors(true);
+			$dom = new \DOMDocument();
+			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+
+			$xpath = new \DOMXPath($dom);
+			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-cancel-btn ')]") as $node) {
+				$node->parentNode->removeChild($node);
+			}
+
+			$template = $dom->saveHTML($dom->getElementsByTagName('body')->item(0));
+			$template = preg_replace('/^<body>|<\/body>$/', '', $template);
+		}
+		
 		// Full start end time with timezone for attendee 
 		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
 		$replacements['{{booking.start_date_time_for_attendee}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
