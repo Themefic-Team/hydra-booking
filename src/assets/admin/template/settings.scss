@@ -323,7 +323,8 @@
 						box-shadow: none;
 					}
 
-					&.integrations-submenu {
+					&.integrations-submenu,
+					&.notification-submenu {
 						position: relative;
 					}
 

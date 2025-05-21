@@ -10,9 +10,10 @@ import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
-import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue';
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
-import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
+import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
+import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
+import SlackIntegration from '@/components/integrations/SlackIntegrations.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -41,17 +42,20 @@ const paypalpopup = ref(false);
 const spopup = ref(false);
 const zohopopup = ref(false);
 const mailpopup = ref(false);
+const telepopup = ref(false);
+const twpopup = ref(false);
+const skpopup = ref(false);
 const isPopupOpen = () => {
     popup.value = true;
 }
 const isPopupClose = (data) => {
     popup.value = false;
 }
-const ispaypalPopupOpen = () => {
-    paypalpopup.value = true;
+const istwPopupOpen = () => {
+    twpopup.value = true;
 }
-const ispaypalPopupClose = (data) => {
-    paypalpopup.value = false;
+const istwPopupClose = (data) => {
+    twpopup.value = false;
 }
 const isZohoPopupOpen = () => {
     zohopopup.value = true;
@@ -59,11 +63,17 @@ const isZohoPopupOpen = () => {
 const isZohoPopupClose = (data) => {
     zohopopup.value = false;
 }
-const isstripePopupOpen = () => {
-    spopup.value = true;
+const istelePopupOpen = () => {
+    telepopup.value = true;
 }
-const isstripePopupClose = (data) => {
-    spopup.value = false;
+const istelePopupClose = (data) => {
+    telepopup.value = false;
+}
+const isskPopupOpen = () => {
+    skpopup.value = true;
+}
+const isskPopupClose = (data) => {
+    skpopup.value = false;
 }
 const ismailchimpPopupOpen = () => {
     mailpopup.value = true;
@@ -128,6 +138,29 @@ const Integration = reactive( {
         refresh_token: '',
         modules: ''
     },
+    telegram : {
+        type: 'telegram', 
+        status: 0, 
+        connection_status: 0, 
+        bot_token: '',
+        chat_id: '',
+    },
+    twilio : {
+        type: 'twilio', 
+        status: 0, 
+        connection_status: 0, 
+        otp_type: 'whatsapp',
+        receive_number: '',
+        from_number: '',
+        sid: '',
+        token: '',
+    },
+    slack : {
+        type: 'slack', 
+        status: 0, 
+        connection_status: 0, 
+        endpoint: '',
+    },
 });
  
 
@@ -154,6 +187,9 @@ const fetchIntegration = async () => {
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
             Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
+            Integration.telegram = response.data.telegram  ? response.data.telegram  : Integration.telegram ; 
+            Integration.twilio = response.data.twilio  ? response.data.twilio  : Integration.twilio ; 
+            Integration.slack = response.data.slack  ? response.data.slack  : Integration.slack ; 
             
 
             skeleton.value = false;
@@ -190,9 +226,11 @@ const UpdateIntegration = async (key, value) => {
             popup.value = false;
             paypalpopup.value = false;
             spopup.value = false;
+            telepopup.value = false;
+            twpopup.value = false;
             mailpopup.value = false;
             zohopopup.value = false;
-            
+            skpopup.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
@@ -262,6 +300,39 @@ onBeforeMount(() => {
         @popup-close-control="isZohoPopupClose" 
         />
         <!-- Zoho intrigation -->
+
+        <!-- telegram intrigation -->
+        <TelegramIntregration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        :telegram_data="Integration.telegram" 
+        @update-integrations="UpdateIntegration" 
+        from="host"
+        :ispopup="telepopup"
+        @popup-open-control="istelePopupOpen"
+        @popup-close-control="istelePopupClose" 
+        />
+        <!-- telegram intrigation -->
+
+        <!-- twilio intrigation -->
+        <TwilioIntegration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        :twilio_data="Integration.twilio" 
+        @update-integrations="UpdateIntegration" 
+        from="host"
+        :ispopup="twpopup"
+        @popup-open-control="istwPopupOpen"
+        @popup-close-control="istwPopupClose" 
+        />
+        <!-- twilio intrigation -->
+
+        <!-- slack intrigation -->
+        <SlackIntegration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        :slack_data="Integration.slack" 
+        @update-integrations="UpdateIntegration" 
+        from="host"
+        :ispopup="skpopup"
+        @popup-open-control="isskPopupOpen"
+        @popup-close-control="isskPopupClose" 
+        />
+        <!-- slack intrigation -->
 
     </div> 
 </template>
