@@ -18,8 +18,13 @@ const appearanceSettings = reactive({
   themes: 'System default',
   colors_palette: 'default',
   primary_color: '#2E6B38',
+  primary_hover: '#4C9959',
   secondary_color: '#273F2B',
+  secondary_hover: '#E1F2E4',
+  text_title_color: '#141915',
   paragraph_color: '#273F2B',
+  surface_primary: '#C0D8C4',
+  surface_background: '#EEF6F0',
   titleTypo: '',
   desTypo: '',
 });
@@ -39,8 +44,13 @@ try {
         appearanceSettings.themes = response.data.appearance_settings.themes ? response.data.appearance_settings.themes : 'System default';
         appearanceSettings.colors_palette = response.data.appearance_settings.colors_palette ? response.data.appearance_settings.colors_palette : 'default';
         appearanceSettings.primary_color = response.data.appearance_settings.primary_color ? response.data.appearance_settings.primary_color : '#2E6B38';
+        appearanceSettings.primary_hover = response.data.appearance_settings.primary_hover ? response.data.appearance_settings.primary_hover : '#4C9959';
         appearanceSettings.secondary_color = response.data.appearance_settings.secondary_color ? response.data.appearance_settings.secondary_color : '#273F2B';
+        appearanceSettings.secondary_hover = response.data.appearance_settings.secondary_hover ? response.data.appearance_settings.secondary_hover : '#E1F2E4';
+        appearanceSettings.text_title_color = response.data.appearance_settings.text_title_color ? response.data.appearance_settings.text_title_color : '#141915';
         appearanceSettings.paragraph_color = response.data.appearance_settings.paragraph_color ? response.data.appearance_settings.paragraph_color : '#273F2B';
+        appearanceSettings.surface_primary = response.data.appearance_settings.surface_primary ? response.data.appearance_settings.surface_primary : '#C0D8C4';
+        appearanceSettings.surface_background = response.data.appearance_settings.surface_background ? response.data.appearance_settings.surface_background : '#EEF6F0';
         appearanceSettings.titleTypo = response.data.appearance_settings.titleTypo ? response.data.appearance_settings.titleTypo : '';
         appearanceSettings.desTypo = response.data.appearance_settings.desTypo ? response.data.appearance_settings.desTypo : '';
         skeleton.value = false;
@@ -79,10 +89,15 @@ const UpdateAppearanceSettings = async () => {
 const ChangeColors = (value,  colors) => {
 
     appearanceSettings.colors_palette = value;  
-    if('custom' != appearanceSettings.colors_palette){  
+    if('custom' != appearanceSettings.colors_palette){   
         appearanceSettings.primary_color = colors.primary; 
+        appearanceSettings.primary_hover = colors.primary_hover; 
         appearanceSettings.secondary_color = colors.secondary; 
-        appearanceSettings.paragraph_color = colors.text_title;  
+        appearanceSettings.secondary_hover = colors.secondary_hover; 
+        appearanceSettings.text_title_color = colors.text_title;  
+        appearanceSettings.paragraph_color = colors.text_paragraph;  
+        appearanceSettings.surface_primary = colors.surface_primary;  
+        appearanceSettings.surface_background = colors.surface_background;  
     }
     
 }
@@ -142,8 +157,8 @@ onBeforeMount(() => {
                     width="33" 
                     :class="{ 'active': appearanceSettings.colors_palette == 'default' }"
                     value="default"
-                    @click="ChangeColors('default',{  primary: '#2E6B38', secondary: '#273F2B', text_title: '#273F2B', })"
-                    :colors ="{  primary: '#2E6B38', secondary: '#273F2B', text_title: '#273F2B', }"
+                    @click="ChangeColors('default',{  primary: '#2E6B38', secondary: '#273F2B', text_title: '#141915', text_paragraph: '#273F2B', primary_hover: '#4C9959', secondary_hover: '#E1F2E4', surface_primary: '#C0D8C4' })"
+                    :colors ="{  primary: '#2E6B38', secondary: '#273F2B', text_title: '#141915', text_paragraph: '#273F2B', primary_hover: '#4C9959', secondary_hover: '#E1F2E4', surface_primary: '#C0D8C4', surface_background: '#EEF6F0'  }"
                 />  
                 <HbColorPalette  
                     v-model="appearanceSettings.colors_palette"   
@@ -153,15 +168,102 @@ onBeforeMount(() => {
                     value="custom"
                     :class="{ 'active': appearanceSettings.colors_palette == 'custom' }"
                     width="33"
-                    @click="ChangeColors('custom',{  primary: '', secondary: '', paragraph_color: '', text_title: '',  })"
-                    :colors ="{  primary: '', secondary: '', paragraph_color: '', text_title: '',  }"
+                    @click="ChangeColors('custom',{  primary: '', secondary: '', text_title: '', text_paragraph: '', primary_hover: '', secondary_hover: '', surface_primary: '', surface_background: ''    })"
+                    :colors ="{  primary: '', secondary: '', text_title: '', text_paragraph: '', primary_hover: '', secondary_hover: '',surface_primary: '', surface_background: ''  }"
                 />  
                 
             </div>
-            <div  v-if="appearanceSettings.colors_palette == 'custom'"  @click.stop class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24">
+            <div  v-if="appearanceSettings.colors_palette == 'custom'"  @click.stop class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-24">
+                <HbColor  
+                    v-model="appearanceSettings.primary_color" 
+                    key = "primary_color"  
+                    :label="$tfhb_trans('Primary Color (Default)')"
+                    name="Primary"
+                    selected = "1" 
+                    width="50"  
+                />  
+                <HbColor  
+                    v-model="appearanceSettings.primary_hover"
+                    key = "primery_hover"     
+                    :label="$tfhb_trans('Primary Color (Hover)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="appearanceSettings.secondary_color" 
+                    key = "secondary_default"    
+                    :label="$tfhb_trans('Secondary Color (Default)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="appearanceSettings.secondary_hover"
+                    key = "secondary_hover"     
+                    :label="$tfhb_trans('Secondary Color (Hover)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="appearanceSettings.text_title_color" 
+                    key = "text_title"    
+                    :label="$tfhb_trans('Text Color (Title)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="appearanceSettings.paragraph_color" 
+                    key = "text_paragraph"    
+                    :label="$tfhb_trans('Text Color (Paragraph)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="appearanceSettings.surface_primary" 
+                    key = "surface_primary"    
+                    :label="$tfhb_trans('Surface Color (Primary)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="appearanceSettings.surface_background" 
+                    key = "surface_background"    
+                    :label="$tfhb_trans('Surface Color (Background)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <!--  -->
+                <!--
+                <HbColor  
+                    v-model="props.FrontendDashboard.fd_dashboard.general.surface_background" 
+                    key = "surface_background"    
+                    :label="$tfhb_trans('Surface Color (Background)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="props.FrontendDashboard.fd_dashboard.general.surface_border"  
+                    key = "surface_border"   
+                    :label="$tfhb_trans('Surface Color (Border)')"  
+                    selected = "1" 
+                    width="50" 
+                />  
+                <HbColor  
+                    v-model="props.FrontendDashboard.fd_dashboard.general.surface_border_hover"  
+                    key = "surface_border_hover"   
+                    :label="$tfhb_trans('Surface Color (Border Hover)')"  
+                    selected = "1" 
+                    width="50" 
+                />
+                <HbColor  
+                    v-model="props.FrontendDashboard.fd_dashboard.general.surface_input_field"  
+                    key = "surface_input_field"   
+                    :label="$tfhb_trans('Surface Color (Input Field)')"  
+                    selected = "1" 
+                    width="50" 
+                />   -->
                 <div class="tfhb-colorbox tfhb-full-width">
                      
-                    <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
+                    <!-- <div class="tfhb-single-colorbox tfhb-flexbox tfhb-mb-16 tfhb-justify-between">
                         <label>
                             {{ $tfhb_trans('Primary Color') }}
                             
@@ -203,7 +305,7 @@ onBeforeMount(() => {
                                 :withoutInput="true" />
                             <span>{{ $tfhb_trans('Select Color') }}</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 
             </div>
