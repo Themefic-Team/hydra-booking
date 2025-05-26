@@ -62,8 +62,7 @@ const Booking = reactive({
         }
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/lists', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -83,8 +82,7 @@ const Booking = reactive({
         }
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/get-availability-dates', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -101,8 +99,7 @@ const Booking = reactive({
         }
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/get-availability-time-slot', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -125,8 +122,7 @@ const Booking = reactive({
         }
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/re-book-meeting', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 

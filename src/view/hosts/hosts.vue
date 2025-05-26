@@ -35,8 +35,7 @@ const fetchHosts = async () => {
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/lists',{
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         });
         if (response.data.status) { 
@@ -90,8 +89,7 @@ const CreateHosts = async (validator_field) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/create', host, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -135,8 +133,7 @@ const deleteHost = async ($id, $user_id) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/delete', deleteHost, { 
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             }
         }  );
         if (response.data.status) { 
@@ -161,8 +158,7 @@ const updateHostStatus = async ($id, $user_id, $status) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/update-status', HostData, { 
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             }
         } );
         if (response.data.status) { 
@@ -196,8 +192,7 @@ const Tfhb_Host_Filter = async (e) =>{
                 filterData
             },
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_integrations'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             }
         });
         

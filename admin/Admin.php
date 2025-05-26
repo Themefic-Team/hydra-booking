@@ -1,8 +1,7 @@
 <?php
 namespace HydraBooking\Admin;
 
-use HydraBooking\Admin\Controller\AdminMenu;
-use HydraBooking\Admin\Controller\AvailabilityController;
+use HydraBooking\Admin\Controller\AdminMenu; 
 use HydraBooking\Admin\Controller\Notification;
 use HydraBooking\Admin\Controller\UpdateController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
@@ -27,9 +26,7 @@ class Admin {
 
 		// admin menu
 		new AdminMenu();
-
-		// availability controller
-		new AvailabilityController();
+ 
 
 		// update controller
 		new UpdateController();

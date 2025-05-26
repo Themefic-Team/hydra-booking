@@ -1,7 +1,6 @@
 <?php
 namespace HydraBooking\Admin\Controller;
-
-use HydraBooking\Admin\Controller\AvailabilityController;
+ 
 use HydraBooking\Admin\Controller\SettingsController;
 use HydraBooking\Admin\Controller\HostsController;
 use HydraBooking\Admin\Controller\MeetingController;
@@ -26,8 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class RouteController {
 
 	// constaract
-	public function __construct() {
-		$this->create( new AvailabilityController(), 'create_endpoint' );
+	public function __construct() { 
 		$this->create( new SettingsController(), 'create_endpoint' );
 		$this->create( new HostsController(), 'create_endpoint' );
 		$this->create( new MeetingController(), 'create_endpoint' );
@@ -52,5 +50,18 @@ class RouteController {
 		 
 		// check current user have capability
 		return current_user_can( $capability );
+	}
+
+	public function tfhb_manage_options_permission(){
+		return current_user_can( 'tfhb_manage_options' );
+	}
+	public function tfhb_manage_integrations_permission(){
+		return current_user_can( 'tfhb_manage_integrations' );
+	}
+	public function tfhb_manage_hosts_permission(){
+		return current_user_can( 'tfhb_manage_hosts' );
+	}
+	public function tfhb_manage_custom_availability_permission(){
+		return current_user_can( 'tfhb_manage_custom_availability' );
 	}
 }

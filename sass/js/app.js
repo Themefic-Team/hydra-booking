@@ -145,26 +145,38 @@
 				$this.find('.tfhb-meeting-times').css("display", "block").animate({left: "0%", opacity: 1, width: 224}, 400,);
 
 
-				$this.find('.tfhb-available-times').removeClass('inactive');  
+				$this.find('.tfhb-available-times').removeClass('inactive');
 				$this.find('.tfhb-available-times').html('');
 				$this.find('.tfhb-available-times').append('<ul></ul>');
+
 				var selected_date = $this_li.attr('data-date'); 
 				$this.find("#meeting_dates").val(selected_date);
-				// selected_date_format = new Date(selected_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-				// Get Only Day 
-				var selected_date_format_weekday = tfhbTranslate(new Date(selected_date).toLocaleDateString('en-US', { weekday: 'long' }));  
-				var selected_date_format_month = tfhbTranslate(new Date(selected_date).toLocaleDateString('en-US', { month: 'long' }));  
-				var selected_date_format_day = tfhbTranslateNumber(new Date(selected_date).toLocaleDateString('en-US', { day: 'numeric' }));  
-				// Format like tat "Tuesday, March 4"
-				var selected_date_format =  selected_date_format_weekday+', '+selected_date_format_month+ ' '+selected_date_format_day;
-                // Set the date in the select box
-				// selected_date_format_day 
-				// translate the selected
-				// alert(selected_date_format_day);
 
-				 
+				// Safely create a Date object (adding 'T00:00:00' ensures local time)
+				var dateObj = new Date(selected_date + 'T00:00:00');
 
-				$this.find('.tfhb-meeting-times .tfhb-select-date').html(selected_date_format); 
+				// Fallback for invalid date
+				if (isNaN(dateObj.getTime())) {
+					console.error('Invalid date:', selected_date);
+					return;
+				}
+
+				// Extract formatted components
+				var selected_date_format_weekday = tfhbTranslate(
+					dateObj.toLocaleDateString('en-US', { weekday: 'long' })
+				);
+				var selected_date_format_month = tfhbTranslate(
+					dateObj.toLocaleDateString('en-US', { month: 'long' })
+				);
+				var selected_date_format_day = tfhbTranslateNumber(
+					dateObj.toLocaleDateString('en-US', { day: 'numeric' })
+				);
+
+				// Final formatted string: "Tuesday, March 4"
+				var selected_date_format = `${selected_date_format_weekday}, ${selected_date_format_month} ${selected_date_format_day}`;
+
+				// Set the formatted date in the element
+				$this.find('.tfhb-meeting-times .tfhb-select-date').html(selected_date_format);
 				// get selected date calenderData.calander_available_time_slot
 				var selected_date_time_slot = calenderData.calander_available_time_slot[selected_date]; 
 				// if selected_date_time_slot is not empty

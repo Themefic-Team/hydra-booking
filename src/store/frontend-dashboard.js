@@ -28,8 +28,7 @@ export const FdDashboard = reactive({
                userAuthData: tfhb_core_apps.user 
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -54,8 +53,7 @@ export const FdDashboard = reactive({
                 userAuth: this.userAuth 
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -77,8 +75,7 @@ export const FdDashboard = reactive({
                 userAuth: this.userAuth, 
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_hosts'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -115,8 +112,7 @@ export const FdDashboard = reactive({
                 pass_data: this.pass_data
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_hosts'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
