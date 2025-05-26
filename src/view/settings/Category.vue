@@ -65,8 +65,7 @@ const UpdateCategory = async (validator_field) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories/create-update', CategoryData, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
       
@@ -109,8 +108,7 @@ const removeCategory = async (key) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories/delete', DeleteData, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
       

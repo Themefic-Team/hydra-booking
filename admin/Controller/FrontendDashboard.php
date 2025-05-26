@@ -32,7 +32,7 @@ class FrontendDashboard {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetFrontendDashboardSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		); 
 		register_rest_route(
@@ -41,7 +41,7 @@ class FrontendDashboard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateFrontendDashboardSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
         // Frontend Dashboard Profile
@@ -51,7 +51,7 @@ class FrontendDashboard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'GetFdUserAuth' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		); 
         // Logout
@@ -61,7 +61,7 @@ class FrontendDashboard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'LogoutFdUser' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		); 
 
@@ -72,7 +72,7 @@ class FrontendDashboard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateFdUserProfile' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_hosts_permission'),
 			)
 		); 
 
@@ -83,7 +83,7 @@ class FrontendDashboard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ChangeFdUserPassword' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_hosts_permission'),
 			)
 		); 
 

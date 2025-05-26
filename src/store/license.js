@@ -18,8 +18,7 @@ const LicenseBase = reactive({
         try {  
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/license', {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -54,8 +53,7 @@ const LicenseBase = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/license/update', data, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -103,8 +101,7 @@ const LicenseBase = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/license/deactivate', {}, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     

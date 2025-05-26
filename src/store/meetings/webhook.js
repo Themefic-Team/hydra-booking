@@ -36,8 +36,7 @@ const webhookData = reactive({
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/integration/update', this.integrationsData, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             });
             if (response.data.status == true) { 
@@ -66,8 +65,7 @@ const webhookData = reactive({
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/integration/delete', data, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
             if (response.data.status) { 
@@ -99,8 +97,7 @@ const webhookData = reactive({
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/delete', deleteMeeting, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
             if (response.data.status) { 

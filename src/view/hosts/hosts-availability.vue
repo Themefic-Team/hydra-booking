@@ -153,8 +153,7 @@ const fetchAvailabilitySingle = async (setting) => {
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/'+setting, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_hosts'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
         if (response.data.status) { 
@@ -183,8 +182,7 @@ const fetchAvailabilitySettings = async () => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/availability', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_hosts'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
         
@@ -236,8 +234,7 @@ const deleteAvailabilitySettings = async (key, id, user_id ) => {
   try { 
       const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/availability/delete', deleteAvailability, {
         headers: {
-            'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-            'capability': 'tfhb_manage_options'
+            'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
         }
       } );
       if (response.data.status) { 
@@ -259,8 +256,7 @@ const fetchDefaultAvailabilitySingle = async (setting) => {
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/'+setting, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_hosts'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         }); 
         if (response.data.status) { 

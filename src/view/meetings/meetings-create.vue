@@ -362,8 +362,7 @@ const fetchMeeting = async () => {
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/'+meetingId, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         });
         if (response.data.status == true) { 
@@ -546,8 +545,7 @@ const UpdateMeetingData = async (validator_field) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/details/update', meetingData, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         });
         if (response.data.status == true) { 

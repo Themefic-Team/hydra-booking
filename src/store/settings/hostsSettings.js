@@ -26,8 +26,7 @@ const hostsSettings = reactive({
         try {  
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/hosts-settings', {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -55,8 +54,7 @@ const hostsSettings = reactive({
                 hosts_settings: this.settings
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
