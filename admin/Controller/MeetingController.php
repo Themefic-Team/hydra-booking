@@ -32,7 +32,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getMeetingsData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -41,7 +41,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateMeeting' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -50,7 +50,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteMeeting' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Get Single Meeting based on id
@@ -60,7 +60,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getMeetingData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -69,7 +69,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateMeeting' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -79,7 +79,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'cloneMeeting' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -89,7 +89,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateMeetingWebhook' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -98,7 +98,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'deleteMeetingWebhook' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 	 
@@ -109,7 +109,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateMeetingIntegration' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -118,7 +118,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'deleteMeetingIntegration' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -127,7 +127,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getIntegrationModulsFields' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -137,7 +137,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterMeetings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -153,7 +153,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getMeetingsCategories' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -162,7 +162,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'createupdateMeeting' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -171,7 +171,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteCategory' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -182,7 +182,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getTheHostAvailabilityData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 			)
 		);
 
@@ -192,7 +192,7 @@ class MeetingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getQuestionFormsList' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -203,7 +203,7 @@ class MeetingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'fetchMeetingsPaymentIntegration' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 	}
@@ -772,6 +772,16 @@ class MeetingController {
 		return rest_ensure_response( $data );
 	}
 
+	private function ensureBuilderKeyExists(&$notifications) {
+        foreach ($notifications as $role => &$notificationsData) {
+            foreach ($notificationsData as $key => &$notification) {
+                if (!isset($notification['builder'])) {
+                    $notification['builder'] = '';
+                }
+            }
+        }
+    }
+
 	// Get Single Meeting
 	public function getMeetingData( $request ) {
 		$id = $request['id'];
@@ -810,6 +820,8 @@ class MeetingController {
 			}
 			$MeetingData->notification   = $_tfhb_notification_settings;
 		}
+
+		$this->ensureBuilderKeyExists($MeetingData->notification);
 
 		// Integration
 		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();

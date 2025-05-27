@@ -33,7 +33,34 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getBookingsData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+			)
+		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/get-availability-dates',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'getAvailabilityDates' ),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+			)
+		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/get-availability-time-slot',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'getAvailabilityTimeSlot' ),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+			)
+		);
+		register_rest_route(
+			'hydra-booking/v1',
+			'/booking/re-book-meeting',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'ReBookCencelMeeting' ),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -42,7 +69,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -51,7 +78,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Get Single Booking based on id
@@ -61,7 +88,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getBookingData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Get Single Booking based on id
@@ -71,7 +98,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getBookingDetails' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Change Attendee email Attendee.
@@ -81,7 +108,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'changeBookingDetailsStatus' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Cancel Booking Attendee.
@@ -91,7 +118,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'cancelBookingAttendee' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -101,7 +128,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -110,7 +137,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateBulkStatus' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -121,7 +148,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'sendReminderEmail' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// booking reminder email Attendee.
@@ -131,7 +158,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'sendReminderAttendeeEmail' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Change Attendee email Attendee.
@@ -141,7 +168,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'changeAttendeeStatus' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -152,7 +179,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateInternalNotes' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		
@@ -164,7 +191,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getPreBookingsData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -173,7 +200,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getpreMeetingData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -182,7 +209,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getAvailableTimeData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -193,7 +220,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'exportBookingDataAs' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 			)
 		);
 
@@ -217,6 +244,7 @@ class BookingController {
 
 	// Booking List
 	public function getBookingsData() {
+	
 		$request = json_decode( file_get_contents( 'php://input' ), true ); 
 		$filter_data = isset( $request['filter_data'] ) ? $request['filter_data'] : '';
 
@@ -387,14 +415,212 @@ class BookingController {
 			}
 			$booking_list = $filteredData;
 		} 
+		// Time Zone
+		$DateTimeZone           = new DateTimeController( 'UTC' );
+		$time_zone              = $DateTimeZone->TimeZone();
 		// Return response
 		$data = array(
-			'status'           => true,
-			'bookings'         => $booking_list,
-			'booking_calendar' => $booking_array,
-			'message'          => 'Booking Data Successfully Retrieve!',
+			'status'           	=> true,
+			'bookings'         	=> $booking_list,
+			'booking_calendar' 	=> $booking_array,
+			'time_zone' 		=> $time_zone,
+			'message'          	=> 'Booking Data Successfully Retrieve!',
 		);
 		return rest_ensure_response( $data );
+	}
+
+	// Get getAvailabilityTimeSlot
+	public function getAvailabilityDates(){
+		// current user can manage booking 
+		// get current user
+		if ( ! current_user_can( 'tfhb_manage_booking' ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __('You are not allowed to access this page', 'hydra-booking'),
+			) );
+
+		}
+
+		$request = json_decode( file_get_contents( 'php://input' ), true );  
+		$meeting_id = isset( $request['meeting_id'] ) ? $request['meeting_id'] : '';
+		$selected_time_zone = isset( $request['selected_time_zone'] ) ? $request['selected_time_zone'] : '';
+		$date_time = new DateTimeController( $selected_time_zone );
+		$meeting = new Meeting();
+		$meeting_data = $meeting->get( $meeting_id );  
+		$meeting_data = (array) $meeting_data;
+		$user_id = $meeting_data['user_id'];
+		
+		// $AvailabilityData = $date_time->GetAvailabilityData( $meeting_data ); 
+		if ( isset( $meeting_data['availability_type'] ) && 'settings' === $meeting_data['availability_type'] ) {
+			$_tfhb_availability_settings = get_user_meta( $user_id, '_tfhb_host', true ); 
+			
+			if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] == 'settings'){
+				$host_settings_availability_id = $_tfhb_availability_settings['availability_id'];
+				$_tfhb_availability_settings =  get_option( '_tfhb_availability_settings' );
+
+				if ( is_array($_tfhb_availability_settings)  ) { 
+					$key = array_search($host_settings_availability_id, array_column($_tfhb_availability_settings, 'id'));
+					//  _tfhb_availability_settings index id wich is match with host settings availability id
+					if(isset($_tfhb_availability_settings[ $key ])){
+
+						$AvailabilityData = $_tfhb_availability_settings[ $key ];
+					}else{
+						$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+					} 
+				} else {
+					$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+				} 
+			}elseif (isset($_tfhb_availability_settings['availability']) &&  in_array( $meeting_data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+				
+				$AvailabilityData = $_tfhb_availability_settings['availability'][ $meeting_data['availability_id'] ];
+				
+				
+			} else {
+				$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+			}
+		} else {
+
+			$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
+		}
+		$AvailabilityData = !is_array( $AvailabilityData ) && !empty( $AvailabilityData ) ? json_decode( $AvailabilityData, true )  : $AvailabilityData;
+	 
+
+		// Map weekdays to numeric keys
+		$dayMap = [
+			'Sunday' => 0,
+			'Monday' => 1,
+			'Tuesday' => 2,
+			'Wednesday' => 3,
+			'Thursday' => 4,
+			'Friday' => 5,
+			'Saturday' => 6
+		];
+
+		// 2. Extract disabled days (status != 1)
+		$disabled_days = [];
+		foreach ($AvailabilityData['time_slots'] as $slot) {
+			if ($slot['status'] != 1) {
+				$dayName = $slot['day'];
+				if (isset($dayMap[$dayName])) {
+					$disabled_days[] = $dayMap[$dayName];
+				}
+			}
+		}
+
+		// 3. Extract disabled specific dates (available == 1)
+		$disabled_dates = [];
+		foreach ($AvailabilityData['date_slots'] as $dateSlot) {
+			if ($dateSlot['available'] == 1) {
+				$dates = explode(',', $dateSlot['date']);
+				foreach ($dates as $date) {
+					$disabled_dates[] = trim($date);
+				}
+			}
+		}
+	 
+
+		$data = array(
+			'status'    => true,
+			'disabled_days' => $disabled_days, 
+			'disabled_dates' => $disabled_dates, 
+		);
+		return rest_ensure_response( $data );
+	 
+	}
+	// Get getAvailabilityTimeSlot
+	public function getAvailabilityTimeSlot(){
+		if ( ! current_user_can( 'tfhb_manage_booking' ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __('You are not allowed to access this page', 'hydra-booking'),
+			) );
+
+		} 
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$select_date = isset( $request['select_date'] ) ? $request['select_date'] : '';
+		$meeting_id = isset( $request['meeting_id'] ) ? $request['meeting_id'] : '';
+		$selected_time_zone = isset( $request['selected_time_zone'] ) ? $request['selected_time_zone'] : '';
+		$date_time = new DateTimeController( $selected_time_zone );
+		$all_month_data = $date_time->getAvailableTimeData( $meeting_id, $select_date, $selected_time_zone, '12' );
+	 
+		$time_slot = [];
+		foreach ( $all_month_data as $key => $value ) {
+			$time_slot[] = array(
+				'value' => json_encode($value),
+				'name'  => $value['start'] .' - '. $value['end'] ,
+			);
+		}
+
+		$data = array(
+			'status'    => true,
+			'time_slot' => $time_slot, 
+		);
+		return rest_ensure_response( $data );
+	 
+	}
+
+	// Rebook Cencel Meeting 
+	public function ReBookCencelMeeting(){
+
+		if ( ! current_user_can( 'tfhb_manage_booking' ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __('You are not allowed to access this page', 'hydra-booking'),
+			) );
+
+		}
+		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$select_date = isset( $request['select_date'] ) ? $request['select_date'] : '';
+		$booking_id = isset( $request['booking_id'] ) ? $request['booking_id'] : '';
+		$meeting_id = isset( $request['meeting_id'] ) ? $request['meeting_id'] : '';
+		$availability_time_zone = isset( $request['availability_time_zone'] ) ? $request['availability_time_zone'] : '';
+		$select_date = isset( $request['select_date'] ) ? $request['select_date'] : '';
+		$select_time_slot = isset( $request['select_time_slot'] ) ? $request['select_time_slot'] : '';
+		$select_status = isset( $request['select_status'] ) ? $request['select_status'] : '';
+		$select_time_slot = json_decode( $select_time_slot, true ); 
+		$start_time = $select_time_slot['start'];
+		$end_time = $select_time_slot['end'];
+
+		// get booking data with attendees 
+		$booking = new Booking();
+		$where = array(
+			array('id', '=', $booking_id),
+		);
+		 $single_booking = $booking->getBookingWithAttendees(  
+			$where,
+			1,
+			'DESC',
+		);
+		// if booking is not empty and not exist 
+		if( ! empty( $single_booking ) && $single_booking->id != $booking_id ){
+			// return error message
+			$data = array(
+				'status'    => false,
+				'message' => 'Booking is not exist', 
+			);
+			return rest_ensure_response( $data );
+		}  
+		$booking->update(
+			array(
+				'id' => $booking_id,
+				'meeting_dates' => $select_date,
+				'start_time' => $start_time,
+				'end_time' => $end_time,
+				'availability_time_zone' => $availability_time_zone,
+				'status' => $select_status, 
+			)
+		);
+
+		// 
+		// return witn success message
+		$data = array(
+			'status'    => true,
+			'message' => 'Booking is updated successfully', 
+		);
+		return rest_ensure_response( $data );
+
+ 
+
 	}
 
 	// Pre Booking Data
@@ -412,6 +638,8 @@ class BookingController {
 				'value' => '' . $single->id . '',
 			);
 		}
+
+		
 
 		$data = array(
 			'status'    => true,

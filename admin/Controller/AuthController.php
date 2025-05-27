@@ -21,7 +21,7 @@ class AuthController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getUserAuth' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 	}

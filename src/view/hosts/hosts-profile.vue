@@ -86,8 +86,7 @@ const UpdateHostsInformation = async (validator_field) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/information/update', hostData, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_integrations'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         });
         if (response.data.status == true) {  
@@ -137,8 +136,7 @@ const UpdateHostsInformation = async (validator_field) => {
     try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/'+hostId , {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_integrations'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
         if (response.data.status == true) { 
@@ -156,7 +154,7 @@ const UpdateHostsInformation = async (validator_field) => {
             hostData.availability = response.data.host.availability;
             hostData.availability_type = response.data.host.availability_type ? response.data.host.availability_type : 'settings';
             hostData.availability_id = response.data.host.availability_id;
-            hostData.others_information = response.data.host.others_information != null && response.data.host.others_information.length != '[]'  ? response.data.host.others_information : {};
+            hostData.others_information = response.data.host.others_information != null && response.data.host.others_information.length != '[]' ? response.data.host.others_information : {};
             skeleton.value = false;
             time_zones.data = response.data.time_zone; 
             hosts_settings.data = response.data.hosts_settings; 

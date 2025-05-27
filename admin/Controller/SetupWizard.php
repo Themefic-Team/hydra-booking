@@ -32,7 +32,7 @@ class SetupWizard {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'fetchSetupWizard' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -42,7 +42,7 @@ class SetupWizard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportMeetingDemo' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 	}
@@ -268,7 +268,7 @@ class SetupWizard {
 			$default_notification =  new Helper();
 			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
 		}
-		$data['notification']   = json_encode($_tfhb_notification_settings);
+		$data['notification']   = $_tfhb_notification_settings;
 
 		// Check if user is already a meeting
 		$meeting = new Meeting();

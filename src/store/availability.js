@@ -11,8 +11,7 @@ const Availability = reactive({
             const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             });
             if (!response.ok) {

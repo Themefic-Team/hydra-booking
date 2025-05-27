@@ -1,4 +1,5 @@
 <script setup> 
+import { ref, watch } from 'vue'
 import LvColorpicker from 'lightvue/color-picker';
 const props = defineProps([
     'name',
@@ -15,10 +16,27 @@ const props = defineProps([
     'readonly', 
     'errors',
     'tooltip',
-    'tooltipText'
+    'tooltipText',
+    'key'
 
 ])
 const emit = defineEmits(['update:modelValue'])
+
+
+// Local value for color
+const localColor = ref(props.modelValue)
+
+// // Watch for prop updates (in case parent changes value externally)
+// watch(() => props.modelValue, (val) => {
+//   if (val !== localColor.value) {
+//     localColor.value = val
+//   }
+// })
+
+// // Emit when user picks a color
+// watch(localColor, (val) => {
+//   emit('update:modelValue', val)
+// })
 </script>
 
 <template>
@@ -50,10 +68,11 @@ const emit = defineEmits(['update:modelValue'])
                 :class="errors ? 'tfhb-required' : ''" 
                 :withoutInput="true"/> -->
                 <LvColorpicker 
-                  :value="props.modelValue" 
+                  :value="localColor" 
                   @input="emit('update:modelValue', $event)"  
-                  :key="props.modelValue"  
+                  :key="props.key"    
                   :withoutInput="true"
+                  
                 />
                 <span v-if="placeholder">{{ placeholder }}</span>
                 <span v-else>{{ $tfhb_trans('Select Color') }}</span>

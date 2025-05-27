@@ -180,7 +180,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_pending: {
                         status : 0,
@@ -188,7 +188,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_cancel: {
                         status : 0,
@@ -196,7 +196,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reschedule: {
                         status : 0,
@@ -204,7 +204,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reminder: {
                         status : 0,
@@ -212,7 +212,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                 },
                 attendee : {
@@ -222,6 +222,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
+                        builder: ''
                     },
                     booking_pending: {
                         status : 0,
@@ -229,6 +230,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
+                        builder: ''
                     },
                     booking_cancel: {
                         status : 0,
@@ -236,7 +238,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reschedule: {
                         status : 0,
@@ -244,7 +246,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                     booking_reminder: {
                         status : 0,
@@ -252,7 +254,7 @@ const Meeting = reactive({
                         form : '',
                         subject : '',
                         body : '',
-        
+                        builder: ''
                     },
                 }
             },
@@ -281,8 +283,7 @@ const Meeting = reactive({
 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/lists', {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -298,8 +299,7 @@ const Meeting = reactive({
         try { 
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/'+meetingId, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             });
             if (response.data.status == true) { 
@@ -315,7 +315,10 @@ const Meeting = reactive({
                     this.singleMeeting.MeetingData.meeting_locations = JSON.parse(response.data.meeting.meeting_locations)
                 }
              
-                if(response.data.meeting.notification){
+                if(response.data.meeting.notification && "string" == typeof response.data.meeting.notification){
+                    this.singleMeeting.MeetingData.notification = JSON.parse(response.data.meeting.notification)
+                }
+                if(response.data.meeting.notification && "object" == typeof response.data.meeting.notification){
                     this.singleMeeting.MeetingData.notification = response.data.meeting.notification
                 }
 
@@ -355,8 +358,7 @@ const Meeting = reactive({
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/details/update', this.singleMeeting.MeetingData, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             });
             if (response.data.status == true) { 
@@ -395,8 +397,7 @@ const Meeting = reactive({
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/clone', cloneMeeting, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
             if (response.data.status) { 
@@ -418,8 +419,7 @@ const Meeting = reactive({
         this.skeleton = true;
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/payment/payment-method', {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -449,8 +449,7 @@ const Meeting = reactive({
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/delete', deleteMeeting, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
             if (response.data.status) { 
@@ -483,8 +482,7 @@ const Meeting = reactive({
              // axisos sent dataHeader Nonce Data
              const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/create', TypeData, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
              } );
      
@@ -521,8 +519,7 @@ const Meeting = reactive({
                     filterData
                 },
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             });
             
@@ -544,8 +541,7 @@ const Meeting = reactive({
                     filterData
                 },
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             });
             
@@ -565,8 +561,7 @@ const Meeting = reactive({
         try { 
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/categories', {
                     headers: {
-                        'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                        'capability': 'tfhb_manage_options'
+                        'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                     } 
                  }
             );

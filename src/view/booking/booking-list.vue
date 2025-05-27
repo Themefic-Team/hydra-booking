@@ -47,8 +47,7 @@ const ExportBookingAsCSV = async () => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/export-as', exportData, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_integrations'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -113,8 +112,7 @@ const UpdateMeetingStatus = async (id, host, status) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/update', meeting_status, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             }  
         } );
 
@@ -173,8 +171,7 @@ const deleteBooking = async ($id, $host) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/delete', deleteBooking,{
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         });
 
@@ -205,8 +202,7 @@ const Bulk_Status_Callback = async (value) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/bulk-update', bookings, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -320,8 +316,7 @@ const bookingReminder  = async (booking) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/send-reminder', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -353,8 +348,7 @@ const SendAttendeeReminder  = async (attendee) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/send-attendee-reminder', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -387,8 +381,7 @@ const ChangeAttendeeStatus  = async (attendee_id, booking_id, status) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/change-attendee-status', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -535,11 +528,124 @@ const changeToDate = (value) => {
         Booking.fetchBookings();
     }
 }
+
+// Rebooking popup data 
+const flatpickrConfig = ref({ 
+  disable: [
+    // initially empty, will be filled after AJAX
+    function(date) {
+      return Booking.disabled_days.includes(date.getDay());
+    }
+  ], 
+  minDate: 'today'
+});
+
+const singeBookingDetails = ref({});
+const reBookPopupOpen = (booking) => {
+    singeBookingDetails.value = booking;
+    Booking.reBook.availability_time_zone = booking.availability_time_zone;
+    Booking.reBook.booking_id = booking.id;
+    Booking.reBook.meeting_id = booking.meeting_id;
+    Booking.reBook.select_date = '';
+    Booking.reBook.select_time_slot = '';
+    Booking.time_slot = {};
+    Booking.getAvailabilityDates().then(() => { 
+        flatpickrConfig.value.disable = [
+            ...Booking.disabled_dates,
+            function(date) {
+            return Booking.disabled_days.includes(date.getDay());
+            }
+        ];
+
+        Booking.reBookPopup = true;
+    });
+    
+}
+const getAvailabilityTimeSlot = (value) => { 
+    Booking.getAvailabilityTimeSlot(value);
+    
+}
+ 
 </script>
 <template>
-  <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />   
+<!-- Cencel  POPUP-->
+<HbPopup   :isOpen="Booking.reBookPopup" @modal-close="Booking.reBookPopup = false" max_width="600px" name="first-modal">
+    <template #header> 
+        <h3>{{$tfhb_trans('Re-Booking')}}</h3>    
+        <b>{{$tfhb_trans('You are Re-book the booking:')}} {{ singeBookingDetails.start_time }} - {{ singeBookingDetails.end_time }}, {{ Tfhb_Date(singeBookingDetails.meeting_dates) }}</b>
+        <br>
+        <b>({{ singeBookingDetails.availability_time_zone }})</b>
+                
+    </template>  
 
-  <div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24"> 
+    <template #content>   
+        <div class="tfhb-rebook-pupup tfhb-flexbox tfhb-gap-24">  
+            <HbDropdown
+                v-model="Booking.reBook.availability_time_zone"
+                required= "true"  
+                :label="$tfhb_trans('Select Time Zone')" 
+                :filter="true"
+                selected = "1"
+                :placeholder="$tfhb_trans('Select Availability Time Zone')"  
+                :option = "Booking.time_zone" 
+                @tfhb-onchange="[]"
+            />  
+ 
+            <HbDateTime 
+                v-model="Booking.reBook.select_date"
+                selected = "1" 
+                required= "true"  
+                :config="flatpickrConfig" 
+                :label="$tfhb_trans('Select Date')" 
+                @dateChange =  "getAvailabilityTimeSlot"  
+                enableTime='false'
+                :placeholder="$tfhb_trans('Select Date')"  
+                icon="CalendarDays"   
+            /> 
+            <HbDropdown
+                v-if="Booking.reBook.select_date != ''"
+                v-model="Booking.reBook.select_time_slot"
+                required= "true"  
+                :label="$tfhb_trans('Select Time Slot')"  
+                selected = "1"
+                :placeholder="$tfhb_trans('Select Time Slot')"  
+                :option = "Booking.time_slot" 
+                @tfhb-onchange="[]"
+            />  
+            <HbDropdown
+                v-model="Booking.reBook.select_status"
+                required= "true"  
+                :label="$tfhb_trans('Select Booking Status')"  
+                selected = "1"
+                :placeholder="$tfhb_trans('Select Status')"  
+                :option = "[
+                    {'name': 'Pending', 'value': 'pending'},  
+                    {'name': 'Confirmed', 'value': 'confirmed'},    
+                ]" 
+                @tfhb-onchange="[]"
+            />  
+
+            <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16 tfhb-justify-end tfhb-full-width"> 
+
+   
+                <HbButton  
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                    @click="Booking.reBookMeeting()"
+                    :buttonText="$tfhb_trans('Re-book Now')"
+                    icon="RotateCcw"  
+                    :disabled ="Booking.reBook.select_date == ''" 
+                    :hover_animation="false" 
+                    :pre_loader="Booking.reBookPreLoader" 
+                    icon_position = 'left'
+                />
+                
+            </div>
+        </div> 
+    </template> 
+</HbPopup>
+<!-- Cencel  POPUP-->
+<div class="tfhb-booking-heading tfhb-flexbox tfhb-justify-between tfhb-gap-24">
+    
     <!-- Dashboard Heading Wrap -->
     <div class="tfhb-dashboard-heading-wrap tfhb-flexbox tfhb-justify-between">
         <div class="tfhb-filter-box tfhb-flexbox"> 
@@ -1054,14 +1160,16 @@ const changeToDate = (value) => {
             <template v-for="(bookData, key) in paginatedBooking" :key="key">
                 <tr  class="tfhb-list-date-tr">
                     <td colspan="6" >
-                        <div class="tfhb-date-title" v-if="bookData.date == 'Tomorrow' ||  bookData.date == 'Today'">{{ bookData.date }}</div>
+                        <div class="tfhb-date-title" 
+                        v-if="bookData.date == 'Tomorrow' ||  bookData.date == 'Today'">{{ bookData.date }}</div>
                         <div class="tfhb-date-title" v-else>{{ Tfhb_Date(bookData.date) }}</div>
                     </td>
                 </tr>
                 <tr v-for="(book, key) in bookData.bookings" :key="key" :class="{ last: key === bookData.bookings.length - 1 }">
                      
                     <td> 
-                        <span>{{ book.start_time }} - {{ book.end_time }}</span>
+                        <span 
+                        :style="book.status == 'canceled' ? 'text-decoration: line-through': ''" >{{ book.start_time }} - {{ book.end_time }}</span>
                     </td>
                     <td>
                         <span class="tfhb-list-data-event-title">{{ book.title }}</span>
@@ -1103,10 +1211,15 @@ const changeToDate = (value) => {
                                 <path d="M10 13.334L5 8.33398H15L10 13.334Z" fill="#765664"/>
                                 </svg>
                                 <div class="tfhb-status-popup">
-                                    <ul class="tfhb-flexbox tfhb-gap-2">
+                                    <ul v-if="book.status != 'canceled'" class="tfhb-flexbox tfhb-gap-2" >
                                         <li @click="UpdateMeetingStatus(book.id, book.host_id, 'confirmed')">{{ $tfhb_trans('Confirmed') }}</li>
                                         <li class="pending" @click="UpdateMeetingStatus(book.id, book.host_id, 'pending')">{{ $tfhb_trans('Pending') }}</li> 
                                         <li class="canceled" @click="UpdateMeetingStatus(book.id, book.host_id, 'canceled')">{{ $tfhb_trans('Canceled') }}</li>
+                                    </ul>
+                                    <ul v-else class="tfhb-flexbox tfhb-gap-2" >
+                                        <li class="" @click="reBookPopupOpen(book)" > 
+                                            {{ $tfhb_trans('Re-Booking') }}
+                                        </li> 
                                     </ul>
                                 </div>
                             </div>

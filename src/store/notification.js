@@ -9,8 +9,7 @@ const Notification = reactive({
         try {  
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/notifaction', {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -32,8 +31,7 @@ const Notification = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/notifaction/markasread', this.Data, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     

@@ -63,6 +63,7 @@ const ChangeColors = (value,  colors) => {
         <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Logo preference') }} </h2> 
         <p>{{ $tfhb_trans('This only applies to your Frontend Dashboard.') }}</p>
     </div>  
+    
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-start">   
         <HbWpFileUpload
             name="dashboard_logo"
@@ -119,38 +120,44 @@ const ChangeColors = (value,  colors) => {
     </div>
     <div v-if="props.FrontendDashboard.fd_dashboard.general.colors_palette == 'custom'" class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16">
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.primery_default"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.primery_default" 
+            key = "paragraph_color"  
             :label="$tfhb_trans('Primary Color (Default)')"
             name="Primary"
             selected = "1" 
             width="50"  
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.primery_hover"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.primery_hover"
+            key = "primery_hover"     
             :label="$tfhb_trans('Primary Color (Hover)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.secondary_default"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.secondary_default" 
+            key = "secondary_default"    
             :label="$tfhb_trans('Secondary Color (Default)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.secondary_hover"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.secondary_hover"
+            key = "secondary_hover"     
             :label="$tfhb_trans('Secondary Color (Hover)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.text_title"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.text_title" 
+            key = "text_title"    
             :label="$tfhb_trans('Text Color (Title)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.text_paragraph"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.text_paragraph" 
+            key = "text_paragraph"    
             :label="$tfhb_trans('Text Color (Paragraph)')"  
             selected = "1" 
             width="50" 
@@ -158,31 +165,36 @@ const ChangeColors = (value,  colors) => {
 
         <!--  -->
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.surface_primary"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.surface_primary" 
+            key = "surface_primary"    
             :label="$tfhb_trans('Surface Color (Primary)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.surface_background"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.surface_background" 
+            key = "surface_background"    
             :label="$tfhb_trans('Surface Color (Background)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.surface_border"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.surface_border"  
+            key = "surface_border"   
             :label="$tfhb_trans('Surface Color (Border)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.surface_border_hover"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.surface_border_hover"  
+            key = "surface_border_hover"   
             :label="$tfhb_trans('Surface Color (Border Hover)')"  
             selected = "1" 
             width="50" 
         />
         <HbColor  
-            v-model="props.FrontendDashboard.fd_dashboard.general.surface_input_field"   
+            v-model="props.FrontendDashboard.fd_dashboard.general.surface_input_field"  
+            key = "surface_input_field"   
             :label="$tfhb_trans('Surface Color (Input Field)')"  
             selected = "1" 
             width="50" 

@@ -55,6 +55,13 @@ namespace HydraBooking\Admin\Controller;
             'Select Booking status' =>  __('Select Booking status', 'hydra-booking'), 
             'Create Booking' =>  __('Create Booking', 'hydra-booking'), 
             'Has booked a meeting' =>  __('Has booked a meeting', 'hydra-booking'), 
+            'Re-Booking' =>  __('Re-Booking', 'hydra-booking'), 
+            'You are Re-book the booking:' =>  __('You are Re-book the booking:', 'hydra-booking'), 
+            'Re-book' =>  __('Re-book', 'hydra-booking'), 
+            'Select Status' =>  __('Select Status', 'hydra-booking'), 
+            'Re-book Now' =>  __('Re-book Now', 'hydra-booking'), 
+            'Select Time Slot' =>  __('Select Time Slot', 'hydra-booking'), 
+            'Booking' =>  __('Booking', 'hydra-booking'), 
             
 
             'Delete' =>  __('Delete', 'hydra-booking'), 
@@ -421,7 +428,7 @@ namespace HydraBooking\Admin\Controller;
             'Upload logo' =>  __('Upload logo', 'hydra-booking'),  
             'Upload Responsive logo' =>  __('Upload Responsive logo', 'hydra-booking'),  
             'Type login sub-title' =>  __('Type login sub-title', 'hydra-booking'),  
-            // 'License' =>  __('License', 'hydra-booking'),  
+            'Header Background' =>  __('Header Background', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
             // 'License' =>  __('License', 'hydra-booking'),  
 
@@ -626,7 +633,9 @@ namespace HydraBooking\Admin\Controller;
             'Enter Mail Subject' =>  __('Enter Mail Subject', 'hydra-booking'), 
             'Subject' =>  __('Subject', 'hydra-booking'), 
             'Mail Body' =>  __('Mail Body', 'hydra-booking'), 
-            'Update' =>  __('Update', 'hydra-booking'), 
+            'Update' =>  __('Update', 'hydra-booking'),
+            'Greetings' => __('Greetings', 'hydra-booking'), 
+            'Buttons'  => __('Buttons', 'hydra-booking'),
 
             // Activity Logs
             'Booking has been completed' =>  __('Booking has been completed', 'hydra-booking'), 

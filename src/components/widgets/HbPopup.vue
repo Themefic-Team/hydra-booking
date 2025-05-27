@@ -50,7 +50,7 @@ const showData = ref(false);
       <span class="tfhb-popup-overlay" @click.stop="emit('modal-close')"></span>  
       <div class="tfhb-popup-wrap tfhb-scrollbar" :style="{ 'max-width': max_width }">
           <div v-if="props.isOpen" >
-            <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-m-0">
+            <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-m-0 tfhb-align-start">
                 <div class="tfhb-admin-title"> 
                     <slot name="header">  </slot>
                 </div>

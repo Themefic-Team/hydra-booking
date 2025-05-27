@@ -27,7 +27,7 @@ class ImportExport {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetImportExportData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -36,7 +36,7 @@ class ImportExport {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ExportAllData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);  
 		// import export host
@@ -46,7 +46,7 @@ class ImportExport {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'ExportHosts' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -56,7 +56,7 @@ class ImportExport {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportHost' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Import Booking
@@ -66,7 +66,7 @@ class ImportExport {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Import Booking
@@ -76,7 +76,7 @@ class ImportExport {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportAllData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 	}

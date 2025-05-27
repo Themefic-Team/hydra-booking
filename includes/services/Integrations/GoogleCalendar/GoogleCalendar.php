@@ -272,11 +272,7 @@ class GoogleCalendar {
 		if ( isset( $google_calender['connection_status'] ) && $google_calender['connection_status'] == 0 ) {
 			return $value;
 		}
-		
-		
-		if($booking->meeting_calendar){ 
-			return; 
-		}
+ 
 		// set event data google meet shedule
 		
 		$meeting_dates = $booking->meeting_dates; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
@@ -478,7 +474,7 @@ class GoogleCalendar {
 			return;
 		}
 		$BookingMeta = new BookingMeta();
-		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'booking_calendar' );  
+		$get_booking_meta = $BookingMeta->getWithIdKey( $booking->booking_id, 'booking_calendar', 1 );  
 		 
 		if($get_booking_meta){
 			$this->addAttendeeGoogleCalender($booking, $get_booking_meta);	
@@ -513,11 +509,12 @@ class GoogleCalendar {
 			$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 			 
 			$BookingMeta = new BookingMeta();
-			$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'booking_calendar' );
+			$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'booking_calendar', 1);
+			
 			
 			if($booking_meta){
 
-				$events = json_decode( $booking_meta->value );
+				$events = json_decode( $booking_meta->value ); 
 				$events = $events->google_calendar;
 				
 				$host = new Host();
@@ -706,7 +703,7 @@ class GoogleCalendar {
 		}
 		
 		$bookingMeta = new BookingMeta(); 
-		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
+		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar' , 1);
 		
 
 		// if booking calendar data is not found then return false
@@ -940,7 +937,7 @@ class GoogleCalendar {
 		}
 		
 		$bookingMeta = new BookingMeta(); 
-		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar' );
+		$booking_calendarData = $bookingMeta->getWithIdKey( $data->id, 'booking_calendar', 1 );
 
 
 		// if booking calendar data is not found then return false 

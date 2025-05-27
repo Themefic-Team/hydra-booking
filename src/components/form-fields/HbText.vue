@@ -18,7 +18,7 @@ const props = defineProps([
     'tooltipText'
 
 ])
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'tfhb-onclick'])
 </script>
 
 <template>
@@ -52,6 +52,7 @@ const emit = defineEmits(['update:modelValue'])
           :readonly="readonly"
           :class="errors ? 'tfhb-required' : ''"
           :min="limit"
+          @click="emit('tfhb-onclick', $event)"
         /> 
              
     </div> 

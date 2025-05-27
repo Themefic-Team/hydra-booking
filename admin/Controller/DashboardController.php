@@ -29,7 +29,7 @@ class DashboardController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getDashboardsData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -39,7 +39,7 @@ class DashboardController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getDashboardsStatisticsData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
  

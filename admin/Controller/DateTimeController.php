@@ -154,6 +154,7 @@ class DateTimeController extends \DateTimeZone {
 		$where = array(
 			array('meeting_id', '=', $meeting_id),
 			array('meeting_dates', '=', $selected_date), 
+			array('status', '!=', 'canceled'),
 		);
 		$bookings = $booking->getBookingWithAttendees( 
 			$where,
@@ -347,7 +348,20 @@ class DateTimeController extends \DateTimeZone {
 
 			
 			$_tfhb_availability_settings = get_user_meta( $host->user_id, '_tfhb_host', true );
-			if ( isset($_tfhb_availability_settings['availability']) && in_array( $meeting_data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+			if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] == 'settings'){
+				$host_settings_availability_id = $_tfhb_availability_settings['availability_id'];
+				$_tfhb_availability_settings =  get_option( '_tfhb_availability_settings' );
+
+				if ( is_array($_tfhb_availability_settings)  ) { 
+					$key = array_search($host_settings_availability_id, array_column($_tfhb_availability_settings, 'id'));
+					//  _tfhb_availability_settings index id wich is match with host settings availability id
+					if(isset($_tfhb_availability_settings[ $key ])){
+
+						$availability_data = $_tfhb_availability_settings[ $key ];
+					} 
+				} 
+			}elseif ( isset($_tfhb_availability_settings['availability']) && in_array( $meeting_data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+				 
 				$availability_data = $_tfhb_availability_settings['availability'][ $meeting_data['availability_id'] ];
 			} 
 		}  

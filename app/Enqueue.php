@@ -30,13 +30,23 @@ class Enqueue {
 		 
 		
 		$tfhb_primary_color   = ! empty( $_tfhb_appearance_settings['primary_color'] ) ? $_tfhb_appearance_settings['primary_color'] : '#2E6B38';
+		$tfhb_primary_hover   = ! empty( $_tfhb_appearance_settings['primary_hover'] ) ? $_tfhb_appearance_settings['primary_hover'] : '#4C9959';
 		$tfhb_secondary_color = ! empty( $_tfhb_appearance_settings['secondary_color'] ) ? $_tfhb_appearance_settings['secondary_color'] : '#273F2B';
+		$tfhb_secondary_hover = ! empty( $_tfhb_appearance_settings['secondary_hover'] ) ? $_tfhb_appearance_settings['secondary_hover'] : '#E1F2E4';
+		$tfhb_text_title_color = ! empty( $_tfhb_appearance_settings['text_title_color'] ) ? $_tfhb_appearance_settings['text_title_color'] : '#141915';
 		$tfhb_paragraph_color = ! empty( $_tfhb_appearance_settings['paragraph_color'] ) ? $_tfhb_appearance_settings['paragraph_color'] : '#273F2B';
+		$tfhb_surface_primary = ! empty( $_tfhb_appearance_settings['surface_primary'] ) ? $_tfhb_appearance_settings['surface_primary'] : '#C0D8C4';
+		$tfhb_surface_background = ! empty( $_tfhb_appearance_settings['surface_background'] ) ? $_tfhb_appearance_settings['surface_background'] : '#EEF6F0';
 		$tfhb_theme_css       = "
         :root {
             --tfhb-primary-color: $tfhb_primary_color;
+            --tfhb-primary-hover-color: $tfhb_primary_hover;
             --tfhb-secondary-color: $tfhb_secondary_color;
+            --tfhb-secondary-hover-color: $tfhb_secondary_hover;
             --tfhb-paragraph-color: $tfhb_paragraph_color;
+            --tfhb-text-title-color: $tfhb_text_title_color;
+            --tfhb-surface-primary-color: $tfhb_surface_primary;
+            --tfhb-surface-background-color: $tfhb_surface_background;
           }
         ";
 		wp_add_inline_style( 'tfhb-style', $tfhb_theme_css ); 
