@@ -34,7 +34,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getHostsData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -43,7 +43,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateHosts' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -52,7 +52,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteHosts' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		register_rest_route(
@@ -61,7 +61,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateHostsStatus' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 		// Get Single Host based on id
@@ -71,7 +71,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getTheHostData' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 			)
 		);
 		register_rest_route(
@@ -80,7 +80,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateHostInformation' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 			)
 		);
 
@@ -92,7 +92,7 @@ class HostsController {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'UpdateAvailabilitySettings' ),
-				'permission_callback' => array( new RouteController(), 'permission_callback' ),
+				'permission_callback' => array( new RouteController(), 'tfhb_manage_custom_availability_permission' ),
 			)
 		);
 
@@ -102,7 +102,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'GetAvailabilitySettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_hosts_permission'),
 			)
 		);
 
@@ -112,7 +112,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'GetSingleAvailabilitySettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 			)
 		);
 
@@ -122,7 +122,7 @@ class HostsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteAvailabilitySettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 			)
 		);
 
@@ -134,7 +134,7 @@ class HostsController {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'GetIntegrationSettings' ),
-				'permission_callback' => array( new RouteController(), 'permission_callback' ),
+				'permission_callback' => array( new RouteController(), 'tfhb_manage_integrations_permission' ),
 			)
 		);
 
@@ -144,7 +144,7 @@ class HostsController {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'UpdateIntegrationSettings' ),
-				'permission_callback' => array( new RouteController(), 'permission_callback' ),
+				'permission_callback' => array( new RouteController(), 'tfhb_manage_integrations_permission' ),
 			)
 		);
 
@@ -164,7 +164,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterHosts' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',

@@ -45,8 +45,7 @@ const ExportBookingAsCSV = async () => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/export-as', exportData, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_integrations'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -111,8 +110,7 @@ const UpdateMeetingStatus = async (id, host, status) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/update', meeting_status, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             }  
         } );
 
@@ -171,8 +169,7 @@ const deleteBooking = async ($id, $host) => {
     try { 
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/delete', deleteBooking,{
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         });
 
@@ -203,8 +200,7 @@ const Bulk_Status_Callback = async (value) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/bulk-update', bookings, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -318,8 +314,7 @@ const bookingReminder  = async (booking) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/send-reminder', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -351,8 +346,7 @@ const SendAttendeeReminder  = async (attendee) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/send-attendee-reminder', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 
@@ -385,8 +379,7 @@ const ChangeAttendeeStatus  = async (attendee_id, booking_id, status) => {
         // axisos sent dataHeader Nonce Data
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/change-attendee-status', data, {
             headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                'capability': 'tfhb_manage_options'
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
         } );
 

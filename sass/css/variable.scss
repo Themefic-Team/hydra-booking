@@ -3,25 +3,25 @@
  // Primary
  $primary-default : var(--tfhb-primary-color);
  $primary-color : #17030C;
- $primary-hover : #4C9959;
+ $primary-hover : var(--tfhb-primary-hover-color);
  $primary-text : #FFFFFF;
 
  // Secondary
  $secondary-default : var(--tfhb-secondary-color);
- $secondary-hover : #E1F2E4;
+ $secondary-hover : var(--tfhb-secondary-hover-color);
 
  // Text Color
- $text-title : #141915;
- $text-paragraph : var(---tfhb-paragraph-color);
+ $text-title : var(--tfhb-text-title-color);
+ $text-paragraph : var(--tfhb-paragraph-color);
  $text-input : #273F2B;
 
  // Background
  $surface-primary : #F3F6F4;
  $surface-secondary : #FFFFFF;
 
- $surface-border : #C0D8C4;
+ $surface-border : var(--tfhb-surface-primary-color);
  $surface-border-hover : #211319;
- $surface-background : #C0D8C4;
+ $surface-background : var(--tfhb-surface-background-color);
  $surface-input-field : #56765B;
 
  // Error    

@@ -156,16 +156,34 @@ class ShortcodeBuilder {
         ], $atts, 'tfhb_hosts');
 
  
-        // get all meetings based on given parameters
+        // Whitelist for sort_by and order_by
+        $allowed_sort_columns = ['id', 'first_name', 'last_name', 'created_at']; // customize as needed
+        $allowed_order_directions = ['ASC', 'DESC'];
+
+        $sort_by = isset($atts['sort_by']) ? $atts['sort_by'] : 'id';
+        $order_by = isset($atts['order_by']) ? strtoupper($atts['order_by']) : 'DESC';
+
+        if (!in_array($sort_by, $allowed_sort_columns, true)) {
+            $sort_by = 'id';
+        }
+        if (!in_array($order_by, $allowed_order_directions, true)) {
+            $order_by = 'DESC';
+        }
+
+        // Prepare the query for hosts
         $host = new Host();
-        $query = array( ); 
-        // meeting_host
-        if('all'!= $atts['hosts'] && !empty($atts['hosts'])) {
-            $query[] = array('id', 'IN', $atts['hosts']);
-        } 
-        $limit = $atts['limit'] ? $atts['limit'] : 10; 
-        $hostData = $host->getAll( $query, $atts['sort_by'], $atts['order_by'], $limit ); 
-        
+        $query = [];
+
+        if ('all' != $atts['hosts'] && !empty($atts['hosts'])) {
+            // Make sure hosts is a clean array of integers
+            $host_ids = array_map('intval', explode(',', $atts['hosts']));
+            $query[] = ['id', 'IN', $host_ids];
+        }
+
+        $limit = intval($atts['limit']) ?: 10;
+
+        $hostData = $host->getAll($query, $sort_by, $order_by, $limit);
+
         ob_start();
         ?>
         <div class="tfhb-hosts-list">
