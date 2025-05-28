@@ -801,13 +801,21 @@ class MeetingController {
 		$default_notification_data =  new Helper();
 		$_tfhb_default_notification_settings = $default_notification_data->get_default_notification_template(); 
 		
-		$defaultKeys = [
-			'booking_confirmation',
-			'booking_pending',
-			'booking_cancel',
-			'booking_reschedule',
-			'booking_reminder',
-		];
+		if($channel=='slack' || $channel=='twilio' || $channel=='telegram'){
+			$defaultKeys = [
+				'booking_confirmation',
+				'booking_cancel',
+				'booking_reschedule',
+			];
+		}else{
+			$defaultKeys = [
+				'booking_confirmation',
+				'booking_pending',
+				'booking_cancel',
+				'booking_reschedule',
+				'booking_reminder',
+			];
+		}
 	
 		foreach ( $defaultKeys as $key ) {
 			if ( ! isset( $notification->{$channel}->$key ) ) {
@@ -1046,7 +1054,7 @@ class MeetingController {
 		}
 
 		// Telegram
-		if(!empty($_tfhb_host_integration_settings['telegram']) && !empty($_tfhb_host_integration_settings['telegram']['status'])){
+		if(!empty($_tfhb_host_integration_settings['telegram']) && !empty($_tfhb_host_integration_settings['telegram']['status']) && ! empty( $_tfhb_host_integration_settings['telegram']['bot_token'] ) && ! empty( $_tfhb_host_integration_settings['telegram']['chat_id'] )){
 			$telegram_status = ! empty( $_tfhb_host_integration_settings['telegram']['status'] ) ? $_tfhb_host_integration_settings['telegram']['status'] : '';
 			$telegram_bot_token = ! empty( $_tfhb_host_integration_settings['telegram']['bot_token'] ) ? $_tfhb_host_integration_settings['telegram']['bot_token'] : '';
 			$telegram_chat_id  = ! empty( $_tfhb_host_integration_settings['telegram']['chat_id'] ) ? $_tfhb_host_integration_settings['telegram']['chat_id'] : '';
