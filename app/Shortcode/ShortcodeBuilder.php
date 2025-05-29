@@ -41,28 +41,45 @@ class ShortcodeBuilder {
 
     public function tfhb_meetings_callback($atts) { 
         $atts = shortcode_atts([
-            'title'        => '',
-            'subtitle'    => '',
-            'category'     => 'all', // Comma-separated category IDs
-            'hosts'        => 'all', // Comma-separated host IDs
-            'sort_by'      => 'id',
-            'order_by'     => 'DESC',
-            'limit' => '10',
+            'title'     => '',
+            'subtitle'  => '',
+            'category'  => 'all', // Comma-separated category IDs
+            'hosts'     => 'all', // Comma-separated host IDs
+            'sort_by'   => 'id',
+            'order_by'  => 'DESC',
+            'limit'     => '10',
         ], $atts, 'tfhb_meetings');
-
-        // get all meetings based on given parameters
-        $meeting = new Meeting();
-        $query = array( );
+        
+        // Whitelisting
+        $allowed_sort_by = ['id', 'title', 'created_at']; // customize as needed
+        $allowed_order_by = ['ASC', 'DESC'];
+        
+        $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
+        $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
+        
+        $limit = intval($atts['limit']);
+        if ($limit <= 0) {
+            $limit = 10;
+        }
+        
+        // Build secure query
+        $query = [];
+        
         // meeting_category
-        if('all' != $atts['category'] && !empty($atts['category'])) {
-            $query[] = array('meeting_category', 'IN', $atts['category']);
-        } 
+        if ($atts['category'] !== 'all' && !empty($atts['category'])) {
+            $category_ids = array_map('intval', explode(',', $atts['category']));
+            $query[] = ['meeting_category', 'IN', $category_ids];
+        }
+        
         // meeting_host
-        if('all'!= $atts['hosts'] && !empty($atts['hosts'])) {
-            $query[] = array('host_id', 'IN', $atts['hosts']);
-        } 
-        $limit = $atts['limit'] ? $atts['limit'] : 10; 
-        $meetings = $meeting->getAll( $query, $atts['sort_by'], $atts['order_by'], $limit );
+        if ($atts['hosts'] !== 'all' && !empty($atts['hosts'])) {
+            $host_ids = array_map('intval', explode(',', $atts['hosts']));
+            $query[] = ['host_id', 'IN', $host_ids];
+        }
+        
+        // Fetch meetings securely
+        $meeting = new Meeting();
+        $meetings = $meeting->getAll($query, $sort_by, $order_by, $limit);
         
         ob_start();
         ?>
@@ -248,23 +265,30 @@ class ShortcodeBuilder {
     public function tfhb_categories_callback($atts){
         
         $atts = shortcode_atts([
-            'title'        => '',
-            'subtitle'    => '', 
-            'sort_by'      => 'id', // id or title
-            'order_by'     => 'DESC',
-            'limit' => '10',
+            'title'     => '',
+            'subtitle'  => '', 
+            'sort_by'   => 'id', // Allowed: id or title
+            'order_by'  => 'DESC',
+            'limit'     => '10',
         ], $atts, 'tfhb_categories');
-
-       
-        $terms = get_terms(
-			array(
-				'taxonomy'   => 'meeting_category',
-				'hide_empty' => false, // Set to true to hide empty terms
-                'orderby'    => $atts['sort_by'],
-                'order'       => $atts['order_by'],
-                'number'     => $atts['limit'], // Limit the number of returned terms (default: -1)
-			)
-		);  
+        
+        // Whitelist acceptable values
+        $allowed_sort_by = ['id', 'name', 'slug', 'count'];
+        $allowed_order_by = ['ASC', 'DESC'];
+        
+        $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
+        $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
+        $limit = intval($atts['limit']);
+        if ($limit <= 0) $limit = 10;
+        
+        // Safe call to get_terms()
+        $terms = get_terms([
+            'taxonomy'   => 'meeting_category',
+            'hide_empty' => false,
+            'orderby'    => $sort_by,
+            'order'      => $order_by,
+            'number'     => $limit,
+        ]);
         ob_start();
         ?>
         <div class="tfhb-category-list">
