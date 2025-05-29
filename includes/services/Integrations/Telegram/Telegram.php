@@ -141,16 +141,24 @@ class Telegram {
 		); 
 		 
 		// Meeting Location Check
-		$meeting_locations = json_decode( $attendeeBooking->meeting_location );
+		$meeting_locations =  !is_array($attendeeBooking->meeting_locations) ?  json_decode( $attendeeBooking->meeting_locations ) : $attendeeBooking->meeting_locations;
 		$locations         = array();
+		
 		if ( is_array( $meeting_locations ) ) {
 			foreach ( $meeting_locations as $location ) {
 				if ( isset( $location->location ) ) {
-					$locations[] = $location->location;
+					$locations[] = $location->location . (!empty($location->address) ? ' - ' . $location->address : '');
 				}
 			}
 		}
-		// 
+
+		if ( is_object($meeting_locations) ) {
+			foreach ( $meeting_locations as $key => $locationObj ) {
+				if ( isset($locationObj->location) ) {
+					$locations[] = $locationObj->location . (!empty($locationObj->address) ? ' - ' . $locationObj->address : '');
+				}
+			}
+		}
 
 		$replacements = array(
 			'{{meeting.title}}'    => ! empty( $attendeeBooking->meeting_title ) ? $attendeeBooking->meeting_title : '',
