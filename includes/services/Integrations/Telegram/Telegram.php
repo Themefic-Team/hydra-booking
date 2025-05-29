@@ -12,7 +12,7 @@ class Telegram {
 	public function __construct( ) {
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 20, 1 );
-		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 2 );
 	}
 
     // Get Meeting Data
@@ -57,7 +57,7 @@ class Telegram {
 	}
 
 	// If booking Status is ReSchedule
-	public function pushBookingToscheduled( $attendees ) {
+	public function pushBookingToscheduled( $old_booking_id, $attendees ) {
 		
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
