@@ -2,6 +2,7 @@
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
 import { ref, reactive, watch, computed, nextTick } from 'vue';
+import { useRoute} from 'vue-router' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
 import { useDragAndDrop } from "vue-fluid-dnd";
@@ -18,7 +19,7 @@ import HbColor from '@/components/form-fields/HbColor.vue';
 
 //  Load Time Zone 
 const skeleton = ref(false);
-
+const route = useRoute();
 
 const props = defineProps([
     'title', 
@@ -234,6 +235,11 @@ const copySubjectShortcode = (value) => {
   props.data.subject = current + ' ' + value;
 };
 
+const copyBodyShortcode = (value) => {
+  const current = props.data.body || '';
+  props.data.body = current + ' ' + value;
+};
+
 const copyShortcode = (value, key) => {
   const current = emailBuilder.value[key].content || '';
   emailBuilder.value[key].content = current + ' ' + value;
@@ -438,7 +444,7 @@ const emailTemplate = computed(() => {
             
         }
         if (section.status && section.id === 'cancel_reschedule') {
-            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.value[key].border_color};border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed ${emailBuilder.value[key].border_color};border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
                 if (emailBuilder.value[key].content.description.content && emailBuilder.value[key].content.description.status) {
                     emailContent += ` <tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">${emailBuilder.value[key].content.description.content}</td>
@@ -448,10 +454,10 @@ const emailTemplate = computed(() => {
                     emailContent += `<tr>
                     <td style="font-size: 15px; padding-bottom: 24px;">`;
                         if (emailBuilder.value[key].content.cancel.content && emailBuilder.value[key].content.cancel.status){
-                            emailContent += `<a href="${emailBuilder.value[key].content.cancel.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
+                            emailContent += `<a href="${emailBuilder.value[key].content.cancel.content}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a>`;
                         }
                         if (emailBuilder.value[key].content.reschedule.content && emailBuilder.value[key].content.reschedule.status){
-                            emailContent += `<a href="${emailBuilder.value[key].content.reschedule.content}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
+                            emailContent += `<a href="${emailBuilder.value[key].content.reschedule.content}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid ${emailBuilder.value[key].border_color};background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a>`;
                         }
                     emailContent += `</td></tr>`;
                 }
@@ -524,14 +530,16 @@ const formatLabel = (key) => {
 };
 
 watch(() => props.data.builder, (newBuilder) => {
-  if (newBuilder && Object.keys(newBuilder).length) {
-    emailBuilder.value = JSON.parse(JSON.stringify(newBuilder));
-  } else {
-    const defaults = JSON.parse(JSON.stringify(defaultEmailBuilder.value));
-    emailBuilder.value = defaults;
-    props.data.builder = defaults;
-    props.data.body = emailTemplate.value;
-  }
+    if (newBuilder && Object.keys(newBuilder).length) {
+        emailBuilder.value = JSON.parse(JSON.stringify(newBuilder));
+    } else {
+        if(props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'){
+            const defaults = JSON.parse(JSON.stringify(defaultEmailBuilder.value));
+            emailBuilder.value = defaults;
+            props.data.builder = defaults;
+            props.data.body = emailTemplate.value;
+        }
+    }
 }, { immediate: true });
 
 watch(emailTemplate, (newTemplate) => {
@@ -566,6 +574,8 @@ const closePopup = () => {
 }
 </script>
 <template>
+
+    <!-- {{ data }} -->
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-flexbox tfhb-justify-between">
         <div class="tfhb-swicher-wrap  tfhb-flexbox"> 
@@ -589,7 +599,7 @@ const closePopup = () => {
             <template #content>
                 <div class="tfhb-email-builder">
                     <div class="tfhb-builder-tools">
-                        <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32">
+                        <div class="tfhb-template-info tfhb-flexbox tfhb-gap-16 tfhb-mb-32" :class="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack' ? 'tfhb-m-0' : ''">
 
                             <HbText  
                                 v-model="data.from"   
@@ -597,8 +607,9 @@ const closePopup = () => {
                                 :label="$tfhb_trans('From')"  
                                 selected = "1"
                                 :placeholder="$tfhb_trans('Enter From Email')"  
+                                v-if="props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'"
                             /> 
-                            <div class="tfhb-shortcode-box tfhb-full-width">
+                            <div class="tfhb-shortcode-box tfhb-full-width" v-if="props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'">
                                 <HbText  
                                     v-model="data.subject"  
                                     required= "true"  
@@ -612,10 +623,24 @@ const closePopup = () => {
                                     <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copySubjectShortcode(value)" >{{ value}}</span>
                                 </div>
                             </div>
+                            
+                            <div class="tfhb-single-form-field" style="width: 100%;" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'">
+                                <div class="tfhb-single-form-field-wrap tfhb-field-input">
+                                    
+                                    <Editor 
+                                        v-model="props.data.body"  
+                                        :placeholder="$tfhb_trans('Message Body')"    
+                                        editorStyle="height: 250px" 
+                                    />
+                                </div> 
+                            </div> 
+                            <div class="tfhb-mail-shortcode tfhb-flexbox tfhb-gap-8 tfhb-m-0" v-if="props.categoryKey=='telegram' || props.categoryKey=='twilio' || props.categoryKey=='slack'"> 
+                                <span  class="tfhb-mail-shortcode-badge"  v-for="(value, key) in meetingShortcode" :key="key" @click="copyBodyShortcode(value)" >{{ value}}</span>
+                            </div>
                         </div>
 
                         <ul ref="parent" class="number-list">
-                            <li class="single-tools" v-for="(email, key) in sortedEmailBuilder" :index="key" 
+                            <li class="single-tools" v-if="props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack'"  v-for="(email, key) in sortedEmailBuilder" :index="key" 
                             >
                                 <!-- Dynamic Heading -->
                                 <div class="tools-heading tfhb-flexbox tfhb-justify-between tfhb-gap-8">
@@ -877,7 +902,7 @@ const closePopup = () => {
                     :pre_loader="props.update_preloader"
                 />  
 
-                <div class="tfhb-email-preview" v-if="emailBuilder[0].status || emailBuilder[1].status || emailBuilder[2].status || emailBuilder[3].status || emailBuilder[4].status || emailBuilder[5].status || emailBuilder[6].status" v-html="emailTemplate"></div>
+                <div class="tfhb-email-preview" v-if="(props.categoryKey!='telegram' && props.categoryKey!='twilio' && props.categoryKey!='slack') && (emailBuilder[0].status || emailBuilder[1].status || emailBuilder[2].status || emailBuilder[3].status || emailBuilder[4].status || emailBuilder[5].status || emailBuilder[6].status)" v-html="emailTemplate"></div>
 
              </template> 
         </HbPopup>

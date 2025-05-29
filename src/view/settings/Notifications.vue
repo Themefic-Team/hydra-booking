@@ -6,7 +6,7 @@ import { useRouter, useRoute, RouterView } from 'vue-router'
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
-const route = useRoute();
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 const router = useRouter();
 
 // import Form Field 
@@ -21,6 +21,23 @@ const ntskeleton = ref(false);
 const currentTabs = ref('host');
 const popup = ref(false);
 const update_preloader = ref(false);
+const currentHash = ref('email'); 
+ 
+// tfhb-hydra-admin-tabs a clicked using javascript event
+document.addEventListener('click', function (event) {
+    if (event.target.matches('.notification-submenu')) {
+        // .tfhb-notification-settings-menu add class expand
+        document.querySelector('.tfhb-notification-settings-menu').classList.add('expand');
+
+        currentHash.value = event.target.getAttribute('data-filter');
+        // this add class active to the clicked element
+        document.querySelectorAll('.dropdown a').forEach(function (el) {
+            el.classList.remove('active');
+            // 
+        });
+        event.target.classList.add('active');
+    }
+}, false);
 
 const Notification = reactive(  { 
      host : {
@@ -107,15 +124,100 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-    
+    },
+    telegram : {
+        booking_confirmation: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_pending: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_cancel: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reschedule: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reminder: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+    },
+    twilio : {
+        booking_confirmation: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_pending: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_cancel: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reschedule: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reminder: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+    },
+    slack : {
+        booking_confirmation: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_pending: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_cancel: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reschedule: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
+        booking_reminder: {
+            status : 0,
+            body : '',
+            builder: ''
+        },
     }
 });
 
+// Integration Data
+const Integration = reactive( {
+    telegram: '',
+    slack: '',
+    twilio: ''
+});
+
 // Update Notification 
-const changeTab = (e) => {  
+const changeTab = (tab) => {  
     ntskeleton.value = true;
-    // get data-tab attribute value of clicked button
-    const tab = e.target.getAttribute('data-tab'); 
     currentTabs.value = tab;
     setTimeout(() => {
         ntskeleton.value = false;
@@ -135,8 +237,14 @@ const fetchNotification = async () => {
         if (response.data.status) { 
             Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
             Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
-            Notification.email = response.data.notification_settings.email ? response.data.notification_settings.email : Notification.email;
-            
+            Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
+            Notification.twilio = response.data.notification_settings.twilio ? response.data.notification_settings.twilio : Notification.twilio;
+            Notification.slack = response.data.notification_settings.slack ? response.data.notification_settings.slack : Notification.slack;
+
+            Integration.telegram = response.data.telegram.status ? response.data.telegram.status : '';
+            Integration.slack = response.data.slack.status ? response.data.slack.status : '';
+            Integration.twilio = response.data.twilio.status ? response.data.twilio.status : '';
+
             skeleton.value = false;
         }
     } catch (error) {
@@ -197,11 +305,20 @@ onBeforeMount(() => {
 </script>
 <template> 
     <div :class="{ 'tfhb-skeleton': skeleton }" class="thb-event-dashboard ">
-  
+
         <div  class="tfhb-dashboard-heading  ">
             <div class="tfhb-admin-title tfhb-m-0" v-if="$route.params.id"> 
                 <div class="tfhb-flexbox tfhb-gap-4">
-                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" :to="{ name: 'SettingsNotifications' }" v-if="$route.params.id">
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#email" v-if="$route.params.id && $route.params.type!='telegram' && $route.params.type!='twilio' && $route.params.type!='slack'">
+                        <Icon name="ArrowLeft" :width="20"/>
+                    </router-link>
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#telegram" v-if="$route.params.id && $route.params.type=='telegram'">
+                        <Icon name="ArrowLeft" :width="20"/>
+                    </router-link>
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#twilio" v-if="$route.params.id && $route.params.type=='twilio'">
+                        <Icon name="ArrowLeft" :width="20"/>
+                    </router-link>
+                    <router-link class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-inline-flexbox" to="/settings/notifications#slack" v-if="$route.params.id && $route.params.type=='slack'">
                         <Icon name="ArrowLeft" :width="20"/>
                     </router-link>
                     <h1 class="tfhb-capitalize">{{ $route.params.type }}</h1> 
@@ -210,7 +327,8 @@ onBeforeMount(() => {
             </div>
             <div class="tfhb-admin-title tfhb-m-0" v-else> 
                 <h1 >{{ $tfhb_trans('Notifications') }}</h1> 
-                <p>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
+                <p v-if="$route.hash!='#telegram' && $route.hash!='#twilio' && $route.hash!='#slack'">{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host and attendee') }}</p>
+                <p v-else>{{ $tfhb_trans('Organize booking confirmation/cancel/reschedule/reminder notification for host') }}</p>
             </div>
             <div class="thb-admin-btn"> 
                 <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/notifications/" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
@@ -218,17 +336,18 @@ onBeforeMount(() => {
         </div>
         <div class="tfhb-content-wrap">
             <!-- Gmail -->
-            <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16" v-if="!$route.params.id">
-                <button @click="changeTab" data-tab="host" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn"  :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }} </button>
-                <button @click="changeTab"  data-tab="attendee" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
+            <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16" v-if="!$route.params.id && $route.hash === '#email'">
+                <button @click="changeTab('host')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }} </button>
+                <button @click="changeTab('attendee')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='attendee' ? 'active' : ''"><Icon name="UsersRound" size=15 /> {{ $tfhb_trans('To Attendee') }} </button>
             </div>
+
+            <div v-if="currentTabs=='host' && !$route.params.id && $route.hash === '#email'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="{ 'tfhb-skeleton': ntskeleton }"> 
  
-            <div v-if="currentTabs=='host' && !$route.params.id" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box " :class="{ 'tfhb-skeleton': ntskeleton }"> 
  
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Confirmation" 
-                   :label="$tfhb_trans('Booking Confirmation')" 
+                    :title="$tfhb_trans('Booking Confirmation to Host')"   
+                    :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_confirmation"  
                     :isSingle="true"
@@ -239,8 +358,8 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Pending" 
-                   :label="$tfhb_trans('Booking Pending')" 
+                    :title="$tfhb_trans('Booking Pending to Host')"  
+                    :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_pending"  
                     :isSingle="true"
@@ -252,7 +371,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host for Booking Cancels" 
+                    :title="$tfhb_trans('Booking Cancel to Host')"  
                     :label="$tfhb_trans('Booking Cancel')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_cancel"  
@@ -264,7 +383,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host" 
+                    :title="$tfhb_trans('Booking Reschedule to Host')"  
                     :label="$tfhb_trans('Booking Reschedule')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reschedule"  
@@ -276,7 +395,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Host" 
+                    :title="$tfhb_trans('Booking Reminder to Host')"  
                     :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.host.booking_reminder"  
@@ -288,11 +407,12 @@ onBeforeMount(() => {
                 <!-- <router-view :notifications="Notification" /> -->
  
             </div> 
-            <div v-if="currentTabs=='attendee' && !$route.params.id"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box " :class="{ 'tfhb-skeleton': ntskeleton }"> 
+
+            <div v-if="currentTabs=='attendee' && !$route.params.id && $route.hash === '#email'"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box" :class="{ 'tfhb-skeleton': ntskeleton }"> 
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Confirmation to Attendee')"  
                     :label="$tfhb_trans('Booking Confirmation')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_confirmation"  
@@ -304,7 +424,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Pending to Attendee')"  
                     :label="$tfhb_trans('Booking Pending')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_pending"  
@@ -317,7 +437,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Cancel to Attendee')"  
                     :label="$tfhb_trans('Booking Cancel')"  
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_cancel"  
@@ -329,7 +449,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Reschedule to Attendee')"  
                     :label="$tfhb_trans('Booking Reschedule')"
                     :data="Notification.attendee.booking_reschedule"  
                     :isSingle="true"
@@ -340,7 +460,7 @@ onBeforeMount(() => {
 
                 <!-- Single Notification  -->
                 <MailNotifications 
-                    title="Send Email to Attendee" 
+                    :title="$tfhb_trans('Booking Reminder to Attendee')"   
                     :label="$tfhb_trans('Booking Reminder')" 
                     @update-notification="UpdateNotification"
                     :data="Notification.attendee.booking_reminder"  
@@ -352,6 +472,241 @@ onBeforeMount(() => {
  
  
             </div> 
+
+            <!-- Telegram Notification -->
+            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#telegram' && Integration.telegram==''">
+                <template #content>
+                    <span>{{$tfhb_trans('Your aren’t connected with Telegram. Please go to ')}}  
+                        <HbButton 
+                            classValue="tfhb-btn" 
+                            @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                            buttonText="Setting > Integration"
+                        />  
+                        {{$tfhb_trans('and connect.')}}  
+                    </span>
+                </template>
+            </HbInfoBox>
+            <div v-if="!$route.params.id && $route.hash === '#telegram'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.telegram ? 'tfhb-pro' : ''"> 
+ 
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Confirmation to Host')"  
+                :label="$tfhb_trans('Booking Confirmation')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_confirmation"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_confirmation"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Pending to Host')" 
+                :label="$tfhb_trans('Booking Pending')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_pending"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_pending"
+            /> 
+            <!-- Single Integrations  -->
+
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Cancel to Host')"  
+                :label="$tfhb_trans('Booking Cancel')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_cancel"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_cancel"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Reschedule to Host')"
+                :label="$tfhb_trans('Booking Reschedule')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_reschedule"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_reschedule"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Reminder to Host')"
+                :label="$tfhb_trans('Booking Reminder')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.telegram.booking_reminder"  
+                :isSingle="true"
+                categoryKey="telegram"
+                emailKey="booking_reminder"
+            /> 
+            <!-- Single Integrations  -->
+
+            </div> 
+
+            <!-- Twilio Notification -->
+            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#twilio' && Integration.twilio==''">
+                <template #content>
+                    <span>{{$tfhb_trans('Your aren’t connected with Twilio. Please go to ')}}  
+                        <HbButton 
+                            classValue="tfhb-btn" 
+                            @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                            buttonText="Setting > Integration"
+                        />  
+                        {{$tfhb_trans('and connect.')}}  
+                    </span>
+                </template>
+            </HbInfoBox>
+            <div v-if="!$route.params.id && $route.hash === '#twilio'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.twilio ? 'tfhb-pro' : ''"> 
+ 
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    :title="$tfhb_trans('Booking Confirmation to Host')"  
+                    :label="$tfhb_trans('Booking Confirmation')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.twilio.booking_confirmation"  
+                    :isSingle="true"
+                    categoryKey="twilio"
+                    emailKey="booking_confirmation"
+                /> 
+                <!-- Single Integrations  -->
+
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    :title="$tfhb_trans('Booking Pending to Host')" 
+                    :label="$tfhb_trans('Booking Pending')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.twilio.booking_pending"  
+                    :isSingle="true"
+                    categoryKey="twilio"
+                    emailKey="booking_pending"
+                /> 
+                <!-- Single Integrations  -->
+
+
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    :title="$tfhb_trans('Booking Cancel to Host')" 
+                    :label="$tfhb_trans('Booking Cancel')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.twilio.booking_cancel"  
+                    :isSingle="true"
+                    categoryKey="twilio"
+                    emailKey="booking_cancel"
+                /> 
+                <!-- Single Integrations  -->
+
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    :title="$tfhb_trans('Booking Reschedule to Host')"
+                    :label="$tfhb_trans('Booking Reschedule')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.twilio.booking_reschedule"  
+                    :isSingle="true"
+                    categoryKey="twilio"
+                    emailKey="booking_reschedule"
+                /> 
+                <!-- Single Integrations  -->
+
+                <!-- Single Notification  -->
+                <MailNotifications 
+                    :title="$tfhb_trans('Booking Reminder to Host')"
+                    :label="$tfhb_trans('Booking Reminder')" 
+                    @update-notification="UpdateNotification"
+                    :data="Notification.twilio.booking_reminder"  
+                    :isSingle="true"
+                    categoryKey="twilio"
+                    emailKey="booking_reminder"
+                /> 
+                <!-- Single Integrations  -->
+
+            </div> 
+
+            <!-- Slack Notification -->
+            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#slack' && Integration.slack==''">
+                <template #content>
+                    <span>{{$tfhb_trans('Your aren’t connected with Slack. Please go to ')}}  
+                        <HbButton 
+                            classValue="tfhb-btn" 
+                            @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                            buttonText="Setting > Integration"
+                        />  
+                        {{$tfhb_trans('and connect.')}}  
+                    </span>
+                </template>
+            </HbInfoBox>
+            <div v-if="!$route.params.id && $route.hash === '#slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.slack ? 'tfhb-pro' : ''"> 
+ 
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Confirmation to Host')"  
+                :label="$tfhb_trans('Booking Confirmation')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_confirmation"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_confirmation"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Pending to Host')" 
+                :label="$tfhb_trans('Booking Pending')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_pending"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_pending"
+            /> 
+            <!-- Single Integrations  -->
+
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Cancel to Host')" 
+                :label="$tfhb_trans('Booking Cancel')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_cancel"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_cancel"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Reschedule to Host')"
+                :label="$tfhb_trans('Booking Reschedule')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_reschedule"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_reschedule"
+            /> 
+            <!-- Single Integrations  -->
+
+            <!-- Single Notification  -->
+            <MailNotifications 
+                :title="$tfhb_trans('Booking Reminder to Host')"
+                :label="$tfhb_trans('Booking Reminder')" 
+                @update-notification="UpdateNotification"
+                :data="Notification.slack.booking_reminder"  
+                :isSingle="true"
+                categoryKey="slack"
+                emailKey="booking_reminder"
+            /> 
+            <!-- Single Integrations  -->
+
+            </div> 
+
             <router-view 
             v-if="$route.params" 
             :mediaurl="$tfhb_url"
