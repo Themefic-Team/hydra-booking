@@ -57,6 +57,23 @@ class ShortcodeBuilder {
         $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
         $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
         
+         // Validate sort_by
+        if (!in_array($sort_by, $allowed_sort_columns, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid sorting parameter.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted sort_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_sort_columns)) . '</code></p>';
+        }
+
+        // Validate order_by
+        if (!in_array($order_by, $allowed_order_directions, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid order direction.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted order_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_order_directions)) . '</code></p>';
+        }
+
+
         $limit = intval($atts['limit']);
         if ($limit <= 0) {
             $limit = 10;
@@ -171,14 +188,29 @@ class ShortcodeBuilder {
             'order_by'     => 'DESC',
             'limit' => '10',
         ], $atts, 'tfhb_hosts');
-
  
         // Whitelist for sort_by and order_by
-        $allowed_sort_columns = ['id', 'first_name', 'last_name', 'created_at']; // customize as needed
+        $allowed_sort_columns = ['id', 'first_name', 'created_at']; // customize as needed
         $allowed_order_directions = ['ASC', 'DESC'];
 
         $sort_by = isset($atts['sort_by']) ? $atts['sort_by'] : 'id';
         $order_by = isset($atts['order_by']) ? strtoupper($atts['order_by']) : 'DESC';
+
+        // Validate sort_by
+        if (!in_array($sort_by, $allowed_sort_columns, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid sorting parameter.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted sort_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_sort_columns)) . '</code></p>';
+        }
+
+        // Validate order_by
+        if (!in_array($order_by, $allowed_order_directions, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid order direction.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted order_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_order_directions)) . '</code></p>';
+        }
 
         if (!in_array($sort_by, $allowed_sort_columns, true)) {
             $sort_by = 'id';
@@ -276,8 +308,26 @@ class ShortcodeBuilder {
         $allowed_sort_by = ['id', 'name', 'slug', 'count'];
         $allowed_order_by = ['ASC', 'DESC'];
         
+        
         $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
         $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
+
+                 // Validate sort_by
+        if (!in_array($sort_by, $allowed_sort_columns, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid sorting parameter.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted sort_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_sort_columns)) . '</code></p>';
+        }
+
+        // Validate order_by
+        if (!in_array($order_by, $allowed_order_directions, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid order direction.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted order_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_order_directions)) . '</code></p>';
+        }
+
         $limit = intval($atts['limit']);
         if ($limit <= 0) $limit = 10;
         
