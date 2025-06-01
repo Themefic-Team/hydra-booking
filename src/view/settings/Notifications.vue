@@ -334,6 +334,19 @@ onBeforeMount(() => {
                 <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/notifications/" target="_blank" class="tfhb-btn"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=15 /></a>
             </div> 
         </div>
+         <nav v-if="$front_end_dashboard == true && !$route.params.id" class="tfhb-booking-tabs tfhb-integrations-settings-menu"> 
+            <ul>
+                <!-- to route example like hosts/profile/13/information -->
+                   <li><router-link to="/settings/notifications#email" :class="{ 'active': $route.fullPath.includes('email') || $route.fullPath.includes('host') || $route.fullPath.includes('attendee') }" class="notification-submenu" data-filter="email"> <Icon name="Mail" size=18 /> {{ $tfhb_trans('Email') }}</router-link></li>
+                    
+                    <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.fullPath.includes('telegram') }" class="notification-submenu" data-filter="telegram"> <img :src="$tfhb_url+'/assets/images/telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</router-link></li>
+
+                    <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.fullPath.includes('twilio') }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
+
+                    <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.fullPath.includes('slack') }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
+
+            </ul>  
+        </nav>
         <div class="tfhb-content-wrap">
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16" v-if="!$route.params.id && $route.hash === '#email'">

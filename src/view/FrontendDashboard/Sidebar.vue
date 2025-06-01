@@ -71,6 +71,12 @@ const toggleSidebarResponsive= () => {
                         <span v-if="!collapsed" > {{ $tfhb_trans('Integrations') }}</span>
                     </router-link>
                 </li> 
+                <li>
+                    <router-link to="/settings/notifications#email" :class="{ 'active': $route.path === '/settings/notifications#email' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
+                        <Icon name="BellDot" size="20" /> 
+                        <span >{{ $tfhb_trans('Notifications') }}</span>
+                    </router-link>
+                </li> 
                 <li v-if="$user.caps.tfhb_manage_settings == true " :class="{ 'active': $route.path.includes('/settings') }" class="tfhb-dropdown-menu">
                     <!-- <router-link  to="/settings" exact :class="{ 'active': $route.path.includes('/settings') }"  class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 tfhb-p-12" > -->
                         <router-link  @click="showGeneralMenu = !showGeneralMenu"  v-if="!collapsed" to="/settings/general" exact :class="{ 'active': $route.path === '/settings/general' }  "class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" >
@@ -108,12 +114,7 @@ const toggleSidebarResponsive= () => {
                                     <span >{{ $tfhb_trans('Availability') }}</span>
                                 </router-link>
                             </li> 
-                            <li>
-                                <router-link to="/settings/notifications" :class="{ 'active': $route.path === '/settings/notifications' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
-                                    <Icon name="BellDot" size="20" /> 
-                                    <span >{{ $tfhb_trans('Notifications') }}</span>
-                                </router-link>
-                            </li> 
+                            
                             <li>
                                 <router-link  to="/settings/appearance" :class="{ 'active': $route.path === '/settings/appearance' }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                                     <Icon name="SwatchBook" size="20" /> 
