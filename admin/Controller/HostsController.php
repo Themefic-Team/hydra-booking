@@ -154,7 +154,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'FetchIntegrationSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 			)
 		);
 
