@@ -7,12 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 // Use Namespace 
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Host;
+use HydraBooking\Admin\Controller\TransStrings;
 /**
  * Signup Class
  * 
  * @author Sydur Rahman
  */
-class ShortcodeBuilder {
+class ShortcodeBuilder { 
 
     /**
      * Constructor
@@ -29,6 +30,8 @@ class ShortcodeBuilder {
 
         // Meeting categories 
         add_shortcode('tfhb_categories', array($this, 'tfhb_categories_callback') );
+
+        
  
     }
 
@@ -139,7 +142,7 @@ class ShortcodeBuilder {
                                 
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>    
-                                    <?php echo esc_html($meeting->duration) ?> minutes
+                                    <?php echo esc_html(TransStrings::tfhbTranslateNumber($meeting->duration)) ?> <?php echo esc_html(__('minutes', 'hydra-booking')) ?>
                                 </span>
                                
                                 <span>
@@ -151,7 +154,7 @@ class ShortcodeBuilder {
                     </div>
                     
                     <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn">Select</a>
+                        <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn"><?php echo esc_html(__('Select', 'hydra-booking')) ?></a>
                     </div>
                 </div>
 
@@ -265,7 +268,7 @@ class ShortcodeBuilder {
                     </div>
                     
                     <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="<?php echo esc_url(  $user_url ) ?>" class="tfhb-btn secondary-btn">Select</a>
+                        <a href="<?php echo esc_url(  $user_url ) ?>" class="tfhb-btn secondary-btn"><?php echo esc_html(__('Select', 'hydra-booking')) ?></a>
                     </div>
 
                     
@@ -363,7 +366,7 @@ class ShortcodeBuilder {
                     </div>
                     
                     <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="<?php echo esc_url($terms_archive_url) ?>" class="tfhb-btn secondary-btn">Select</a>
+                        <a href="<?php echo esc_url($terms_archive_url) ?>" class="tfhb-btn secondary-btn"><?php echo esc_html(__('Select', 'hydra-booking')) ?></a>
                     </div>
                 </div>
 

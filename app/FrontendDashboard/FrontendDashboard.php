@@ -174,7 +174,7 @@ class FrontendDashboard {
         $required_fields = array( 'tfhb_forgot_user');
         // Check nonce security
         if ( ! isset( $_POST['tfhb_forgot_nonce'] ) || ! wp_verify_nonce( $_POST['tfhb_forgot_nonce'], 'tfhb_check_forgot_nonce' ) ) {
-            $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'tourfic' );
+            $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'hydra-booking' );
         } else {
 
             foreach ( $required_fields as $required_field ) {
@@ -302,7 +302,10 @@ class FrontendDashboard {
                 
                 reset_password( $user, $field['tfhb_password'] );
                 $response['success'] = true;
-                $response['message'] = esc_html__( 'Password changed successfully. you can <a href="' . get_permalink( $login_page_id ) . '">login here</a>', 'hydra-booking' );
+               $response['message'] = sprintf(
+                    __( 'Password changed successfully. You can <a href="%s">login here</a>.', 'hydra-booking' ),
+                    get_permalink( $login_page_id )
+               );
             } else {
                 $response['message'] = esc_html__( 'User not found', 'hydra-booking' );
             }
@@ -353,7 +356,7 @@ class FrontendDashboard {
                     exit; // Prevent further script execution after redirection
                 } else {
                     // Handle the case where the login page URL is not set
-                    wp_die('Login page URL not found. Please configure the settings.');
+                    wp_die( __( 'Login page URL not found. Please configure the settings.', 'hydra-booking' ) );
                 }
 
             }
@@ -380,22 +383,22 @@ class FrontendDashboard {
         
         $pages = array( 
 			'login'              => array(
-				'name'    => _x( 'hydra-login', 'Page slug', 'tourfic' ),
-				'title'   => _x( 'Hydra Login', 'Page title', 'tourfic' ),
+				'name'    => _x( 'hydra-login', 'Page slug', 'hydra-booking' ),
+				'title'   => _x( 'Hydra Login', 'Page title', 'hydra-booking' ),
 				'template' => 'tfhb-frontend-login.php',
 				'content' => '',
 				'pro'     => false,
 			), 
 			'register'           => array(
-				'name'    => _x( 'hydra-register', 'Page slug', 'tourfic' ),
-				'title'   => _x( 'Hydra Register', 'Page title', 'tourfic' ),
+				'name'    => _x( 'hydra-register', 'Page slug', 'hydra-booking' ),
+				'title'   => _x( 'Hydra Register', 'Page title', 'hydra-booking' ),
 				'template' => 'tfhb-frontend-signup.php',
 				'content' => '',
 				'pro'     => false,
 			), 
 			'dashboard'          => array(
-				'name'    => _x( 'hydra-dashboard', 'Page slug', 'tourfic' ),
-				'title'   => _x( 'Hydra Dashboard', 'Page title', 'tourfic' ),
+				'name'    => _x( 'hydra-dashboard', 'Page slug', 'hydra-booking' ),
+				'title'   => _x( 'Hydra Dashboard', 'Page title', 'hydra-booking' ),
 				'template' => 'tfhb-frontend-dashboard.php',
 				'content' => '',
 				'pro'     => false,

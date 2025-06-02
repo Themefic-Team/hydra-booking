@@ -549,7 +549,7 @@ class HydraBookingShortcode {
 				$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
 				$attendees = $check_booking->attendees; 
 				if ( count($attendees) >= $max_book_per_slot ) {
-					wp_send_json_error( array( 'message' => 'Already Booked' ) );
+					wp_send_json_error( array( 'message' => esc_html(__('Already Booked', 'hydra-booking')) ) );
 				}
  
 			}

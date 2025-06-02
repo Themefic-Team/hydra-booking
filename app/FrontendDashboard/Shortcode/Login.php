@@ -161,14 +161,14 @@ class Login {
         $required_fields = array( 'tfhb_login_user', 'tfhb_password' );
         // Check nonce security
         if ( ! isset( $_POST['tfhb_login_nonce'] ) || ! wp_verify_nonce( $_POST['tfhb_login_nonce'], 'tfhb_check_login_nonce' ) ) {
-            $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'hydra-booking' );
+            $response['message'] = esc_html(__( 'Sorry, your nonce did not verify.', 'hydra-booking' ));
         } else {
 
             foreach ( $required_fields as $required_field ) {
                 if ( $required_field === 'tfhb_login_user' && empty( $_POST[ $required_field ] ) ) {
-                    $response['fieldErrors'][ $required_field] = esc_html__( 'Username or email is required.', 'tourfic' );
+                    $response['fieldErrors'][ $required_field] = esc_html(__( 'Username or email is required.', 'hydra-booking' ));
                 } elseif ( $required_field === 'tfhb_password' && empty( $_POST[ $required_field ] ) ) {
-                    $response['fieldErrors'][ $required_field] = esc_html__( 'Password is required.', 'tourfic' );
+                    $response['fieldErrors'][ $required_field] = esc_html(__( 'Password is required.', 'hydra-booking' ));
                 }
             }
         }
@@ -193,7 +193,7 @@ class Login {
             if ( is_wp_error( $user ) ) {
                 $response['message'] = $user->get_error_message();
             } else {
-                $response['message'] = esc_html__( 'Successfully logged in.', 'tourfic' );
+                $response['message'] = esc_html(__( 'Successfully logged in.', 'hydra-booking' ));
                 $response['success'] = true;
 
                 $settings = get_option('_tfhb_frontend_dashboard_settings');
