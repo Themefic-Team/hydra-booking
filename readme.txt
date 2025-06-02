@@ -4,7 +4,7 @@ Tags: appointments, booking, booking system, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.10
+Stable tag: 1.1.11
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
 
@@ -79,7 +79,8 @@ Say goodbye to no-shows and cancellations with automated notifications for all b
 
 * **Email Notifications**: Send booking confirmations, rescheduling updates, and reminders automatically.
 * **Custom Notification Settings**: Tailor notifications by booking status.
-* **SMS Notifications (Pro)**: Use SMS or WhatsApp to notify attendees via integrations like Twilio (coming soon).
+* **SMS Notifications (Pro)**: Notify via SMS or WhatsApp using Twilio integration
+* **Slack & Telegram (Pro)**: Receive booking notifications directly in Slack or Telegram channels.
 
 = 🎉 PAYMENT OPTIONS  =
 * **[WooCommerce Integration](https://demo.hydrabooking.com/woocommerce-demo-meeting/)**: Direct clients to WooCommerce's secure checkout for payments.  
@@ -208,6 +209,14 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 12. Notification Controls
 
 == Changelog ==
+
+= 1.1.11 – June 02, 2025 =
+
+- Added: Unified Host Availability feature.
+- Added: Slack integration for notifications.
+- Added: Twilio integration for notifications.
+- Added: Telegram integration for notifications.
+- Fixed: Vulnerability issues have been resolved.
 
 = 1.1.10 – May 26, 2025 =
 

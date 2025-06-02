@@ -97,9 +97,10 @@ class DateTimeController extends \DateTimeZone {
 			return $start_format . ' - ' . $end_format . ' (' . $selected_time_zone . ')';
 		}
 	}
-	public function getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format ) {
+	public function getAvailableTimeData( $meeting_id,  $selected_date, $selected_time_zone, $selected_time_format, $host_id = 0 ) {
 
 		$meeting_id = isset( $meeting_id ) ? $meeting_id : '';
+		$host_id = isset( $host_id ) ? $host_id : 0;
 
 		$selected_date = isset( $selected_date ) ? sanitize_text_field( $selected_date ) : '';
 
@@ -151,11 +152,15 @@ class DateTimeController extends \DateTimeZone {
 		// Get All Booking Data.
 		$booking = new Booking();
  
-		$where = array(
-			array('meeting_id', '=', $meeting_id),
-			array('meeting_dates', '=', $selected_date), 
-			array('status', '!=', 'canceled'),
-		);
+		// 
+		$where = [
+			'OR' => [
+				['host_id', '=', $MeetingsData->host_id],
+				['meeting_id', '=', $meeting_id]
+			],
+			['meeting_dates', '=', $selected_date], 
+			['status', '!=', 'canceled'],
+		];
 		$bookings = $booking->getBookingWithAttendees( 
 			$where,
 			null,

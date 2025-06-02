@@ -274,7 +274,133 @@ const meetingData = reactive({
                 body : '',
                 builder: ''
             },
-        }
+        },
+        telegram: {
+            booking_confirmation: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_pending: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_cancel: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_reschedule: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_reminder: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+        },
+        slack: {
+            booking_confirmation: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_pending: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_cancel: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_reschedule: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_reminder: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+        },
+        twilio: {
+            booking_confirmation: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_pending: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_cancel: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+            booking_reschedule: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+
+            },
+            booking_reminder: {
+                status : 0,
+                template : 'default',
+                form : '',
+                subject : '',
+                body : '',
+                builder: ''
+            },
+        },
     },
     payment_status: 1,
     meeting_price: '',
@@ -290,7 +416,10 @@ const meetingData = reactive({
     is_display_max_book_slot: 0,
     mailchimp: '',
     fluentcrm: '',
-    zohocrm: ''
+    zohocrm: '',
+    telegram: '',
+    slack: '',
+    twilio: ''
 });
 
 
@@ -487,6 +616,9 @@ const fetchMeeting = async () => {
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
             meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
+            meetingData.telegram = response.data.telegram.status ? response.data.telegram.status : '';
+            meetingData.slack = response.data.slack.status ? response.data.slack.status : '';
+            meetingData.twilio = response.data.twilio.status ? response.data.twilio.status : '';
 
             skeleton.value = false
         }else{ 

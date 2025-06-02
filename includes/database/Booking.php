@@ -331,32 +331,57 @@ class Booking {
 
 			$data = [];
 			if($where != null) { 
-				foreach ($where as $condition) {
-					$field =  $condition[0]; 
-					if(strpos($field, '.') === false){
-						$field = 'booking.'.$condition[0];
-					} 
+				foreach ($where as $key => $condition) {
+					if ($key === 'OR' && is_array($condition)) {
+						$or_sql = [];
+						foreach ($condition as $or_condition) {
+							$field = $or_condition[0];
+							$operator = $or_condition[1];
+							$value = $or_condition[2];
+			
+							if (strpos($field, '.') === false) {
+								$field = 'booking.' . $field;
+							}
+			
+							if ($operator === 'LIKE') {
+								$or_sql[] = "$field $operator %s";
+								$data[] = $value;
+							} else {
+								$or_sql[] = "$field $operator %s";
+								$data[] = $value;
+							}
+						}
+						if (!empty($or_sql)) {
+							$sql .= " AND (" . implode(' OR ', $or_sql) . ")";
+						}
+					} else {
+					    $field =  $condition[0]; 
+						if(strpos($field, '.') === false){
+							$field = 'booking.'.$condition[0];
+						} 
 
-					$operator = $condition[1];
-					$value = $condition[2]; 
-					if($operator == 'BETWEEN'){  
-						$sql .= " AND $field $operator %s AND %s";
-						$data[] = $value[0];
-						$data[] = $value[1]; 
-					}elseif($operator == 'IN'){   
-						// value is array 
-						$in = implode(',', array_fill(0, count($value), '%s')); 
-						$sql .= " AND $field $operator ($in)";
-						$data = array_merge($data, $value);
-					}elseif($operator == 'LIKE'){   
-						// if operator is like 
-						$like_conditions[] = "$field $operator %s";
-						$data[] = $value; 
-					}else{
+						$operator = $condition[1];
+						$value = $condition[2]; 
+						if($operator == 'BETWEEN'){  
+							$sql .= " AND $field $operator %s AND %s";
+							$data[] = $value[0];
+							$data[] = $value[1]; 
+						}elseif($operator == 'IN'){   
+							// value is array 
+							$in = implode(',', array_fill(0, count($value), '%s')); 
+							$sql .= " AND $field $operator ($in)";
+							$data = array_merge($data, $value);
+						}elseif($operator == 'LIKE'){   
+							// if operator is like 
+							$like_conditions[] = "$field $operator %s";
+							$data[] = $value; 
+						}else{
 
-						$sql .= " AND $field $operator %s";
-						$data[] = $value;
+							$sql .= " AND $field $operator %s";
+							$data[] = $value;
+						}
 					}
+					
 				} 
 			} 
 

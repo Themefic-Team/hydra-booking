@@ -46,6 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
     // Integrations
     new HydraBooking\Services\Integrations\MailChimp\MailChimp();
+    new HydraBooking\Services\Integrations\Telegram\Telegram();
 
     
 ?>
