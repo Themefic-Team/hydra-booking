@@ -591,8 +591,13 @@ const fetchMeeting = async () => {
             if(response.data.meeting.questions_form){
                 meetingData.questions_form = response.data.meeting.questions_form
             }
-            if(response.data.meeting.notification && "string" == typeof response.data.meeting.notification){
-                meetingData.notification = JSON.parse(response.data.meeting.notification)
+            if(response.data.meeting.notification && "string" == typeof response.data.meeting.notification){ 
+                let notificationData = JSON.parse(response.data.meeting.notification);
+                meetingData.notification = {
+                ...meetingData.notification,
+                ...notificationData
+                };
+
             }
             if(response.data.meeting.notification && "object" == typeof response.data.meeting.notification){
                 meetingData.notification = response.data.meeting.notification
