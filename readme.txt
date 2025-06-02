@@ -79,7 +79,8 @@ Say goodbye to no-shows and cancellations with automated notifications for all b
 
 * **Email Notifications**: Send booking confirmations, rescheduling updates, and reminders automatically.
 * **Custom Notification Settings**: Tailor notifications by booking status.
-* **SMS Notifications (Pro)**: Use SMS or WhatsApp to notify attendees via integrations like Twilio (coming soon).
+* **SMS Notifications (Pro)**: Notify via SMS or WhatsApp using Twilio integration
+* **Slack & Telegram**: Receive booking notifications directly in Slack or Telegram channels.
 
 = 🎉 PAYMENT OPTIONS  =
 * **[WooCommerce Integration](https://demo.hydrabooking.com/woocommerce-demo-meeting/)**: Direct clients to WooCommerce's secure checkout for payments.  
