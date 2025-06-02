@@ -231,7 +231,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterBookings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',

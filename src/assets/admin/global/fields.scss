@@ -723,4 +723,12 @@
             pointer-events: none !important;
         }
     }
+
+    .tfhb-email-body,
+    .tfhb-email-shortcodes-list{
+        width: calc(50% - 12px);
+        @media #{$max1140} {
+            width: 100%;
+        }
+    }
 }
