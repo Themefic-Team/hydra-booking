@@ -147,7 +147,7 @@ class Telegram {
 		); 
 		 
 		// Meeting Location Check
-		$meeting_locations = json_decode( $attendeeBooking->meeting_location );
+		$meeting_locations =  !is_array($attendeeBooking->meeting_locations) ?  json_decode( $attendeeBooking->meeting_locations ) : $attendeeBooking->meeting_locations;
 		$locations         = array();
 		if ( is_array( $meeting_locations ) ) {
 			foreach ( $meeting_locations as $location ) {
@@ -208,11 +208,11 @@ class Telegram {
 		// Full start end time with timezone for host
 		$dateTime = new DateTimeController( 'UTC' );
 		$metting_dates = explode(',', $attendeeBooking->meeting_dates);
-		if($attendeeBooking->host_time_zone != ''){
-			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->host_time_zone,  $metting_dates[0], 'full' );  
+		if($attendeeBooking->availability_time_zone != ''){
+			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'full' );  
 			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
 
-			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->host_time_zone,  $metting_dates[0], 'start' );
+			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'start' );
 			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
 		}else{
 			$replacements['{{booking.full_start_end_host_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
