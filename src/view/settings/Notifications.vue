@@ -131,22 +131,12 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-        booking_pending: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
         booking_cancel: {
             status : 0,
             body : '',
             builder: ''
         },
         booking_reschedule: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
-        booking_reminder: {
             status : 0,
             body : '',
             builder: ''
@@ -158,22 +148,12 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-        booking_pending: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
         booking_cancel: {
             status : 0,
             body : '',
             builder: ''
         },
         booking_reschedule: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
-        booking_reminder: {
             status : 0,
             body : '',
             builder: ''
@@ -185,22 +165,12 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-        booking_pending: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
         booking_cancel: {
             status : 0,
             body : '',
             builder: ''
         },
         booking_reschedule: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
-        booking_reminder: {
             status : 0,
             body : '',
             builder: ''
@@ -513,18 +483,6 @@ onBeforeMount(() => {
             /> 
             <!-- Single Integrations  -->
 
-            <!-- Single Notification  -->
-            <MailNotifications 
-                :title="$tfhb_trans('Booking Pending to Host')" 
-                :label="$tfhb_trans('Booking Pending')" 
-                @update-notification="UpdateNotification"
-                :data="Notification.telegram.booking_pending"  
-                :isSingle="true"
-                categoryKey="telegram"
-                emailKey="booking_pending"
-            /> 
-            <!-- Single Integrations  -->
-
 
             <!-- Single Notification  -->
             <MailNotifications 
@@ -547,18 +505,6 @@ onBeforeMount(() => {
                 :isSingle="true"
                 categoryKey="telegram"
                 emailKey="booking_reschedule"
-            /> 
-            <!-- Single Integrations  -->
-
-            <!-- Single Notification  -->
-            <MailNotifications 
-                :title="$tfhb_trans('Booking Reminder to Host')"
-                :label="$tfhb_trans('Booking Reminder')" 
-                @update-notification="UpdateNotification"
-                :data="Notification.telegram.booking_reminder"  
-                :isSingle="true"
-                categoryKey="telegram"
-                emailKey="booking_reminder"
             /> 
             <!-- Single Integrations  -->
 
@@ -591,18 +537,6 @@ onBeforeMount(() => {
                 /> 
                 <!-- Single Integrations  -->
 
-                <!-- Single Notification  -->
-                <MailNotifications 
-                    :title="$tfhb_trans('Booking Pending to Host')" 
-                    :label="$tfhb_trans('Booking Pending')" 
-                    @update-notification="UpdateNotification"
-                    :data="Notification.twilio.booking_pending"  
-                    :isSingle="true"
-                    categoryKey="twilio"
-                    emailKey="booking_pending"
-                /> 
-                <!-- Single Integrations  -->
-
 
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -625,18 +559,6 @@ onBeforeMount(() => {
                     :isSingle="true"
                     categoryKey="twilio"
                     emailKey="booking_reschedule"
-                /> 
-                <!-- Single Integrations  -->
-
-                <!-- Single Notification  -->
-                <MailNotifications 
-                    :title="$tfhb_trans('Booking Reminder to Host')"
-                    :label="$tfhb_trans('Booking Reminder')" 
-                    @update-notification="UpdateNotification"
-                    :data="Notification.twilio.booking_reminder"  
-                    :isSingle="true"
-                    categoryKey="twilio"
-                    emailKey="booking_reminder"
                 /> 
                 <!-- Single Integrations  -->
 
@@ -669,18 +591,6 @@ onBeforeMount(() => {
             /> 
             <!-- Single Integrations  -->
 
-            <!-- Single Notification  -->
-            <MailNotifications 
-                :title="$tfhb_trans('Booking Pending to Host')" 
-                :label="$tfhb_trans('Booking Pending')" 
-                @update-notification="UpdateNotification"
-                :data="Notification.slack.booking_pending"  
-                :isSingle="true"
-                categoryKey="slack"
-                emailKey="booking_pending"
-            /> 
-            <!-- Single Integrations  -->
-
 
             <!-- Single Notification  -->
             <MailNotifications 
@@ -703,18 +613,6 @@ onBeforeMount(() => {
                 :isSingle="true"
                 categoryKey="slack"
                 emailKey="booking_reschedule"
-            /> 
-            <!-- Single Integrations  -->
-
-            <!-- Single Notification  -->
-            <MailNotifications 
-                :title="$tfhb_trans('Booking Reminder to Host')"
-                :label="$tfhb_trans('Booking Reminder')" 
-                @update-notification="UpdateNotification"
-                :data="Notification.slack.booking_reminder"  
-                :isSingle="true"
-                categoryKey="slack"
-                emailKey="booking_reminder"
             /> 
             <!-- Single Integrations  -->
 

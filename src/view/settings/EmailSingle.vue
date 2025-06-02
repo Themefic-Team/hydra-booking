@@ -117,11 +117,6 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-        booking_pending: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
         booking_cancel: {
             status : 0,
             body : '',
@@ -131,12 +126,7 @@ const Notification = reactive(  {
             status : 0,
             body : '',
             builder: ''
-        },
-        booking_reminder: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
+        }
     },
     twilio : {
         booking_confirmation: {
@@ -144,22 +134,12 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-        booking_pending: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
         booking_cancel: {
             status : 0,
             body : '',
             builder: ''
         },
         booking_reschedule: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
-        booking_reminder: {
             status : 0,
             body : '',
             builder: ''
@@ -171,22 +151,12 @@ const Notification = reactive(  {
             body : '',
             builder: ''
         },
-        booking_pending: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
         booking_cancel: {
             status : 0,
             body : '',
             builder: ''
         },
         booking_reschedule: {
-            status : 0,
-            body : '',
-            builder: ''
-        },
-        booking_reminder: {
             status : 0,
             body : '',
             builder: ''

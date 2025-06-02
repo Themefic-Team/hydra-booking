@@ -358,21 +358,6 @@ const UpdateNotification = async () => {
 
                         <!-- Single Notification  -->
                         <MailNotifications 
-                            :title="$tfhb_trans('Booking Pending to Host')" 
-                            :label="$tfhb_trans('Booking Pending')" 
-                            @update-notification="UpdateNotification"
-                            :data="meeting.notification.telegram.booking_pending"  
-                            :update_preloader="props.update_preloader"  
-                            :ispopup="telegramBookingPendingPopUp"
-                            @popup-open-control="telegramBookingPendingPopUp = true"
-                            @popup-close-control="telegramBookingPendingPopUp = false"
-                            :mediaurl="$tfhb_url"
-                            categoryKey="telegram"
-                        /> 
-                        <!-- Single Integrations  -->
-
-                        <!-- Single Notification  -->
-                        <MailNotifications 
                             :title="$tfhb_trans('Booking Cancel to Host')"
                             :label="$tfhb_trans('Booking Cancel')" 
                             @update-notification="UpdateNotification"
@@ -396,21 +381,6 @@ const UpdateNotification = async () => {
                             :ispopup="telegramBookingReschedulePopUp"
                             @popup-open-control="telegramBookingReschedulePopUp = true"
                             @popup-close-control="telegramBookingReschedulePopUp = false"
-                            :mediaurl="$tfhb_url"
-                            categoryKey="telegram"
-                        /> 
-                        <!-- Single Integrations  -->
-
-                        <!-- Single Notification  -->
-                        <MailNotifications 
-                            :title="$tfhb_trans('Booking Reminder to Host')"
-                            :label="$tfhb_trans('Booking Reminder')"
-                            @update-notification="UpdateNotification"
-                            :data="meeting.notification.telegram.booking_reminder"  
-                            :update_preloader="props.update_preloader"  
-                            :ispopup="telegramBookingReminderPopUp"
-                            @popup-open-control="telegramBookingReminderPopUp = true"
-                            @popup-close-control="telegramBookingReminderPopUp = false"
                             :mediaurl="$tfhb_url"
                             categoryKey="telegram"
                         /> 
@@ -453,21 +423,6 @@ const UpdateNotification = async () => {
 
                         <!-- Single Notification  -->
                         <MailNotifications 
-                            :title="$tfhb_trans('Booking Pending to Host')"
-                            :label="$tfhb_trans('Booking Pending')" 
-                            @update-notification="UpdateNotification"
-                            :data="meeting.notification.slack.booking_pending"  
-                            :update_preloader="props.update_preloader"  
-                            :ispopup="slackBookingPendingPopUp"
-                            @popup-open-control="slackBookingPendingPopUp = true"
-                            @popup-close-control="slackBookingPendingPopUp = false"
-                            :mediaurl="$tfhb_url"
-                            categoryKey="slack"
-                        /> 
-                        <!-- Single Integrations  -->
-
-                        <!-- Single Notification  -->
-                        <MailNotifications 
                             :title="$tfhb_trans('Booking Cancel to Host')"
                             :label="$tfhb_trans('Booking Cancel')" 
                             @update-notification="UpdateNotification"
@@ -491,21 +446,6 @@ const UpdateNotification = async () => {
                             :ispopup="slackBookingReschedulePopUp"
                             @popup-open-control="slackBookingReschedulePopUp = true"
                             @popup-close-control="slackBookingReschedulePopUp = false"
-                            :mediaurl="$tfhb_url"
-                            categoryKey="slack"
-                        /> 
-                        <!-- Single Integrations  -->
-
-                        <!-- Single Notification  -->
-                        <MailNotifications 
-                            :title="$tfhb_trans('Booking Reminder to Host')"
-                            :label="$tfhb_trans('Booking Reminder')"
-                            @update-notification="UpdateNotification"
-                            :data="meeting.notification.slack.booking_reminder"  
-                            :update_preloader="props.update_preloader"  
-                            :ispopup="slackBookingReminderPopUp"
-                            @popup-open-control="slackBookingReminderPopUp = true"
-                            @popup-close-control="slackBookingReminderPopUp = false"
                             :mediaurl="$tfhb_url"
                             categoryKey="slack"
                         /> 
@@ -548,21 +488,6 @@ const UpdateNotification = async () => {
 
                         <!-- Single Notification  -->
                         <MailNotifications 
-                            :title="$tfhb_trans('Booking Pending to Host')" 
-                            :label="$tfhb_trans('Booking Pending')" 
-                            @update-notification="UpdateNotification"
-                            :data="meeting.notification.twilio.booking_pending"  
-                            :update_preloader="props.update_preloader"  
-                            :ispopup="twilioBookingPendingPopUp"
-                            @popup-open-control="twilioBookingPendingPopUp = true"
-                            @popup-close-control="twilioBookingPendingPopUp = false"
-                            :mediaurl="$tfhb_url"
-                            categoryKey="twilio"
-                        /> 
-                        <!-- Single Integrations  -->
-
-                        <!-- Single Notification  -->
-                        <MailNotifications 
                             :title="$tfhb_trans('Booking Cancel to Host')"
                             :label="$tfhb_trans('Booking Cancel')" 
                             @update-notification="UpdateNotification"
@@ -586,21 +511,6 @@ const UpdateNotification = async () => {
                             :ispopup="twilioBookingReschedulePopUp"
                             @popup-open-control="twilioBookingReschedulePopUp = true"
                             @popup-close-control="twilioBookingReschedulePopUp = false"
-                            :mediaurl="$tfhb_url"
-                            categoryKey="twilio"
-                        /> 
-                        <!-- Single Integrations  -->
-
-                        <!-- Single Notification  -->
-                        <MailNotifications 
-                            :title="$tfhb_trans('Booking Reminder to Host')"
-                            :label="$tfhb_trans('Booking Reminder')"
-                            @update-notification="UpdateNotification"
-                            :data="meeting.notification.twilio.booking_reminder"  
-                            :update_preloader="props.update_preloader"  
-                            :ispopup="twilioBookingReminderPopUp"
-                            @popup-open-control="twilioBookingReminderPopUp = true"
-                            @popup-close-control="twilioBookingReminderPopUp = false"
                             :mediaurl="$tfhb_url"
                             categoryKey="twilio"
                         /> 

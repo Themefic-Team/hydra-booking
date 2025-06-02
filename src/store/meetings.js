@@ -266,14 +266,6 @@ const Meeting = reactive({
                         body : '',
                         builder: ''
                     },
-                    booking_pending: {
-                        status : 0,
-                        template : 'default',
-                        form : '',
-                        subject : '',
-                        body : '',
-                        builder: ''
-                    },
                     booking_cancel: {
                         status : 0,
                         template : 'default',
@@ -283,14 +275,6 @@ const Meeting = reactive({
                         builder: ''
                     },
                     booking_reschedule: {
-                        status : 0,
-                        template : 'default',
-                        form : '',
-                        subject : '',
-                        body : '',
-                        builder: ''
-                    },
-                    booking_reminder: {
                         status : 0,
                         template : 'default',
                         form : '',
@@ -308,14 +292,6 @@ const Meeting = reactive({
                         body : '',
                         builder: ''
                     },
-                    booking_pending: {
-                        status : 0,
-                        template : 'default',
-                        form : '',
-                        subject : '',
-                        body : '',
-                        builder: ''
-                    },
                     booking_cancel: {
                         status : 0,
                         template : 'default',
@@ -331,14 +307,6 @@ const Meeting = reactive({
                         subject : '',
                         body : '',
         
-                    },
-                    booking_reminder: {
-                        status : 0,
-                        template : 'default',
-                        form : '',
-                        subject : '',
-                        body : '',
-                        builder: ''
                     },
                 },
                 twilio: {
@@ -350,14 +318,6 @@ const Meeting = reactive({
                         body : '',
                         builder: ''
                     },
-                    booking_pending: {
-                        status : 0,
-                        template : 'default',
-                        form : '',
-                        subject : '',
-                        body : '',
-                        builder: ''
-                    },
                     booking_cancel: {
                         status : 0,
                         template : 'default',
@@ -373,14 +333,6 @@ const Meeting = reactive({
                         subject : '',
                         body : '',
         
-                    },
-                    booking_reminder: {
-                        status : 0,
-                        template : 'default',
-                        form : '',
-                        subject : '',
-                        body : '',
-                        builder: ''
                     },
                 },
             },

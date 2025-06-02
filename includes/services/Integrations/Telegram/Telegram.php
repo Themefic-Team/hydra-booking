@@ -10,10 +10,9 @@ use HydraBooking\Admin\Controller\DateTimeController;
 class Telegram {
 
 	public function __construct( ) {
-		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 ); 
-		add_action( 'hydra_booking/after_booking_pending', array( $this, 'pushBookingToPending' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'pushBookingToConfirmed' ), 20, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 20, 1 );
-		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 1 );
+		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 20, 2 );
 	}
 
     // Get Meeting Data
@@ -35,28 +34,12 @@ class Telegram {
 
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
-
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 			if(!empty($_tfhb_notification_settings['telegram']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_confirmation']['body'])){
 				$telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_confirmation']['body'], $attendees);
 			}
 		}
        
-	}
-
-
-	// If booking Status is Pending
-	public function pushBookingToPending( $attendees ) {
-
-		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
-		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
-
-		if ( ! empty( $_tfhb_notification_settings ) ) {
-			if(!empty($_tfhb_notification_settings['telegram']['booking_pending']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_pending']['body'])){
-				$telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_pending']['body'], $attendees);
-			}
-		}
-
 	}
 
 	// If booking Status is Cancel
@@ -74,7 +57,7 @@ class Telegram {
 	}
 
 	// If booking Status is ReSchedule
-	public function pushBookingToscheduled( $attendees ) {
+	public function pushBookingToscheduled( $old_booking_id, $attendees ) {
 		
 		$Meeting_meta                = $this->getMeetingData( $attendees->meeting_id );
 		$_tfhb_notification_settings = ! empty( $Meeting_meta['notification'] ) ? $Meeting_meta['notification'] : '';
@@ -92,7 +75,7 @@ class Telegram {
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $attendees->host_id, '_tfhb_host_integration_settings', true ) : array();
         $_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
         
-		if(!empty($_tfhb_host_integration_settings['telegram']) && !empty($_tfhb_host_integration_settings['telegram']['status'])){
+		if(!empty($_tfhb_host_integration_settings['telegram']) && !empty($_tfhb_host_integration_settings['telegram']['status']) && !empty($_tfhb_host_integration_settings['telegram']['bot_token'])){
 			$telegram_status = !empty($_tfhb_host_integration_settings['telegram']['status']) ? $_tfhb_host_integration_settings['telegram']['status'] : '';
 			$telegram_bot_token = !empty($_tfhb_host_integration_settings['telegram']['bot_token']) ? $_tfhb_host_integration_settings['telegram']['bot_token'] : '';
 			$telegram_chat_id = !empty($_tfhb_host_integration_settings['telegram']['chat_id']) ? $_tfhb_host_integration_settings['telegram']['chat_id'] : '';
@@ -111,6 +94,8 @@ class Telegram {
 			$text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
 			$lines = array_filter(array_map('trim', explode("\n", $text)));
 			$mailbody = implode("\n", $lines);
+			
+			$mailbody = $this->escape_markdown_v2($mailbody);
 
             $api_url = "https://api.telegram.org/bot$telegram_bot_token/sendMessage";
 			$args = array(
@@ -123,6 +108,7 @@ class Telegram {
 				'body' => json_encode( $args ),
 				'headers' => array( 'Content-Type' => 'application/json' ),
 			) );
+
             return $response;
 
 
@@ -132,6 +118,14 @@ class Telegram {
         }
     }
 
+	// Escape MarkdownV2 reserved characters
+	public function escape_markdown_v2($text) {
+		$special_chars = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+		foreach ($special_chars as $char) {
+			$text = str_replace($char, '\\' . $char, $text);
+		}
+		return $text;
+	}
     /**
 	 * Replace all available mail tags
 	 */
@@ -149,14 +143,22 @@ class Telegram {
 		// Meeting Location Check
 		$meeting_locations =  !is_array($attendeeBooking->meeting_locations) ?  json_decode( $attendeeBooking->meeting_locations ) : $attendeeBooking->meeting_locations;
 		$locations         = array();
+		
 		if ( is_array( $meeting_locations ) ) {
 			foreach ( $meeting_locations as $location ) {
 				if ( isset( $location->location ) ) {
-					$locations[] = $location->location;
+					$locations[] = $location->location . (!empty($location->address) ? ' - ' . $location->address : '');
 				}
 			}
 		}
-		// 
+
+		if ( is_object($meeting_locations) ) {
+			foreach ( $meeting_locations as $key => $locationObj ) {
+				if ( isset($locationObj->location) ) {
+					$locations[] = $locationObj->location . (!empty($locationObj->address) ? ' - ' . $locationObj->address : '');
+				}
+			}
+		}
 
 		$replacements = array(
 			'{{meeting.title}}'    => ! empty( $attendeeBooking->meeting_title ) ? $attendeeBooking->meeting_title : '',
