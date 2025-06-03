@@ -132,7 +132,7 @@ const UpdateNotification = async () => {
 <template>
     <div class="meeting-create-details tfhb-gap-24">
         <div class="tfhb-notification-wrap tfhb-admin-card-box tfhb-m-0 tfhb-gap-0 tfhb-full-width">
-
+ 
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">
                 <button @click="changeTab('host')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }}</button>
@@ -150,7 +150,6 @@ const UpdateNotification = async () => {
                         <Icon v-else name="ChevronDown" size=20 />
                     </div>
                 </div>
-
                 <div class="tfhb-integration-notification-box" v-show="EmailPreview">
                     <div v-if="currentTabs=='host'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
                         <!-- Single Notification  -->
