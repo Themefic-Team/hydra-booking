@@ -591,8 +591,15 @@ const fetchMeeting = async () => {
             if(response.data.meeting.questions_form){
                 meetingData.questions_form = response.data.meeting.questions_form
             }
-            if(response.data.meeting.notification && "string" == typeof response.data.meeting.notification){
-                meetingData.notification = JSON.parse(response.data.meeting.notification)
+            if(response.data.meeting.notification && "string" == typeof response.data.meeting.notification){ 
+                console.log(meetingData.notification)
+                let notificationData = JSON.parse(response.data.meeting.notification);
+                meetingData.notification.attendee = notificationData.attendee ? notificationData.attendee : meetingData.notification.attendee;
+                meetingData.notification.host = notificationData.host ? notificationData.host : meetingData.notification.host;
+                meetingData.notification.slack = notificationData.slack ? notificationData.slack : meetingData.notification.slack;
+                meetingData.notification.twilio = notificationData.twilio ? notificationData.twilio : meetingData.notification.twilio;
+                meetingData.notification.telegram = notificationData.telegram ? notificationData.telegram : meetingData.notification.telegram;
+
             }
             if(response.data.meeting.notification && "object" == typeof response.data.meeting.notification){
                 meetingData.notification = response.data.meeting.notification
