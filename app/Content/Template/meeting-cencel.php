@@ -2,6 +2,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use HydraBooking\Admin\Controller\TransStrings;
 /**
  * The public-facing functionality of the plugin.
  *
@@ -54,11 +55,12 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 							$date_strings = '';
 							foreach ( $meeting_dates as $key => $date ) {
 
-								$date_strings .= gmdate( 'l, F j', strtotime( $date ) );
+								
+								$date_strings .= TransStrings::tfhbTranslateDateSlot(gmdate( 'l, F j', strtotime( $date ) ));
 								$date_strings .= ', ';
 							}
-
-								echo ! empty( $data->start_time ) ? '' . esc_html( $data->start_time ) . ' - ' . esc_html( $data->end_time ) . ' ' . esc_html( $date_strings ) . '' : ''
+ 
+								echo ! empty(  $data->start_time ) ? '' . esc_html( TransStrings::tfhbTranslateTimeSlot( $data->start_time)) . ' - ' . esc_html( TransStrings::tfhbTranslateTimeSlot($data->end_time )) . ', ' . esc_html( $date_strings ) . '' : ';'
 							?>
 						</li>
 						<li class="tfhb-flexbox tfhb-gap-8">
@@ -73,17 +75,54 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 						<!-- Meeting location -->
 						<?php
 						if ( ! empty( $data->meeting_locations ) ) {
-							$locations = json_decode( $data->meeting_locations );
+							$locations = json_decode( $data->meeting_locations, true );
 							foreach ( $locations as $key => $location ) {
-								if ( empty( $location->location ) ) {
+
+									$location_value = $location['address'];
+							if($location['location'] == 'zoom'){
+								$location_value = __('Zoom', 'hydra-booking');
+							}elseif($location['location'] == 'meet'){
+								$location_value = __('Google Meet', 'hydra-booking');
+							}
+							elseif($location['location'] == 'Attendee Phone Number'){
+								$location_value = __('Attendee Phone Number', 'hydra-booking');
+							}elseif($location['location'] == 'Organizer Phone Number'){
+								$location_value = __('Organizer Phone Number', 'hydra-booking');
+							
+							}elseif($location['location'] == 'In Person (Organizer Address)'){
+								$location_value = __('In Person (Organizer Address)', 'hydra-booking');
+							
+							}elseif($location['location'] == 'In Person (Attendee Address)'){
+								$location_value = __('In Person (Attendee Address)', 'hydra-booking');
+							}else{
+								$location_value = $location['location'];
+							}
+							$address =  isset($location['address']) && !empty($location['address']) ? $location['address'] : $location_value;
+							
+							if($key == 'zoom'){
+								$address = isset($location['address']['link']) ? $location['address']['link'] : $key;
+							}
+							if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
+								$icon = '<img src="'.esc_url(TFHB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';
+							}elseif($location['location'] == 'zoom'){
+								$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/zoom.png').'" alt="Zoom">';
+							}elseif($location['location'] == 'meet'){
+								$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/google-meet small.png').'" alt="meet">';
+							}elseif($location['location'] == 'MS Teams'){
+								$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/ms_teams-logo.svg').'" alt="MS Teams">';
+							}else{
+								$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/location.svg').'" alt="Location">';
+							}
+								if ( empty( $location['location'] ) ) {
 									continue;
 								}
 								echo '<li class="tfhb-flexbox tfhb-gap-8">
-                                            <div class="tfhb-icon">
-                                                <img src="' . esc_url( TFHB_URL . 'assets/app/images/location.svg' ) . '" alt="location">   
-                                            </div> 
-                                            ' . esc_html( $location->location ) . '
-                                        </li>';
+										<div class="tfhb-icon">
+											'.$icon.'  
+										</div> 
+										' . 
+										esc_html( $address ) . '
+									</li>';
 							}
 						}
 						?>
@@ -113,7 +152,7 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 					<div class="tfhb-confirmation-button tfhb-flexbox tfhb-gap-8">
 				   
 						<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
-							<?php echo esc_attr( 'Cancel Booking' ); ?>
+							<?php echo esc_html__('Cancel booking', 'hydra-booking'); ?>
 							<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
 						</button>
 					</div>

@@ -1,7 +1,0 @@
-{
-    "potFilename": "languages/hydra-booking.pot",
-    "exclude": [
-      "sass/*",
-      "sass/**/*"
-    ]
-  }

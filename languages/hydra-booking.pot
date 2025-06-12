@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-29T15:31:11+00:00\n"
+"POT-Creation-Date: 2025-06-12T16:26:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: hydra-booking\n"
 
 #. Plugin Name of the plugin
@@ -42,7 +42,7 @@ msgstr ""
 #: admin/Controller/AdminMenu.php:32
 #: admin/Controller/AdminMenu.php:33
 #: app/FrontendDashboard/FrontendDashboard.php:221
-#: app/FrontendDashboard/FrontendDashboard.php:483
+#: app/FrontendDashboard/FrontendDashboard.php:486
 msgid "Hydra Booking"
 msgstr ""
 
@@ -266,8 +266,8 @@ msgstr ""
 #: admin/Controller/HostsController.php:497
 #: admin/Controller/HostsController.php:556
 #: admin/Controller/HostsController.php:570
-#: admin/Controller/MeetingController.php:1378
-#: admin/Controller/MeetingController.php:1416
+#: admin/Controller/MeetingController.php:1386
+#: admin/Controller/MeetingController.php:1424
 msgid "Invalid Host"
 msgstr ""
 
@@ -433,10 +433,10 @@ msgid "Meeting Created Successfully!"
 msgstr ""
 
 #: admin/Controller/MeetingController.php:732
-#: admin/Controller/MeetingController.php:832
-#: admin/Controller/MeetingController.php:847
-#: admin/Controller/MeetingController.php:1148
-#: admin/Controller/MeetingController.php:1160
+#: admin/Controller/MeetingController.php:840
+#: admin/Controller/MeetingController.php:855
+#: admin/Controller/MeetingController.php:1156
+#: admin/Controller/MeetingController.php:1168
 msgid "Invalid Meeting"
 msgstr ""
 
@@ -448,31 +448,31 @@ msgstr ""
 msgid "Meeting Deleted Successfully!"
 msgstr ""
 
-#: admin/Controller/MeetingController.php:979
+#: admin/Controller/MeetingController.php:987
 msgid "Install and activate the Fluent CRM plugin."
 msgstr ""
 
-#: admin/Controller/MeetingController.php:982
+#: admin/Controller/MeetingController.php:990
 msgid "Activate the Fluent CRM plugin."
 msgstr ""
 
-#: admin/Controller/MeetingController.php:1133
+#: admin/Controller/MeetingController.php:1141
 msgid "Meeting Data"
 msgstr ""
 
-#: admin/Controller/MeetingController.php:1279
+#: admin/Controller/MeetingController.php:1287
 msgid "Error while updating meeting"
 msgstr ""
 
-#: admin/Controller/MeetingController.php:1298
+#: admin/Controller/MeetingController.php:1306
 msgid "Meeting Updated Successfully"
 msgstr ""
 
-#: admin/Controller/MeetingController.php:1364
+#: admin/Controller/MeetingController.php:1372
 msgid "Meeting Cloned Successfully"
 msgstr ""
 
-#: admin/Controller/MeetingController.php:1431
+#: admin/Controller/MeetingController.php:1439
 msgid "Host Availability Data"
 msgstr ""
 
@@ -618,6 +618,10 @@ msgid "Recent Bookings"
 msgstr ""
 
 #: admin/Controller/TransStrings.php:28
+#: app/Content/Archive/archive-page-tfhb-host.php:43
+#: app/Content/Archive/archive-tfhb_meeting.php:32
+#: app/Content/Archive/taxonomy-meeting_category.php:35
+#: app/Shortcode/ShortcodeBuilder.php:122
 msgid "Free"
 msgstr ""
 
@@ -752,7 +756,7 @@ msgstr ""
 
 #: admin/Controller/TransStrings.php:63
 #: admin/Controller/TransStrings.php:104
-#: app/Content/Template/meeting-confirmation.php:44
+#: app/Content/Template/meeting-confirmation.php:45
 msgid "Booking"
 msgstr ""
 
@@ -805,7 +809,8 @@ msgid "Export Booking"
 msgstr ""
 
 #: admin/Controller/TransStrings.php:78
-#: app/Content/Template/meeting-cencel.php:43
+#: app/Content/Template/meeting-cencel.php:44
+#: app/Content/Template/meeting-confirmation.php:56
 msgid "Host"
 msgstr ""
 
@@ -846,6 +851,11 @@ msgid "Action"
 msgstr ""
 
 #: admin/Controller/TransStrings.php:88
+#: app/Content/Archive/archive-page-tfhb-host.php:69
+#: app/Content/Archive/archive-tfhb_meeting.php:58
+#: app/Content/Archive/taxonomy-meeting_category.php:61
+#: app/Content/Template/meeting-info.php:132
+#: app/Shortcode/ShortcodeBuilder.php:145
 msgid "minutes"
 msgstr ""
 
@@ -938,13 +948,17 @@ msgid "Minutes"
 msgstr ""
 
 #: admin/Controller/TransStrings.php:113
-#: app/Content/Template/meeting-info.php:142
+#: app/Content/Template/meeting-cencel.php:85
+#: app/Content/Template/meeting-confirmation.php:108
+#: app/Content/Template/meeting-info.php:143
 msgid "Google Meet"
 msgstr ""
 
 #: admin/Controller/TransStrings.php:114
 #: admin/Controller/TransStrings.php:599
-#: app/Content/Template/meeting-info.php:140
+#: app/Content/Template/meeting-cencel.php:83
+#: app/Content/Template/meeting-confirmation.php:106
+#: app/Content/Template/meeting-info.php:141
 msgid "Zoom"
 msgstr ""
 
@@ -3435,6 +3449,24 @@ msgstr ""
 msgid "Host: "
 msgstr ""
 
+#: app/Content/Archive/archive-page-tfhb-host.php:84
+#: app/Content/Archive/archive-tfhb_meeting.php:73
+#: app/Content/Archive/taxonomy-meeting_category.php:76
+#: app/Shortcode/ShortcodeBuilder.php:157
+#: app/Shortcode/ShortcodeBuilder.php:271
+#: app/Shortcode/ShortcodeBuilder.php:369
+msgid "Select"
+msgstr ""
+
+#: app/Content/Archive/archive-page-tfhb-host.php:90
+#: app/Content/Archive/archive-tfhb_meeting.php:79
+#: app/Content/Archive/taxonomy-meeting_category.php:82
+#: app/Shortcode/ShortcodeBuilder.php:163
+#: app/Shortcode/ShortcodeBuilder.php:279
+#: app/Shortcode/ShortcodeBuilder.php:375
+msgid "No meetings found."
+msgstr ""
+
 #: app/Content/Archive/archive-tfhb_meeting.php:19
 msgid "Meeting Archive"
 msgstr ""
@@ -3443,32 +3475,74 @@ msgstr ""
 msgid "Category: "
 msgstr ""
 
-#: app/Content/calendar.php:37
+#: app/Content/calendar.php:38
 msgid "Host is not selected"
 msgstr ""
 
-#: app/Content/calendar.php:40
+#: app/Content/calendar.php:41
 msgid "Timezone is not valid"
 msgstr ""
 
-#: app/Content/calendar.php:65
+#: app/Content/calendar.php:66
 msgid "You are rescheduling the booking:"
 msgstr ""
 
-#: app/Content/Template/meeting-cencel.php:32
+#: app/Content/Template/meeting-cencel.php:33
 msgid "Your meeting has been"
 msgstr ""
 
-#: app/Content/Template/meeting-cencel.php:33
+#: app/Content/Template/meeting-cencel.php:34
 msgid "Please check your email for more information. Now you can reschedule or cancel booking from here."
 msgstr ""
 
-#: app/Content/Template/meeting-cencel.php:104
+#: app/Content/Template/meeting-cencel.php:88
+#: app/Content/Template/meeting-confirmation.php:111
+#: app/Content/Template/meeting-info.php:146
+msgid "Attendee Phone Number"
+msgstr ""
+
+#: app/Content/Template/meeting-cencel.php:90
+#: app/Content/Template/meeting-confirmation.php:113
+#: app/Content/Template/meeting-info.php:148
+msgid "Organizer Phone Number"
+msgstr ""
+
+#: app/Content/Template/meeting-cencel.php:93
+#: app/Content/Template/meeting-confirmation.php:116
+#: app/Content/Template/meeting-info.php:151
+msgid "In Person (Organizer Address)"
+msgstr ""
+
+#: app/Content/Template/meeting-cencel.php:96
+#: app/Content/Template/meeting-confirmation.php:119
+#: app/Content/Template/meeting-info.php:154
+msgid "In Person (Attendee Address)"
+msgstr ""
+
+#: app/Content/Template/meeting-cencel.php:143
 msgid "Reason for Cancellation"
+msgstr ""
+
+#: app/Content/Template/meeting-cencel.php:155
+#: app/Content/Template/meeting-confirmation.php:182
+msgid "Cancel booking"
+msgstr ""
+
+#: app/Content/Template/meeting-confirmation.php:155
+msgid "Add to calender"
+msgstr ""
+
+#: app/Content/Template/meeting-confirmation.php:196
+#: app/Content/Template/meeting-form.php:189
+msgid "Reschedule"
 msgstr ""
 
 #: app/Content/Template/meeting-form.php:177
 msgid "Reason for Reschedule"
+msgstr ""
+
+#: app/Content/Template/meeting-form.php:189
+msgid "Confirm"
 msgstr ""
 
 #: app/Content/Template/meeting-info.php:100
@@ -3477,22 +3551,6 @@ msgstr ""
 
 #: app/Content/Template/meeting-info.php:109
 msgid "See less"
-msgstr ""
-
-#: app/Content/Template/meeting-info.php:145
-msgid "Attendee Phone Number"
-msgstr ""
-
-#: app/Content/Template/meeting-info.php:147
-msgid "Organizer Phone Number"
-msgstr ""
-
-#: app/Content/Template/meeting-info.php:150
-msgid "In Person (Organizer Address)"
-msgstr ""
-
-#: app/Content/Template/meeting-info.php:153
-msgid "In Person (Attendee Address)"
 msgstr ""
 
 #: app/Content/Template/meeting-times.php:68
@@ -3512,7 +3570,15 @@ msgstr ""
 msgid "You are not allowed to reschedule this meeting"
 msgstr ""
 
+#: app/FrontendDashboard/FrontendDashboard.php:177
+#: app/FrontendDashboard/FrontendDashboard.php:270
+#: app/FrontendDashboard/Shortcode/Login.php:164
+#: app/FrontendDashboard/Shortcode/Signup.php:267
+msgid "Sorry, your nonce did not verify."
+msgstr ""
+
 #: app/FrontendDashboard/FrontendDashboard.php:182
+#: app/FrontendDashboard/Shortcode/Login.php:169
 msgid "Username or email is required."
 msgstr ""
 
@@ -3552,12 +3618,6 @@ msgstr ""
 msgid "Password reset link sent to your email."
 msgstr ""
 
-#: app/FrontendDashboard/FrontendDashboard.php:270
-#: app/FrontendDashboard/Shortcode/Login.php:164
-#: app/FrontendDashboard/Shortcode/Signup.php:267
-msgid "Sorry, your nonce did not verify."
-msgstr ""
-
 #: app/FrontendDashboard/FrontendDashboard.php:287
 #: app/FrontendDashboard/Shortcode/Signup.php:290
 msgid "Please re-enter your password"
@@ -3573,12 +3633,47 @@ msgstr ""
 msgid "The field is required"
 msgstr ""
 
-#: app/FrontendDashboard/FrontendDashboard.php:305
-msgid "Password changed successfully. you can <a href=\""
+#: app/FrontendDashboard/FrontendDashboard.php:306
+#, php-format
+msgid "Password changed successfully. You can <a href=\"%s\">login here</a>."
 msgstr ""
 
-#: app/FrontendDashboard/FrontendDashboard.php:307
+#: app/FrontendDashboard/FrontendDashboard.php:310
 msgid "User not found"
+msgstr ""
+
+#: app/FrontendDashboard/FrontendDashboard.php:359
+msgid "Login page URL not found. Please configure the settings."
+msgstr ""
+
+#: app/FrontendDashboard/FrontendDashboard.php:386
+msgctxt "Page slug"
+msgid "hydra-login"
+msgstr ""
+
+#: app/FrontendDashboard/FrontendDashboard.php:387
+msgctxt "Page title"
+msgid "Hydra Login"
+msgstr ""
+
+#: app/FrontendDashboard/FrontendDashboard.php:393
+msgctxt "Page slug"
+msgid "hydra-register"
+msgstr ""
+
+#: app/FrontendDashboard/FrontendDashboard.php:394
+msgctxt "Page title"
+msgid "Hydra Register"
+msgstr ""
+
+#: app/FrontendDashboard/FrontendDashboard.php:400
+msgctxt "Page slug"
+msgid "hydra-dashboard"
+msgstr ""
+
+#: app/FrontendDashboard/FrontendDashboard.php:401
+msgctxt "Page title"
+msgid "Hydra Dashboard"
 msgstr ""
 
 #: app/FrontendDashboard/Shortcode/Login.php:48
@@ -3632,6 +3727,14 @@ msgstr ""
 #: app/FrontendDashboard/Template/forgot-password.php:137
 #: app/FrontendDashboard/Template/forgot-password.php:193
 msgid "Sign up"
+msgstr ""
+
+#: app/FrontendDashboard/Shortcode/Login.php:171
+msgid "Password is required."
+msgstr ""
+
+#: app/FrontendDashboard/Shortcode/Login.php:196
+msgid "Successfully logged in."
 msgstr ""
 
 #: app/FrontendDashboard/Shortcode/Signup.php:84
@@ -3689,26 +3792,32 @@ msgid "Your account has been successfully activated."
 msgstr ""
 
 #: app/FrontendDashboard/Template/email-verification.php:56
+#, php-format
 msgid "%1$sYour email has been successfully verified! %2$sLogin here%3$s"
 msgstr ""
 
 #: app/FrontendDashboard/Template/email-verification.php:81
+#, php-format
 msgid "%1$s Invalid email verification url! %2$sResend email%3$"
 msgstr ""
 
 #: app/FrontendDashboard/Template/email-verification.php:85
+#, php-format
 msgid "%1$sYour email is already verified. %2$sLogin here%3$s"
 msgstr ""
 
 #: app/FrontendDashboard/Template/email-verification.php:89
+#, php-format
 msgid "%1$s No email verification url found! %2$sResend email%3$"
 msgstr ""
 
 #: app/FrontendDashboard/Template/email-verification.php:93
+#, php-format
 msgid "%1$s Invalid or not found email verification url! %2$s"
 msgstr ""
 
 #: app/FrontendDashboard/Template/email-verification.php:97
+#, php-format
 msgid "%1$s Verification failed! %2$s"
 msgstr ""
 
@@ -3762,6 +3871,7 @@ msgstr ""
 msgid "Please upgrade to pro version for group meeting"
 msgstr ""
 
+#: app/Shortcode/HydraBookingShortcode.php:552
 #: app/Shortcode/HydraBookingShortcode.php:559
 msgid "Already Booked"
 msgstr ""
@@ -3820,6 +3930,43 @@ msgstr ""
 msgid "Payment Completed Successfully"
 msgstr ""
 
+#: app/Shortcode/ShortcodeBuilder.php:65
+#: app/Shortcode/ShortcodeBuilder.php:73
+#: app/Shortcode/ShortcodeBuilder.php:204
+#: app/Shortcode/ShortcodeBuilder.php:212
+#: app/Shortcode/ShortcodeBuilder.php:320
+#: app/Shortcode/ShortcodeBuilder.php:328
+msgid "Error:"
+msgstr ""
+
+#: app/Shortcode/ShortcodeBuilder.php:66
+#: app/Shortcode/ShortcodeBuilder.php:205
+#: app/Shortcode/ShortcodeBuilder.php:321
+msgid "Invalid sorting parameter."
+msgstr ""
+
+#: app/Shortcode/ShortcodeBuilder.php:67
+#: app/Shortcode/ShortcodeBuilder.php:206
+#: app/Shortcode/ShortcodeBuilder.php:322
+msgid "Accepted sort_by values:"
+msgstr ""
+
+#: app/Shortcode/ShortcodeBuilder.php:74
+#: app/Shortcode/ShortcodeBuilder.php:213
+#: app/Shortcode/ShortcodeBuilder.php:329
+msgid "Invalid order direction."
+msgstr ""
+
+#: app/Shortcode/ShortcodeBuilder.php:75
+#: app/Shortcode/ShortcodeBuilder.php:214
+#: app/Shortcode/ShortcodeBuilder.php:330
+msgid "Accepted order_by values:"
+msgstr ""
+
+#: app/Shortcode/ShortcodeBuilder.php:134
+msgid "No Title"
+msgstr ""
+
 #: includes/license/HydraBooking.php:171
 msgid "Hydra Booking License Info"
 msgstr ""
@@ -3856,6 +4003,7 @@ msgstr ""
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:41
 #: includes/post-type/Post_Type.php:120
+#, php-format
 msgid "Add New %s"
 msgstr ""
 
@@ -3863,11 +4011,13 @@ msgstr ""
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:43
 #: includes/post-type/Post_Type.php:114
+#, php-format
 msgid "Edit %s"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:45
+#, php-format
 msgid "New %s"
 msgstr ""
 
@@ -3875,6 +4025,7 @@ msgstr ""
 #. translators: %s: taxonomy name
 #: includes/post-type/Post_Type.php:47
 #: includes/post-type/Post_Type.php:112
+#, php-format
 msgid "All %s"
 msgstr ""
 
@@ -3884,6 +4035,7 @@ msgstr ""
 #: includes/post-type/Post_Type.php:49
 #: includes/post-type/Post_Type.php:51
 #: includes/post-type/Post_Type.php:116
+#, php-format
 msgid "View %s"
 msgstr ""
 
@@ -3891,46 +4043,55 @@ msgstr ""
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:53
 #: includes/post-type/Post_Type.php:128
+#, php-format
 msgid "Search %s"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:55
+#, php-format
 msgid "No %s found"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:57
+#, php-format
 msgid "No %s found in Trash"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:61
+#, php-format
 msgid "%s Image"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:63
+#, php-format
 msgid "Set %s Image"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:65
+#, php-format
 msgid "Remove %s Image"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:67
+#, php-format
 msgid "Use as %s Image"
 msgstr ""
 
 #. translators: %s: post type singular name
 #: includes/post-type/Post_Type.php:69
+#, php-format
 msgid "%s Attributes"
 msgstr ""
 
 #. translators: %s: post type name
 #: includes/post-type/Post_Type.php:71
+#, php-format
 msgid "Filter %s list"
 msgstr ""
 
@@ -3938,6 +4099,7 @@ msgstr ""
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:73
 #: includes/post-type/Post_Type.php:142
+#, php-format
 msgid "%s list navigation"
 msgstr ""
 
@@ -3945,61 +4107,73 @@ msgstr ""
 #. translators: %s: taxonomy name
 #: includes/post-type/Post_Type.php:75
 #: includes/post-type/Post_Type.php:144
+#, php-format
 msgid "%s list"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:118
+#, php-format
 msgid "Update %s name"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:122
+#, php-format
 msgid "New %s name"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:124
+#, php-format
 msgid "Parent %s"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:126
+#, php-format
 msgid "Parent : %s"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:130
+#, php-format
 msgid "Popular %s"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:132
+#, php-format
 msgid "Separate %s with commas"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:134
+#, php-format
 msgid "Add or remove %s"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:136
+#, php-format
 msgid "Choose from the most used %s"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:138
+#, php-format
 msgid "No %s found."
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:140
+#, php-format
 msgid "No %s"
 msgstr ""
 
 #. translators: %s: taxonomy singular name
 #: includes/post-type/Post_Type.php:146
+#, php-format
 msgid "Back to %s"
 msgstr ""
 

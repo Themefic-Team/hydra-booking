@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks; 
+use HydraBooking\Admin\Controller\TransStrings;
 $data = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array();  
 $confirmation_page = isset( $args['confirmation_page'] ) ? $args['confirmation_page'] : false;  
 
@@ -51,8 +52,8 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						<div class="tfhb-icon">
 							<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/user.svg'); ?>" alt="User">
 						</div>
-						<?php echo ! empty( $data->first_name ) ? '' . esc_html( $data->first_name ) . '  ' . esc_html( $data->last_name ) . '' : ''; ?>
-						<span>Host</span>
+						<?php echo ! empty( $data->host_first_name ) ? '' . esc_html( $data->host_first_name ) . '  ' . esc_html( $data->host_last_name ) . '' : ''; ?>
+						<span><?php echo esc_html( __( 'Host', 'hydra-booking' ) ); ?> </span>
 					</li> 
 					<?php if ( ! empty( $data->start_time ) ) { ?>
 					<li class="tfhb-flexbox tfhb-gap-8">
@@ -73,12 +74,12 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 							$date_strings = '';
 						foreach ( $meeting_dates as $key => $date ) {
 							$formate_date = $date_time->convert_time_based_on_timezone( $date, $data->start_time, $booking_availability_time_zone, $data->attendee_time_zone , '' );
-							$date_strings .= $formate_date->format('l, F j');
+							$date_strings .= TransStrings::tfhbTranslateDateSlot($formate_date->format('l, F j') );
 							$date_strings .= '| ';
 						}
 						$date_strings = rtrim( $date_strings, '| ' ); 
 
-							echo ! empty( $start_time->format('h:i A') ) ? '' . esc_html( $start_time->format('h:i A') ) . ' - ' . esc_html( $end_time->format('h:i A') ) . ', ' . esc_html( $date_strings ) . '' : ''
+							echo ! empty( $start_time->format('h:i A') ) ? '' . esc_html( TransStrings::tfhbTranslateTimeSlot($start_time->format('h:i A') )) . ' - ' . esc_html( TransStrings::tfhbTranslateTimeSlot($end_time->format('h:i A') )) . ', ' . esc_html( $date_strings ) . '' : ''
 						?>
 					</li>
 					<?php } ?>
@@ -100,8 +101,27 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						
 						foreach ( $meeting_location as $key => $location ) {
 
+							$location_value = $location['address'];
+							if($location['location'] == 'zoom'){
+								$location_value = __('Zoom', 'hydra-booking');
+							}elseif($location['location'] == 'meet'){
+								$location_value = __('Google Meet', 'hydra-booking');
+							}
+							elseif($location['location'] == 'Attendee Phone Number'){
+								$location_value = __('Attendee Phone Number', 'hydra-booking');
+							}elseif($location['location'] == 'Organizer Phone Number'){
+								$location_value = __('Organizer Phone Number', 'hydra-booking');
 							
-							$address =  isset($location['address']) && !empty($location['address']) ? $location['address'] : $key;
+							}elseif($location['location'] == 'In Person (Organizer Address)'){
+								$location_value = __('In Person (Organizer Address)', 'hydra-booking');
+							
+							}elseif($location['location'] == 'In Person (Attendee Address)'){
+								$location_value = __('In Person (Attendee Address)', 'hydra-booking');
+							}else{
+								$location_value = $location['location'];
+							}
+							
+							$address =  isset($location['address']) && !empty($location['address']) ? $location['address'] : $location_value;
 							
 							if($key == 'zoom'){
 								$address = isset($location['address']['link']) ? $location['address']['link'] : $key;
@@ -132,7 +152,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 
 					
 			<div class="tfhb-meeting-bookmark-action tfhb-text-center">
-				<p><?php echo esc_html(__('Add to calender', 'hydra_booking')) ?></p>
+				<p><?php echo esc_html(__('Add to calender', 'hydra-booking')) ?></p>
 				<div class="tfhb-meeting-bookmark-list">
 					<!-- Bookmarks -->
 					<?php 
@@ -159,7 +179,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						),
 						home_url()
 					);
-					echo '<a href="' . esc_attr( $cancel ) . '">'.esc_html__('Cancel booking', 'hydra_booking').'</a>';
+					echo '<a href="' . esc_attr( $cancel ) . '">'.esc_html__('Cancel booking', 'hydra-booking').'</a>';
 				}
 				if ( true == $data->attendee_can_reschedule ) {
 
@@ -173,7 +193,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						home_url()
 					);
 
-					echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html__('Reschedule', 'hydra_booking').'</a>';
+					echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html__('Reschedule', 'hydra-booking').'</a>';
 				}
 				?>
 			</div>

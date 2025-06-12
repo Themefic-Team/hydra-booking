@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 use HydraBooking\Admin\Controller\DateTimeController;
  
+use HydraBooking\Admin\Controller\TransStrings;
 $atts          = isset( $args['atts'] ) ? $args['atts'] : array();
 $meeting          = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host 		   = isset( $args['host'] ) ? $args['host'] : array();
@@ -62,14 +63,14 @@ $availability_time_zone = isset($availability_data['time_zone']) ? $availability
                 // Load Reschedule Template
                 // You are rescheduling the booking: 3:15 pm - 3:30 pm, May 27, 2024 (Asia/Dhaka)
                 echo '<div class="tfhb-reschedule-box">';
-                echo '<p>' . esc_html__( 'You are rescheduling the booking:', 'hydra-booking' ) . ' ' . esc_html( $start_time->format('h:i A') ) . ' - ' . esc_html( $end_time->format('h:i A') ) . ', ';
+                echo '<p>' . esc_html__( 'You are rescheduling the booking:', 'hydra-booking' ) . ' ' . esc_html( TransStrings::tfhbTranslateTimeSlot($start_time->format('h:i A') ) ) . ' - ' . esc_html( TransStrings::tfhbTranslateTimeSlot( $end_time->format('h:i A') ) ) . ', ';
                 
 
                 $date_strings = '';
                     foreach ( $meeting_dates as $key => $date ) {
                         $formate_date = $date_time->convert_time_based_on_timezone( $date, $booking_data->start_time, $meeting_availability_time_zone, $booking_data->attendee_time_zone , '' );
 
-                        $date_strings .= $formate_date->format('l, F j');
+                        $date_strings .= TransStrings::tfhbTranslateDateSlot($formate_date->format('l, F j') );;
                         $date_strings .= '| ';
                     } 
                     $date_strings = rtrim( $date_strings, '| ' );

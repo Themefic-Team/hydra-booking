@@ -186,7 +186,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 			?> 
 				<div class="tfhb-confirmation-button tfhb-mt-32">
 					<button class="tfhb-flexbox tfhb-gap-8 tfhb-booking-submit">
-					<?php echo ! empty( $booking_data ) ? 'Reschedule' : 'Confirm'; ?>  
+					<?php echo ! empty( $booking_data ) ? esc_html__( 'Reschedule', 'hydra-booking' ) : esc_html__( 'Confirm', 'hydra-booking' ); ?>  
 						<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/arrow-right.svg'); ?>" alt="arrow"> 
 					</button>
 				</div>

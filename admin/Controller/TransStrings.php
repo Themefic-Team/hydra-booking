@@ -809,7 +809,7 @@ namespace HydraBooking\Admin\Controller;
       // Translate each part
       $translatedWeekday = self::tfhbTranslate($weekday);
       $translatedMonth = self::tfhbTranslate($month);
-      $translatedDay = self::tfhbTranslate($day);
+      $translatedDay = self::tfhbTranslateNumber($day);
    
       // Return the translated string in the format 'Weekday, Month Day'
       return $translatedWeekday . ', ' . $translatedMonth . ' ' . $translatedDay;
