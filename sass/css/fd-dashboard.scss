@@ -1,7 +1,4 @@
 .tfhb-frontend-from {
-    * {
-        box-sizing: border-box;
-    }
 
     max-width: 100%;
     width: 500px;
@@ -10,6 +7,9 @@
     box-shadow: 0px 8px 16px 0px rgba(16, 40, 20, 0.04);
     margin: 24px auto;
 
+    * {
+        box-sizing: border-box;
+    }
     button,
     .tfhb-from-btn {
         padding: 8px 24px;
