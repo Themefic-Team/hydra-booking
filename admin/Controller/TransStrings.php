@@ -712,6 +712,7 @@ namespace HydraBooking\Admin\Controller;
             'Placeholder' =>  __('Placeholder', 'hydra-booking'), 
             'Options' =>  __('Options', 'hydra-booking'), 
             'Add New Option' =>  __('Add New Option', 'hydra-booking'),  
+            'Enable or disable this field.' =>  __('Enable or disable this field.', 'hydra-booking'),  
            
         );
      } 

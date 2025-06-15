@@ -37,11 +37,15 @@ const capitalizedFirstChar = (value) => {
                         <HbText  
                             v-model="question.placeholder"
                             disabled="disabled"
+                  
                         /> 
                     </div>
                     <HbSwitch 
                         v-model="question.enable"
                         v-if="key > skip_remove"
+                        class="tfhb-tooltip"
+                        :tooltip="true"
+                        :tooltipText = "$tfhb_trans('Enable or disable this field.')"
                     />
                     <button class="question-edit-btn" v-if="key > skip_remove">
                         <Icon name="PencilLine" :width="16" @click="emit('question-edit', key)"/>
