@@ -368,7 +368,7 @@ class HydraBookingShortcode {
 						return strpos( $key, 'question_' ) === 0;
 					},
 					ARRAY_FILTER_USE_KEY
-				);
+				); 
 			}
 
 			if ( $meta_data['questions_form_type'] == 'fluent-forms' ) {
@@ -446,6 +446,8 @@ class HydraBookingShortcode {
 			}
 		}
 
+	
+		
 		if ( isset( $questions ) && ! empty( $questions ) ) {
 			foreach ( $questions as $key => $question ) {
 				$attendee_data['others_info'][ $key ] = sanitize_text_field( $question );
@@ -559,7 +561,6 @@ class HydraBookingShortcode {
 			wp_send_json_error( array( 'message' => esc_html(__('Already Booked', 'hydra-booking')) ) );
 		}
 
-	
 		// Get booking Data using Hash
 		if ( isset( $_POST['action_type'] ) && 'reschedule' == $_POST['action_type'] ) {
 			
@@ -603,7 +604,6 @@ class HydraBookingShortcode {
 			}
 
 		}
-		
 		// Attendees
 		$attendees = new Attendees(); 
 		$add_attendee = $attendees->add( $attendee_data ); 
