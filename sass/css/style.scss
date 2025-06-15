@@ -3,6 +3,19 @@
     input {
         box-sizing: border-box;
     }
+    #reason{
+        border-radius: 8px;
+        border: 0.5px solid $surface-background;
+        background: $surface-secondary;
+        height: 40px;
+        width: 100%;
+        padding: 8px 12px;
+        box-sizing: border-box;
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    }
 
     .tfhb-reschedule-box {
         margin-bottom: 25px;
@@ -916,7 +929,7 @@
                             height: 40px;
                             width: 100%;
                             padding: 8px 12px;
-
+                            box-sizing: border-box;
                             &:focus {
                                 outline: none;
                                 box-shadow: none;
