@@ -16,6 +16,9 @@ class Helper {
         $notification = array(
             'host' => array(),
             'attendee' => array(),
+            'telegram' => array(),
+            'twilio' => array(),
+            'slack' => array(),
         );
 
         // Get image URL dynamically
@@ -29,7 +32,7 @@ class Helper {
         
 
         //  Host Notification
-         $notification['host']['booking_confirmation'] = array(
+        $notification['host']['booking_confirmation'] = array(
             'status' => 1,
             'template' => 'default',
             'from' =>  '{{wp.admin_email}}',
@@ -190,10 +193,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -513,10 +516,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -836,10 +839,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -1159,10 +1162,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -1480,10 +1483,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -1803,10 +1806,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -1964,7 +1967,6 @@ class Helper {
             )
 
         );
-        // Attendee Notification
         $notification['attendee']['booking_pending'] = array(
             'status' => 1,
             'template' => 'default',
@@ -2127,10 +2129,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -2449,10 +2451,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -2773,10 +2775,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -3094,10 +3096,10 @@ class Helper {
                 </tr>
                 <tr>
                     <td style="font-size: 15px;"><ul><li>Please <strong>join the event five minutes before the event starts</strong> based on your time zone.</li><li>Ensure you have a good internet connection, a quality camera, and a quiet space.</li></ul></td>
-                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
+                </tr></tbody></table></td></tr></tbody></table> <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tbody><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px dashed #C0D8C4;border-bottom: 1px dashed #C0D8C4; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;"> <tbody><tr>
                         <td style="font-size: 15px;padding: 24px 0 16px 0;">You can cancel or reschedule this event for any reason.</td>
                     </tr><tr>
-                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
+                    <td style="font-size: 15px; padding-bottom: 24px;"><a href="{{booking.cancel_link}}" class="tfhb-cancel-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block;text-decoration: none;">Cancel</a><a href="{{booking.rescheduled_link}}" class="tfhb-reschedule-btn" style=" padding: 8px 24px; border-radius: 8px;border: 1px solid #C0D8C4;background: #FFF; color: #273F2B;display: inline-block; margin-left: 16px;text-decoration: none;">Reschedule</a></td></tr></tbody></table></td></tr></tbody></table>
                 
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#121D13" style="padding: 16px 32px;border-radius: 0px 0px 8px 8px; width: 100%; max-width: 600px; margin: 0 auto;">
                         <tbody><tr><td align="left">
@@ -3255,6 +3257,92 @@ class Helper {
             )
         );
 
+        // Telegram Notification
+        $notification['telegram']['booking_confirmation'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A new Booking has been scheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['telegram']['booking_cancel'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Cancellation</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['telegram']['booking_reschedule'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Rescheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+
+        // Twilio Notification
+        $notification['twilio']['booking_confirmation'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A new Booking has been scheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['twilio']['booking_cancel'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Cancellation</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['twilio']['booking_reschedule'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Rescheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        
+        // Slack Notification
+        $notification['slack']['booking_confirmation'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>A new Booking has been scheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['slack']['booking_cancel'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Cancellation</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
+        $notification['slack']['booking_reschedule'] = array(
+            'status' => 0,
+            'builder' => '',
+            'body' => '
+                <h3>Booking Rescheduled</h3> <hr> 
+                <h4>Meeting Details</h4>
+                <p> {{meeting.title}} with {{attendee.name}}</p> 
+                <p> Date: {{meeting.date}} </p>'
+        );
 
         return $notification;
         

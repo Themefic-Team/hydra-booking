@@ -7,12 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 // Use Namespace 
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Host;
+use HydraBooking\Admin\Controller\TransStrings;
 /**
  * Signup Class
  * 
  * @author Sydur Rahman
  */
-class ShortcodeBuilder {
+class ShortcodeBuilder { 
 
     /**
      * Constructor
@@ -29,6 +30,8 @@ class ShortcodeBuilder {
 
         // Meeting categories 
         add_shortcode('tfhb_categories', array($this, 'tfhb_categories_callback') );
+
+        
  
     }
 
@@ -41,28 +44,62 @@ class ShortcodeBuilder {
 
     public function tfhb_meetings_callback($atts) { 
         $atts = shortcode_atts([
-            'title'        => '',
-            'subtitle'    => '',
-            'category'     => 'all', // Comma-separated category IDs
-            'hosts'        => 'all', // Comma-separated host IDs
-            'sort_by'      => 'id',
-            'order_by'     => 'DESC',
-            'limit' => '10',
+            'title'     => '',
+            'subtitle'  => '',
+            'category'  => 'all', // Comma-separated category IDs
+            'hosts'     => 'all', // Comma-separated host IDs
+            'sort_by'   => 'id',
+            'order_by'  => 'DESC',
+            'limit'     => '10',
         ], $atts, 'tfhb_meetings');
+        
+        // Whitelisting
+        $allowed_sort_by = ['id', 'title', 'created_at']; // customize as needed
+        $allowed_order_by = ['ASC', 'DESC'];
+        
+        $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
+        $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
+        
+         // Validate sort_by
+        if (!in_array($sort_by, $allowed_sort_columns, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid sorting parameter.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted sort_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_sort_columns)) . '</code></p>';
+        }
 
-        // get all meetings based on given parameters
-        $meeting = new Meeting();
-        $query = array( );
+        // Validate order_by
+        if (!in_array($order_by, $allowed_order_directions, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid order direction.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted order_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_order_directions)) . '</code></p>';
+        }
+
+
+        $limit = intval($atts['limit']);
+        if ($limit <= 0) {
+            $limit = 10;
+        }
+        
+        // Build secure query
+        $query = [];
+        
         // meeting_category
-        if('all' != $atts['category'] && !empty($atts['category'])) {
-            $query[] = array('meeting_category', 'IN', $atts['category']);
-        } 
+        if ($atts['category'] !== 'all' && !empty($atts['category'])) {
+            $category_ids = array_map('intval', explode(',', $atts['category']));
+            $query[] = ['meeting_category', 'IN', $category_ids];
+        }
+        
         // meeting_host
-        if('all'!= $atts['hosts'] && !empty($atts['hosts'])) {
-            $query[] = array('host_id', 'IN', $atts['hosts']);
-        } 
-        $limit = $atts['limit'] ? $atts['limit'] : 10; 
-        $meetings = $meeting->getAll( $query, $atts['sort_by'], $atts['order_by'], $limit );
+        if ($atts['hosts'] !== 'all' && !empty($atts['hosts'])) {
+            $host_ids = array_map('intval', explode(',', $atts['hosts']));
+            $query[] = ['host_id', 'IN', $host_ids];
+        }
+        
+        // Fetch meetings securely
+        $meeting = new Meeting();
+        $meetings = $meeting->getAll($query, $sort_by, $order_by, $limit);
         
         ob_start();
         ?>
@@ -105,7 +142,7 @@ class ShortcodeBuilder {
                                 
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>    
-                                    <?php echo esc_html($meeting->duration) ?> minutes
+                                    <?php echo esc_html(TransStrings::tfhbTranslateNumber($meeting->duration)) ?> <?php echo esc_html(__('minutes', 'hydra-booking')) ?>
                                 </span>
                                
                                 <span>
@@ -117,7 +154,7 @@ class ShortcodeBuilder {
                     </div>
                     
                     <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn">Select</a>
+                        <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn"><?php echo esc_html(__('Select', 'hydra-booking')) ?></a>
                     </div>
                 </div>
 
@@ -154,14 +191,29 @@ class ShortcodeBuilder {
             'order_by'     => 'DESC',
             'limit' => '10',
         ], $atts, 'tfhb_hosts');
-
  
         // Whitelist for sort_by and order_by
-        $allowed_sort_columns = ['id', 'first_name', 'last_name', 'created_at']; // customize as needed
+        $allowed_sort_columns = ['id', 'first_name', 'created_at']; // customize as needed
         $allowed_order_directions = ['ASC', 'DESC'];
 
         $sort_by = isset($atts['sort_by']) ? $atts['sort_by'] : 'id';
         $order_by = isset($atts['order_by']) ? strtoupper($atts['order_by']) : 'DESC';
+
+        // Validate sort_by
+        if (!in_array($sort_by, $allowed_sort_columns, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid sorting parameter.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted sort_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_sort_columns)) . '</code></p>';
+        }
+
+        // Validate order_by
+        if (!in_array($order_by, $allowed_order_directions, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid order direction.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted order_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_order_directions)) . '</code></p>';
+        }
 
         if (!in_array($sort_by, $allowed_sort_columns, true)) {
             $sort_by = 'id';
@@ -216,7 +268,7 @@ class ShortcodeBuilder {
                     </div>
                     
                     <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="<?php echo esc_url(  $user_url ) ?>" class="tfhb-btn secondary-btn">Select</a>
+                        <a href="<?php echo esc_url(  $user_url ) ?>" class="tfhb-btn secondary-btn"><?php echo esc_html(__('Select', 'hydra-booking')) ?></a>
                     </div>
 
                     
@@ -248,23 +300,48 @@ class ShortcodeBuilder {
     public function tfhb_categories_callback($atts){
         
         $atts = shortcode_atts([
-            'title'        => '',
-            'subtitle'    => '', 
-            'sort_by'      => 'id', // id or title
-            'order_by'     => 'DESC',
-            'limit' => '10',
+            'title'     => '',
+            'subtitle'  => '', 
+            'sort_by'   => 'id', // Allowed: id or title
+            'order_by'  => 'DESC',
+            'limit'     => '10',
         ], $atts, 'tfhb_categories');
+        
+        // Whitelist acceptable values
+        $allowed_sort_by = ['id', 'name', 'slug', 'count'];
+        $allowed_order_by = ['ASC', 'DESC'];
+        
+        
+        $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
+        $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
 
-       
-        $terms = get_terms(
-			array(
-				'taxonomy'   => 'meeting_category',
-				'hide_empty' => false, // Set to true to hide empty terms
-                'orderby'    => $atts['sort_by'],
-                'order'       => $atts['order_by'],
-                'number'     => $atts['limit'], // Limit the number of returned terms (default: -1)
-			)
-		);  
+                 // Validate sort_by
+        if (!in_array($sort_by, $allowed_sort_columns, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid sorting parameter.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted sort_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_sort_columns)) . '</code></p>';
+        }
+
+        // Validate order_by
+        if (!in_array($order_by, $allowed_order_directions, true)) {
+            return '<p class="tfhb-notice notice-error"><strong>' . esc_html__('Error:', 'hydra-booking') . '</strong> ' 
+                . esc_html__('Invalid order direction.', 'hydra-booking') . '<br>'
+                . '' . esc_html__('Accepted order_by values:', 'hydra-booking') . ' <code>' 
+                . esc_html(implode(', ', $allowed_order_directions)) . '</code></p>';
+        }
+
+        $limit = intval($atts['limit']);
+        if ($limit <= 0) $limit = 10;
+        
+        // Safe call to get_terms()
+        $terms = get_terms([
+            'taxonomy'   => 'meeting_category',
+            'hide_empty' => false,
+            'orderby'    => $sort_by,
+            'order'      => $order_by,
+            'number'     => $limit,
+        ]);
         ob_start();
         ?>
         <div class="tfhb-category-list">
@@ -289,7 +366,7 @@ class ShortcodeBuilder {
                     </div>
                     
                     <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a href="<?php echo esc_url($terms_archive_url) ?>" class="tfhb-btn secondary-btn">Select</a>
+                        <a href="<?php echo esc_url($terms_archive_url) ?>" class="tfhb-btn secondary-btn"><?php echo esc_html(__('Select', 'hydra-booking')) ?></a>
                     </div>
                 </div>
 

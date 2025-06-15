@@ -159,7 +159,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						),
 						home_url()
 					);
-					echo '<a href="' . esc_attr( $cancel ) . '">Cancel booking</a>';
+					echo '<a href="' . esc_attr( $cancel ) . '">'.esc_html__('Cancel booking', 'hydra_booking').'</a>';
 				}
 				if ( true == $data->attendee_can_reschedule ) {
 
@@ -173,7 +173,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						home_url()
 					);
 
-					echo '<a href="' . esc_url( $reschedule_url ) . '">Reschedule</a>';
+					echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html__('Reschedule', 'hydra_booking').'</a>';
 				}
 				?>
 			</div>

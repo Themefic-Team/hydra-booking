@@ -154,7 +154,7 @@ class HostsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'FetchIntegrationSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'permission_callback'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_integrations_permission'),
 			)
 		);
 
@@ -689,6 +689,56 @@ class HostsController {
 			$mailchimp['connection_status']            = 0; 
 		}
 
+		// Telegram
+		$telegram = isset( $_tfhb_host_integration_settings['telegram'] ) ? $_tfhb_host_integration_settings['telegram'] : array();
+		if (isset($_tfhb_integration_settings['telegram']['status']) && $_tfhb_integration_settings['telegram']['status'] == true ) {
+
+			$telegram['type']              = 'telegram';
+			$telegram['status']            = $_tfhb_host_integration_settings['telegram']['status'];
+			$telegram['connection_status'] = $_tfhb_integration_settings['telegram']['status'];
+			$telegram['bot_token']         = $_tfhb_host_integration_settings['telegram']['bot_token'];
+			$telegram['chat_id']           = $_tfhb_host_integration_settings['telegram']['chat_id'];
+
+		}else{
+			$telegram['type']              = 'telegram';
+			$telegram['status']            = 0; 
+			$telegram['connection_status'] = 0; 
+		}
+
+		// twilio
+		$twilio = isset( $_tfhb_host_integration_settings['twilio'] ) ? $_tfhb_host_integration_settings['twilio'] : array();
+		if (isset($_tfhb_integration_settings['twilio']['status']) && $_tfhb_integration_settings['twilio']['status'] == true ) {
+
+			$twilio['type']              = 'twilio';
+			$twilio['status']            = $_tfhb_host_integration_settings['twilio']['status'];
+			$twilio['connection_status'] = $_tfhb_integration_settings['twilio']['status'];
+			$twilio['receive_number']    = $_tfhb_host_integration_settings['twilio']['receive_number'];
+			$twilio['from_number']       = $_tfhb_host_integration_settings['twilio']['from_number'];
+			$twilio['sid']           	 = $_tfhb_host_integration_settings['twilio']['sid'];
+			$twilio['token']           	 = $_tfhb_host_integration_settings['twilio']['token'];
+			$twilio['otp_type']          = $_tfhb_host_integration_settings['twilio']['otp_type'];
+
+		}else{
+			$twilio['type']              = 'twilio';
+			$twilio['status']            = 0; 
+			$twilio['connection_status'] = 0; 
+		}
+
+		// slack
+		$slack = isset( $_tfhb_host_integration_settings['slack'] ) ? $_tfhb_host_integration_settings['slack'] : array();
+		if (isset($_tfhb_integration_settings['slack']['status']) && $_tfhb_integration_settings['slack']['status'] == true ) {
+
+			$slack['type']              = 'slack';
+			$slack['status']            = $_tfhb_host_integration_settings['slack']['status'];
+			$slack['connection_status'] = $_tfhb_integration_settings['slack']['status'];
+			$slack['endpoint']          = $_tfhb_host_integration_settings['slack']['endpoint'];
+
+		}else{
+			$slack['type']              = 'slack';
+			$slack['status']            = 0; 
+			$slack['connection_status'] = 0; 
+		}
+
 		// Zoho
 		$zoho = isset( $_tfhb_host_integration_settings['zoho'] ) ? $_tfhb_host_integration_settings['zoho'] : array();
 		if (isset($_tfhb_integration_settings['zoho']['status']) && $_tfhb_integration_settings['zoho']['status'] ) {
@@ -714,10 +764,13 @@ class HostsController {
 			'status'                     => true,
 			'integration_settings'       => $_tfhb_host_integration_settings,
 			'google_calendar'            => $google_calendar,
-			'zoom_meeting'            => $zoom_meeting, 
+			'zoom_meeting'               => $zoom_meeting, 
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
 			'zoho'                       => $zoho,
+			'telegram'                   => $telegram,
+			'twilio'                     => $twilio,
+			'slack'                      => $slack,
 			'_tfhb_integration_settings' => $_tfhb_integration_settings,
 		);
 
@@ -811,6 +864,41 @@ class HostsController {
 			 
 			$responseData['status'] = true;
 			$responseData['message'] = esc_html(__('Mailchimp Settings Updated Successfully', 'hydra-booking'));   
+		} elseif ( $key == 'telegram_data' ) {
+			$_tfhb_host_integration_settings['telegram']['type']   = 'telegram';
+			$_tfhb_host_integration_settings['telegram']['status'] = sanitize_text_field( $data['status'] );
+			$_tfhb_host_integration_settings['telegram']['bot_token']    = sanitize_text_field( $data['bot_token'] );
+			$_tfhb_host_integration_settings['telegram']['chat_id']    = sanitize_text_field( $data['chat_id'] );
+
+			// update User Meta
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Telegram Settings Updated Successfully', 'hydra-booking'));   
+		} elseif ( $key == 'twilio_data' ) {
+			$_tfhb_host_integration_settings['twilio']['type']   = 'twilio';
+			$_tfhb_host_integration_settings['twilio']['status'] = sanitize_text_field( $data['status'] );
+			$_tfhb_host_integration_settings['twilio']['receive_number']    = sanitize_text_field( $data['receive_number'] );
+			$_tfhb_host_integration_settings['twilio']['from_number']    = sanitize_text_field( $data['from_number'] );
+			$_tfhb_host_integration_settings['twilio']['sid']    = sanitize_text_field( $data['sid'] );
+			$_tfhb_host_integration_settings['twilio']['token']    = sanitize_text_field( $data['token'] );
+			$_tfhb_host_integration_settings['twilio']['otp_type']    = sanitize_text_field( $data['otp_type'] );
+
+			// update User Meta
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Twilio Settings Updated Successfully', 'hydra-booking'));   
+		} elseif ( $key == 'slack_data' ) {
+			$_tfhb_host_integration_settings['slack']['type']   = 'slack';
+			$_tfhb_host_integration_settings['slack']['status'] = sanitize_text_field( $data['status'] );
+			$_tfhb_host_integration_settings['slack']['endpoint']    = sanitize_text_field( $data['endpoint'] );
+
+			// update User Meta
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('Slack Settings Updated Successfully', 'hydra-booking'));   
 		} elseif ( $key == 'zoho' ) {
 			$_tfhb_host_integration_settings['zoho']['type']          = 'zoho';
 			$_tfhb_host_integration_settings['zoho']['status']        = sanitize_text_field( $data['status'] );

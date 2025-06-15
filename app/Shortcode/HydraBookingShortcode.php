@@ -549,7 +549,7 @@ class HydraBookingShortcode {
 				$max_book_per_slot = isset( $meta_data['max_book_per_slot'] ) ? $meta_data['max_book_per_slot'] : 1;
 				$attendees = $check_booking->attendees; 
 				if ( count($attendees) >= $max_book_per_slot ) {
-					wp_send_json_error( array( 'message' => 'Already Booked' ) );
+					wp_send_json_error( array( 'message' => esc_html(__('Already Booked', 'hydra-booking')) ) );
 				}
  
 			}
@@ -958,8 +958,7 @@ class HydraBookingShortcode {
 		foreach ( $this_month_all_dates as $date ) {
 			$all_month_data[ $date ] = $date_time->getAvailableTimeData( $meeting_id, $date, $selected_time_zone, $selected_time_format );
 		} 
-		// tfhb_print_r($all_month_data);
-		
+	 
 		if ( empty( $all_month_data ) ) {
 			wp_send_json_error( array( 'message' => esc_html(__('No time slots are currently available.', 'hydra-booking')) ) );
 		}

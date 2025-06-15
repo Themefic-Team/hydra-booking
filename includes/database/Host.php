@@ -254,7 +254,7 @@ class Host {
 
 		
 		// Sort and order
-		$sql .= " ORDER BY $sort_by $order_by";
+		$sql .= " ORDER BY {$sort_by} {$order_by}";
 
 		// Limit
 		if ($limit !== false) {

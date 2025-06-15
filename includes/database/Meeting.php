@@ -374,7 +374,7 @@ class Meeting {
 
 		
 		// Sort and order
-		$sql .= " ORDER BY tfhb_meetings.$sort_by $order_by";
+		$sql .= " ORDER BY tfhb_meetings.{$sort_by} {$order_by}";
 
 		// Limit
 		if ($limit !== false) {

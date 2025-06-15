@@ -3,7 +3,7 @@
 // exit
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 use HydraBooking\DB\Meeting;
- 
+use HydraBooking\Admin\Controller\TransStrings;
 $meeting = new Meeting();
 $query = array( ); 
 $meetings = $meeting->getAll( $query, 'id', 'DESC');
@@ -55,7 +55,7 @@ get_header();
                             </span>  -->
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>    
-                                <?php echo esc_html($meeting->duration) ?> minutes
+                                <?php echo esc_html(TransStrings::tfhbTranslateNumber($meeting->duration)) ?> <?php echo esc_html__('minutes', 'hydra_booking')?>
                             </span>
                             <!-- <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg> 
@@ -63,20 +63,20 @@ get_header();
                             </span> -->
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg> 
-                                <?php echo esc_html($price) ?>
+                                <?php echo esc_html(TransStrings::tfhbTranslateNumber($meeting->price)) ?>
                             </span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                    <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn">Select</a>
+                    <a href="<?php echo esc_url($permalink) ?>" class="tfhb-btn secondary-btn"><?php echo esc_html__('Select', 'hydra_booking')?></a>
                 </div>
             </div>
 
             <?php endforeach; else: ?>
                 <div class="tfhb-meeting-list__wrap__no-found">
-                    <p><?php esc_html_e('No meetings found.', 'hydra_booking')?></p>
+                    <p><?php echo esc_html__('No meetings found.', 'hydra_booking')?></p>
                 </div>
             <?php endif;?>
 

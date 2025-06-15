@@ -151,6 +151,7 @@ onBeforeMount(() => {
                     :option = "[
                         {'name': 'ID', 'value': 'id'}, 
                         {'name': 'Title', 'value': 'title'}, 
+                        {'name': 'Created Date', 'value': 'created_at'}, 
                     ]" 
                 />
                 <!-- Time format -->
