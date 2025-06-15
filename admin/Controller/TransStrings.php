@@ -772,6 +772,8 @@ namespace HydraBooking\Admin\Controller;
             '7' => _x('7', 'Calendar number', 'hydra-booking'),
             '8' => _x('8', 'Calendar number', 'hydra-booking'),
             '9' => _x('9', 'Calendar number', 'hydra-booking'),
+            
+            'Payment Method Required.' =>  __('Payment Method Required.', 'hydra-booking'),  
 
        );
     }
