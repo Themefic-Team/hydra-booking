@@ -756,6 +756,7 @@ namespace HydraBooking\Admin\Controller;
             'Export Meeting as' =>  __('Export Meeting as', 'hydra-booking'),
             'Export Bookings as' =>  __('Export Bookings as', 'hydra-booking'),
             'Import' =>  __('Import', 'hydra-booking'),
+            'Go to Import/Export' =>  __('Go to Import/Export', 'hydra-booking'),
            
         );
      } 

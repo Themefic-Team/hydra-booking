@@ -20,6 +20,7 @@ onBeforeMount(() => {
     importExport.GetImportExportData();
     importExport.host.steps = 'start';
     importExport.host.import_file = null;
+    importExport.host.import_column = {};
 });
 
 const changeImportFileData = (event) => {    
@@ -35,6 +36,13 @@ const clickToNextMapping = () => {
     // file is empty 
     if(importExport.host.import_file == '' || importExport.host.import_file == null){
         toast.error('Please choose file to import!', {
+            position: 'bottom-right', // Set the desired position
+            autoClose: 1500,
+        });
+        return false;
+    }
+       if(importExport.host.import_column.length === 1 && importExport.host.import_column[0] === ""){
+        toast.error($tfhb_trans('Selected File column is empty!'), {
             position: 'bottom-right', // Set the desired position
             autoClose: 1500,
         });
@@ -88,7 +96,8 @@ const clickToNextMapping = () => {
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="clickToNextMapping"
                 :buttonText="$tfhb_trans('Next step')"
-                icon="ChevronRight"   
+                icon="ChevronRight" 
+                :disabled = "Object.keys(importExport.host.import_column).length == 0"    
                 hover_icon="ArrowRight" 
                 :hover_animation="true" 
                 icon_position = 'right'

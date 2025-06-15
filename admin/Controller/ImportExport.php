@@ -20,65 +20,65 @@ class ImportExport {
 	}
 
 	public function create_endpoint() {
-		// tfhb_print_r('hello world');
-		register_rest_route(
-			'hydra-booking/v1',
-			'/settings/import-export',
-			array(
-				'methods'  => 'GET',
-				'callback' => array( $this, 'GetImportExportData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
-			)
-		);
-		register_rest_route(
-			'hydra-booking/v1',
-			'/settings/import-export/export-all-data',
-			array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'ExportAllData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
-			)
-		);  
-		// import export host
-		register_rest_route(
-			'hydra-booking/v1',
-			'/settings/import-export/export-hosts',
-			array(
-				'methods'  => 'GET',
-				'callback' => array( $this, 'ExportHosts' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
-			)
-		);
+		// // tfhb_print_r('hello world');
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/settings/import-export',
+		// 	array(
+		// 		'methods'  => 'GET',
+		// 		'callback' => array( $this, 'GetImportExportData' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+		// 	)
+		// );
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/settings/import-export/export-all-data',
+		// 	array(
+		// 		'methods'  => 'POST',
+		// 		'callback' => array( $this, 'ExportAllData' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+		// 	)
+		// );  
+		// // import export host
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/settings/import-export/export-hosts',
+		// 	array(
+		// 		'methods'  => 'GET',
+		// 		'callback' => array( $this, 'ExportHosts' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+		// 	)
+		// );
 
-		register_rest_route(
-			'hydra-booking/v1',
-			'/settings/import-export/import-host',
-			array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'ImportHost' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
-			)
-		);
-		// Import Booking
-		register_rest_route(
-			'hydra-booking/v1',
-			'/settings/import-export/import-booking',
-			array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'ImportBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
-			)
-		);
-		// Import Booking
-		register_rest_route(
-			'hydra-booking/v1',
-			'/settings/import-export/import-all-data',
-			array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'ImportAllData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
-			)
-		);
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/settings/import-export/import-host',
+		// 	array(
+		// 		'methods'  => 'POST',
+		// 		'callback' => array( $this, 'ImportHost' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+		// 	)
+		// );
+		// // Import Booking
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/settings/import-export/import-booking',
+		// 	array(
+		// 		'methods'  => 'POST',
+		// 		'callback' => array( $this, 'ImportBooking' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+		// 	)
+		// );
+		// // Import Booking
+		// register_rest_route(
+		// 	'hydra-booking/v1',
+		// 	'/settings/import-export/import-all-data',
+		// 	array(
+		// 		'methods'  => 'POST',
+		// 		'callback' => array( $this, 'ImportAllData' ),
+		// 		'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+		// 	)
+		// );
 	}
 
 	public function GetImportExportData() {

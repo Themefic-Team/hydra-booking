@@ -31,7 +31,9 @@ const handleDropOnlyFile = (event) => {
 
     const file = files[0]
 
-    checkValidation(file)
+     if(checkValidation(file) == false){
+      return false;
+    }
 
 
     setTimeout(() => {
@@ -46,7 +48,9 @@ const handleDropOnlyFile = (event) => {
 const inputOnChange = (event) => {
     isUploading.value = true;
     const file = event.target.files[0]
-    checkValidation(file)  
+    if(checkValidation(file) == false){
+      return false;
+    }
     // set time out  for on sec 
     setTimeout(() => {
         emit('update:modelValue', file) 
@@ -67,18 +71,25 @@ const checkValidation = (file) => {
         fileName.value = file.name.substring(0, 10) + '***.' + fileExtension
     }
     
-    if (allowedFormats.length && !allowedFormats.includes(fileExtension)) { 
-        toast.error(`File type must be one of: ${allowedFormats.join(', ')}`)
-        return
+    if (allowedFormats.length && !allowedFormats.includes(fileExtension)) {  
+          toast.error(`File type must be one of: ${allowedFormats.join(', ')}`, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+        return false;
     }
 
     //   // Size validation
     const maxSizeMB = parseFloat(props.file_size || 5)
     const fileSizeMB = file.size / 1024 / 1024
-    if (fileSizeMB > maxSizeMB) {
-        toast.error(`File size must be less than ${maxSizeMB} MB`)
-        return
+    if (fileSizeMB > maxSizeMB) { 
+         toast.error(`File size must be less than ${maxSizeMB} MB`, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+        return false;
     }
+    return true;
 
 }
 </script>

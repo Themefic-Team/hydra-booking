@@ -172,14 +172,13 @@ const importExport = reactive({
                 default_meeting_id: this.allData.default_meeting_id,  
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
             if (response.data.status) {  
                 this.progress = 100;
-                this.meeting.steps = 'completed';
+                this.allData.steps = 'completed';
                 this.importing = false;
                 // scrool to top
                 window.scrollTo(0, 0);
@@ -341,8 +340,7 @@ const importExport = reactive({
                 is_overwrite: this.meeting.is_overwrite,
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -391,8 +389,7 @@ const importExport = reactive({
                 is_create_new_user: this.host.is_create_new_user,
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -442,8 +439,7 @@ const importExport = reactive({
                 default_meeting_id: this.booking.default_meeting_id,
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -475,8 +471,7 @@ const importExport = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-meetings', exportData, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -530,8 +525,7 @@ const importExport = reactive({
         try {  
             const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-hosts',{
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     
@@ -591,8 +585,7 @@ const importExport = reactive({
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-all-data', exportData, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-                    'capability': 'tfhb_manage_options'
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
             } );
     

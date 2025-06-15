@@ -171,6 +171,7 @@ const exportData = reactive({
 <!-- {{ filterData }} -->
 
     <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />   
+    
     <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between" >
         <div class="tfhb-filter-box tfhb-flexbox">
             <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
@@ -263,8 +264,7 @@ const exportData = reactive({
                 icon_position = 'left'
             />   
         </div> 
-    </div>
-
+    </div> 
     <!-- Export CSV POPup -->
     <HbPopup  :isOpen="ExportAsCSV" @modal-close="ExportAsCSV = false" max_width="500px" name="first-modal" gap="32px">
         <template #header>  

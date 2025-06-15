@@ -20,6 +20,7 @@ onBeforeMount(() => {
     importExport.GetImportExportData(); 
     importExport.meeting.steps = 'start';
     importExport.meeting.import_file = null;
+    importExport.meeting.import_column = {};
 });
 
 const changeImportFileData = (event) => {    
@@ -39,7 +40,14 @@ const clickToNextMapping = () => {
             autoClose: 1500,
         });
         return false;
-    }
+    }  
+    if(importExport.meeting.import_column.length === 1 && importExport.meeting.import_column[0] === ""){
+        toast.error('Selected  File column is empty!', {
+            position: 'bottom-right', // Set the desired position
+            autoClose: 1500,
+        });
+        return false;
+    }  
     window.scrollTo(0, 0);
     importExport.import_pre_loader = true;
     importExport.meeting.steps = 'mapping';
@@ -76,20 +84,21 @@ const clickToNextMapping = () => {
             v-model="importExport.meeting.is_overwrite"
             :label="$tfhb_trans('Overwrite existing data')"
             name="meeting_is_overwrite"
-        />
+        /> 
         <div class="tfhb-import-btn-wrap tfhb-flexbox tfhb-justify-end tfhb-full-width">
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="clickToNextMapping"
                 :buttonText="$tfhb_trans('Next step')"
-                icon="ChevronRight"   
+                icon="ChevronRight"  
+                :disabled = "Object.keys(importExport.meeting.import_column).length == 0"  
                 hover_icon="ArrowRight" 
                 :hover_animation="true" 
                 icon_position = 'right'
             /> 
         </div>
     </div> 
-
+ 
      <!-- column mapping -->
     <div v-if="importExport.meeting.steps =='mapping'" class="tfhb-import-wrap tfhb-flexbox tfhb-gap-24">    
         <div class="tfhb-admin-title" > 
@@ -104,7 +113,7 @@ const clickToNextMapping = () => {
                 <div style="width:43%" ><h4>{{$tfhb_trans('Attributes')}}</h4></div>
                 <div class="import-column-status"></div>
                 
-            </div>
+            </div> 
             <div class="tfhb-import-export-column-wrap tfhb-flexbox  tfhb-gap-4 tfhb-justify-between tfhb-full-width" v-for="(item, index) in importExport.meeting.import_column"> 
                 <div style="width:43%" class="tfhb-import-export-column-name"><span>{{ item }}</span></div>
                 <div style="width:6%" class="import-column-arrow"><Icon name="MoveRight" /></div>  

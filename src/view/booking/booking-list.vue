@@ -568,6 +568,8 @@ const getAvailabilityTimeSlot = (value) => {
  
 </script>
 <template>
+<HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />   
+
 <!-- Cencel  POPUP-->
 <HbPopup   :isOpen="Booking.reBookPopup" @modal-close="Booking.reBookPopup = false" max_width="600px" name="first-modal">
     <template #header> 

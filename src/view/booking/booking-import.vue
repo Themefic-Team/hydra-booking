@@ -19,6 +19,7 @@ onBeforeMount(() => {
     importExport.GetImportExportData();
     importExport.booking.steps = 'start';
     importExport.booking.import_file = null;
+    importExport.booking.import_column = {};
 });
 
 const changeImportFileData = (event) => {    
@@ -34,6 +35,13 @@ const clickToNextMapping = () => {
     // file is empty 
     if(importExport.booking.import_file == '' || importExport.booking.import_file == null){
         toast.error('Please choose file to import!', {
+            position: 'bottom-right', // Set the desired position
+            autoClose: 1500,
+        });
+        return false;
+    }
+    if(importExport.booking.import_column.length === 1 && importExport.booking.import_column[0] === ""){
+        toast.error(tfhb_core_apps.trans['Selected  File column is empty!'], {
             position: 'bottom-right', // Set the desired position
             autoClose: 1500,
         });
@@ -96,6 +104,7 @@ const clickToNextMapping = () => {
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                 @click="clickToNextMapping"
                 :buttonText="$tfhb_trans('Next step')"
+                   :disabled = "Object.keys(importExport.booking.import_column).length == 0" 
                 icon="ChevronRight"   
                 hover_icon="ArrowRight" 
                 :hover_animation="true" 

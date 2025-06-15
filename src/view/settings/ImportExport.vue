@@ -52,11 +52,19 @@ const clickToNextMapping = () => {
 
 onBeforeMount(() => {  
     importExport.GetImportExportData();
+    importExport.allData.steps = 'start';
+    importExport.allData.import_file = null; 
 });
 
 const exportAsJson = () => {
     importExport.exportAllData(exportData)
     ExportAsCSV.value= false;
+}
+// router.push({ name: 'dashboard' }), importExport.allData.steps = 'start'
+const goToDashboard = () => {
+ importExport.allData.steps = 'start';
+ importExport.allData.import_file = null;
+//  file is empty 
 }
 </script>
 <template>
@@ -258,8 +266,8 @@ const exportAsJson = () => {
                     <div> 
                         <HbButton 
                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                            @click="router.push({ name: 'MeetingsLists' })"
-                            :buttonText="$tfhb_trans('Go to meetings')"
+                            @click="goToDashboard()"
+                            :buttonText="$tfhb_trans('Go to Import/Export')"
                             icon="ChevronRight"   
                             hover_icon="ArrowRight" 
                             :hover_animation="true" 
