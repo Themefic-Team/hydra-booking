@@ -9,6 +9,7 @@ import { useRouter, useRoute, RouterView } from 'vue-router'
 // component
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import WooIntegrations from '@/components/integrations/WooIntegrations.vue';
+import SureCartIntegrations from '@/components/integrations/SureCartIntegrations.vue';
 import GoogleCalendarIntegrations from '@/components/integrations/GoogleCalendarIntegrations.vue'; 
 import OutlookCalendarIntegrations from '@/components/integrations/OutlookCalendarIntegrations.vue'; 
 import AppleCalendarIntegrations from '@/components/integrations/AppleCalendarIntegrations.vue'; 
@@ -137,6 +138,11 @@ const isslPopupClose = (data) => {
 
 const preloader = ref(false);
 const Integration = reactive( {
+    sure_cart : {
+        type: 'payment', 
+        status: 0, 
+        connection_status: 0,  
+    },
     woo_payment : {
         type: 'payment', 
         status: 0, 
@@ -265,6 +271,7 @@ const fetchIntegration = async () => {
             // console.log(response.data.integration_settings);
             Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
             Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
+            Integration.sure_cart= response.data.integration_settings.sure_cart ? response.data.integration_settings.sure_cart : Integration.sure_cart;
             Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
             Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
             Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
@@ -322,6 +329,7 @@ const UpdateIntegration = async (key, value) => {
             
             Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
             Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
+            Integration.sure_cart= response.data.integration_settings.sure_cart ? response.data.integration_settings.sure_cart : Integration.sure_cart;
             Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
             Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
             Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
@@ -397,6 +405,7 @@ onBeforeMount(() => {
                 <!-- Woo  Integrations  -->
                 
                 <WooIntegrations :woo_payment="Integration.woo_payment" @update-integrations="UpdateIntegration" v-if="currentHash === 'all' || currentHash === 'payments'"/>
+                <SureCartIntegrations :sure_cart="Integration.sure_cart" @update-integrations="UpdateIntegration" v-if="currentHash === 'all' || currentHash === 'payments'"/>
 
                 <!-- Woo Integrations  -->
 

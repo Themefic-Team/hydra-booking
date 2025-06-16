@@ -6,6 +6,7 @@ use HydraBooking\Admin\Controller\RouteController;
 use HydraBooking\Admin\Controller\DateTimeController;
 use HydraBooking\Admin\Controller\CountryController;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
+use HydraBooking\Services\Integrations\SureCart\SureCart;
 use HydraBooking\Admin\Controller\Helper;
 
 // Use DB
@@ -897,7 +898,7 @@ class MeetingController {
 
 		// Integration
 		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
-		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'woocommerce/woocommerce.php' ) ) {
+		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'SureCart/woocommerce.php' ) ) {
 			$woo_connection_status = 0;
 
 		} elseif ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
@@ -924,6 +925,10 @@ class MeetingController {
 		// WooCommerce Product
 		$woo_commerce = new WooBooking();
 		$wc_product   = $woo_commerce->getAllProductList();
+
+		// Sure Cart Product
+		$sureCart = new SureCart();
+		$sureCart_product = $sureCart->getAllProductList();
 
 		// Webhook status
 		$setting_webhook = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
@@ -1129,6 +1134,7 @@ class MeetingController {
 			'meeting'          => $MeetingData,
 			'time_zone'        => $time_zone,
 			'wc_product'       => $wc_product,
+			'sureCart_product' => $sureCart_product,
 			'meeting_category' => $term_array,
 			'mailchimp'        => $mailchimp_Data,
 			'fluentcrm'        => $fluentcrm_Data,
@@ -1706,6 +1712,7 @@ class MeetingController {
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 		$integrations = array();
 		$integrations['woo_payment'] = isset( $_tfhb_integration_settings['woo_payment']['status'] ) && $_tfhb_integration_settings['woo_payment']['status'] == true ? false : true;
+		$integrations['sure_cart'] = isset( $_tfhb_integration_settings['sure_cart']['status'] ) && $_tfhb_integration_settings['sure_cart']['status'] == true ? false : true;
 		$integrations['paypal'] = isset( $_tfhb_integration_settings['paypal']['status'] ) && !empty($_tfhb_integration_settings['paypal']['client_id'] ) && $_tfhb_integration_settings['paypal']['status'] == true ? false : true;
 		$integrations['stripe'] = isset( $_tfhb_integration_settings['stripe']['status'] ) && !empty($_tfhb_integration_settings['stripe']['public_key'] ) && $_tfhb_integration_settings['stripe']['status'] == true ? false : true;
 		

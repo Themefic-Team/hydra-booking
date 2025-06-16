@@ -487,6 +487,26 @@ class SettingsController {
 			$_tfhb_integration_settings['woo_payment']['connection_status'] = $woo_connection_status;
 		}
 
+		// Checking Sure Cart installed and activated
+		if ( ! file_exists( WP_PLUGIN_DIR . '/' . 'surecart/surecart.php' ) ) {
+			$sureCart_connection_status = 0;
+
+		} elseif ( ! is_plugin_active( 'surecart/surecart.php' ) ) {
+			$sureCart_connection_status = 0;
+		} else {
+			$sureCart_connection_status = 1;
+		}
+
+		if ( ! isset( $_tfhb_integration_settings['sure_cart'] ) ) {
+
+			$_tfhb_integration_settings['sure_cart']['type']              = 'type';
+			$_tfhb_integration_settings['sure_cart']['status']            = 0;
+			$_tfhb_integration_settings['sure_cart']['connection_status'] = $sureCart_connection_status;
+		} else {
+			$_tfhb_integration_settings['sure_cart']['connection_status'] = $sureCart_connection_status;
+		}
+
+
 		if ( ! isset( $_tfhb_integration_settings['google_calendar'] ) ) {
 			$GoogleCalendar                                        = new GoogleCalendar();
 			$_tfhb_integration_settings['google_calendar']['type'] = 'calendar';
@@ -523,6 +543,19 @@ class SettingsController {
 		} elseif ( $key == 'woo_payment' ) {
 			$_tfhb_integration_settings['woo_payment']['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['woo_payment']['status']      = sanitize_text_field( $data['status'] ); 
+
+			// update option
+			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+
+			// woocommerce payment
+			$data = array(
+				'status'  => true,
+				'message' =>  __('Integration Settings Updated Successfully', 'hydra-booking')
+			);
+			return rest_ensure_response( $data );
+		} elseif ( $key == 'sure_cart' ) {
+			$_tfhb_integration_settings['sure_cart']['type']        = sanitize_text_field( $data['type'] );
+			$_tfhb_integration_settings['sure_cart']['status']      = sanitize_text_field( $data['status'] ); 
 
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );

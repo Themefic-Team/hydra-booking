@@ -18,6 +18,7 @@ const skeleton = ref(true);
 const timeZone = reactive({});
 const meetingCategory = reactive({});
 const wcProduct = reactive({});
+const sureCartProduct = reactive({});
 const integrations = reactive({
     google_calendar_status : 1,
     outlook_calendar_status : 1,
@@ -511,6 +512,7 @@ const fetchMeeting = async () => {
             integrations.zapier_status = response.data.integrations.zapier_status && response.data.integrations.zapier_status == 1  ? true : false;
 
             wcProduct.value = response.data.wc_product;  
+            sureCartProduct.value = response.data.sureCart_product;  
             formsList.value = response.data.formsList;  
             meetingCategory.value = response.data.meeting_category;
 
@@ -864,6 +866,7 @@ const truncateString = (str, num) => {
             :integrations="integrations" 
             :timeZone="timeZone.value" 
             :wcProduct="wcProduct.value" 
+            :sureCartProduct="sureCartProduct.value" 
             :formsList="formsList" 
             :update_preloader="update_preloader" 
             :meetingCategory="meetingCategory" 

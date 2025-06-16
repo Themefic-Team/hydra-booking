@@ -26,6 +26,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    sureCartProduct: {
+        type: Object,
+        required: true
+    },
     update_preloader: {
         type: Boolean,
         required: true
@@ -71,6 +75,7 @@ onBeforeMount(() => {
                         :width= "50"  
                         :option = "[
                             {name: 'Woocommerce', value: 'woo_payment', icon: $tfhb_url+'/assets/images/Woo.png',  },  
+                            {name: 'SureCart', value: 'sure_cart', icon: $tfhb_url+'/assets/images/surecart-logo.svg',  },  
                             {name: 'Paypal', value: 'paypal_payment', icon: $tfhb_url+'/assets/images/paypal.svg',}, 
                             {name: 'Stripe Pay', value: 'stripe_payment', icon: $tfhb_url+'/assets/images/stripe-small.svg',}, 
                         ]"   
@@ -88,6 +93,18 @@ onBeforeMount(() => {
                         :option = "props.wcProduct"  
                         :width= "50" 
                     />   
+                    <HbDropdown 
+                        v-if="meeting.payment_status == 1 && meeting.payment_method=='sure_cart' && Meeting.meetingPaymentIntegration.sure_cart == false" 
+                        v-model="meeting.payment_meta.product_id" 
+                        required= "true" 
+                        :filter="true"
+                        :label="$tfhb_trans('Selecte Product')"  
+                        :selected = "1"
+                        name="payment_meta"
+                        :placeholder="$tfhb_trans('Selecte Product')"  
+                        :option = "props.sureCartProduct"  
+                        :width= "50" 
+                    />   
                     <HbText  
                         v-if="meeting.payment_status == 1 && meeting.payment_method=='stripe_payment' || meeting.payment_method=='paypal_payment'" 
                         v-model="meeting.meeting_price"  
@@ -101,6 +118,14 @@ onBeforeMount(() => {
 
                 </div> 
                 <div  v-if="meeting.payment_method == 'woo_payment' && Meeting.meetingPaymentIntegration.woo_payment == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('Woocommerce is not connected.') }} 
+                    <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                        :buttonText="$tfhb_trans('Please Configure')"
+                    />  
+                </div>
+                <div  v-if="meeting.payment_method == 'sure_cart' && Meeting.meetingPaymentIntegration.sure_cart == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('SureCart is not connected.') }} 
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 
