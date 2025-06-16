@@ -757,7 +757,8 @@ namespace HydraBooking\Admin\Controller;
             'Export Bookings as' =>  __('Export Bookings as', 'hydra-booking'),
             'Import' =>  __('Import', 'hydra-booking'),
             'Go to Import/Export' =>  __('Go to Import/Export', 'hydra-booking'),
-           
+            'Add New Option' =>  __('Add New Option', 'hydra-booking'),  
+            'Enable or disable this field.' =>  __('Enable or disable this field.', 'hydra-booking'),  
         );
      } 
 
@@ -816,6 +817,8 @@ namespace HydraBooking\Admin\Controller;
             '7' => _x('7', 'Calendar number', 'hydra-booking'),
             '8' => _x('8', 'Calendar number', 'hydra-booking'),
             '9' => _x('9', 'Calendar number', 'hydra-booking'),
+            
+            'Payment Method Required.' =>  __('Payment Method Required.', 'hydra-booking'),  
 
        );
     }
