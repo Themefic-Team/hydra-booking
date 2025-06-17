@@ -450,6 +450,9 @@
         gap: 24px;
         box-sizing: border-box;
     }
+    .tfhb-flex-col{
+        flex-direction: column;
+    }
     .tfhb-inline-flexbox {
         display: inline-flex;;
     }

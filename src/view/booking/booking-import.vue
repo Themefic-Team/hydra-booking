@@ -73,8 +73,7 @@ const clickToNextMapping = () => {
             :subtitle = "$tfhb_trans('CSV file, Max 5 MB')"
             :btn_label = "$tfhb_trans('Browse file')"
             file_size ="5"
-            file_format ="csv"
-            @change="changeImportFileData"
+            file_format ="csv" 
             @tfhbChange="readImportDataChange"
             :wp_media = "false" 
 

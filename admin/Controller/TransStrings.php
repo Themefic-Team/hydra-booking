@@ -742,7 +742,7 @@ namespace HydraBooking\Admin\Controller;
             'Overwrite if host is already exists' =>  __('Overwrite if host is already exists', 'hydra-booking'),
             'Create new users if user id not exists' =>  __('Create new users if user id not exists', 'hydra-booking'),
             'Go to Hosts' =>  __('Go to Hosts', 'hydra-booking'),
-            'Import/Export your data' =>  __('Import/Export your data', 'hydra-booking'),
+            'Easily back up or transfer your booking data' =>  __('Easily back up or transfer your booking data', 'hydra-booking'),
             'Export Hydra Booking Data as Json' =>  __('Export Hydra Booking Data as Json', 'hydra-booking'),
             'Select What to Export' =>  __('Select What to Export', 'hydra-booking'),
             'Which data you want to import ' =>  __('Which data you want to import ', 'hydra-booking'),

@@ -52,7 +52,7 @@ const clickToNextMapping = () => {
 
 onBeforeMount(() => {  
     importExport.GetImportExportData();
-    importExport.allData.steps = 'start';
+    importExport.allData.steps = 'init';
     importExport.allData.import_file = null; 
 });
 
@@ -68,23 +68,18 @@ const goToDashboard = () => {
 }
 </script>
 <template>
-        <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />
+    <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />
     <div :class="{ 'tfhb-skeleton': false }" class="thb-event-dashboard">
   
         <div  class="tfhb-dashboard-heading ">
             <div class="tfhb-admin-title tfhb-m-0"> 
                 <h1 >{{ $tfhb_trans('Import/Export') }}</h1>  
-                <p>{{ $tfhb_trans('Import/Export your data') }}</p>
+                <p>{{ $tfhb_trans('Easily back up or transfer your booking data') }}</p>
             </div>
-            <div class="thb-admin-btn right"> 
-                <HbButton 
-                    classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
-                    @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true"
-                    :buttonText="$tfhb_trans('Export')"
-                    icon="FileDown"   
-                    :hover_animation="false" 
-                    icon_position = 'left'
-                />
+            <div class="thb-admin-btn right">
+                  <a href="https://themefic.com/docs/hydrabooking" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('View Documentation') }}<Icon name="ArrowUpRight" size=20 /></a>
+            
+                
             </div> 
         </div>
         <!-- Export CSV POPup -->
@@ -120,11 +115,34 @@ const goToDashboard = () => {
         </HbPopup>
     <!-- Export CSV POPup -->
         <div :class="{'tfhb-pro': $tfhb_is_pro == false || $tfhb_license_status == false}" class=" tfhb-flexbox tfhb-justify-center tfhb-full-width">
-            <!-- Getting start with imported data -->
-           
-            <div v-if="importExport.allData.steps =='start'" class="tfhb-import-wrap tfhb-full-width tfhb-flexbox tfhb-gap-24">     
+            <!-- Getting start with imported data --> 
+            <div v-if="importExport.allData.steps == 'init'" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-24 tfhb-justify-between tfhb-flex-col tfhb-mt-32">  
+                <h3 class="tfhb-flexbox align-ceter tfhb-gap-8 tfhb-justify-normal">
+                    {{ $tfhb_trans(`What would you like to do?`) }}   
+                </h3> 
+                <div class="tfhb-flexbox tfhb-gap-16 tfhb-justify-between">
+                    <HbButton 
+                        classValue="tfhb-btn   boxed-btn tfhb-flexbox tfhb-gap-8" 
+                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true"
+                        :buttonText="$tfhb_trans('Export')"
+                        icon="FileDown"   
+                        :hover_animation="false" 
+                        icon_position = 'left'
+                    />
+                    <HbButton 
+                        classValue="tfhb-btn   boxed-btn tfhb-flexbox tfhb-gap-8" 
+                        @click="importExport.allData.steps = 'start'"
+                        :buttonText="$tfhb_trans('Import')"
+                        icon="FileDown"   
+                        :hover_animation="false" 
+                        icon_position = 'left'
+                    />
+                </div>
+            </div>  
+            <div v-if="importExport.allData.steps == 'start'" class="tfhb-import-wrap tfhb-full-width tfhb-flexbox tfhb-gap-24">     
                 <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-meeting-limit tfhb-flexbox tfhb-gap-16" >
                     <div class=" tfhb-pro">
+                       
                         <h3 class="tfhb-flexbox align-ceter tfhb-gap-8 tfhb-justify-normal">
                             {{ $tfhb_trans(`Let’s get your data in!`) }}  
                             <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
@@ -134,10 +152,15 @@ const goToDashboard = () => {
                     </div> 
                 
                 </div>
-                <div v-else class="tfhb-admin-title" > 
-                    <h3 class="fhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                        {{ $tfhb_trans(`Let’s get your data in!`) }}   </h3> 
-                    <p>{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p>
+                <div v-else class="tfhb-admin-title " > 
+                    
+                    <h3 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal ">
+                        <div class="prev-navigator" @click="importExport.allData.steps = 'init'" style="cursor: pointer;">
+                            <Icon  name="ArrowLeft" size=20 />  
+                        </div>
+                        {{ $tfhb_trans(`Let’s get your data in!`) }}   
+                    </h3> 
+                    <p  >{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p> 
                 </div> 
                 <HbFileUpload
                     name="dashboard_logo"
@@ -146,8 +169,7 @@ const goToDashboard = () => {
                     :subtitle = "$tfhb_trans('Json file, Max 5 MB')"
                     :btn_label = "$tfhb_trans('Browse file')"
                     file_size ="5"
-                    file_format ="json"
-                    @change="changeImportFileData"
+                    file_format ="json" 
                     @tfhbChange="readImportDataChange"
                     :wp_media = "false" 
 
@@ -160,6 +182,7 @@ const goToDashboard = () => {
                         @click="clickToNextMapping"
                         :buttonText="$tfhb_trans('Next step')"
                         icon="ChevronRight"   
+                        :disabled = "Object.keys(importExport.allData.import_column).length == 0"  
                         hover_icon="ArrowRight" 
                         :hover_animation="true" 
                         icon_position = 'right'
@@ -170,11 +193,18 @@ const goToDashboard = () => {
             <!-- column mapping -->
             <div v-if="importExport.allData.steps =='mapping'" class="tfhb-import-wrap tfhb-flexbox tfhb-gap-24 tfhb-full-width">    
                 <div class="tfhb-admin-title" > 
-                    <h3>{{ $tfhb_trans('Which data you want to import') }}</h3> 
-                    <p>{{ $tfhb_trans('Select data which data you want to import in your website') }}</p>
+                    <h3 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal ">
+                          <div class="prev-navigator" @click="importExport.allData.steps = 'start'" style="cursor: pointer;">
+                            <Icon  name="ArrowLeft" size=20 />  
+                        </div>
+                        {{ $tfhb_trans('Select Data to Import') }}
+
+
+                    </h3> 
+                    <p>{{ $tfhb_trans(`Choose which data you'd like to to import your website`) }}</p>
                 </div>  
                 <div class="tfhb-flexbox tfhb-gap-12 tfhb-full-width">  
-                    <div v-for="(item, index) in importExport.allData.import_column" :key="index" class="tfhb-admin-card-box tfhb-flexbox  tfhb-flexbox tfhb-gap-8tfhb-gap-12 tfhb-full-width">
+                    <div v-for="(item, index) in importExport.allData.import_column" :key="index" class="tfhb-admin-card-box tfhb-flexbox  tfhb-flexbox tfhb-gap-8tfhb-gap-12 tfhb-full-width">  
                         <HbCheckbox 
                             class="tfhb-select-import-label "
                             v-model="importExport.allData.select_import[item]"
@@ -183,7 +213,7 @@ const goToDashboard = () => {
                         />  
  
 
-                        <div v-if="index == 'Hosts' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox  tfhb-flexbox tfhb-gap-8"  style="margin-left: 30px;">
+                        <div v-if="index == 'Hosts' && importExport.allData.select_import[item] == true" class="tfhb-sub-checkbox  tfhb-flexbox tfhb-gap-8"  style="margin-left: 30px;"> 
                             <HbCheckbox 
                                 v-model="importExport.allData.is_overwrite_host"
                                 :label="$tfhb_trans('Overwrite if host is already exists')"
@@ -244,7 +274,7 @@ const goToDashboard = () => {
                             hover_icon="ArrowRight"
                             :pre_loader="importExport.importing"
                             :hover_animation="true" 
-                            :disabled="importExport.importing"
+                            :disabled="importExport.importing || (importExport.allData.select_import['settings'] == 0 && importExport.allData.select_import['tfhb_hosts'] == 0 && importExport.allData.select_import['tfhb_meetings'] == 0 && importExport.allData.select_import['tfhb_bookings'] == 0)"
                             icon_position = 'right'
                         /> 
                     </div>

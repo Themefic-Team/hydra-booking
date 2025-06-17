@@ -55,10 +55,15 @@ const importExport = reactive({
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
     allData: {
-        steps: 'start',
+        steps: 'mapping',
         column: [],  
         import_column: {},  
-        select_import: {},   
+        select_import: {
+            settings : 0,
+            tfhb_hosts : 0,
+            tfhb_meetings : 0,
+            tfhb_bookings : 0,
+        },   
         is_overwrite_host: true,
         is_create_new_user: true,
         is_overwrite_meeting: true,
@@ -271,7 +276,7 @@ const importExport = reactive({
     },
     // Other Information 
     async readMeetingImportData(event) {   
-        const file = event;
+        const file = event; 
         // const file = event.target.files[0];
         Papa.parse(file, { 
             header: false,

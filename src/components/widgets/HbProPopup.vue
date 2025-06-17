@@ -91,7 +91,7 @@ const router = useRouter();
 
 </template>
 <style>
-.tfhb-dashboard-heading{ 
+/* .tfhb-dashboard-heading{ 
   margin-bottom: 0 !important;
-}
+} */
 </style>

@@ -65,7 +65,7 @@ const clickToNextMapping = () => {
         <div class="tfhb-admin-title" > 
             <h3>{{ $tfhb_trans(`Let’s get your data in!`) }}</h3> 
             <p>{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p>
-        </div>
+        </div> 
         <HbFileUpload
             name="dashboard_logo"
             v-model= "importExport.meeting.import_file"
@@ -73,8 +73,7 @@ const clickToNextMapping = () => {
             :subtitle = "$tfhb_trans('CSV file, Max 5 MB')"
             :btn_label = "$tfhb_trans('Browse file')"
             file_size ="5"
-            file_format ="csv"
-            @change="changeImportFileData"
+            file_format ="csv" 
             @tfhbChange="readImportDataChange"
             :wp_media = "false" 
 
@@ -84,7 +83,7 @@ const clickToNextMapping = () => {
             v-model="importExport.meeting.is_overwrite"
             :label="$tfhb_trans('Overwrite existing data')"
             name="meeting_is_overwrite"
-        /> 
+        />  
         <div class="tfhb-import-btn-wrap tfhb-flexbox tfhb-justify-end tfhb-full-width">
             <HbButton 
                 classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
