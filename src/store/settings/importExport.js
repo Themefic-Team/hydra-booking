@@ -75,6 +75,60 @@ const importExport = reactive({
         import_status: false,
         import_progress: 0, // shuld be 0 to 100 dynamically
     }, 
+    async ExportSampleData(data_type) {  
+        try {
+            const response = await axios.post(
+            tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/export-sample-data',
+            { data_type: data_type },
+            {
+                headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                },
+                responseType: 'json', // make sure it's json
+            }
+            );
+
+            if (response.data.status) {
+            // base64 encoded CSV content
+            const base64Data = response.data.data;
+            const fileName = response.data.file_name || 'download.csv';
+
+            // Decode base64 to Uint8Array
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+
+            // Create Blob and download
+            const blob = new Blob([byteArray], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+                toast.success(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });  
+            } else {
+                toast.error(response.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                }); 
+            }
+        } catch (error) {
+            console.log(error);
+            alert('Error exporting data');
+        }
+    },
     async GetImportExportData() { 
       
         try {  

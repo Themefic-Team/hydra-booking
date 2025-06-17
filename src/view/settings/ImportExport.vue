@@ -114,7 +114,7 @@ const goToDashboard = () => {
             </template> 
         </HbPopup>
     <!-- Export CSV POPup -->
-        <div :class="{'tfhb-pro': $tfhb_is_pro == false || $tfhb_license_status == false}" class=" tfhb-flexbox tfhb-justify-center tfhb-full-width">
+        <div class=" tfhb-flexbox tfhb-justify-center tfhb-full-width">
             <!-- Getting start with imported data --> 
             <div v-if="importExport.allData.steps == 'init'" class="tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-24 tfhb-justify-between tfhb-flex-col tfhb-mt-32">  
                 <h3 class="tfhb-flexbox align-ceter tfhb-gap-8 tfhb-justify-normal">
@@ -131,7 +131,7 @@ const goToDashboard = () => {
                     />
                     <HbButton 
                         classValue="tfhb-btn   boxed-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="importExport.allData.steps = 'start'"
+                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.allData.steps = 'start'"
                         :buttonText="$tfhb_trans('Import')"
                         icon="FileDown"   
                         :hover_animation="false" 
@@ -160,7 +160,7 @@ const goToDashboard = () => {
                         </div>
                         {{ $tfhb_trans(`Let’s get your data in!`) }}   
                     </h3> 
-                    <p  >{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p> 
+                         <p>{{ $tfhb_trans('Need a sample template?') }} <span  @click.stop="importExport.ExportSampleData('all')">{{ $tfhb_trans('Download one') }} </span> {{ $tfhb_trans('here.') }}</p>
                 </div> 
                 <HbFileUpload
                     name="dashboard_logo"
@@ -330,9 +330,10 @@ const goToDashboard = () => {
     .tfhb-admin-title{
         margin-bottom: 0 !important;
         p {
-            a{
-                color: #2E6B38;
+            span{
+                color: #2E6B38 !important;
                 text-decoration: underline !important;
+                cursor: pointer;
             }
         }
     }

@@ -212,6 +212,7 @@ namespace HydraBooking\Admin\Controller;
             'Limits' =>  __('Limits', 'hydra-booking'), 
             'Questions' =>  __('Questions', 'hydra-booking'), 
             'Notifications' =>  __('Notifications', 'hydra-booking'), 
+            'No new notifications' =>  __('No new notifications', 'hydra-booking'), 
             'Payment' =>  __('Payment', 'hydra-booking'), 
             'Select Category' =>  __('Select Category', 'hydra-booking'), 
             'Create Category' =>  __('Create Category', 'hydra-booking'), 
@@ -759,6 +760,13 @@ namespace HydraBooking\Admin\Controller;
             'Go to Import/Export' =>  __('Go to Import/Export', 'hydra-booking'),
             'Add New Option' =>  __('Add New Option', 'hydra-booking'),  
             'Enable or disable this field.' =>  __('Enable or disable this field.', 'hydra-booking'),  
+            'What would you like to do?' =>  __('What would you like to do?', 'hydra-booking'),  
+            'Json file, Max 5 MB' =>  __('Json file, Max 5 MB', 'hydra-booking'),  
+            'Select Data to Import' =>  __('Select Data to Import', 'hydra-booking'),  
+            'No upcoming booking found' =>  __('No upcoming booking found', 'hydra-booking'),  
+            'hello' =>  __('hello', 'hydra-booking'),  
+            'hello' =>  __('hello', 'hydra-booking'),  
+            'hello' =>  __('hello', 'hydra-booking'),  
         );
      } 
 

@@ -128,11 +128,17 @@ const toggleSidebarResponsive= () => {
                                 </router-link>
                             </li> 
                             <li>
+                                <router-link to="/settings/import-export" exact :class="{ 'active': $route.path.startsWith('/settings/import-export') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
+                                    <Icon name="Import" size="20" /> 
+                                    <span >{{ $tfhb_trans('Import/Export') }}</span>
+                                </router-link>
+                            </li>
+                            <li>
                                 <router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
                                     <Icon name="UserCog" size="20" /> 
                                     <span >{{ $tfhb_trans('Host Settings') }}</span>
                                 </router-link>
-                            </li> 
+                            </li>  
 
                             <li>
                                 <router-link to="/settings/shortcodes" exact :class="{ 'active': $route.path.startsWith('/settings/shortcodes') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">

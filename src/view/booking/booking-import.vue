@@ -64,7 +64,7 @@ const clickToNextMapping = () => {
         
         <div class="tfhb-admin-title" > 
             <h3>{{ $tfhb_trans(`Let’s get your data in!`) }}</h3> 
-            <p>{{ $tfhb_trans('Need a sample template?') }} <a href="#">{{ $tfhb_trans('Download one') }} </a> {{ $tfhb_trans('here.') }}</p>
+            <p>{{ $tfhb_trans('Need a sample template?') }} <span  @click.stop="importExport.ExportSampleData('bookings')">{{ $tfhb_trans('Download one') }} </span> {{ $tfhb_trans('here.') }}</p>
         </div>
         <HbFileUpload
             name="dashboard_logo"
@@ -216,6 +216,7 @@ const clickToNextMapping = () => {
 
 <style scoped lang="scss">
  .tfhb-import-cotent{ 
+     min-height: 80vh;
     .tfhb-import-wrap{
         max-width: 670px;
         width: 100%;
@@ -225,9 +226,10 @@ const clickToNextMapping = () => {
         .tfhb-admin-title{
             margin-bottom: 0 !important;
             p {
-                a{
-                    color: #2E6B38;
+                span{
+                    color: #2E6B38 !important;
                     text-decoration: underline !important;
+                    cursor: pointer;
                 }
             }
         }
