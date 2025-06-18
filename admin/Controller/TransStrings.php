@@ -763,10 +763,9 @@ namespace HydraBooking\Admin\Controller;
             'What would you like to do?' =>  __('What would you like to do?', 'hydra-booking'),  
             'Json file, Max 5 MB' =>  __('Json file, Max 5 MB', 'hydra-booking'),  
             'Select Data to Import' =>  __('Select Data to Import', 'hydra-booking'),  
-            'No upcoming booking found' =>  __('No upcoming booking found', 'hydra-booking'),  
-            'hello' =>  __('hello', 'hydra-booking'),  
-            'hello' =>  __('hello', 'hydra-booking'),  
-            'hello' =>  __('hello', 'hydra-booking'),  
+            'No upcoming booking found' =>  __('No upcoming booking found', 'hydra-booking'),    
+            'Choose which data you would like to to import your website' =>  __('Choose which data you would like to to import your website', 'hydra-booking'),  
+            'hello' =>  __('hello', 'hydra-booking'),
         );
      } 
 
