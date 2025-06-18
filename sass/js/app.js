@@ -696,10 +696,11 @@
 				},  2000); // 2000 milliseconds = 2 seconds
 				
 			}
+			
 
-		   if(payment_status != 1 || ( payment_status == 1 && "woo_payment"==payment_type ) || ( payment_status == 1 && "paypal_payment"==payment_type ) || ( payment_status == 1 && "stripe_payment"==payment_type ) ){
+		   if(payment_status != 1 || ( payment_status == 1 && "woo_payment"==payment_type ) || ( payment_status == 1 && "paypal_payment"==payment_type ) || ( payment_status == 1 && "stripe_payment"==payment_type ) || ( payment_status == 1 && "sure_cart"==payment_type ) ){
 			  
-			 
+			 alert(payment_type);
 			   $.ajax({
 				   url: tfhb_app_booking.ajax_url, 
 				   type: 'POST',
@@ -716,7 +717,7 @@
 							//    Remove Disabled
 						   $this.find('.tfhb-booking-submit').removeAttr('disabled');
 						   
-						   // Render Paypal Payment System
+						   // Render Paypal Payment System 
 						   if(payment_status == 1 && "paypal_payment" == payment_type && response.data.data){ 
 								tfhb_render_paypal_payment($this, response.data);
 								return
