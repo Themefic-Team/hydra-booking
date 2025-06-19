@@ -227,15 +227,7 @@ class HydraBookingShortcode {
 			wp_enqueue_script( 'tfhb-select2-script' );
 		}
 
-		if (class_exists('SureCart')) {
-			wp_enqueue_script(
-				'tfhb-surecart-sdk',
-				'https://cdn.surecart.com/sdk.js',
-				[],
-				null,
-				true
-			);
-		}
+	 
 		
 		// Enqueue Scripts scripts 
 		wp_enqueue_script( 'tfhb-app-script-app', TFHB_URL . 'assets/app/js/app.js', array( 'jquery', 'tfhb-app-script', 'wp-i18n' ), TFHB_VERSION, true );
