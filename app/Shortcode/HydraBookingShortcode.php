@@ -9,6 +9,7 @@ use HydraBooking\DB\Booking;
 use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
+use HydraBooking\Services\Integrations\SureCart\SureCart;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\BookingMeta;
@@ -224,6 +225,16 @@ class HydraBookingShortcode {
 		// Enqueue Select2
 		if ( ! wp_script_is( 'tfhb-select2-script', 'enqueued' ) ) {
 			wp_enqueue_script( 'tfhb-select2-script' );
+		}
+
+		if (class_exists('SureCart')) {
+			wp_enqueue_script(
+				'tfhb-surecart-sdk',
+				'https://cdn.surecart.com/sdk.js',
+				[],
+				null,
+				true
+			);
 		}
 		
 		// Enqueue Scripts scripts 
@@ -625,6 +636,16 @@ class HydraBookingShortcode {
 			$response['redirect'] = wc_get_checkout_url();
 		}
 
+		// Sure Cart Payment Method
+		if ( true == $meta_data['payment_status'] && 'sure_cart' == $meta_data['payment_method'] ) {
+			// Add to cart
+			$SureCart = new SureCart();
+			$SureCart_meta = $SureCart->add_to_cart( $product_id, $data, $attendee_data );
+			$product_id = $meta_data['payment_meta']['product_id']; 
+			$response['sure_cart']['product_id'] = $product_id;
+			$response['sure_cart']['meta'] = $SureCart_meta;
+		}
+
 
 		// After Booking Hooks Action  
 		$Attendee = new Attendees();
@@ -656,7 +677,7 @@ class HydraBookingShortcode {
 		$response['message']               = 'Booking Successful';
 		$response['action']                = 'create';
 		
-		if('paypal_payment' == $meta_data['payment_method'] || 'stripe_payment' == $meta_data['payment_method']){
+		if('paypal_payment' == $meta_data['payment_method'] || 'stripe_payment' == $meta_data['payment_method'] || 'sure_cart' == $meta_data['payment_method']){
 			$response['data']                = array( 
 				'hash' 	  => $data['hash'], 
 				'booking_id' => $attendee_data['booking_id'],

@@ -624,6 +624,17 @@
 			});
 		}
 
+		// Sure cart ad
+		function tfhb_render_sure_cart_payment($this, responseData) { 
+			 SureCart.Cart.addItem(responseData.sure_cart.product_id, {
+					meta: {
+						tfhb_order_meta:  responseData.sure_cart.meta,
+					}
+				}).then(() => {
+					window.location.href = SureCart.getCheckoutUrl();
+				});
+		}
+
 		function tfhb_from_submission($this, preloader, InformationData, calenderData){ 
 			let submitPreLoader = `<span class="tfhb-submit-preloader"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="4" stroke="#ffffff" fill="none" cy="50" cx="50">
 			<animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="0.49751243781094534s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform>
@@ -699,8 +710,8 @@
 			
 
 		   if(payment_status != 1 || ( payment_status == 1 && "woo_payment"==payment_type ) || ( payment_status == 1 && "paypal_payment"==payment_type ) || ( payment_status == 1 && "stripe_payment"==payment_type ) || ( payment_status == 1 && "sure_cart"==payment_type ) ){
-			  
-			 alert(payment_type);
+			
+			 
 			   $.ajax({
 				   url: tfhb_app_booking.ajax_url, 
 				   type: 'POST',
@@ -712,13 +723,13 @@
 					//   Remove Disabled
 					$this.find('.tfhb-booking-submit').removeAttr('disabled');
 					   if(response.success){
-								
+							
 							$this.find('.tfhb-booking-submit').remove('.tfhb-submit-preloader'); 
 							//    Remove Disabled
 						   $this.find('.tfhb-booking-submit').removeAttr('disabled');
 						   
 						   // Render Paypal Payment System 
-						   if(payment_status == 1 && "paypal_payment" == payment_type && response.data.data){ 
+						   	if(payment_status == 1 && "paypal_payment" == payment_type && response.data.data){ 
 								tfhb_render_paypal_payment($this, response.data);
 								return
 							}
@@ -726,11 +737,18 @@
 								tfhb_render_stripe_payment($this, response.data, stripe_public_key, meeting_title);
 								return
 							}
-						   if(response.data.redirect){
+					 
+							if(payment_status == 1 && "sure_cart" == payment_type && response.data.data){
+								alert(1);
+								tfhb_render_sure_cart_payment($this, response.data);
+								return
+							}
+
+						  	if(response.data.redirect){
 							   window.location.href = response.data.redirect;
 							   return;
 
-						   }else{ 
+						  	}else{ 
 							   $this.find('.tfhb-meeting-card').html(''); 
 							   $this.find('.tfhb-meeting-card').append(response.data.confirmation_template); 
 							   if(response.data.action == 'rescheduled'){
@@ -741,7 +759,7 @@
 								   )
 							   }
 
-						   } 
+						   	} 
 
 					   }else{ 
 						   $this.find('.tfhb-notice').append(response.data.message);

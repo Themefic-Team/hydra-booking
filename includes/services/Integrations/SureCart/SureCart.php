@@ -22,16 +22,14 @@ class SureCart {
 	public function __construct() {
 	}
 
-	public function add_to_cart( $product_id, $data, $attendee_data ) { 
-		$product                                      = wc_get_product( $product_id );
-		$order_meta                                   = array();
-		$order_meta['tfhb_order_meta']['booking_id']  = $data['booking_id'];
-		$order_meta['tfhb_order_meta']['attendee_id']  = $attendee_data['id'];
-		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_data['attendee_time_zone'] . ' )';
-		$cart = WC()->cart;
-		$cart->add_to_cart( $product_id, 1, 0, array(), $order_meta );
+	public function add_to_cart( $product_id, $data, $attendee_data ) {  
+		$order_meta                                   = array(); 
+		$order_meta['booking_id']  = $attendee_data['booking_id'];
+		$order_meta['attendee_id']  = $attendee_data['id'];
+		$order_meta['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_data['attendee_time_zone'] . ' )';
+ 
 
-		return true;
+		return $order_meta;
 	}
 
 	// display booking_id  into checkout page
