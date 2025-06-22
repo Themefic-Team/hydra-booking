@@ -500,7 +500,7 @@ const filteredDateSlots = computed(() => {
                                     classValue="tfhb-btn boxed-btn flex-btn" 
                                     @click="addAvailabilityDate(key)"
                                     :buttonText="$tfhb_trans('Add override')"
-                                    icon="ChevronRight" 
+                                    icon="PlusCircle" 
                                     hover_icon="ArrowRight" 
                                     :hover_animation="true" 
                                 />  
@@ -535,7 +535,7 @@ const filteredDateSlots = computed(() => {
                             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
                             @click="UpdateAvailabilitySettings(['title', 'time_zone'])" 
                             :buttonText="$tfhb_trans('Add Availability')"
-                            icon="ChevronRight" 
+                            icon="PlusCircle" 
                             hover_icon="ArrowRight" 
                             :hover_animation="true"
                         />  

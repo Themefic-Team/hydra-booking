@@ -138,6 +138,7 @@ namespace HydraBooking\Admin\Controller;
             'Change' =>  __('Change', 'hydra-booking'), 
             'Profile image' =>  __('Profile image', 'hydra-booking'), 
             'Cover image' =>  __('Cover image', 'hydra-booking'), 
+            'Edit cover image' =>  __('Edit cover image', 'hydra-booking'), 
             'Cover image is displayed in the meeting forms.' =>  __('Cover image is displayed in the meeting forms.', 'hydra-booking'), 
             'Recommended Image Size: 120x120px' =>  __('Recommended Image Size: 120x120px', 'hydra-booking'), 
             'General Information' =>  __('General Information', 'hydra-booking'), 
@@ -483,6 +484,7 @@ namespace HydraBooking\Admin\Controller;
             'Mark as read' =>  __('Mark as read', 'hydra-booking'), 
             'Save Availability' =>  __('Save Availability', 'hydra-booking'), 
             'Update Availability' =>  __('Update Availability', 'hydra-booking'), 
+            'Add Availability' =>  __('Add Availability', 'hydra-booking'), 
             'Default' =>  __('Default', 'hydra-booking'), 
 
             // Component : hosts
