@@ -6,8 +6,8 @@ use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\BookingMeta;
-use HydraBooking\Admin\Controller\DateTimeController;
-
+use HydraBooking\Admin\Controller\DateTimeController; 
+use HydraBooking\Hooks\BookingActivityHandler;
 
 class MailHooks {
 	// Approved
@@ -90,9 +90,8 @@ class MailHooks {
 
 				
 				Mailer::send( $mailto, $subject, $body, $headers );
-
-				// Add activity after email sent
-				$bookingMeta->add([
+ 
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
@@ -140,7 +139,7 @@ class MailHooks {
 
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array(
@@ -197,7 +196,7 @@ class MailHooks {
 				Mailer::send( $mailto, $subject, $body, $headers );
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array(
@@ -241,7 +240,7 @@ class MailHooks {
 				Mailer::send( $mailto, $subject, $body, $headers );
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array(
@@ -296,7 +295,7 @@ class MailHooks {
 				Mailer::send( $mailto, $subject, $body, $headers );
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array(
@@ -339,7 +338,7 @@ class MailHooks {
 				Mailer::send( $mailto, $subject, $body, $headers );
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array(
@@ -395,7 +394,7 @@ class MailHooks {
 				Mailer::send( $mailto, $subject, $body, $headers );
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
@@ -437,7 +436,7 @@ class MailHooks {
 				Mailer::send( $mailto, $subject, $body, $headers );
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
@@ -493,7 +492,7 @@ class MailHooks {
 					Mailer::send( $mailto, $subject, $body, $headers );
 
 						// Add activity after email sent
-					$bookingMeta->add([
+					BookingActivityHandler::add_activity([
 						'booking_id' => $attendees->booking_id,
 						'meta_key' => 'booking_activity',
 						'value' => array( 
@@ -552,7 +551,7 @@ class MailHooks {
 					
 				}
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
@@ -609,7 +608,7 @@ class MailHooks {
 				
 				}
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
@@ -667,7 +666,7 @@ class MailHooks {
 					
 				}
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
@@ -728,7 +727,7 @@ class MailHooks {
 				}
 
 				// Add activity after email sent
-				$bookingMeta->add([
+				BookingActivityHandler::add_activity([
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 

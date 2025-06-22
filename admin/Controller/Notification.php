@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 use HydraBooking\DB\Meta;
 use HydraBooking\Admin\Controller\RouteController;
 use HydraBooking\DB\Host;
+use HydraBooking\DB\BookingMeta;
 class Notification {
 
 	public function __construct() { 
@@ -117,5 +118,16 @@ class Notification {
 
         return rest_ensure_response( $data );
     }
+
+    // // Add Booking Activity
+    // public function AddBookingActivity($booking_id , $value){
+    //     $bookingMeta = new BookingMeta();
+    //     $bookingMeta->add([
+    //         'booking_id' => $booking_id,
+    //         'meta_key' => 'booking_activity',
+    //         'value' => $value,
+    //         ]
+    //     );
+    // }
     
 }

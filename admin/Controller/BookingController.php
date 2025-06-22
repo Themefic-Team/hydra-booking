@@ -15,6 +15,7 @@ use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\BookingMeta;
 use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks;
+use HydraBooking\Hooks\BookingActivityHandler;
 
 class BookingController {
 
@@ -610,6 +611,29 @@ class BookingController {
 				'status' => $select_status, 
 			)
 		);
+		
+		BookingActivityHandler::add_activity([
+			'booking_id' => $booking_id,
+			'meta_key' => 'booking_activity',
+			'value' => array( 
+					'datetime' => date('M d, Y, h:i A'), 
+					'title' =>     'Rebook Cencel Meeting',
+					'description' => 'Booking is updated successfully',
+				)
+			]
+		); 
+
+		if ( 'confirmed' == $select_status ) {
+			do_action( 'hydra_booking/send_booking_with_all_attendees_confirmed', $single_booking );
+		}
+
+		if ( 'pending' == $select_status ) {
+			do_action( 'hydra_booking/send_booking_with_all_attendees_pending', $single_booking );
+		}
+
+		
+		
+		BookingActivityHandler::bulk_insert();
 
 		// 
 		// return witn success message
@@ -909,6 +933,7 @@ class BookingController {
 		if ( 'schedule' == $request['status'] ) {
 			do_action( 'hydra_booking/after_booking_schedule', $single_booking_meta );
 		}
+		BookingActivityHandler::bulk_insert(); 
 
 
 		// booking Lists
@@ -1161,6 +1186,8 @@ class BookingController {
 		$attendee_update['id'] = $attendee_id;
 
 		$attendeeUpdate = $Attendee->update( $attendee_update ); 
+
+ 
 		
 		if ( 'canceled' == $status ) { 
 			
@@ -1174,6 +1201,7 @@ class BookingController {
 			
 			do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
 		}
+		BookingActivityHandler::bulk_insert(); 
 		
 
 		if( $attendeeUpdate ){ 
@@ -1542,6 +1570,7 @@ class BookingController {
 			);
 			if ( 'canceled' == $status ) {
 				do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
+				BookingActivityHandler::bulk_insert(); 
 			}
 
 
@@ -1612,7 +1641,7 @@ class BookingController {
 		if ( 'schedule' == $request['status'] ) {
 			do_action( 'hydra_booking/send_booking_with_all_attendees_schedule', $single_booking_meta );
 		}
-	
+		BookingActivityHandler::bulk_insert(); 
 
 		// Return response
 		$data = array(

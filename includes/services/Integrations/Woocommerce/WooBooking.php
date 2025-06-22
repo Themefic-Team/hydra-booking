@@ -8,7 +8,10 @@ defined( 'ABSPATH' ) || exit;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Transactions;
-use HydraBooking\DB\Meeting;
+use HydraBooking\DB\Meeting; 
+use HydraBooking\DB\BookingMeta;
+
+use HydraBooking\Hooks\BookingActivityHandler; 
 
 /**
  *
@@ -23,6 +26,8 @@ class WooBooking {
 	}
 
 	public function add_to_cart( $product_id, $data, $attendee_data ) { 
+		
+		
 		$product                                      = wc_get_product( $product_id );
 		$order_meta                                   = array();
 		$order_meta['tfhb_order_meta']['booking_id']  = $data['booking_id'];
@@ -30,6 +35,17 @@ class WooBooking {
 		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_data['attendee_time_zone'] . ' )';
 		$cart = WC()->cart;
 		$cart->add_to_cart( $product_id, 1, 0, array(), $order_meta );
+	 
+		BookingActivityHandler::add_activity([
+			'booking_id' => $attendee_data['booking_id'],
+			'meta_key' => 'booking_activity',
+			'value' => array( 
+					'datetime' => date('M d, Y, h:i A'), 
+					'title' =>    'Booking added to cart',
+					'description' =>    'Booking added to WC cart',
+				)
+			]
+		);
 
 		return true;
 	}
@@ -113,10 +129,24 @@ class WooBooking {
 					'transation_history' => json_encode($transation_history, true),
 				); 
 
+			
+
 		
 
 				// add transaction
 				$transactions->add( $transactionData );  
+
+				BookingActivityHandler::add_activity([
+					'booking_id' => $get_attendee->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'), 
+							'title' =>    'WC Order Processed',
+							'description' => 'An Attendee has been processed the order',
+						)
+					]
+				); 
+				BookingActivityHandler::bulk_insert();
 
 
 			}
@@ -176,6 +206,19 @@ class WooBooking {
 				// add transaction
 				$transactions->add( $transactionData );  
 
+				BookingActivityHandler::add_activity([
+					'booking_id' => $booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'), 
+							'title' =>    'WC Order Processed',
+							'description' => 'An Attendee has been processed the order',
+						)
+					]
+				); 
+				// tfhb_print_r( BookingActivityHandler::get_activity() );
+				BookingActivityHandler::bulk_insert();
+
 
 			}
 		}
@@ -205,6 +248,7 @@ class WooBooking {
 
 				// update booking
 				$Attendees->update( $updateData );
+				  
 
 			}
 		}

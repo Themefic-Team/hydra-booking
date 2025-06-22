@@ -4,7 +4,8 @@ namespace HydraBooking\Services\Integrations\Zoom;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\BookingMeta;
 use HydraBooking\DB\Host;
-use HydraBooking\DB\Meeting;
+use HydraBooking\DB\Meeting; 
+use HydraBooking\Hooks\BookingActivityHandler; 
 
 class ZoomServices {
 
@@ -165,6 +166,17 @@ class ZoomServices {
 		);
 
 		$BookingMeta->update( $bookingMetaData );
+ 
+		BookingActivityHandler::add_activity([
+			'booking_id' => $booking->booking_id,
+			'meta_key' => 'booking_activity',
+			'value' => array( 
+					'datetime' => date('M d, Y, h:i A'), 
+					'title' =>   'Attendee added to Zoom Meeting',
+					'description' =>  'An Attendee added to Zoom Meeting',
+				)
+			]
+		);
 
 
 	}
@@ -556,6 +568,7 @@ class ZoomServices {
  
 		$BookingMeta = new BookingMeta(); 
 		$BookingMeta->add( $bookingMetaData );
+		
  
 		$zoom_link = '';
 		$password = '';
@@ -567,6 +580,19 @@ class ZoomServices {
 			'link' => $zoom_link,
 			'password' => $password,
 		);
+
+		BookingActivityHandler::add_activity([
+			'booking_id' => $booking->booking_id,
+			'meta_key' => 'booking_activity',
+			'value' => array( 
+					'datetime' => date('M d, Y, h:i A'), 
+					'title' =>   'Zoom meeting created',
+					'description' => 'Zoom meeting created for this booking',
+				)
+			]
+		);
+
+		
 		
 		return $address;
  
@@ -574,6 +600,7 @@ class ZoomServices {
 
 	public function update_zoom_meeting( $meeting_schedule_id, $booking_meta, $meeting_meta, $host_meta ) {
 		
+		$BookingMeta = new BookingMeta(); 
 		$this->setHostApiDetails( $booking_meta->host_id );
 		$access_response = $this->generateAccessToken();
 
@@ -598,6 +625,17 @@ class ZoomServices {
 
 		$response_body = wp_remote_retrieve_body( $response );
 
+		BookingActivityHandler::add_activity([
+			'booking_id' => $booking_meta->booking_id,
+			'meta_key' => 'booking_activity',
+			'value' => array( 
+					'datetime' => date('M d, Y, h:i A'), 
+					'title' => 'Zoom Meeting Updated',
+					'description' => 'Zoom meeting updated for this booking',
+				)
+			]
+		);
+
 		return $response_body;
 	}
 
@@ -619,9 +657,12 @@ class ZoomServices {
 			'email' => $booking->email,
 			'name'  => $booking->attendee_name,
 		);
-
+ 
+		$buffer_time_before = empty($booking->buffer_time_before) ? 0 : $booking->buffer_time_before;
+		$buffer_time_after = empty($booking->buffer_time_after) ? 0 : $booking->buffer_time_after;
+		$meeting_interval = empty($booking->meeting_interval) ? 0 : $booking->meeting_interval; 
 		// Calculate duration
-		$duration = $booking->duration + $booking->buffer_time_before + $booking->buffer_time_after + $booking->meeting_interval;
+		$duration = $booking->duration + $buffer_time_before + $buffer_time_after + $meeting_interval;
 		 
 
 

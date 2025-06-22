@@ -5,7 +5,8 @@ use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\BookingMeta;
-use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Admin\Controller\DateTimeController; 
+use HydraBooking\Hooks\BookingActivityHandler; 
 
 class Telegram {
 
@@ -37,6 +38,20 @@ class Telegram {
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 			if(!empty($_tfhb_notification_settings['telegram']['booking_confirmation']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_confirmation']['body'])){
 				$telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_confirmation']['body'], $attendees);
+				if($telegram_data){
+					
+					BookingActivityHandler::add_activity([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'), 
+								'title' =>  "Sent Meessage to Telegram bot",
+								'description' => "Booking Confirmation Message sent to Telegram",
+							)
+						]
+					);
+				}
+
 			}
 		}
        
@@ -51,6 +66,20 @@ class Telegram {
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 			if(!empty($_tfhb_notification_settings['telegram']['booking_cancel']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_cancel']['body'])){
 				$telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_cancel']['body'], $attendees);
+
+				if($telegram_data){
+					
+					BookingActivityHandler::add_activity([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'), 
+								'title' =>  "Sent Meessage to Telegram bot",
+								'description' =>  "Booking Cancel Message sent to Telegram",
+							)
+						]
+					);
+				}
 			}
 		}
 
@@ -65,6 +94,20 @@ class Telegram {
 		if ( ! empty( $_tfhb_notification_settings ) ) {
 			if(!empty($_tfhb_notification_settings['telegram']['booking_reschedule']['status']) && !empty($_tfhb_notification_settings['telegram']['booking_reschedule']['body'])){
 				$telegram_data = $this->tfhb_telegram_callback($_tfhb_notification_settings['telegram']['booking_reschedule']['body'], $attendees);
+
+				if($telegram_data){
+					
+					BookingActivityHandler::add_activity([
+						'booking_id' => $attendees->booking_id,
+						'meta_key' => 'booking_activity',
+						'value' => array( 
+								'datetime' => date('M d, Y, h:i A'), 
+								'title' =>  "Sent Meessage to Telegram bot",
+								'description' =>  "Booking Cancel Message sent to Telegram",
+							)
+						]
+					);
+				}
 			}
 		}
 
@@ -109,12 +152,16 @@ class Telegram {
 				'headers' => array( 'Content-Type' => 'application/json' ),
 			) );
 
-            return $response;
 
 
 			if ( is_wp_error( $response ) ) {
 				error_log( 'Telegram API request failed: ' . $response->get_error_message() );
+			}else{
+				
+
+            	return $response;
 			}
+			
         }
     }
 

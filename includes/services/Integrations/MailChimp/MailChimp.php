@@ -2,12 +2,16 @@
 namespace HydraBooking\Services\Integrations\MailChimp;
 
 use HydraBooking\DB\Meeting;
+use HydraBooking\DB\BookingMeta;
+
+use HydraBooking\Hooks\BookingActivityHandler; 
 class MailChimp {
 
 	public function __construct() {
 		add_action( 'hydra_booking/after_booking_completed', array( $this, 'integrationsBookingToCompleted' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'integrationsBookingToCanceled' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'integrationsBookingToConfirmed' ), 10, 1 );
+ 
 	}
 
 	// If booking Completed
@@ -205,6 +209,17 @@ class MailChimp {
  
 			if (isset($response_body->status) && !$response_body->status == 400) { 
 				return true;
+
+				BookingActivityHandler::add_activity([
+					'booking_id' => $attendeeBooking->booking_id,
+					'meta_key' => 'booking_activity',
+					'value' => array(
+							'datetime' => date('M d, Y, h:i A'),
+							'title' => 'Attendee to a Mailchimp list',
+							'description' => $attendeeBooking->attendee_name . ' has been added to the Mailchimp list ',
+						)
+					]
+				);
 			} else {
 				return false;
 			}

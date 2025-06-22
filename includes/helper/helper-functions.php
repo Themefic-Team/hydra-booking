@@ -1,5 +1,6 @@
 <?php
-
+// don't load directly
+defined( 'ABSPATH' ) || exit;
 if ( ! function_exists( 'tfhb_print_r' ) ) {
 	function tfhb_print_r( $data ) {
 		echo '<pre>';

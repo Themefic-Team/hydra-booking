@@ -73,6 +73,45 @@ class BookingMeta {
 			);
 		}
 	}
+
+	// Bulk insert
+	public function bulkInsert($data) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$insert_data = [];
+		$placeholders = [];
+		$values = [];
+
+		foreach ($data as $value) {
+			// Ensure value is encoded if it's an array
+			if (!empty($value['value']) && is_array($value['value'])) {
+				$value['value'] = json_encode($value['value']);
+			}
+
+			// Validate required keys
+			if (!isset($value['booking_id'], $value['meta_key'], $value['value'])) {
+				continue; // skip invalid rows
+			}
+
+			// Sanitize input values (optional but good practice)
+			$booking_id = intval($value['booking_id']);
+			$meta_key   = sanitize_text_field($value['meta_key']);
+			$meta_value = wp_kses_post($value['value']); // assumes value may contain HTML
+
+			$placeholders[] = "(%d, %s, %s)";
+			$values[] = $booking_id;
+			$values[] = $meta_key;
+			$values[] = $meta_value;
+		}
+
+		if (!empty($placeholders)) {
+			$sql = "INSERT INTO `$table_name` (`booking_id`, `meta_key`, `value`) VALUES " . implode(", ", $placeholders);
+			$prepared = $wpdb->prepare($sql, ...$values);
+			$wpdb->query($prepared);
+		}
+	}
 	/**
 	 * Update the database availability.
 	 */

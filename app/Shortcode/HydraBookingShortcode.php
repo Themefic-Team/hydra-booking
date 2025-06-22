@@ -12,7 +12,7 @@ use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\BookingMeta;
-
+use HydraBooking\Hooks\BookingActivityHandler;
 
 class HydraBookingShortcode {
 	public function __construct() {
@@ -40,8 +40,7 @@ class HydraBookingShortcode {
 		// Paypal Payment Confirmation
 		add_action( 'wp_ajax_nopriv_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
 		add_action( 'wp_ajax_tfhb_meeting_paypal_payment_confirmation', array( $this, 'tfhb_meeting_paypal_payment_confirmation_callback' ) );
- 
-		// Create Zoom Meeting
+  
 		
 	}
 
@@ -568,6 +567,8 @@ class HydraBookingShortcode {
 		}
 		$this->tfhb_create_new_booking($data, $attendee_data, $meta_data, $MeetingData, $host_meta);
 
+ 
+
 
 
 	}
@@ -638,18 +639,18 @@ class HydraBookingShortcode {
  
 		if($attendeeBooking->status == 'confirmed'){
 			// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
-			do_action( 'hydra_booking/after_booking_confirmed', $attendeeBooking ); 
+			do_action( 'hydra_booking/after_booking_confirmed', $attendeeBooking );  
 		}  
 		if($attendeeBooking->status == 'pending'){  
 			do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
-		}
+			
+		} 
+		// insert all booking activity
+		BookingActivityHandler::bulk_insert(); 
+		
 		$notification = new Notification();
 		$notification->AddNotification($attendeeBooking);
-		
-
-		
-		
-  
+ 
 		// Load Meeting Confirmation Template
 		$confirmation_template = $this->tfhb_booking_confirmation( $attendee_data['id']);
 
@@ -859,7 +860,7 @@ class HydraBookingShortcode {
  
  
 		do_action( 'hydra_booking/after_booking_schedule',  $old_booking_id, $attendeeBooking );
-
+		BookingActivityHandler::bulk_insert(); 
 	 
 
 		$response['message']               = esc_html(__('Rescheduled Successfully', 'hydra-booking'));
@@ -1029,6 +1030,7 @@ class HydraBookingShortcode {
 
 		// Before Booking After Cancel
 		do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
+		BookingActivityHandler::bulk_insert(); 
 
 		$response['message'] = esc_html(__('Booking Cancelled Successfully', 'hydra-booking'));
 
@@ -1106,6 +1108,7 @@ class HydraBookingShortcode {
 
 		// After Booking Hooks
 		do_action( 'hydra_booking/after_booking_payment_complete', $attendeedata );
+		BookingActivityHandler::bulk_insert(); 
 
 		// return success message
 		$response['message'] = esc_html(__('Payment Completed Successfully', 'hydra-booking'));
