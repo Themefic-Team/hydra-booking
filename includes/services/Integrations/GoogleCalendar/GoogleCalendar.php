@@ -487,8 +487,8 @@ class GoogleCalendar {
 				'meta_key' => 'booking_activity',
 				'value' => array(
 						'datetime' => date('M d, Y, h:i A'),
-						'title' => 'Attendee to a Google Calendar',
-						'description' => $booking->attendee_name . ' has been added to the Google Calendar',
+						'title' => 'Attendee added to google calendar',
+						'description' => 'An attendee has been added to the google calendar',
 					)
 				]
 			);
@@ -503,8 +503,8 @@ class GoogleCalendar {
 				'meta_key' => 'booking_activity',
 				'value' => array(
 						'datetime' => date('M d, Y, h:i A'),
-						'title' =>  'Google Calendar Event Created',
-						'description' => $booking->attendee_name . ' has been added to the Google Calendar',
+						'title' =>  'Google calendar event created',
+						'description' => 'A google calendar event has been created',
 					)
 				]
 			);
@@ -599,8 +599,8 @@ class GoogleCalendar {
 					'meta_key' => 'booking_activity',
 					'value' => array(
 							'datetime' => date('M d, Y, h:i A'),
-							'title' =>  'Attendee Removed from Google Calendar',
-							'description' => 'Attendee Removed from Google Calendar',
+							'title' =>  'Attendee removed from google calendar',
+							'description' => 'Attendee removed from google calendar',
 						)
 					]
 				);
@@ -788,23 +788,23 @@ class GoogleCalendar {
 
 		
 		if ( $delete ) {
-				// update meeting location
-				$updateBooking = new Booking();
-				$updateBookingData = $updateBooking->get( $data->id ); 
-				$meeting_loaction  = json_decode($updateBookingData->meeting_locations); 
-				$meeting_loaction->meet->address = 'Cancelled'; 
+			// update meeting location
+			$updateBooking = new Booking();
+			$updateBookingData = $updateBooking->get( $data->id ); 
+			$meeting_loaction  = json_decode($updateBookingData->meeting_locations); 
+			$meeting_loaction->meet->address = 'Cancelled'; 
 
 
-				$updateBooking->update( array('id' => $data->id, 'meeting_locations' => $meeting_loaction) );
-				
+			$updateBooking->update( array('id' => $data->id, 'meeting_locations' => $meeting_loaction) );
+			
 
 			BookingActivityHandler::add_activity([
 				'booking_id' => $attendeeBooking->booking_id,
 				'meta_key' => 'booking_activity',
 				'value' => array(
 						'datetime' => date('M d, Y, h:i A'),
-						'title' =>   'Attendee Removed from Google Calendar',
-						'description' =>  'Attendee Removed from Google Calendar',
+						'title' =>   'Google calendar event deleted',
+						'description' => 'Google calendar event deleted',
 					)
 				]
 			);
@@ -910,8 +910,8 @@ class GoogleCalendar {
 			'meta_key' => 'booking_activity',
 			'value' => array(
 					'datetime' => date('M d, Y, h:i A'),
-					'title' =>  'Attendee Removed from Google Calendar',
-					'description' =>  'Attendee Removed from Google Calendar',
+					'title' =>  'Attendee removed from google calendar',
+					'description' =>  'Attendee removed from google calendar',
 				)
 			]
 		);
@@ -1089,8 +1089,8 @@ class GoogleCalendar {
 				'meta_key' => 'booking_activity',
 				'value' => array(
 						'datetime' => date('M d, Y, h:i A'),
-						'title' =>  'Google Calendar Rescheduled',
-						'description' =>   'Google Calendar Rescheduled',
+						'title' =>  'Google calendar rescheduled',
+						'description' =>   'Google calendar rescheduled',
 					)
 				]
 			);

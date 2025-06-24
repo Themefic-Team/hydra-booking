@@ -212,7 +212,7 @@ const GetFormsData = async (value) => {
                     :option = "[
                         {'name': 'Contact Form 7', 'value': 'wpcf7' },  
                         {'name': 'Fluent Forms', 'value': 'fluent-forms', disable:  integrations.fluent_status},  
-                        // {'name': 'Forminator Forms', 'value': 'forminator', disable:  integrations.forminator_status},  
+                        {'name': 'Forminator Forms', 'value': 'forminator', disable:  integrations.forminator_status},  
                         {'name': 'Gravity Forms', 'value': 'gravityforms', disable:  integrations.gravity_status},  
                     ]"
                     @tfhb-onchange="GetFormsData" 
@@ -248,6 +248,14 @@ const GetFormsData = async (value) => {
                     />  
                 </div>
                 <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Gravity Forms is not connected.') }} 
+                    <HbButton 
+                        v-if="$user.role != 'tfhb_host'"
+                        classValue="tfhb-btn flex-btn" 
+                        @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                        :buttonText="$tfhb_trans('Please Configure')"
+                    />  
+                </div>
+                <div  v-if="meeting.questions_form_type == 'forminator' && integrations.forminator_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Forminator Forms is not connected.') }} 
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 

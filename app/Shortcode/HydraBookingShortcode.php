@@ -368,6 +368,8 @@ class HydraBookingShortcode {
 					},
 					ARRAY_FILTER_USE_KEY
 				);
+
+				
 			}
 
 			if ( $meta_data['questions_form_type'] == 'fluent-forms' ) {
@@ -636,6 +638,53 @@ class HydraBookingShortcode {
 			1,
 			'DESC'
 		); 
+
+
+		// Contact form fields
+		if ( $meta_data['questions_type'] == 'existing' ) {
+
+			if ( $meta_data['questions_form_type'] == 'wpcf7' ) { 
+				BookingActivityHandler::add_activity([
+					'booking_id' => $attendee_data['booking_id'],
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'), 
+							'title' =>   'Contact from 7 form submitted',
+							'description' =>   'Contact form 7 data stored',
+						)
+					]
+				);
+
+			}
+
+			if ( $meta_data['questions_form_type'] == 'fluent-forms' ) { 
+				BookingActivityHandler::add_activity([
+					'booking_id' => $attendee_data['booking_id'],
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),  
+							'title' =>   'Fluent form submitted',
+							'description' =>   'Fluent form data stored',
+						)
+					]
+				);
+
+			}
+
+			if ( $meta_data['questions_form_type'] == 'forminator' ) { 
+				BookingActivityHandler::add_activity([
+					'booking_id' => $attendee_data['booking_id'],
+					'meta_key' => 'booking_activity',
+					'value' => array( 
+							'datetime' => date('M d, Y, h:i A'),   
+							'title' =>   'Forminator form submitted',
+							'description' =>   'Forminator form data stored',
+						)
+					]
+				);
+
+			}
+		}
  
 		if($attendeeBooking->status == 'confirmed'){
 			// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
@@ -645,6 +694,8 @@ class HydraBookingShortcode {
 			do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
 			
 		} 
+		// tfhb_print_r(BookingActivityHandler::get_activity()); 
+		// exit;
 		// insert all booking activity
 		BookingActivityHandler::bulk_insert(); 
 		
@@ -1105,6 +1156,17 @@ class HydraBookingShortcode {
  
 		$Transactions = new Transactions();
 		$Transactions = $Transactions->add( $tdata );
+
+		BookingActivityHandler::add_activity([
+			'booking_id' => $booking_id,
+			'meta_key' => 'booking_activity',
+			'value' => array( 
+					'datetime' => date('M d, Y, h:i A'),  
+					'title' =>    'Payment completed via paypal',
+					'description' =>   'An attendee has completed payment for the booking via paypal',
+				)
+			]
+		);
 
 		// After Booking Hooks
 		do_action( 'hydra_booking/after_booking_payment_complete', $attendeedata );

@@ -39,7 +39,7 @@
             var $this = $(this);
             $this.addClass('active');
         });
-
+ 
         // });
 	
 		/**
@@ -606,7 +606,7 @@
 						}
 					});
 				}
-			});
+			}); 
 		
 			// Attach click event to the Stripe Payment Button
 			stripeButtonContainer.on('click', '.tfhb-stripe-payment-btn', function (e) {

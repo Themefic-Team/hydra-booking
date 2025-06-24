@@ -45,8 +45,8 @@ class Telegram {
 						'meta_key' => 'booking_activity',
 						'value' => array( 
 								'datetime' => date('M d, Y, h:i A'), 
-								'title' =>  "Sent Meessage to Telegram bot",
-								'description' => "Booking Confirmation Message sent to Telegram",
+								'title' =>  "Sent meessage to telegram bot",
+								'description' => "Booking confirmation message sent to telegram",
 							)
 						]
 					);
@@ -74,8 +74,8 @@ class Telegram {
 						'meta_key' => 'booking_activity',
 						'value' => array( 
 								'datetime' => date('M d, Y, h:i A'), 
-								'title' =>  "Sent Meessage to Telegram bot",
-								'description' =>  "Booking Cancel Message sent to Telegram",
+								'title' =>  "Sent meessage to telegram bot",
+								'description' =>  "Booking cancel message sent to telegram",
 							)
 						]
 					);
@@ -102,8 +102,8 @@ class Telegram {
 						'meta_key' => 'booking_activity',
 						'value' => array( 
 								'datetime' => date('M d, Y, h:i A'), 
-								'title' =>  "Sent Meessage to Telegram bot",
-								'description' =>  "Booking Cancel Message sent to Telegram",
+								'title' =>  "Sent meessage to telegram bot",
+								'description' =>  "Booking Re-scheduled message sent to telegram",
 							)
 						]
 					);

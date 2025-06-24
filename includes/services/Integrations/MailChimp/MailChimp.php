@@ -4,7 +4,7 @@ namespace HydraBooking\Services\Integrations\MailChimp;
 use HydraBooking\DB\Meeting;
 use HydraBooking\DB\BookingMeta;
 
-use HydraBooking\Hooks\BookingActivityHandler; 
+use HydraBooking\Hooks\BookingActivityHandler;
 class MailChimp {
 
 	public function __construct() {
@@ -204,24 +204,26 @@ class MailChimp {
 			add_filter('https_ssl_verify', '__return_false');
 			$response = wp_remote_post($url, $args);
 			$response_body = wp_remote_retrieve_body($response); 
-			// json_decode the response
-			$response_body = json_decode($response_body);
- 
-			if (isset($response_body->status) && !$response_body->status == 400) { 
-				return true;
+			// json_decode the response 
+			if (isset($response_body->status) && $response_body->status == 400) { 
+				
+				
+				
+				return false;
 
+				
+			} else {
 				BookingActivityHandler::add_activity([
-					'booking_id' => $attendeeBooking->booking_id,
+					'booking_id' => $attendee->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array(
 							'datetime' => date('M d, Y, h:i A'),
-							'title' => 'Attendee to a Mailchimp list',
-							'description' => $attendeeBooking->attendee_name . ' has been added to the Mailchimp list ',
+							'title' => 'Added to mailchimp list',
+							'description' => 'An attendee has been added to the mailchimp list',
 						)
 					]
 				);
-			} else {
-				return false;
+				return true;
 			}
 		}
 	}

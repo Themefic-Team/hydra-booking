@@ -484,6 +484,14 @@ window.addEventListener('click', function(e) {
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
                 <!-- CF7 -->
+                <!-- Fluent -->
+                <ForminatorIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between" 
+                :forminator_data="Integration.forminator" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'forms'"
+                />
+                <!-- CF7 -->
 
                 
                 <!-- CF7 -->

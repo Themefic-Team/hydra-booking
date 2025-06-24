@@ -25,7 +25,7 @@ class ActionHooks {
 			add_action( 'hydra_booking/after_booking_schedule', array( new GoogleCalendar(), 'remove_attendde_event_from_existing_booking' ), 11, 2 );
 
 			// Added Booking Activity 
-			add_action( 'hydra_booking/after_booking_completed', array( new GoogleCalendar(), 'added_booking_activity' ), 99, 2 ); 
+			// add_action( 'hydra_booking/after_booking_completed', array( new GoogleCalendar(), 'added_booking_activity' ), 99, 2 ); 
 		}
 
 		// if(!empty($zoom_meeting) && $zoom_meeting['status'] == true){
