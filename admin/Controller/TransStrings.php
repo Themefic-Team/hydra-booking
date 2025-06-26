@@ -746,9 +746,14 @@ namespace HydraBooking\Admin\Controller;
             'Booking data sent to webhook' =>  __('Booking data sent to webhook', 'hydra-booking'),   
             'Payment completed via Stripe' =>  __('Payment completed via Stripe', 'hydra-booking'),  
             'An attendee has completed payment for the booking via Stripe' =>  __('An attendee has completed payment for the booking via Stripe', 'hydra-booking'),  
-            'hello' =>  __('hello', 'hydra-booking'),  
-            'hello' =>  __('hello', 'hydra-booking'),  
-            'hello' =>  __('hello', 'hydra-booking'),  
+            'Outlook calendar event created' =>  __('Outlook calendar event created', 'hydra-booking'),  
+            'A outlook calendar event has been created' =>  __('A outlook calendar event has been created', 'hydra-booking'),  
+            'Attendee added to outlook calendar' =>  __('Attendee added to outlook calendar', 'hydra-booking'),  
+            'An attendee has been added to the outlook calendar' =>  __('An attendee has been added to the outlook calendar', 'hydra-booking'),  
+            'Attendee removed from google calendar' =>  __('Attendee removed from google calendar', 'hydra-booking'),  
+            'Attendee removed from google calendar' =>  __('Attendee removed from google calendar', 'hydra-booking'),  
+            'Sent data to Zoho CRM' =>  __('Sent data to Zoho CRM', 'hydra-booking'),  
+            'Booking data sent to Zoho CRM' =>  __('Booking data sent to Zoho CRM', 'hydra-booking'),  
             'hello' =>  __('hello', 'hydra-booking'),  
 
             //

@@ -961,7 +961,7 @@ class MeetingController {
 			);
 		}
 
-		$_tfhb_host_integration_settings = ! empty( $MeetingData->host_id ) ? get_user_meta( $MeetingData->host_id, '_tfhb_host_integration_settings', true ) : '';
+		$_tfhb_host_integration_settings = ! empty( $MeetingData->user_id ) ? get_user_meta( $MeetingData->user_id, '_tfhb_host_integration_settings', true ) : '';
 		$api_key                         = ! empty( $_tfhb_integration_settings['mailchimp']['key'] ) ? $_tfhb_integration_settings['mailchimp']['key'] : '';
 		$api_key                         = ! empty( $_tfhb_host_integration_settings['mailchimp']['key'] ) ? $_tfhb_host_integration_settings['mailchimp']['key'] : $api_key;
 		$mailchimp_Data                  = array();
