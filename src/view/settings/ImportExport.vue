@@ -259,7 +259,7 @@ const goToDashboard = () => {
                 <div class="tfhb-import-btn-wrap tfhb-flexbox tfhb-justify-end tfhb-full-width">
                     <div class="tfhb-flexbox tfhb-gap-8">
                         <!--   -->
-                        <h3 v-if="importExport.importing"> {{ $tfhb_trans('Importing..') }}  {{ importExport.progress }} %</h3>
+                        <h3 v-if="importExport.importing"> {{ importExport.progress_title }}..  {{ importExport.progress }} %</h3>
                         <HbButton 
                             classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
                             @click="importExport.importAllData()"

@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 const importExport = reactive({
     skeleton: false, 
     progress: 0,
+    progress_title: 'Importing',
     importing: false,
     host_preloader: false,
     progressInterval: null,
@@ -202,65 +203,183 @@ const importExport = reactive({
     },
 
      // Import All Data
-     async importAllData() { 
-        // if this.allData.select_import is empty return mesage
-        if(Object.keys(this.allData.select_import).length === 0) {
+    //  async importAllData() { 
+    //     // if this.allData.select_import is empty return mesage
+    //     if(Object.keys(this.allData.select_import).length === 0) {
+    //         toast.error('Please select at least one item to import', {
+    //             position: 'bottom-right', // Set the desired position
+    //             "autoClose": 1500,
+    //         });
+    //     }
+    //     this.importing = true;
+    //     this.progress = 0;
+    //     // Simulate progress
+    //     this.progressInterval = setInterval(() => {
+    //         if (this.progress < 90) {
+    //         this.progress += 1;
+    //         }
+    //     }, 100);
+
+    //     try {  
+    //         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-all-data', {
+    //             import_data: this.allData.import_data,  
+    //             select_import: this.allData.select_import,   
+    //             is_overwrite_host: this.allData.is_overwrite_host,  
+    //             is_create_new_user: this.allData.is_create_new_user,  
+    //             is_overwrite_meeting: this.allData.is_overwrite_meeting,  
+    //             is_overwrite_booking: this.allData.is_overwrite_booking,  
+    //             is_default_meeting: this.allData.is_default_meeting,  
+    //             default_meeting_id: this.allData.default_meeting_id,  
+    //         }, {
+    //             headers: {
+    //                 'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
+    //             } 
+    //         } );
+    
+    //         if (response.data.status) {  
+    //             this.progress = 100;
+    //             this.allData.steps = 'completed';
+    //             this.importing = false;
+    //             // scrool to top
+    //             window.scrollTo(0, 0);
+    //             toast.success(response.data.message, {
+    //                 position: 'bottom-right', // Set the desired position
+    //                 "autoClose": 1500,
+    //             });   
+    //         }else{
+
+    //             this.importing = false;
+    //             this.progress = 100;
+    //             toast.error(response.data.message, {
+    //                 position: 'bottom-right', // Set the desired position
+    //                 "autoClose": 1500,
+    //             });
+    //         }
+    //     } catch (error) {
+
+    //         this.importing = false;
+    //         this.progress = 100;
+    //         console.log(error);
+    //     }  
+    // },
+
+    // Import All Data with Batching
+    async importAllData() {
+
+        if (Object.keys(this.allData.select_import).length === 0) {
             toast.error('Please select at least one item to import', {
-                position: 'bottom-right', // Set the desired position
-                "autoClose": 1500,
+                position: 'bottom-right',
+                autoClose: 1500,
             });
+            return;
         }
+
         this.importing = true;
         this.progress = 0;
-        // Simulate progress
-        this.progressInterval = setInterval(() => {
-            if (this.progress < 90) {
-            this.progress += 1;
-            }
-        }, 100);
+        const batchSize = 200; // You can adjust to 100, 500 based on server performance
+        const totalTypes = Object.keys(this.allData.select_import).length;
+        let completedTypes = 0;
 
-        try {  
+        // Loop through each selected data type
+        for (const type in this.allData.select_import) {
+            if (!this.allData.select_import[type]) continue;
+
+            if(type == 'settings'){ 
+                this.progress_title = 'Importing Settings...'
+            } 
+            if(type == 'tfhb_hosts'){ 
+                this.progress_title = 'Importing Hosts...'
+            } 
+            if(type == 'tfhb_meetings'){ 
+                this.progress_title =  'Importing Meetings...'
+            } 
+            if(type == 'tfhb_bookings'){ 
+                this.progress_title =  'Importing Bookings...'
+            } 
+            const dataset = this.allData.import_data[type] || [];
+            // If it's a settings import (single JSON), process without batching
+            if (type === 'settings') {
+               this.progressInterval = setInterval(() => {
+                    if (this.progress < 90) {
+                    this.progress += 1;
+                    }
+                }, 100);
+                const result = await this.importDataBatch({ settings: this.allData.import_data.settings }, { settings: true });
+                if (!result.status) {
+                    toast.error(result.message);
+                    break;
+                }
+                completedTypes++; 
+                continue;
+            }
+
+            // Split large datasets into batches
+            const totalBatches = Math.ceil(dataset.length / batchSize);
+
+            for (let i = 0; i < totalBatches; i++) {
+                const batch = dataset.slice(i * batchSize, (i + 1) * batchSize);
+                const batchData = { [type]: batch };
+                const selectedType = { [type]: true };
+
+                this.progressInterval = setInterval(() => {
+                    if (this.progress < 90) {
+                    this.progress += 1;
+                    }
+                }, 100);
+                const result = await this.importDataBatch(batchData, selectedType);
+                if (!result.status) {
+                    toast.error(result.message);
+                    this.importing = false;
+                    this.progress = 100;
+                    return;
+                }
+
+                // Update progress after each batch
+                const typeProgress = ((i + 1) / totalBatches) * (1 / totalTypes) * 100;
+                // this.progress = Math.floor((completedTypes / totalTypes) * 100); 
+            }
+
+            completedTypes++;
+            // this.progress = Math.floor((completedTypes / totalTypes) * 100);
+        }
+
+        // Finalize
+        this.progress = 100;
+        this.importing = false;
+        this.allData.steps = 'completed';
+        window.scrollTo(0, 0);
+        
+        toast.success('Data imported successfully', {
+            position: 'bottom-right',
+            autoClose: 1500,
+        });
+    },
+    // Send Single Batch to Backend
+    async importDataBatch(batchData, selectedType) {
+        try {
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/import-export/import-all-data', {
-                import_data: this.allData.import_data,  
-                select_import: this.allData.select_import,   
-                is_overwrite_host: this.allData.is_overwrite_host,  
-                is_create_new_user: this.allData.is_create_new_user,  
-                is_overwrite_meeting: this.allData.is_overwrite_meeting,  
-                is_overwrite_booking: this.allData.is_overwrite_booking,  
-                is_default_meeting: this.allData.is_default_meeting,  
-                default_meeting_id: this.allData.default_meeting_id,  
+                import_data: batchData,
+                select_import: selectedType,
+                is_overwrite_host: this.allData.is_overwrite_host,
+                is_create_new_user: this.allData.is_create_new_user,
+                is_overwrite_meeting: this.allData.is_overwrite_meeting,
+                is_overwrite_booking: this.allData.is_overwrite_booking,
+                is_default_meeting: this.allData.is_default_meeting,
+                default_meeting_id: this.allData.default_meeting_id,
             }, {
                 headers: {
-                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
-                } 
-            } );
-    
-            if (response.data.status) {  
-                this.progress = 100;
-                this.allData.steps = 'completed';
-                this.importing = false;
-                // scrool to top
-                window.scrollTo(0, 0);
-                toast.success(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });   
-            }else{
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                }
+            });
 
-                this.importing = false;
-                this.progress = 100;
-                toast.error(response.data.message, {
-                    position: 'bottom-right', // Set the desired position
-                    "autoClose": 1500,
-                });
-            }
+            return response.data;
         } catch (error) {
-
-            this.importing = false;
-            this.progress = 100;
-            console.log(error);
-        }  
+            console.error('Import error:', error);
+            return { status: false, message: 'Import failed' };
+        }
     },
+
+
 
     // export Booking Data
     async exportBooking() { 
