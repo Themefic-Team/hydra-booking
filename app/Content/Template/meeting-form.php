@@ -57,8 +57,11 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 			} elseif ( $questions_form_type == 'forminator' ) {
 				echo do_shortcode( '[forminator_form id="' . $questions_form . '"]' );
 			} elseif ( $questions_form_type == 'forminator' ) {
-					echo do_shortcode( '[forminator_form id="' . $questions_form . '"]' );
-			}
+				echo do_shortcode( '[forminator_form id="' . $questions_form . '"]' );
+			} 
+			// elseif ( $questions_form_type  ) {
+			// 	echo do_shortcode( '[gravityform id="' . $questions_form . '" title="false" ajax="true"]' );
+			// }
 			
 			if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 ):
 			?> 

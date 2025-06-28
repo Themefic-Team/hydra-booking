@@ -234,6 +234,7 @@ class SettingsController {
 		$_tfhb_general_settings['after_booking_completed']                 = sanitize_text_field( $request['after_booking_completed'] );
 		$_tfhb_general_settings['booking_status']                          = sanitize_text_field( $request['booking_status'] );
 		$_tfhb_general_settings['reschedule_status']                       = sanitize_text_field( $request['reschedule_status'] );
+		$_tfhb_general_settings['is_bokking_activity']                       = sanitize_text_field( $request['is_bokking_activity'] );
 		$_tfhb_general_settings['allowed_reschedule_before_meeting_start'] = sanitize_text_field( $request['allowed_reschedule_before_meeting_start'] );
 
 		// update option
@@ -732,9 +733,9 @@ class SettingsController {
 				'message' => $name . __( ' Settings Updated Successfully', 'hydra-booking' ),
 			);
 
-			if($key == 'gravity' && !empty($data['status'])){
-				$data['message'] =  __('Install and activate the Gravity Forms plugin if it is not already installed or active.', 'hydra-booking');
-			}
+			// if($key == 'gravity' && !empty($data['status'])){
+			// 	$data['message'] =  __('Install and activate the Gravity Forms plugin if it is not already installed or active.', 'hydra-booking');
+			// }
 			if($key == 'cf7' && !empty($data['status']) && $_tfhb_integration_settings[$key]['status'] == true){
 				if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
 					$data['message'] = __( 'Install and activate the Contact Form 7 plugin if it is not already installed or active.', 'hydra-booking' );

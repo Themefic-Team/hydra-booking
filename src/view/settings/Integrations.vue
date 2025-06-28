@@ -18,7 +18,7 @@ import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue
 import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
 import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
 import ForminatorIntegrations from '@/components/integrations/ForminatorIntegrations.vue'; 
-import GravityFormsIntegrations from '@/components/integrations/GravityFormsIntegrations.vue'; 
+// import GravityFormsIntegrations from '@/components/integrations/GravityFormsIntegrations.vue'; 
 import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
@@ -223,10 +223,10 @@ const Integration = reactive( {
         type: 'forms', 
         status: 0, 
     },
-    gravity : {
-        type: 'forms', 
-        status: 0, 
-    },
+    // gravity : {
+    //     type: 'forms', 
+    //     status: 0, 
+    // },
     webhook : {
         type: 'webhook', 
         status: 0, 
@@ -279,7 +279,8 @@ const fetchIntegration = async () => {
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             Integration.cf7= response.data.integration_settings.cf7 ? response.data.integration_settings.cf7 : Integration.cf7;
             Integration.fluent= response.data.integration_settings.fluent ? response.data.integration_settings.fluent : Integration.fluent;
-            Integration.gravity= response.data.integration_settings.gravity ? response.data.integration_settings.gravity : Integration.gravity;
+            // Integration.gravity= response.data.integration_settings.gravity ? response.data.integration_settings.gravity : Integration.gravity;
+            Integration.forminator= response.data.integration_settings.forminator ? response.data.integration_settings.forminator : Integration.forminator;
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
             Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
@@ -525,11 +526,11 @@ onBeforeMount(() => {
                 <!-- CF7 -->
 
                 <!-- gravity -->
-                <GravityFormsIntegrations 
+                <!-- <GravityFormsIntegrations 
                 :gravity_data="Integration.gravity" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
-                />
+                /> -->
                 <!-- gravity -->
 
                 <!-- webhook -->

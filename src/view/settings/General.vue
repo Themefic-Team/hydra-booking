@@ -25,6 +25,7 @@ const generalSettings = reactive({
   country: '',
   currency: 'USD',
   after_booking_completed: '10',
+  is_bokking_activity: 1,
   booking_status: 1,
   reschedule_status: '',
   allowed_reschedule_before_meeting_start: '10', 
@@ -79,6 +80,7 @@ const fetchGeneralSettings = async () => {
                 generalSettings.currency = response.data.general_settings.currency;
                 generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
                 generalSettings.booking_status = response.data.general_settings.booking_status;
+                generalSettings.is_bokking_activity = response.data.general_settings.is_bokking_activity;
                 generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
                 generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
 
@@ -353,6 +355,12 @@ onBeforeMount(() => {
                     v-model="generalSettings.booking_status"
                     width="100"
                     :label="$tfhb_trans('Confirmed bookings by default.')"  
+                />
+
+                <HbSwitch 
+                    v-model="generalSettings.is_bokking_activity"
+                    width="100"
+                    :label="$tfhb_trans('Track Booking Activity Based on Individual Bookings')"  
                 />
                  
             </div>  

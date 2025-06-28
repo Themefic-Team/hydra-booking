@@ -12,6 +12,7 @@ const BookingDetails = reactive({
     attendeeCancelPreloader : ref(false),
     deletePopup : ref(false),
     deletePreloader : ref(false),
+    is_bokking_activity : 0,
     cancelAttendee : {
         id: 0,
         booking_id: 0,
@@ -35,6 +36,7 @@ const BookingDetails = reactive({
                 this.booking = response.data.booking;
                 this.attendees = response.data.booking.attendees;
                 this.booking_activity = response.data.booking_activity; 
+                this.is_bokking_activity = response.data.is_bokking_activity; 
                 this.internal_note =  response.data.internal_note == '' || response.data.internal_note == null ? '' : response.data.internal_note;
                 this.location = JSON.parse(response.data.booking.meeting_locations);
                 this.skeleton = false;

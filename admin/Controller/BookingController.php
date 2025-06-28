@@ -1414,9 +1414,17 @@ class BookingController {
 			);
 		}
 		
+		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+		$is_bokking_activity = isset($_tfhb_general_settings['is_bokking_activity']) ? $_tfhb_general_settings['is_bokking_activity'] : 1;
+		
 		$bookingsList = $this->getBookingDetailsData($booking_id);
 		$bookingMeta = new BookingMeta();
-		$booking_activity = $bookingMeta->getWithIdKey ( $booking_id, 'booking_activity', null); 
+		if($is_bokking_activity == 1){ 
+			$booking_activity = $bookingMeta->getWithIdKey ( $booking_id, 'booking_activity', null); 
+		}else{
+			$booking_activity = [];
+		}
+
 		$get_internal_note = $bookingMeta->getWithIdKey ( $booking_id, 'internal_note', 1);  
  
 		$internal_note = isset($get_internal_note->value) ? $get_internal_note->value : '';
@@ -1435,6 +1443,7 @@ class BookingController {
 			'status'  => true,
 			'booking' => $bookingsList,
 			'booking_activity' => $booking_activity,
+			'is_bokking_activity' => $is_bokking_activity,
 			'internal_note' => $internal_note,
 			'message' =>  __('Booking Data Successfully Retrieve!', 'hydra-booking'),
 		);

@@ -290,8 +290,10 @@ const TfhbPrevNavigator = () => {
             </div>
             
        </div>
-       <div class="tfhb-booking-details-wrap tfhb-flexbox tfhb-gap-16 tfhb-justify-between tfhb-align-normal">
-            <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16">
+       <div class="tfhb-booking-details-wrap tfhb-flexbox tfhb-gap-16 tfhb-justify-between tfhb-align-normal tfhb-full-width"> 
+            <div class="tfhb-booking-details-content tfhb-flexbox tfhb-gap-16" :style="BookingDetails.is_bokking_activity == 1 
+              ? { width: 'calc(100% - 316px)' } 
+              : { width: '100%' }">
                 <div class="tfhb-b-d-wrap">
                     <h3>{{ $tfhb_trans('Meeting Details') }}</h3> 
                     
@@ -762,7 +764,7 @@ const TfhbPrevNavigator = () => {
                  </div> 
                  <!-- For Group Booking -->
             </div>
-            <div class="tfhb-booking-details-activity">
+            <div v-if="BookingDetails.is_bokking_activity == 1" class="tfhb-booking-details-activity">
                 <div class="tfhb-b-d-wrap">  
                     <h3>{{ $tfhb_trans('Activity Details') }}</h3> 
                     <div v-if="BookingDetails.booking_activity"  class="tfhb-activity-timeline tfhb-flexbox tfhb-gap-16">

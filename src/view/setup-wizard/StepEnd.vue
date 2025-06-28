@@ -24,7 +24,7 @@ import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue
 import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
 import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
 import ForminatorIntegrations from '@/components/integrations/ForminatorIntegrations.vue'; 
-import GravityFormsIntegrations from '@/components/integrations/GravityFormsIntegrations.vue'; 
+// import GravityFormsIntegrations from '@/components/integrations/GravityFormsIntegrations.vue'; 
 import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
@@ -192,10 +192,10 @@ const Integration = reactive( {
         type: 'forms', 
         status: 0, 
     },
-    gravity : {
-        type: 'forms', 
-        status: 0, 
-    },
+    // gravity : {
+    //     type: 'forms', 
+    //     status: 0, 
+    // },
     webhook : {
         type: 'others', 
         status: 0, 
@@ -225,15 +225,28 @@ const fetchIntegration = async () => {
         if (response.data.status) { 
             
             // console.log(response.data.integration_settings);
-            Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
+             Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
             Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
             Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
             Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
             Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
+            Integration.webhook= response.data.integration_settings.webhook ? response.data.integration_settings.webhook : Integration.webhook;
+            Integration.fluent_crm= response.data.integration_settings.fluent_crm ? response.data.integration_settings.fluent_crm : Integration.fluent_crm;
+            Integration.zoho_crm= response.data.integration_settings.zoho_crm ? response.data.integration_settings.zoho_crm : Integration.zoho_crm;
+            Integration.pabbly= response.data.integration_settings.pabbly ? response.data.integration_settings.pabbly : Integration.pabbly;
+            Integration.zapier= response.data.integration_settings.zapier ? response.data.integration_settings.zapier : Integration.zapier;
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
+            Integration.cf7= response.data.integration_settings.cf7 ? response.data.integration_settings.cf7 : Integration.cf7;
+            Integration.fluent= response.data.integration_settings.fluent ? response.data.integration_settings.fluent : Integration.fluent;
+            // Integration.gravity= response.data.integration_settings.gravity ? response.data.integration_settings.gravity : Integration.gravity;
+            Integration.forminator= response.data.integration_settings.forminator ? response.data.integration_settings.forminator : Integration.forminator;
+            Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
+            Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
+            Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
+
 
             skeleton.value = false;
         }
@@ -484,25 +497,25 @@ window.addEventListener('click', function(e) {
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
                 <!-- CF7 -->
-                <!-- Fluent -->
+                <!-- Forminator -->
                 <ForminatorIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between" 
                 :forminator_data="Integration.forminator" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
-                <!-- CF7 -->
+                <!-- Forminator -->
 
                 
                 <!-- CF7 -->
 
                 <!-- gravity -->
-                <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
+                <!-- <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :gravity_data="Integration.gravity" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
-                />
+                /> -->
                 <!-- gravity -->
 
                 <!-- webhook -->

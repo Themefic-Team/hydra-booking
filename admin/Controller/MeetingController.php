@@ -937,7 +937,7 @@ class MeetingController {
 		$integrations['cf7_status'] = isset( $_tfhb_integration_settings['cf7']['status'] ) ? $_tfhb_integration_settings['cf7']['status'] : 0;
 		$integrations['fluent_status'] = isset( $_tfhb_integration_settings['fluent']['status'] ) ? $_tfhb_integration_settings['fluent']['status'] : 0;
 		$integrations['forminator_status'] = isset( $_tfhb_integration_settings['forminator']['status'] ) ? $_tfhb_integration_settings['forminator']['status'] : 0;
-		$integrations['gravity_status'] = isset( $_tfhb_integration_settings['gravity']['status'] ) ? $_tfhb_integration_settings['gravity']['status'] : 0;
+		// $integrations['gravity_status'] = isset( $_tfhb_integration_settings['gravity']['status'] ) ? $_tfhb_integration_settings['gravity']['status'] : 0;
 		$integrations['webhook_status'] = isset( $_tfhb_integration_settings['webhook']['status'] ) ? $_tfhb_integration_settings['webhook']['status'] : 0;
 		$integrations['fluent_crm_status'] = isset( $_tfhb_integration_settings['fluent_crm']['status'] ) ? $_tfhb_integration_settings['fluent_crm']['status'] : 0;
 		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
@@ -1761,17 +1761,18 @@ class MeetingController {
 					'value' => $form->id,
 				);
 			}
-		} elseif ( $form_type == 'gravityforms' ) {
-			// Query arguments get custom fluentform_forms data all into custom database table
-			global $wpdb;
-			$results    = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}gf_form" );
-			foreach ( $results as $form ) {
-				$questionForms[] = array(
-					'name'  => $form->title,
-					'value' => $form->id,
-				);
-			}
-		}
+		} 
+		// elseif ( $form_type == 'gravityforms' ) {
+		// 	// Query arguments get custom fluentform_forms data all into custom database table
+		// 	global $wpdb;
+		// 	$results    = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}gf_form" );
+		// 	foreach ( $results as $form ) {
+		// 		$questionForms[] = array(
+		// 			'name'  => $form->title,
+		// 			'value' => $form->id,
+		// 		);
+		// 	}
+		// }
 		return $questionForms;
 	}
 }

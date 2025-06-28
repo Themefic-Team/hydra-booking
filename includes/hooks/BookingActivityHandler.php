@@ -15,6 +15,10 @@ class BookingActivityHandler {
      * @param array $activity_data Array of data for the booking activity.
      */
     public static function add_activity($activity_data) {
+         if(self::is_booking_Activity() == false){
+            return;
+        }
+        
         self::$activities[] = $activity_data;
     }
 
@@ -23,11 +27,27 @@ class BookingActivityHandler {
         exit;
     }
 
+    // checked booking is_booking_Activity 
+    public static function is_booking_Activity() {
+        $_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+        $is_bokking_activity = isset($_tfhb_general_settings['is_bokking_activity']) ? $_tfhb_general_settings['is_bokking_activity'] : 1; 
+
+        if($is_bokking_activity == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
      /**
      * Perform a bulk insert of all collected activities.
      */
     public static function bulk_insert() {
+        if(self::is_booking_Activity() == false){
+            return;
+        }
+
         if ( empty(self::$activities) ) {
             return;
         }  

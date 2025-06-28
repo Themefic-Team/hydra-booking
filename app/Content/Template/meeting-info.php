@@ -28,6 +28,12 @@ $_tfhb_host_integration_settings = get_user_meta( $host['user_id'], '_tfhb_host_
 $stripePublicKey                 = ! empty( $_tfhb_host_integration_settings['stripe']['public_key'] ) ? $_tfhb_host_integration_settings['stripe']['public_key'] : $stripePublicKey;
 $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['paypal']['client_id'] ) ? $_tfhb_host_integration_settings['paypal']['client_id'] : $paypalPublicKey;
 
+if('woo_payment' == $meeting['payment_method']){
+	// get woo currency from meeting
+	if (  class_exists( 'WooCommerce' ) ) {
+		$currency 	=  get_woocommerce_currency();
+	}
+}
 // display short 
 
 $selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $meeting['availability_custom']['time_zone'] : 'UTC';
