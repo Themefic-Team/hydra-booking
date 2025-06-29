@@ -308,7 +308,7 @@ const importExport = reactive({
                 if (!result.status) {
                     toast.error(result.message);
                     break;
-                }
+                } 
                 completedTypes++; 
                 continue;
             }
@@ -326,12 +326,23 @@ const importExport = reactive({
                     this.progress += 1;
                     }
                 }, 100);
-                const result = await this.importDataBatch(batchData, selectedType);
+                const result = await this.importDataBatch(batchData, selectedType); 
                 if (!result.status) {
                     toast.error(result.message);
                     this.importing = false;
                     this.progress = 100;
                     return;
+                }else{
+                    if (result.id_maps?.host_id_map) { 
+                        this.remapIds('tfhb_meetings', 'host_id', result.id_maps.host_id_map);
+                        this.remapIds('tfhb_bookings', 'host_id', result.id_maps.host_id_map);
+                    }
+                    if (result.id_maps?.user_id_map) {
+                        this.remapIds('tfhb_meetings', 'user_id', result.id_maps.user_id_map); 
+                    }
+                    if (result.id_maps?.meeting_id_map) {
+                        this.remapIds('tfhb_bookings', 'meeting_id', result.id_maps.meeting_id_map);
+                    } 
                 }
 
                 // Update progress after each batch
@@ -377,6 +388,15 @@ const importExport = reactive({
             console.error('Import error:', error);
             return { status: false, message: 'Import failed' };
         }
+    },
+
+    remapIds(type, field, idMap) {
+        const dataset = this.allData.import_data[type] || []; 
+        dataset.forEach(item => {
+            if (idMap[item[field]]) {
+                item[field] = idMap[item[field]];
+            }
+        });
     },
 
 
