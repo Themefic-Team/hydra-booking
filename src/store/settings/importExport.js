@@ -265,7 +265,6 @@ const importExport = reactive({
 
     // Import All Data with Batching
     async importAllData() {
-
         if (Object.keys(this.allData.select_import).length === 0) {
             toast.error('Please select at least one item to import', {
                 position: 'bottom-right',
@@ -276,95 +275,90 @@ const importExport = reactive({
 
         this.importing = true;
         this.progress = 0;
-        const batchSize = 200; // You can adjust to 100, 500 based on server performance
+        const batchSize = 100;
         const totalTypes = Object.keys(this.allData.select_import).length;
         let completedTypes = 0;
 
-        // Loop through each selected data type
         for (const type in this.allData.select_import) {
             if (!this.allData.select_import[type]) continue;
 
-            if(type == 'settings'){ 
-                this.progress_title = 'Importing Settings...'
-            } 
-            if(type == 'tfhb_hosts'){ 
-                this.progress_title = 'Importing Hosts...'
-            } 
-            if(type == 'tfhb_meetings'){ 
-                this.progress_title =  'Importing Meetings...'
-            } 
-            if(type == 'tfhb_bookings'){ 
-                this.progress_title =  'Importing Bookings...'
-            } 
-            const dataset = this.allData.import_data[type] || [];
-            // If it's a settings import (single JSON), process without batching
+            if (type === 'settings') this.progress_title = 'Importing Settings...';
+            if (type === 'tfhb_hosts') this.progress_title = 'Importing Hosts...';
+            if (type === 'tfhb_meetings') this.progress_title = 'Importing Meetings...';
+            if (type === 'tfhb_bookings') this.progress_title = 'Importing Bookings...';
+
+            let dataset = Array.isArray(this.allData.import_data[type]) ? this.allData.import_data[type] : [];
+
             if (type === 'settings') {
-               this.progressInterval = setInterval(() => {
-                    if (this.progress < 90) {
-                    this.progress += 1;
-                    }
+                let interval = setInterval(() => {
+                    if (this.progress < 90) this.progress += 1;
                 }, 100);
-                const result = await this.importDataBatch({ settings: this.allData.import_data.settings }, { settings: true });
-                if (!result.status) {
-                    toast.error(result.message);
-                    break;
-                } 
-                completedTypes++; 
-                continue;
-            }
 
-            // Split large datasets into batches
-            const totalBatches = Math.ceil(dataset.length / batchSize);
+                let result = await this.importDataBatch({ settings: this.allData.import_data.settings }, { settings: true });
 
-            for (let i = 0; i < totalBatches; i++) {
-                const batch = dataset.slice(i * batchSize, (i + 1) * batchSize);
-                const batchData = { [type]: batch };
-                const selectedType = { [type]: true };
+                clearInterval(interval);
 
-                this.progressInterval = setInterval(() => {
-                    if (this.progress < 90) {
-                    this.progress += 1;
-                    }
-                }, 100);
-                const result = await this.importDataBatch(batchData, selectedType); 
                 if (!result.status) {
                     toast.error(result.message);
                     this.importing = false;
                     this.progress = 100;
                     return;
-                }else{
-                    if (result.id_maps?.host_id_map) { 
+                }
+                completedTypes++;
+                this.progress = Math.floor((completedTypes / totalTypes) * 100);
+                continue;
+            }
+
+            let totalBatches = Math.ceil(dataset.length / batchSize);
+
+            for (let i = 0; i < totalBatches; i++) {
+                let batch = dataset.slice(i * batchSize, (i + 1) * batchSize);
+                let batchData = { [type]: batch };
+                let selectedType = { [type]: true };
+
+                let interval = setInterval(() => {
+                    if (this.progress < 90) this.progress += 1;
+                }, 100);
+
+                let result = await this.importDataBatch(batchData, selectedType);
+
+                clearInterval(interval); 
+                if (!result.status) {
+                    toast.error(result.message);
+                    this.importing = false;
+                    this.progress = 100;
+                    return;
+                } else {
+                    if (result.id_maps?.host_id_map) {
                         this.remapIds('tfhb_meetings', 'host_id', result.id_maps.host_id_map);
                         this.remapIds('tfhb_bookings', 'host_id', result.id_maps.host_id_map);
                     }
                     if (result.id_maps?.user_id_map) {
-                        this.remapIds('tfhb_meetings', 'user_id', result.id_maps.user_id_map); 
+                        this.remapIds('tfhb_meetings', 'user_id', result.id_maps.user_id_map);
                     }
                     if (result.id_maps?.meeting_id_map) {
                         this.remapIds('tfhb_bookings', 'meeting_id', result.id_maps.meeting_id_map);
-                    } 
+                    }
                 }
 
-                // Update progress after each batch
-                const typeProgress = ((i + 1) / totalBatches) * (1 / totalTypes) * 100;
-                // this.progress = Math.floor((completedTypes / totalTypes) * 100); 
+                this.progress = Math.floor(((completedTypes + (i + 1) / totalBatches)) / totalTypes * 100);
             }
 
             completedTypes++;
-            // this.progress = Math.floor((completedTypes / totalTypes) * 100);
+            this.progress = Math.floor((completedTypes / totalTypes) * 100);
         }
 
-        // Finalize
         this.progress = 100;
         this.importing = false;
         this.allData.steps = 'completed';
         window.scrollTo(0, 0);
-        
+
         toast.success('Data imported successfully', {
             position: 'bottom-right',
             autoClose: 1500,
         });
     },
+
     // Send Single Batch to Backend
     async importDataBatch(batchData, selectedType) {
         try {
