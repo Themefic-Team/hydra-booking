@@ -171,14 +171,14 @@ const removeExtraFrequency = (key) => {
                 
                 <!-- For a maximum of --> 
                 <HbText  
-                        v-model="meeting.recurring_maximum"   
-                        type="number"
-                        :label="$tfhb_trans('Maximum number of bookings')"   
-                        selected = "1"
-                        :placeholder="$tfhb_trans('Use meeting length (default)')" 
-                        width="40"  
-                        limit="1"
-                    /> 
+                    v-model="meeting.recurring_maximum"   
+                    type="number"
+                    :label="$tfhb_trans('Maximum number of bookings')"   
+                    selected = "1"
+                    :placeholder="$tfhb_trans('Use meeting length (default)')" 
+                    width="40"  
+                    limit="1"
+                /> 
 
 
             </div>  

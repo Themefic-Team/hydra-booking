@@ -36,6 +36,7 @@ function CounterDec(key){
 <template>
     <div class="tfhb-counter-box " :class="name" 
             :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }">
+            {{ counter_value }}
         <div class="tfhb-single-form-field">
             <div class="tfhb-single-form-field-wrap">
                 <label v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> </label>

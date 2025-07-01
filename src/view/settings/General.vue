@@ -15,6 +15,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbCounter from '@/components/meetings/HbCounter.vue'
 const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const generalSettings = reactive({
   admin_email: '{{wp.admin_email}}',
@@ -28,6 +29,12 @@ const generalSettings = reactive({
   booking_status: 1,
   reschedule_status: '',
   allowed_reschedule_before_meeting_start: '10', 
+  allowed_before_booking_cencel_reschedule:[
+        {
+            limit: 1,
+            times:'Year'
+        }
+    ],
 });
 
 // Field Validator
@@ -345,6 +352,16 @@ onBeforeMount(() => {
                         {'name': '1 Hour', 'value': '60'}
                     ]" 
                 />
+                
+                  <HbCounter
+                    :label="$tfhb_trans('Minimum time required before Booking/Cancel/Reschedule')"
+                    width="50" 
+                    required= "true" 
+                    :repater="false"
+                    :counter_value="generalSettings.allowed_before_booking_cencel_reschedule"
+                    limit="1"
+                />
+                
                 <!-- Minimum time required before Booking/Cancel/Reschedule -->
 
                  <!-- Default status of bookings Approved if checkbox is checked --> 
