@@ -27,12 +27,11 @@ const generalSettings = reactive({
   currency: 'USD',
   after_booking_completed: '10',
   booking_status: 1,
-  reschedule_status: '',
-  allowed_reschedule_before_meeting_start: '10', 
-  allowed_before_booking_cencel_reschedule:[
+  reschedule_status: '', 
+  allowed_reschedule_before_meeting_start:[
         {
-            limit: 1,
-            times:'Year'
+            limit: 10,
+            times:'minutes'
         }
     ],
 });
@@ -86,8 +85,8 @@ const fetchGeneralSettings = async () => {
                 generalSettings.currency = response.data.general_settings.currency;
                 generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
                 generalSettings.booking_status = response.data.general_settings.booking_status;
-                generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
-                generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
+                generalSettings.reschedule_status = response.data.general_settings.reschedule_status; 
+                generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start   ? response.data.general_settings.allowed_reschedule_before_meeting_start : generalSettings.allowed_reschedule_before_meeting_start;
 
             }
            
@@ -335,31 +334,19 @@ onBeforeMount(() => {
                
                 
                 <!-- Minimum time required before Booking/Cancel/Reschedule -->
-                <HbDropdown 
-                    v-model="generalSettings.allowed_reschedule_before_meeting_start"  
-                    required= "true" 
-                    :label="$tfhb_trans('Minimum time required before Booking/Cancel/Reschedule')"  
-                    selected = "1"
-                    width="50"
-                    :placeholder="$tfhb_trans('Select Time')"  
-                    :option = "[
-                        {'name': '5 Minutes', 'value': '5'},  
-                        {'name': '10 Minutes', 'value': '10'},   
-                        {'name': '20 Minutes', 'value': '20'},  
-                        {'name': '30 Minutes', 'value': '30'},  
-                        {'name': '40 Minutes', 'value': '40'},
-                        {'name': '50 Minutes', 'value': '50'},
-                        {'name': '1 Hour', 'value': '60'}
-                    ]" 
-                />
+             
                 
                   <HbCounter
                     :label="$tfhb_trans('Minimum time required before Booking/Cancel/Reschedule')"
                     width="50" 
                     required= "true" 
                     :repater="false"
-                    :counter_value="generalSettings.allowed_before_booking_cencel_reschedule"
+                    :counter_value="generalSettings.allowed_reschedule_before_meeting_start"
                     limit="1"
+                    :option = "[ 
+                        {'name': 'Minutes', 'value': 'minutes'},   
+                        {'name': 'Hours', 'value': 'hours'}
+                    ]"
                 />
                 
                 <!-- Minimum time required before Booking/Cancel/Reschedule -->

@@ -208,6 +208,12 @@ class SettingsController {
 		$country_list           = $country->country_list();
 		$currency_list           = $country->currency_list();
 		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+		// if( !is_array($_tfhb_general_settings['allowed_reschedule_before_meeting_start'])){
+		// 	$_tfhb_general_settings['allowed_reschedule_before_meeting_start'][] = [
+		// 		'limit' => $_tfhb_general_settings['allowed_reschedule_before_meeting_start'],
+		// 		'times' => 'minutes',
+		// 	]; 
+		// }
 		$data                   = array(
 			'status'           => true,
 			'time_zone'        => $time_zone,
@@ -233,8 +239,8 @@ class SettingsController {
 		$_tfhb_general_settings['currency']                                 = sanitize_text_field( $request['currency'] );
 		$_tfhb_general_settings['after_booking_completed']                 = sanitize_text_field( $request['after_booking_completed'] );
 		$_tfhb_general_settings['booking_status']                          = sanitize_text_field( $request['booking_status'] );
-		$_tfhb_general_settings['reschedule_status']                       = sanitize_text_field( $request['reschedule_status'] );
-		$_tfhb_general_settings['allowed_reschedule_before_meeting_start'] = sanitize_text_field( $request['allowed_reschedule_before_meeting_start'] );
+		$_tfhb_general_settings['reschedule_status']                       = sanitize_text_field( $request['reschedule_status'] ); 
+		$_tfhb_general_settings['allowed_reschedule_before_meeting_start'] =  $request['allowed_reschedule_before_meeting_start'];
 
 		// update option
 		update_option( '_tfhb_general_settings', $_tfhb_general_settings );

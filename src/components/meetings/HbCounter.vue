@@ -13,6 +13,7 @@ const props = defineProps([
     'subtitle',
     'counter_value',
     'description', 
+    'option', 
     'repater', 
     'limit'
 ])
@@ -28,6 +29,18 @@ function CounterDec(key){
 
     if ( !props.limit ) {
         props.counter_value[key].limit --;
+    }
+}
+function getTheOption(){
+    if (props.option) {
+        return props.option;
+    } else {
+        return [ 
+            {'name': 'Days', 'value': 'days'},  
+            {'name': 'Weeks', 'value': 'weeks'},  
+            {'name': 'Months', 'value': 'months'},  
+            {'name': 'Years', 'value': 'years'},
+        ]
     }
 }
 
@@ -62,12 +75,7 @@ function CounterDec(key){
                         width="50"
                         :selected = "1"   
                         placeholder="Select" 
-                        :option = "[ 
-                            {'name': 'Days', 'value': 'days'},  
-                            {'name': 'Weeks', 'value': 'weeks'},  
-                            {'name': 'Months', 'value': 'months'},  
-                            {'name': 'Years', 'value': 'years'},
-                        ]"
+                        :option = "getTheOption()"
                     /> 
 
                     <div v-if="repater && key == 0" class="tfhb-availability-schedule-clone-single">
