@@ -124,6 +124,15 @@ const UpdateGeneralSettings = async () => {
             
         });
     }
+    // if  generalSettings.allowed_reschedule_before_meeting_start is not number 
+    if(!Number(generalSettings.allowed_reschedule_before_meeting_start[0].limit)){ 
+            toast.error('AMinimum time required before Booking/Cancel/Reschedule must be a number', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        
+        return 
+    }
 
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;

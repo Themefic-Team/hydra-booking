@@ -20,8 +20,7 @@ class Enqueue {
 
 	// constaract
 	public function __construct() { 
-		
-		
+
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) ); 
 		add_action( 'wp_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'script_loader_tag', array( $this, 'thb_loadScriptAsModule' ), 10, 3 );

@@ -262,9 +262,18 @@ class DateTimeController extends \DateTimeZone {
 
 	public function generateTimeSlots( $startTime, $endTime, $duration, $meeting_interval, $buffer_time_before, $buffer_time_after, $selected_date, $time_format, $time_zone, $selected_time_zone, $bookings, $max_book_per_slot, $is_display_max_book_slot ) {
 		$timeSlots = array();
-	
-		// Example value for buffer time before meeting start (replace with your actual setting)
-		$skip_before_meeting_start = 100; 
+		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+		$allowed_reschedule_before_meeting_start =   isset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) && !empty($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) ? $_tfhb_general_settings['allowed_reschedule_before_meeting_start'] : 10;
+		
+		if(is_array($allowed_reschedule_before_meeting_start)){
+			$skip_before_meeting_start = $allowed_reschedule_before_meeting_start[0]['limit'];
+			$skip_before_format = $allowed_reschedule_before_meeting_start[0]['times'];
+		}else{
+			$skip_before_meeting_start = $allowed_reschedule_before_meeting_start;
+			$skip_before_format = 'minutes';
+		}
+		 
+		 
 	
 		// Convert start and end times based on the selected timezone
 		$start = $this->convert_time_based_on_timezone($selected_date, $startTime, $time_zone, $selected_time_zone, '');
@@ -290,7 +299,7 @@ class DateTimeController extends \DateTimeZone {
 			$end_time   = $this->formatTime( ( clone $current )->modify( "+$total_diff seconds" ), $time_format, $selected_time_zone );
 
 			// if current time is passed then skip skip_before_meeting_start
-			$current_minus_skip = ( clone $current )->modify( "-$skip_before_meeting_start minutes" );
+			$current_minus_skip = ( clone $current )->modify( "-$skip_before_meeting_start $skip_before_format" );
 			if ( new \DateTime( 'now', new \DateTimeZone( $time_zone ) ) > $current_minus_skip ) {
 				$current->modify( "+$total_diff seconds" )->modify( "+$meeting_interval seconds" );
 

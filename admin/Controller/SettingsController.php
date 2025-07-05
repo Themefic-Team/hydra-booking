@@ -208,12 +208,15 @@ class SettingsController {
 		$country_list           = $country->country_list();
 		$currency_list           = $country->currency_list();
 		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
-		// if( !is_array($_tfhb_general_settings['allowed_reschedule_before_meeting_start'])){
-		// 	$_tfhb_general_settings['allowed_reschedule_before_meeting_start'][] = [
-		// 		'limit' => $_tfhb_general_settings['allowed_reschedule_before_meeting_start'],
-		// 		'times' => 'minutes',
-		// 	]; 
-		// }
+		if( isset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) && !is_array($_tfhb_general_settings['allowed_reschedule_before_meeting_start'])){
+			$old_value = $_tfhb_general_settings['allowed_reschedule_before_meeting_start'];
+			unset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']); 
+			$old_value = empty( $old_value ) ? 10 : $old_value;
+			$_tfhb_general_settings['allowed_reschedule_before_meeting_start'][] = [
+				'limit' => $old_value,
+				'times' => 'minutes',
+			]; 
+		}
 		$data                   = array(
 			'status'           => true,
 			'time_zone'        => $time_zone,
