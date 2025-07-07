@@ -36,29 +36,11 @@ const props = defineProps({
 const emit = defineEmits([ "modal-close" ]); 
 const showData = ref(false);
 
-// onBeforeMount(() => {
-//     showData.value = props.isOpen;
-// });
-
-// clicke outside of .tfhb-popup-wrap then close the modal
-// document.addEventListener('click', (event) => {
-//   if (event.target.closest('.tfhb-popup-wrap') === null) {
-//     emit('modal-close');
-//   }
-// });
-
+ 
 
 </script>
  
-<style scoped> 
-/* add zoom in animation  */
-/* .tfhb-popup-open {
-    display: block;
-    animation: zoom-in 0.3s ease-in-out;
-} */
-
-
-</style>
+ 
 
 <template>
  

@@ -124,6 +124,10 @@ onBeforeRouteLeave((to, from, next) => {
 
 
                         </div> 
+                        <div v-if="props.notifications.length == 0" class="tfhb-flexbox tfhb-gap-8 tfhb-flex-col tfhb-justify-center" style="text-align:center; padding:50px 12px ">
+                              <img :src="$tfhb_url+'/assets/images/notification-not-found.svg'" alt="" >
+                            <p > {{ $tfhb_trans('No new notifications') }} </p>
+                        </div>
                     </div>
                 </div>
             </transition>
