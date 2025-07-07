@@ -11,6 +11,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbMultiSelect from '@/components/form-fields/HbMultiSelect.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbProPopup from '@/components/widgets/HbProPopup.vue'; 
 import { toast } from "vue3-toastify"; 
 import useDateFormat from '@/store/dateformat'
 const { Tfhb_Date, Tfhb_Time } = useDateFormat();
@@ -27,6 +28,7 @@ const router = useRouter()
 const BookingDetailsPopup = ref(false);
 const BookingEditPopup = ref(false);
 const ExportAsCSV = ref(false);
+const ProPopup = ref(false);
 const itemsPerPage = ref(10);
 const currentPage = ref(1);
 const bookingView = ref('list');
@@ -566,6 +568,8 @@ const getAvailabilityTimeSlot = (value) => {
  
 </script>
 <template>
+<HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />   
+
 <!-- Cencel  POPUP-->
 <HbPopup   :isOpen="Booking.reBookPopup" @modal-close="Booking.reBookPopup = false" max_width="600px" name="first-modal">
     <template #header> 
@@ -655,21 +659,32 @@ const getAvailabilityTimeSlot = (value) => {
         </div> 
         <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8">
             <HbButton 
-                classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
-                @click="ExportAsCSV = true, exportData.type = 'CSV'"
-                :buttonText="$tfhb_trans('Export as CSV')"
-                icon="FileDown"   
-                :hover_animation="false" 
-                icon_position = 'left'
-            />
-            <HbButton 
-                classValue="tfhb-btn  boxed-btn tfhb-flexbox tfhb-gap-8" 
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="ExportAsCSV = true, exportData.type = 'iCal'"
                 :buttonText="$tfhb_trans('Export as .ics')"
                 icon="Calendar"   
                 :hover_animation="false" 
                 icon_position = 'left'
             />
+            <HbButton 
+                v-if="$user.role != 'tfhb_host'"
+                classValue="tfhb-btn  secondary-btn tfhb-flexbox tfhb-gap-8" 
+                @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true, exportData.type = 'CSV'"
+                :buttonText="$tfhb_trans('Export as CSV')"
+                icon="FileDown"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />
+            
+            <HbButton 
+                v-if="$user.role != 'tfhb_host'"
+                classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
+                @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'BookingImport' })"
+                :buttonText="$tfhb_trans('Import')"
+                icon="FileUp"   
+                :hover_animation="false" 
+                icon_position = 'left'
+            />   
         </div>
     </div> 
     <!-- Dashboard Heading Wrap -->

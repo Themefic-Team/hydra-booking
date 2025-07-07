@@ -121,6 +121,10 @@
 
                                             font-weight: $font-weight-reguler;
                                             line-height: 20px;
+                                            text-overflow: ellipsis;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            max-width: 83%;
                                         }
                                     }
 

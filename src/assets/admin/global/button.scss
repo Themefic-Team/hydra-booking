@@ -58,14 +58,10 @@ button.tfhb-btn {
         }
 
         &.disabled {
-            span {
-                color: #FFFFFF70 !important;
-            }
+            opacity: 0.4;
         }
 
-        //    .tfhb-button-icon {
-        //         padding: 10px 8px !important;
-        //     }
+ 
     }
 
     &.boxed-btn-danger {

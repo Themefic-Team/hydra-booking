@@ -13,7 +13,7 @@ let hashParts = webHash.split('/');
 let requiredPart = hashParts[1];
 if("meetings"==requiredPart){
   localStorage.setItem('currentMenuItemIndex', 2);
-}else if("booking"==requiredPart){
+}else if("bookings"==requiredPart){
   localStorage.setItem('currentMenuItemIndex', 3);
 }else if("hosts"==requiredPart){
   localStorage.setItem('currentMenuItemIndex', 4);
