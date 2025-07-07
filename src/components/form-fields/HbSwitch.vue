@@ -1,4 +1,5 @@
 <script setup>
+import Icon from '@/components/icon/LucideIcon.vue';
 const props = defineProps([
         'name',
         'modelValue',
@@ -9,6 +10,8 @@ const props = defineProps([
         'placeholder',
         'description', 
         'width', 
+        'tooltip',
+        'tooltipText'
 ])
 const emit = defineEmits(['update:modelValue'])
 
@@ -22,15 +25,19 @@ const checkedValue = (e) => {
 </script>
 
 <template>
-    
+
     <div class="tfhb-single-form-field" :class="name" 
       :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : 'auto' }" 
-    >
-        <div class="tfhb-single-form-field-wrap tfhb-field-swicher">
+    > 
+        <span  v-if="tooltip" class="tfhb-tooltiptext"> 
+        {{ tooltipText }}
+        </span> 
+        <div class="tfhb-single-form-field-wrap tfhb-field-swicher" >
             <div class="tfhb-swicher-wrap tfhb-flexbox tfhb-gap-8">
                 <!-- Checkbox swicher -->
                 <!--   @change="checkedValue" -->
                 <label class="switch">
+                     
                     <input 
                         type="checkbox"
                         :id="name" 
@@ -42,7 +49,11 @@ const checkedValue = (e) => {
                     <div class="slider"></div>
                 </label>
                 <label class="tfhb-schedule-swicher" v-if="label" :for="name"> {{ label }} <span  v-if="required == 'true'"> *</span></label>
+                 
+              
             </div>
+
+            
         </div>
     </div>
 </template>

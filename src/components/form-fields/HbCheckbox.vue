@@ -70,7 +70,9 @@ const MulticheckedValue = (e) => {
                 <span class="checkmark"></span>
                 {{ label }} <span  v-if="required == 'true'"> </span> 
             </label>
-            <label v-else-if="groups == true && options" v-for="(value, key) in options"  :for="key+'-'+name"> 
+            <label v-else-if="groups == true && options" v-for="(value, key) in options"  :for="key+'-'+name"
+            :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '' }" > 
+            
                 <input 
                 :id="key+'-'+name" 
                 :v-model="groupsvalue"  

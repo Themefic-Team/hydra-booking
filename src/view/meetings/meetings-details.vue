@@ -132,6 +132,7 @@ onMounted(() => {
             selected = "1"
             :placeholder="$tfhb_trans('Type meeting title')" 
             :errors="errors.title"
+             
         /> 
         <HbTextarea  
             v-model="meeting.description" 

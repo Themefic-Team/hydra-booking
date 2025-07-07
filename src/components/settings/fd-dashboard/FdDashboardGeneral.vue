@@ -5,7 +5,7 @@ import { useRouter, RouterView,} from 'vue-router'
 import HbQuestion from '@/components/widgets/HbQuestion.vue'; 
 import HbColor from '@/components/form-fields/HbColor.vue'; 
 import HbColorPalette from '@/components/form-fields/HbColorPalette.vue'; 
-import HbFileUpload from '@/components/form-fields/HbFileUpload.vue'; 
+import HbWpFileUpload from '@/components/form-fields/HbFileUpload.vue'; 
 
 import LvColorpicker from 'lightvue/color-picker';
 const props = defineProps([
@@ -39,7 +39,7 @@ const UploadChangeMobileDashboardLogo = () => {
 const ChangeColors = (value,  colors) => {
 
     props.FrontendDashboard.fd_dashboard.general.colors_palette = value;  
-    if('custom' != props.FrontendDashboard.fd_dashboard.general.colors_palette){  
+    if('custom' != props.FrontendDashboard.fd_dashboard.general.colors_palette){
         props.FrontendDashboard.fd_dashboard.general.primery_default = colors.primary; 
         props.FrontendDashboard.fd_dashboard.general.primery_hover = colors.primery_hover; 
         props.FrontendDashboard.fd_dashboard.general.secondary_default = colors.secondary; 
@@ -65,7 +65,7 @@ const ChangeColors = (value,  colors) => {
     </div>  
     
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-start">   
-        <HbFileUpload
+        <HbWpFileUpload
             name="dashboard_logo"
             v-model= "props.FrontendDashboard.fd_dashboard.general.dashboard_logo"
             :label = "$tfhb_trans('Choose images or drag & drop it here.')"
@@ -76,7 +76,7 @@ const ChangeColors = (value,  colors) => {
 
             width="50"
          />
-         <HbFileUpload
+         <HbWpFileUpload
             name="mobile_dashboard_logo"
             v-model="props.FrontendDashboard.fd_dashboard.general.mobile_dashboard_logo"
             :label = "$tfhb_trans('Choose images or drag & drop it here.')"
