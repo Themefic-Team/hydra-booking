@@ -217,7 +217,8 @@ Although there are some good WordPress appointment plugin like "Amelia Booking p
 
 = 1.1.17 – July 08, 2025 =
 
-- Fixed: The Update issue has been resolved.
+- Fixed: The Design issue has been resolved.
+- Improved: System stability for improved performance.
 
 = 1.1.16 – July 07, 2025 =
 
