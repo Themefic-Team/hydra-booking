@@ -202,7 +202,9 @@ class FrontendDashboard {
         $request =  json_decode(file_get_contents('php://input'), true);
         $userAuthData = isset($request['userAuthData']) ? $request['userAuthData'] : array();
         $user = wp_get_current_user();
-        $user_id = $user->ID;
+        $user_id = $user->ID; 
+        // get current user role 
+        $user_role = $user->roles[0];
        
         if($userAuthData['id'] != $user_id){
             
@@ -217,29 +219,62 @@ class FrontendDashboard {
             return rest_ensure_response($data);
             
         }
-        $host = new Host(); 
-        $host_data = $host->getHostById( $userAuthData['host_id'] ); 
+   
+        if($user->roles[0] == 'tfhb_attendee'){
+            $host = new Host(); 
+            $host_data = $host->getHostById( $userAuthData['host_id'] ); 
 
-        $settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();  
-        $site_settings = [];
-        $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
-        $site_settings['blog_title'] = get_bloginfo('title');
-        $site_settings['site_url'] = get_bloginfo('url');
-        $site_settings['dashboard_url'] = get_permalink( $tfhb_dashboard_page_id );
-        $site_settings['dashboard_logo'] = isset($settings['general']['dashboard_logo']) ? $settings['general']['dashboard_logo'] : '';
-        $site_settings['mobile_dashboard_logo'] = isset($settings['general']['mobile_dashboard_logo']) ? $settings['general']['mobile_dashboard_logo'] : '';
-       
-        $DateTimeZone = new DateTimeController( 'UTC' );
-		$time_zone    = $DateTimeZone->TimeZone();
+            $settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();  
+            $site_settings = [];
+            $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
+            $site_settings['blog_title'] = get_bloginfo('title');
+            $site_settings['site_url'] = get_bloginfo('url');
+            $site_settings['dashboard_url'] = get_permalink( $tfhb_dashboard_page_id );
+            $site_settings['dashboard_logo'] = isset($settings['general']['dashboard_logo']) ? $settings['general']['dashboard_logo'] : '';
+            $site_settings['mobile_dashboard_logo'] = isset($settings['general']['mobile_dashboard_logo']) ? $settings['general']['mobile_dashboard_logo'] : '';
+        
+            $DateTimeZone = new DateTimeController( 'UTC' );
+            $time_zone    = $DateTimeZone->TimeZone();
+            
+            $data = array(
+                'status' => true,
+                'userAuth' => $host_data, 
+                'user_role' => $user->roles[0], 
+                'site_settings' => $site_settings,
+                'time_zone' => $time_zone,
+            );
+    
+            return rest_ensure_response($data);
 
-        $data = array(
-            'status' => true,
-            'userAuth' => $host_data, 
-            'site_settings' => $site_settings,
-            'time_zone' => $time_zone,
-        );
- 
-        return rest_ensure_response($data);
+        }else{
+
+         $host = new Host(); 
+            $host_data = $host->getHostById( $userAuthData['host_id'] ); 
+
+            $settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();  
+            $site_settings = [];
+            $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
+            $site_settings['blog_title'] = get_bloginfo('title');
+            $site_settings['site_url'] = get_bloginfo('url');
+            $site_settings['dashboard_url'] = get_permalink( $tfhb_dashboard_page_id );
+            $site_settings['dashboard_logo'] = isset($settings['general']['dashboard_logo']) ? $settings['general']['dashboard_logo'] : '';
+            $site_settings['mobile_dashboard_logo'] = isset($settings['general']['mobile_dashboard_logo']) ? $settings['general']['mobile_dashboard_logo'] : '';
+        
+            $DateTimeZone = new DateTimeController( 'UTC' );
+            $time_zone    = $DateTimeZone->TimeZone();
+
+            $data = array(
+                'status' => true,
+                'userAuth' => $host_data, 
+                'site_settings' => $site_settings,
+                'time_zone' => $time_zone,
+            );
+    
+            return rest_ensure_response($data);
+
+        }
+
+
 
         // 
      }

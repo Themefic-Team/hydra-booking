@@ -2,6 +2,8 @@
 import { ref, onBeforeMount, defineProps  } from 'vue'; 
 import Sidebar from './Sidebar.vue';
 import topHeader from './topHeader.vue';
+import AttendeeTopHeader from './attendees/AttendeeTopHeader.vue';
+import AttendeeSidebar from './attendees/AttendeeSidebar.vue';
 
 
 // Store 
@@ -21,12 +23,10 @@ onBeforeMount(() => {
 </script>
 
 <template > 
-    <topHeader :notifications="Notification.Data" :userAuth="FdDashboard.userAuth" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
-        
+<div v-if="FdDashboard.user_role == 'tfhb_attendee'"> 
     <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
-        <!-- Load Sidebar -->
-        <Sidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
-        
+ 
+        <AttendeeSidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
         <!-- Load Route view Content -->
         <div class="tfhb-frontend-main-content">
             <router-view /> 
@@ -34,6 +34,24 @@ onBeforeMount(() => {
       
     </div>
     
+</div>
+
+<div  v-if="FdDashboard.user_role == 'tfhb_host' || FdDashboard.user_role != '' ">
+    <topHeader :notifications="Notification.Data" :userAuth="FdDashboard.userAuth" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+ 
+    <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
+        <!-- Load Sidebar -->
+        <Sidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
+    
+        <!-- Load Route view Content -->
+        <div class="tfhb-frontend-main-content">
+            <router-view /> 
+        </div>
+      
+    </div>
+    
+</div>
+
 </template>  
 <style scoped>
 .tfhb-frontend-dashboard { 

@@ -62,6 +62,9 @@ onMounted(() => {
                     <li><router-link to="/settings/shortcodes" exact :class="{ 'active': $route.path.startsWith('/settings/shortcodes') }"> <Icon name="Braces" /> {{ $tfhb_trans('Shortcodes') }}</router-link></li>  
 
                     <li><router-link to="/settings/fd-dashboard" exact :class="{ 'active': $route.path.startsWith('/settings/fd-dashboard') }"> <Icon name="LayoutDashboard" /> {{ $tfhb_trans('Frontend Dashboard') }}</router-link></li> 
+                    
+                    <!-- Addons Settings -->
+                    <li><router-link to="/settings/addons-settings" exact :class="{ 'active': $route.path.startsWith('/settings/fd-dashboard') }"> <Icon name="Blocks" /> {{ $tfhb_trans('Addons Settings') }}</router-link></li> 
  
                     <!-- Frontend Dashbaord -->
                     <li><router-link to="/settings/license" exact :class="{ 'active': $route.path.startsWith('/settings/license') }"> <Icon name="FileLock2" /> {{ $tfhb_trans('License') }}</router-link></li> 

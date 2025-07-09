@@ -284,6 +284,34 @@ const routes = [
                 ]
             },
 
+            // For The addons 
+             {
+                path: 'addons-settings',
+                name: 'AddonsSettings',
+                meta: { Capabilities: 'tfhb_manage_settings' },
+                component: () => import('../view/settings/AddonsSettings.vue'),
+                redirect: { name: 'AddonsSettingsBuyers' },
+                children: [ 
+                    {
+                        path: 'buyers',
+                        name: 'AddonsSettingsBuyers',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/addons-settings/buyers-settings.vue')
+                    }, 
+                    {
+                        path: 'sellers',
+                        name: 'AddonsSettingsSellers',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/addons-settings/sellers-settings.vue')
+                    }, 
+                    {
+                        path: 'sellers',
+                        name: 'AddonsSettingsExhibitors',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/addons-settings/exhibitors-settings.vue')
+                    }, 
+                ]
+            },
             {
                 path: 'availability',
                 name: 'SettingsAvailability',
@@ -381,6 +409,15 @@ const routes = [
             }, 
         ]
     },
+    // Attendee Dashboard
+    {
+        path: '/attendee-dashboard',
+        name: 'AttendeeDashboard',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/attendees/attendeeDashboard.vue'),
+        // redirect: { name: 'AttendeeDashboardInformation' }, 
+    }
 ];
 
 const router = createRouter({
@@ -416,15 +453,17 @@ router.beforeEach(async (to, from, next) => {
         await AuthData.fetchAuth();
 
         // Check if the user has the required capabilities for the route
-        const hasCapabilities = AuthData.Capabilities(to.meta.Capabilities);   
-        
+        const hasCapabilities = AuthData.Capabilities(to.meta.Capabilities);  
         if (hasCapabilities) {
             // Host Route for if use is host 
             if(  user_role == 'tfhb_host' && to.name == 'HostsLists' ){
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
-                next({ name: 'HostsProfile', params: { id: host_id } });
-        
-                
+                next({ name: 'HostsProfile', params: { id: host_id } }); 
+            }
+            if(  user_role == 'tfhb_attendee'  && to.name == 'dashboard' ){
+                alert(1)
+                // next({ name: 'HostsProfile', params: { id: user_id } }); 
+                next({ name: 'AttendeeDashboard'}); 
             }
             // User has the required capabilities, continue to the next route
             next();
