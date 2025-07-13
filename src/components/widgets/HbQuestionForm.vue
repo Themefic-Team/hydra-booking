@@ -15,6 +15,11 @@ const props = defineProps({
     questions_data: {
         type: Object,
         required: true
+    },
+    name: {
+        type: Boolean,
+        default: false,
+        required: false
     }
 });
 
@@ -72,6 +77,7 @@ const UpdateQuestionsData = async (validator_field) => {
 
 <template> 
     <!-- if change  questions_data.type -->
+     {{ questions_data }}
     <HbDropdown 
         v-model="questions_data.type"
         required= "true" 
@@ -100,6 +106,15 @@ const UpdateQuestionsData = async (validator_field) => {
         :placeholder="__('Enter field Label', 'hydra-booking')" 
         name="type" 
         :errors="errors.label"
+    /> 
+    <HbText  
+        v-if="props.name == true"
+        v-model="questions_data.name"
+        required= "true"  
+        :label="__('Name', 'hydra-booking')"  
+        :placeholder="__('Enter field Name', 'hydra-booking')" 
+        name="type" 
+        :errors="errors.name"
     /> 
     <HbText  
         v-if="questions_data.type != 'radio' &&  questions_data.type != 'checkbox' && questions_data.type != 'select'"  
@@ -154,7 +169,7 @@ const UpdateQuestionsData = async (validator_field) => {
         />  
         <HbButton  
             classValue="tfhb-btn boxed-btn" 
-            @click="UpdateQuestionsData(['type', 'label'])"
+            @click="UpdateQuestionsData(['type', 'label', 'name'])"
             :buttonText="$tfhb_trans('Save')" 
         /> 
     </div>

@@ -1041,8 +1041,7 @@ const getAvailabilityTimeSlot = (value) => {
     </template> 
 </HbPopup>
 
-<!-- Booking Quick View End -->
-
+<!-- Booking Quick View End --> 
 <!-- Booking Calendar View -->
 <div :class="{   'tfhb-skeleton': Booking.skeleton, 'tfhb-skeleton': Booking.filter_skeleton } " class="tfhb-booking-calendar tfhb-mt-24" v-if="bookingView=='calendar'"> 
      

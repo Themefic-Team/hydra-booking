@@ -33,13 +33,16 @@ export const FdDashboard = reactive({
                 } 
             } );
     
-            if (response.data.status) {  
+            if (response.data.status) {   
                 this.userAuth = response.data.userAuth; 
                 this.user_role = response.data.user_role; 
                 this.site_settings = response.data.site_settings; 
                 this.time_zone = response.data.time_zone;  
-                this.userAuth.others_information = response.data.userAuth.others_information != '[]' && response.data.userAuth.others_information != null ? JSON.parse(response.data.userAuth.others_information) : {};
-                this.skeleton = false;
+                if(response.data.userAuth.others_information != null   ){
+                    
+                    this.userAuth.others_information = response.data.userAuth.others_information != null && response.data.userAuth.others_information != '[]'  ? JSON.parse(response.data.userAuth.others_information) : {};
+                
+                }this.skeleton = false;
                  
             }
         } catch (error) { 

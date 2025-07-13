@@ -6,9 +6,15 @@ import { RouterView } from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
  
+import { AddonsSettings } from '@/store/settings/addons-settings';
+
+// on before mount 
+onBeforeMount(() => {
+    AddonsSettings.FetchAddonsSettings();
+})
 </script>
 <template> 
-    <div :class="{ 'tfhb-skeleton': false }" class="thb-host-dashboard "> 
+    <div :class="{ 'tfhb-skeleton': AddonsSettings.skeleton }" class="thb-host-dashboard "> 
         <div  class="tfhb-dashboard-heading tfhb-mb-16">
             <div class="tfhb-admin-title "> 
                 <h1 >{{ $tfhb_trans('Addons Settings') }}</h1> 
@@ -22,7 +28,7 @@ import HbButton from '@/components/form-fields/HbButton.vue'
                     <!-- to route example like hosts/profile/13/information -->
                     <li><router-link to="/settings/addons-settings/sellers" exact :class="{ 'active': $route.path === '/settings/addons-settings/sellers' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Sellers') }}</router-link></li>  
                     <li><router-link to="/settings/addons-settings/buyers" exact :class="{ 'active': $route.path === '/settings/addons-settings/buyers' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Buyers') }}</router-link></li>  
-                    <li><router-link to="/settings/addons-settings/exhibitors" exact :class="{ 'active': $route.path === '/settings/shortcodes/exhibitors' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Exhibitors') }}</router-link></li>  
+                    <!-- <li><router-link to="/settings/addons-settings/exhibitors" exact :class="{ 'active': $route.path === '/settings/shortcodes/exhibitors' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Exhibitors') }}</router-link></li>   -->
                     
                 </ul>  
             </nav>

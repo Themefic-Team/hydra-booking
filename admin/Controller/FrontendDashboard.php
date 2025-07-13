@@ -204,7 +204,7 @@ class FrontendDashboard {
         $user = wp_get_current_user();
         $user_id = $user->ID; 
         // get current user role 
-        $user_role = $user->roles[0];
+        $user_role = $user->roles[0]; 
        
         if($userAuthData['id'] != $user_id){
             
@@ -220,9 +220,9 @@ class FrontendDashboard {
             
         }
    
-        if($user->roles[0] == 'tfhb_attendee'){
+        if($user->roles[0] == 'tfhb_buyers' || $user->roles[0] == 'tfhb_sellers'){
             $host = new Host(); 
-            $host_data = $host->getHostById( $userAuthData['host_id'] ); 
+            $host_data = []; 
 
             $settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();  
             $site_settings = [];

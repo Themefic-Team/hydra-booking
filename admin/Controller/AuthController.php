@@ -45,7 +45,7 @@ class AuthController {
 	}
 	// Get Current user auth.
 	public function userRole() {
-		$user  = wp_get_current_user();
+		$user  = wp_get_current_user(); 
 		$roles = (array) $user->roles;
 		return $roles;
 	}

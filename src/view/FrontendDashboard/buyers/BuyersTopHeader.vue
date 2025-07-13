@@ -1,0 +1,148 @@
+<script setup>
+import { __ } from '@wordpress/i18n';
+import { ref, onBeforeMount, computed,  watch } from 'vue'; 
+import { onBeforeRouteLeave, useRoute  } from 'vue-router' 
+import Icon from '@/components/icon/LucideIcon.vue'
+import { FdDashboard } from '@/store/frontend-dashboard.js';
+const props = defineProps([
+    'title',
+    'notifications',
+    'userAuth',
+    'total_unread'
+     
+])
+const emit = defineEmits([ "MarkAsRead" ]); 
+
+const displayNotification = ref(false);
+
+// make a vue time 2024-08-20 16:15:39 to 6m example
+const timeAgo = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) {
+        return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
+
+
+const MarkAsRead = () => {
+    //  remove the unread class
+    document.querySelectorAll('.tfhb-single-notification').forEach((el) => {
+        el.classList.remove('unread');
+    });
+    emit('MarkAsRead')
+}
+
+// if click outside the dropdown
+ 
+function hideDropdownOutsideClick(e) {
+    if (!document.querySelector('.tfhb-header-notification').contains(e.target)) {
+        displayNotification.value = false;
+    }
+    if (!document.querySelector('.tfhb-header-profile-dropdown').contains(e.target)) {
+        profileDropdown.value = false;
+    }
+}
+onBeforeMount(() => {  
+    window.addEventListener('click', hideDropdownOutsideClick); 
+}); 
+onBeforeRouteLeave((to, from, next) => {
+    displayNotification.value = 0;
+    window.removeEventListener('click', hideDropdownOutsideClick);
+    next();
+});
+
+const profileDropdown = ref(false);
+
+const route = useRoute();
+const pageTitle = computed(() => {
+  if (route.path === '/') {
+    return 'Dashboard';
+  } 
+  else if (route.path.includes('/meetings')) {
+    return 'Meetings';
+  }
+  else if (route.path.includes('/hosts')) {
+    return 'Hosts';
+  }
+  else if (route.path.includes('/settings')) {
+    return 'Settings';
+  }
+  else if (route.path.includes('/profile')) {
+    return 'Profile';
+  }
+  else {
+    return '';
+  }
+});
+
+// Update document title whenever pageTitle changes
+watch(pageTitle, (newTitle) => {
+  document.title = newTitle;
+}, { immediate: true });
+
+// if tfhb-responsive-menu-trigger click add a active class into tfhb-frontend-sidebar  div  using add class not toggle
+const toggleSidebar = () => {
+    document.querySelector('.tfhb-frontend-sidebar').classList.toggle('responsive-active');
+}
+</script>
+
+
+<template>    
+    <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
+        <div class="tfhb-flexbox">
+            <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >
+
+                <a  class="responsive-header-icon"  v-if="'' != FdDashboard.site_settings.mobile_dashboard_logo"   :href="FdDashboard.site_settings.dashboard_url" >
+                    <img :src="FdDashboard.site_settings.mobile_dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
+                </a>
+                <span class="tfhb-responsive-menu-trigger" @click="toggleSidebar()">
+                    <Icon name="Menu" size=20 /> 
+                </span>
+               
+                <a  v-if="'' == FdDashboard.site_settings.dashboard_logo" :href="FdDashboard.site_settings.dashboard_url" class="desktop-header-icon" >{{ FdDashboard.site_settings.blog_title }}</a>
+                <a  v-else  :href="FdDashboard.site_settings.dashboard_url" >
+                    <img class="desktop-header-icon" :src="FdDashboard.site_settings.dashboard_logo" :alt="FdDashboard.site_settings.blog_title">
+                </a>
+             
+
+            </div>
+            <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16">
+
+                <h2 class="tfhb-admin-header-title">{{ $tfhb_trans(pageTitle) }}</h2>
+            </div>
+        </div>
+        
+ 
+        
+    </div>
+</template> 
+
+<style scoped>
+/* Your component styles go here */
+    
+</style>
+
+<style scoped>
+ 
+
+
+</style>
+

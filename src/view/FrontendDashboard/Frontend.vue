@@ -4,6 +4,8 @@ import Sidebar from './Sidebar.vue';
 import topHeader from './topHeader.vue';
 import AttendeeTopHeader from './attendees/AttendeeTopHeader.vue';
 import AttendeeSidebar from './attendees/AttendeeSidebar.vue';
+import BuyersIndex from './buyers/Index.vue';
+import SellersIndex from './sellers/Index.vue';
 
 
 // Store 
@@ -18,25 +20,21 @@ onBeforeMount(() => {
   FdDashboard.FetchUserAuth(); 
 }); 
 
- 
+ alert(FdDashboard.user_role);
  
 </script>
 
 <template > 
-<div v-if="FdDashboard.user_role == 'tfhb_attendee'"> 
-    <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
  
-        <AttendeeSidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
-        <!-- Load Route view Content -->
-        <div class="tfhb-frontend-main-content">
-            <router-view /> 
-        </div>
-      
-    </div>
-    
+<div v-if="FdDashboard.user_role == 'tfhb_buyers'"> 
+  <BuyersIndex />
+</div>
+{{  }}
+<div v-if="FdDashboard.user_role == 'tfhb_sellers'"> 
+  <SellersIndex />
 </div>
 
-<div  v-if="FdDashboard.user_role == 'tfhb_host' || FdDashboard.user_role != '' ">
+<div  v-if="FdDashboard.user_role == 'tfhb_host' || (FdDashboard.user_role != 'tfhb_buyers' && FdDashboard.user_role != 'tfhb_sellers')">
     <topHeader :notifications="Notification.Data" :userAuth="FdDashboard.userAuth" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
  
     <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">

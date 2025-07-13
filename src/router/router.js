@@ -10,6 +10,7 @@ import { AuthData } from '@/store/auth';
 
 // Event 
 const user = tfhb_core_apps.user || '';
+console.log(user);
 const user_id = user.id || '';
 const host_id = user.host_id || ''; 
 const user_role = user.role[0] || '';
@@ -290,7 +291,7 @@ const routes = [
                 name: 'AddonsSettings',
                 meta: { Capabilities: 'tfhb_manage_settings' },
                 component: () => import('../view/settings/AddonsSettings.vue'),
-                redirect: { name: 'AddonsSettingsBuyers' },
+                redirect: { name: 'AddonsSettingsSellers' },
                 children: [ 
                     {
                         path: 'buyers',
@@ -369,9 +370,7 @@ const routes = [
         // redirect: { name: 'SettingsGeneral' },
        
         
-    },
-    // ...
-
+    }, 
     // frontend dasboard profile
     {
         path: '/frontend-dashboard/profile',
@@ -417,6 +416,84 @@ const routes = [
         props: true,
         component: () => import('../view/FrontendDashboard/attendees/attendeeDashboard.vue'),
         // redirect: { name: 'AttendeeDashboardInformation' }, 
+    },
+    // Buyers Dashboard
+    {
+        path: '/buyers-dashboard',
+        name: 'BuyersDashboard',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/buyers/BuyersDashboard.vue'),
+        redirect: { name: 'BuyersDashboardCalenders' }, 
+        children: [
+            {
+                path: 'calenders',
+                name: 'BuyersDashboardCalenders',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/buyers/Calenders.vue')
+            },  
+            {
+                path: 'all-events',
+                name: 'BuyersDashboardAllEvents',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/buyers/AllEvents.vue')
+            },  
+            {
+                path: 'profile',
+                name: 'BuyersDashboardPublicProfile',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/buyers/Profile.vue')
+            },  
+            {
+                path: 'sellers-list',
+                name: 'BuyersDashboardViewSellers',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/buyers/SellersList.vue')
+            },  
+        ]
+    },
+    // Sellers Dashboard
+    {
+        path: '/sellers-dashboard',
+        name: 'SellersDashboard',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/sellers/SellersDashboard.vue'),
+        redirect: { name: 'SellersDashboardCalenders' }, 
+        children: [
+            {
+                path: 'calenders',
+                name: 'SellersDashboardCalenders',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/sellers/Calenders.vue')
+            },  
+            {
+                path: 'all-events',
+                name: 'SellerssDashboardAllEvents',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/sellers/AllEvents.vue')
+            },  
+            {
+                path: 'profile',
+                name: 'SellersDashboardPublicProfile',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/sellers/Profile.vue')
+            },  
+            {
+                path: 'sellers-list',
+                name: 'SellersDashboardViewSellers',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/sellers/BuyersList.vue')
+            },  
+        ]
     }
 ];
 
@@ -450,20 +527,24 @@ router.beforeEach(async (to, from, next) => {
 
     try {
         // Fetch user authentication data based on capabilities
-        await AuthData.fetchAuth();
-
+        await AuthData.fetchAuth(); 
         // Check if the user has the required capabilities for the route
         const hasCapabilities = AuthData.Capabilities(to.meta.Capabilities);  
-        if (hasCapabilities) {
+        if (hasCapabilities) { 
             // Host Route for if use is host 
             if(  user_role == 'tfhb_host' && to.name == 'HostsLists' ){
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'HostsProfile', params: { id: host_id } }); 
             }
-            if(  user_role == 'tfhb_attendee'  && to.name == 'dashboard' ){
-                alert(1)
+            if(  user_role == 'tfhb_buyers'  && to.name == 'dashboard' ){ 
+                
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
-                next({ name: 'AttendeeDashboard'}); 
+                next({ name: 'BuyersDashboard'}); 
+            }
+            if(  user_role == 'tfhb_sellers'  && to.name == 'dashboard' ){ 
+                
+                // next({ name: 'HostsProfile', params: { id: user_id } }); 
+                next({ name: 'SellersDashboard'}); 
             }
             // User has the required capabilities, continue to the next route
             next();
