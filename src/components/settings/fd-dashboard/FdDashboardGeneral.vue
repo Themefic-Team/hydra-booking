@@ -5,7 +5,7 @@ import { useRouter, RouterView,} from 'vue-router'
 import HbQuestion from '@/components/widgets/HbQuestion.vue'; 
 import HbColor from '@/components/form-fields/HbColor.vue'; 
 import HbColorPalette from '@/components/form-fields/HbColorPalette.vue'; 
-import HbWpFileUpload from '@/components/form-fields/HbFileUpload.vue'; 
+import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'; 
 
 import LvColorpicker from 'lightvue/color-picker';
 const props = defineProps([
@@ -64,7 +64,7 @@ const ChangeColors = (value,  colors) => {
         <p>{{ $tfhb_trans('This only applies to your Frontend Dashboard.') }}</p>
     </div>  
     
-    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-start">   
+    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-start">    
         <HbWpFileUpload
             name="dashboard_logo"
             v-model= "props.FrontendDashboard.fd_dashboard.general.dashboard_logo"
@@ -72,8 +72,7 @@ const ChangeColors = (value,  colors) => {
             :subtitle = "$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
             :btn_label = "$tfhb_trans('Upload logo')"
             file_size ="5"
-            file_format ="jpg,jpeg,png"
-
+            file_format ="jpg,jpeg,png" 
             width="50"
          />
          <HbWpFileUpload
