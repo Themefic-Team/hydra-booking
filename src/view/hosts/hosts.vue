@@ -249,9 +249,7 @@ const Tfhb_Host_Filter = async (e) =>{
                     icon_position="left"
 
                 />  
-            </div> 
-
-             
+            </div>  
         </div>
         <div class="tfhb-hosts-content">  
             <HbPopup v-if="$user.role != 'tfhb_host'" :isOpen="isModalOpened" @modal-close="closeModal" max_width="600px" name="first-modal">

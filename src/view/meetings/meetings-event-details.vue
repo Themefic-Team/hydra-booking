@@ -82,6 +82,8 @@ const event_details = reactive({
         website: '',
         email: '',
         phone: '',
+        phone2: '',
+        phone3: '',
         location: '',
         social_media: {
             instagram: '',
@@ -360,25 +362,37 @@ onBeforeMount(() => {
             <div class="tfhb-form-grid">
                 <HbInput
                     v-model="event_details.contact_info.website"
-                    :label="$tfhb_trans('Website')"
+                    :label="$tfhb_trans('SITE')"
                     :placeholder="$tfhb_trans('Enter website URL')"
                     type="url"
                 />
                 <HbInput
                     v-model="event_details.contact_info.email"
-                    :label="$tfhb_trans('Email')"
+                    :label="$tfhb_trans('EMAIL')"
                     :placeholder="$tfhb_trans('Enter email address')"
                     type="email"
                 />
                 <HbInput
                     v-model="event_details.contact_info.phone"
-                    :label="$tfhb_trans('Phone')"
+                    :label="$tfhb_trans('PHONE')"
                     :placeholder="$tfhb_trans('Enter phone number')"
                     type="tel"
                 />
                 <HbInput
+                    v-model="event_details.contact_info.phone2"
+                    :label="$tfhb_trans('PHONE 2')"
+                    :placeholder="$tfhb_trans('Enter second phone number')"
+                    type="tel"
+                />
+                <HbInput
+                    v-model="event_details.contact_info.phone3"
+                    :label="$tfhb_trans('PHONE 3')"
+                    :placeholder="$tfhb_trans('Enter third phone number')"
+                    type="tel"
+                />
+                <HbInput
                     v-model="event_details.contact_info.location"
-                    :label="$tfhb_trans('Location')"
+                    :label="$tfhb_trans('LOCATION')"
                     :placeholder="$tfhb_trans('Enter location address')"
                 />
             </div>

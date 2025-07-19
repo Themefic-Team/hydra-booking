@@ -78,9 +78,15 @@ onBeforeMount(() => {
                     </div>
                     
                     <div class="tfhb-meeting-list__wrap__items__actions tfhb-aling">
-                        <a :href="items.permalink" target="_blank" class="tfhb-btn secondary-btn">
+                        <!-- <a :href="items.permalink" target="_blank" class="tfhb-btn secondary-btn">
                             Select
-                        </a>
+                        </a> -->
+                        <!-- add event details route link with event id -->
+                        <router-link :to="`/sellers/event/${items.id}`">
+                            <button class="tfhb-btn secondary-btn">
+                                View Details
+                            </button>
+                        </router-link> 
                     </div>
                 </div>
  

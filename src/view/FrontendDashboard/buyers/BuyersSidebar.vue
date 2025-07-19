@@ -71,6 +71,12 @@ const toggleSidebarResponsive= () => {
                     </router-link>
                 </li>   -->
             </ul>
+
+            <h6 class="tfhb-sidebar-menu-heading">
+                <template v-if="!collapsed">
+                    {{ $tfhb_trans('Users') }}
+                </template> 
+            </h6>
  
          </div>
  

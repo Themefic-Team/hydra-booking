@@ -475,7 +475,7 @@ const routes = [
                 name: 'AppointmentsDashboardEventList',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
-                component: () => import('../view/FrontendDashboard/buyers/EventList.vue')
+                component: () => import('../view/FrontendDashboard/common/EventList.vue')
             },  
             {
                 path: 'my-appointments',
@@ -484,13 +484,13 @@ const routes = [
                 props: true,
                 component: () => import('../view/FrontendDashboard/buyers/Appointments.vue')
             }, 
-            {
-                path: 'all-events',
-                name: 'BuyersDashboardAllEvents',
-                meta: { Capabilities: 'tfhb_manage_options' },
-                props: true,
-                component: () => import('../view/FrontendDashboard/buyers/AllEvents.vue')
-            },  
+            // {
+            //     path: 'all-events',
+            //     name: 'BuyersDashboardAllEvents',
+            //     meta: { Capabilities: 'tfhb_manage_options' },
+            //     props: true,
+            //     component: () => import('../view/FrontendDashboard/buyers/AllEvents.vue')
+            // },  
             // {
             //     path: 'profile',
             //     name: 'BuyersDashboardPublicProfile',
@@ -503,7 +503,7 @@ const routes = [
                 name: 'BuyersDashboardViewSellers',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
-                component: () => import('../view/FrontendDashboard/buyers/SellersList.vue')
+                component: () => import('../view/FrontendDashboard/common/SellersList.vue')
             },  
         ]
     },
@@ -521,8 +521,15 @@ const routes = [
                 name: 'SellersDashboardEventList',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
-                component: () => import('../view/FrontendDashboard/sellers/EventList.vue')
+                component: () => import('../view/FrontendDashboard/common/EventList.vue')
             },  
+            {
+                path: 'event/:id',
+                props: true,
+                name: 'SellersDashboardEventDetails',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                component: () => import('../view/FrontendDashboard/common/EventDetails.vue')
+            },
             {
                 path: 'my-appointments',
                 name: 'SellersDashboardCalenders',
@@ -530,13 +537,14 @@ const routes = [
                 props: true,
                 component: () => import('../view/FrontendDashboard/sellers/Appointments.vue')
             },  
-            {
-                path: 'all-events',
-                name: 'SellerssDashboardAllEvents',
-                meta: { Capabilities: 'tfhb_manage_options' },
-                props: true,
-                component: () => import('../view/FrontendDashboard/sellers/AllEvents.vue')
-            },  
+            // {
+            //     path: 'all-events',
+            //     name: 'SellerssDashboardAllEvents',
+            //     meta: { Capabilities: 'tfhb_manage_options' },
+            //     props: true,
+            //     component: () => import('../view/FrontendDashboard/sellers/AllEvents.vue')
+            // },
+            
             {
                 path: 'profile',
                 name: 'SellersDashboardPublicProfile',
@@ -545,11 +553,18 @@ const routes = [
                 component: () => import('../view/FrontendDashboard/sellers/Profile.vue')
             },  
             {
-                path: 'sellers-list',
+                path: 'buyer-list',
+                name: 'SellersDashboardViewBuyers',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/common/BuyersList.vue')
+            },  
+            {
+                path: 'seller-list',
                 name: 'SellersDashboardViewSellers',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
-                component: () => import('../view/FrontendDashboard/sellers/BuyersList.vue')
+                component: () => import('../view/FrontendDashboard/common/SellersList.vue')
             },  
         ]
     }

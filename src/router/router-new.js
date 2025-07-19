@@ -408,7 +408,7 @@ const frontendDashboardRoutes = [
                 path: 'sellers',
                 name: 'BuyersDashboardSellers',
                 meta: { Capabilities: 'tfhb_manage_options' },
-                component: () => import('../view/FrontendDashboard/buyers/SellersList.vue')
+                component: () => import('../view/FrontendDashboard/Common/SellersList.vue')
             }
         ]
     },
@@ -423,7 +423,7 @@ const frontendDashboardRoutes = [
                 path: 'events',
                 name: 'SellersDashboardEventList',
                 meta: { Capabilities: 'tfhb_manage_options' },
-                component: () => import('../view/FrontendDashboard/sellers/EventList.vue')
+                component: () => import('../view/FrontendDashboard/Common/EventList.vue')
             },  
             {
                 path: 'appointments',
@@ -447,7 +447,7 @@ const frontendDashboardRoutes = [
                 path: 'buyers',
                 name: 'SellersDashboardBuyers',
                 meta: { Capabilities: 'tfhb_manage_options' },
-                component: () => import('../view/FrontendDashboard/sellers/BuyersList.vue')
+                component: () => import('../view/FrontendDashboard/Common/BuyersList.vue')
             }
         ]
     }
