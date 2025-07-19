@@ -1,5 +1,6 @@
 
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { getCurrentInstance } from 'vue';
 import Dashboard from '../view/dashboard/Dashboard.vue';  
 import Booking from '../view/booking/booking.vue'; 
 import Settings from '../view/settings/Settings.vue';
@@ -15,7 +16,13 @@ const user_id = user.id || '';
 const host_id = user.host_id || ''; 
 const user_role = user.role[0] || '';
 
-let routes = [
+const tfhb_license_type =  tfhb_core_apps.tfhb_license_type || false;   
+const tfhb_is_valid =  tfhb_core_apps.tfhb_is_valid || false;   
+const tfhb_core_apps_pro_data = typeof tfhb_core_apps_pro !== 'undefined' ? tfhb_core_apps_pro : '';
+const tfhb_is_pro = tfhb_core_apps_pro_data.tfhb_is_pro ? true : false;
+const tfhb_license_status = tfhb_license_type == 'pro' ? true : false; 
+
+const routes = [
     // Define your routes here
     // For example:
     {
@@ -36,6 +43,12 @@ let routes = [
                 name: 'BookingLists',
                 meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-list.vue')
+            }, 
+            {
+                path: 'import',
+                name: 'BookingImport',
+                meta: { Capabilities: 'tfhb_manage_meetings' },
+                component: () => import('../view/booking/booking-import.vue')
             }, 
             {
                 path: 'create-new',
@@ -71,6 +84,13 @@ let routes = [
                 meta: { Capabilities: 'tfhb_manage_hosts' },
                 component: () => import('../view/hosts/hosts-list.vue')
             }, 
+            {
+                path: 'import',
+                name: 'HostsImport',
+                meta: { Capabilities: 'tfhb_manage_meetings' },
+                component: () => import('../view/hosts/hosts-import.vue')
+            }, 
+            
             {
                 path: 'profile/:id',
                 name: 'HostsProfile',
@@ -131,6 +151,12 @@ let routes = [
                 meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-list.vue')
             }, 
+            {
+                path: 'import',
+                name: 'MeetingsImport',
+                meta: { Capabilities: 'tfhb_manage_meetings' },
+                component: () => import('../view/meetings/meetings-import.vue')
+            }, 
             
             {
                 path: 'single/:id',
@@ -171,6 +197,12 @@ let routes = [
                         name: 'MeetingsCreateNotifications',
                         meta: { Capabilities: 'tfhb_manage_meetings' },
                         component: () => import('../view/meetings/meetings-notifications.vue')
+                    },
+                    {
+                        path: 'event-details',
+                        name: 'MeetingsEventDetails',
+                        meta: { Capabilities: 'tfhb_manage_meetings' },
+                        component: () => import('../view/meetings/meetings-event-details.vue')
                     },
                     {
                         path: 'payment',
@@ -357,8 +389,14 @@ let routes = [
                 component: () => import('../view/settings/Category.vue')
             },
             {
+                path: 'import-export',
+                name: 'SettingsImportExport',
+                component: () => import('../view/settings/ImportExport.vue'), 
+               
+            },
+            {
                 path: 'license',
-                name: 'LicenseCategory',
+                name: 'LicenseRoute',
                 component: () => import('../view/settings/License.vue')
             },
              
@@ -533,7 +571,7 @@ const router = createRouter({
 
 // Navigation guards to check authentication status
 router.beforeEach(async (to, from, next) => { 
- 
+  
     if (to.name == 'setupWizard') { 
         document.body.classList.add('tfhb-setup-wizard-body');
     }else{ 
@@ -543,6 +581,12 @@ router.beforeEach(async (to, from, next) => {
         // If no capabilities are defined for the route, proceed to the next route
         next();
         return;
+    }
+    if(tfhb_is_pro == false ||  tfhb_license_status == false){ 
+        // if current route is MeetingsImport then return to dashboard
+        if(to.name == 'MeetingsImport' || to.name == 'HostsImport' || to.name == 'BookingImport' ){
+            next({ name: 'dashboard' });
+        }
     }
 
     try {

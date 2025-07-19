@@ -25,10 +25,13 @@ const readImportDdata = (event) => {
    props.importExport.readBookingImportData(event);
    
 }
+
  
 </script>
 
 <template>  
+
+
     <div class="tfhb-admin-card-box"  >   
         <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-mb-16">
             <div class="tfhb-admin-title "> 
@@ -42,7 +45,8 @@ const readImportDdata = (event) => {
         </div>
 
         <div class="tfhb-content-wrap "> 
-            {{ props.importExport.booking.import_data }}
+            <!-- {{ props.importExport.booking.import_data }} -->
+            {{props.importExport.booking.column}}
            <div class="tfhb-upload-csv tfhb-flexbox tfhb-gap-16">
                 <div class="tfhb-hydra-content-wrap">      
                     <HbText  
@@ -62,6 +66,7 @@ const readImportDdata = (event) => {
            </div>
            <!-- Export Column -->
             <div v-if="props.importExport.booking.import_column.length > 0"  class="tfhb-import-column-data tfhb-admin-card-box">
+                {{props.importExport.booking.rearrange_column}}
                 <div class="tfhb-admin-title "> 
                     <h3 >{{ $tfhb_trans('Map CSV fields to Booking') }}</h3> 
                     <p>{{ $tfhb_trans('Select fields from your CSV file to map against booking fields, or to ignore during import.') }}</p>

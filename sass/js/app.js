@@ -661,9 +661,9 @@
 		   var paypal_public_key = $this.find("#paypal_public_key").val();
 		   var payment_currency = $this.find("#payment_currency").val(); 
 
-		//    Payment Status
-		   var payment_status = calenderData.payment_status;
-
+			//    Payment Status
+		   	var payment_status = calenderData.payment_status;
+		
 
 		   var data  = {
 			action: 'tfhb_meeting_form_submit',
@@ -685,15 +685,20 @@
 			stripe_public_key: stripe_public_key,
 			payment_currency: payment_currency,
 		}; 
+		
 		// Push object information data to data
 		data = Object.assign(InformationData, data); 
-			if(payment_status == 1 && ""==payment_type){
+			if(payment_status == 1 && "" == payment_type){ 
 				//   5 seconds
 				setTimeout(function(){ 
-					$this.find('.tfhb-notice').append( __('Payment Method Required', 'hydra-booking'));
+					$this.find('.tfhb-notice').append( tfhbTranslate('Payment Method Required.' ));
 					$this.find('.tfhb-notice').show();
-					$this.find('.tfhb-booking-submit .tfhb-submit-preloader').remove();  
-				},  2000); // 2000 milliseconds = 2 seconds
+					$this.find('.tfhb-booking-submit .tfhb-submit-preloader').remove();
+					$this.find('.tfhb-booking-submit').remove('.tfhb-submit-preloader'); 
+					//    Remove Disabled
+					$this.find('.tfhb-booking-submit').removeAttr('disabled');  
+				},  1000); // 2000 milliseconds = 2 seconds
+			
 				
 			}
 

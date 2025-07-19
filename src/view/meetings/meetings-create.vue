@@ -849,6 +849,8 @@ const truncateString = (str, num) => {
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/limits'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/limits' }">{{ $tfhb_trans('Limits') }}</router-link></li>  
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/questions'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/questions' }"> {{ $tfhb_trans('Questions') }}</router-link></li>  
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/notifications'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/notifications' }"> {{ $tfhb_trans('Notifications') }}</router-link></li>   
+
+                <li><router-link :to="'/meetings/single/'+ $route.params.id +'/event-details'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/event-details' }"> {{ $tfhb_trans('Event Details') }}</router-link></li>   
                 <li><router-link :to="'/meetings/single/'+ $route.params.id +'/integrations'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/integrations' }">{{ $tfhb_trans('Integrations') }}</router-link></li> 
                 <!-- <li><router-link :to="'/meetings/single/'+ $route.params.id +'/webhook'" :class="{ 'active': $route.path === '/meetings/single/'+ $route.params.id +'/webhook' }">{{ $tfhb_trans('Webhook') }}</router-link></li>   -->
 
