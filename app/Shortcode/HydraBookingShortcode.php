@@ -345,7 +345,15 @@ class HydraBookingShortcode {
 		$data['end_time']           = isset( $end_time ) ? sanitize_text_field( $end_time ) : '';
 		$data['slot_minutes']       = isset( $_POST['slot_minutes'] ) ? sanitize_text_field( $_POST['slot_minutes'] ) : '';
 		$data['duration']           = isset( $_POST['duration'] ) ? sanitize_text_field( $_POST['duration'] ) : 0;
-		
+
+
+		// if user is logged in then get the user id
+		if ( is_user_logged_in() ) {
+			$current_user = wp_get_current_user();
+			$attendee_data['user_id'] = $current_user->ID;
+		}else{
+			$attendee_data['user_id'] = 0;
+		}
 
 		// Attendee Data
 		$attendee_data['hash'] =  md5( $data['meeting_id'] . $data['meeting_dates'] . $data['start_time'] . $data['end_time'] . wp_rand( 1000, 9999 ) );
@@ -517,7 +525,7 @@ class HydraBookingShortcode {
 		$attendee_data['status'] = $booking_status;
 
 		// Before Booking Hooks Action
-		do_action( 'hydra_booking/before_booking_confirmation', $data );
+		do_action( 'hydra_booking/before_booking_confirmation', $data, $attendee_data );
 
 		// Filter Hooks After Booking
 		$data = apply_filters( 'hydra_booking/after_booking_confirmation_filters', $data );

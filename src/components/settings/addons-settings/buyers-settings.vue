@@ -9,6 +9,8 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
 
+import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 
@@ -122,8 +124,7 @@ const copyShortcodeCode = () => {
         <p>{{ $tfhb_trans('Enable or disable the seller registration forms') }}</p>
     </div>
     <div v-if="AddonsSettings.buyers.enable_registration == true">
-        <HbInfoBox  name="first-modal">
-    
+        <HbInfoBox  name="first-modal"> 
             <template #content>
                 <div class="tfhb-flexbox tfhb-justify-between tfhb-align-center">
                     <span>
@@ -157,6 +158,21 @@ const copyShortcodeCode = () => {
                 width="48"
                 :placeholder="$tfhb_trans('Start')"
             /> 
+             <!-- Time format -->
+            <HbDropdown 
+                
+                v-model="AddonsSettings.buyers.default_account_status"  
+                required= "true" 
+                :label="$tfhb_trans(' Default Account Status')"
+                width="50"
+                :selected = "1"
+                :placeholder="$tfhb_trans('Select')"
+                :option = "[
+                    {'name': 'Inactive', 'value': 'inactive'}, 
+                    {'name': 'Active', 'value': 'active'}
+                ]" 
+            />
+            <!-- Time format --> 
         </div> 
         <div class="tfhb-admin-title" >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Seller Registration Forms Builders') }}   </h2> 

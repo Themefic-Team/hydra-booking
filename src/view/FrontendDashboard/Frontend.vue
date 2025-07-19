@@ -19,8 +19,7 @@ const collapsedSideBar = ref(false);
 onBeforeMount(() => {  
   FdDashboard.FetchUserAuth(); 
 }); 
-
- alert(FdDashboard.user_role);
+ 
  
 </script>
 
@@ -28,8 +27,7 @@ onBeforeMount(() => {
  
 <div v-if="FdDashboard.user_role == 'tfhb_buyers'"> 
   <BuyersIndex />
-</div>
-{{  }}
+</div> 
 <div v-if="FdDashboard.user_role == 'tfhb_sellers'"> 
   <SellersIndex />
 </div>

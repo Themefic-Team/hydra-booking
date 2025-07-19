@@ -25,11 +25,11 @@ onBeforeMount(() => {
              <!-- {{ tfhbClass }} --> 
              <nav class="tfhb-booking-tabs"> 
                 <ul>
-                    <!-- to route example like hosts/profile/13/information -->
+                    <li><router-link to="/settings/addons-settings/event-settings" exact :class="{ 'active': $route.path === '/settings/shortcodes/event-settings' }"> <Icon name="SlidersHorizontal" /> {{ $tfhb_trans('Event Settings') }}</router-link></li>  
+                    
                     <li><router-link to="/settings/addons-settings/sellers" exact :class="{ 'active': $route.path === '/settings/addons-settings/sellers' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Sellers') }}</router-link></li>  
                     <li><router-link to="/settings/addons-settings/buyers" exact :class="{ 'active': $route.path === '/settings/addons-settings/buyers' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Buyers') }}</router-link></li>  
-                    <!-- <li><router-link to="/settings/addons-settings/exhibitors" exact :class="{ 'active': $route.path === '/settings/shortcodes/exhibitors' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Exhibitors') }}</router-link></li>   -->
-                    
+                   
                 </ul>  
             </nav>
             <div class="tfhb-hydra-content-wrap">      

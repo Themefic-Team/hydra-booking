@@ -28,11 +28,7 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 
 ?> 
 <div class="tfhb-meeting-booking-form" style="display:none">
-	<?php
-		// Hook for Before Form
-		do_action( 'hydra_booking/before_meeting_form' );
 
-	?>
 
 	<div class="tfhb-back-btn tfhb-flexbox tfhb-gap-8">
 		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,6 +39,12 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 	</div>
 	<div class="tfhb-notice notice-error" style="display:none;"> 
 	</div>
+
+	<?php 
+		do_action( 'hydra_booking/before_meeting_form' );  
+	?>
+	
+	<?php ob_start(); ?>
 
 	<div class="tfhb-forms tfhb-flexbox">
 		
@@ -207,6 +209,10 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
  
 	</div>
 
+	<?php 
+		$From_data = 	ob_get_clean(); 
+		echo apply_filters( 'hydra_booking/meeting_form_data', $From_data );
+	?>
 	<?php
 		// Hook for After confirmation
 		do_action( 'hydra_booking/after_meeting_form' );

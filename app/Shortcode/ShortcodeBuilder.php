@@ -53,6 +53,10 @@ class ShortcodeBuilder {
             'limit'     => '10',
         ], $atts, 'tfhb_meetings');
         
+        
+        $allowed_sort_columns = ['id', 'title', 'created_at']; // customize as needed
+        $allowed_order_directions = ['ASC', 'DESC'];
+
         // Whitelisting
         $allowed_sort_by = ['id', 'title', 'created_at']; // customize as needed
         $allowed_order_by = ['ASC', 'DESC'];

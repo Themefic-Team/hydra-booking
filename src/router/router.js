@@ -15,7 +15,7 @@ const user_id = user.id || '';
 const host_id = user.host_id || ''; 
 const user_role = user.role[0] || '';
 
-const routes = [
+let routes = [
     // Define your routes here
     // For example:
     {
@@ -294,6 +294,12 @@ const routes = [
                 redirect: { name: 'AddonsSettingsSellers' },
                 children: [ 
                     {
+                        path: 'event-settings',
+                        name: 'AddonsSettingsEvents',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/addons-settings/event-settings.vue')
+                    }, 
+                    {
                         path: 'buyers',
                         name: 'AddonsSettingsBuyers',
                         meta: { Capabilities: 'tfhb_manage_settings' },
@@ -419,20 +425,27 @@ const routes = [
     },
     // Buyers Dashboard
     {
-        path: '/buyers-dashboard',
+        path: '/buyers',
         name: 'BuyersDashboard',
         meta: { Capabilities: 'tfhb_manage_options' },
         props: true,
         component: () => import('../view/FrontendDashboard/buyers/BuyersDashboard.vue'),
-        redirect: { name: 'BuyersDashboardCalenders' }, 
+        redirect: { name: 'BuyersDashboardEventList' }, 
         children: [
             {
-                path: 'calenders',
-                name: 'BuyersDashboardCalenders',
+                path: 'event-list',
+                name: 'AppointmentsDashboardEventList',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
-                component: () => import('../view/FrontendDashboard/buyers/Calenders.vue')
+                component: () => import('../view/FrontendDashboard/buyers/EventList.vue')
             },  
+            {
+                path: 'my-appointments',
+                name: 'AppointmentsDashboardAppointments',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/buyers/Appointments.vue')
+            }, 
             {
                 path: 'all-events',
                 name: 'BuyersDashboardAllEvents',
@@ -440,13 +453,13 @@ const routes = [
                 props: true,
                 component: () => import('../view/FrontendDashboard/buyers/AllEvents.vue')
             },  
-            {
-                path: 'profile',
-                name: 'BuyersDashboardPublicProfile',
-                meta: { Capabilities: 'tfhb_manage_options' },
-                props: true,
-                component: () => import('../view/FrontendDashboard/buyers/Profile.vue')
-            },  
+            // {
+            //     path: 'profile',
+            //     name: 'BuyersDashboardPublicProfile',
+            //     meta: { Capabilities: 'tfhb_manage_options' },
+            //     props: true,
+            //     component: () => import('../view/FrontendDashboard/buyers/Profile.vue')
+            // },  
             {
                 path: 'sellers-list',
                 name: 'BuyersDashboardViewSellers',
@@ -458,19 +471,26 @@ const routes = [
     },
     // Sellers Dashboard
     {
-        path: '/sellers-dashboard',
+        path: '/sellers',
         name: 'SellersDashboard',
         meta: { Capabilities: 'tfhb_manage_options' },
         props: true,
         component: () => import('../view/FrontendDashboard/sellers/SellersDashboard.vue'),
-        redirect: { name: 'SellersDashboardCalenders' }, 
+        redirect: { name: 'SellersDashboardEventList' }, 
         children: [
             {
-                path: 'calenders',
+                path: 'event-list',
+                name: 'SellersDashboardEventList',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/sellers/EventList.vue')
+            },  
+            {
+                path: 'my-appointments',
                 name: 'SellersDashboardCalenders',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
-                component: () => import('../view/FrontendDashboard/sellers/Calenders.vue')
+                component: () => import('../view/FrontendDashboard/sellers/Appointments.vue')
             },  
             {
                 path: 'all-events',
@@ -536,8 +556,7 @@ router.beforeEach(async (to, from, next) => {
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'HostsProfile', params: { id: host_id } }); 
             }
-            if(  user_role == 'tfhb_buyers'  && to.name == 'dashboard' ){ 
-                
+            if(  user_role == 'tfhb_buyers'  && to.name == 'dashboard' ){  
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'BuyersDashboard'}); 
             }

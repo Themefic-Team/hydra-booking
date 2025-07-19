@@ -41,31 +41,31 @@ const toggleSidebarResponsive= () => {
 
             <ul class="tfhb-sidebar-menu">
                 <li>
-                    <router-link   @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 " to="/sellers-dashboard/calenders" exact :class="{ 'active': $route.path === '/sellers-dashboard/calenders' }">
+                    <router-link   @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 " to="/sellers/event-list" exact :class="{ 'active': $route.path === '/sellers/event-list' }">
                         <Icon name="CalendarDays" size="20" /> 
-                        <span v-if="!collapsed" >{{ $tfhb_trans('My Calenders') }}</span> 
+                        <span v-if="!collapsed" >{{ $tfhb_trans('All Events') }}</span> 
                     </router-link>
                 </li>  
                 <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers-dashboard/all-events" exact :class="{ 'active': $route.path === '/sellers-dashboard/all-events' }" >
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers/my-appointments" exact :class="{ 'active': $route.path === '/sellers/my-appointments' }" >
                         <Icon name="CalendarClock" size="20" /> 
-                        <span v-if="!collapsed" > {{ $tfhb_trans('All Event') }}</span>
+                        <span v-if="!collapsed" > {{ $tfhb_trans('My Appointments') }}</span>
                     </router-link>
                 </li>  
                 <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers-dashboard/sellers-list" exact :class="{ 'active': $route.path === '/sellers-dashboard/sellers-list' }" >
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers/sellers-list" exact :class="{ 'active': $route.path === '/sellers/sellers-list' }" >
                         <Icon name="Users" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('View Buyers') }}</span>
                     </router-link>
                 </li>  
                 <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers-dashboard/profile" exact :class="{ 'active': $route.path === '/sellers-dashboard/profile' }" >
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers/profile" exact :class="{ 'active': $route.path === '/sellers/profile' }" >
                         <Icon name="Contact" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('Profile') }}</span>
                     </router-link>
                 </li>
                 <!-- <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers-dashboard/calenders" exact :class="{ 'active': $route.path === '/buyers-dashboard/calenders' }" >
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers/calenders" exact :class="{ 'active': $route.path === '/buyers-dashboard/calenders' }" >
                         <Icon name="Presentation" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('Event Info') }}</span>
                     </router-link>

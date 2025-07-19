@@ -12,6 +12,8 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 
+import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 
 const informationPopup = ref(false);
@@ -144,19 +146,35 @@ const copyShortcodeCode = () => {
                 selected = "1" 
                 :config="{
                 }"
-                width="48"
+                width="50"
                 :placeholder="$tfhb_trans('Start')"
             /> 
             <HbDateTime   
                 v-model="AddonsSettings.Sellers.registration_end_date"
                 icon="CalendarDays" 
-                label="Start Date"
+                label="End Date"
                 selected = "1" 
                 :config="{
                 }"
-                width="48"
-                :placeholder="$tfhb_trans('Start')"
+                width="50"
+                :placeholder="$tfhb_trans('End')"
             /> 
+              <!-- Time format -->
+               {{ AddonsSettings.Sellers.default_account_status }}
+            <HbDropdown 
+                
+                v-model="AddonsSettings.Sellers.default_account_status"  
+                required= "true" 
+                :label="$tfhb_trans(' Default Account Status')"
+                width="50"
+                :selected = "1"
+                :placeholder="$tfhb_trans('Select')"
+                :option = "[
+                    {'name': 'Inactive', 'value': 'inactive'}, 
+                    {'name': 'Active', 'value': 'active'}
+                ]" 
+            />
+            <!-- Time format --> 
         </div> 
         <div class="tfhb-admin-title" >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Seller Registration Forms Builders') }}   </h2> 

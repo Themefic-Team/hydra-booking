@@ -53,12 +53,12 @@ const MarkAsRead = () => {
 // if click outside the dropdown
  
 function hideDropdownOutsideClick(e) {
-    if (!document.querySelector('.tfhb-header-notification').contains(e.target)) {
-        displayNotification.value = false;
-    }
-    if (!document.querySelector('.tfhb-header-profile-dropdown').contains(e.target)) {
-        profileDropdown.value = false;
-    }
+    // if (!document.querySelector('.tfhb-header-notification').contains(e.target)) {
+    //     displayNotification.value = false;
+    // }
+    // if (!document.querySelector('.tfhb-header-profile-dropdown').contains(e.target)) {
+    //     profileDropdown.value = false;
+    // }
 }
 onBeforeMount(() => {  
     window.addEventListener('click', hideDropdownOutsideClick); 

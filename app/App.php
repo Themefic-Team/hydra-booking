@@ -26,15 +26,16 @@ class App {
 		// Load Enqueue Class
 		new Enqueue();
 
+ 
+
+		new FrontendDashboard();
+		
 		// Load Shortcode Class
 		new HydraBookingShortcode();
 
 		// Load meeting shortcode Class
 		new ShortcodeBuilder();
 
- 
-
-		new FrontendDashboard();
 		// use this class
 		new Archive();
 
