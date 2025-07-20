@@ -344,10 +344,16 @@ const routes = [
                         component: () => import('@/components/settings/addons-settings/sellers-settings.vue')
                     }, 
                     {
-                        path: 'sellers',
+                        path: 'exhibitors',
                         name: 'AddonsSettingsExhibitors',
                         meta: { Capabilities: 'tfhb_manage_settings' },
                         component: () => import('@/components/settings/addons-settings/exhibitors-settings.vue')
+                    }, 
+                    {
+                        path: 'matching',
+                        name: 'AddonsSettingsMatching',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/addons-settings/matching-settings.vue')
                     }, 
                 ]
             },

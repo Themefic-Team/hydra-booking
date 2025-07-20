@@ -29,6 +29,8 @@ onBeforeMount(() => {
                     
                     <li><router-link to="/settings/addons-settings/sellers" exact :class="{ 'active': $route.path === '/settings/addons-settings/sellers' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Sellers') }}</router-link></li>  
                     <li><router-link to="/settings/addons-settings/buyers" exact :class="{ 'active': $route.path === '/settings/addons-settings/buyers' }"> <Icon name="UserRound" /> {{ $tfhb_trans('Buyers') }}</router-link></li>  
+                    <li><router-link to="/settings/addons-settings/exhibitors" exact :class="{ 'active': $route.path === '/settings/addons-settings/exhibitors' }"> <Icon name="Building2" /> {{ $tfhb_trans('Exhibitors') }}</router-link></li>  
+                    <li><router-link to="/settings/addons-settings/matching" exact :class="{ 'active': $route.path === '/settings/addons-settings/matching' }"> <Icon name="Users" /> {{ $tfhb_trans('Matching') }}</router-link></li>  
                    
                 </ul>  
             </nav>

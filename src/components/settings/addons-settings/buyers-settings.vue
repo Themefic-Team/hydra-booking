@@ -8,7 +8,7 @@ import HbQuestionForm from '@/components/widgets/HbQuestionForm.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
-
+import { toast } from "vue3-toastify"; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
@@ -88,7 +88,7 @@ const questions_data =  reactive({});
 
 
 const copyShortcodeCode = () => {
-    const link = '[hydra_login_form]';
+    const link = '[hydra_buyers_registration_form]';
     const textarea = document.createElement('textarea');
     textarea.value = link;
     textarea.setAttribute('readonly', '');

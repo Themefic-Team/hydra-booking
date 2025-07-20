@@ -76,8 +76,7 @@ const UpdateQuestionsData = async (validator_field) => {
 </script>
 
 <template> 
-    <!-- if change  questions_data.type -->
-     {{ questions_data }}
+    <!-- if change  questions_data.type --> 
     <HbDropdown 
         v-model="questions_data.type"
         required= "true" 

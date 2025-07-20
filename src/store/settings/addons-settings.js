@@ -22,6 +22,13 @@ const AddonsSettings = reactive({
         enable_registration : 0,
         default_account_status : 'active',
     },
+    Exhibitors: {
+        registration_froms_fields : [],
+        registration_start_date : '',
+        registration_end_date : '',
+        enable_registration : 0,
+        default_account_status : 'active',
+    },
     // Other Information 
     async FetchAddonsSettings() {  
         try {  
@@ -33,6 +40,7 @@ const AddonsSettings = reactive({
             if (response.data.status) {  
                 this.Sellers = response.data.sellers_settings ? response.data.sellers_settings : this.Sellers; 
                 this.buyers = response.data.buyers_settings ? response.data.buyers_settings : this.buyers; 
+                this.Exhibitors = response.data.exhibitors_settings ? response.data.exhibitors_settings : this.Exhibitors; 
                 this.event_settings = response.data.event_settings ? response.data.event_settings : this.event_settings; 
                 this.skeleton = false;
             }
@@ -69,6 +77,31 @@ const AddonsSettings = reactive({
         this.update_preloader = true; 
         try {  
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/buyers-settings/update', this.buyers, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
+                } 
+            } );
+
+            if (response.data.status) {   
+                
+
+                this.skeleton = false;
+                // responsed message bottom
+                toast.success(response.data.message, {
+                    position: "bottom-right",
+                });
+                this.update_preloader = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.update_preloader = false;
+
+        }  
+    },
+    async UpdateExhibitorsSettings() { 
+        this.update_preloader = true; 
+        try {  
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/exhibitors-settings/update', this.Exhibitors, {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
