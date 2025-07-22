@@ -58,12 +58,12 @@ const toggleSidebarResponsive= () => {
                         <span v-if="!collapsed" > {{ $tfhb_trans('View Sellers') }}</span>
                     </router-link>
                 </li>  
-                <li>
+                <!-- <li>
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/buyers/profile" exact :class="{ 'active': $route.path === '/buyers/profile' }" >
                         <Icon name="Contact" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('Profile') }}</span>
                     </router-link>
-                </li>
+                </li> -->
                 <!-- <li>
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/buyers/calenders" exact :class="{ 'active': $route.path === '/buyers/calenders' }" >
                         <Icon name="Presentation" size="20" /> 
@@ -74,9 +74,30 @@ const toggleSidebarResponsive= () => {
 
             <h6 class="tfhb-sidebar-menu-heading">
                 <template v-if="!collapsed">
-                    {{ $tfhb_trans('Users') }}
+                    {{ $tfhb_trans('Users List') }}
                 </template> 
             </h6>
+            <ul class="tfhb-sidebar-menu"> 
+                <li>
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/buyers/buyer-list" exact :class="{ 'active': $route.path === '/sellers/buyer-list' }" >
+                        <Icon name="Users" size="20" /> 
+                        <span v-if="!collapsed" > {{ $tfhb_trans('Buyers') }}</span>
+                    </router-link>
+                </li>   
+                <li>
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/buyers/seller-list" exact :class="{ 'active': $route.path === '/sellers/seller-list' }" >
+                        <Icon name="Users" size="20" /> 
+                        <span v-if="!collapsed" > {{ $tfhb_trans('Sellers') }}</span>
+                    </router-link>
+                </li>   
+                <!-- <li>
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers/seller-list" exact :class="{ 'active': $route.path === '/sellers/seller-list' }" >
+                        <Icon name="Users" size="20" /> 
+                        <span v-if="!collapsed" > {{ $tfhb_trans('Buyers') }}</span>
+                    </router-link>
+                </li>    -->
+            </ul>
+
  
          </div>
  

@@ -10,6 +10,7 @@ const front_end_dashboard =  tfhb_core_apps.front_end_dashboard || false;
 const tfhb_license_type =  tfhb_core_apps.tfhb_license_type || false;   
 const tfhb_is_valid =  tfhb_core_apps.tfhb_is_valid || false;   
 const user =  tfhb_core_apps.user || '';   
+console.log( user.id)
  
 // console.log(tfhb_core_apps); 
 // Pro Plugins  checked  first tfhb_core_apps_pro is not defined

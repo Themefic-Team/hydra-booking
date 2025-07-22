@@ -1,12 +1,13 @@
 <script setup> 
 import { ref, onBeforeMount, defineProps  } from 'vue';  
-import BuyersTopHeader from './BuyersTopHeader.vue';
+// import BuyersTopHeader from './BuyersTopHeader.vue';
 import BuyersSidebar from './BuyersSidebar.vue';
- const collapsedSideBar = ref(false);
+import TopHeader from '../common/TopHeader.vue';
+const collapsedSideBar = ref(false);
 </script>
 
 <template > 
-   <BuyersTopHeader   /> 
+   <TopHeader   /> 
  
    <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
   

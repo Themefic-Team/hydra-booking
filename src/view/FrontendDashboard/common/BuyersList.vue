@@ -1,96 +1,121 @@
 <script setup> 
-import { ref, onBeforeMount, defineProps } from 'vue';  
+import { ref, reactive, onBeforeMount, defineProps } from 'vue';  
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
-
+import axios from 'axios';
 const selectedBuyer = ref(null)
-const buyers = ref([
-    {
-        id: 1,
-        name: 'Davide Rossetti',
-        role: 'Sales Manager',
-        email: 'davide@google.com',
-        phone: '339 050403',
-        location: 'Perugia, Italia',
-        avatar: 'DR',
-        status: 'Active',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.davideagency.com',
-        preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists', 'Concierge and booking services'],
-        regionsOfInterest: ['Argentina and Latin America']
-    },
-    {
-        id: 2,
-        name: 'Anna White',
-        role: 'Director / Joe Agency',
-        email: 'customer@email.com',
-        phone: '+01 917 055-0403',
-        location: 'New York, NY 10169',
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-        status: 'Active',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.joeagency.com',
-        preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists', 'Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
-        regionsOfInterest: ['Argentina and Latin America']
-    },
-    {
-        id: 3,
-        name: 'Marco Rossi',
-        role: 'Marketing Manager',
-        email: 'marco@agency.com',
-        phone: '+39 123 456 789',
-        location: 'Roma, Italia',
-        avatar: 'MR',
-        status: 'Disable',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.marcoagency.com',
-        preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists'],
-        regionsOfInterest: ['Europe']
-    },
-    {
-        id: 4,
-        name: 'Sarah Johnson',
-        role: 'Business Development',
-        email: 'sarah@travel.com',
-        phone: '+44 20 7946 0958',
-        location: 'London, UK',
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-        status: 'Active',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.sarahagency.com',
-        preferredWorkshops: ['Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
-        regionsOfInterest: ['North America']
-    },
-    {
-        id: 5,
-        name: 'Carlos Rodriguez',
-        role: 'Tourism Director',
-        email: 'carlos@tourism.com',
-        phone: '+34 91 123 4567',
-        location: 'Madrid, España',
-        avatar: 'CR',
-        status: 'Active',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.carlosagency.com',
-        preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists'],
-        regionsOfInterest: ['Latin America']
-    },
-    {
-        id: 6,
-        name: 'Lisa Chen',
-        role: 'Operations Manager',
-        email: 'lisa@operations.com',
-        phone: '+1 555 123 4567',
-        location: 'San Francisco, CA',
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
-        status: 'Active',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.lisaagency.com',
-        preferredWorkshops: ['Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
-        regionsOfInterest: ['Asia Pacific']
-    }
-])
+const skeleton = ref(true);
+// const buyers = ref([
+//     {
+//         id: 1,
+//         name: 'Davide Rossetti',
+//         role: 'Sales Manager',
+//         email: 'davide@google.com',
+//         phone: '339 050403',
+//         location: 'Perugia, Italia',
+//         avatar: 'DR',
+//         status: 'Active',
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.davideagency.com',
+//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists', 'Concierge and booking services'],
+//         regionsOfInterest: ['Argentina and Latin America']
+//     },
+//     {
+//         id: 2,
+//         name: 'Anna White',
+//         role: 'Director / Joe Agency',
+//         email: 'customer@email.com',
+//         phone: '+01 917 055-0403',
+//         location: 'New York, NY 10169',
+//         avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+//         status: 'Active',
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.joeagency.com',
+//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists', 'Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
+//         regionsOfInterest: ['Argentina and Latin America']
+//     },
+//     {
+//         id: 3,
+//         name: 'Marco Rossi',
+//         role: 'Marketing Manager',
+//         email: 'marco@agency.com',
+//         phone: '+39 123 456 789',
+//         location: 'Roma, Italia',
+//         avatar: 'MR',
+//         status: 'Disable',
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.marcoagency.com',
+//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists'],
+//         regionsOfInterest: ['Europe']
+//     },
+//     {
+//         id: 4,
+//         name: 'Sarah Johnson',
+//         role: 'Business Development',
+//         email: 'sarah@travel.com',
+//         phone: '+44 20 7946 0958',
+//         location: 'London, UK',
+//         avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+//         status: 'Active',
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.sarahagency.com',
+//         preferredWorkshops: ['Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
+//         regionsOfInterest: ['North America']
+//     },
+//     {
+//         id: 5,
+//         name: 'Carlos Rodriguez',
+//         role: 'Tourism Director',
+//         email: 'carlos@tourism.com',
+//         phone: '+34 91 123 4567',
+//         location: 'Madrid, España',
+//         avatar: 'CR',
+//         status: 'Active',
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.carlosagency.com',
+//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists'],
+//         regionsOfInterest: ['Latin America']
+//     },
+//     {
+//         id: 6,
+//         name: 'Lisa Chen',
+//         role: 'Operations Manager',
+//         email: 'lisa@operations.com',
+//         phone: '+1 555 123 4567',
+//         location: 'San Francisco, CA',
+//         avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+//         status: 'Active',
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.lisaagency.com',
+//         preferredWorkshops: ['Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
+//         regionsOfInterest: ['Asia Pacific']
+//     }
+// ]);
 
+const buyers = ref([]);
+async function fetchBuyers() {
+    try {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/buyers-list', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+            },
+            params: {
+                current_user_id: tfhb_core_apps.user.id
+            },
+            withCredentials: true
+        });
+        if (response.data.success && response.data.data) {
+            buyers.value = response.data.data;
+        }
+    } catch (e) {
+        // handle error
+    } finally {
+        skeleton.value = false;
+    }
+}
+onBeforeMount(async () => {
+    await fetchBuyers();
+});
 const selectBuyer = (buyer) => {
     selectedBuyer.value = buyer
 }
@@ -106,6 +131,7 @@ const Tfhb_Buyer_Filter = (event) => {
 </script>
 
 <template> 
+
     <div class="buyers-dashboard">
         <!-- Header Section with Filters -->
         <div class="buyers-header">
@@ -179,15 +205,18 @@ const Tfhb_Buyer_Filter = (event) => {
                     >
                         <div class="buyer-card-header">
                             <div class="buyer-avatar">
-                                <img v-if="buyer.avatar && buyer.avatar.startsWith('http')" :src="buyer.avatar" alt="Buyer Avatar">
-                                <span v-else class="avatar-text">{{ buyer.avatar }}</span>
+                                <img v-if="buyer.data.avatar && buyer.data.avatar.startsWith('http')" :src="buyer.data.avatar" alt="Buyer Avatar">
+                                <span v-else class="avatar-text">{{ buyer.data.avatar }}</span>
                             </div>
                             <div class="buyer-info">
-                                <h3 class="buyer-name">{{ buyer.name }}</h3>
-                                <p class="buyer-role">{{ buyer.role }}</p>
+                                <h3 class="buyer-name">{{ buyer.data.name_of_participant }}</h3>
+                                <p class="buyer-role">{{ buyer.data.job_title }}</p>
                             </div>
                             <div class="buyer-status">
-                                <span class="status-badge" :class="{ 'warning': buyer.status === 'Disable' }">{{ buyer.status }}</span>
+                              
+                                <span class="status-badge" :class="{ 
+                                    'warning': buyer.status === 'inactive' 
+                                }">{{ buyer.status }}</span>
                             </div>
                         </div>
                         
@@ -195,20 +224,20 @@ const Tfhb_Buyer_Filter = (event) => {
                             <div class="contact-info">
                                 <div class="contact-item">
                                     <Icon name="Mail" size=16 />
-                                    <span>{{ buyer.email }}</span>
+                                    <span>{{ buyer.data.email }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="Phone" size=16 />
-                                    <span>{{ buyer.phone }}</span>
+                                    <span>{{ buyer.data.mobile_no }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="MapPin" size=16 />
-                                    <span>{{ buyer.location }}</span>
+                                    <span>{{ buyer.data.address }}</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="buyer-card-actions">
+                        <!-- <div class="buyer-card-actions">
                             <button class="action-btn">
                                 <Icon name="Star" size=16 />
                             </button>
@@ -218,13 +247,14 @@ const Tfhb_Buyer_Filter = (event) => {
                             <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
 
             <!-- Buyer Details Sidebar -->
             <div v-if="selectedBuyer" class="buyer-details-sidebar">
+                
                 <div class="buyer-details-header">
                     <h2 class="details-title">
                         <Icon name="MessageCircle" size=20 />
@@ -238,54 +268,54 @@ const Tfhb_Buyer_Filter = (event) => {
                 <div class="buyer-details-content">
                     <div class="buyer-profile">
                         <div class="buyer-avatar-large">
-                            <img v-if="selectedBuyer.avatar && selectedBuyer.avatar.startsWith('http')" :src="selectedBuyer.avatar" alt="Buyer Avatar">
-                            <span v-else class="avatar-text-large">{{ selectedBuyer.avatar }}</span>
-                            <div class="online-indicator"></div>
+                            <img v-if="selectedBuyer.data.avatar && selectedBuyer.data.avatar.startsWith('http')" :src="selectedBuyer.data.avatar" alt="Buyer Avatar">
+                            <span v-else class="avatar-text-large">{{ selectedBuyer.data.avatar }}</span>
+                            <!-- <div class="online-indicator"></div> -->
                         </div>
-                        <h3 class="buyer-name-large">{{ selectedBuyer.name }}</h3>
-                        <p class="buyer-role-large">{{ selectedBuyer.role }}</p>
+                        <h3 class="buyer-name-large">{{ selectedBuyer.data.name_of_participant }}</h3>
+                        <p class="buyer-role-large">{{ selectedBuyer.data.job_title }}</p>
                     </div>
 
                     <div class="buyer-details-sections">
                         <div class="detail-section">
                             <h4>DESCRIPTION</h4>
-                            <p>{{ selectedBuyer.description }}</p>
+                            <p>{{ selectedBuyer.data.description }}</p>
                             <a href="#" class="read-more">read more</a>
                         </div>
 
                         <div class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedBuyer.website }}</p>
+                            <p>{{ selectedBuyer.data.website }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>EMAIL</h4>
-                            <p>{{ selectedBuyer.email }}</p>
+                            <p>{{ selectedBuyer.data.email }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>PHONE</h4>
-                            <p>{{ selectedBuyer.phone }}</p>
+                            <p>{{ selectedBuyer.data.mobile_no }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>LOCATION</h4>
-                            <p>{{ selectedBuyer.location }}</p>
+                            <p>{{ selectedBuyer.data.address }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>BUYERS' PREFERRED WORKSHOP MEETINGS WITH:</h4>
                             <div class="tags-container">
-                                <span v-for="workshop in selectedBuyer.preferredWorkshops" :key="workshop" class="tag">
+                                <span v-for="workshop in selectedBuyer.data.preferred_workshop_meetings" :key="workshop" class="tag">
                                     {{ workshop }}
                                 </span>
                             </div>
                         </div>
 
                         <div class="detail-section">
-                            <h4>ITALIAN REGIONS OF INTEREST:</h4>
+                            <h4>AREAS OF ACTIVITY:</h4>
                             <div class="tags-container">
-                                <span v-for="region in selectedBuyer.regionsOfInterest" :key="region" class="tag">
+                                <span v-for="region in selectedBuyer.data.areas_of_activity" :key="region" class="tag">
                                     {{ region }}
                                 </span>
                             </div>
@@ -293,14 +323,14 @@ const Tfhb_Buyer_Filter = (event) => {
                     </div>
                 </div>
 
-                <div class="buyer-details-footer">
+                <!-- <div class="buyer-details-footer">
                     <button class="nav-btn">
                         <Icon name="X" size=20 />
                     </button>
                     <button class="nav-btn">
                         <Icon name="ChevronRight" size=20 />
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div> 

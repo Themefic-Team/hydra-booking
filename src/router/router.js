@@ -497,20 +497,27 @@ const routes = [
             //     props: true,
             //     component: () => import('../view/FrontendDashboard/buyers/AllEvents.vue')
             // },  
-            // {
-            //     path: 'profile',
-            //     name: 'BuyersDashboardPublicProfile',
-            //     meta: { Capabilities: 'tfhb_manage_options' },
-            //     props: true,
-            //     component: () => import('../view/FrontendDashboard/buyers/Profile.vue')
-            // },  
             {
-                path: 'sellers-list',
+                path: 'profile',
+                name: 'BuyersDashboardPublicProfile',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/buyers/Profile.vue')
+            },  
+            {
+                path: 'buyer-list',
+                name: 'BuyersDashboardViewBuyers',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/common/BuyersList.vue')
+            },  
+            {
+                path: 'seller-list',
                 name: 'BuyersDashboardViewSellers',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
                 component: () => import('../view/FrontendDashboard/common/SellersList.vue')
-            },  
+            }, 
         ]
     },
     // Sellers Dashboard
