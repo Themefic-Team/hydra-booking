@@ -6,29 +6,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import { FdDashboard } from '@/store/frontend-dashboard.js';
 import axios from 'axios';
 
-const loggedInUser = ref({});
-const skeleton = ref(true);
-
-async function fetchLoggedInUser() {
-    try {
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/logged-in-user', {
-            headers: {
-                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
-            },
-            params: {
-                user_id: tfhb_core_apps.user.id
-            },
-            withCredentials: true
-        });
-        if (response.data.success && response.data.data) {
-            loggedInUser.value = response.data.data;
-        }
-    } catch (e) {
-        // handle error
-    } finally {
-        skeleton.value = false;
-    }
-}
+import { AddonsAuth } from '@/view/FrontendDashboard/common/storeCommon';
 
 // User Logout function 
 async function logoutUser() {
@@ -47,7 +25,7 @@ async function logoutUser() {
     }
 }
 onBeforeMount(async () => {
-    await fetchLoggedInUser();
+    await AddonsAuth.fetchLoggedInUser();
 });
 // if click outside the dropdown
  
@@ -105,7 +83,7 @@ const toggleSidebar = () => {
 
 
 <template>    
-{{ loggedInUser }}
+<!-- {{ loggedInUser }} -->
     <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox">
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >
@@ -134,8 +112,9 @@ const toggleSidebar = () => {
            
             <div class="tfhb-dropdown tfhb-header-profile-dropdown">
                 <div @click.stop="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
-                    <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">
-                    <span class="tfhb-profile-name">  {{ $tfhb_trans('Hi,') }} <b>{{ loggedInUser.first_name }}</b> </span>
+                    <img v-if="AddonsAuth.loggedInUser.user_data" :src="AddonsAuth.loggedInUser.user_data.avatar" alt="Hosts Avatar">
+                    <img v-else :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">
+                    <span class="tfhb-profile-name">  {{ $tfhb_trans('Hi,') }} <b>{{ AddonsAuth.loggedInUser.user_data.name_of_participant }}</b> </span>
                     <span  class="tfhb-dropdown-single" >
                         <Icon  v-if="profileDropdown == false" name="ChevronDown" size=16 /> 
                         <Icon v-if="profileDropdown == true" name="ChevronUp" size=16 /> 
@@ -144,11 +123,14 @@ const toggleSidebar = () => {
  
                 <transition  name="tfhb-dropdown-transition">
                     <div v-show="profileDropdown == true"  class="tfhb-dropdown-wrap"> 
-                        <router-link  class="tfhb-dropdown-single" to="/buyers/profile" exact >
+                        <router-link v-if="AddonsAuth.loggedInUser.user_role == 'buyers'"  class="tfhb-dropdown-single" to="/buyers/profile" exact >
                                 <Icon name="User" size=16 /> 
                                 {{ $tfhb_trans('My Account') }}
                             </router-link>
-                      
+                        <router-link v-if="AddonsAuth.loggedInUser.user_role == 'sellers'"  class="tfhb-dropdown-single" to="/sellers/profile" exact >
+                                <Icon name="User" size=16 /> 
+                                {{ $tfhb_trans('My Account') }}
+                            </router-link>
                         <span class="tfhb-dropdown-single tfhb-dropdown-error"@click="logoutUser"><Icon name="LogOut" size=16 />{{ $tfhb_trans('Logout') }}</span>
                     </div>
                 </transition>

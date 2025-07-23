@@ -2,106 +2,134 @@
 import { ref, onBeforeMount, defineProps } from 'vue';  
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
+import axios from 'axios';
+const selectedSeller  = ref(null);
+const skeleton = ref(true);
+// const sellers = ref([
+//     {
+//         id: 1,
+//         name: 'La Dimora dei Cavalieri',
+//         subtitle: 'subtitle / brand payoff',
+//         email: 'davide@google.com',
+//         phone: '339 050403',
+//         location: 'Perugia, Italia',
+//         avatar: 'LD',
+//         status: 'Active',
+//         matchPercentage: 40,
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.ladimora.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
+//         regionsOfInterest: ['Argentina and Latin America']
+//     },
+//     {
+//         id: 2,
+//         name: 'Joe Agency',
+//         subtitle: 'Travel agency in Word',
+//         email: 'customer@email.com',
+//         phone: '+01 917 055-0403',
+//         location: 'New York, NY 10169',
+//         avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+//         status: 'Active',
+//         matchPercentage: 20,
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.joeagency.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4', 'Staff 5'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
+//         regionsOfInterest: ['Argentina and Latin America', 'Australia', 'Brazil', 'Canada', 'Europe', 'USA']
+//     },
+//     {
+//         id: 3,
+//         name: 'Name Brand',
+//         subtitle: 'subtitle / brand payoff',
+//         email: 'marco@agency.com',
+//         phone: '+39 123 456 789',
+//         location: 'Roma, Italia',
+//         avatar: 'NB',
+//         status: 'Active',
+//         matchPercentage: 35,
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.namebrand.com',
+//         staff: ['Staff 1', 'Staff 2'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
+//         regionsOfInterest: ['Europe']
+//     },
+//     {
+//         id: 4,
+//         name: 'C4 Agency',
+//         subtitle: 'Travel agency in Word',
+//         email: 'sarah@travel.com',
+//         phone: '+44 20 7946 0958',
+//         location: 'London, UK',
+//         avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+//         status: 'Active',
+//         matchPercentage: 60,
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.c4agency.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
+//         regionsOfInterest: ['North America']
+//     },
+//     {
+//         id: 5,
+//         name: 'HB Agency',
+//         subtitle: 'subtitle / brand payoff',
+//         email: 'carlos@tourism.com',
+//         phone: '+34 91 123 4567',
+//         location: 'Madrid, España',
+//         avatar: 'HB',
+//         status: 'Active',
+//         matchPercentage: 25,
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.hbagency.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
+//         regionsOfInterest: ['Latin America']
+//     },
+//     {
+//         id: 6,
+//         name: 'EL Agency',
+//         subtitle: 'Travel agency in Word',
+//         email: 'lisa@operations.com',
+//         phone: '+1 555 123 4567',
+//         location: 'San Francisco, CA',
+//         avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+//         status: 'Active',
+//         matchPercentage: 45,
+//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//         website: 'www.elagency.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
+//         regionsOfInterest: ['Asia Pacific']
+//     }
+// ])
 
-const selectedSeller = ref(null)
-const sellers = ref([
-    {
-        id: 1,
-        name: 'La Dimora dei Cavalieri',
-        subtitle: 'subtitle / brand payoff',
-        email: 'davide@google.com',
-        phone: '339 050403',
-        location: 'Perugia, Italia',
-        avatar: 'LD',
-        status: 'Active',
-        matchPercentage: 40,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.ladimora.com',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4'],
-        preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
-        regionsOfInterest: ['Argentina and Latin America']
-    },
-    {
-        id: 2,
-        name: 'Joe Agency',
-        subtitle: 'Travel agency in Word',
-        email: 'customer@email.com',
-        phone: '+01 917 055-0403',
-        location: 'New York, NY 10169',
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-        status: 'Active',
-        matchPercentage: 20,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.joeagency.com',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4', 'Staff 5'],
-        preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
-        regionsOfInterest: ['Argentina and Latin America', 'Australia', 'Brazil', 'Canada', 'Europe', 'USA']
-    },
-    {
-        id: 3,
-        name: 'Name Brand',
-        subtitle: 'subtitle / brand payoff',
-        email: 'marco@agency.com',
-        phone: '+39 123 456 789',
-        location: 'Roma, Italia',
-        avatar: 'NB',
-        status: 'Active',
-        matchPercentage: 35,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.namebrand.com',
-        staff: ['Staff 1', 'Staff 2'],
-        preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
-        regionsOfInterest: ['Europe']
-    },
-    {
-        id: 4,
-        name: 'C4 Agency',
-        subtitle: 'Travel agency in Word',
-        email: 'sarah@travel.com',
-        phone: '+44 20 7946 0958',
-        location: 'London, UK',
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-        status: 'Active',
-        matchPercentage: 60,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.c4agency.com',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3'],
-        preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
-        regionsOfInterest: ['North America']
-    },
-    {
-        id: 5,
-        name: 'HB Agency',
-        subtitle: 'subtitle / brand payoff',
-        email: 'carlos@tourism.com',
-        phone: '+34 91 123 4567',
-        location: 'Madrid, España',
-        avatar: 'HB',
-        status: 'Active',
-        matchPercentage: 25,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.hbagency.com',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4'],
-        preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
-        regionsOfInterest: ['Latin America']
-    },
-    {
-        id: 6,
-        name: 'EL Agency',
-        subtitle: 'Travel agency in Word',
-        email: 'lisa@operations.com',
-        phone: '+1 555 123 4567',
-        location: 'San Francisco, CA',
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
-        status: 'Active',
-        matchPercentage: 45,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        website: 'www.elagency.com',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3'],
-        preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
-        regionsOfInterest: ['Asia Pacific']
+
+const sellers = ref([]);
+async function fetchSellers() {
+    
+    try {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/sellers-list', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+            },
+            params: {
+                current_user_id: tfhb_core_apps.user.id
+            },
+            withCredentials: true
+        });
+        if (response.data.success && response.data.data) {
+            sellers.value = response.data.data;
+        }
+    } catch (e) {
+        // handle error
+    } finally {
+        skeleton.value = false;
     }
-])
+}
+onBeforeMount(async () => {
+    await fetchSellers();
+});
 
 const selectSeller = (seller) => {
     selectedSeller.value = seller
@@ -118,6 +146,7 @@ const Tfhb_Seller_Filter = (event) => {
 </script>
 
 <template> 
+
     <div class="sellers-dashboard">
         <!-- Header Section with Filters -->
         <div class="sellers-header">
@@ -189,17 +218,18 @@ const Tfhb_Seller_Filter = (event) => {
                         :class="{ 'selected': selectedSeller && selectedSeller.id === seller.id }"
                         @click="selectSeller(seller)"
                     >
+                    <!-- {{ seller }} -->
                         <div class="seller-card-header">
                             <div class="seller-avatar">
-                                <img v-if="seller.avatar && seller.avatar.startsWith('http')" :src="seller.avatar" alt="Seller Avatar">
-                                <span v-else class="avatar-text">{{ seller.avatar }}</span>
+                                <img v-if="seller.data.avatar && seller.data.avatar.startsWith('http')" :src="seller.data.avatar" alt="Seller Avatar">
+                                <span v-else class="avatar-text">{{ seller.data.avatar }}</span>
                             </div>
                             <div class="seller-info">
-                                <h3 class="seller-name">{{ seller.name }}</h3>
-                                <p class="seller-subtitle">{{ seller.subtitle }}</p>
+                                <h3 class="seller-name">{{ seller.data.name_of_participant }}</h3>
+                                <p class="seller-subtitle">{{ seller.data.job_title }}</p>
                             </div>
                             <div class="seller-status">
-                                <span class="match-percentage">{{ seller.matchPercentage }}% Mach</span>
+                                <span class="match-percentage">{{ seller.data.matchPercentage }}% Mach</span>
                                 <span class="status-badge" :class="{ 'warning': seller.status === 'Disable' }">{{ seller.status }}</span>
                             </div>
                         </div>
@@ -208,15 +238,15 @@ const Tfhb_Seller_Filter = (event) => {
                             <div class="contact-info">
                                 <div class="contact-item">
                                     <Icon name="Mail" size=16 />
-                                    <span>{{ seller.email }}</span>
+                                    <span>{{ seller.data.email }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="Phone" size=16 />
-                                    <span>{{ seller.phone }}</span>
+                                    <span>{{ seller.data.phone }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="MapPin" size=16 />
-                                    <span>{{ seller.location }}</span>
+                                    <span>{{ seller.data.location }}</span>
                                 </div>
                             </div>
                         </div>
@@ -244,7 +274,7 @@ const Tfhb_Seller_Filter = (event) => {
                         Sellers
                     </h2>
                     <div class="header-actions">
-                        <span class="match-percentage-large">{{ selectedSeller.matchPercentage }}% Mach</span>
+                        <span class="match-percentage-large">{{ selectedSeller.data.matchPercentage }}% Mach</span>
                         <button class="close-btn" @click="closeSellerDetails">
                             <Icon name="X" size=20 />
                         </button>
@@ -254,42 +284,42 @@ const Tfhb_Seller_Filter = (event) => {
                 <div class="seller-details-content">
                     <div class="seller-profile">
                         <div class="seller-avatar-large">
-                            <img v-if="selectedSeller.avatar && selectedSeller.avatar.startsWith('http')" :src="selectedSeller.avatar" alt="Seller Avatar">
-                            <span v-else class="avatar-text-large">{{ selectedSeller.avatar }}</span>
+                            <img v-if="selectedSeller.data.avatar && selectedSeller.data.avatar.startsWith('http')" :src="selectedSeller.data.avatar" alt="Seller Avatar">
+                            <span v-else class="avatar-text-large">{{ selectedSeller.data.avatar }}</span>
                             <div class="online-indicator"></div>
                         </div>
-                        <h3 class="seller-name-large">{{ selectedSeller.name }}</h3>
-                        <p class="seller-subtitle-large">{{ selectedSeller.subtitle }}</p>
+                        <h3 class="seller-name-large">{{ selectedSeller.data.name_of_participant }}</h3>
+                        <p class="seller-subtitle-large">{{ selectedSeller.data.job_title }}</p>
                     </div>
 
                     <div class="seller-details-sections">
                         <div class="detail-section">
                             <h4>DESCRIPTION</h4>
-                            <p>{{ selectedSeller.description }}</p>
+                            <p>{{ selectedSeller.data.description }}</p>
                             <a href="#" class="read-more">read more</a>
                         </div>
 
                         <div class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedSeller.website }}</p>
+                            <p>{{ selectedSeller.data.website }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>EMAIL</h4>
-                            <p>{{ selectedSeller.email }}</p>
+                            <p>{{ selectedSeller.data.email }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>PHONE</h4>
-                            <p>{{ selectedSeller.phone }}</p>
+                            <p>{{ selectedSeller.data.phone }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>LOCATION</h4>
-                            <p>{{ selectedSeller.location }}</p>
+                            <p>{{ selectedSeller.data.location }}</p>
                         </div>
 
-                        <div class="detail-section">
+                        <!-- <div class="detail-section">
                             <h4>STAFF</h4>
                             <div class="staff-container">
                                 <div v-for="(staff, index) in selectedSeller.staff.slice(0, 4)" :key="index" class="staff-avatar">
@@ -299,12 +329,12 @@ const Tfhb_Seller_Filter = (event) => {
                                     +{{ selectedSeller.staff.length - 4 }}
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="detail-section">
                             <h4>BUYERS' PREFERRED WORKSHOP MEETINGS WITH:</h4>
                             <div class="tags-container">
-                                <span v-for="workshop in selectedSeller.preferredWorkshops" :key="workshop" class="tag">
+                                <span v-for="workshop in selectedSeller.data.provenienza_buyer_interesse" :key="workshop" class="tag">
                                     {{ workshop }}
                                 </span>
                             </div>
@@ -313,7 +343,7 @@ const Tfhb_Seller_Filter = (event) => {
                         <div class="detail-section">
                             <h4>BUYERS' NATION:</h4>
                             <div class="tags-container">
-                                <span v-for="region in selectedSeller.regionsOfInterest" :key="region" class="tag">
+                                <span v-for="region in selectedSeller.data.provenienza_buyer_interesse" :key="region" class="tag">
                                     {{ region }}
                                 </span>
                             </div>

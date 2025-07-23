@@ -77,6 +77,8 @@ async function saveUserPublicInfo() {
     } finally {
         loading.value = false;
         setTimeout(() => { saveSuccess.value = false; }, 2000);
+        // windows reload 
+        window.location.reload();
     }
 }
 
