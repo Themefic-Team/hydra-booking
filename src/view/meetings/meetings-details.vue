@@ -164,7 +164,7 @@ onMounted(() => {
             <!-- Custom Duration -->
             <HbText  
                 v-model="meeting.custom_duration"  
-                :label="$tfhb_trans('Custom Duration')"  
+                :label="$tfhb_trans('Custom Duration (minutes)')"  
                 name="title"
                 type="number"
                 selected = "1"
