@@ -244,7 +244,7 @@ onBeforeMount(() => {
         }
     }
     .desktop-view {
-        zoom: 0.4; /* Scale down */
+        zoom: 0.8; /* Scale down */
     }
     
 }
