@@ -95,7 +95,7 @@ onBeforeMount(() => {
                 />  
             </div>
         </div>
-        <div class="tfhb-settings-shortcode-wrap tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-16 tfhb-align-normal tfhb-justify-between"> 
+        <div class="tfhb-settings-shortcode-wrap tfhb-admin-card-box tfhb-general-card tfhb-flexbox tfhb-gap-16 tfhb-align-normal tfhb-justify-between tfhb-full-width"> 
           
             <div class="settings tfhb-flexbox tfhb-gap-16 tfhb-align-normal tfhb-justify-between">  
                  
@@ -170,7 +170,7 @@ onBeforeMount(() => {
 
                 </div>  
             </div>  
-            <div class="preview">   
+            <div class="preview  ">   
                 <div :class="{ 'tfhb-skeleton': ShortcodeData.preview_skeleton || ShortcodeData.preview_skeleton_reset }" class="tfhb-desktop-wrapper tfhb-scrollbar">  
                     <div class="desktop-view tfhb-full-width">
                         <div v-html="ShortcodeData.output"></div>     
