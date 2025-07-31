@@ -12,6 +12,7 @@ use HydraBooking\Services\Integrations\Woocommerce\WooBooking;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\DB\Transactions;
 use HydraBooking\DB\BookingMeta;
+use HydraBookingAddons\DB\Matching;
 
 
 class HydraBookingShortcode {
@@ -578,6 +579,10 @@ class HydraBookingShortcode {
 
 
 
+	}
+
+	public static function test_function (){
+		return "hello";
 	}
 
 	/**

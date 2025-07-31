@@ -9,7 +9,7 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbInput from '@/components/form-fields/HbText.vue'
-import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
+import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue' 
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'
 import { toast } from "vue3-toastify"; 
 import axios from 'axios';
@@ -285,18 +285,18 @@ onBeforeMount(() => {
 
         <!-- Program -->
         <div class="tfhb-section">
-            <h3>{{ $tfhb_trans('Program') }}</h3>
+            <h3>{{ $tfhb_trans('Documents') }}</h3>
             <div v-for="(item, index) in event_details.program_items" :key="index" class="tfhb-program-item">
-                <div class="tfhb-flexbox tfhb-gap-16">
+                <div class="tfhb-flexbox tfhb-gap-16 tfhb-items-start">
                     <HbInput
                         v-model="item.title"
-                        :label="$tfhb_trans('Program Title')"
+                        :label="$tfhb_trans('Document Title')"
                         :placeholder="$tfhb_trans('Enter program title')"
                         width="50"
                     />
                     <HbInput
                         v-model="item.subtitle"
-                        :label="$tfhb_trans('Program Subtitle')"
+                        :label="$tfhb_trans('Document Subtitle')"
                         :placeholder="$tfhb_trans('Enter program subtitle')"
                         width="50"
                     />
@@ -305,23 +305,34 @@ onBeforeMount(() => {
                         v-model="item.program_icon"
                         :label="$tfhb_trans('Choose image or drag & drop it here.')"
                         :subtitle="$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
-                        :btn_label="$tfhb_trans('Upload Program Icon')"
+                        :btn_label="$tfhb_trans('Upload Document Icon')"
                         file_size="5"
                         file_format="jpg,jpeg,png"
-                        width="100"
+                        width="50"
+                    />
+                    <HbWpFileUpload
+                        :name="`program_file_${index}`"
+                        v-model="item.program_file"
+                        :label="$tfhb_trans('Choose file or drag & drop it here.')"
+                        :subtitle="$tfhb_trans('PDF, DOC, DOCX, XLS, XLSX. Max 5 MB.')"
+                        :btn_label="$tfhb_trans('Upload Document File')"
+                        file_size="5"
+                        file_format="pdf,doc,docx,xls,xlsx"
+                        width="50"
                     />
                     <HbButton
                         v-if="event_details.program_items.length > 1"
                         @click="removeProgramItem(index)"
                         :buttonText="$tfhb_trans('Remove')"
-                        classValue="tfhb-btn-danger"
+                        classValue="tfhb-btn boxed-btn-danger"
                     />
                 </div>
             </div>
             <HbButton
                 @click="addProgramItem"
-                :buttonText="$tfhb_trans('Add Program Item')"
+                :buttonText="$tfhb_trans('Add Document')"
                 icon="Plus"
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation"
             />
         </div>
 
@@ -345,7 +356,7 @@ onBeforeMount(() => {
                         v-if="event_details.external_links.length > 1"
                         @click="removeExternalLink(index)"
                         :buttonText="$tfhb_trans('Remove')"
-                        classValue="tfhb-btn-danger"
+                        classValue="tfhb-btn boxed-btn-danger"
                     />
                 </div>
             </div>
@@ -353,6 +364,7 @@ onBeforeMount(() => {
                 @click="addExternalLink"
                 :buttonText="$tfhb_trans('Add External Link')"
                 icon="Plus"
+                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation"
             />
         </div>
 

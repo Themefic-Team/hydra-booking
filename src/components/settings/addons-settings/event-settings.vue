@@ -4,7 +4,7 @@ import { ref, reactive, onBeforeMount, } from 'vue';
 import { useRouter, RouterView,} from 'vue-router' 
 import HbQuestion from '@/components/widgets/HbQuestion.vue';
 import Icon from '@/components/icon/LucideIcon.vue';
-import HbQuestionForm from '@/components/widgets/HbQuestionForm.vue';
+import HbQuestionForm from '@/components/widgets/HbQuestionForm.vue'; 
 import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
@@ -23,7 +23,7 @@ import { AddonsSettings } from '@/store/settings/addons-settings';
  
 </script>
 
-<template>   
+<template>    
     <div class="tfhb-admin-title" >
         <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Events Settings') }} </h2>  
         <p>{{ $tfhb_trans('Manage the settings for your events') }}</p>
@@ -34,6 +34,14 @@ import { AddonsSettings } from '@/store/settings/addons-settings';
             v-model="AddonsSettings.event_settings.guest_booking" 
             :label="'Enable Guest Booking'"   
             width="100"
+        /> 
+        <HbDropdown 
+            v-model="AddonsSettings.event_settings.meeting_id" 
+            :label="'Select Meeting'"   
+            width="100"
+            :selected = "1"
+            :placeholder="$tfhb_trans('Select')"
+            :option="AddonsSettings.meeting_list"
         /> 
     </div>  
     <HbButton 

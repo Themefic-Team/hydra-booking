@@ -1,5 +1,6 @@
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue';
+
+import { ref, reactive, onBeforeMount, onMounted, computed } from 'vue';
 import { __ } from '@wordpress/i18n';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
@@ -7,6 +8,7 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
+import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
 import axios from 'axios';
@@ -19,6 +21,22 @@ const userPublicInformation = reactive({
     cover_image : '',
     avatar : '',
     description : '',
+    // New fields
+    staff: [],
+    gallery: [],
+    video: {
+        title: '',
+        description: '',
+        url: ''
+    },
+    documents: [],
+    links: [],
+    social_share: {
+        instagram: '',
+        facebook: '',
+        youtube: '',
+        linkedin: ''
+    }
 });
 const loading = ref(false);
 const skeleton = ref(true);
@@ -54,7 +72,7 @@ async function saveUserPublicInfo() {
     saveError.value = '';
     try {
         const response = await axios.post(
-            tfhb_core_apps.rest_route + 'hydra-booking/v1/sellers/user-public-info',
+            tfhb_core_apps.rest_route + 'hydra-booking/v1/sellers/user-public-info/update',
             { ...userPublicInformation, user_id: tfhb_core_apps.user.id },
             {
                 headers: {
@@ -76,6 +94,8 @@ async function saveUserPublicInfo() {
     } finally {
         loading.value = false;
         setTimeout(() => { saveSuccess.value = false; }, 2000);
+        // windows reload 
+        // window.location.reload();
     }
 }
 
@@ -165,6 +185,7 @@ const EmptyImageFeatured  = () => {
 const activeCoverDropdown = ref(false);
 const activeProfileDropdown = ref(false);
 
+// hide activeCoverDropdown when clicked outside
 document.addEventListener('click', (e) => { 
     if ( !e.target.closest('.edit-profile-image')) { 
         activeProfileDropdown.value = false;
@@ -228,7 +249,7 @@ document.addEventListener('click', (e) => {
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
         <HbText  
-            v-model="userPublicInformation.name_of_participant"  
+            v-model="userPublicInformation.name"  
             required= "true"  
             :label="$tfhb_trans('Name')"  
             selected = "1"
@@ -252,7 +273,7 @@ document.addEventListener('click', (e) => {
             disabled="true"
         /> 
         <HbText  
-            v-model="userPublicInformation.mobile_no"   
+            v-model="userPublicInformation.telefono_diretto"   
             :label="$tfhb_trans('Mobile')"  
             selected = "1"
             :placeholder="$tfhb_trans('Type your mobile no')" 
@@ -265,16 +286,9 @@ document.addEventListener('click', (e) => {
             selected = "1"
             :placeholder="$tfhb_trans('Type your Address')" 
             width="50"  
-        />    
+        />     
         <HbText  
-            v-model="userPublicInformation.state"   
-            :label="$tfhb_trans('State')"  
-            selected = "1"
-            :placeholder="$tfhb_trans('Type your State')" 
-            width="50"  
-        />
-        <HbText  
-            v-model="userPublicInformation.company_website"   
+            v-model="userPublicInformation.sito_internet"   
             :label="$tfhb_trans('Website')"  
             selected = "1"
             :placeholder="$tfhb_trans('Type your website')" 
@@ -286,6 +300,260 @@ document.addEventListener('click', (e) => {
             :placeholder="$tfhb_trans('Type your description')" 
             width="100"  
         />  
+        
+        <!-- New Sections Parent Card -->
+        <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">
+            <div class="tfhb-admin-title">
+                <h2>{{ $tfhb_trans('Additional Information') }}</h2>
+                <p>{{ $tfhb_trans('Manage your staff, gallery, video, documents, links, and social media') }}</p>
+            </div>
+            
+            <!-- Staff Section -->
+            <div class="tfhb-section-container">
+                <div class="tfhb-section-title">
+                    <h3>{{ $tfhb_trans('Staff') }}</h3>
+                </div>
+                <div class="tfhb-staff-section">
+                    <div v-for="(member, index) in userPublicInformation.staff" :key="index" class="tfhb-staff-item tfhb-flexbox tfhb-gap-16">
+                        <HbText  
+                            v-model="member.name"  
+                            :label="$tfhb_trans('Name')"  
+                            :placeholder="$tfhb_trans('Staff member name')" 
+                            width="50"
+                        /> 
+                        <HbText  
+                            v-model="member.position"  
+                            :label="$tfhb_trans('Position')"  
+                            :placeholder="$tfhb_trans('Job position')" 
+                            width="50"
+                        />
+                        <HbWpFileUpload
+                            :name="`staff_image_${index}`"
+                            v-model="member.image"
+                            :label="$tfhb_trans('Staff Image')"
+                            :subtitle="$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+                            :btn_label="$tfhb_trans('Upload Staff Image')"
+                            file_size="5"
+                            file_format="jpg,jpeg,png"
+                            width="100"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                            @click="userPublicInformation.staff.splice(index, 1)"
+                            :buttonText="$tfhb_trans('Remove')"
+                            icon="Trash2"
+                        />
+                    </div>
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="userPublicInformation.staff.push({name: '', position: '', image: ''})"
+                        :buttonText="$tfhb_trans('Add Staff Member')"
+                        icon="UserPlus"
+                        hover_icon="UserPlus"
+                        :hover_animation="true"
+                    />
+                </div>
+            </div>
+
+            <!-- Gallery Section -->
+            <div class="tfhb-section-container">
+                <div class="tfhb-section-title">
+                    <h3>{{ $tfhb_trans('Gallery') }}</h3>
+                </div>
+                <div class="tfhb-gallery-section ">
+                    <div v-for="(image, index) in userPublicInformation.gallery" :key="index" class="tfhb-gallery-item tfhb-flexbox tfhb-gap-16">
+                        <HbWpFileUpload
+                            :name="`gallery_image_${index}`"
+                            v-model="image.url"
+                            :label="$tfhb_trans('Gallery Image')"
+                            :subtitle="$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+                            :btn_label="$tfhb_trans('Upload Gallery Image')"
+                            file_size="5"
+                            file_format="jpg,jpeg,png"
+                            width="100"
+                        />
+                        <HbText  
+                            v-model="image.title"  
+                            :label="$tfhb_trans('Title')"  
+                            :placeholder="$tfhb_trans('Image title')" 
+                            width="100"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                            @click="userPublicInformation.gallery.splice(index, 1)"
+                            :buttonText="$tfhb_trans('Remove')"
+                            icon="Trash2"
+                        />
+                    </div>
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="userPublicInformation.gallery.push({url: '', title: ''})"
+                        :buttonText="$tfhb_trans('Add Gallery Image')"
+                        icon="ImagePlus"
+                        hover_icon="ImagePlus"
+                        :hover_animation="true"
+                    />
+                </div>
+            </div>
+
+            <!-- Video Section -->
+            <div class="tfhb-section-container">
+                <div class="tfhb-section-title">
+                    <h3>{{ $tfhb_trans('Video') }}</h3>
+                </div>
+                <HbText  
+                    v-model="userPublicInformation.video.title"  
+                    :label="$tfhb_trans('Video Title')"  
+                    :placeholder="$tfhb_trans('Enter video title')" 
+                    width="100"
+                />
+                <HbTextarea  
+                    v-model="userPublicInformation.video.description"   
+                    :label="$tfhb_trans('Video Description')"  
+                    :placeholder="$tfhb_trans('Enter video description')" 
+                    width="100"  
+                />
+                <HbText  
+                    v-model="userPublicInformation.video.url"  
+                    :label="$tfhb_trans('Video URL')"  
+                    :placeholder="$tfhb_trans('Enter video URL (YouTube, Vimeo, etc.)')" 
+                    width="100"
+                />
+            </div>
+
+            <!-- Documents Section -->
+            <div class="tfhb-section-container">
+                <div class="tfhb-section-title">
+                    <h3>{{ $tfhb_trans('Documents') }}</h3>
+                </div>
+                <div class="tfhb-documents-section  ">
+                    <div v-for="(doc, index) in userPublicInformation.documents" :key="index" class="tfhb-document-item tfhb-flexbox tfhb-gap-16">
+                        <HbText  
+                            v-model="doc.title"  
+                            :label="$tfhb_trans('Document Title')"  
+                            :placeholder="$tfhb_trans('Document title')" 
+                            width="50"
+                        />
+                        <HbText  
+                            v-model="doc.subtitle"  
+                            :label="$tfhb_trans('Subtitle')"  
+                            :placeholder="$tfhb_trans('Document subtitle')" 
+                            width="50"
+                        />
+                        <HbWpFileUpload
+                            :name="`document_icon_${index}`"
+                            v-model="doc.icon"
+                            :label="$tfhb_trans('Document Icon')"
+                            :subtitle="$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+                            :btn_label="$tfhb_trans('Upload Document Icon')"
+                            file_size="5"
+                            file_format="jpg,jpeg,png"
+                            width="50"
+                        />
+                        <HbWpFileUpload
+                            :name="`document_file_${index}`"
+                            v-model="doc.url"
+                            :label="$tfhb_trans('Document File')"
+                            :subtitle="$tfhb_trans('PDF, DOC, DOCX, XLS, XLSX. Max 10 MB.')"
+                            :btn_label="$tfhb_trans('Upload Document File')"
+                            file_size="10"
+                            file_format="pdf,doc,docx,xls,xlsx"
+                            width="50"
+                        />
+                        <HbText  
+                            v-model="doc.size"  
+                            :label="$tfhb_trans('File Size')"  
+                            :placeholder="$tfhb_trans('e.g., 900 kb')" 
+                            width="50"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                            @click="userPublicInformation.documents.splice(index, 1)"
+                            :buttonText="$tfhb_trans('Remove')"
+                            icon="Trash2"
+                        />
+                    </div>
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="userPublicInformation.documents.push({title: '', subtitle: '', icon: '', url: '', size: ''})"
+                        :buttonText="$tfhb_trans('Add Document')"
+                        icon="FileText"
+                        hover_icon="FileText"
+                        :hover_animation="true"
+                    />
+                </div>
+            </div>
+
+            <!-- Links Section -->
+            <div class="tfhb-section-container">
+                <div class="tfhb-section-title">
+                    <h3>{{ $tfhb_trans('Links') }}</h3>
+                </div>
+                <div class="tfhb-links-section">
+                    <div v-for="(link, index) in userPublicInformation.links" :key="index" class="tfhb-link-item tfhb-flexbox tfhb-gap-16">
+                        <HbText  
+                            v-model="link.title"  
+                            :label="$tfhb_trans('Link Title')"  
+                            :placeholder="$tfhb_trans('Link title')" 
+                            width="50"
+                        />
+                        <HbText  
+                            v-model="link.url"  
+                            :label="$tfhb_trans('Link URL')"  
+                            :placeholder="$tfhb_trans('https://example.com')" 
+                            width="50"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
+                            @click="userPublicInformation.links.splice(index, 1)"
+                            :buttonText="$tfhb_trans('Remove')"
+                            icon="Trash2"
+                        />
+                    </div>
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="userPublicInformation.links.push({title: '', url: ''})"
+                        :buttonText="$tfhb_trans('Add Link')"
+                        icon="Link"
+                        hover_icon="Link"
+                        :hover_animation="true"
+                    />
+                </div>
+            </div>
+
+            <!-- Social Share Section -->
+            <div class="tfhb-section-container">
+                <div class="tfhb-section-title">
+                    <h3>{{ $tfhb_trans('Social Media') }}</h3>
+                </div>
+                <div class="tfhb-flexbox tfhb-gap-16">
+                    <HbText  
+                        v-model="userPublicInformation.social_share.instagram"  
+                        :label="$tfhb_trans('Instagram')"  
+                        :placeholder="$tfhb_trans('Instagram profile URL')" 
+                        width="50"
+                    />
+                    <HbText  
+                        v-model="userPublicInformation.social_share.facebook"  
+                        :label="$tfhb_trans('Facebook')"  
+                        :placeholder="$tfhb_trans('Facebook profile URL')" 
+                        width="50"
+                    />
+                    <HbText  
+                        v-model="userPublicInformation.social_share.youtube"  
+                        :label="$tfhb_trans('YouTube')"  
+                        :placeholder="$tfhb_trans('YouTube channel URL')" 
+                        width="50"
+                    />
+                    <HbText  
+                        v-model="userPublicInformation.social_share.linkedin"  
+                        :label="$tfhb_trans('LinkedIn')"  
+                        :placeholder="$tfhb_trans('LinkedIn profile URL')" 
+                        width="50"
+                    />
+                </div>
+            </div>
+        </div>
          <HbButton 
             classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
             @click="saveUserPublicInfo"
@@ -302,75 +570,85 @@ document.addEventListener('click', (e) => {
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox" style="flex-direction:column;">
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Travel Agent Name') }}:</strong>
-        <span>{{ userPublicInformation['travel-agent-name'] }}</span>
+        <strong>{{ $tfhb_trans('Company Name') }}:</strong>
+        <span>{{ userPublicInformation['denominazione-operatore-azienda'] }}</span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Family Name of Participant') }}:</strong>
-        <span>{{ userPublicInformation.family_name_of_participant }}</span>
+        <strong>{{ $tfhb_trans('Alternative Company Name') }}:</strong>
+        <span>{{ userPublicInformation['eventuale-altra-denominazione'] }}</span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Office Direct Phone') }}:</strong>
-        <span>{{ userPublicInformation.office_direct_phone }}</span>
+        <strong>{{ $tfhb_trans('VAT Number') }}:</strong>
+        <span>{{ userPublicInformation['pi_cf'] }}</span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Passport Number') }}:</strong>
-        <span>{{ userPublicInformation.passport_number }}</span>
+        <strong>{{ $tfhb_trans('Activity Area') }}:</strong>
+        <span>{{ userPublicInformation.ambito_di_attivita }}</span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Nation') }}:</strong>
+        <strong>{{ $tfhb_trans('Specialization') }}:</strong>
         <span>
-          <template v-if="Array.isArray(userPublicInformation.nation)">
-            {{ userPublicInformation.nation.join(', ') }}
+          <template v-if="Array.isArray(userPublicInformation.specializzazione)">
+            {{ userPublicInformation.specializzazione.join(', ') }}
           </template>
           <template v-else>
-            {{ userPublicInformation.nation }}
+            {{ userPublicInformation.specializzazione }}
           </template>
         </span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Invitation Received From') }}:</strong>
+        <strong>{{ $tfhb_trans('Website') }}:</strong>
+        <span>{{ userPublicInformation['sito-internet'] }}</span>
+      </div>
+      <div class="tfhb-info-row">
+        <strong>{{ $tfhb_trans('Buyer Interest Origin') }}:</strong>
         <span>
-          <template v-if="Array.isArray(userPublicInformation.invitation_received_from)">
-            {{ userPublicInformation.invitation_received_from.join(', ') }}
+          <template v-if="Array.isArray(userPublicInformation.provenienza_buyer_interesse)">
+            {{ userPublicInformation.provenienza_buyer_interesse.join(', ') }}
           </template>
           <template v-else>
-            {{ userPublicInformation.invitation_received_from }}
+            {{ userPublicInformation.provenienza_buyer_interesse }}
           </template>
         </span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Areas of Activity') }}:</strong>
+        <strong>{{ $tfhb_trans('Region') }}:</strong>
+        <span>{{ userPublicInformation.regione }}</span>
+      </div>
+      <div class="tfhb-info-row">
+        <strong>{{ $tfhb_trans('Name') }}:</strong>
+        <span>{{ userPublicInformation.name }}</span>
+      </div>
+      <div class="tfhb-info-row">
+        <strong>{{ $tfhb_trans('Position') }}:</strong>
+        <span>{{ userPublicInformation.incarico }}</span>
+      </div>
+      <div class="tfhb-info-row">
+        <strong>{{ $tfhb_trans('Email') }}:</strong>
+        <span>{{ userPublicInformation.email }}</span>
+      </div>
+      <div class="tfhb-info-row">
+        <strong>{{ $tfhb_trans('Direct Phone') }}:</strong>
+        <span>{{ userPublicInformation.telefono_diretto }}</span>
+      </div>
+      <div class="tfhb-info-row">
+        <strong>{{ $tfhb_trans('Second Participant') }}:</strong>
         <span>
-          <template v-if="Array.isArray(userPublicInformation.areas_of_activity)">
-            {{ userPublicInformation.areas_of_activity.join(', ') }}
+          <template v-if="Array.isArray(userPublicInformation.eventuale_secondo_partecipante)">
+            {{ userPublicInformation.eventuale_secondo_partecipante.join(', ') }}
           </template>
           <template v-else>
-            {{ userPublicInformation.areas_of_activity }}
+            {{ userPublicInformation.eventuale_secondo_partecipante }}
           </template>
         </span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Preferred Workshop Meetings') }}:</strong>
-        <span>
-          <template v-if="Array.isArray(userPublicInformation.preferred_workshop_meetings)">
-            {{ userPublicInformation.preferred_workshop_meetings.join(', ') }}
-          </template>
-          <template v-else>
-            {{ userPublicInformation.preferred_workshop_meetings }}
-          </template>
-        </span>
+        <strong>{{ $tfhb_trans('Second Seller Name') }}:</strong>
+        <span>{{ userPublicInformation.nome_econdo_seller_partecipante }}</span>
       </div>
       <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Participation to Basilicata') }}:</strong>
-        <span>
-          <template v-if="Array.isArray(userPublicInformation.participation_to_basilicata)">
-            {{ userPublicInformation.participation_to_basilicata.join(', ') }}
-          </template>
-          <template v-else>
-            {{ userPublicInformation.participation_to_basilicata }}
-          </template>
-        </span>
+        <strong>{{ $tfhb_trans('Second Position') }}:</strong>
+        <span>{{ userPublicInformation.incarico_2 }}</span>
       </div>
     </div>
    
@@ -412,7 +690,10 @@ document.addEventListener('click', (e) => {
     </div>
 </template>
 
+
+ 
 <style scoped lang="scss">
+/* Your component styles go here */ 
 .avatar_display-wrap, .featured_image_display-wrap {
   position: relative;
 
@@ -458,6 +739,149 @@ document.addEventListener('click', (e) => {
         border-radius: 8px;
     } 
 }
+
+/* New section styles */
+.tfhb-section-title {
+  margin: 2rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e3e6ed;
+}
+
+.tfhb-section-title h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.tfhb-staff-section,
+.tfhb-gallery-section,
+.tfhb-documents-section,
+.tfhb-links-section {
+  margin-bottom: 2rem;
+}
+
+/* Form grid layout */
+.tfhb-admin-card-box.tfhb-flexbox {
+  display: flex; 
+  gap: 1.5rem;
+  align-items: stretch;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Section containers */
+.tfhb-section-container {
+  background: #f8f9fb;
+  border: 1px solid #e3e6ed;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+.tfhb-section-container:last-child {
+  margin-bottom: 0;
+}
+
+/* Section title styling */
+.tfhb-section-title {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e3e6ed;
+}
+
+.tfhb-section-title h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Form field width override - make all fields 50% width */
+.tfhb-admin-card-box .tfhb-single-form-field-wrap,
+.tfhb-single-form-field-wrap {
+  width: 50% !important;
+  margin-bottom: 1.5rem;
+}
+
+/* Make textarea fields full width */
+.tfhb-single-form-field-wrap textarea,
+.tfhb-admin-card-box .tfhb-single-form-field-wrap textarea {
+  width: 100% !important;
+}
+
+/* Remove old button styles since we're using the standard button classes */
+.tfhb-staff-item,
+.tfhb-gallery-item,
+.tfhb-document-item,
+.tfhb-link-item {
+  background: #ffffff;
+  border: 1px solid #e3e6ed;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.tfhb-staff-item:hover,
+.tfhb-gallery-item:hover,
+.tfhb-document-item:hover,
+.tfhb-link-item:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-color: #cbd5e0;
+}
+
+// .tfhb-staff-item .tfhb-btn,
+// .tfhb-gallery-item .tfhb-btn,
+// .tfhb-document-item .tfhb-btn,
+// .tfhb-link-item .tfhb-btn {
+//   position: absolute;
+//   top: 1rem;
+//   right: 1rem;
+//   min-width: auto;
+//   padding: 0.5rem 1rem;
+//   font-size: 0.875rem;
+// }
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .tfhb-admin-card-box.tfhb-flexbox {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  
+  .tfhb-staff-item,
+  .tfhb-gallery-item,
+  .tfhb-document-item,
+  .tfhb-link-item {
+    padding: 1rem;
+  }
+  
+  .tfhb-section-container {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .tfhb-section-title h3 {
+    font-size: 1.125rem;
+  }
+  
+  /* Make all fields full width on mobile */
+  .tfhb-admin-card-box .tfhb-single-form-field-wrap,
+  .tfhb-single-form-field-wrap {
+    width: 100% !important;
+  }
+}
+
 .tfhb-info-row {
   display: flex;
   align-items: flex-start;
@@ -486,4 +910,5 @@ document.addEventListener('click', (e) => {
 .tfhb-info-row:hover {
   background: #eef2f7;
 }
+ 
 </style>

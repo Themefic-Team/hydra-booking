@@ -1,104 +1,115 @@
 <script setup> 
-import { ref, reactive, onBeforeMount, defineProps } from 'vue';  
+import { ref, onBeforeMount, defineProps } from 'vue';  
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import axios from 'axios';
-const selectedBuyer = ref(null)
+const selectedSeller  = ref(null);
 const skeleton = ref(true);
-// const buyers = ref([
+// const sellers = ref([
 //     {
 //         id: 1,
-//         name: 'Davide Rossetti',
-//         role: 'Sales Manager',
+//         name: 'La Dimora dei Cavalieri',
+//         subtitle: 'subtitle / brand payoff',
 //         email: 'davide@google.com',
 //         phone: '339 050403',
 //         location: 'Perugia, Italia',
-//         avatar: 'DR',
+//         avatar: 'LD',
 //         status: 'Active',
+//         matchPercentage: 40,
 //         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-//         website: 'www.davideagency.com',
-//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists', 'Concierge and booking services'],
+//         website: 'www.ladimora.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
 //         regionsOfInterest: ['Argentina and Latin America']
 //     },
 //     {
 //         id: 2,
-//         name: 'Anna White',
-//         role: 'Director / Joe Agency',
+//         name: 'Joe Agency',
+//         subtitle: 'Travel agency in Word',
 //         email: 'customer@email.com',
 //         phone: '+01 917 055-0403',
 //         location: 'New York, NY 10169',
 //         avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
 //         status: 'Active',
+//         matchPercentage: 20,
 //         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
 //         website: 'www.joeagency.com',
-//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists', 'Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
-//         regionsOfInterest: ['Argentina and Latin America']
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4', 'Staff 5'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
+//         regionsOfInterest: ['Argentina and Latin America', 'Australia', 'Brazil', 'Canada', 'Europe', 'USA']
 //     },
 //     {
 //         id: 3,
-//         name: 'Marco Rossi',
-//         role: 'Marketing Manager',
+//         name: 'Name Brand',
+//         subtitle: 'subtitle / brand payoff',
 //         email: 'marco@agency.com',
 //         phone: '+39 123 456 789',
 //         location: 'Roma, Italia',
-//         avatar: 'MR',
-//         status: 'Disable',
+//         avatar: 'NB',
+//         status: 'Active',
+//         matchPercentage: 35,
 //         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-//         website: 'www.marcoagency.com',
-//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists'],
+//         website: 'www.namebrand.com',
+//         staff: ['Staff 1', 'Staff 2'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
 //         regionsOfInterest: ['Europe']
 //     },
 //     {
 //         id: 4,
-//         name: 'Sarah Johnson',
-//         role: 'Business Development',
+//         name: 'C4 Agency',
+//         subtitle: 'Travel agency in Word',
 //         email: 'sarah@travel.com',
 //         phone: '+44 20 7946 0958',
 //         location: 'London, UK',
 //         avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
 //         status: 'Active',
+//         matchPercentage: 60,
 //         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-//         website: 'www.sarahagency.com',
-//         preferredWorkshops: ['Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
+//         website: 'www.c4agency.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
 //         regionsOfInterest: ['North America']
 //     },
 //     {
 //         id: 5,
-//         name: 'Carlos Rodriguez',
-//         role: 'Tourism Director',
+//         name: 'HB Agency',
+//         subtitle: 'subtitle / brand payoff',
 //         email: 'carlos@tourism.com',
 //         phone: '+34 91 123 4567',
 //         location: 'Madrid, España',
-//         avatar: 'CR',
+//         avatar: 'HB',
 //         status: 'Active',
+//         matchPercentage: 25,
 //         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-//         website: 'www.carlosagency.com',
-//         preferredWorkshops: ['Italian incoming Travel Agents and TO', 'Genealogists'],
+//         website: 'www.hbagency.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
 //         regionsOfInterest: ['Latin America']
 //     },
 //     {
 //         id: 6,
-//         name: 'Lisa Chen',
-//         role: 'Operations Manager',
+//         name: 'EL Agency',
+//         subtitle: 'Travel agency in Word',
 //         email: 'lisa@operations.com',
 //         phone: '+1 555 123 4567',
 //         location: 'San Francisco, CA',
 //         avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
 //         status: 'Active',
+//         matchPercentage: 45,
 //         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-//         website: 'www.lisaagency.com',
-//         preferredWorkshops: ['Concierge and booking services', 'Luxury accomodation (4-5* hotels and historical dwellings)'],
+//         website: 'www.elagency.com',
+//         staff: ['Staff 1', 'Staff 2', 'Staff 3'],
+//         preferredWorkshops: ['Alberghi diffusi - 3* hotels and B&B'],
 //         regionsOfInterest: ['Asia Pacific']
 //     }
-// ]);
+// ])
 
-const buyers = ref([]);
-const filteredBuyers = ref([]);
-const searchQuery = ref('');
 
-async function fetchBuyers() {
+const sellers = ref([]);
+async function fetchSellers() {
+    
     try {
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/buyers-list', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/sellers-list', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
             },
@@ -108,8 +119,7 @@ async function fetchBuyers() {
             withCredentials: true
         });
         if (response.data.success && response.data.data) {
-            buyers.value = response.data.data;
-            filteredBuyers.value = response.data.data;
+            sellers.value = response.data.data;
         }
     } catch (e) {
         // handle error
@@ -117,108 +127,38 @@ async function fetchBuyers() {
         skeleton.value = false;
     }
 }
-
 onBeforeMount(async () => {
-    await fetchBuyers();
+    await fetchSellers();
 });
 
-const selectBuyer = (buyer) => {
-    selectedBuyer.value = buyer
+const selectSeller = (seller) => {
+    selectedSeller.value = seller
 }
 
-const closeBuyerDetails = () => {
-    selectedBuyer.value = null
+const closeSellerDetails = () => {
+    selectedSeller.value = null
 }
 
-const Tfhb_Buyer_Filter = (event) => {
-    const query = event.target.value.toLowerCase().trim();
-    searchQuery.value = query;
-    
-    if (!query) {
-        filteredBuyers.value = buyers.value;
-        return;
-    }
-    
-    filteredBuyers.value = buyers.value.filter(buyer => {
-        // Search in name
-        if (buyer.data.name_of_participant && 
-            buyer.data.name_of_participant.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in job title
-        if (buyer.data.job_title && 
-            buyer.data.job_title.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in email
-        if (buyer.data.email && 
-            buyer.data.email.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in phone number
-        if (buyer.data.mobile_no && 
-            buyer.data.mobile_no.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in address
-        if (buyer.data.address && 
-            buyer.data.address.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in description
-        if (buyer.data.description && 
-            buyer.data.description.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in website
-        if (buyer.data.website && 
-            buyer.data.website.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in preferred workshop meetings
-        if (buyer.data.preferred_workshop_meetings && 
-            Array.isArray(buyer.data.preferred_workshop_meetings)) {
-            const workshopMatch = buyer.data.preferred_workshop_meetings.some(workshop => 
-                workshop.toLowerCase().includes(query)
-            );
-            if (workshopMatch) return true;
-        }
-        
-        // Search in nation
-        if (buyer.data.nation && 
-            Array.isArray(buyer.data.nation)) {
-            const nationMatch = buyer.data.nation.some(nation => 
-                nation.toLowerCase().includes(query)
-            );
-            if (nationMatch) return true;
-        }
-        
-        return false;
-    });
+const Tfhb_Seller_Filter = (event) => {
+    // Implement seller filter functionality
+    console.log('Filtering sellers:', event.target.value)
 }
 </script>
 
 <template> 
 
-    <div class="buyers-dashboard">
+    <div class="sellers-dashboard">
         <!-- Header Section with Filters -->
-        <div class="buyers-header">
+        <div class="sellers-header">
+           
 
             <!-- Filter Section (from hosts.vue) -->
-            <div class="tfhb-dashboard-heading tfhb-flexbox">
+            <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
                 <div class="tfhb-header-filters">
-                    <input type="text" @keyup="Tfhb_Buyer_Filter" placeholder="Search by name, job title, email, phone, address..." /> 
+                    <input type="text" @keyup="Tfhb_Seller_Filter" placeholder="Search by host name" /> 
                     <span><Icon name="Search" size=20 /></span>
-                        
                 </div>
-                <!-- <HbButton 
+                 <!-- <HbButton 
                     classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
                     :buttonText="$tfhb_trans('Filter')"
                     icon="SlidersHorizontal"   
@@ -228,7 +168,7 @@ const Tfhb_Buyer_Filter = (event) => {
                 <!-- <div class="thb-admin-btn right tfhb-flexbox tfhb-gap-16"> 
                     <HbButton 
                         classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportBuyers()"
+                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportSellers()"
                         :buttonText="$tfhb_trans('Export Badge')"
                         icon="FileDown"   
                         :hover_animation="false" 
@@ -236,7 +176,7 @@ const Tfhb_Buyer_Filter = (event) => {
                     />   
                     <HbButton 
                         classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportBuyers()"
+                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportSellers()"
                         :buttonText="$tfhb_trans('Export')"
                         icon="FileDown"   
                         :hover_animation="false" 
@@ -244,7 +184,7 @@ const Tfhb_Buyer_Filter = (event) => {
                     />   
                     <HbButton 
                         classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'BuyersImport' })"
+                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'SellersImport' })"
                         :buttonText="$tfhb_trans('Import')"
                         icon="FileUp"   
                         :hover_animation="false" 
@@ -259,37 +199,39 @@ const Tfhb_Buyer_Filter = (event) => {
                     />  
                 </div>   -->
             </div>
-            
+
+
             <div class="header-content">
                 <div class="header-left">
-                    <h1 class="buyers-title">Buyers</h1>
-                    <p class="buyers-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
+                    <h1 class="sellers-title">Sellers</h1>
+                    <p class="sellers-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
                 </div>
                 
                 <div class="header-right">
-                    <div class="total-buyers">
+                    <div class="total-sellers">
                         <Icon name="Users" size=20 />
-                        <span>Total Buyer <b>{{ filteredBuyers.length }}</b></span>
+                        <span>Total Sellers {{ sellers.length }}</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Main Content Area -->
-        <div class="buyers-content">
-            <!-- Buyers List -->
-            <div class="buyers-list" :class="{ 'with-details': selectedBuyer }">
-                <div class="buyers-grid">
+        <div class="sellers-content">
+            <!-- Sellers List -->
+            <div class="sellers-list" :class="{ 'with-details': selectedSeller }">
+                <div class="sellers-grid">
                     <div 
-                        v-for="buyer in filteredBuyers" 
-                        :key="buyer.id" 
-                        class="buyer-card"
-                        :class="{ 'selected': selectedBuyer && selectedBuyer.id === buyer.id }"
-                        @click="selectBuyer(buyer)"
+                        v-for="seller in sellers" 
+                        :key="seller.id" 
+                        class="seller-card"
+                        :class="{ 'selected': selectedSeller && selectedSeller.id === seller.id }"
+                        @click="selectSeller(seller)"
                     >
-                        <div class="buyer-card-header">
-                            <div class="buyer-avatar">
-                                <img v-if="buyer.data.avatar && buyer.data.avatar.startsWith('http')" :src="buyer.data.avatar" alt="Buyer Avatar">
+                    <!-- {{ seller }} -->
+                        <div class="seller-card-header">
+                            <div class="seller-avatar">
+                                <img v-if="seller.data.avatar && seller.data.avatar.startsWith('http')" :src="seller.data.avatar" alt="Seller Avatar">
                                 <img 
                                     v-else
                                     :src="$tfhb_url+'/assets/images/avator.png'" 
@@ -297,36 +239,31 @@ const Tfhb_Buyer_Filter = (event) => {
                                     class="event-logo"
                                 /> 
                             </div>
-                            <div class="buyer-info">
-                                <h3 class="buyer-name">{{ buyer.data.name_of_participant }}</h3>
-                                <p class="buyer-role">{{ buyer.data.job_title }}</p>
-                            </div>
-                            <div class="buyer-status">
-                              
-                                <span class="status-badge" :class="{ 
-                                    'warning': buyer.status === 'inactive' 
-                                }">{{ buyer.status }}</span>
-                            </div>
+                            <div class="seller-info">
+                                <h3 class="seller-name">{{ seller.data.name }}</h3>
+                                <p class="seller-subtitle">{{ seller.data.ambito_di_attività }}</p>
+                            </div> 
                         </div>
                         
-                        <div class="buyer-card-content">
+                        <div class="seller-card-content">
                             <div class="contact-info">
                                 <div class="contact-item">
                                     <Icon name="Mail" size=16 />
-                                    <span>{{ buyer.data.email }}</span>
+                                    <span>{{ seller.data.email }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="Phone" size=16 />
-                                    <span>{{ buyer.data.mobile_no }}</span>
+                                    <span>{{ seller.data.telefono_diretto }}</span>
                                 </div>
-                                <div class="contact-item">
+                                <div  v-if="seller.data.location" 
+                                class="contact-item">
                                     <Icon name="MapPin" size=16 />
-                                    <span>{{ buyer.data.address }}</span>
+                                    <span>{{ seller.data.location }}</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- <div class="buyer-card-actions">
+                        <!-- <div class="seller-card-actions">
                             <button class="action-btn">
                                 <Icon name="Star" size=16 />
                             </button>
@@ -341,74 +278,89 @@ const Tfhb_Buyer_Filter = (event) => {
                 </div>
             </div>
 
-            <!-- Buyer Details Sidebar -->
-            <div v-if="selectedBuyer" class="buyer-details-sidebar">
-                
-                <div class="buyer-details-header">
+            <!-- Seller Details Sidebar -->
+            <div v-if="selectedSeller" class="seller-details-sidebar">
+                <div class="seller-details-header">
                     <h2 class="details-title">
                         <Icon name="MessageCircle" size=20 />
-                        Buyer
+                        Sellers
                     </h2>
-                    <button class="close-btn" @click="closeBuyerDetails">
-                        <Icon name="X" size=20 />
-                    </button>
+                    <div class="header-actions">
+                        <!-- <span class="match-percentage-large">{{ selectedSeller.data.matchPercentage }}% Mach</span>s -->
+                        <button class="close-btn" @click="closeSellerDetails">
+                            <Icon name="X" size=20 />
+                        </button>
+                    </div>
                 </div>
 
-                <div class="buyer-details-content">
-                    <div class="buyer-profile">
-                        <div class="buyer-avatar-large">
-                            <img v-if="selectedBuyer.data.avatar && selectedBuyer.data.avatar.startsWith('http')" :src="selectedBuyer.data.avatar" alt="Buyer Avatar">
+                <div class="seller-details-content">
+                    <div class="seller-profile">
+                        <div class="seller-avatar-large">
+                            <img v-if="selectedSeller.data.avatar && selectedSeller.data.avatar.startsWith('http')" :src="selectedSeller.data.avatar" alt="Seller Avatar">
                             <img 
-                                    v-else
-                                    :src="$tfhb_url+'/assets/images/avator.png'" 
-                                    alt="Event Logo" 
-                                    class="event-logo"
-                                /> 
+                                v-else
+                                :src="$tfhb_url+'/assets/images/avator.png'" 
+                                alt="Event Logo" 
+                                class="event-logo"
+                            /> 
                             <!-- <div class="online-indicator"></div> -->
                         </div>
-                        <h3 class="buyer-name-large">{{ selectedBuyer.data.name_of_participant }}</h3>
-                        <p class="buyer-role-large">{{ selectedBuyer.data.job_title }}</p>
+                        <h3 class="seller-name-large">{{ selectedSeller.data.name }}</h3>
+                        <p class="seller-subtitle-large">{{ selectedSeller.data.job_title }}</p>
                     </div>
 
-                    <div class="buyer-details-sections">
+                    <div class="seller-details-sections">
                         <div class="detail-section">
                             <h4>DESCRIPTION</h4>
-                            <p>{{ selectedBuyer.data.description }}</p>
+                            <p>{{ selectedSeller.data.description }}</p>
                             <a href="#" class="read-more">read more</a>
                         </div>
 
                         <div class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedBuyer.data.website }}</p>
+                            <p>{{ selectedSeller.data.sito_internet }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>EMAIL</h4>
-                            <p>{{ selectedBuyer.data.email }}</p>
+                            <p>{{ selectedSeller.data.email }}</p>
                         </div>
 
-                        <div class="detail-section">
+                        <div v-if="selectedSeller.data.location"  class="detail-section">
                             <h4>PHONE</h4>
-                            <p>{{ selectedBuyer.data.mobile_no }}</p>
+                            <p>{{ selectedSeller.data.telefono_diretto }}</p>
                         </div>
 
                         <div class="detail-section">
                             <h4>LOCATION</h4>
-                            <p>{{ selectedBuyer.data.address }}</p>
+                            <p>{{ selectedSeller.data.location }}</p>
                         </div>
 
+                        <!-- <div class="detail-section">
+                            <h4>STAFF</h4>
+                            <div class="staff-container">
+                                <div v-for="(staff, index) in selectedSeller.staff.slice(0, 4)" :key="index" class="staff-avatar">
+                                    <span class="staff-initial">{{ staff.charAt(0) }}</span>
+                                </div>
+                                <div v-if="selectedSeller.staff.length > 4" class="staff-more">
+                                    +{{ selectedSeller.staff.length - 4 }}
+                                </div>
+                            </div>
+                        </div> -->
+
                         <div class="detail-section">
-                            <h4>BUYERS' PREFERRED WORKSHOP MEETINGS WITH:</h4>
+                            <h4>aree di provenienza Buyer di interesse</h4>
                             <div class="tags-container">
-                                <span v-for="workshop in selectedBuyer.data.preferred_workshop_meetings" :key="workshop" class="tag">
+                                <span v-for="workshop in selectedSeller.data.provenienza_Buyer_interesse" :key="workshop" class="tag">
                                     {{ workshop }}
                                 </span>
                             </div>
-                        </div> 
+                        </div>
+
                         <div class="detail-section">
-                            <h4>NATION:</h4>
+                            <h4> Specializzazione:</h4>
                             <div class="tags-container">
-                                <span v-for="region in selectedBuyer.data.nation" :key="region" class="tag">
+                                <span v-for="region in selectedSeller.data.specializzazione" :key="region" class="tag">
                                     {{ region }}
                                 </span>
                             </div>
@@ -416,7 +368,7 @@ const Tfhb_Buyer_Filter = (event) => {
                     </div>
                 </div>
 
-                <!-- <div class="buyer-details-footer">
+                <!-- <div class="seller-details-footer">
                     <button class="nav-btn">
                         <Icon name="X" size=20 />
                     </button>
@@ -430,13 +382,13 @@ const Tfhb_Buyer_Filter = (event) => {
 </template>  
 
 <style scoped lang="scss">
-.buyers-dashboard {
+.sellers-dashboard {
     padding: 24px;
     background-color: #fff;
     min-height: 100vh;
 }
 
-.buyers-header {
+.sellers-header {
     background: white;
     border-radius: 12px;
     padding: 24px;
@@ -451,22 +403,23 @@ const Tfhb_Buyer_Filter = (event) => {
     margin-top: 24px;
 }
 
+
 .header-left {
-    .buyers-title {
+    .sellers-title {
         font-size: 2rem;
         font-weight: 700;
         color: var(--tfhb-text-title-color, #141915);
         margin: 0 0 8px 0;
     }
     
-    .buyers-subtitle {
+    .sellers-subtitle {
         color: var(--tfhb-paragraph-color, #273F2B);
         margin: 0;
     }
 }
 
 .header-right {
-    .total-buyers {
+    .total-sellers {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -544,13 +497,13 @@ const Tfhb_Buyer_Filter = (event) => {
     }
 }
 
-.buyers-content {
+.sellers-content {
     display: flex;
     gap: 24px;
     transition: all 0.3s ease;
 }
 
-.buyers-list {
+.sellers-list {
     flex: 1;
     transition: all 0.3s ease;
     
@@ -559,20 +512,20 @@ const Tfhb_Buyer_Filter = (event) => {
     }
 }
 
-.buyers-grid {
+.sellers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 20px;
 }
 
-.buyer-card {
+.seller-card {
     background: white;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     
     &:hover {
         transform: translateY(-2px);
@@ -580,19 +533,19 @@ const Tfhb_Buyer_Filter = (event) => {
     }
     
     &.selected {
-        border-color: 1px solid var(--tfhb-surface-primary-color, #2E6B38);
-        background: #F3EEF5;
+        border-color: var(--tfhb-primary-color, #2E6B38);
+        background: var(--tfhb-surface-background-color, #EEF6F0);
     }
 }
 
-.buyer-card-header {
+.seller-card-header {
     display: flex;
     align-items: center;
     gap: 16px;
     margin-bottom: 16px;
 }
 
-.buyer-avatar {
+.seller-avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -618,24 +571,35 @@ const Tfhb_Buyer_Filter = (event) => {
     }
 }
 
-.buyer-info {
+.seller-info {
     flex: 1;
     
-    .buyer-name {
+    .seller-name {
         margin: 0 0 4px 0;
         font-size: 16px;
         font-weight: 600;
         color: var(--tfhb-text-title-color, #141915);
     }
     
-    .buyer-role {
+    .seller-subtitle {
         margin: 0;
         font-size: 14px;
         color: var(--tfhb-paragraph-color, #273F2B);
     }
 }
 
-.buyer-status {
+.seller-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    
+    .match-percentage {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--tfhb-primary-color, #2E6B38);
+    }
+    
     .status-badge {
         background: #E6FAEE;
         color: #17723F;
@@ -651,7 +615,7 @@ const Tfhb_Buyer_Filter = (event) => {
     }
 }
 
-.buyer-card-content {
+.seller-card-content {
     margin-bottom: 16px;
 }
 
@@ -669,7 +633,7 @@ const Tfhb_Buyer_Filter = (event) => {
     color: var(--tfhb-paragraph-color, #273F2B);
 }
 
-.buyer-card-actions {
+.seller-card-actions {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
@@ -690,17 +654,17 @@ const Tfhb_Buyer_Filter = (event) => {
     }
 }
 
-// Buyer Details Sidebar
-.buyer-details-sidebar {
+// Seller Details Sidebar
+.seller-details-sidebar {
     flex: 0 0 40%;
-    background: #FCF9FB;
+    background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
 }
 
-.buyer-details-header {
+.seller-details-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -717,31 +681,43 @@ const Tfhb_Buyer_Filter = (event) => {
         color: var(--tfhb-text-title-color, #141915);
     }
     
-    .close-btn {
-        background: none;
-        border: none;
-        padding: 8px;
-        border-radius: 6px;
-        cursor: pointer;
-        color: var(--tfhb-paragraph-color, #273F2B);
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
         
-        &:hover {
-            background: var(--tfhb-surface-background-color, #EEF6F0);
+        .match-percentage-large {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tfhb-primary-color, #2E6B38);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--tfhb-paragraph-color, #273F2B);
+            
+            &:hover {
+                background: var(--tfhb-surface-background-color, #EEF6F0);
+            }
         }
     }
 }
 
-.buyer-details-content {
+.seller-details-content {
     flex: 1;
     padding: 24px;
     overflow-y: auto;
 }
 
-.buyer-profile {
+.seller-profile {
     text-align: center;
     margin-bottom: 32px;
     
-    .buyer-avatar-large {
+    .seller-avatar-large {
         position: relative;
         width: 80px;
         height: 80px;
@@ -780,21 +756,21 @@ const Tfhb_Buyer_Filter = (event) => {
         }
     }
     
-    .buyer-name-large {
+    .seller-name-large {
         margin: 0 0 8px 0;
         font-size: 20px;
         font-weight: 600;
         color: var(--tfhb-text-title-color, #141915);
     }
     
-    .buyer-role-large {
+    .seller-subtitle-large {
         margin: 0;
         font-size: 16px;
         color: var(--tfhb-paragraph-color, #273F2B);
     }
 }
 
-.buyer-details-sections {
+.seller-details-sections {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -829,6 +805,31 @@ const Tfhb_Buyer_Filter = (event) => {
     }
 }
 
+.staff-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .staff-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--tfhb-primary-color, #2E6B38);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white !important;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .staff-more {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--tfhb-paragraph-color, #273F2B);
+    }
+}
+
 .tags-container {
     display: flex;
     flex-wrap: wrap;
@@ -849,7 +850,7 @@ const Tfhb_Buyer_Filter = (event) => {
     }
 }
 
-.buyer-details-footer {
+.seller-details-footer {
     display: flex;
     justify-content: space-between;
     padding: 16px 24px;
@@ -871,22 +872,22 @@ const Tfhb_Buyer_Filter = (event) => {
 
 // Responsive Design
 @media (max-width: 1200px) {
-    .buyers-content {
+    .sellers-content {
         flex-direction: column;
     }
     
-    .buyer-details-sidebar {
+    .seller-details-sidebar {
         flex: none;
         width: 100%;
     }
     
-    .buyers-list.with-details {
+    .sellers-list.with-details {
         flex: none;
     }
 }
 
 @media (max-width: 768px) {
-    .buyers-grid {
+    .sellers-grid {
         grid-template-columns: 1fr;
     }
     

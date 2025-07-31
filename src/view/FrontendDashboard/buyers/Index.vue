@@ -1,7 +1,7 @@
 <script setup> 
 import { ref, onBeforeMount, defineProps  } from 'vue';  
 // import BuyersTopHeader from './BuyersTopHeader.vue';
-import BuyersSidebar from './BuyersSidebar.vue';
+import Sidebar from '../common/Sidebar.vue';
 import TopHeader from '../common/TopHeader.vue';
 const collapsedSideBar = ref(false);
 </script>
@@ -11,7 +11,7 @@ const collapsedSideBar = ref(false);
  
    <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
   
-        <BuyersSidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
+        <Sidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
         
         <!-- Load Route view Content -->
         <div class="tfhb-frontend-main-content">

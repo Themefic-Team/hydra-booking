@@ -6,6 +6,8 @@ const AddonsAuth = reactive({
     skeleton: true, 
     update_preloader: false, 
     loggedInUser: {},
+    event_settings: {},
+    event: {},
     // Other Information 
     async fetchLoggedInUser() {
         try {
@@ -26,7 +28,26 @@ const AddonsAuth = reactive({
         } finally {
             this.skeleton = false;
         }
+    },
+    async FetchSettings() {
+        try {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/all-settings', {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                }, 
+                withCredentials: true
+            });
+            if (response.data.success && response.data.data) { 
+                this.event_settings = response.data.data.event_settings;
+                this.event = response.data.data.event;
+            }
+        } catch (e) {
+            // handle error
+        } finally {
+            this.skeleton = false;
+        }
     }
+    
     
 })
 

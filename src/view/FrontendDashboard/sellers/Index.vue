@@ -1,16 +1,16 @@
 <script setup> 
 import { ref, onBeforeMount, defineProps  } from 'vue';  
-import SellersTopHeader from './SellersTopHeader.vue';
-import SellersSidebar from './SellersSidebar.vue';
+import TopHeader from '../common/TopHeader.vue';
+import Sidebar from '../common/Sidebar.vue';
 const collapsedSideBar = ref(false);
 </script>
 
 <template > 
-   <SellersTopHeader   /> 
+   <TopHeader   /> 
  
    <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
   
-        <SellersSidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
+        <Sidebar :collapsed="collapsedSideBar" @toggle="collapsedSideBar = !collapsedSideBar"  />
         <!-- Load Route view Content -->
         <div class="tfhb-frontend-main-content">
             <router-view /> 

@@ -6,7 +6,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import { FdDashboard } from '@/store/frontend-dashboard.js';
 import axios from 'axios';
 
-import { AddonsAuth } from '@/view/FrontendDashboard/common/storeCommon';
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 
 // User Logout function 
 async function logoutUser() {
@@ -83,7 +83,7 @@ const toggleSidebar = () => {
 
 
 <template>    
-<!-- {{ loggedInUser }} -->
+<!-- {{ AddonsAuth.loggedInUser }} -->
     <div :class="{ 'tfhb-skeleton': FdDashboard.skeleton }" class="thb-admin-header tfhb-frontend-top-header">
         <div class="tfhb-flexbox">
             <div class="tfhb-admin-header-icon tfhb-flexbox tfhb-gap-16" >

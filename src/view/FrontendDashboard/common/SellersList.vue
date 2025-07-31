@@ -106,6 +106,9 @@ const skeleton = ref(true);
 
 
 const sellers = ref([]);
+const filteredSellers = ref([]);
+const searchQuery = ref('');
+
 async function fetchSellers() {
     
     try {
@@ -120,6 +123,7 @@ async function fetchSellers() {
         });
         if (response.data.success && response.data.data) {
             sellers.value = response.data.data;
+            filteredSellers.value = response.data.data;
         }
     } catch (e) {
         // handle error
@@ -127,6 +131,7 @@ async function fetchSellers() {
         skeleton.value = false;
     }
 }
+
 onBeforeMount(async () => {
     await fetchSellers();
 });
@@ -140,8 +145,107 @@ const closeSellerDetails = () => {
 }
 
 const Tfhb_Seller_Filter = (event) => {
-    // Implement seller filter functionality
-    console.log('Filtering sellers:', event.target.value)
+    const query = event.target.value.toLowerCase().trim();
+    searchQuery.value = query;
+    
+    if (!query) {
+        filteredSellers.value = sellers.value;
+        return;
+    }
+    
+    filteredSellers.value = sellers.value.filter(seller => {
+        // Search in name
+        if (seller.data.name && 
+            seller.data.name.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in job title
+        if (seller.data.job_title && 
+            seller.data.job_title.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in email
+        if (seller.data.email && 
+            seller.data.email.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in phone number
+        if (seller.data.telefono_diretto && 
+            seller.data.telefono_diretto.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in address/location
+        if (seller.data.location && 
+            seller.data.location.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in description
+        if (seller.data.description && 
+            seller.data.description.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in website
+        if (seller.data.sito_internet && 
+            seller.data.sito_internet.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in company name
+        if (seller.data['denominazione-operatore-azienda'] && 
+            seller.data['denominazione-operatore-azienda'].toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in alternative company name
+        if (seller.data['eventuale-altra-denominazione'] && 
+            seller.data['eventuale-altra-denominazione'].toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in VAT number
+        if (seller.data['pi_cf'] && 
+            seller.data['pi_cf'].toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in activity area
+        if (seller.data.ambito_di_attivita && 
+            seller.data.ambito_di_attivita.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        // Search in specialization
+        if (seller.data.specializzazione && 
+            Array.isArray(seller.data.specializzazione)) {
+            const specializationMatch = seller.data.specializzazione.some(spec => 
+                spec.toLowerCase().includes(query)
+            );
+            if (specializationMatch) return true;
+        }
+        
+        // Search in buyer interest origin
+        if (seller.data.provenienza_buyer_interesse && 
+            Array.isArray(seller.data.provenienza_buyer_interesse)) {
+            const buyerMatch = seller.data.provenienza_buyer_interesse.some(buyer => 
+                buyer.toLowerCase().includes(query)
+            );
+            if (buyerMatch) return true;
+        }
+        
+        // Search in region
+        if (seller.data.regione && 
+            seller.data.regione.toLowerCase().includes(query)) {
+            return true;
+        }
+        
+        return false;
+    });
 }
 </script>
 
@@ -150,27 +254,22 @@ const Tfhb_Seller_Filter = (event) => {
     <div class="sellers-dashboard">
         <!-- Header Section with Filters -->
         <div class="sellers-header">
-            <div class="header-content">
-                <div class="header-left">
-                    <h1 class="sellers-title">Sellers</h1>
-                    <p class="sellers-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
-                </div>
-                
-                <div class="header-right">
-                    <div class="total-sellers">
-                        <Icon name="Users" size=20 />
-                        <span>Total Sellers {{ sellers.length }}</span>
-                    </div>
-                </div>
-            </div>
+           
 
             <!-- Filter Section (from hosts.vue) -->
             <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
                 <div class="tfhb-header-filters">
-                    <input type="text" @keyup="Tfhb_Seller_Filter" placeholder="Search by host name" /> 
+                    <input type="text" @keyup="Tfhb_Seller_Filter" placeholder="Search by name, job title, email, phone, address..." /> 
                     <span><Icon name="Search" size=20 /></span>
                 </div>
-                <div class="thb-admin-btn right tfhb-flexbox tfhb-gap-16"> 
+                 <!-- <HbButton 
+                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
+                    :buttonText="$tfhb_trans('Filter')"
+                    icon="SlidersHorizontal"   
+                    :hover_animation="false" 
+                    icon_position = 'left'
+                />  -->
+                <!-- <div class="thb-admin-btn right tfhb-flexbox tfhb-gap-16"> 
                     <HbButton 
                         classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                         @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportSellers()"
@@ -202,7 +301,22 @@ const Tfhb_Seller_Filter = (event) => {
                         icon="PlusCircle"  
                         icon_position="left"
                     />  
-                </div>  
+                </div>   -->
+            </div>
+
+
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="sellers-title">Sellers</h1>
+                    <p class="sellers-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
+                </div>
+                
+                <div class="header-right">
+                    <div class="total-sellers">
+                        <Icon name="Users" size=20 />
+                        <span>Total Sellers <b>{{ filteredSellers.length }}</b></span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -212,7 +326,7 @@ const Tfhb_Seller_Filter = (event) => {
             <div class="sellers-list" :class="{ 'with-details': selectedSeller }">
                 <div class="sellers-grid">
                     <div 
-                        v-for="seller in sellers" 
+                        v-for="seller in filteredSellers" 
                         :key="seller.id" 
                         class="seller-card"
                         :class="{ 'selected': selectedSeller && selectedSeller.id === seller.id }"
@@ -222,16 +336,17 @@ const Tfhb_Seller_Filter = (event) => {
                         <div class="seller-card-header">
                             <div class="seller-avatar">
                                 <img v-if="seller.data.avatar && seller.data.avatar.startsWith('http')" :src="seller.data.avatar" alt="Seller Avatar">
-                                <span v-else class="avatar-text">{{ seller.data.avatar }}</span>
+                                <img 
+                                    v-else
+                                    :src="$tfhb_url+'/assets/images/avator.png'" 
+                                    alt="Event Logo" 
+                                    class="event-logo"
+                                /> 
                             </div>
                             <div class="seller-info">
-                                <h3 class="seller-name">{{ seller.data.name_of_participant }}</h3>
-                                <p class="seller-subtitle">{{ seller.data.job_title }}</p>
-                            </div>
-                            <div class="seller-status">
-                                <span class="match-percentage">{{ seller.data.matchPercentage }}% Mach</span>
-                                <span class="status-badge" :class="{ 'warning': seller.status === 'Disable' }">{{ seller.status }}</span>
-                            </div>
+                                <h3 class="seller-name">{{ seller.data.name }}</h3>
+                                <p class="seller-subtitle">{{ seller.data.ambito_di_attività }}</p>
+                            </div> 
                         </div>
                         
                         <div class="seller-card-content">
@@ -242,16 +357,17 @@ const Tfhb_Seller_Filter = (event) => {
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="Phone" size=16 />
-                                    <span>{{ seller.data.phone }}</span>
+                                    <span>{{ seller.data.telefono_diretto }}</span>
                                 </div>
-                                <div class="contact-item">
+                                <div  v-if="seller.data.location" 
+                                class="contact-item">
                                     <Icon name="MapPin" size=16 />
                                     <span>{{ seller.data.location }}</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="seller-card-actions">
+                        <!-- <div class="seller-card-actions">
                             <button class="action-btn">
                                 <Icon name="Star" size=16 />
                             </button>
@@ -261,7 +377,7 @@ const Tfhb_Seller_Filter = (event) => {
                             <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -274,7 +390,7 @@ const Tfhb_Seller_Filter = (event) => {
                         Sellers
                     </h2>
                     <div class="header-actions">
-                        <span class="match-percentage-large">{{ selectedSeller.data.matchPercentage }}% Mach</span>
+                        <!-- <span class="match-percentage-large">{{ selectedSeller.data.matchPercentage }}% Mach</span>s -->
                         <button class="close-btn" @click="closeSellerDetails">
                             <Icon name="X" size=20 />
                         </button>
@@ -285,10 +401,15 @@ const Tfhb_Seller_Filter = (event) => {
                     <div class="seller-profile">
                         <div class="seller-avatar-large">
                             <img v-if="selectedSeller.data.avatar && selectedSeller.data.avatar.startsWith('http')" :src="selectedSeller.data.avatar" alt="Seller Avatar">
-                            <span v-else class="avatar-text-large">{{ selectedSeller.data.avatar }}</span>
-                            <div class="online-indicator"></div>
+                            <img 
+                                v-else
+                                :src="$tfhb_url+'/assets/images/avator.png'" 
+                                alt="Event Logo" 
+                                class="event-logo"
+                            /> 
+                            <!-- <div class="online-indicator"></div> -->
                         </div>
-                        <h3 class="seller-name-large">{{ selectedSeller.data.name_of_participant }}</h3>
+                        <h3 class="seller-name-large">{{ selectedSeller.data.name }}</h3>
                         <p class="seller-subtitle-large">{{ selectedSeller.data.job_title }}</p>
                     </div>
 
@@ -301,7 +422,7 @@ const Tfhb_Seller_Filter = (event) => {
 
                         <div class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedSeller.data.website }}</p>
+                            <p>{{ selectedSeller.data.sito_internet }}</p>
                         </div>
 
                         <div class="detail-section">
@@ -309,9 +430,9 @@ const Tfhb_Seller_Filter = (event) => {
                             <p>{{ selectedSeller.data.email }}</p>
                         </div>
 
-                        <div class="detail-section">
+                        <div v-if="selectedSeller.data.location"  class="detail-section">
                             <h4>PHONE</h4>
-                            <p>{{ selectedSeller.data.phone }}</p>
+                            <p>{{ selectedSeller.data.telefono_diretto }}</p>
                         </div>
 
                         <div class="detail-section">
@@ -332,18 +453,18 @@ const Tfhb_Seller_Filter = (event) => {
                         </div> -->
 
                         <div class="detail-section">
-                            <h4>BUYERS' PREFERRED WORKSHOP MEETINGS WITH:</h4>
+                            <h4>aree di provenienza Buyer di interesse</h4>
                             <div class="tags-container">
-                                <span v-for="workshop in selectedSeller.data.provenienza_buyer_interesse" :key="workshop" class="tag">
+                                <span v-for="workshop in selectedSeller.data.provenienza_Buyer_interesse" :key="workshop" class="tag">
                                     {{ workshop }}
                                 </span>
                             </div>
                         </div>
 
                         <div class="detail-section">
-                            <h4>BUYERS' NATION:</h4>
+                            <h4> Specializzazione:</h4>
                             <div class="tags-container">
-                                <span v-for="region in selectedSeller.data.provenienza_buyer_interesse" :key="region" class="tag">
+                                <span v-for="region in selectedSeller.data.specializzazione" :key="region" class="tag">
                                     {{ region }}
                                 </span>
                             </div>
@@ -351,14 +472,14 @@ const Tfhb_Seller_Filter = (event) => {
                     </div>
                 </div>
 
-                <div class="seller-details-footer">
+                <!-- <div class="seller-details-footer">
                     <button class="nav-btn">
                         <Icon name="X" size=20 />
                     </button>
                     <button class="nav-btn">
                         <Icon name="ChevronRight" size=20 />
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div> 
@@ -367,7 +488,7 @@ const Tfhb_Seller_Filter = (event) => {
 <style scoped lang="scss">
 .sellers-dashboard {
     padding: 24px;
-    background-color: #f8fafc;
+    background-color: #fff;
     min-height: 100vh;
 }
 
@@ -383,8 +504,9 @@ const Tfhb_Seller_Filter = (event) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-top: 24px;
 }
+
 
 .header-left {
     .sellers-title {
@@ -405,18 +527,19 @@ const Tfhb_Seller_Filter = (event) => {
         display: flex;
         align-items: center;
         gap: 8px;
-        background: var(--tfhb-primary-color, #2E6B38);
-        color: white !important;
+        background: #F3EEF5; 
         padding: 12px 20px;
-        border-radius: 8px;
-        font-weight: 600;
+        border-radius: 8px;  
     }
 }
 
 // Filter Section Styles (from hosts.vue)
 .tfhb-dashboard-heading {
-    padding-top: 16px;
-    border-top: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+    margin: 0 !important;
+    border-radius: 0 !important;
+    
 }
 
 .tfhb-header-filters {
@@ -436,11 +559,15 @@ const Tfhb_Seller_Filter = (event) => {
     }
     
     span {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--tfhb-paragraph-color, #273F2B);
+        position: absolute !important;
+        right: 10px;
+        top: 9px;
+        margin: 0 !important;
+        color: var(--tfhb-admin-secondary-default, #273F2B) !important;
+        width: 20px;
+        display: inline-block;
+        left: auto;
+        top: 20px;
     }
 }
 
@@ -813,14 +940,15 @@ const Tfhb_Seller_Filter = (event) => {
     gap: 8px;
     
     .tag {
-        background: var(--tfhb-primary-color, #2E6B38);
-        color: white !important;
+        background: #D6E0E8;
+        color: #000;
         padding: 6px 12px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 500;
         
         &:hover {
+            color: #fff !important;
             background: var(--tfhb-primary-hover-color, #4C9959);
         }
     }

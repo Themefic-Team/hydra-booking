@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 const route = useRoute()
 const eventDetails = ref({})
 const skeleton = ref(true)
@@ -43,10 +44,30 @@ const defaultLinks = [
   }
 ]
 
+// Lightbox state for gallery popup
+const isGalleryPopupOpen = ref(false)
+const popupImageSrc = ref('')
+
+function openGalleryPopup(img) {
+  popupImageSrc.value = img
+  isGalleryPopupOpen.value = true
+}
+function closeGalleryPopup() {
+  isGalleryPopupOpen.value = false
+  popupImageSrc.value = ''
+}
+
 const fetchEventDetails = async () => {
+  // If route.params.id is not available, show the event id from AddonsAuth.event
+  let event_id = 0
+  if (!route.params.id) {
+    event_id = AddonsAuth.event?.id || 0
+  } else{
+    event_id = route.params.id
+  }
   try {
     skeleton.value = true
-    const response = await axios.get(`/wp-json/hydra-booking/v1/addons/sellers/event-details/${route.params.id}`, {
+    const response = await axios.get(`/wp-json/hydra-booking/v1/addons/sellers/event-details/${event_id}`, {
       headers: {
         'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
       }
@@ -67,8 +88,7 @@ onMounted(() => {
 })
 </script>
 
-<template>
-    {{ eventDetails }}
+<template> 
   <div class="event-details-container">
     <!-- Main Content Area -->
     <div class="main-content">
@@ -80,12 +100,13 @@ onMounted(() => {
           alt="Event Banner" 
           class="event-banner"
         />
-        <div v-else class="event-banner-placeholder">
-          <div class="banner-placeholder-content">
-            <h2>Event Banner</h2>
-            <p>Upload an event banner image</p>
-          </div>
-        </div>
+        <img 
+          v-else 
+          :src="$tfhb_url + '/assets/app/images/meeting-cover.png'" 
+          alt="Event Banner" 
+          class="event-banner"
+          
+        />
         
         <!-- Event Logo Overlay -->
         <div class="event-logo-overlay">
@@ -95,9 +116,12 @@ onMounted(() => {
             alt="Event Logo" 
             class="event-logo"
           />
-          <div v-else class="event-logo-placeholder">
-            <div class="logo-placeholder-content"></div>
-          </div>
+          <img 
+            v-else
+            :src="$tfhb_url+'/assets/images/avator.png'" 
+            alt="Event Logo" 
+            class="event-logo"
+          /> 
         </div>
       </div>
 
@@ -126,21 +150,113 @@ onMounted(() => {
         <div v-if="activeTab === 'Home'" class="home-content">
           <div class="content-card">
             <h2>Description</h2>
-            <p>{{ eventDetails.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.' }}</p>
-            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </div>
+              <p v-if="eventDetails.description != null">{{ eventDetails.description }}</p>
+              <p v-else>No description found</p>
+            </div>
 
           <div class="content-card">
             <h2>Gallery</h2>
-            <div class="gallery-grid">
-              <div v-for="(img, index) in eventDetails.gallery_images || defaultGalleryImages" :key="index" class="gallery-item">
-                <img :src="img" alt="Gallery Image" />
+            <div  v-if="eventDetails.gallery_images && eventDetails.gallery_images.length > 0" class="gallery-grid">
+              <div v-for="(img, index) in eventDetails.gallery_images " :key="index" class="gallery-item">
+                <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
               </div>
+            </div>
+            <div v-else>
+              <p>No gallery images found</p>
             </div>
           </div>
 
-          <div class="content-card">
+          <div  class="content-card">
             <h2>Video</h2>
+            <div  v-if="eventDetails.video_url != null"  >
+              <p class="video-title">{{ eventDetails.video_title || 'Event Video Presentation' }}</p>
+              <p class="video-description">{{ eventDetails.video_description || 'Video presentation of our exclusive event' }}</p>
+              <div class="video-container">
+                <iframe 
+                  v-if="eventDetails.video_url" 
+                  :src="eventDetails.video_url" 
+                  frameborder="0" 
+                  allowfullscreen
+                  class="video-iframe"
+                ></iframe>
+                <div v-else class="video-placeholder">
+                  <div class="video-placeholder-content">
+                    <div class="play-button">▶</div>
+                    <p>Video presentation</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <p>No video found</p>
+            </div>
+          </div>
+
+          <div  class="content-card">
+            <h2>Documents</h2>
+            <div v-if="eventDetails.program_items && eventDetails.program_items.length > 0" class="program-list">
+              <div v-for="(item, index) in eventDetails.program_items " :key="index" class="program-item" v-if="item && item.program_file != null && item.program_file.length > 0">
+                <div class="program-icon">
+                  <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
+                  <div v-else class="program-icon-placeholder">📋</div>
+                </div>
+                <div class="program-content">
+                  <h3>{{ item.title || 'Untitled' }}</h3>
+                  <p>{{ item.subtitle || 'No description' }}</p>
+                </div>
+              </div>
+            </div>
+            <div v-else class="program-list">
+              <p>No documents found</p>
+            </div>
+          </div>
+
+          <div  class="content-card">
+            <h2>Links</h2>
+            <div v-if="eventDetails.external_links != null && eventDetails.external_links.length > 0"  class="links-list">
+              <div v-for="(link, index) in eventDetails.external_links " :key="index" class="link-item" v-if="link && link.url">
+                <span class="link-icon">🌐</span>
+                <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+              </div>
+            </div>
+            <div v-else class="links-list">
+              <p>No links found</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Tab -->
+        <div v-if="activeTab === 'Description'" class="content-card">
+          <h2>Description</h2>
+          <p v-if="eventDetails.description != null">{{ eventDetails.description }}</p>
+          <p v-else>No description found</p>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div v-if="activeTab === 'Gallery'" class="content-card">
+          <h2>Gallery</h2>
+          <div v-if="eventDetails.gallery_images != null && eventDetails.gallery_images.length > 0" class="gallery-grid">
+            <div v-for="(img, index) in eventDetails.gallery_images " :key="index" class="gallery-item">
+              <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+            </div>
+          </div>
+          <div v-else class="gallery-grid">
+            <p>No gallery images found</p>
+          </div>
+        </div>
+
+        <!-- Gallery Popup Modal (duplicate for Gallery tab) -->
+        <div v-if="isGalleryPopupOpen" class="gallery-popup-overlay" @click.self="closeGalleryPopup">
+          <div class="gallery-popup-content">
+            <button class="gallery-popup-close" @click="closeGalleryPopup">&times;</button>
+            <img :src="popupImageSrc" alt="Gallery Preview" />
+          </div>
+        </div>
+
+        <!-- Video Tab -->
+        <div v-if="activeTab === 'Video'" class="content-card">
+          <h2>Video</h2>
+          <div  v-if="eventDetails.video_url != null && eventDetails.video_url.length > 0"  >
             <p class="video-title">{{ eventDetails.video_title || 'Event Video Presentation' }}</p>
             <p class="video-description">{{ eventDetails.video_description || 'Video presentation of our exclusive event' }}</p>
             <div class="video-container">
@@ -159,86 +275,42 @@ onMounted(() => {
               </div>
             </div>
           </div>
-
-          <div class="content-card">
-            <h2>Program</h2>
-            <div class="program-list">
-              <div v-for="(item, index) in eventDetails.program_items || defaultProgramItems" :key="index" class="program-item">
-                <div class="program-icon">
-                  <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
-                  <div v-else class="program-icon-placeholder">📋</div>
-                </div>
-                <div class="program-content">
-                  <h3>{{ item.title }}</h3>
-                  <p>{{ item.subtitle }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="content-card">
-            <h2>Links</h2>
-            <div class="links-list">
-              <div v-for="(link, index) in eventDetails.external_links || defaultLinks" :key="index" class="link-item">
-                <span class="link-icon">🌐</span>
-                <a :href="link.url" target="_blank">{{ link.title }}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Description Tab -->
-        <div v-if="activeTab === 'Description'" class="content-card">
-          <h2>Description</h2>
-          <p>{{ eventDetails.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' }}</p>
-        </div>
-
-        <!-- Gallery Tab -->
-        <div v-if="activeTab === 'Gallery'" class="content-card">
-          <h2>Gallery</h2>
-          <div class="gallery-grid">
-            <div v-for="(img, index) in eventDetails.gallery_images || defaultGalleryImages" :key="index" class="gallery-item">
-              <img :src="img" alt="Gallery Image" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Video Tab -->
-        <div v-if="activeTab === 'Video'" class="content-card">
-          <h2>Video</h2>
-          <p class="video-title">{{ eventDetails.video_title || 'Event Video Presentation' }}</p>
-          <p class="video-description">{{ eventDetails.video_description || 'Video presentation of our exclusive event' }}</p>
-          <div class="video-container">
-            <iframe 
-              v-if="eventDetails.video_url" 
-              :src="eventDetails.video_url" 
-              frameborder="0" 
-              allowfullscreen
-              class="video-iframe"
-            ></iframe>
-            <div v-else class="video-placeholder">
-              <div class="video-placeholder-content">
-                <div class="play-button">▶</div>
-                <p>Video presentation</p>
-              </div>
-            </div>
-          </div>
+          <div v-else>
+            <p>No video found</p>
+          </div>          
         </div>
 
         <!-- Documents Tab -->
         <div v-if="activeTab === 'Documents'" class="content-card">
           <h2>Documents</h2>
-          <p>Event documents and materials will be displayed here.</p>
+            <div v-if="eventDetails.program_items != null && eventDetails.program_items.length > 0" class="program-list">
+              <div v-for="(item, index) in eventDetails.program_items " :key="index" class="program-item" v-if="item">
+                <div class="program-icon">
+                  <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
+                  <div v-else class="program-icon-placeholder">📋</div>
+                </div>
+                <div class="program-content">
+                  <h3>{{ item.title || 'Untitled' }}</h3>
+                  <p>{{ item.subtitle || 'No description' }}</p>
+                </div>
+              </div>
+            </div>
+            <div v-else class="program-list">
+              <p>No documents found</p>
+            </div>
         </div>
 
         <!-- Links Tab -->
         <div v-if="activeTab === 'Links'" class="content-card">
           <h2>Links</h2>
-          <div class="links-list">
-            <div v-for="(link, index) in eventDetails.external_links || defaultLinks" :key="index" class="link-item">
+          <div v-if="eventDetails.external_links != null && eventDetails.external_links.length > 0" class="links-list">
+            <div v-for="(link, index) in eventDetails.external_links " :key="index" class="link-item" v-if="link && link.url">
               <span class="link-icon">🌐</span>
-              <a :href="link.url" target="_blank">{{ link.title }}</a>
+              <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
             </div>
+          </div>
+          <div v-else class="links-list">
+            <p>No links found</p>
           </div>
         </div>
       </div>
@@ -324,12 +396,14 @@ onMounted(() => {
 .event-banner-container {
   position: relative;
   margin-bottom: 2rem;
+  border-radius: 16px 16px 0px 0px;
 }
 
 .event-banner {
   width: 100%;
-  height: 300px;
+  height: 220px;
   object-fit: cover;
+  border-radius: 16px 16px 0px 0px;
 }
 
 .event-banner-placeholder {
@@ -394,7 +468,7 @@ onMounted(() => {
 /* Event Header */
 .event-header {
   padding: 0 2rem 2rem 2rem;
-  margin-top: 2rem;
+  margin-top: 4rem;
 }
 
 .event-title {
@@ -420,6 +494,7 @@ onMounted(() => {
 /* Tabs */
 .event-tabs {
   padding: 0 2rem;
+  border-top: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
   border-bottom: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
   display: flex;
   gap: 0;
@@ -435,6 +510,7 @@ onMounted(() => {
   border-bottom: 2px solid transparent;
   transition: all 0.2s;
   font-weight: 500;
+  border-radius: 0;
 }
 
 .tab-button:hover {
@@ -444,7 +520,7 @@ onMounted(() => {
 .tab-button.active {
   color: var(--tfhb-primary-color, #2E6B38);
   border-bottom-color: var(--tfhb-primary-color, #2E6B38);
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 /* Tab Content */
@@ -633,8 +709,8 @@ onMounted(() => {
 
 /* Right Sidebar */
 .sidebar-right {
-  width: 320px;
-  padding: 2rem;
+  width: 400px;
+  padding: 0 2rem;
   flex-shrink: 0;
 }
 
@@ -764,5 +840,47 @@ onMounted(() => {
   .gallery-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
+}
+
+/* Gallery Popup Styles */
+.gallery-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.gallery-popup-content {
+  position: relative;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.gallery-popup-content img {
+  max-width: 80vw;
+  max-height: 80vh;
+  border-radius: 4px;
+}
+.gallery-popup-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 10;
 }
 </style>
