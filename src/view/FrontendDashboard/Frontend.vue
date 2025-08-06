@@ -11,13 +11,15 @@ import SellersIndex from './sellers/Index.vue';
 // Store 
 import { Notification } from '@/store/notification';
 import { FdDashboard } from '@/store/frontend-dashboard.js';
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 
 const collapsedSideBar = ref(false);
 
 // on before mount 
 
 onBeforeMount(() => {  
-  FdDashboard.FetchUserAuth(); 
+  FdDashboard.FetchUserAuth();
+  AddonsAuth.fetchLoggedInUser();
 }); 
  
  

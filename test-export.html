@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <h1>Export Functionality Test</h1>
+    <button onclick="testICalExport()">Test iCal Export</button>
+    <button onclick="testPDFExport()">Test PDF Export</button>
+    
+    <div id="test-events" style="display: none;">
+        <div class="event">
+            <h3>Test Event 1</h3>
+            <p>Date: 2025-01-15</p>
+            <p>Time: 10:00 AM - 11:00 AM</p>
+            <p>Status: confirmed</p>
+        </div>
+        <div class="event">
+            <h3>Test Event 2</h3>
+            <p>Date: 2025-01-16</p>
+            <p>Time: 2:00 PM - 3:00 PM</p>
+            <p>Status: pending</p>
+        </div>
+    </div>
+
+    <script>
+        // Test iCal export
+        function testICalExport() {
+            const testEvents = [
+                {
+                    id: '1',
+                    title: 'Test Event 1',
+                    start: '2025-01-15T10:00:00',
+                    end: '2025-01-15T11:00:00',
+                    extendedProps: {
+                        status: 'confirmed',
+                        apiData: {
+                            buyers_data: {
+                                user_meta: {
+                                    tfhb_buyers_data: {
+                                        description: 'Test description',
+                                        address: 'Test address'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    id: '2',
+                    title: 'Test Event 2',
+                    start: '2025-01-16T14:00:00',
+                    end: '2025-01-16T15:00:00',
+                    extendedProps: {
+                        status: 'pending',
+                        apiData: {
+                            buyers_data: {
+                                user_meta: {
+                                    tfhb_buyers_data: {
+                                        description: 'Another test description',
+                                        address: 'Another test address'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ];
+
+            // Generate iCal content
+            let ical = "BEGIN:VCALENDAR\r\n";
+            ical += "VERSION:2.0\r\n";
+            ical += "PRODID:-//Hydra Booking//Calendar Export//EN\r\n";
+            ical += "CALSCALE:GREGORIAN\r\n";
+            ical += "METHOD:PUBLISH\r\n";
+
+            testEvents.forEach(event => {
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                
+                // Format dates for iCal (YYYYMMDDTHHMMSSZ)
+                const formatDate = (date) => {
+                    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                };
+
+                ical += "BEGIN:VEVENT\r\n";
+                ical += "UID:" + event.id + "@hydra-booking\r\n";
+                ical += "DTSTAMP:" + formatDate(new Date()) + "\r\n";
+                ical += "DTSTART:" + formatDate(startDate) + "\r\n";
+                ical += "DTEND:" + formatDate(endDate) + "\r\n";
+                ical += "SUMMARY:" + event.title + "\r\n";
+                ical += "STATUS:" + event.extendedProps.status.toUpperCase() + "\r\n";
+                
+                // Add description if available
+                if (event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description) {
+                    ical += "DESCRIPTION:" + event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.description + "\r\n";
+                }
+                
+                // Add location if available
+                if (event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.address) {
+                    ical += "LOCATION:" + event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.address + "\r\n";
+                }
+                
+                ical += "END:VEVENT\r\n";
+            });
+
+            ical += "END:VCALENDAR\r\n";
+
+            // Create and download the file
+            const blob = new Blob([ical], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `test-calendar-export-${new Date().toISOString().split('T')[0]}.ics`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            alert('iCal export test completed!');
+        }
+
+        // Test PDF export
+        function testPDFExport() {
+            const testEvents = [
+                {
+                    id: '1',
+                    title: 'Test Event 1',
+                    start: '2025-01-15T10:00:00',
+                    end: '2025-01-15T11:00:00',
+                    extendedProps: {
+                        status: 'confirmed',
+                        apiData: {
+                            buyers_data: {
+                                user_meta: {
+                                    tfhb_buyers_data: {
+                                        description: 'Test description',
+                                        address: 'Test address'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    id: '2',
+                    title: 'Test Event 2',
+                    start: '2025-01-16T14:00:00',
+                    end: '2025-01-16T15:00:00',
+                    extendedProps: {
+                        status: 'pending',
+                        apiData: {
+                            buyers_data: {
+                                user_meta: {
+                                    tfhb_buyers_data: {
+                                        description: 'Another test description',
+                                        address: 'Another test address'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ];
+
+            // Create a temporary container for PDF generation
+            const container = document.createElement('div');
+            container.style.position = 'absolute';
+            container.style.left = '-9999px';
+            container.style.top = '0';
+            container.style.width = '800px';
+            container.style.padding = '40px';
+            container.style.backgroundColor = 'white';
+            container.style.fontFamily = 'Arial, sans-serif';
+            container.style.fontSize = '12px';
+            container.style.lineHeight = '1.4';
+            
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Create header
+            const header = document.createElement('div');
+            header.innerHTML = `
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px;">
+                    <h1 style="color: #333; margin: 0 0 10px 0; font-size: 24px;">Calendar Export</h1>
+                    <p style="color: #666; margin: 5px 0; font-size: 14px;">Generated on ${currentDate}</p>
+                    <p style="color: #666; margin: 5px 0; font-size: 14px;">Total Events: ${testEvents.length}</p>
+                </div>
+            `;
+            container.appendChild(header);
+
+            // Add events
+            testEvents.forEach(event => {
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                const formattedDate = startDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                const formattedTime = startDate.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) + ' - ' + endDate.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const apiData = event.extendedProps.apiData;
+                const description = apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description || 'No description available';
+                const address = apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.address || '';
+
+                // Get status color
+                let statusColor = '#666';
+                switch (event.extendedProps.status) {
+                    case 'confirmed':
+                        statusColor = '#2e7d32';
+                        break;
+                    case 'pending':
+                        statusColor = '#f57c00';
+                        break;
+                    case 'canceled':
+                        statusColor = '#c62828';
+                        break;
+                }
+
+                const eventDiv = document.createElement('div');
+                eventDiv.style.border = '1px solid #ddd';
+                eventDiv.style.marginBottom = '20px';
+                eventDiv.style.padding = '15px';
+                eventDiv.style.borderRadius = '8px';
+                eventDiv.style.pageBreakInside = 'avoid';
+                eventDiv.innerHTML = `
+                    <div style="font-weight: bold; font-size: 16px; color: #333; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                        ${event.title}
+                    </div>
+                    <div style="color: #666; font-size: 14px; line-height: 1.6;">
+                        <div style="margin-bottom: 8px;"><strong>Date:</strong> ${formattedDate}</div>
+                        <div style="margin-bottom: 8px;"><strong>Time:</strong> ${formattedTime}</div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>Status:</strong> 
+                            <span style="color: ${statusColor}; font-weight: bold; text-transform: uppercase;">${event.extendedProps.status}</span>
+                        </div>
+                        ${address ? `<div style="margin-bottom: 8px;"><strong>Address:</strong> ${address}</div>` : ''}
+                        <div style="margin-bottom: 8px;"><strong>Description:</strong> ${description}</div>
+                    </div>
+                `;
+                container.appendChild(eventDiv);
+            });
+
+            document.body.appendChild(container);
+
+            // Convert to canvas and then to PDF
+            html2canvas(container, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 295; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // Save the PDF
+                const fileName = `test-calendar-export-${new Date().toISOString().split('T')[0]}.pdf`;
+                pdf.save(fileName);
+
+                // Clean up
+                document.body.removeChild(container);
+
+                alert('PDF export test completed!');
+            }).catch(error => {
+                console.error('PDF generation error:', error);
+                document.body.removeChild(container);
+                alert('PDF generation failed: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html> 

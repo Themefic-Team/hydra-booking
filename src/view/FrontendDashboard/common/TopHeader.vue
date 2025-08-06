@@ -24,9 +24,6 @@ async function logoutUser() {
         // handle error
     }
 }
-onBeforeMount(async () => {
-    await AddonsAuth.fetchLoggedInUser();
-});
 // if click outside the dropdown
  
 function hideDropdownOutsideClick(e) {
@@ -37,7 +34,8 @@ function hideDropdownOutsideClick(e) {
         profileDropdown.value = false;
     }
 }
-onBeforeMount(() => {  
+onBeforeMount(async () => {
+    await AddonsAuth.fetchLoggedInUser();
     window.addEventListener('click', hideDropdownOutsideClick); 
 }); 
 onBeforeRouteLeave((to, from, next) => {
@@ -112,9 +110,16 @@ const toggleSidebar = () => {
            
             <div class="tfhb-dropdown tfhb-header-profile-dropdown">
                 <div @click.stop="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
-                    <img v-if="AddonsAuth.loggedInUser.user_data" :src="AddonsAuth.loggedInUser.user_data.avatar" alt="Hosts Avatar">
+                    <img v-if="AddonsAuth.loggedInUser?.user_data?.avatar" :src="AddonsAuth.loggedInUser.user_data.avatar" alt="Hosts Avatar">
                     <img v-else :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">
-                    <span class="tfhb-profile-name">  {{ $tfhb_trans('Hi,') }} <b>{{ AddonsAuth.loggedInUser.user_data.name_of_participant }}</b> </span>
+                    <span class="tfhb-profile-name">  
+                        <template v-if="AddonsAuth.skeleton">
+                            {{ $tfhb_trans('Loading...') }}
+                        </template>
+                        <template v-else>
+                            {{ $tfhb_trans('Hi,') }} <b>{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</b>
+                        </template>
+                    </span>
                     <span  class="tfhb-dropdown-single" >
                         <Icon  v-if="profileDropdown == false" name="ChevronDown" size=16 /> 
                         <Icon v-if="profileDropdown == true" name="ChevronUp" size=16 /> 
@@ -123,11 +128,11 @@ const toggleSidebar = () => {
  
                 <transition  name="tfhb-dropdown-transition">
                     <div v-show="profileDropdown == true"  class="tfhb-dropdown-wrap"> 
-                        <router-link v-if="AddonsAuth.loggedInUser.user_role == 'buyers'"  class="tfhb-dropdown-single" to="/buyers/profile" exact >
+                        <router-link v-if="AddonsAuth.loggedInUser?.user_role == 'buyers'"  class="tfhb-dropdown-single" to="/buyers/profile" exact >
                                 <Icon name="User" size=16 /> 
                                 {{ $tfhb_trans('My Account') }}
                             </router-link>
-                        <router-link v-if="AddonsAuth.loggedInUser.user_role == 'sellers'"  class="tfhb-dropdown-single" to="/sellers/profile" exact >
+                        <router-link v-if="AddonsAuth.loggedInUser?.user_role == 'sellers'"  class="tfhb-dropdown-single" to="/sellers/profile" exact >
                                 <Icon name="User" size=16 /> 
                                 {{ $tfhb_trans('My Account') }}
                             </router-link>

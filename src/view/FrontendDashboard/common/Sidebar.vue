@@ -65,13 +65,13 @@ onBeforeMount(async () => {
 
             <ul class="tfhb-sidebar-menu"> 
                 <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  :to="'/'+AddonsAuth.loggedInUser.user_role+'/my-profile'" exact :class="{ 'active': $route.path === '/'+AddonsAuth.loggedInUser.user_role+'/my-profile' }" >
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  :to="'/'+(AddonsAuth.loggedInUser?.user_role || 'buyers')+'/my-profile'" exact :class="{ 'active': $route.path === '/'+(AddonsAuth.loggedInUser?.user_role || 'buyers')+'/my-profile' }" >
                         <Icon name="CircleUser" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('My Profile') }}</span>
                     </router-link>
                 </li>   
                 <li>
-                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  :to="'/'+AddonsAuth.loggedInUser.user_role+'/my-appointments'" exact :class="{ 'active': $route.path === '/'+AddonsAuth.loggedInUser.user_role+'/my-appointments' }" >
+                    <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  :to="'/'+(AddonsAuth.loggedInUser?.user_role || 'buyers')+'/my-appointments'" exact :class="{ 'active': $route.path === '/'+(AddonsAuth.loggedInUser?.user_role || 'buyers')+'/my-appointments' }" >
                         <Icon name="CalendarClock" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('Agenda') }}</span>
                     </router-link>

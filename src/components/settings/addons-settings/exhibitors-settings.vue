@@ -107,6 +107,68 @@ const copyShortcodeCode = () => {
     });
 }
 
+// Initialize default exhibitor registration fields if empty
+onBeforeMount(() => {
+    if (!AddonsSettings.Exhibitors.registration_froms_fields || AddonsSettings.Exhibitors.registration_froms_fields.length === 0) {
+        AddonsSettings.Exhibitors.registration_froms_fields = [
+            {
+                label: 'Company Name',
+                type: 'text',
+                name: 'company_name',
+                placeholder: 'Enter company name',
+                options: [],
+                required: 0,
+                enable: 1,
+            },
+            {
+                label: 'Contact Person',
+                type: 'text',
+                name: 'contact_person',
+                placeholder: 'Enter contact person name',
+                options: [],
+                required: 0,
+                enable: 1,
+            },
+            {
+                label: 'Email',
+                type: 'email',
+                name: 'email',
+                placeholder: 'Enter email address',
+                options: [],
+                required: 0,
+                enable: 1,
+            },
+            {
+                label: 'Phone',
+                type: 'tel',
+                name: 'phone',
+                placeholder: 'Enter phone number',
+                options: [],
+                required: 0,
+                enable: 1,
+            },
+            {
+                label: 'Website',
+                type: 'url',
+                name: 'website',
+                placeholder: 'Enter website URL',
+                options: [],
+                required: 0,
+                enable: 1,
+            },
+            {
+                label: 'Description',
+                type: 'textarea',
+                name: 'description',
+                placeholder: 'Enter company description',
+                options: [],
+                required: 0,
+                enable: 1,
+            }
+        ];
+    }
+});
+
  
 </script>
 

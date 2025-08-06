@@ -75,7 +75,7 @@ function closeGalleryPopup() {
       <!-- Company Banner -->
       <div class="company-banner-container">
         <img 
-          :src="AddonsAuth.loggedInUser.user_data.cover_image" 
+          :src="AddonsAuth.loggedInUser?.user_data?.cover_image || ''" 
           alt="Company Banner" 
           class="company-banner"
         />
@@ -83,7 +83,7 @@ function closeGalleryPopup() {
         <!-- Company Logo Overlay -->
         <div class="company-logo-overlay">
           <img 
-            :src="AddonsAuth.loggedInUser.user_data.cover_image" 
+            :src="AddonsAuth.loggedInUser?.user_data?.cover_image || ''" 
             alt="Company Logo" 
             class="company-logo"
           />
@@ -93,11 +93,11 @@ function closeGalleryPopup() {
       <!-- Company Title and Type -->
       <div class="company-header">
         <div class="company-title-section">
-          <h1 class="company-title">{{ AddonsAuth.loggedInUser.user_data.name_of_participant }}</h1>
-          <span class="company-type">{{ AddonsAuth.loggedInUser.user_role }}</span>
+          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</h1>
+          <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'User' }}</span>
           <span class="star-icon">⭐</span>
         </div>
-        <p class="company-subtitle">{{ AddonsAuth.loggedInUser.user_data.job_title }}</p>
+        <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.job_title || '' }}</p>
       </div>
 
       <!-- Navigation Tabs -->
@@ -118,7 +118,7 @@ function closeGalleryPopup() {
         <div v-if="activeTab === 'Home'" class="home-content">
           <div class="content-card">
             <h2>About</h2>
-            <p>{{ AddonsAuth.loggedInUser.user_data.description }}</p>
+            <p>{{ AddonsAuth.loggedInUser?.user_data?.description || 'No description available' }}</p>
           </div>
 
           <div class="content-card">
@@ -729,7 +729,7 @@ function closeGalleryPopup() {
 
 /* Right Sidebar */
 .sidebar-right {
-  width: 400px;
+  width: 500px;
   padding: 0 2rem;
   flex-shrink: 0;
   display: flex;

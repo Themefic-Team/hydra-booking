@@ -536,7 +536,7 @@ const routes = [
         meta: { Capabilities: 'tfhb_manage_options' },
         props: true,
         component: () => import('../view/FrontendDashboard/sellers/SellersDashboard.vue'),
-        redirect: { name: 'SellersDashboardEventList' }, 
+        redirect: { name: 'AddonsEventDetails' }, 
         children: [ 
             {
                 path: 'my-appointments',
@@ -554,7 +554,7 @@ const routes = [
             },    
             {
                 path: 'profile',
-                name: 'BuyersDashboardPublicProfile',
+                name: 'sellersDashboardPublicProfile',
                 meta: { Capabilities: 'tfhb_manage_options' },
                 props: true,
                 component: () => import('../view/FrontendDashboard/sellers/Profile.vue')
@@ -630,11 +630,20 @@ router.beforeEach(async (to, from, next) => {
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'HostsProfile', params: { id: host_id } }); 
             }
-            if(  user_role == 'tfhb_buyers'  && to.name == 'dashboard' ){  
+            if(  (user_role == 'tfhb_buyers'  && to.name == 'dashboard') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'SellersDashboard') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'SellersDashboardCalenders') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'SellersDashboardMyProfile') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'sellersDashboardPublicProfile') 
+            ){  
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'BuyersDashboard'}); 
             }
-            if(  user_role == 'tfhb_sellers'  && to.name == 'dashboard' ){ 
+            if(  (user_role == 'tfhb_sellers'  && to.name == 'dashboard' ) 
+                || (user_role == 'tfhb_sellers'  && to.name == 'BuyersDashboard') 
+                || (user_role == 'tfhb_sellers'  && to.name == 'BuyersDashboardMyProfile') 
+                || (user_role == 'tfhb_sellers'  && to.name == 'BuyersDashboardPublicProfile') 
+            ){ 
                 
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'SellersDashboard'}); 

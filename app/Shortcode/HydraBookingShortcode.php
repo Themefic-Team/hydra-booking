@@ -580,10 +580,7 @@ class HydraBookingShortcode {
 
 
 	}
-
-	public static function test_function (){
-		return "hello";
-	}
+ 
 
 	/**
 	 * Create New Booking

@@ -1,6 +1,6 @@
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 
@@ -61,7 +61,7 @@ const fetchEventDetails = async () => {
   // If route.params.id is not available, show the event id from AddonsAuth.event
   let event_id = 0
   if (!route.params.id) {
-    event_id = AddonsAuth.event?.id || 0
+    event_id = AddonsAuth.event?.id ||1
   } else{
     event_id = route.params.id
   }
@@ -86,6 +86,40 @@ const fetchEventDetails = async () => {
 onMounted(() => {
   fetchEventDetails()
 })
+
+const embedVideoUrl = computed(() => {
+  if (!eventDetails.value.video_url) {
+    return null;
+  }
+  
+  try {
+    const url = new URL(eventDetails.value.video_url);
+    
+    // Handle YouTube URLs
+    if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+      let videoId = '';
+      
+      // Handle youtu.be URLs (short format)
+      if (url.hostname.includes('youtu.be')) {
+        videoId = url.pathname.substring(1); // Remove leading slash
+      } 
+      // Handle youtube.com URLs
+      else if (url.hostname.includes('youtube.com')) {
+        videoId = url.searchParams.get('v');
+      }
+      
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
+    
+    // Return original URL for non-YouTube videos
+    return eventDetails.value.video_url;
+  } catch (error) {
+    console.error('Error parsing video URL:', error);
+    return eventDetails.value.video_url;
+  }
+});
 </script>
 
 <template> 
@@ -168,13 +202,14 @@ onMounted(() => {
 
           <div  class="content-card">
             <h2>Video</h2>
+             
             <div  v-if="eventDetails.video_url != null"  >
               <p class="video-title">{{ eventDetails.video_title || 'Event Video Presentation' }}</p>
               <p class="video-description">{{ eventDetails.video_description || 'Video presentation of our exclusive event' }}</p>
               <div class="video-container">
                 <iframe 
-                  v-if="eventDetails.video_url" 
-                  :src="eventDetails.video_url" 
+                  v-if="embedVideoUrl" 
+                  :src="embedVideoUrl" 
                   frameborder="0" 
                   allowfullscreen
                   class="video-iframe"
@@ -261,8 +296,8 @@ onMounted(() => {
             <p class="video-description">{{ eventDetails.video_description || 'Video presentation of our exclusive event' }}</p>
             <div class="video-container">
               <iframe 
-                v-if="eventDetails.video_url" 
-                :src="eventDetails.video_url" 
+                v-if="embedVideoUrl" 
+                :src="embedVideoUrl" 
                 frameborder="0" 
                 allowfullscreen
                 class="video-iframe"
@@ -378,6 +413,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.tfhb-frontend-main-content {
+	max-width: calc(100% - 300px) !important;
+}
 .event-details-container {
   display: flex;
   min-height: 100vh;

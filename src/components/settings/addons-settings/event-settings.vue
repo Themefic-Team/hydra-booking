@@ -30,11 +30,11 @@ import { AddonsSettings } from '@/store/settings/addons-settings';
     </div> 
  
     <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-24"  >    
-        <HbSwitch  
+        <!-- <HbSwitch  
             v-model="AddonsSettings.event_settings.guest_booking" 
             :label="'Enable Guest Booking'"   
             width="100"
-        /> 
+        />  -->
         <HbDropdown 
             v-model="AddonsSettings.event_settings.meeting_id" 
             :label="'Select Meeting'"   

@@ -117,7 +117,7 @@ const copyShortcodeCode = () => {
             <HbSwitch  
                 v-model="AddonsSettings.Sellers.enable_registration" 
                 :label="''"   
-                @change="AddonsSettings.UpdateBuyersSettings()" 
+                @change="AddonsSettings.UpdateSellersSettings()" 
             />
 
         </h2> 
