@@ -241,7 +241,7 @@ onBeforeMount(() => {
         <div class="tfhb-admin-title" >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Exhibitors Registration Forms Builders') }}   </h2> 
             <p>{{ $tfhb_trans('Create and customize the information fields for your exhibitors') }}</p>
-        </div>
+        </div> 
         <div class="tfhb-admin-card-box  tfhb-gap-24 tfhb-m-0"  >   
             <div v-if="AddonsSettings.Exhibitors.registration_froms_fields !=''"  class="tfhb-host-info-builder-wrap  tfhb-mb-16" >
                 

@@ -46,7 +46,7 @@ const saveError = ref('');
 async function fetchUserPublicInfo() {
     loading.value = true;
     try {
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/sellers/user-public-info', {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/exhibitors/user-public-info', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
             },
@@ -72,7 +72,7 @@ async function saveUserPublicInfo() {
     saveError.value = '';
     try {
         const response = await axios.post(
-            tfhb_core_apps.rest_route + 'hydra-booking/v1/sellers/user-public-info/update',
+            tfhb_core_apps.rest_route + 'hydra-booking/v1/exhibitors/user-public-info/update',
             { ...userPublicInformation, user_id: tfhb_core_apps.user.id },
             {
                 headers: {
@@ -115,7 +115,7 @@ async function changePassword() {
     passwordError.value = '';
     try {
         const response = await axios.post(
-            tfhb_core_apps.rest_route + 'hydra-booking/v1/sellers/change-password',
+            tfhb_core_apps.rest_route + 'hydra-booking/v1/exhibitors/change-password',
             { ...passwordForm },
             {
                 headers: {
@@ -692,7 +692,10 @@ document.addEventListener('click', (e) => {
 
 
  
-<style scoped lang="scss"> 
+<style scoped lang="scss">
+.tfhb-frontend-main-content {
+	width: calc(100% - 300px);
+}
 .tfhb-host-profile-image-wrap{
     max-width: 1024px;
 }

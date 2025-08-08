@@ -37,5 +37,7 @@ const collapsedSideBar = ref(false);
 .tfhb-frontend-main-content {
   flex: 1; 
   transition: margin-left 0.3s ease;
+  
+	width: calc(100% - 300px) !important; 
 }
 </style>

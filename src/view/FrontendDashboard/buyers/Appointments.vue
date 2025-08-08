@@ -1,4 +1,3 @@
-
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, computed, nextTick } from 'vue';
@@ -1064,7 +1063,12 @@ onBeforeMount(() => {
 <!-- </HbPopup> -->
 </template>
 
-<style scoped>
+<style scoped> 
+.tfhb-appointments-container {
+  padding: 24px;
+  background: var(--tfhb-surface-background-color, #f8f9fa);
+  min-height: 100vh;
+}
 .tfhb-btn.secondary-btn.active{
   color: #fff !important;
 }

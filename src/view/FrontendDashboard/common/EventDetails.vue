@@ -412,10 +412,7 @@ const embedVideoUrl = computed(() => {
   </div>
 </template>
 
-<style scoped>
-.tfhb-frontend-main-content {
-	max-width: calc(100% - 300px) !important;
-}
+<style scoped> 
 .event-details-container {
   display: flex;
   min-height: 100vh;

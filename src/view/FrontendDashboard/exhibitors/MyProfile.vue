@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -47,7 +46,7 @@ function closeGalleryPopup() {
 //   }
 //   try {
 //     skeleton.value = true
-//     const response = await axios.get(`/wp-json/hydra-booking/v1/addons/sellers/event-details/${event_id}`, {
+//     const response = await axios.get(`/wp-json/hydra-booking/v1/addons/exhibitors/event-details/${event_id}`, {
 //       headers: {
 //         'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
 //       }
@@ -343,7 +342,7 @@ function closeGalleryPopup() {
       </div>
 
       <div class="seller-info-card">
-        <h3>Seller info</h3>
+        <h3>Exhibitor info</h3>
         
         <div class="info-section">
           <h4>MAIN AREAS OF ACTIVITY</h4>
@@ -366,7 +365,7 @@ function closeGalleryPopup() {
       </div>
 
       <div class="sellers-interests-card">
-        <h3>Sellers interests</h3>
+        <h3>Exhibitor interests</h3>
         
         <div class="info-section">
           <h4>PREFERRED WORKSHOP MEETINGS WITH</h4>

@@ -39,6 +39,7 @@ const AuthData = reactive({
         if( cap == ''){
             return true;
         }
+        console.log(this.Auth.caps);
         if( this.Auth.caps === undefined ){
             return false;
         }

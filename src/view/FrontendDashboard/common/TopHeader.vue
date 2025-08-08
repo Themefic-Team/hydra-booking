@@ -117,7 +117,9 @@ const toggleSidebar = () => {
                             {{ $tfhb_trans('Loading...') }}
                         </template>
                         <template v-else>
-                            {{ $tfhb_trans('Hi,') }} <b>{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</b>
+                            {{ $tfhb_trans('Hi,') }} 
+                             <b v-if="AddonsAuth.loggedInUser?.user_role == 'exhibitors'" >{{ AddonsAuth.loggedInUser?.user_data?.name || 'User' }}</b>
+                            <b v-else>{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</b>
                         </template>
                     </span>
                     <span  class="tfhb-dropdown-single" >
@@ -133,6 +135,10 @@ const toggleSidebar = () => {
                                 {{ $tfhb_trans('My Account') }}
                             </router-link>
                         <router-link v-if="AddonsAuth.loggedInUser?.user_role == 'sellers'"  class="tfhb-dropdown-single" to="/sellers/profile" exact >
+                                <Icon name="User" size=16 /> 
+                                {{ $tfhb_trans('My Account') }}
+                            </router-link>
+                        <router-link v-if="AddonsAuth.loggedInUser?.user_role == 'exhibitors'"  class="tfhb-dropdown-single" to="/exhibitors/profile" exact >
                                 <Icon name="User" size=16 /> 
                                 {{ $tfhb_trans('My Account') }}
                             </router-link>

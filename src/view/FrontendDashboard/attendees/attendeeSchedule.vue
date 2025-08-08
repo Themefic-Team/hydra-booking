@@ -10,5 +10,5 @@ import { ref, onBeforeMount, defineProps  } from 'vue';
     </div>
     
 </template>  
-<style scoped> 
+<style scoped>  
 </style>

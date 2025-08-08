@@ -6,6 +6,7 @@ import AttendeeTopHeader from './attendees/AttendeeTopHeader.vue';
 import AttendeeSidebar from './attendees/AttendeeSidebar.vue';
 import BuyersIndex from './buyers/Index.vue';
 import SellersIndex from './sellers/Index.vue';
+import ExhibitorsIndex from './exhibitors/Index.vue';
 
 
 // Store 
@@ -25,16 +26,18 @@ onBeforeMount(() => {
  
 </script>
 
-<template > 
- 
+<template >  
 <div v-if="FdDashboard.user_role == 'tfhb_buyers'"> 
   <BuyersIndex />
 </div> 
 <div v-if="FdDashboard.user_role == 'tfhb_sellers'"> 
   <SellersIndex />
 </div>
+<div v-if="FdDashboard.user_role == 'tfhb_exhibitors'"> 
+  <ExhibitorsIndex />
+</div>
 
-<div  v-if="FdDashboard.user_role == 'tfhb_host' || (FdDashboard.user_role != 'tfhb_buyers' && FdDashboard.user_role != 'tfhb_sellers')">
+<div  v-if="FdDashboard.user_role == 'tfhb_host' || (FdDashboard.user_role != 'tfhb_buyers' && FdDashboard.user_role != 'tfhb_sellers' && FdDashboard.user_role != 'tfhb_exhibitors')">
     <topHeader :notifications="Notification.Data" :userAuth="FdDashboard.userAuth" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
  
     <div class="tfhb-frontend-dashboard tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-align-normal">
@@ -67,6 +70,7 @@ onBeforeMount(() => {
 
 .tfhb-frontend-main-content {
   flex: 1; 
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease; 
+	width: calc(100% - 300px) !important; 
 }
 </style>

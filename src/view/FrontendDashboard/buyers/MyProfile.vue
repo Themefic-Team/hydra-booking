@@ -389,7 +389,7 @@ function closeGalleryPopup() {
   </div>
 </template>
 
-<style scoped>
+<style scoped> 
 .profile-container {
   display: flex;
   min-height: 100vh;

@@ -562,6 +562,32 @@ const routes = [
         ]
     },
     
+    // Exhibitors Dashboard
+    {
+        path: '/exhibitors',
+        name: 'ExhibitorsDashboard',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/exhibitors/ExhibitorsDashboard.vue'),
+        redirect: { name: 'AddonsEventDetails' }, 
+        children: [ 
+            {
+                path: 'my-profile',
+                name: 'ExhibitorsDashboardMyProfile',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/exhibitors/MyProfile.vue')
+            },    
+            {
+                path: 'profile',
+                name: 'ExhibitorsDashboardPublicProfile',
+                meta: { Capabilities: 'tfhb_manage_options' },
+                props: true,
+                component: () => import('../view/FrontendDashboard/exhibitors/Profile.vue')
+            },    
+        ]
+    },
+    
     {
         path: '/buyer-list',
         name: 'SellersDashboardViewBuyers',
@@ -597,7 +623,7 @@ const router = createRouter({
     });
   },
 });
- 
+  
 
 // Navigation guards to check authentication status
 router.beforeEach(async (to, from, next) => { 
@@ -623,7 +649,7 @@ router.beforeEach(async (to, from, next) => {
         // Fetch user authentication data based on capabilities
         await AuthData.fetchAuth(); 
         // Check if the user has the required capabilities for the route
-        const hasCapabilities = AuthData.Capabilities(to.meta.Capabilities);  
+        const hasCapabilities = AuthData.Capabilities(to.meta.Capabilities);   
         if (hasCapabilities) { 
             // Host Route for if use is host 
             if(  user_role == 'tfhb_host' && to.name == 'HostsLists' ){
@@ -647,6 +673,18 @@ router.beforeEach(async (to, from, next) => {
                 
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'SellersDashboard'}); 
+            }
+            if(  (user_role == 'tfhb_exhibitors'  && to.name == 'dashboard' ) 
+                || (user_role == 'tfhb_sellers'  && to.name == 'BuyersDashboard') 
+                || (user_role == 'tfhb_sellers'  && to.name == 'BuyersDashboardMyProfile') 
+                || (user_role == 'tfhb_sellers'  && to.name == 'BuyersDashboardPublicProfile') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'SellersDashboard') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'SellersDashboardCalenders') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'SellersDashboardMyProfile') 
+                || (user_role == 'tfhb_buyers'  && to.name == 'sellersDashboardPublicProfile') 
+            ){  
+                // next({ name: 'HostsProfile', params: { id: user_id } }); 
+                next({ name: 'ExhibitorsDashboard'}); 
             }
             // User has the required capabilities, continue to the next route
             next();

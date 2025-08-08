@@ -689,7 +689,7 @@ document.addEventListener('click', (e) => {
 
 
  
-<style scoped lang="scss">
+<style scoped lang="scss"> 
 .tfhb-host-profile-image-wrap{
     max-width: 1024px;
 }

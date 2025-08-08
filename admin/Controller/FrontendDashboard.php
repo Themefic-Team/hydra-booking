@@ -220,7 +220,7 @@ class FrontendDashboard {
             
         }
    
-        if($user->roles[0] == 'tfhb_buyers' || $user->roles[0] == 'tfhb_sellers'){
+        if($user->roles[0] == 'tfhb_buyers' || $user->roles[0] == 'tfhb_sellers' || $user->roles[0] == 'tfhb_exhibitors'){
             $host = new Host(); 
             $host_data = []; 
 
