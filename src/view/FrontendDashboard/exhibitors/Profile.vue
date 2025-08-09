@@ -692,12 +692,10 @@ document.addEventListener('click', (e) => {
 
 
  
-<style scoped lang="scss">
-.tfhb-frontend-main-content {
-	width: calc(100% - 300px);
-}
+<style scoped lang="scss"> 
 .tfhb-host-profile-image-wrap{
     max-width: 1024px;
+    margin: 0 auto;
 }
 /* Your component styles go here */ 
 .avatar_display-wrap, .featured_image_display-wrap {
