@@ -82,7 +82,7 @@ function closeGalleryPopup() {
         <!-- Company Logo Overlay -->
         <div class="company-logo-overlay">
           <img 
-            :src="AddonsAuth.loggedInUser?.user_data?.cover_image || ''" 
+            :src="AddonsAuth.loggedInUser?.user_data?.avatar || ''" 
             alt="Company Logo" 
             class="company-logo"
           />
@@ -92,7 +92,7 @@ function closeGalleryPopup() {
       <!-- Company Title and Type -->
       <div class="company-header">
         <div class="company-title-section">
-          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</h1>
+          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.name || 'User' }}</h1>
           <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'User' }}</span>
           <span class="star-icon">⭐</span>
         </div>

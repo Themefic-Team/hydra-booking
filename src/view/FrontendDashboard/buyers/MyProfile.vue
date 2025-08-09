@@ -83,7 +83,7 @@ function closeGalleryPopup() {
         <!-- Company Logo Overlay -->
         <div class="company-logo-overlay">
           <img 
-            :src="AddonsAuth.loggedInUser?.user_data?.cover_image || ''" 
+            :src="AddonsAuth.loggedInUser?.user_data?.avatar || ''" 
             alt="Company Logo" 
             class="company-logo"
           />

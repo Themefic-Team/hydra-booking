@@ -119,6 +119,7 @@ const toggleSidebar = () => {
                         <template v-else>
                             {{ $tfhb_trans('Hi,') }} 
                              <b v-if="AddonsAuth.loggedInUser?.user_role == 'exhibitors'" >{{ AddonsAuth.loggedInUser?.user_data?.name || 'User' }}</b>
+                             <b v-else-if="AddonsAuth.loggedInUser?.user_role == 'sellers'" >{{ AddonsAuth.loggedInUser?.user_data?.name || 'User' }}</b>
                             <b v-else>{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</b>
                         </template>
                     </span>

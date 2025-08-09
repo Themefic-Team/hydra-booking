@@ -338,36 +338,7 @@ const Tfhb_Exhibitor_Filter = (event) => {
                             <h4>LOCATION</h4>
                             <p>{{ selectedExhibitor.data.location }}</p>
                         </div>
-
-                        <!-- <div class="detail-section">
-                            <h4>STAFF</h4>
-                            <div class="staff-container">
-                                <div v-for="(staff, index) in selectedExhibitor.staff.slice(0, 4)" :key="index" class="staff-avatar">
-                                    <span class="staff-initial">{{ staff.charAt(0) }}</span>
-                                </div>
-                                <div v-if="selectedExhibitor.staff.length > 4" class="staff-more">
-                                    +{{ selectedExhibitor.staff.length - 4 }}
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <div class="detail-section">
-                            <h4>aree di provenienza Buyer di interesse</h4>
-                            <div class="tags-container">
-                                <span v-for="workshop in selectedExhibitor.data.provenienza_Buyer_interesse" :key="workshop" class="tag">
-                                    {{ workshop }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="detail-section">
-                            <h4> Specializzazione:</h4>
-                            <div class="tags-container">
-                                <span v-for="region in selectedExhibitor.data.specializzazione" :key="region" class="tag">
-                                    {{ region }}
-                                </span>
-                            </div>
-                        </div>
+ 
                     </div>
                 </div>
 
