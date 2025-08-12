@@ -151,12 +151,12 @@ const copyShortcodeCode = () => {
             <HbDateTime   
                 v-model="AddonsSettings.buyers.registration_end_date"
                 icon="CalendarDays" 
-                label="Start Date"
+                label="End Date"
                 selected = "1" 
                 :config="{
                 }"
                 width="48"
-                :placeholder="$tfhb_trans('Start')"
+                :placeholder="$tfhb_trans('End')"
             /> 
              <!-- Time format -->
             <HbDropdown 

@@ -603,6 +603,13 @@ const routes = [
         component: () => import('../view/FrontendDashboard/common/SellersList.vue')
     },
     {
+        path: '/messages',
+        name: 'HydraAddonsMessages',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/common/Messages.vue')
+    },
+    {
         path: '/exhibitors-list',
         name: 'ExhibitorsList',
         meta: { Capabilities: 'tfhb_manage_options' },

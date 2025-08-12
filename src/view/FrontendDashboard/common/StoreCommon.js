@@ -7,6 +7,8 @@ const AddonsAuth = reactive({
     update_preloader: false, 
     loggedInUser: {},
     event_settings: {},
+    chat_user_id: 0,
+    message_count: ``,
     event: {},
     // Other Information 
     async fetchLoggedInUser() {
@@ -39,6 +41,7 @@ const AddonsAuth = reactive({
             });
             if (response.data.success && response.data.data) { 
                 this.event_settings = response.data.data.event_settings;
+                this.message_count = response.data.data.message_count;
                 this.event = response.data.data.event;
             }
         } catch (e) {

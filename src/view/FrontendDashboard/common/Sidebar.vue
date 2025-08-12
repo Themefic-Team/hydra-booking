@@ -3,6 +3,9 @@ import { ref, onMounted, defineProps, onBeforeMount  } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { RouterView, useRoute } from 'vue-router' 
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const collapsedSideBar = ref(false);
 
 import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
@@ -26,6 +29,11 @@ const toggleSidebarResponsive= () => {
 onBeforeMount(async () => {
     await AddonsAuth.FetchSettings();  
 });
+const redirectToChat = () => { 
+    showGeneralMenu.value = false;
+    AddonsAuth.chat_user_id = 0;
+    router.push({ name: 'HydraAddonsMessages' });
+}
 </script>
 
 <template >  
@@ -114,6 +122,13 @@ onBeforeMount(async () => {
                         <span v-if="!collapsed" > {{ $tfhb_trans('Exhibitors') }}</span>
                     </router-link>
                 </li>   
+                <li>
+                    <button  class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  @click="redirectToChat()" :class="{ 'active': $route.path === '/messages' }" >
+                        <Icon name="MessageCircleMore" size="20" /> 
+                        <span v-if="!collapsed" > {{ $tfhb_trans('Message') }}</span>
+                        <div v-html="AddonsAuth.message_count"></div>
+                    </button>
+                </li>   
                 <!-- <li>
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  to="/sellers/seller-list" exact :class="{ 'active': $route.path === '/sellers/seller-list' }" >
                         <Icon name="Users" size="20" /> 
@@ -142,4 +157,5 @@ onBeforeMount(async () => {
     }
 
  }
+
 </style>

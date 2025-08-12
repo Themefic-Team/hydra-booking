@@ -8,6 +8,7 @@ const AddonsSettings = reactive({
     meeting_list : {},
     event_settings: {
         meeting_id : 0, 
+        live_chat_url : '', 
         guest_booking : false, 
     },
     Sellers: {

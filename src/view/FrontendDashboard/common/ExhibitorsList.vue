@@ -3,11 +3,14 @@ import { ref, onBeforeMount, defineProps } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const selectedExhibitor  = ref(null);
 const skeleton = ref(true);
 const exhibitors = ref([]);
 const filteredExhibitors = ref([]);
 const searchQuery = ref('');
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 
 async function fetchExhibitors() {
     
@@ -146,6 +149,11 @@ const Tfhb_Exhibitor_Filter = (event) => {
         return false;
     });
 }
+
+const redirectToChat = (buyerId) => { 
+    AddonsAuth.chat_user_id = buyerId;
+    router.push({ name: 'HydraAddonsMessages' });
+}
 </script>
 
 <template> 
@@ -229,7 +237,7 @@ const Tfhb_Exhibitor_Filter = (event) => {
                         :key="exhibitor.id" 
                         class="exhibitor-card"
                         :class="{ 'selected': selectedExhibitor && selectedExhibitor.id === exhibitor.id }"
-                        @click="selectExhibitor(exhibitor)"
+                       
                     >
                     <!-- {{ exhibitor }} -->
                         <div class="exhibitor-card-header">
@@ -266,17 +274,17 @@ const Tfhb_Exhibitor_Filter = (event) => {
                             </div>
                         </div>
                         
-                        <!-- <div class="exhibitor-card-actions">
-                            <button class="action-btn">
-                                <Icon name="Star" size=16 />
+                        <div class="exhibitor-card-actions">
+                            <button class="action-btn"  @click="selectExhibitor(exhibitor)">
+                                <Icon name="Eye" size=16 />
                             </button>
-                            <button class="action-btn">
+                            <button class="action-btn" @click="redirectToChat(exhibitor.id)">
                                 <Icon name="MessageCircle" size=16 />
                             </button>
-                            <button class="action-btn">
+                            <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
-                            </button>
-                        </div> -->
+                            </button> -->
+                        </div>
                     </div>
                 </div>
             </div>

@@ -11,6 +11,7 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 
+import HbText from '@/components/form-fields/HbText.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 
@@ -42,6 +43,15 @@ import { AddonsSettings } from '@/store/settings/addons-settings';
             :selected = "1"
             :placeholder="$tfhb_trans('Select')"
             :option="AddonsSettings.meeting_list"
+        />
+        <!-- Time Zone -->
+        <HbText  
+            v-model="AddonsSettings.event_settings.live_chat_url"  
+            required= "true"  
+            :label="$tfhb_trans('Live Chat URL')"  
+            selected = "1"
+            :placeholder="$tfhb_trans('Live Chat URL')" 
+            width="100" 
         /> 
     </div>  
     <HbButton 

@@ -5,6 +5,9 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 import axios from 'axios';
 const selectedSeller  = ref(null);
 const skeleton = ref(true);
+import { useRouter } from 'vue-router';
+const router = useRouter();
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 // const sellers = ref([
 //     {
 //         id: 1,
@@ -247,6 +250,10 @@ const Tfhb_Seller_Filter = (event) => {
         return false;
     });
 }
+const redirectToChat = (user_id) => { 
+    AddonsAuth.chat_user_id = user_id;
+    router.push({ name: 'HydraAddonsMessages' });
+}
 </script>
 
 <template> 
@@ -329,8 +336,7 @@ const Tfhb_Seller_Filter = (event) => {
                         v-for="seller in filteredSellers" 
                         :key="seller.id" 
                         class="seller-card"
-                        :class="{ 'selected': selectedSeller && selectedSeller.id === seller.id }"
-                        @click="selectSeller(seller)"
+                        :class="{ 'selected': selectedSeller && selectedSeller.id === seller.id }" 
                     >
                     <!-- {{ seller }} -->
                         <div class="seller-card-header">
@@ -367,17 +373,17 @@ const Tfhb_Seller_Filter = (event) => {
                             </div>
                         </div>
                         
-                        <!-- <div class="seller-card-actions">
-                            <button class="action-btn">
-                                <Icon name="Star" size=16 />
+                        <div class="seller-card-actions">
+                            <button class="action-btn"  @click="selectSeller(seller)">
+                                <Icon name="Eye" size=16 />
                             </button>
-                            <button class="action-btn">
+                            <button class="action-btn" @click="redirectToChat(seller.id)">
                                 <Icon name="MessageCircle" size=16 />
                             </button>
-                            <button class="action-btn">
+                            <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
-                            </button>
-                        </div> -->
+                            </button> -->
+                        </div>
                     </div>
                 </div>
             </div>

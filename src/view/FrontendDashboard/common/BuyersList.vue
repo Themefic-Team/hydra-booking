@@ -3,8 +3,11 @@ import { ref, reactive, onBeforeMount, defineProps } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const selectedBuyer = ref(null)
 const skeleton = ref(true);
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 // const buyers = ref([
 //     {
 //         id: 1,
@@ -203,6 +206,11 @@ const Tfhb_Buyer_Filter = (event) => {
         return false;
     });
 }
+
+const redirectToChat = (user_id) => { 
+    AddonsAuth.chat_user_id = user_id;
+    router.push({ name: 'HydraAddonsMessages' });
+}
 </script>
 
 <template> 
@@ -285,8 +293,8 @@ const Tfhb_Buyer_Filter = (event) => {
                         :key="buyer.id" 
                         class="buyer-card"
                         :class="{ 'selected': selectedBuyer && selectedBuyer.id === buyer.id }"
-                        @click="selectBuyer(buyer)"
                     >
+                    
                         <div class="buyer-card-header">
                             <div class="buyer-avatar">
                                 <img v-if="buyer.data.avatar && buyer.data.avatar.startsWith('http')" :src="buyer.data.avatar" alt="Buyer Avatar">
@@ -326,17 +334,18 @@ const Tfhb_Buyer_Filter = (event) => {
                             </div>
                         </div>
                         
-                        <!-- <div class="buyer-card-actions">
-                            <button class="action-btn">
-                                <Icon name="Star" size=16 />
+                        <div class="buyer-card-actions">
+                            <button class="action-btn" 
+                            @click="selectBuyer(buyer)">
+                                <Icon name="Eye" size=16 />
                             </button>
-                            <button class="action-btn">
+                            <button class="action-btn" @click="redirectToChat(buyer.id)">
                                 <Icon name="MessageCircle" size=16 />
                             </button>
-                            <button class="action-btn">
+                            <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
-                            </button>
-                        </div> -->
+                            </button> -->
+                        </div>
                     </div>
                 </div>
             </div>
