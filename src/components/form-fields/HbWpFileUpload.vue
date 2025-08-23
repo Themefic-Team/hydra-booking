@@ -46,7 +46,9 @@ const validateFile = (file) => {
         return false
     }
     return true
-} 
+}
+
+ 
 
 const imageChange = (attachment, type) => {  
     if (props.multiple) {
@@ -78,10 +80,25 @@ const imageChange = (attachment, type) => {
 
 const UploadImage = () => {   
     if (isUploading.value) return
+    
+    // Create a custom media frame that only shows user's own media
     const mediaUploader = wp.media({
-        title: 'Upload Image',
-        button: { text: 'Use this image' },
-        multiple: props.multiple || false
+        title: 'Select or Upload Media',
+        button: { text: 'Use this media' },
+        multiple: props.multiple || false,
+        library: {
+            // Only show media uploaded by current user
+            author: tfhb_core_apps?.user?.id || 0
+        }
+    })
+
+    // Add custom filter to ensure only user's media is shown
+    mediaUploader.on('ready', function() {
+        // Filter to only show current user's media
+        const currentUserId = tfhb_core_apps?.user?.id || 0;
+        if (currentUserId) {
+            mediaUploader.library.props.set('author', currentUserId);
+        }
     })
 
     mediaUploader.on('select', function () {
@@ -132,19 +149,39 @@ const uploadFileToWordPress = async (file) => {
     try {
         const response = await fetch(`${window.wpApiSettings.root}wp/v2/media`, {
             method: 'POST',
-            headers: { 'X-WP-Nonce': window.wpApiSettings.nonce },
+            headers: { 
+                'X-WP-Nonce': window.wpApiSettings.nonce,
+                'X-WP-User-ID': tfhb_core_apps?.user?.id || 0
+            },
             body: formData
         })
 
-        if (!response.ok) throw new Error('Upload failed')
+        if (!response.ok) {
+            if (response.status === 403) {
+                throw new Error('Access denied: You do not have permission to upload files.');
+            }
+            throw new Error('Upload failed');
+        }
 
         const result = await response.json()
-        imageChange(result, 'dragDrop') 
+        
+        // Verify the uploaded file belongs to the current user
+        if (result.author === tfhb_core_apps?.user?.id) {
+            imageChange(result, 'dragDrop')
+        } else {
+            throw new Error('Security error: Upload verification failed.');
+        }
     } catch (error) {
         console.error('Error uploading file:', error)
+        toast.error(error.message || 'Failed to upload file', {
+            position: 'bottom-right',
+            autoClose: 1500,
+        });
         isUploading.value = false
     }
 }
+
+
 
 const removeImage = (index = null) => {
     if (props.multiple) {
@@ -197,7 +234,7 @@ watch(() => props.modelValue, (newVal) => {
                 icon_position="left"
                 :disabled="isUploading"
                 @click="UploadImage()"
-            />  
+            />
 
             <div v-if="props.label" class="tfhb-drag-drop-text tfhb-flexbox tfhb-gap-8">
                 <div v-if="props.subtitle">{{ props.subtitle }}</div>
@@ -263,6 +300,8 @@ watch(() => props.modelValue, (newVal) => {
         transition: 0.3s ease;
         cursor: pointer;
         position: relative;
+        
+
 
         .tfhb-drag-drop-text { 
             flex-direction: column;

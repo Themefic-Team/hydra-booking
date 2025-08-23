@@ -47,13 +47,17 @@ class THB_INIT {
 		add_action( 'current_screen', array( $this, 'tfhb_get_plugin_screen' ) );
 		
 		add_action('plugins_loaded', array($this, 'tfhb_load_textdomain'));
- 
+
+
+	
 	}
 
 
 	function tfhb_load_textdomain() {
 		load_plugin_textdomain('hydra-booking', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 	}
+
+	
 
  
 

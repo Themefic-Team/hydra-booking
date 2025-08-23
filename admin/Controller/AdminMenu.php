@@ -77,6 +77,8 @@ class AdminMenu {
 
 		);
 
+		$sub_menu = apply_filters( 'hydra_booking_sub_menu', $sub_menu );
+
 		// Loop through array and create sub menu
 		foreach ( $sub_menu as $menu ) {
 

@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, reactive, onBeforeMount, onMounted, computed } from 'vue';
+import { ref, reactive, onBeforeMount, onMounted, computed, watch } from 'vue';
 import { __ } from '@wordpress/i18n';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
@@ -10,16 +10,19 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
 import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
+import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import useValidators from '@/store/validator'
 import axios from 'axios';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 const { errors, isEmpty } = useValidators();
 
+const EditMoreDetailsPopup = ref(false)
 // --- API-driven user public info ---
 const userPublicInformation = reactive({
     cover_image : '',
     avatar : '',
+    companey_logo : '',
     description : '',
     // New fields
     staff: [],
@@ -36,12 +39,54 @@ const userPublicInformation = reactive({
         facebook: '',
         youtube: '',
         linkedin: ''
-    }
+    },
+    more_details_fields: {}
 });
 const loading = ref(false);
 const skeleton = ref(true);
 const saveSuccess = ref(false);
 const saveError = ref('');
+
+// Add new reactive data for editing more details
+const editMoreDetailsForm = reactive({});
+const editMoreDetailsLoading = ref(false);
+const editMoreDetailsSuccess = ref(false);
+const editMoreDetailsError = ref('');
+
+// Computed property to get filtered more details fields
+const filteredMoreDetailsFields = computed(() => {
+    if (!userPublicInformation.more_details_fields || !Array.isArray(userPublicInformation.more_details_fields)) {
+        return [];
+    }
+    
+    // Filter out fields that are already editable in the main profile
+    const excludedFields = ['name_of_participant', 'job_title', 'email', 'mobile_no', 'address', 'state', 'company_website', 'description'];
+    
+    const filtered = userPublicInformation.more_details_fields.filter(field => {
+        const isExcluded = excludedFields.includes(field.name);
+        return !isExcluded;
+    });
+    
+    return filtered;
+});
+
+// Computed property to check if the edit form is ready
+const isEditFormReady = computed(() => {
+    return filteredMoreDetailsFields.value.length > 0 && Object.keys(editMoreDetailsForm).length > 0;
+});
+
+// Watch for popup open/close to initialize form
+watch(EditMoreDetailsPopup, (newVal) => {
+    if (newVal) {
+        // Popup is opening, initialize the form with a small delay
+        setTimeout(() => {
+            initializeEditForm();
+        }, 100);
+    } else {
+        // Popup is closing, clear the form
+        clearEditForm();
+    }
+});
 
 async function fetchUserPublicInfo() {
     loading.value = true;
@@ -56,7 +101,8 @@ async function fetchUserPublicInfo() {
             withCredentials: true
         });
         if (response.data.success && response.data.data) {
-            Object.assign(userPublicInformation, response.data.data);
+            Object.assign(userPublicInformation, response.data.data.info);
+            userPublicInformation.more_details_fields = response.data.data.registration_froms_fields;
             skeleton.value = false;
         }
     } catch (e) {
@@ -72,7 +118,7 @@ async function saveUserPublicInfo() {
     saveError.value = '';
     try {
         const response = await axios.post(
-            tfhb_core_apps.rest_route + 'hydra-booking/v1/buyers/user-public-info',
+            tfhb_core_apps.rest_route + 'hydra-booking/v1/buyers/user-public-info/update',
             { ...userPublicInformation, user_id: tfhb_core_apps.user.id },
             {
                 headers: {
@@ -97,6 +143,127 @@ async function saveUserPublicInfo() {
         // windows reload 
         window.location.reload();
     }
+}
+
+// Add new function to save more details
+async function saveMoreDetails() {
+    
+    // Validate the form first
+    const validationErrors = validateEditForm();
+    if (validationErrors.length > 0) {
+        editMoreDetailsError.value = 'Validation errors: ' + validationErrors.join(', ');
+        toast.error(editMoreDetailsError.value, { position: "bottom-right" });
+        return;
+    }
+    
+    editMoreDetailsLoading.value = true;
+    editMoreDetailsSuccess.value = false;
+    editMoreDetailsError.value = '';
+    
+    try {
+        // Create the data to send - only include the fields that were edited
+        const dataToSend = {
+            user_id: tfhb_core_apps.user.id,
+            ...editMoreDetailsForm
+        };
+        
+        const response = await axios.post(
+            tfhb_core_apps.rest_route + 'hydra-booking/v1/buyers/user-public-info/update',
+            dataToSend,
+            {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                },
+                withCredentials: true
+            }
+        );
+        
+        if (response.data.success) {
+            editMoreDetailsSuccess.value = true;
+            toast.success('More details updated successfully!', { position: "bottom-right" });
+            
+            // Update the local userPublicInformation with the form values
+            Object.keys(editMoreDetailsForm).forEach(fieldName => {
+                if (userPublicInformation.hasOwnProperty(fieldName)) {
+                    userPublicInformation[fieldName] = editMoreDetailsForm[fieldName];
+                }
+            });
+            
+            // Close popup after success
+            setTimeout(() => {
+                EditMoreDetailsPopup.value = false;
+                editMoreDetailsSuccess.value = false;
+            }, 1500);
+        } else {
+            editMoreDetailsError.value = response.data.message || 'Failed to save more details.';
+            toast.error(editMoreDetailsError.value, { position: "bottom-right" });
+        }
+    } catch (e) {
+        console.error('Error saving more details:', e);
+        editMoreDetailsError.value = 'Failed to save more details.';
+        toast.error(editMoreDetailsError.value, { position: "bottom-right" });
+    } finally {
+        editMoreDetailsLoading.value = false;
+    }
+}
+
+// Function to open edit popup and initialize form
+function openEditMoreDetails() {
+    EditMoreDetailsPopup.value = true;
+}
+
+// Function to close edit popup
+function closeEditMoreDetails() {
+    EditMoreDetailsPopup.value = false;
+}
+
+// Function to initialize the edit form when the popup opens
+function initializeEditForm() {
+    // Clear the previous form data
+    Object.keys(editMoreDetailsForm).forEach(key => {
+        delete editMoreDetailsForm[key];
+    });
+    
+    // Initialize the edit form with current values from more_details_fields
+    if (userPublicInformation.more_details_fields && Array.isArray(userPublicInformation.more_details_fields)) {
+        userPublicInformation.more_details_fields.forEach(field => {
+            // Skip fields that are already editable in the main profile
+            if (!['name_of_participant', 'job_title', 'email', 'mobile_no', 'address', 'state', 'company_website', 'description'].includes(field.name)) {
+                // Initialize with current value or default value based on field type
+                if (field.type === 'checkbox') {
+                    // For checkboxes, initialize as empty array if no value exists
+                    editMoreDetailsForm[field.name] = userPublicInformation[field.name] || [];
+                } else {
+                    // For other fields, initialize with current value or empty string
+                    editMoreDetailsForm[field.name] = userPublicInformation[field.name] || '';
+                }
+            }
+        });
+    }
+}
+
+// Function to clear the edit form when the popup closes
+function clearEditForm() {
+    Object.keys(editMoreDetailsForm).forEach(key => {
+        delete editMoreDetailsForm[key];
+    });
+    editMoreDetailsSuccess.value = false;
+    editMoreDetailsError.value = '';
+}
+
+// Function to validate the edit form
+function validateEditForm() {
+    const errors = [];
+    
+    if (filteredMoreDetailsFields.value.length === 0) {
+        errors.push('No fields available for editing');
+    }
+    
+    if (Object.keys(editMoreDetailsForm).length === 0) {
+        errors.push('Form data not initialized');
+    }
+    
+    return errors;
 }
 
 // --- Password Change State ---
@@ -152,11 +319,32 @@ const imageChange = (attachment) => {
     activeProfileDropdown.value = false;
 }
 const UploadImage = () => {   
-    wp.media.editor.send.attachment = (props, attachment) => { 
-    // set the image url to the input field
-    imageChange(attachment);
-    };  
-    wp.media.editor.open(); 
+    // Create a custom media frame that only shows user's own media
+    const mediaUploader = wp.media({
+        title: 'Select or Upload Media',
+        button: { text: 'Use this media' },
+        multiple: false,
+        library: {
+            // Only show media uploaded by current user
+            author: tfhb_core_apps?.user?.id || 0
+        }
+    })
+
+    // Add custom filter to ensure only user's media is shown
+    mediaUploader.on('ready', function() {
+        // Filter to only show current user's media
+        const currentUserId = tfhb_core_apps?.user?.id || 0;
+        if (currentUserId) {
+            mediaUploader.library.props.set('author', currentUserId);
+        }
+    })
+
+    mediaUploader.on('select', function () {
+        const attachment = mediaUploader.state().get('selection').first().toJSON()
+        imageChange(attachment);
+    })
+
+    mediaUploader.open()
 } 
 const EmptyImage = () => {   
     userPublicInformation.avatar = ''; 
@@ -170,11 +358,32 @@ const imageChangeFeature = (attachment) => {
     image.src = attachment.url; 
 }
 const UploadImageFeature  = () => {   
-    wp.media.editor.send.attachment = (props, attachment) => { 
-    // set the image url to the input field
-    imageChangeFeature(attachment);
-    };  
-    wp.media.editor.open(); 
+    // Create a custom media frame that only shows user's own media
+    const mediaUploader = wp.media({
+        title: 'Select or Upload Media',
+        button: { text: 'Use this media' },
+        multiple: false,
+        library: {
+            // Only show media uploaded by current user
+            author: tfhb_core_apps?.user?.id || 0
+        }
+    })
+
+    // Add custom filter to ensure only user's media is shown
+    mediaUploader.on('ready', function() {
+        // Filter to only show current user's media
+        const currentUserId = tfhb_core_apps?.user?.id || 0;
+        if (currentUserId) {
+            mediaUploader.library.props.set('author', currentUserId);
+        }
+    })
+
+    mediaUploader.on('select', function () {
+        const attachment = mediaUploader.state().get('selection').first().toJSON()
+        imageChangeFeature(attachment);
+    })
+
+    mediaUploader.open()
 }
 
 
@@ -307,7 +516,19 @@ document.addEventListener('click', (e) => {
             :placeholder="$tfhb_trans('Type your description')" 
             width="100"  
         />  
-        
+        <div class="companey_logo tfhb-full-width">
+            <label for="companey_logo_icon">Company Logo</label>
+            <HbWpFileUpload
+                :name="`companey_logo_icon`"
+                v-model="userPublicInformation.companey_logo"
+                :label="$tfhb_trans('Company Logo')"
+                :subtitle="$tfhb_trans('JPG, JPEG, PNG. Max 5 MB.')"
+                :btn_label="$tfhb_trans('Upload Company Logo')"
+                file_size="5"
+                file_format="jpg,jpeg,png"
+                width="100"
+            />
+        </div>
         <!-- New Sections Parent Card -->
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">
             <div class="tfhb-admin-title">
@@ -572,13 +793,22 @@ document.addEventListener('click', (e) => {
         />  
     </div>   
 
-    <div class="tfhb-admin-title" >
+    <!-- {{ EditMoreDetailsPopup }} -->
+    <!-- {{ userPublicInformation.more_details_fields }} -->
+    <!-- {{ userPublicInformation }} -->
+    <div class="tfhb-admin-title tfhb-flexbox tfhb-justify-between" >
         <h2>{{ $tfhb_trans('More Details') }}    </h2>  
+        <HbButton 
+            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+            @click="openEditMoreDetails"
+            :buttonText="$tfhb_trans('Edit More Details')" 
+            :hover_animation="true" 
+        />  
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox" style="flex-direction:column;">
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Travel Agent Name') }}:</strong>
-        <span>{{ userPublicInformation['travel-agent-name'] }}</span>
+        <span>{{ userPublicInformation['travel_agent_name'] }}</span>
       </div>
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Family Name of Participant') }}:</strong>
@@ -648,8 +878,114 @@ document.addEventListener('click', (e) => {
         </span>
       </div>
     </div>
-   
 
+    <HbPopup :isOpen="EditMoreDetailsPopup" @modal-close="closeEditMoreDetails" max_width="800px" name="first-modal" gap="24px" class="tfhb-booking-calendar-popup">
+        <template #header> 
+            <h3>{{ $tfhb_trans('Edit More Details') }}</h3>
+        </template>
+
+        <template #content> 
+            <div class="tfhb-edit-more-details-form">
+                <!-- Success/Error Messages -->
+                <div v-if="editMoreDetailsSuccess" class="tfhb-success-message">
+                    {{ $tfhb_trans('More details updated successfully!') }}
+                </div>
+                <div v-if="editMoreDetailsError" class="tfhb-error-message">
+                    {{ editMoreDetailsError }}
+                </div>
+                
+                <!-- Dynamic Form Fields -->
+                <div class="tfhb-form-fields-container">
+                    <div v-if="!isEditFormReady && EditMoreDetailsPopup" class="tfhb-loading-message">
+                        {{ $tfhb_trans('Loading form fields...') }}
+                    </div>
+                    <div v-else-if="filteredMoreDetailsFields.length === 0" class="tfhb-no-fields-message">
+                        {{ $tfhb_trans('No additional fields available for editing.') }}
+                    </div>
+                    <div v-else v-for="field in filteredMoreDetailsFields" :key="field.name" class="tfhb-form-field">
+                        <label :for="field.name" class="tfhb-field-label">
+                            {{ field.label }}
+                        </label>
+                        
+                        <!-- Text Input -->
+                        <div v-if="field.type === 'text' || field.type === 'email' || field.type === 'phone'" class="tfhb-field-input">
+                            <input 
+                                :type="field.type === 'phone' ? 'text' : field.type"
+                                :id="field.name"
+                                v-model="editMoreDetailsForm[field.name]"
+                                :placeholder="field.placeholder"
+                                class="tfhb-input"
+                            />
+                        </div>
+                        
+                        <!-- Select Dropdown -->
+                        <div v-else-if="field.type === 'select'" class="tfhb-field-input">
+                            <select 
+                                :id="field.name"
+                                v-model="editMoreDetailsForm[field.name]"
+                                class="tfhb-select"
+                            >
+                                <option value="">{{ $tfhb_trans('Select an option') }}</option>
+                                <option v-for="option in field.options" :key="option" :value="option">
+                                    {{ option }}
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <!-- Checkbox Group -->
+                        <div v-else-if="field.type === 'checkbox'" class="tfhb-field-input">
+                            <div class="tfhb-checkbox-group">
+                                <label v-for="option in field.options" :key="option" class="tfhb-checkbox-item">
+                                    <input 
+                                        type="checkbox"
+                                        :value="option"
+                                        v-model="editMoreDetailsForm[field.name]"
+                                        class="tfhb-checkbox"
+                                    />
+                                    <span class="tfhb-checkbox-label">{{ option }}</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Radio Group -->
+                        <div v-else-if="field.type === 'radio'" class="tfhb-field-input">
+                            <div class="tfhb-radio-group">
+                                <label v-for="option in field.options" :key="option" class="tfhb-radio-item">
+                                    <input 
+                                        type="radio"
+                                        :name="field.name"
+                                        :value="option"
+                                        v-model="editMoreDetailsForm[field.name]"
+                                        class="tfhb-radio"
+                                    />
+                                    <span class="tfhb-radio-label">{{ option }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="tfhb-form-actions">
+                    <HbButton 
+                        classValue="tfhb-btn secondary-btn"
+                        @click="closeEditMoreDetails"
+                        :buttonText="$tfhb_trans('Cancel')"
+                        :disabled="editMoreDetailsLoading"
+                    />
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation"
+                        @click="saveMoreDetails"
+                        :buttonText="$tfhb_trans('Save Changes')"
+                        icon="Save"
+                        :pre_loader="editMoreDetailsLoading"
+                        :disabled="editMoreDetailsLoading || !isEditFormReady"
+                    />
+                </div>
+                
+            </div>
+        </template>
+    </HbPopup>
     <div class="tfhb-admin-title" >
         <h2>{{ $tfhb_trans('Change Password') }}    </h2>  
     </div>
@@ -911,5 +1247,179 @@ document.addEventListener('click', (e) => {
 .tfhb-info-row:hover {
   background: #eef2f7;
 }
+
+/* Edit More Details Form Styles */
+.tfhb-edit-more-details-form {
+  max-width: 100%;
+}
+
+.tfhb-success-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #c3e6cb;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.tfhb-error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #f5c6cb;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.tfhb-form-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tfhb-form-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tfhb-field-label {
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 0.9rem;
+  width: 280px;
+  flex-shrink: 0;
+  text-align: left;
+  padding-right: 16px;
+}
+
+.tfhb-field-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.tfhb-input,
+.tfhb-select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #ffffff;
+}
+
+.tfhb-input:focus,
+.tfhb-select:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.1);
+}
+
+.tfhb-checkbox-group,
+.tfhb-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tfhb-checkbox-item,
+.tfhb-radio-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 2px 0;
+  font-size: 0.85rem;
+}
+
+.tfhb-checkbox,
+.tfhb-radio {
+  margin: 0;
+  cursor: pointer;
+}
+
+.tfhb-checkbox-label,
+.tfhb-radio-label {
+  font-size: 0.85rem;
+  color: #4a5568;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tfhb-form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.tfhb-loading-message,
+.tfhb-no-fields-message {
+  text-align: center;
+  padding: 24px 16px;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.tfhb-loading-message {
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.tfhb-no-fields-message {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Responsive adjustments for the form */
+@media (max-width: 768px) {
+  .tfhb-form-fields-container {
+    gap: 8px;
+  }
+  
+  .tfhb-form-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 6px 0;
+  }
+  
+  .tfhb-field-label {
+    width: 100%;
+    text-align: left;
+    padding-right: 0;
+    font-size: 0.85rem;
+  }
+  
+  .tfhb-field-input {
+    width: 100%;
+  }
+  
+  .tfhb-checkbox-group,
+  .tfhb-radio-group {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .tfhb-form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .tfhb-form-actions .tfhb-btn {
+    width: 100%;
+  }
+}
  
 </style>
+

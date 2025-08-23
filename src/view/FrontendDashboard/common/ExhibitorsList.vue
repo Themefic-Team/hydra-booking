@@ -324,7 +324,7 @@ const redirectToChat = (buyerId) => {
                         <div class="detail-section">
                             <h4>DESCRIPTION</h4>
                             <p>{{ selectedExhibitor.data.description }}</p>
-                            <a href="#" class="read-more">read more</a>
+                            <!-- <a href="#" class="read-more">read more</a> -->
                         </div>
 
                         <div class="detail-section">

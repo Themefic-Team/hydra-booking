@@ -120,17 +120,19 @@ const embedVideoUrl = computed(() => {
     return eventDetails.value.video_url;
   }
 });
+
 </script>
 
 <template> 
+<!-- {{ AddonsAuth.event.event_details }} -->
   <div class="event-details-container">
     <!-- Main Content Area -->
     <div class="main-content">
       <!-- Event Banner -->
       <div class="event-banner-container">
         <img 
-          v-if="eventDetails.event_banner" 
-          :src="eventDetails.event_banner" 
+          v-if="AddonsAuth.event.event_details.event_banner" 
+          :src="AddonsAuth.event.event_details.event_banner" 
           alt="Event Banner" 
           class="event-banner"
         />
@@ -145,8 +147,8 @@ const embedVideoUrl = computed(() => {
         <!-- Event Logo Overlay -->
         <div class="event-logo-overlay">
           <img 
-            v-if="eventDetails.event_logo" 
-            :src="eventDetails.event_logo" 
+            v-if="AddonsAuth.event.event_details.event_logo" 
+            :src="AddonsAuth.event.event_details.event_logo" 
             alt="Event Logo" 
             class="event-logo"
           />
@@ -158,12 +160,23 @@ const embedVideoUrl = computed(() => {
           /> 
         </div>
       </div>
-
+ 
       <!-- Event Title and Date -->
       <div class="event-header">
         <h1 class="event-title">{{ eventDetails.title || 'Event Title' }}</h1>
-        <p class="event-subtitle">{{ eventDetails.subtitle || 'Event Subtitle' }}</p>
-        <p class="event-date">{{ eventDetails.date || 'Event Date' }}</p>
+        <!-- <p class="event-subtitle">{{ eventDetails.subtitle || 'Event Subtitle' }}</p> -->
+        <!-- <p class="event-date">{{ eventDetails.date || 'Event Date' }}</p> -->
+        <span v-if="AddonsAuth.event.availability_range && AddonsAuth.event.availability_range.start && AddonsAuth.event.availability_range.end">
+            From {{
+                new Date(AddonsAuth.event.availability_range.start).getDate()
+            }} to {{
+                new Date(AddonsAuth.event.availability_range.end).getDate()
+            }} {{
+                new Date(AddonsAuth.event.availability_range.end).toLocaleString('default', { month: 'short' })
+            }}, {{
+                new Date(AddonsAuth.event.availability_range.end).getFullYear()
+            }}
+        </span>
       </div>
 
       <!-- Navigation Tabs -->
@@ -184,14 +197,14 @@ const embedVideoUrl = computed(() => {
         <div v-if="activeTab === 'Home'" class="home-content">
           <div class="content-card">
             <h2>Description</h2>
-              <p v-if="eventDetails.description != null">{{ eventDetails.description }}</p>
+              <p v-if="AddonsAuth.event.description != null">{{ AddonsAuth.event.description }}</p>
               <p v-else>No description found</p>
             </div>
 
           <div class="content-card">
             <h2>Gallery</h2>
-            <div  v-if="eventDetails.gallery_images && eventDetails.gallery_images.length > 0" class="gallery-grid">
-              <div v-for="(img, index) in eventDetails.gallery_images " :key="index" class="gallery-item">
+            <div  v-if="AddonsAuth.event.event_details.gallery_images && AddonsAuth.event.event_details.gallery_images.length > 0" class="gallery-grid">
+              <div v-for="(img, index) in AddonsAuth.event.event_details.gallery_images " :key="index" class="gallery-item">
                 <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
               </div>
             </div>
@@ -203,9 +216,9 @@ const embedVideoUrl = computed(() => {
           <div  class="content-card">
             <h2>Video</h2>
              
-            <div  v-if="eventDetails.video_url != null"  >
-              <p class="video-title">{{ eventDetails.video_title || 'Event Video Presentation' }}</p>
-              <p class="video-description">{{ eventDetails.video_description || 'Video presentation of our exclusive event' }}</p>
+            <div  v-if="AddonsAuth.event.event_details.video_url != null"  >
+              <p class="video-title">{{ AddonsAuth.event.event_details.video_title || 'Event Video Presentation' }}</p>
+              <p class="video-description">{{ AddonsAuth.event.event_details.video_description || 'Video presentation of our exclusive event' }}</p>
               <div class="video-container">
                 <iframe 
                   v-if="embedVideoUrl" 
@@ -229,8 +242,8 @@ const embedVideoUrl = computed(() => {
 
           <div  class="content-card">
             <h2>Documents</h2>
-            <div v-if="eventDetails.program_items && eventDetails.program_items.length > 0" class="program-list">
-              <div v-for="(item, index) in eventDetails.program_items " :key="index" class="program-item" v-if="item && item.program_file != null && item.program_file.length > 0">
+            <div v-if="AddonsAuth.event.event_details.program_items && AddonsAuth.event.event_details.program_items.length > 0" class="program-list">
+              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" class="program-item" v-if="item && item.program_file != null && item.program_file.length > 0">
                 <div class="program-icon">
                   <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
                   <div v-else class="program-icon-placeholder">📋</div>
@@ -248,8 +261,8 @@ const embedVideoUrl = computed(() => {
 
           <div  class="content-card">
             <h2>Links</h2>
-            <div v-if="eventDetails.external_links != null && eventDetails.external_links.length > 0"  class="links-list">
-              <div v-for="(link, index) in eventDetails.external_links " :key="index" class="link-item" v-if="link && link.url">
+            <div v-if="AddonsAuth.event.event_details.external_links != null && AddonsAuth.event.event_details.external_links.length > 0"  class="links-list">
+              <div v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" class="link-item" v-if="link && link.url">
                 <span class="link-icon">🌐</span>
                 <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
               </div>
@@ -263,14 +276,14 @@ const embedVideoUrl = computed(() => {
         <!-- Description Tab -->
         <div v-if="activeTab === 'Description'" class="content-card">
           <h2>Description</h2>
-          <p v-if="eventDetails.description != null">{{ eventDetails.description }}</p>
+          <p v-if="AddonsAuth.event.description != null">{{ AddonsAuth.event.description }}</p>
           <p v-else>No description found</p>
         </div>
 
         <!-- Gallery Tab -->
         <div v-if="activeTab === 'Gallery'" class="content-card">
           <h2>Gallery</h2>
-          <div v-if="eventDetails.gallery_images != null && eventDetails.gallery_images.length > 0" class="gallery-grid">
+          <div v-if="AddonsAuth.event.gallery_images != null && AddonsAuth.event.gallery_images.length > 0" class="gallery-grid">
             <div v-for="(img, index) in eventDetails.gallery_images " :key="index" class="gallery-item">
               <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
             </div>
@@ -291,9 +304,9 @@ const embedVideoUrl = computed(() => {
         <!-- Video Tab -->
         <div v-if="activeTab === 'Video'" class="content-card">
           <h2>Video</h2>
-          <div  v-if="eventDetails.video_url != null && eventDetails.video_url.length > 0"  >
-            <p class="video-title">{{ eventDetails.video_title || 'Event Video Presentation' }}</p>
-            <p class="video-description">{{ eventDetails.video_description || 'Video presentation of our exclusive event' }}</p>
+          <div  v-if="AddonsAuth.event.event_details.video_url != null && AddonsAuth.event.event_details.video_url.length > 0"  >
+            <p class="video-title">{{ AddonsAuth.event.event_details.video_title || 'Event Video Presentation' }}</p>
+            <p class="video-description">{{ AddonsAuth.event.event_details.video_description || 'Video presentation of our exclusive event' }}</p>
             <div class="video-container">
               <iframe 
                 v-if="embedVideoUrl" 
@@ -318,8 +331,8 @@ const embedVideoUrl = computed(() => {
         <!-- Documents Tab -->
         <div v-if="activeTab === 'Documents'" class="content-card">
           <h2>Documents</h2>
-            <div v-if="eventDetails.program_items != null && eventDetails.program_items.length > 0" class="program-list">
-              <div v-for="(item, index) in eventDetails.program_items " :key="index" class="program-item" v-if="item">
+            <div v-if="AddonsAuth.event.event_details.program_items != null && AddonsAuth.event.event_details.program_items.length > 0" class="program-list">
+              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" class="program-item" v-if="item">
                 <div class="program-icon">
                   <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
                   <div v-else class="program-icon-placeholder">📋</div>
@@ -338,8 +351,8 @@ const embedVideoUrl = computed(() => {
         <!-- Links Tab -->
         <div v-if="activeTab === 'Links'" class="content-card">
           <h2>Links</h2>
-          <div v-if="eventDetails.external_links != null && eventDetails.external_links.length > 0" class="links-list">
-            <div v-for="(link, index) in eventDetails.external_links " :key="index" class="link-item" v-if="link && link.url">
+          <div v-if="AddonsAuth.event.event_details.external_links != null && AddonsAuth.event.event_details.external_links.length > 0" class="links-list">
+            <div v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" class="link-item" v-if="link && link.url">
               <span class="link-icon">🌐</span>
               <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
             </div>
@@ -359,49 +372,50 @@ const embedVideoUrl = computed(() => {
         <div class="contact-section">
           <div class="contact-item">
             <span class="contact-label">SITE</span>
-            <a :href="eventDetails.contact_info?.website || 'https://www.example.com'" target="_blank">
-              {{ eventDetails.contact_info?.website || 'www.example.com' }}
+            <a :href="AddonsAuth.event.event_details.contact_info?.website || 'https://www.example.com'" target="_blank">
+              {{ AddonsAuth.event.event_details.contact_info?.website || 'www.example.com' }}
             </a>
           </div>
           
           <div class="contact-item">
             <span class="contact-label">EMAIL</span>
-            <a :href="`mailto:${eventDetails.contact_info?.email || 'info@example.com'}`">
-              {{ eventDetails.contact_info?.email || 'info@example.com' }}
+            <a :href="`mailto:${AddonsAuth.event.event_details.contact_info?.email || 'info@example.com'}`">
+              {{ AddonsAuth.event.event_details.contact_info?.email || 'info@example.com' }}
             </a>
           </div>
           
           <div class="contact-item">
             <span class="contact-label">PHONE</span>
             <div class="phone-numbers">
-              <div>{{ eventDetails.contact_info?.phone || '+01 917 055-0403' }}</div>
-              <div>{{ eventDetails.contact_info?.phone2 || '+01 920 036-1002' }}</div>
-              <div>{{ eventDetails.contact_info?.phone3 || '+01 917 070-2102' }}</div>
+              <div>{{ AddonsAuth.event.event_details.contact_info?.phone || '+01 917 055-0403' }}</div>
+              <div>{{ AddonsAuth.event.event_details.contact_info?.phone2 || '+01 920 036-1002' }}</div>
+              <div>{{ AddonsAuth.event.event_details.contact_info?.phone3 || '+01 917 070-2102' }}</div>
             </div>
           </div>
           
           <div class="contact-item">
             <span class="contact-label">LOCATION</span>
-            <div>{{ eventDetails.contact_info?.location || 'Event Location' }}</div>
+            <div>{{ AddonsAuth.event.event_details.contact_info?.location || 'Event Location' }}</div>
           </div>
         </div>
+        <!-- {{ AddonsAuth.event.event_details.contact_info.social_media }} -->
 
         <div class="social-section">
           <h4>SOCIAL</h4>
           <div class="social-links">
-            <a href="#" class="social-link">
+            <a :href="AddonsAuth.event.event_details.contact_info.social_media.instagram" class="social-link">
               <span class="social-icon">📷</span>
               <span>Instagram</span>
             </a>
-            <a href="#" class="social-link">
+            <a :href="AddonsAuth.event.event_details.contact_info.social_media.facebook" class="social-link">
               <span class="social-icon">📘</span>
               <span>Facebook</span>
             </a>
-            <a href="#" class="social-link">
+            <a :href="AddonsAuth.event.event_details.contact_info.social_media.youtube" class="social-link">
               <span class="social-icon">📺</span>
               <span>YouTube</span>
             </a>
-            <a href="#" class="social-link">
+            <a :href="AddonsAuth.event.event_details.contact_info.social_media.linkedin" class="social-link">
               <span class="social-icon">💼</span>
               <span>LinkedIn</span>
             </a>
@@ -422,7 +436,7 @@ const embedVideoUrl = computed(() => {
 /* Main Content */
 .main-content {
   flex: 1;
-  background: var(--tfhb-surface-background-color, #EEF6F0);
+  /* background: var(--tfhb-surface-background-color, #EEF6F0); */
   padding: 0;
   overflow-y: auto;
 }
@@ -533,6 +547,7 @@ const embedVideoUrl = computed(() => {
   border-bottom: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
   display: flex;
   gap: 0;
+  flex-wrap: wrap;
 }
 
 .tab-button {

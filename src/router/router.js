@@ -561,6 +561,35 @@ const routes = [
             },    
         ]
     },
+    // Sellers Dashboard
+    {
+        path: '/addons-users',
+        name: 'AddonsUsersList',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/addons-settings/AddonsUsers.vue'), 
+    },
+    {
+        path: '/addons-add-matching',
+        name: 'AddonsAddMaching',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/addons-settings/AddMaching.vue'), 
+    },
+    {
+        path: '/addons-view-matching',
+        name: 'AddonsMachingList',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/addons-settings/MachingList.vue'), 
+    },
+    {
+        path: '/addons-edit-matching/:id',
+        name: 'AddonsEditMaching',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/addons-settings/EditMaching.vue'), 
+    },
     
     // Exhibitors Dashboard
     {
