@@ -10,8 +10,13 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbMultiSelect from '@/components/form-fields/HbMultiSelect.vue';
 import { AddonsUsers } from './addons-settings.js'; 
+import { AddonsSettings } from '@/store/settings/addons-settings.js';
 import { Notification } from '@/store/notification';
 import { toast } from "vue3-toastify";
+import QRCode from 'qrcode';
+import jsPDF from 'jspdf';
+// Import JSZip properly for this environment
+import JSZip from 'jszip';
 
 // Computed properties
 const paginatedUsers = computed(() => {
@@ -46,7 +51,12 @@ const handleBulkAction = async () => {
         return;
     }
     
-    await AddonsUsers.bulkUpdateStatus(AddonsUsers.bulk_action);
+    if (AddonsUsers.bulk_action === 'badge') {
+        await handleBulkBadgeExport();
+    } else {
+        await AddonsUsers.bulkUpdateStatus(AddonsUsers.bulk_action);
+    }
+    
     AddonsUsers.bulk_action = '';
 };
 
@@ -135,6 +145,18 @@ const getFieldOptions = (fieldName) => {
     return [];
 };
 
+// Get bulk action button text
+const getBulkActionButtonText = () => {
+    if (AddonsUsers.bulk_action === 'activate') {
+        return `Make Active ${selectedCount.value} Users`;
+    } else if (AddonsUsers.bulk_action === 'deactivate') {
+        return `Make Deactive ${selectedCount.value} Users`;
+    } else if (AddonsUsers.bulk_action === 'badge') {
+        return `Export Badges (${selectedCount.value} Users)`;
+    }
+    return '';
+};
+
 // Get field type for proper input rendering
 const getFieldType = (fieldName) => {
     const userType = AddonsUsers.edit_user_popup.user_type;
@@ -160,9 +182,438 @@ const getFieldType = (fieldName) => {
     return 'text';
 };
 
+const DownloadBadgePDFWithQRCode = async (user) => {
+    try { 
+        
+        // Create QR code data
+        // const qr_data = user.name + ' ' + user.email;
+        console.log(user);
+
+         // Create QR code data with more comprehensive information
+         const qr_data = `Name: ${user.name} | Role: ${user.role} | Email: ${user.email}`;
+        
+        // Generate QR code as data URL
+        const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
+            width: 150,
+            margin: 2,
+            color: {
+                dark: '#000000',
+                light: '#FFFFFF'
+            }
+        });
+        
+        // Create new PDF document (A4 size)
+        const pdf = new jsPDF('portrait', 'mm', 'a4');
+        
+        // A4 dimensions: 210mm x 297mm
+        const pageWidth = 210;
+        const pageHeight = 297;
+        let backgroundImageUrl = '';
+        if(user.role == 'Buyers'){
+            // Background image URL
+            backgroundImageUrl = AddonsSettings.buyers.badge_pdf_image;
+        }else if(user.role == 'Sellers'){
+            // Background image URL
+            backgroundImageUrl = AddonsSettings.Sellers.badge_pdf_image;
+        }else if(user.role == 'Exhibitors'){
+            // Background image URL
+            backgroundImageUrl = AddonsSettings.Exhibitors.badge_pdf_image;
+        } 
+        // Function to load image and create PDF
+        const createPDFWithBackground = () => {
+            // Add background image
+            pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+            
+            // Calculate bottom right quadrant positions
+            const quadrantWidth = pageWidth / 2;
+            const quadrantHeight = pageHeight / 2;
+            const startX = quadrantWidth; // Start from right half
+            const startY = quadrantHeight; // Start from bottom half
+            
+            // Add QR code (centered in bottom right quadrant)
+            const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
+            const qrX = startX + (quadrantWidth - qrSize) / 2;
+            const qrY = startY + 80; // Reduced spacing from top
+            pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+            
+            // Add job title (centered in bottom right quadrant, below QR code)
+            pdf.setFontSize(11); // Reduced font size
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFont('helvetica', 'normal');
+            const jobTitle = user.role; // You can make this dynamic if needed
+            const jobTitleWidth = pdf.getTextWidth(jobTitle);
+            pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+            
+            // Add user name (centered in bottom right quadrant, below job title)
+            pdf.setFontSize(16); // Reduced font size
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFont('helvetica', 'bold');
+            const nameText = user.name || 'User Name';
+            const nameWidth = pdf.getTextWidth(nameText);
+            pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+           
+            // Save the PDF
+            const fileName = `badge_${user.name || 'user'}_${Date.now()}.pdf`;
+            pdf.save(fileName);
+            
+            toast.success('Badge PDF generated successfully!', {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+        };
+        
+        // Try to load the background image first
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Handle CORS if needed
+        
+        img.onload = () => {
+            try {
+                createPDFWithBackground();
+            } catch (error) {
+                console.error('Error creating PDF:', error);
+                toast.error('Failed to create PDF. Please try again.', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            }
+        };
+        
+        img.onerror = () => {
+            console.warn('Background image failed to load, creating PDF without background');
+            // Create PDF without background image
+            try {
+                // Calculate bottom right quadrant positions
+                const quadrantWidth = pageWidth / 2;
+                const quadrantHeight = pageHeight / 2;
+                const startX = quadrantWidth; // Start from right half
+                const startY = quadrantHeight; // Start from bottom half
+                
+                // Add QR code (centered in bottom right quadrant)
+                const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
+                const qrX = startX + (quadrantWidth - qrSize) / 2;
+                const qrY = startY + 80; // Reduced spacing from top
+                pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                
+                // Add job title (centered in bottom right quadrant, below QR code)
+                pdf.setFontSize(11); // Reduced font size
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const jobTitle = user.role; // You can make this dynamic if needed
+                const jobTitleWidth = pdf.getTextWidth(jobTitle);
+                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                
+                // Add user name (centered in bottom right quadrant, below job title)
+                pdf.setFontSize(16); // Reduced font size
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'bold');
+                const nameText = user.name || 'User Name';
+                const nameWidth = pdf.getTextWidth(nameText);
+                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+                 
+                // Save the PDF
+                const fileName = `badge_${user.name || 'user'}_${Date.now()}.pdf`;
+                pdf.save(fileName);
+                
+                toast.success('Badge PDF generated successfully! (without background)', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            } catch (error) {
+                console.error('Error creating PDF without background:', error);
+                toast.error('Failed to create PDF. Please try again.', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            }
+        };
+        
+        // Start loading the image
+        img.src = backgroundImageUrl;
+        
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        toast.error('Failed to generate PDF. Please try again.', {
+            position: 'bottom-right',
+            autoClose: 3000,
+        });
+    }
+}
+
+// Bulk badge export function
+const handleBulkBadgeExport = async () => {
+    if (AddonsUsers.selected_users.length === 0) {
+        toast.warning('Please select users first', {
+            position: 'bottom-right',
+            autoClose: 1500,
+        });
+        return;
+    }
+
+    try {
+        // Check if JSZip is available (try multiple sources)
+        let JSZipInstance = JSZip;
+        if (typeof JSZipInstance === 'undefined') {
+            // Try to get JSZip from global scope
+            JSZipInstance = window.JSZip;
+        }
+        if (typeof JSZipInstance === 'undefined') {
+            // Try to get JSZip from require if available
+            try {
+                JSZipInstance = require('jszip');
+            } catch (e) {
+                // Ignore require error
+            }
+        }
+        
+        if (typeof JSZipInstance === 'undefined') {
+            toast.error('JSZip library not available. Please contact administrator.', {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+            return;
+        }
+
+        toast.info('Generating bulk badges...', {
+            position: 'bottom-right',
+            autoClose: 2000,
+        });
+
+        const zip = new JSZipInstance();
+        const selectedUsers = AddonsUsers.users[AddonsUsers.current_tab].filter(user => 
+            AddonsUsers.selected_users.includes(user.id)
+        );
+
+        // Validate that selected users have required data
+        const validUsers = selectedUsers.filter(user => user.name && user.role);
+        if (validUsers.length === 0) {
+            toast.error('Selected users must have valid names and roles', {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+            return;
+        }
+
+        if (validUsers.length !== selectedUsers.length) {
+            toast.warning(`Some users (${selectedUsers.length - validUsers.length}) were skipped due to missing data`, {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+        }
+
+        // Check for reasonable limit to prevent performance issues
+        const MAX_USERS = 100;
+        if (validUsers.length > MAX_USERS) {
+            toast.warning(`Large number of users selected (${validUsers.length}). This may take some time.`, {
+                position: 'bottom-right',
+                autoClose: 4000,
+            });
+        }
+
+        // Show initial progress toast
+        toast.info(`Starting bulk badge generation for ${validUsers.length} users...`, {
+            position: 'bottom-right',
+            autoClose: 3000,
+        });
+
+        // Generate PDFs for each valid user with timeout protection
+        const TIMEOUT_PER_USER = 10000; // 10 seconds per user
+        for (let i = 0; i < validUsers.length; i++) {
+            const user = validUsers[i];
+            
+            try {
+                // Add timeout protection for each user
+                const userPromise = new Promise(async (resolve, reject) => {
+                    const timeoutId = setTimeout(() => {
+                        reject(new Error(`Timeout generating badge for ${user.name}`));
+                    }, TIMEOUT_PER_USER);
+                    
+                    try {
+                        // Create QR code data
+                        const qr_data = `Name: ${user.name} | Role: ${user.role} | Email: ${user.email}`;
+                        
+                        // Generate QR code as data URL
+                        const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
+                            width: 150,
+                            margin: 2,
+                            color: {
+                                dark: '#000000',
+                                light: '#FFFFFF'
+                            }
+                        });
+
+                        // Create new PDF document (A4 size)
+                        const pdf = new jsPDF('portrait', 'mm', 'a4');
+                        
+                        // A4 dimensions: 210mm x 297mm
+                        const pageWidth = 210;
+                        const pageHeight = 297;
+                        let backgroundImageUrl = '';
+                        
+                        if(user.role == 'Buyers'){
+                            backgroundImageUrl = AddonsSettings.buyers.badge_pdf_image;
+                        } else if(user.role == 'Sellers'){
+                            backgroundImageUrl = AddonsSettings.Sellers.badge_pdf_image;
+                        } else if(user.role == 'Exhibitors'){
+                            backgroundImageUrl = AddonsSettings.Exhibitors.badge_pdf_image;
+                        }
+
+                        // Function to create PDF with background
+                        const createPDFWithBackground = () => {
+                            // Add background image
+                            pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                            
+                            // Calculate bottom right quadrant positions
+                            const quadrantWidth = pageWidth / 2;
+                            const quadrantHeight = pageHeight / 2;
+                            const startX = quadrantWidth;
+                            const startY = quadrantHeight;
+                            
+                            // Add QR code
+                            const qrSize = 35;
+                            const qrX = startX + (quadrantWidth - qrSize) / 2;
+                            const qrY = startY + 80;
+                            pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                            
+                            // Add job title
+                            pdf.setFontSize(11);
+                            pdf.setTextColor(0, 0, 0);
+                            pdf.setFont('helvetica', 'normal');
+                            const jobTitle = user.role;
+                            const jobTitleWidth = pdf.getTextWidth(jobTitle);
+                            pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120);
+                            
+                            // Add user name
+                            pdf.setFontSize(16);
+                            pdf.setTextColor(0, 0, 0);
+                            pdf.setFont('helvetica', 'bold');
+                            const nameText = user.name || 'User Name';
+                            const nameWidth = pdf.getTextWidth(nameText);
+                            pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128);
+                            
+                            return pdf;
+                        };
+
+                        // Try to load background image first
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+                        
+                        const pdfPromise = new Promise((resolve, reject) => {
+                            img.onload = () => {
+                                try {
+                                    const pdfDoc = createPDFWithBackground();
+                                    resolve(pdfDoc);
+                                } catch (error) {
+                                    reject(error);
+                                }
+                            };
+                            
+                            img.onerror = () => {
+                                try {
+                                    // Create PDF without background
+                                    const quadrantWidth = pageWidth / 2;
+                                    const quadrantHeight = pageHeight / 2;
+                                    const startX = quadrantWidth;
+                                    const startY = quadrantHeight;
+                                    
+                                    const qrSize = 35;
+                                    const qrX = startX + (quadrantWidth - qrSize) / 2;
+                                    const qrY = startY + 80;
+                                    pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                                    
+                                    pdf.setFontSize(11);
+                                    pdf.setTextColor(0, 0, 0);
+                                    pdf.setFont('helvetica', 'normal');
+                                    const jobTitle = user.role;
+                                    const jobTitleWidth = pdf.getTextWidth(jobTitle);
+                                    pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120);
+                                    
+                                    pdf.setFontSize(16);
+                                    pdf.setTextColor(0, 0, 0);
+                                    pdf.setFont('helvetica', 'bold');
+                                    const nameText = user.name || 'User Name';
+                                    const nameWidth = pdf.getTextWidth(nameText);
+                                    pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128);
+                                    
+                                    resolve(pdf);
+                                } catch (error) {
+                                    reject(error);
+                                }
+                            };
+                            
+                            img.src = backgroundImageUrl;
+                        });
+
+                        const pdfDoc = await pdfPromise;
+                        const pdfBlob = pdfDoc.output('blob');
+                        
+                        // Add PDF to zip with sanitized filename
+                        const sanitizedName = user.name.replace(/[^a-zA-Z0-9]/g, '_') || 'user';
+                        const fileName = `badge_${sanitizedName}_${user.id}.pdf`;
+                        zip.file(fileName, pdfBlob);
+                        
+                        clearTimeout(timeoutId);
+                        resolve();
+                    } catch (error) {
+                        clearTimeout(timeoutId);
+                        reject(error);
+                    }
+                });
+                
+                await userPromise;
+                
+                // Show progress only at key milestones (25%, 50%, 75%, 100%)
+                const progress = Math.round(((i + 1) / validUsers.length) * 100);
+                if (progress === 25 || progress === 50 || progress === 75 || progress === 100) {
+                    toast.info(`Progress: ${progress}% (${i + 1}/${validUsers.length} badges generated)`, {
+                        position: 'bottom-right',
+                        autoClose: 2000,
+                    });
+                }
+                
+            } catch (error) {
+                console.error(`Error generating badge for user ${user.name}:`, error);
+                // Continue with other users even if one fails
+            }
+        }
+
+        // Progress complete
+
+        // Generate and download ZIP file
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        const zipUrl = URL.createObjectURL(zipBlob);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = zipUrl;
+        link.download = `bulk_badges_${AddonsUsers.current_tab}_${Date.now()}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up
+        URL.revokeObjectURL(zipUrl);
+        
+        // Clear selections
+        AddonsUsers.selected_users = [];
+        
+        toast.success(`✅ Bulk export complete! ${validUsers.length} badges generated and downloaded as ZIP file.`, {
+            position: 'bottom-right',
+            autoClose: 4000,
+        });
+        
+    } catch (error) {
+        console.error('Error generating bulk badges:', error);
+        toast.error('Failed to generate bulk badges. Please try again.', {
+            position: 'bottom-right',
+            autoClose: 3000,
+        });
+    }
+};
+
 // Lifecycle
 onBeforeMount(() => {
     AddonsUsers.init();
+    AddonsSettings.FetchAddonsSettings();
 });
 
 onBeforeRouteLeave(() => {
@@ -171,366 +622,371 @@ onBeforeRouteLeave(() => {
 </script>
 
 <template>
-    <div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
+    <div class="tfhb-admin-dashboard tfhb-admin-meetings ">  
         <Header v-if="$front_end_dashboard == false" :title="$tfhb_trans('Addons Users Management')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
      
-    </div>
-    <div class="tfhb-addons-users-wrap">
+        <div class="tfhb-addons-users-wrap">
         
-        <!-- Dashboard Heading Wrap --> 
+            <!-- Dashboard Heading Wrap --> 
 
-        <!-- Filter Box -->
-         <div class="tfhb-filter-box tfhb-flexbox tfhb-justify-between tfhb-align-center tfhb-gap-8 tfhb-mt-24">
-             <!-- Search -->
-             <div class="tfhb-header-filters">
-                 <input 
-                     type="text"  
-                     :placeholder="$tfhb_trans('Search users...')" 
-                     :value="AddonsUsers.search_query"
-                     @input="handleSearch"
-                 /> 
-                 <span><Icon name="Search" size="20" /></span>
-             </div>
+            <!-- Filter Box -->
+            <div class="tfhb-filter-box tfhb-flexbox tfhb-justify-between tfhb-align-center tfhb-gap-8 tfhb-mt-24">
+                <!-- Search -->
+                <div class="tfhb-header-filters">
+                    <input 
+                        type="text"  
+                        :placeholder="$tfhb_trans('Search users...')" 
+                        :value="AddonsUsers.search_query"
+                        @input="handleSearch"
+                    /> 
+                    <span><Icon name="Search" size="20" /></span>
+                </div>
 
-             <!-- Bulk Actions -->
-             <div class="tfhb-bulk-actions tfhb-flexbox tfhb-align-center tfhb-gap-8">
-                 <HbDropdown
-                     v-model="AddonsUsers.bulk_action"
-                     :placeholder="$tfhb_trans('Bulk Actions')"
-                     :option="[
-                         {'name': 'Active', 'value': 'activate'},
-                         {'name': 'Deactive', 'value': 'deactivate'}
-                     ]"
-                     @tfhb-onchange="[]"
-                 />
-                 <HbButton 
-                     v-if="AddonsUsers.bulk_action && selectedCount > 0"
-                     classValue="tfhb-btn boxed-btn"
-                     @click="handleBulkAction"
-                     :buttonText="`${AddonsUsers.bulk_action === 'activate' ? 'Make Active' : 'Make Deactive'} ${selectedCount} Users`"
-                     :pre_loader="AddonsUsers.update_preloader"
-                     :hover_animation="false"
-                 />
-             </div>
-         </div>
+                <!-- Bulk Actions -->
+                <div class="tfhb-bulk-actions tfhb-flexbox tfhb-align-center tfhb-gap-8">
+                    <HbDropdown
+                        v-model="AddonsUsers.bulk_action"
+                        :placeholder="$tfhb_trans('Bulk Actions')"
+                        :option="[
+                            {'name': 'Active', 'value': 'activate'},
+                            {'name': 'Deactive', 'value': 'deactivate'},
+                            {'name': 'Export Badge', 'value': 'badge'}
+                        ]"
+                        @tfhb-onchange="[]"
+                    />
+                    <HbButton 
+                        v-if="AddonsUsers.bulk_action && selectedCount > 0"
+                        classValue="tfhb-btn boxed-btn"
+                        @click="handleBulkAction"
+                        :buttonText="getBulkActionButtonText()"
+                        :pre_loader="AddonsUsers.update_preloader"
+                        :hover_animation="false"
+                    />
+                </div>
+            </div>
 
-        <!-- Tab Buttons -->
-        <div class="tfhb-tab-buttons tfhb-flexbox tfhb-gap-8 tfhb-mt-24">
-            <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                :class="AddonsUsers.current_tab === 'sellers' ? 'active' : ''"
-                @click="handleTabChange('sellers')"
-                :buttonText="$tfhb_trans('Sellers')"
-                icon="Users"
-                :hover_animation="false"
-                icon_position="left"
-            />
-            <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                :class="AddonsUsers.current_tab === 'buyers' ? 'active' : ''"
-                @click="handleTabChange('buyers')"
-                :buttonText="$tfhb_trans('Buyers')"
-                icon="UserCheck"
-                :hover_animation="false"
-                icon_position="left"
-            />
-            <HbButton 
-                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                :class="AddonsUsers.current_tab === 'exhibitors' ? 'active' : ''"
-                @click="handleTabChange('exhibitors')"
-                :buttonText="$tfhb_trans('Exhibitors')"
-                icon="Building2"
-                :hover_animation="false"
-                icon_position="left"
-            />
-        </div>
+            <!-- Tab Buttons -->
+            <div class="tfhb-tab-buttons tfhb-flexbox tfhb-gap-8 tfhb-mt-24">
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                    :class="AddonsUsers.current_tab === 'sellers' ? 'active' : ''"
+                    @click="handleTabChange('sellers')"
+                    :buttonText="$tfhb_trans('Sellers')"
+                    icon="Users"
+                    :hover_animation="false"
+                    icon_position="left"
+                />
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                    :class="AddonsUsers.current_tab === 'buyers' ? 'active' : ''"
+                    @click="handleTabChange('buyers')"
+                    :buttonText="$tfhb_trans('Buyers')"
+                    icon="UserCheck"
+                    :hover_animation="false"
+                    icon_position="left"
+                />
+                <HbButton 
+                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
+                    :class="AddonsUsers.current_tab === 'exhibitors' ? 'active' : ''"
+                    @click="handleTabChange('exhibitors')"
+                    :buttonText="$tfhb_trans('Exhibitors')"
+                    icon="Building2"
+                    :hover_animation="false"
+                    icon_position="left"
+                />
+            </div>
 
-        <!-- Users Table -->
-        <div :class="{'tfhb-skeleton': AddonsUsers.skeleton}" class="tfhb-booking-details tfhb-mt-32" v-if="paginatedUsers.length > 0">
-            <table class="table" cellpadding="0" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th class="column-cb">
-                            <input 
-                                type="checkbox" 
-                                :checked="allUsersSelected"
-                                @change="handleAllUsersSelection"
-                            />
-                        </th>
-                        <th>{{ $tfhb_trans('Name') }}</th>
-                        <th>{{ $tfhb_trans('Email') }}</th>
-                        <th>{{ $tfhb_trans('Status') }}</th>
-                        <th>{{ $tfhb_trans('Actions') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="user in paginatedUsers" :key="user.id">
-                        <td class="column-cb">
-                            <input 
-                                type="checkbox" 
-                                :checked="AddonsUsers.selected_users.includes(user.id)"
-                                @change="handleUserSelection(user.id)"
-                            />
-                        </td>
-                        <td>
-                            <div class="tfhb-list-data-event-title">
-                                <strong>{{ user.name || 'N/A' }}</strong>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="tfhb-list-data-event-title">
-                                {{ user.email || 'N/A' }}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
-                                <div class="status" :class="getStatusClass(user.status)">
-                                    {{ getStatusText(user.status) }}
+            <!-- Users Table -->
+            <div :class="{'tfhb-skeleton': AddonsUsers.skeleton}" class="tfhb-booking-details tfhb-mt-32" v-if="paginatedUsers.length > 0">
+                <table class="table" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="column-cb">
+                                <input 
+                                    type="checkbox" 
+                                    :checked="allUsersSelected"
+                                    @change="handleAllUsersSelection"
+                                />
+                            </th>
+                            <th>{{ $tfhb_trans('Name') }}</th>
+                            <th>{{ $tfhb_trans('Email') }}</th>
+                            <th>{{ $tfhb_trans('Status') }}</th>
+                            <th>{{ $tfhb_trans('Actions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="user in paginatedUsers" :key="user.id">
+                            <td class="column-cb">
+                                <input 
+                                    type="checkbox" 
+                                    :checked="AddonsUsers.selected_users.includes(user.id)"
+                                    @change="handleUserSelection(user.id)"
+                                />
+                            </td>
+                            <td>
+                                <div class="tfhb-list-data-event-title">
+                                    <strong>{{ user.name || 'N/A' }}</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tfhb-list-data-event-title">
+                                    {{ user.email || 'N/A' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tfhb-details-status tfhb-flexbox tfhb-justify-normal tfhb-gap-0">
+                                    <div class="status" :class="getStatusClass(user.status)">
+                                        {{ getStatusText(user.status) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
+                                    <span @click.stop="showUserDetails(user)">
+                                        <Icon name="Eye" width="20" />
+                                    </span>
+                                    <span @click.stop="AddonsUsers.showEditUser(user, AddonsUsers.current_tab)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
+                                        {{ $tfhb_trans('Edit') }}
+                                    </span>
+                                    <span @click.stop="DownloadBadgePDFWithQRCode(user)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
+                                        {{ $tfhb_trans('Badge') }}
+                                    </span>
+                                    <span v-if="isUserInactive(user.status)" @click.stop="handleStatusUpdate(user.id, 'activate')" class="tfhb-activate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
+                                        <Icon name="Check" width="16" />
+                                        {{ $tfhb_trans('Active') }}
+                                    </span> 
+                                    <span v-else @click.stop="handleStatusUpdate(user.id, 'deactivate')" class="tfhb-deactivate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
+                                        <Icon name="X" width="16" />
+                                        {{ $tfhb_trans('Deactive') }}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+
+            <!-- Empty State -->
+            <div v-else-if="!AddonsUsers.skeleton" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-booking-notice tfhb-mt-32">
+                <Icon name="Users" size="48" />
+                <p>{{ $tfhb_trans('No users found') }}</p>
+            </div>
+
+            <!-- Pagination -->
+            <div v-if="AddonsUsers.pagination.total_pages > 1" class="tfhb-booking-details-pagination tfhb-flexbox tfhb-mt-32">
+                <div class="tfhb-prev-next-button">
+                    <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="AddonsUsers.pagination.current_page === 1">
+                        <Icon name="ArrowLeft" width="20" />{{ $tfhb_trans('Previous') }}
+                    </a>
+                </div>
+                <div class="tfhb-pagination">
+                    <ul class="tfhb-flexbox tfhb-gap-0 tfhb-justify-normal">
+                        <li v-for="page in AddonsUsers.pagination.total_pages" :key="page" :class="{ active: page === AddonsUsers.pagination.current_page }">
+                            <a href="#" @click.prevent="changePage(page)" :class="{ 'active-link': page === AddonsUsers.pagination.current_page }">{{ page }}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tfhb-prev-next-button">
+                    <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="AddonsUsers.pagination.current_page === AddonsUsers.pagination.total_pages">
+                        {{ $tfhb_trans('Next') }}<Icon name="ArrowRight" width="20" />
+                    </a>
+                </div>
+            </div>
+
+            <!-- User Details Popup -->
+            <HbPopup 
+                :isOpen="AddonsUsers.user_details_popup.show" 
+                @modal-close="closeUserDetails" 
+                max_width="800px" 
+                name="user-details-modal"
+            >
+                <template #header>
+                    <h3>{{ $tfhb_trans('User Details') }}</h3>
+                </template>
+                
+                <template #content>
+                    <div v-if="AddonsUsers.user_details_popup.user_data" class="tfhb-booking-info tfhb-full-width tfhb-flexbox tfhb-gap-16">
+                        <!-- Basic Info -->
+                        <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width">
+                            <h3> {{ $tfhb_trans('Basic Information') }} </h3>
+                            <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
+                                <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
+                                    <Icon name="User" size="20" /> 
+                                    {{ AddonsUsers.user_details_popup.user_data.name || 'N/A' }}
+                                </div>
+                                <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
+                                    <Icon name="Mail" size="20" /> 
+                                    {{ AddonsUsers.user_details_popup.user_data.email || 'N/A' }}
+                                </div>
+                                <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
+                                    <Icon name="CheckCircle" size="20" /> 
+                                    <span :class="getStatusClass(AddonsUsers.user_details_popup.user_data.status)">
+                                        {{ getStatusText(AddonsUsers.user_details_popup.user_data.status) }}
+                                    </span>
                                 </div>
                             </div>
-                        </td>
-                        <td>
-                            <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
-                                <span @click.stop="showUserDetails(user)">
-                                    <Icon name="Eye" width="20" />
-                                </span>
-                                <span @click.stop="AddonsUsers.showEditUser(user, AddonsUsers.current_tab)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
-                                    {{ $tfhb_trans('Edit') }}
-                                </span>
-                                <span v-if="isUserInactive(user.status)" @click.stop="handleStatusUpdate(user.id, 'activate')" class="tfhb-activate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
-                                     <Icon name="Check" width="16" />
-                                     {{ $tfhb_trans('Active') }}
-                                 </span> 
-                                 <span v-else @click.stop="handleStatusUpdate(user.id, 'deactivate')" class="tfhb-deactivate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
-                                     <Icon name="X" width="16" />
-                                     {{ $tfhb_trans('Deactive') }}
-                                 </span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                        </div>
 
-        
-
-        <!-- Empty State -->
-        <div v-else-if="!AddonsUsers.skeleton" class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-booking-notice tfhb-mt-32">
-            <Icon name="Users" size="48" />
-            <p>{{ $tfhb_trans('No users found') }}</p>
-        </div>
-
-        <!-- Pagination -->
-        <div v-if="AddonsUsers.pagination.total_pages > 1" class="tfhb-booking-details-pagination tfhb-flexbox tfhb-mt-32">
-            <div class="tfhb-prev-next-button">
-                <a href="#" @click.prevent="prevPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="AddonsUsers.pagination.current_page === 1">
-                    <Icon name="ArrowLeft" width="20" />{{ $tfhb_trans('Previous') }}
-                </a>
-            </div>
-            <div class="tfhb-pagination">
-                <ul class="tfhb-flexbox tfhb-gap-0 tfhb-justify-normal">
-                    <li v-for="page in AddonsUsers.pagination.total_pages" :key="page" :class="{ active: page === AddonsUsers.pagination.current_page }">
-                        <a href="#" @click.prevent="changePage(page)" :class="{ 'active-link': page === AddonsUsers.pagination.current_page }">{{ page }}</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="tfhb-prev-next-button">
-                <a href="#" @click.prevent="nextPage" class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal" :disabled="AddonsUsers.pagination.current_page === AddonsUsers.pagination.total_pages">
-                    {{ $tfhb_trans('Next') }}<Icon name="ArrowRight" width="20" />
-                </a>
-            </div>
-        </div>
-
-        <!-- User Details Popup -->
-        <HbPopup 
-            :isOpen="AddonsUsers.user_details_popup.show" 
-            @modal-close="closeUserDetails" 
-            max_width="800px" 
-            name="user-details-modal"
-        >
-            <template #header>
-                <h3>{{ $tfhb_trans('User Details') }}</h3>
-            </template>
-            
-            <template #content>
-                <div v-if="AddonsUsers.user_details_popup.user_data" class="tfhb-booking-info tfhb-full-width tfhb-flexbox tfhb-gap-16">
-                    <!-- Basic Info -->
-                    <div class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width">
-                        <h3>{{ $tfhb_trans('Basic Information') }}</h3>
-                        <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
-                            <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
-                                <Icon name="User" size="20" /> 
-                                {{ AddonsUsers.user_details_popup.user_data.name || 'N/A' }}
-                            </div>
-                            <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
-                                <Icon name="Mail" size="20" /> 
-                                {{ AddonsUsers.user_details_popup.user_data.email || 'N/A' }}
-                            </div>
-                            <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
-                                <Icon name="CheckCircle" size="20" /> 
-                                <span :class="getStatusClass(AddonsUsers.user_details_popup.user_data.status)">
-                                    {{ getStatusText(AddonsUsers.user_details_popup.user_data.status) }}
-                                </span>
+                        <!-- User Data -->
+                        <div v-if="AddonsUsers.user_details_popup.user_data.data" class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width">
+                            <h3>{{ $tfhb_trans('Registration Data') }}</h3>
+                            <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12" style="flex-direction: column;">
+                                <div v-for="(value, key) in AddonsUsers.user_details_popup.user_data.data" :key="key" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: 100% !important;">
+                                    <Icon name="FileText" size="20" />
+                                    <div class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>
+                                        <span v-if="Array.isArray(value)" class="tfhb-array-list">
+                                            <span v-for="item in value" :key="item" class="tfhb-array-item"> {{ item }}</span>
+                                        </span>
+                                        <span v-else-if="typeof value === 'object'" class="tfhb-object-value">
+                                            {{ JSON.stringify(value, null, 2) }}
+                                        </span>
+                                        <span v-else-if="value === '' || value === null || value === undefined" class="tfhb-empty-value">
+                                            {{ $tfhb_trans('Not provided') }}
+                                        </span>
+                                        <span v-else>{{ value }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </template>
+            </HbPopup>
 
-                    <!-- User Data -->
-                     <div v-if="AddonsUsers.user_details_popup.user_data.data" class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width">
-                         <h3>{{ $tfhb_trans('Registration Data') }}</h3>
-                         <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
-                             <div v-for="(value, key) in AddonsUsers.user_details_popup.user_data.data" :key="key" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
-                                 <Icon name="FileText" size="20" />
-                                 <div class="tfhb-booking-details">
-                                     <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>
-                                     <span v-if="Array.isArray(value)" class="tfhb-array-list">
-                                         <span v-for="item in value" :key="item" class="tfhb-array-item">{{ item }}</span>
-                                     </span>
-                                     <span v-else-if="typeof value === 'object'" class="tfhb-object-value">
-                                         {{ JSON.stringify(value, null, 2) }}
-                                     </span>
-                                     <span v-else-if="value === '' || value === null || value === undefined" class="tfhb-empty-value">
-                                         {{ $tfhb_trans('Not provided') }}
-                                     </span>
-                                     <span v-else>{{ value }}</span>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                </div>
-            </template>
-        </HbPopup>
-
-        <!-- Edit User Popup -->
-        <HbPopup 
-            :isOpen="AddonsUsers.edit_user_popup.show" 
-            @modal-close="AddonsUsers.closeEditUser()" 
-            max_width="1000px" 
-            name="edit-user-modal"
-            gap="24px"
-        >
-            <template #header>
-                <h3>{{ $tfhb_trans('Edit User Data') }} - {{ AddonsUsers.edit_user_popup.user_data?.name || 'User' }}</h3>
-            </template>
-            
-            <template #content>
-                <div v-if="AddonsUsers.edit_user_popup.user_data" class="tfhb-edit-user-form">
-                    <!-- Success/Error Messages -->
-                    <div v-if="AddonsUsers.edit_user_popup.success" class="tfhb-success-message">
-                        {{ $tfhb_trans('User data updated successfully!') }}
+            <!-- Edit User Popup -->
+            <HbPopup 
+                :isOpen="AddonsUsers.edit_user_popup.show" 
+                @modal-close="AddonsUsers.closeEditUser()" 
+                max_width="1000px" 
+                name="edit-user-modal"
+                gap="24px"
+            >
+                <template #header>
+                    <h3>{{ $tfhb_trans('Edit User Data') }} - {{ AddonsUsers.edit_user_popup.user_data?.name || 'User' }}</h3>
+                </template>
+                
+                <template #content>
+                    <div v-if="AddonsUsers.edit_user_popup.user_data" class="tfhb-edit-user-form">
+                        <!-- Success/Error Messages -->
+                        <div v-if="AddonsUsers.edit_user_popup.success" class="tfhb-success-message">
+                            {{ $tfhb_trans('User data updated successfully!') }}
+                        </div>
+                        <div v-if="AddonsUsers.edit_user_popup.error" class="tfhb-error-message">
+                            {{ AddonsUsers.edit_user_popup.error }}
+                        </div>
+                        
+                                            <!-- Dynamic Form Fields -->
+                        <div class="tfhb-form-fields-container">
+                            <div v-if="Object.keys(AddonsUsers.edit_user_popup.form_data).length === 0" class="tfhb-loading-message">
+                                {{ $tfhb_trans('Loading form fields...') }}
+                            </div>
+                            <div v-else>
+                                <!-- Basic Information Section -->
+                                <div class="tfhb-form-section">
+                                    <h4>{{ $tfhb_trans('Basic Information') }}</h4>
+                                    <div class="tfhb-form-single-column">
+                                        <div v-for="(value, key) in AddonsUsers.edit_user_popup.form_data" :key="key" class="tfhb-form-field">
+                                            <label :for="key" class="tfhb-field-label">
+                                                {{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
+                                            </label>
+                                            
+                                            <!-- Text Input -->
+                                            <div v-if="typeof value === 'string' && !key.includes('url') && !key.includes('image')" class="tfhb-field-input">
+                                                <input 
+                                                    :type="key === 'email' ? 'email' : 'text'"
+                                                    :id="key"
+                                                    v-model="AddonsUsers.edit_user_popup.form_data[key]"
+                                                    :placeholder="key.replace(/_/g, ' ')"
+                                                    class="tfhb-input"
+                                                    :disabled="key === 'email'"
+                                                />
+                                            </div>
+                                            
+                                            <!-- URL Input -->
+                                            <div v-else-if="typeof value === 'string' && (key.includes('url') || key.includes('image'))" class="tfhb-field-input">
+                                                <input 
+                                                    type="url"
+                                                    :id="key"
+                                                    v-model="AddonsUsers.edit_user_popup.form_data[key]"
+                                                    :placeholder="'Enter ' + key.replace(/_/g, ' ')"
+                                                    class="tfhb-input"
+                                                />
+                                            </div>
+                                            
+                                            <!-- Array Input (for checkbox fields from registration) -->
+                                            <div v-else-if="Array.isArray(value)" class="tfhb-field-input">
+                                                <div class="tfhb-checkbox-group">
+                                                    <label v-for="option in getFieldOptions(key)" :key="option" class="tfhb-checkbox-item">
+                                                        <input 
+                                                            type="checkbox"
+                                                            :value="option"
+                                                            v-model="AddonsUsers.edit_user_popup.form_data[key]"
+                                                            class="tfhb-checkbox"
+                                                        />
+                                                        <span class="tfhb-checkbox-label">{{ option }}</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Select Input (for select fields from registration) -->
+                                            <div v-else-if="getFieldType(key) === 'select'" class="tfhb-field-input">
+                                                <select 
+                                                    :id="key"
+                                                    v-model="AddonsUsers.edit_user_popup.form_data[key]"
+                                                    class="tfhb-select"
+                                                >
+                                                    <option value="">{{ $tfhb_trans('Select an option') }}</option>
+                                                    <option v-for="option in getFieldOptions(key)" :key="option" :value="option">
+                                                        {{ option }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            
+                                            
+                                            
+                                            <!-- Default Input -->
+                                            <div v-else class="tfhb-field-input">
+                                                <input 
+                                                    type="text"
+                                                    :id="key"
+                                                    v-model="AddonsUsers.edit_user_popup.form_data[key]"
+                                                    :placeholder="'Enter ' + key.replace(/_/g, ' ')"
+                                                    class="tfhb-input"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="tfhb-form-actions">
+                            <HbButton 
+                                classValue="tfhb-btn secondary-btn"
+                                @click="AddonsUsers.closeEditUser()"
+                                :buttonText="$tfhb_trans('Cancel')"
+                                :disabled="AddonsUsers.edit_user_popup.loading"
+                            />
+                            <HbButton 
+                                classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation"
+                                @click="AddonsUsers.saveEditUser()"
+                                :buttonText="$tfhb_trans('Save Changes')"
+                                icon="Save"
+                                :pre_loader="AddonsUsers.edit_user_popup.loading"
+                                :disabled="AddonsUsers.edit_user_popup.loading"
+                            />
+                        </div>
                     </div>
-                    <div v-if="AddonsUsers.edit_user_popup.error" class="tfhb-error-message">
-                        {{ AddonsUsers.edit_user_popup.error }}
-                    </div>
-                    
-                                         <!-- Dynamic Form Fields -->
-                     <div class="tfhb-form-fields-container">
-                         <div v-if="Object.keys(AddonsUsers.edit_user_popup.form_data).length === 0" class="tfhb-loading-message">
-                             {{ $tfhb_trans('Loading form fields...') }}
-                         </div>
-                         <div v-else>
-                             <!-- Basic Information Section -->
-                             <div class="tfhb-form-section">
-                                 <h4>{{ $tfhb_trans('Basic Information') }}</h4>
-                                 <div class="tfhb-form-single-column">
-                                     <div v-for="(value, key) in AddonsUsers.edit_user_popup.form_data" :key="key" class="tfhb-form-field">
-                                         <label :for="key" class="tfhb-field-label">
-                                             {{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
-                                         </label>
-                                         
-                                         <!-- Text Input -->
-                                         <div v-if="typeof value === 'string' && !key.includes('url') && !key.includes('image')" class="tfhb-field-input">
-                                             <input 
-                                                 :type="key === 'email' ? 'email' : 'text'"
-                                                 :id="key"
-                                                 v-model="AddonsUsers.edit_user_popup.form_data[key]"
-                                                 :placeholder="key.replace(/_/g, ' ')"
-                                                 class="tfhb-input"
-                                                 :disabled="key === 'email'"
-                                             />
-                                         </div>
-                                         
-                                         <!-- URL Input -->
-                                         <div v-else-if="typeof value === 'string' && (key.includes('url') || key.includes('image'))" class="tfhb-field-input">
-                                             <input 
-                                                 type="url"
-                                                 :id="key"
-                                                 v-model="AddonsUsers.edit_user_popup.form_data[key]"
-                                                 :placeholder="'Enter ' + key.replace(/_/g, ' ')"
-                                                 class="tfhb-input"
-                                             />
-                                         </div>
-                                         
-                                         <!-- Array Input (for checkbox fields from registration) -->
-                                         <div v-else-if="Array.isArray(value)" class="tfhb-field-input">
-                                             <div class="tfhb-checkbox-group">
-                                                 <label v-for="option in getFieldOptions(key)" :key="option" class="tfhb-checkbox-item">
-                                                     <input 
-                                                         type="checkbox"
-                                                         :value="option"
-                                                         v-model="AddonsUsers.edit_user_popup.form_data[key]"
-                                                         class="tfhb-checkbox"
-                                                     />
-                                                     <span class="tfhb-checkbox-label">{{ option }}</span>
-                                                 </label>
-                                             </div>
-                                         </div>
-                                         
-                                         <!-- Select Input (for select fields from registration) -->
-                                         <div v-else-if="getFieldType(key) === 'select'" class="tfhb-field-input">
-                                             <select 
-                                                 :id="key"
-                                                 v-model="AddonsUsers.edit_user_popup.form_data[key]"
-                                                 class="tfhb-select"
-                                             >
-                                                 <option value="">{{ $tfhb_trans('Select an option') }}</option>
-                                                 <option v-for="option in getFieldOptions(key)" :key="option" :value="option">
-                                                     {{ option }}
-                                                 </option>
-                                             </select>
-                                         </div>
-                                         
-                                         
-                                         
-                                         <!-- Default Input -->
-                                         <div v-else class="tfhb-field-input">
-                                             <input 
-                                                 type="text"
-                                                 :id="key"
-                                                 v-model="AddonsUsers.edit_user_popup.form_data[key]"
-                                                 :placeholder="'Enter ' + key.replace(/_/g, ' ')"
-                                                 class="tfhb-input"
-                                             />
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="tfhb-form-actions">
-                        <HbButton 
-                            classValue="tfhb-btn secondary-btn"
-                            @click="AddonsUsers.closeEditUser()"
-                            :buttonText="$tfhb_trans('Cancel')"
-                            :disabled="AddonsUsers.edit_user_popup.loading"
-                        />
-                        <HbButton 
-                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation"
-                            @click="AddonsUsers.saveEditUser()"
-                            :buttonText="$tfhb_trans('Save Changes')"
-                            icon="Save"
-                            :pre_loader="AddonsUsers.edit_user_popup.loading"
-                            :disabled="AddonsUsers.edit_user_popup.loading"
-                        />
-                    </div>
-                </div>
-            </template>
-        </HbPopup>
+                </template>
+            </HbPopup>
 
 
+        </div>
     </div>
+
 </template>
 
 <style scoped>

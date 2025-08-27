@@ -15,6 +15,7 @@ import { Booking } from '@/store/booking'
 import { Host } from '@/store/hosts'
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import QRCode from 'qrcode';
 
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -22,6 +23,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
 import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
+import { AddonsSettings } from '@/store/settings/addons-settings.js';
 
 const router = useRouter()
 const bookingView = ref('calendar');
@@ -440,6 +442,266 @@ const exportAsPDF = () => {
     }
 };
 
+// Test function to debug user data
+const testUserData = (user) => {
+    console.log('=== USER DATA DEBUG ===');
+    console.log('Full user object:', user);
+    console.log('User ID:', user?.ID);
+    console.log('User role:', user?.user_role);
+    console.log('First name:', user?.first_name);
+    console.log('Last name:', user?.last_name);
+    console.log('Display name:', user?.display_name);
+    console.log('User data object:', user?.user_data);
+    if (user?.user_data) {
+        console.log('User data name:', user.user_data.name);
+        console.log('User data email:', user.user_data.email);
+        console.log('User data job_title:', user.user_data.job_title);
+        console.log('User data company:', user.user_data.company_website);
+    }
+    console.log('=== END DEBUG ===');
+};
+
+const DownloadBadgePDFWithQRCode = async (user) => {
+    try { 
+        console.log('Starting PDF generation for user:', user);
+        
+        // Validate user object
+        if (!user) {
+            throw new Error('User object is required');
+        }
+        
+        // Extract user data from the complex structure with better fallbacks
+        const userName = user.user_data?.name || 
+                        (user.first_name && user.last_name ? `${user.first_name} ${user.last_name}`.trim() : '') || 
+                        user.display_name || 
+                        'User Name';
+        
+        const userEmail = user.user_data?.email || 
+                          user.user_email || 
+                          'No Email';
+        
+        const userRole = user.user_data?.job_title || 
+                        user.user_role || 
+                        'Participant';
+        
+        const companyName = user.user_data?.company_website || 
+                           user.user_data?.company_name || 
+                           'Company Name';
+        
+        const jobTitle = user.user_data?.job_title || 
+                        user.user_data?.position || 
+                        'Position';
+        
+        const region = user.user_data?.state || user.user_data?.region || 'Region'; 
+        
+        // Create QR code data with more comprehensive information
+        const qr_data = `Name: ${userName}  | Role: ${userRole} | Email: ${userEmail}`;
+        
+        console.log('Generating QR code for data:', qr_data);
+        
+        // Generate QR code as data URL
+        const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
+            width: 150,
+            margin: 2,
+            color: {
+                dark: '#000000',
+                light: '#FFFFFF'
+            }
+        });
+        
+        console.log('QR code generated successfully');
+        
+        // Create new PDF document (A4 size)
+        const pdf = new jsPDF('portrait', 'mm', 'a4');
+        
+        // A4 dimensions: 210mm x 297mm
+        const pageWidth = 210;
+        const pageHeight = 297;
+        let backgroundImageUrl = '';
+        
+        // Determine background image based on user role
+        if (user.user_role === 'buyers' || user.user_role === 'Buyers') {
+            backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || '';
+        } else if (user.user_role === 'sellers' || user.user_role === 'Sellers') {
+            backgroundImageUrl = AddonsSettings?.Sellers?.badge_pdf_image || '';
+        } else if (user.user_role === 'exhibitors' || user.user_role === 'Exhibitors') {
+            backgroundImageUrl = AddonsSettings?.Exhibitors?.badge_pdf_image || '';
+        }
+        
+        console.log('Background image URL:', backgroundImageUrl);
+        
+        // Function to create PDF without background
+        const createPDFWithoutBackground = () => {
+            try {
+                console.log('Creating PDF without background');
+                
+                // Calculate bottom right quadrant positions
+                const quadrantWidth = pageWidth / 2;
+                const quadrantHeight = pageHeight / 2;
+                const startX = quadrantWidth; // Start from right half
+                const startY = quadrantHeight; // Start from bottom half
+                
+                // Add QR code (centered in bottom right quadrant)
+                const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
+                const qrX = startX + (quadrantWidth - qrSize) / 2;
+                const qrY = startY + 80; // Reduced spacing from top
+                pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                
+                // Add company name (centered in bottom right quadrant, above QR code)
+                pdf.setFontSize(10); // Smaller font for company name
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const companyNameWidth = pdf.getTextWidth(companyName);
+                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 60);
+                
+                // Add job title (centered in bottom right quadrant, below QR code)
+                pdf.setFontSize(11); // Reduced font size
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const jobTitleWidth = pdf.getTextWidth(jobTitle);
+                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                
+                // Add user name (centered in bottom right quadrant, below job title)
+                pdf.setFontSize(16); // Reduced font size
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'bold');
+                const nameText = userName;
+                const nameWidth = pdf.getTextWidth(nameText);
+                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+                
+                // Add region (centered in bottom right quadrant, below name)
+                pdf.setFontSize(9); // Small font for region
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const regionWidth = pdf.getTextWidth(region);
+                pdf.text(region, startX + (quadrantWidth - regionWidth) / 2, startY + 138);
+                
+                // Save the PDF
+                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                pdf.save(fileName);
+                
+                console.log('PDF saved successfully:', fileName);
+                
+                toast.success('Badge PDF generated successfully! (without background)', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            } catch (error) {
+                console.error('Error creating PDF without background:', error);
+                toast.error('Failed to create PDF. Please try again.', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            }
+        };
+        
+        // Function to load image and create PDF
+        const createPDFWithBackground = () => {
+            try {
+                console.log('Creating PDF with background');
+                
+                // Add background image if available
+                if (backgroundImageUrl) {
+                    pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                }
+                
+                // Calculate bottom right quadrant positions
+                const quadrantWidth = pageWidth / 2;
+                const quadrantHeight = pageHeight / 2;
+                const startX = quadrantWidth; // Start from right half
+                const startY = quadrantHeight; // Start from bottom half
+                
+                // Add QR code (centered in bottom right quadrant)
+                const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
+                const qrX = startX + (quadrantWidth - qrSize) / 2;
+                const qrY = startY + 80; // Reduced spacing from top
+                pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                
+                // Add company name (centered in bottom right quadrant, above QR code)
+                pdf.setFontSize(10); // Smaller font for company name
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const companyNameWidth = pdf.getTextWidth(companyName);
+                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 60);
+                
+                // Add job title (centered in bottom right quadrant, below QR code)
+                pdf.setFontSize(11); // Reduced font size
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const jobTitleWidth = pdf.getTextWidth(jobTitle);
+                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                
+                // Add user name (centered in bottom right quadrant, below job title)
+                pdf.setFontSize(16); // Reduced font size
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'bold');
+                const nameText = userName;
+                const nameWidth = pdf.getTextWidth(nameText);
+                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+                
+                // Add region (centered in bottom right quadrant, below name)
+                pdf.setFontSize(9); // Small font for region
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const regionWidth = pdf.getTextWidth(region);
+                pdf.text(region, startX + (quadrantWidth - regionWidth) / 2, startY + 138);
+                
+                // Save the PDF
+                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                pdf.save(fileName);
+                
+                console.log('PDF saved successfully:', fileName);
+                
+                toast.success('Badge PDF generated successfully!', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            } catch (error) {
+                console.error('Error creating PDF with background:', error);
+                // Fallback to creating PDF without background
+                createPDFWithoutBackground();
+            }
+        };
+        
+        // Try to load the background image first
+        if (backgroundImageUrl) {
+            console.log('Attempting to load background image');
+            const img = new Image();
+            img.crossOrigin = 'anonymous'; // Handle CORS if needed
+            
+            img.onload = () => {
+                console.log('Background image loaded successfully');
+                try {
+                    createPDFWithBackground();
+                } catch (error) {
+                    console.error('Error creating PDF with background:', error);
+                    // Fallback to creating PDF without background
+                    createPDFWithoutBackground();
+                }
+            };
+            
+            img.onerror = () => {
+                console.warn('Background image failed to load, creating PDF without background');
+                createPDFWithoutBackground();
+            };
+            
+            // Start loading the image
+            img.src = backgroundImageUrl;
+        } else {
+            console.log('No background image, creating PDF directly');
+            // No background image, create PDF directly
+            createPDFWithoutBackground();
+        }
+        
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        toast.error(`Failed to generate PDF: ${error.message}`, {
+            position: 'bottom-right',
+            autoClose: 5000,
+        });
+    }
+}
+
 const deleteBooking = async ($id, $host) => { 
     let deleteBooking = {
         id: $id,
@@ -648,7 +910,9 @@ onBeforeMount(() => {
     // Meeting.fetchMeetings();
     // Host.fetchHosts();
     
-    // Load seller's agenda data
+    AddonsSettings.FetchAddonsSettings();
+    
+    // Load buyer's agenda data
     if (AddonsAuth.loggedInUser?.ID) {
         buyersAgenda(AddonsAuth.loggedInUser.ID);
         
@@ -734,6 +998,13 @@ onBeforeMount(() => {
         <!-- Search and Filter Controls -->
     <div class="tfhb-calendar-controls tfhb-flexbox tfhb-justify-between tfhb-align-center tfhb-mb-24">
         
+        <!-- Debug Info -->
+        <div v-if="AddonsAuth.loggedInUser" style="font-size: 12px; color: #666; max-width: 300px;">
+            <strong>Debug:</strong> User ID: {{ AddonsAuth.loggedInUser.ID }}, 
+            Role: {{ AddonsAuth.loggedInUser.user_role }}, 
+            Name: {{ AddonsAuth.loggedInUser.user_data?.name || AddonsAuth.loggedInUser.first_name }}
+        </div>
+        
         <!-- Export Buttons -->
         <div class="tfhb-export-buttons tfhb-flexbox tfhb-gap-8">
             <button class="tfhb-btn secondary-btn" @click="exportCalendar('iCal')">
@@ -743,6 +1014,14 @@ onBeforeMount(() => {
             <button class="tfhb-btn secondary-btn" @click="exportCalendar('PDF')">
                 <Icon name="FileText" size=16 />
                Export Calendar PDF
+            </button>
+            <button class="tfhb-btn secondary-btn" @click="testUserData(AddonsAuth.loggedInUser)" :disabled="!AddonsAuth.loggedInUser" style="margin-right: 8px;">
+                <Icon name="Bug" size=16 />
+               Debug User Data
+            </button>
+            <button class="tfhb-btn secondary-btn" @click="DownloadBadgePDFWithQRCode(AddonsAuth.loggedInUser)" :disabled="!AddonsAuth.loggedInUser">
+                <Icon name="FileText" size=16 />
+               Export Badge PDF
             </button>
         </div>
 

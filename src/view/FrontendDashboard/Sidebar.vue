@@ -186,6 +186,18 @@ onBeforeMount(async () => {
                         <span >{{ $tfhb_trans('User Management') }}</span>
                     </router-link>
                 </li> 
+                <li v-if="$addons_apps == true ">
+                    <router-link to="/addons-add-matching" :class="{ 'active': $route.path === '/addons-add-matching' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
+                        <Icon name="FilePenLine" size="20" /> 
+                        <span >{{ $tfhb_trans('Add Matching') }}</span>
+                    </router-link>
+                </li> 
+                <li v-if="$addons_apps == true ">
+                    <router-link to="/addons-view-matching" :class="{ 'active': $route.path === '/addons-view-matching' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
+                        <Icon name="RefreshCcw" size="20" /> 
+                        <span >{{ $tfhb_trans('View Matching') }}</span>
+                    </router-link>
+                </li> 
 
             </ul>
  

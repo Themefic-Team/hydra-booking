@@ -14,6 +14,7 @@ import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 
+import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue' 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 
 const informationPopup = ref(false);
@@ -237,6 +238,18 @@ onBeforeMount(() => {
                 ]" 
             />
             <!-- Time format --> 
+
+            <!-- Time format -->   
+            <HbWpFileUpload
+                name="badge_pdf"
+                v-model="AddonsSettings.Exhibitors.badge_pdf_image"
+                :label="$tfhb_trans('Choose PDF or drag & drop it here.')"
+                :subtitle="$tfhb_trans('PNG. Max 5 MB.')"
+                :btn_label="$tfhb_trans('Upload Badge PDF Image')"
+                file_size="5"
+                file_format="png"
+                width="100"
+            />
         </div> 
         <div class="tfhb-admin-title" >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Exhibitors Registration Forms Builders') }}   </h2> 

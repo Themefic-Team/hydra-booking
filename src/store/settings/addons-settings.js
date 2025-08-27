@@ -17,6 +17,7 @@ const AddonsSettings = reactive({
         registration_end_date : '',
         enable_registration : 0,
         default_account_status : 'active',
+        badge_pdf_image : '',
     },
     buyers: {
         registration_froms_fields : [],
@@ -24,6 +25,7 @@ const AddonsSettings = reactive({
         registration_end_date : '',
         enable_registration : 0,
         default_account_status : 'active',
+        badge_pdf_image : '',
     },
     Exhibitors: {
         registration_froms_fields : [],
@@ -31,6 +33,7 @@ const AddonsSettings = reactive({
         registration_end_date : '',
         enable_registration : 0,
         default_account_status : 'active',
+        badge_pdf_image : '',
     },
     // Matching Settings
     matching_settings: {

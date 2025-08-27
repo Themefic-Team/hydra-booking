@@ -11,6 +11,7 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import { toast } from "vue3-toastify"; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 
+import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue' 
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 
@@ -172,7 +173,17 @@ const copyShortcodeCode = () => {
                     {'name': 'Active', 'value': 'active'}
                 ]" 
             />
-            <!-- Time format --> 
+            <!-- Time format -->   
+            <HbWpFileUpload
+                name="badge_pdf"
+                v-model="AddonsSettings.buyers.badge_pdf_image"
+                :label="$tfhb_trans('Choose PDF or drag & drop it here.')"
+                :subtitle="$tfhb_trans('PNG. Max 5 MB.')"
+                :btn_label="$tfhb_trans('Upload Badge PDF Image')"
+                file_size="5"
+                file_format="png"
+                width="100"
+            />
         </div> 
         <div class="tfhb-admin-title" >
             <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Seller Registration Forms Builders') }}   </h2> 

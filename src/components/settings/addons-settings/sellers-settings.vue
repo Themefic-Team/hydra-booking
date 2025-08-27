@@ -13,6 +13,7 @@ import { toast } from "vue3-toastify";
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 
+import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue' 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
@@ -172,6 +173,17 @@ const copyShortcodeCode = () => {
                     {'name': 'Inactive', 'value': 'inactive'}, 
                     {'name': 'Active', 'value': 'active'}
                 ]" 
+            />
+            <!-- Time format -->   
+            <HbWpFileUpload
+                name="badge_pdf"
+                v-model="AddonsSettings.Sellers.badge_pdf_image"
+                :label="$tfhb_trans('Choose PDF or drag & drop it here.')"
+                :subtitle="$tfhb_trans('PNG. Max 5 MB.')"
+                :btn_label="$tfhb_trans('Upload Badge PDF Image')"
+                file_size="5"
+                file_format="png"
+                width="100"
             />
             <!-- Time format --> 
         </div> 

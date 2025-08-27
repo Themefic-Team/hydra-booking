@@ -261,6 +261,7 @@ watch(() => props.modelValue, (newVal) => {
             <div class="upload-file-preview-items tfhb-flexbox tfhb-justify-between tfhb-gap-16">
                 <div class="tfhb-flexbox tfhb-upload-flie-img-wrap tfhb-gap-16">
                     <img :src="imageUrl" alt="Uploaded Image">
+                    
                     <span class="file-name">{{ fileName || 'Uploaded Image' }}</span>
                 </div>
                 
