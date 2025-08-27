@@ -755,8 +755,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                           user.user_email || 
                           'No Email';
         
-        const userRole = user.user_data?.incarico || 
-                        user.user_role || 
+        const userRole = user.user_role || 
                         'Participant';
         
         const companyName = user.user_data?.denominazione_operatore_azienda || 
@@ -828,8 +827,8 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                const jobTitleWidth = pdf.getTextWidth(userRole);
+                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
                 
                 // Add user name (centered in bottom right quadrant, below job title)
                 pdf.setFontSize(16); // Reduced font size
@@ -838,14 +837,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const nameText = userName;
                 const nameWidth = pdf.getTextWidth(nameText);
                 pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
-                
-                // Add region (centered in bottom right quadrant, below name)
-                pdf.setFontSize(9); // Small font for region
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont('helvetica', 'normal');
-                const regionWidth = pdf.getTextWidth(region);
-                pdf.text(region, startX + (quadrantWidth - regionWidth) / 2, startY + 138);
-                
+                 
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
@@ -887,19 +879,13 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const qrY = startY + 80; // Reduced spacing from top
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
                 
-                // Add company name (centered in bottom right quadrant, above QR code)
-                pdf.setFontSize(10); // Smaller font for company name
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont('helvetica', 'normal');
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 60);
-                
+ 
                 // Add job title (centered in bottom right quadrant, below QR code)
                 pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                const jobTitleWidth = pdf.getTextWidth(userRole);
+                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
                 
                 // Add user name (centered in bottom right quadrant, below job title)
                 pdf.setFontSize(16); // Reduced font size
@@ -909,13 +895,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const nameWidth = pdf.getTextWidth(nameText);
                 pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
                 
-                // Add region (centered in bottom right quadrant, below name)
-                pdf.setFontSize(9); // Small font for region
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont('helvetica', 'normal');
-                const regionWidth = pdf.getTextWidth(region);
-                pdf.text(region, startX + (quadrantWidth - regionWidth) / 2, startY + 138);
-                
+ 
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);

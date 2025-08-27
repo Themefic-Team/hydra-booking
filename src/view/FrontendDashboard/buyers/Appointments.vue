@@ -471,7 +471,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         }
         
         // Extract user data from the complex structure with better fallbacks
-        const userName = user.user_data?.name || 
+        const userName = user.user_data?.family_name_of_participant || 
                         (user.first_name && user.last_name ? `${user.first_name} ${user.last_name}`.trim() : '') || 
                         user.display_name || 
                         'User Name';
@@ -480,8 +480,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                           user.user_email || 
                           'No Email';
         
-        const userRole = user.user_data?.job_title || 
-                        user.user_role || 
+        const userRole =  user.user_role || 
                         'Participant';
         
         const companyName = user.user_data?.company_website || 
@@ -532,8 +531,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         
         // Function to create PDF without background
         const createPDFWithoutBackground = () => {
-            try {
-                console.log('Creating PDF without background');
+            try { 
                 
                 // Calculate bottom right quadrant positions
                 const quadrantWidth = pageWidth / 2;
@@ -546,20 +544,14 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const qrX = startX + (quadrantWidth - qrSize) / 2;
                 const qrY = startY + 80; // Reduced spacing from top
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
-                
-                // Add company name (centered in bottom right quadrant, above QR code)
-                pdf.setFontSize(10); // Smaller font for company name
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont('helvetica', 'normal');
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 60);
+                 
                 
                 // Add job title (centered in bottom right quadrant, below QR code)
                 pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                const jobTitleWidth = pdf.getTextWidth(userRole);
+                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
                 
                 // Add user name (centered in bottom right quadrant, below job title)
                 pdf.setFontSize(16); // Reduced font size
@@ -569,13 +561,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const nameWidth = pdf.getTextWidth(nameText);
                 pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
                 
-                // Add region (centered in bottom right quadrant, below name)
-                pdf.setFontSize(9); // Small font for region
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont('helvetica', 'normal');
-                const regionWidth = pdf.getTextWidth(region);
-                pdf.text(region, startX + (quadrantWidth - regionWidth) / 2, startY + 138);
-                
+     
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
@@ -616,20 +602,14 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const qrX = startX + (quadrantWidth - qrSize) / 2;
                 const qrY = startY + 80; // Reduced spacing from top
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
-                
-                // Add company name (centered in bottom right quadrant, above QR code)
-                pdf.setFontSize(10); // Smaller font for company name
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont('helvetica', 'normal');
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 60);
+                 
                 
                 // Add job title (centered in bottom right quadrant, below QR code)
                 pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                const jobTitleWidth = pdf.getTextWidth(userRole);
+                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
                 
                 // Add user name (centered in bottom right quadrant, below job title)
                 pdf.setFontSize(16); // Reduced font size
@@ -638,13 +618,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const nameText = userName;
                 const nameWidth = pdf.getTextWidth(nameText);
                 pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
-                
-                // Add region (centered in bottom right quadrant, below name)
-                pdf.setFontSize(9); // Small font for region
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont('helvetica', 'normal');
-                const regionWidth = pdf.getTextWidth(region);
-                pdf.text(region, startX + (quadrantWidth - regionWidth) / 2, startY + 138);
+                 
                 
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
@@ -998,12 +972,7 @@ onBeforeMount(() => {
         <!-- Search and Filter Controls -->
     <div class="tfhb-calendar-controls tfhb-flexbox tfhb-justify-between tfhb-align-center tfhb-mb-24">
         
-        <!-- Debug Info -->
-        <div v-if="AddonsAuth.loggedInUser" style="font-size: 12px; color: #666; max-width: 300px;">
-            <strong>Debug:</strong> User ID: {{ AddonsAuth.loggedInUser.ID }}, 
-            Role: {{ AddonsAuth.loggedInUser.user_role }}, 
-            Name: {{ AddonsAuth.loggedInUser.user_data?.name || AddonsAuth.loggedInUser.first_name }}
-        </div>
+ 
         
         <!-- Export Buttons -->
         <div class="tfhb-export-buttons tfhb-flexbox tfhb-gap-8">
@@ -1015,10 +984,7 @@ onBeforeMount(() => {
                 <Icon name="FileText" size=16 />
                Export Calendar PDF
             </button>
-            <button class="tfhb-btn secondary-btn" @click="testUserData(AddonsAuth.loggedInUser)" :disabled="!AddonsAuth.loggedInUser" style="margin-right: 8px;">
-                <Icon name="Bug" size=16 />
-               Debug User Data
-            </button>
+ 
             <button class="tfhb-btn secondary-btn" @click="DownloadBadgePDFWithQRCode(AddonsAuth.loggedInUser)" :disabled="!AddonsAuth.loggedInUser">
                 <Icon name="FileText" size=16 />
                Export Badge PDF
