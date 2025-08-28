@@ -35,7 +35,7 @@ class Login {
      * 
      */
 
-     public function hydra_login_form_shortcode() {
+     public function hydra_login_form_shortcode($atts) {
        
          // Enqueue Login Script
 		if ( ! wp_script_is( 'tfhb-app-login', 'enqueued' ) ) {
@@ -50,7 +50,15 @@ class Login {
         
         $forget_url = get_site_url() . '/?hydra-booking=forgot-password';
        
-        
+        // Attributes
+		$atts = shortcode_atts(
+			array(
+				'event_id' => 0, 
+			),
+			$atts,
+			'hydra_login_form'
+		);
+
 		// Start Buffer
 		ob_start(); 
 
@@ -76,6 +84,7 @@ class Login {
             </div>
             <form action="" id="tfhb-login-from">
                 <?php wp_nonce_field( 'tfhb_check_login_nonce', 'tfhb_login_nonce' ); ?>
+                <input type="hidden" name="event_id" value="<?php echo esc_attr($atts['event_id']) ?>">
                 <div class="tfhb-frontend-from__field-wrap">
                  
 
@@ -193,6 +202,12 @@ class Login {
             if ( is_wp_error( $user ) ) {
                 $response['message'] = $user->get_error_message();
             } else {
+
+                if(isset($_POST['event_id']) && $_POST['event_id'] != 0){
+                    // set cookies 
+                    setcookie('tfhb_event_id', $_POST['event_id'], time() + (86400 * 30), "/"); 
+                }
+                
                 $response['message'] = esc_html(__( 'Successfully logged in.', 'hydra-booking' ));
                 $response['success'] = true;
 
@@ -201,6 +216,9 @@ class Login {
 
                 $after_login_redirect = isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
                 $after_login_redirect_custom = isset($settings['login']['after_login_redirect_custom']) && !empty($settings['login']['after_login_redirect_custom']) ? $settings['login']['after_login_redirect_custom'] :  '';
+
+              
+
 
                 if('page' == $after_login_redirect_type || empty($after_login_redirect_custom)){
                     $response['redirect_url'] = get_permalink( $after_login_redirect );

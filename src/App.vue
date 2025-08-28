@@ -19,6 +19,12 @@ if("meetings"==requiredPart){
   localStorage.setItem('currentMenuItemIndex', 4);
 }else if("settings"==requiredPart){
   localStorage.setItem('currentMenuItemIndex', 5);
+}else if("addons-users"==requiredPart){
+  localStorage.setItem('currentMenuItemIndex', 7);
+}else if("addons-add-matching"==requiredPart){
+  localStorage.setItem('currentMenuItemIndex', 8);
+}else if("addons-view-matching"==requiredPart){
+  localStorage.setItem('currentMenuItemIndex', 9);
 }else{
   localStorage.setItem('currentMenuItemIndex', 1);
 }
