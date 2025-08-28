@@ -38,7 +38,7 @@ import { AddonsSettings } from '@/store/settings/addons-settings';
         />  -->
         <HbDropdown 
             v-model="AddonsSettings.event_settings.meeting_id" 
-            :label="'Select Meeting'"   
+            :label="'Select Default Meeting'"   
             width="100"
             :selected = "1"
             :placeholder="$tfhb_trans('Select')"

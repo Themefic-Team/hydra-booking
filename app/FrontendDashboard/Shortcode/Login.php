@@ -59,6 +59,13 @@ class Login {
 			'hydra_login_form'
 		);
 
+        $event_id = isset($atts['event_id']) && !empty($atts['event_id']) ? $atts['event_id'] : 0;
+        
+        if($event_id == 0){
+            $event_settings = !empty(get_option( '_tfhb_event_settings' )) && get_option( '_tfhb_event_settings' ) != false ? get_option( '_tfhb_event_settings' ) : array();  
+            $event_id = !empty($event_settings['meeting_id']) ? $event_settings['meeting_id'] : 0; 
+        }
+
 		// Start Buffer
 		ob_start(); 
 
@@ -84,7 +91,7 @@ class Login {
             </div>
             <form action="" id="tfhb-login-from">
                 <?php wp_nonce_field( 'tfhb_check_login_nonce', 'tfhb_login_nonce' ); ?>
-                <input type="hidden" name="event_id" value="<?php echo esc_attr($atts['event_id']) ?>">
+                <input type="hidden" name="event_id" value="<?php echo esc_attr($event_id) ?>">
                 <div class="tfhb-frontend-from__field-wrap">
                  
 
@@ -203,11 +210,34 @@ class Login {
                 $response['message'] = $user->get_error_message();
             } else {
 
+                $meeting_ids = !empty(get_user_meta($user->ID, 'tfhb_meeting_ids', true)) ? get_user_meta($user->ID, 'tfhb_meeting_ids', true) : array();
+
+                // if !inarray 
+                if(!in_array($_POST['event_id'], $meeting_ids)){
+                    // its only happend if users role is buyers sellers and exibiutors 
+                    $user_role = get_user_meta($user->ID, 'tfhb_user_role', true);
+                    if($user_role == 'tfhb_buyers' || $user_role == 'tfhb_sellers' || $user_role == 'tfhb_exhibitors'){
+                        // return resoinsed as you are not registered for this event
+                        $response['message'] = esc_html(__( 'You are not registered for this event.', 'hydra-booking' ));
+                        // and sign out that users 
+                        wp_logout();
+                        wp_send_json( $response );
+                        die();
+                    }
+                  
+                }
+
+
                 if(isset($_POST['event_id']) && $_POST['event_id'] != 0){
                     // set cookies 
                     setcookie('tfhb_event_id', $_POST['event_id'], time() + (86400 * 30), "/"); 
+                }else{
+                    $event_settings = !empty(get_option( '_tfhb_event_settings' )) && get_option( '_tfhb_event_settings' ) != false ? get_option( '_tfhb_event_settings' ) : array();
+	 
+		            $meeting_id = !empty($event_settings['meeting_id']) ? $event_settings['meeting_id'] : 1;
+                    setcookie('tfhb_event_id', $meeting_id, time() + (86400 * 30), "/"); 
                 }
-                
+
                 $response['message'] = esc_html(__( 'Successfully logged in.', 'hydra-booking' ));
                 $response['success'] = true;
 

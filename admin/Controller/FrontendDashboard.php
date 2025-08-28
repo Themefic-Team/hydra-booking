@@ -304,6 +304,8 @@ class FrontendDashboard {
         $settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings : array();
         $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
         $get_login_page_url = get_permalink( $login_page_id ); 
+        // delete cookies 
+        setcookie('tfhb_event_id', '', time() - 3600, '/');
         wp_logout();  
         // return response
         $data = array(
