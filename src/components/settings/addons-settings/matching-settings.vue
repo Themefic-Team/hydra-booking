@@ -16,7 +16,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 
 // Popup state
 const matchingRulePopup = ref(false);
-const dynamic_matching = ref(false);
+const dynamic_matching = ref(true);
 
 // Reactive data
 const settings = ref({
@@ -84,26 +84,32 @@ const loadSettings = async () => {
 
 // Save settings
 const saveSettings = async () => {
-  try {
-    // Update the matching settings in the store
-    AddonsSettings.matching_settings.matching_rules = settings.value.matching_rules;
+
+  // Update the matching settings in the store
+  AddonsSettings.matching_settings.matching_rules = settings.value.matching_rules;
     AddonsSettings.matching_settings.matching_start_date = AddonsSettings.matching_settings.matching_start_date;
     
-    const response = await AddonsSettings.UpdateMatchingSettings();
+     await AddonsSettings.UpdateMatchingSettings();
+  // try {
+  //   // Update the matching settings in the store
+  //   AddonsSettings.matching_settings.matching_rules = settings.value.matching_rules;
+  //   AddonsSettings.matching_settings.matching_start_date = AddonsSettings.matching_settings.matching_start_date;
     
-    if (response && response.status) {
-      if (typeof toast !== 'undefined') {
-        toast.success(response.message || 'Matching rules saved successfully')
-      }
-    } else {
-      throw new Error(response?.message || 'Failed to save settings')
-    }
-  } catch (error) {
-    console.error('Error saving settings:', error)
-    if (typeof toast !== 'undefined') {
-      toast.error(error.message || 'Failed to save settings')
-    }
-  }
+  //    await AddonsSettings.UpdateMatchingSettings();
+    
+  //   // if (response && response.status) {
+  //   //   if (typeof toast !== 'undefined') {
+  //   //     toast.success(response.message || 'Matching rules saved successfully')
+  //   //   }
+  //   // } else {
+  //   //   throw new Error(response?.message || 'Failed to save settings')
+  //   // }
+  // } catch (error) {
+  //   console.error('Error saving settings:', error)
+  //   if (typeof toast !== 'undefined') {
+  //     toast.error(error.message || 'Failed to save settings')
+  //   }
+  // }
 }
 
 // Add new matching rule
@@ -200,20 +206,10 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
       <p>{{ $tfhb_trans('Configure how buyers and sellers should be matched based on their registration form data') }}</p>
     </div>
 
-    <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0">
-      <!-- Display existing matching rules using HbQuestion component -->
-      <HbDateTime   
-          v-model="AddonsSettings.matching_settings.matching_start_date"
-          icon="CalendarDays" 
-          label="Start Date"
-          selected = "1" 
-          :config="{
-          }"
-          width="50"
-          :placeholder="$tfhb_trans('Start')"
-      />  
+    <!-- <div class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0">
  
-    </div>
+ 
+    </div> -->
 
     <!-- <div class="tfhb-admin-title tfhb-mt-24">
       <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
@@ -263,6 +259,19 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
               :placeholder="$tfhb_trans('Select Seller Field')"
               :option="sellerFields.map(field => ({name: field.label, value: field.name}))"
             />
+
+            <HbDropdown 
+              v-model="matching_rule_data.type"
+              required="true" 
+              :label="$tfhb_trans('Type')"
+              width="100"
+              :selected="1"
+              :placeholder="$tfhb_trans('Select Type')"
+              :option="[
+                {name: 'Exact', value: 'exact'},
+                {name: 'Any', value: 'any'}, 
+              ]"
+            />
  
             <div class="tfhb-single-form-field" style="width: 100%">
               <div class="tfhb-single-form-field-wrap">
@@ -275,28 +284,28 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
                   placeholder="1"
                   class="tfhb-form-input"
                 />
-                <small>{{ $tfhb_trans('Higher number = higher priority') }}</small>
+                <!-- <small>{{ $tfhb_trans('Higher number = higher priority') }}</small> -->
               </div>
             </div>
-
+            <div class="tfhb-popup-actions tfhb-flexbox tfhb-gap-16">
+              <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn" 
+                @click="matchingRulePopup = false"
+                :buttonText="$tfhb_trans('Cancel')"
+                :hover_animation="false"
+              />
+              <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn" 
+                @click="saveMatchingRule"
+                :buttonText="$tfhb_trans('Save Rule')"
+                icon="Check"
+                :hover_animation="true"
+              />
+            </div>
 
           </div>
  
-          <div class="tfhb-popup-actions tfhb-flexbox tfhb-gap-16">
-            <HbButton 
-              classValue="tfhb-btn tfhb-btn-secondary" 
-              @click="matchingRulePopup = false"
-              :buttonText="$tfhb_trans('Cancel')"
-              :hover_animation="false"
-            />
-            <HbButton 
-              classValue="tfhb-btn tfhb-btn-primary" 
-              @click="saveMatchingRule"
-              :buttonText="$tfhb_trans('Save Rule')"
-              icon="Check"
-              :hover_animation="true"
-            />
-          </div>
+          
         </template> 
       </HbPopup>
     </div>
