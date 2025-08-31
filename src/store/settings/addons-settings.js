@@ -5,7 +5,7 @@ import { toast } from "vue3-toastify";
 const AddonsSettings = reactive({
     skeleton: true, 
     update_preloader: false, 
-    meeting_list : {},
+    meeting_list : [], // Changed from {} to [] to prevent findIndex error
     event_settings: {
         meeting_id : 0, 
         live_chat_url : '', 
@@ -55,7 +55,8 @@ const AddonsSettings = reactive({
                 } 
             } ); 
             if (response.data.status) {  
-                this.meeting_list = response.data.meeting_list ? response.data.meeting_list : this.meeting_list; 
+                // Ensure meeting_list is always an array to prevent findIndex errors
+                this.meeting_list = Array.isArray(response.data.meeting_list) ? response.data.meeting_list : []; 
                 this.Sellers = response.data.sellers_settings ? response.data.sellers_settings : this.Sellers; 
                 this.buyers = response.data.buyers_settings ? response.data.buyers_settings : this.buyers; 
                 this.Exhibitors = response.data.exhibitors_settings ? response.data.exhibitors_settings : this.Exhibitors; 
@@ -65,6 +66,9 @@ const AddonsSettings = reactive({
             }
         } catch (error) { 
             console.log(error); 
+            // Ensure meeting_list is always an array even on error
+            this.meeting_list = [];
+            this.skeleton = false;
         }  
     }, 
     async UpdateSellersSettings() { 
