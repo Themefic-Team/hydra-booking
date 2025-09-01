@@ -35,7 +35,7 @@ onBeforeMount(async () => {
 <style scoped>
 /* Your component styles go here */
 .chat-messages {
-	width: 800px;
+	width: auto;
     margin: 0 auto;
 }
 iframe #wpadminbar{
