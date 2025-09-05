@@ -42,7 +42,9 @@ const AddonsSettings = reactive({
             {
                 buyer_field: '',
                 seller_field: '',
-                priority: 1
+                priority: 1,
+                match_type: 'exact',
+                field_mappings: []
             }
         ]
     },
@@ -203,12 +205,16 @@ const AddonsSettings = reactive({
         }
     },
     // Helper methods for matching rules
-    addMatchingRule() {
-        this.matching_settings.matching_rules.push({
+    addMatchingRule(categoryId = null) {
+        const newRule = {
             buyer_field: '',
             seller_field: '',
-            priority: 1
-        });
+            priority: 1,
+            match_type: 'exact',
+            field_mappings: []
+        };
+        
+        this.matching_settings.matching_rules.push(newRule);
     },
     removeMatchingRule(index) {
         this.matching_settings.matching_rules.splice(index, 1);

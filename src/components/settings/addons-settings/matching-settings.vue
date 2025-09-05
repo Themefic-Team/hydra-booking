@@ -24,7 +24,9 @@ const settings = ref({
     {
       buyer_field: '',
       seller_field: '',
-      priority: 1
+      priority: 1,
+      match_type: 'exact',
+      field_mappings: []
     }
   ]
 })
@@ -41,7 +43,18 @@ const matching_rule_data = reactive({
   key: 0,
   buyer_field: '',
   seller_field: '',
-  priority: 1
+  priority: 1,
+  match_type: 'exact',
+  field_mappings: [] // Array of value-to-value mappings
+})
+
+// Field mapping popup state
+const fieldMappingPopup = ref(false)
+const currentFieldMapping = reactive({
+  key: 0,
+  buyer_value: '',
+  seller_value: '',
+  enabled: true
 })
 
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
@@ -63,7 +76,7 @@ const loadSettings = async () => {
     
     if (response && response.status) {
       settings.value = {
-        matching_rules: response.settings?.matching_rules ?? [],
+        matching_rules: (response.settings && response.settings.matching_rules) ? response.settings.matching_rules : [],
       }
       
       // Load buyer and seller fields from API response if available
@@ -82,49 +95,45 @@ const loadSettings = async () => {
   }
 }
 
+
 // Save settings
 const saveSettings = async () => {
-
-  // Update the matching settings in the store
-  AddonsSettings.matching_settings.matching_rules = settings.value.matching_rules;
+  try {
+    // Update the matching settings in the store
+    AddonsSettings.matching_settings.matching_rules = settings.value.matching_rules;
     AddonsSettings.matching_settings.matching_start_date = AddonsSettings.matching_settings.matching_start_date;
     
-     await AddonsSettings.UpdateMatchingSettings();
-  // try {
-  //   // Update the matching settings in the store
-  //   AddonsSettings.matching_settings.matching_rules = settings.value.matching_rules;
-  //   AddonsSettings.matching_settings.matching_start_date = AddonsSettings.matching_settings.matching_start_date;
+    await AddonsSettings.UpdateMatchingSettings();
     
-  //    await AddonsSettings.UpdateMatchingSettings();
-    
-  //   // if (response && response.status) {
-  //   //   if (typeof toast !== 'undefined') {
-  //   //     toast.success(response.message || 'Matching rules saved successfully')
-  //   //   }
-  //   // } else {
-  //   //   throw new Error(response?.message || 'Failed to save settings')
-  //   // }
-  // } catch (error) {
-  //   console.error('Error saving settings:', error)
-  //   if (typeof toast !== 'undefined') {
-  //     toast.error(error.message || 'Failed to save settings')
-  //   }
-  // }
+    // if (typeof toast !== 'undefined') {
+    //   toast.success('Matching rules saved successfully');
+    // }
+  } catch (error) {
+    console.error('Error saving settings:', error);
+    if (typeof toast !== 'undefined') {
+      toast.error(error.message || 'Failed to save settings');
+    }
+  }
 }
 
 // Add new matching rule
 const addMatchingRule = () => {
-  settings.value.matching_rules.push({
+  const newRule = {
     buyer_field: '',
     seller_field: '',
-    priority: 1
-  })
+    priority: 1,
+    match_type: 'exact',
+    field_mappings: []
+  }
   
+  settings.value.matching_rules.push(newRule)
   const lastIndex = settings.value.matching_rules.length - 1
   matching_rule_data.key = lastIndex
   matching_rule_data.buyer_field = ''
   matching_rule_data.seller_field = ''
   matching_rule_data.priority = 1
+  matching_rule_data.match_type = 'exact'
+  matching_rule_data.field_mappings = []
   
   matchingRulePopup.value = true
 }
@@ -132,10 +141,13 @@ const addMatchingRule = () => {
 // Edit matching rule
 const editMatchingRule = (index) => {
   const rule = settings.value.matching_rules[index]
+  
   matching_rule_data.key = index
   matching_rule_data.buyer_field = rule.buyer_field
   matching_rule_data.seller_field = rule.seller_field
   matching_rule_data.priority = rule.priority
+  matching_rule_data.match_type = rule.match_type || 'exact'
+  matching_rule_data.field_mappings = rule.field_mappings || []
   
   matchingRulePopup.value = true
 }
@@ -148,12 +160,16 @@ const saveMatchingRule = () => {
     return
   }
   
-  // Update the rule
-  settings.value.matching_rules[matching_rule_data.key] = {
+  const ruleData = {
     buyer_field: matching_rule_data.buyer_field,
     seller_field: matching_rule_data.seller_field,
-    priority: matching_rule_data.priority
+    priority: matching_rule_data.priority,
+    match_type: matching_rule_data.match_type,
+    field_mappings: matching_rule_data.field_mappings
   }
+  
+  // Update the rule
+  settings.value.matching_rules[matching_rule_data.key] = ruleData
   
   matchingRulePopup.value = false
 }
@@ -161,6 +177,76 @@ const saveMatchingRule = () => {
 // Remove matching rule
 const removeMatchingRule = (index) => {
   settings.value.matching_rules.splice(index, 1)
+}
+
+// Check if field needs mapping (checkbox, radio, select)
+const needsFieldMapping = (fieldName, isBuyer = true) => {
+  const fields = isBuyer ? buyerFields.value : sellerFields.value
+  const field = fields.find(f => f.name === fieldName)
+  return field && ['checkbox', 'radio', 'select'].includes(field.type)
+}
+
+// Get field options for mapping
+const getFieldOptions = (fieldName, isBuyer = true) => {
+  const fields = isBuyer ? buyerFields.value : sellerFields.value
+  const field = fields.find(f => f.name === fieldName)
+  return field ? field.options || [] : []
+}
+
+// Get field label for display
+const getFieldLabel = (fieldName, isBuyer = true) => {
+  const fields = isBuyer ? buyerFields.value : sellerFields.value
+  const field = fields.find(f => f.name === fieldName)
+  return field ? field.label : fieldName
+}
+
+// Add field mapping
+const addFieldMapping = () => {
+  matching_rule_data.field_mappings.push({
+    buyer_value: '',
+    seller_value: '',
+    enabled: true
+  })
+  
+  const lastIndex = matching_rule_data.field_mappings.length - 1
+  currentFieldMapping.key = lastIndex
+  currentFieldMapping.buyer_value = ''
+  currentFieldMapping.seller_value = ''
+  currentFieldMapping.enabled = true
+  
+  fieldMappingPopup.value = true
+}
+
+// Edit field mapping
+const editFieldMapping = (index) => {
+  const mapping = matching_rule_data.field_mappings[index]
+  currentFieldMapping.key = index
+  currentFieldMapping.buyer_value = mapping.buyer_value
+  currentFieldMapping.seller_value = mapping.seller_value
+  currentFieldMapping.enabled = mapping.enabled
+  
+  fieldMappingPopup.value = true
+}
+
+// Save field mapping
+const saveFieldMapping = () => {
+  if (!currentFieldMapping.buyer_value || !currentFieldMapping.seller_value) {
+    toast.error('Please select both buyer and seller values')
+    return
+  }
+  
+  matching_rule_data.field_mappings[currentFieldMapping.key] = {
+    buyer_value: currentFieldMapping.buyer_value,
+    seller_value: currentFieldMapping.seller_value,
+    enabled: currentFieldMapping.enabled
+  }
+  
+  fieldMappingPopup.value = false
+}
+
+// Remove field mapping
+const removeFieldMapping = (index) => {
+  matching_rule_data.field_mappings.splice(index, 1)
 }
 
 // Convert matching rules to question format for HbQuestion component
@@ -219,6 +305,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
     </div> -->
 
     <div v-if="dynamic_matching" class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0"> 
+      <!-- Matching Rules --> 
       <div v-if="settings.matching_rules.length > 0" class="tfhb-matching-rules-wrap tfhb-mb-16">
         <HbQuestion 
           :question_value="matchingRulesAsQuestions"
@@ -227,7 +314,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
           @question-remove="removeMatchingRule"
         />
       </div>
- 
+      
       <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" @click="addMatchingRule">
         <Icon name="PlusCircle" :width="20"/>
         {{ $tfhb_trans('Add Matching Rule') }}
@@ -261,15 +348,18 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
             />
 
             <HbDropdown 
-              v-model="matching_rule_data.type"
+              v-model="matching_rule_data.match_type"
               required="true" 
-              :label="$tfhb_trans('Type')"
+              :label="$tfhb_trans('Match Type')"
               width="100"
               :selected="1"
-              :placeholder="$tfhb_trans('Select Type')"
+              :placeholder="$tfhb_trans('Select Match Type')"
               :option="[
-                {name: 'Exact', value: 'exact'},
-                {name: 'Any', value: 'any'}, 
+                {name: 'Exact Match', value: 'exact'},
+                {name: 'Any Match', value: 'any'},
+                {name: 'Contains', value: 'contains'},
+                {name: 'Starts With', value: 'starts_with'},
+                {name: 'Ends With', value: 'ends_with'}
               ]"
             />
  
@@ -286,6 +376,38 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
                 />
                 <!-- <small>{{ $tfhb_trans('Higher number = higher priority') }}</small> -->
               </div>
+            </div>
+
+            <!-- Field Mapping Section -->
+            <div v-if="needsFieldMapping(matching_rule_data.buyer_field, true) && needsFieldMapping(matching_rule_data.seller_field, false)" class="tfhb-field-mapping-section">
+              <div class="tfhb-section-header">
+                <h4>{{ $tfhb_trans('Field Value Mapping') }}</h4>
+                <p class="tfhb-text-sm tfhb-text-muted">{{ $tfhb_trans('Map specific values between buyer and seller fields') }}</p>
+              </div>
+              
+              <div v-if="matching_rule_data.field_mappings.length > 0" class="tfhb-mapping-list">
+                <div v-for="(mapping, index) in matching_rule_data.field_mappings" :key="index" class="tfhb-mapping-item">
+                  <div class="tfhb-mapping-content">
+                    <span class="tfhb-mapping-buyer">{{ mapping.buyer_value }}</span>
+                    <Icon name="ArrowRight" :width="16" class="tfhb-mapping-arrow"/>
+                    <span class="tfhb-mapping-seller">{{ mapping.seller_value }}</span>
+                    <span v-if="!mapping.enabled" class="tfhb-mapping-disabled">{{ $tfhb_trans('(Disabled)') }}</span>
+                  </div>
+                  <div class="tfhb-mapping-actions">
+                    <button @click="editFieldMapping(index)" class="tfhb-btn-small tfhb-btn-edit">
+                      <Icon name="Edit" :width="14"/>
+                    </button>
+                    <button @click="removeFieldMapping(index)" class="tfhb-btn-small tfhb-btn-remove">
+                      <Icon name="Trash2" :width="14"/>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <button @click="addFieldMapping" class="tfhb-btn tfhb-flexbox tfhb-gap-8 tfhb-mt-8">
+                <Icon name="PlusCircle" :width="16"/>
+                {{ $tfhb_trans('Add Value Mapping') }}
+              </button>
             </div>
             <div class="tfhb-popup-actions tfhb-flexbox tfhb-gap-16">
               <HbButton 
@@ -306,6 +428,71 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
           </div>
  
           
+        </template> 
+      </HbPopup>
+
+      <!-- Field Mapping Popup -->
+      <HbPopup :isOpen="fieldMappingPopup" @modal-close="fieldMappingPopup = false" max_width="500px" name="field-mapping-modal">
+        <template #header> 
+          <h3>{{ $tfhb_trans('Configure Value Mapping') }}</h3>
+          <p class="tfhb-mapping-field-info">
+            <strong>{{ $tfhb_trans('Buyer Field') }}:</strong> {{ getFieldLabel(matching_rule_data.buyer_field, true) }} 
+            <span class="tfhb-mapping-separator">↔</span> 
+            <strong>{{ $tfhb_trans('Seller Field') }}:</strong> {{ getFieldLabel(matching_rule_data.seller_field, false) }}
+          </p>
+        </template>
+
+        <template #content>  
+          <div class="tfhb-field-mapping-form"> 
+            <HbDropdown 
+              v-model="currentFieldMapping.buyer_value"
+              required="true" 
+              :label="`${$tfhb_trans('Buyer Value')} (${getFieldLabel(matching_rule_data.buyer_field, true)})`"
+              width="100"
+              :selected="1"
+              :placeholder="$tfhb_trans('Select Buyer Value')"
+              :option="getFieldOptions(matching_rule_data.buyer_field, true).map(option => ({name: option, value: option}))"
+            />
+ 
+            <HbDropdown 
+              v-model="currentFieldMapping.seller_value"
+              required="true" 
+              :label="`${$tfhb_trans('Seller Value')} (${getFieldLabel(matching_rule_data.seller_field, false)})`"
+              width="100"
+              :selected="1"
+              :placeholder="$tfhb_trans('Select Seller Value')"
+              :option="getFieldOptions(matching_rule_data.seller_field, false).map(option => ({name: option, value: option}))"
+            />
+
+            <div class="tfhb-single-form-field" style="width: 100%">
+              <div class="tfhb-single-form-field-wrap">
+                <label class="tfhb-flexbox tfhb-gap-8 tfhb-align-center">
+                  <input 
+                    v-model="currentFieldMapping.enabled"
+                    type="checkbox" 
+                    class="tfhb-checkbox"
+                  />
+                  {{ $tfhb_trans('Enable this mapping') }}
+                </label>
+              </div>
+            </div>
+            
+            <div class="tfhb-popup-actions tfhb-flexbox tfhb-gap-16">
+              <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn" 
+                @click="fieldMappingPopup = false"
+                :buttonText="$tfhb_trans('Cancel')"
+                :hover_animation="false"
+              />
+              <HbButton 
+                classValue="tfhb-btn boxed-btn flex-btn" 
+                @click="saveFieldMapping"
+                :buttonText="$tfhb_trans('Save Mapping')"
+                icon="Check"
+                :hover_animation="true"
+              />
+            </div>
+          </div>
         </template> 
       </HbPopup>
     </div>
@@ -353,5 +540,168 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
 
 .tfhb-matching-rules-wrap {
   margin-bottom: 1rem;
+}
+
+
+.tfhb-text-sm {
+  font-size: 0.875rem;
+}
+
+.tfhb-text-muted {
+  color: #6c757d;
+}
+
+.tfhb-text-center {
+  text-align: center;
+}
+
+.tfhb-p-16 {
+  padding: 1rem;
+}
+
+.tfhb-mb-16 {
+  margin-bottom: 1rem;
+}
+
+.tfhb-mt-24 {
+  margin-top: 1.5rem;
+}
+
+.tfhb-field-mapping-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: #f8f9fa;
+}
+
+.tfhb-section-header {
+  margin-bottom: 1rem;
+}
+
+.tfhb-section-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.tfhb-mapping-list {
+  margin-bottom: 1rem;
+}
+
+.tfhb-mapping-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.tfhb-mapping-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.tfhb-mapping-buyer {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tfhb-mapping-seller {
+  background: #f3e5f5;
+  color: #7b1fa2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tfhb-mapping-arrow {
+  color: #666;
+}
+
+.tfhb-mapping-disabled {
+  color: #999;
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.tfhb-mapping-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tfhb-btn-small {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.tfhb-btn-small:hover {
+  background: #f5f5f5;
+}
+
+.tfhb-btn-edit {
+  color: #1976d2;
+  border-color: #1976d2;
+}
+
+.tfhb-btn-edit:hover {
+  background: #e3f2fd;
+}
+
+.tfhb-btn-remove {
+  color: #d32f2f;
+  border-color: #d32f2f;
+}
+
+.tfhb-btn-remove:hover {
+  background: #ffebee;
+}
+
+.tfhb-field-mapping-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tfhb-checkbox {
+  margin-right: 0.5rem;
+}
+
+.tfhb-mt-8 {
+  margin-top: 0.5rem;
+}
+
+.tfhb-mapping-field-info {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tfhb-mapping-separator {
+  color: #999;
+  font-weight: bold;
+  margin: 0 0.25rem;
 }
 </style> 
