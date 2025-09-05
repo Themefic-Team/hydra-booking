@@ -644,6 +644,10 @@ const redirectToChat = (buyerId) => {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
 }
 
 .exhibitor-details-header {
@@ -693,6 +697,7 @@ const redirectToChat = (buyerId) => {
     flex: 1;
     padding: 24px;
     overflow-y: auto;
+    min-height: 0; /* Allows flex item to shrink below content size */
 }
 
 .exhibitor-profile {
@@ -861,6 +866,8 @@ const redirectToChat = (buyerId) => {
     .exhibitor-details-sidebar {
         flex: none;
         width: 100%;
+        position: static; /* Remove sticky behavior on mobile */
+        max-height: none;
     }
     
     .exhibitors-list.with-details {

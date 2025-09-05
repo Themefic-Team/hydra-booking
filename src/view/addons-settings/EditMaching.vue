@@ -6,6 +6,7 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { toast } from "vue3-toastify";
 import { Notification } from '@/store/notification';
+import axios from 'axios';
 
 import Header from '@/components/Header.vue';
 
@@ -48,37 +49,32 @@ const getMatchingIdFromRoute = () => {
 const loadInitialData = async () => {
   try {
     const [matchingResponse, pageDataResponse] = await Promise.all([
-      fetch(`/wp-json/hydra-booking/v1/addons/matching/${matchingId.value}`, {
-        method: 'GET',
+      axios.get(tfhb_core_apps.rest_route + `hydra-booking/v1/addons/matching/${matchingId.value}`, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-WP-Nonce': window.wpApiSettings?.nonce || getNonce() || ''
+          'X-WP-Nonce': tfhb_core_apps.rest_nonce,
         }
       }),
-      fetch(`/wp-json/hydra-booking/v1/addons/edit-matching-page-data/${matchingId.value}`, {
-        method: 'GET',
+      axios.post(tfhb_core_apps.rest_route + `hydra-booking/v1/addons/edit-matching-page-data/`, {
+        'matchingId' : matchingId.value,
+      }, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-WP-Nonce': window.wpApiSettings?.nonce || getNonce() || ''
+          'X-WP-Nonce': tfhb_core_apps.rest_nonce,
         }
       })
     ]);
     
-    const matchingDataResponse = await matchingResponse.json();
-    const pageData = await pageDataResponse.json();
-    
-    if (matchingDataResponse.success) {
-      Object.assign(matchingData, matchingDataResponse.data);
+    if (matchingResponse.data.success) {
+      Object.assign(matchingData, matchingResponse.data.data);
       formData.select_date = matchingData.date;
       formData.select_time_slot = matchingData.start_time;
       formData.selected_end_time = matchingData.end_time;
     }
     
-    if (pageData.success) {
-      meetingDates.value = pageData.data.meeting_availability.dates;
-      meetingId.value = pageData.data.meeting_availability.meeting_id;
+    if (pageDataResponse.data.success) {
+      meetingDates.value = pageDataResponse.data.data.meeting_availability.dates;
+      meetingId.value = pageDataResponse.data.data.meeting_availability.meeting_id;
       formData.meeting_id = meetingId.value;
-      timeSlots.value = pageData.data.time_slots || [];
+      timeSlots.value = pageDataResponse.data.data.time_slots || [];
     }
     
     // Load user information
@@ -96,46 +92,37 @@ const loadInitialData = async () => {
 const loadUserInfo = async () => {
   try {
     const [sellerResponse, buyerResponse] = await Promise.all([
-      fetch('/wp-json/hydra-booking/v1/addons/user-info', {
-        method: 'POST',
+      axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/user-info', {
+        user_id: matchingData.sellers_id,
+        user_type: 'seller'
+      }, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-WP-Nonce': window.wpApiSettings?.nonce || getNonce() || ''
-        },
-        body: JSON.stringify({
-          user_id: matchingData.sellers_id,
-          user_type: 'seller'
-        })
+          'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+        }
       }),
-      fetch('/wp-json/hydra-booking/v1/addons/user-info', {
-        method: 'POST',
+      axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/user-info', {
+        user_id: matchingData.buyers_id,
+        user_type: 'buyer'
+      }, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-WP-Nonce': window.wpApiSettings?.nonce || getNonce() || ''
-        },
-        body: JSON.stringify({
-          user_id: matchingData.buyers_id,
-          user_type: 'buyer'
-        })
+          'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+        }
       })
     ]);
     
-    const sellerData = await sellerResponse.json();
-    const buyerData = await buyerResponse.json();
-    
-    if (sellerData.success) {
-      sellerDetails.value = sellerData.data.html;
+    if (sellerResponse.data.success) {
+      sellerDetails.value = sellerResponse.data.data.html;
       Object.assign(sellerInfo, {
-        display_name: sellerData.data.display_name,
-        user_email: sellerData.data.user_email
+        display_name: sellerResponse.data.data.display_name,
+        user_email: sellerResponse.data.data.user_email
       });
     }
     
-    if (buyerData.success) {
-      buyerDetails.value = buyerData.data.html;
+    if (buyerResponse.data.success) {
+      buyerDetails.value = buyerResponse.data.data.html;
       Object.assign(buyerInfo, {
-        display_name: buyerData.data.display_name,
-        user_email: buyerData.data.user_email
+        display_name: buyerResponse.data.data.display_name,
+        user_email: buyerResponse.data.data.user_email
       });
     }
     
@@ -167,22 +154,17 @@ const onTimeSlotChange = () => {
 
 const loadTimeSlots = async () => {
   try {
-    const response = await fetch('/wp-json/hydra-booking/v1/addons/time-slots', {
-      method: 'POST',
+    const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/time-slots', {
+      meeting_id: meetingId.value,
+      selected_date: formData.select_date
+    }, {
       headers: {
-        'Content-Type': 'application/json',
-        'X-WP-Nonce': window.wpApiSettings?.nonce || getNonce() || ''
-      },
-      body: JSON.stringify({
-        meeting_id: meetingId.value,
-        selected_date: formData.select_date
-      })
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+      }
     });
     
-    const data = await response.json();
-    
-    if (data.success) {
-      timeSlots.value = data.data.time_slots || [];
+    if (response.data.success) {
+      timeSlots.value = response.data.data.time_slots || [];
     } else {
       timeSlots.value = [];
     }
@@ -204,24 +186,19 @@ const submitForm = async () => {
   loading.value = true;
   
   try {
-    const response = await fetch('/wp-json/hydra-booking/v1/addons/update-matching', {
-      method: 'POST',
+    const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/update-matching', {
+      matching_id: matchingId.value,
+      meeting_id: meetingId.value,
+      select_date: formData.select_date,
+      select_time_slot: formData.select_time_slot,
+      selected_end_time: formData.selected_end_time
+    }, {
       headers: {
-        'Content-Type': 'application/json',
-        'X-WP-Nonce': window.wpApiSettings?.nonce || getNonce() || ''
-      },
-      body: JSON.stringify({
-        matching_id: matchingId.value,
-        meeting_id: meetingId.value,
-        select_date: formData.select_date,
-        select_time_slot: formData.select_time_slot,
-        selected_end_time: formData.selected_end_time
-      })
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+      }
     });
     
-    const data = await response.json();
-    
-    if (data.success) {
+    if (response.data.success) {
       toast.success('Matching updated successfully!', {
         position: 'bottom-right',
         autoClose: 1500,
@@ -229,7 +206,7 @@ const submitForm = async () => {
       // Redirect to matching list
       goToMatchingList();
     } else {
-      toast.error(data.message || 'Error updating matching', {
+      toast.error(response.data.message || 'Error updating matching', {
         position: 'bottom-right',
         autoClose: 1500,
       });
@@ -267,10 +244,6 @@ const validateForm = () => {
 
 const goToMatchingList = () => {
   router.push('/addons-view-matching');
-};
-
-const getNonce = () => {
-  return window.tfhb_addons_admin_js?.nonce || '';
 };
 
 // Lifecycle

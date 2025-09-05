@@ -3,7 +3,6 @@ import { ref, watch, defineEmits } from 'vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
-import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 const props = defineProps([
     'name', 
     'modelValue', 
@@ -13,28 +12,19 @@ const props = defineProps([
     'width',
     'subtitle', 'placeholder', 'description', 'disabled',
     'file_size', // 5 MB
-    'file_format' // jpg, jpeg, png
+    'file_format', // jpg, jpeg, png
+    'multiple' // true/false for multiple file upload
 ])
 const emit = defineEmits(['update:modelValue']);
 const imageUrl = ref(props.modelValue);
+const imageUrls = ref(Array.isArray(props.modelValue) ? props.modelValue : []);
 const dragOver = ref(false);
 const fileName = ref('');
+const fileNames = ref([]);
 const isUploading = ref(false);
 const uploadProgress = ref(0);
 const MAX_FILE_SIZE = props.file_size * 1024 * 1024 // Convert MB to bytes
 const ALLOWED_FORMATS = props.file_format != '' ?  props.file_format.split(',') : '';
-
-// Get current user ID from WordPress
-const getCurrentUserId = () => {
-    if (window.wpApiSettings && window.wpApiSettings.currentUser) {
-        return window.wpApiSettings.currentUser.id;
-    }
-    // Fallback: try to get from wp_localize_script data
-    if (window.hydraBookingData && window.hydraBookingData.currentUserId) {
-        return window.hydraBookingData.currentUserId;
-    }
-    return 0;
-}
 
 const extractFileName = (url) => url ? url.split('/').pop().split('?')[0] : '';
 
@@ -56,17 +46,34 @@ const validateFile = (file) => {
         return false
     }
     return true
-} 
+}
+
+ 
+
 const imageChange = (attachment, type) => {  
-    if(type == 'clicked'){ 
-        imageUrl.value = attachment.url  
-        fileName.value = extractFileName(attachment.url) 
-        emit('update:modelValue', attachment.url)
-    }else{
-        imageUrl.value = attachment.source_url  
-        fileName.value = extractFileName(attachment.source_url) 
-        emit('update:modelValue', attachment.source_url)
-    } 
+    if (props.multiple) {
+        // Handle multiple files
+        const url = type == 'clicked' ? attachment.url : attachment.source_url;
+        const fileName = extractFileName(url);
+        
+        // Add to arrays
+        imageUrls.value.push(url);
+        fileNames.value.push(fileName);
+        
+        // Emit array
+        emit('update:modelValue', [...imageUrls.value]);
+    } else {
+        // Handle single file
+        if(type == 'clicked'){ 
+            imageUrl.value = attachment.url  
+            fileName.value = extractFileName(attachment.url) 
+            emit('update:modelValue', attachment.url)
+        }else{
+            imageUrl.value = attachment.source_url  
+            fileName.value = extractFileName(attachment.source_url) 
+            emit('update:modelValue', attachment.source_url)
+        } 
+    }
     isUploading.value = false
     uploadProgress.value = 0
 }
@@ -74,22 +81,38 @@ const imageChange = (attachment, type) => {
 const UploadImage = () => {   
     if (isUploading.value) return
     
-    const currentUserId = AddonsAuth.loggedInUser.ID;
-    
+    // Create a custom media frame that only shows user's own media
     const mediaUploader = wp.media({
-        title: 'Upload Image',
-        button: { text: 'Use this image' },
-        multiple: false,
-        // Filter to show only current user's media
+        title: 'Select or Upload Media',
+        button: { text: 'Use this media' },
+        multiple: props.multiple || false,
         library: {
-            type: 'image',
-            author: currentUserId
+            // Only show media uploaded by current user
+            author: tfhb_core_apps?.user?.id || 0
+        }
+    })
+
+    // Add custom filter to ensure only user's media is shown
+    mediaUploader.on('ready', function() {
+        // Filter to only show current user's media
+        const currentUserId = tfhb_core_apps?.user?.id || 0;
+        if (currentUserId) {
+            mediaUploader.library.props.set('author', currentUserId);
         }
     })
 
     mediaUploader.on('select', function () {
-        const attachment = mediaUploader.state().get('selection').first().toJSON()
-        imageChange(attachment, 'clicked')
+        if (props.multiple) {
+            // Handle multiple selections
+            const attachments = mediaUploader.state().get('selection').toJSON();
+            attachments.forEach(attachment => {
+                imageChange(attachment, 'clicked');
+            });
+        } else {
+            // Handle single selection
+            const attachment = mediaUploader.state().get('selection').first().toJSON()
+            imageChange(attachment, 'clicked')
+        }
     })
 
     mediaUploader.open()
@@ -99,9 +122,21 @@ const handleDrop = async (event) => {
     event.preventDefault()
     dragOver.value = false
     
-    const file = event.dataTransfer.files[0]
-    if (file && validateFile(file)) {
-        await uploadFileToWordPress(file)
+    const files = event.dataTransfer.files;
+    
+    if (props.multiple) {
+        // Handle multiple files
+        for (let file of files) {
+            if (validateFile(file)) {
+                await uploadFileToWordPress(file);
+            }
+        }
+    } else {
+        // Handle single file
+        const file = files[0];
+        if (file && validateFile(file)) {
+            await uploadFileToWordPress(file);
+        }
     }
 }
 
@@ -110,44 +145,77 @@ const uploadFileToWordPress = async (file) => {
     uploadProgress.value = 0
     const formData = new FormData()
     formData.append('file', file)
-    
-    // Add author parameter to associate file with current user
-    const currentUserId = getCurrentUserId();
-    if (currentUserId > 0) {
-        formData.append('author', currentUserId)
-    }
 
     try {
         const response = await fetch(`${window.wpApiSettings.root}wp/v2/media`, {
             method: 'POST',
-            headers: { 'X-WP-Nonce': window.wpApiSettings.nonce },
+            headers: { 
+                'X-WP-Nonce': window.wpApiSettings.nonce,
+                'X-WP-User-ID': tfhb_core_apps?.user?.id || 0
+            },
             body: formData
         })
 
-        if (!response.ok) throw new Error('Upload failed')
+        if (!response.ok) {
+            if (response.status === 403) {
+                throw new Error('Access denied: You do not have permission to upload files.');
+            }
+            throw new Error('Upload failed');
+        }
 
         const result = await response.json()
-        imageChange(result, 'dragDrop') 
+        
+        // Verify the uploaded file belongs to the current user
+        if (result.author === tfhb_core_apps?.user?.id) {
+            imageChange(result, 'dragDrop')
+        } else {
+            throw new Error('Security error: Upload verification failed.');
+        }
     } catch (error) {
         console.error('Error uploading file:', error)
+        toast.error(error.message || 'Failed to upload file', {
+            position: 'bottom-right',
+            autoClose: 1500,
+        });
         isUploading.value = false
     }
 }
 
-const removeImage = () => {
-    imageUrl.value = ''
-    fileName.value = ''
-    emit('update:modelValue', '')
+
+
+const removeImage = (index = null) => {
+    if (props.multiple) {
+        // Remove specific image from array
+        if (index !== null) {
+            imageUrls.value.splice(index, 1);
+            fileNames.value.splice(index, 1);
+            emit('update:modelValue', [...imageUrls.value]);
+        } else {
+            // Clear all images
+            imageUrls.value = [];
+            fileNames.value = [];
+            emit('update:modelValue', []);
+        }
+    } else {
+        // Remove single image
+        imageUrl.value = ''
+        fileName.value = ''
+        emit('update:modelValue', '')
+    }
 }
 
 watch(() => props.modelValue, (newVal) => {
-    imageUrl.value = newVal
-    fileName.value = extractFileName(newVal)
+    if (props.multiple) {
+        imageUrls.value = Array.isArray(newVal) ? newVal : [];
+        fileNames.value = imageUrls.value.map(url => extractFileName(url));
+    } else {
+        imageUrl.value = newVal
+        fileName.value = extractFileName(newVal)
+    }
 }) 
 </script>
 
 <template> 
-<!-- {{ AddonsAuth.loggedInUser.ID }} -->
   <div class="tfhb-single-form-field tfhb-file-upload tfhb-flexbox" :class="name" 
       :style="{ 'width': width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }" 
   >
@@ -166,7 +234,7 @@ watch(() => props.modelValue, (newVal) => {
                 icon_position="left"
                 :disabled="isUploading"
                 @click="UploadImage()"
-            />  
+            />
 
             <div v-if="props.label" class="tfhb-drag-drop-text tfhb-flexbox tfhb-gap-8">
                 <div v-if="props.subtitle">{{ props.subtitle }}</div>
@@ -175,7 +243,7 @@ watch(() => props.modelValue, (newVal) => {
 
             <input 
                 type="text" 
-                :value="imageUrl" 
+                :value="props.multiple ? imageUrls.join(',') : imageUrl" 
                 :required="required"
                 :name="name"
                 :id="name"
@@ -188,14 +256,30 @@ watch(() => props.modelValue, (newVal) => {
             <div class="progress-bar" :style="{ width: uploadProgress + '%' }"></div>
         </div>
 
-        <div class="upload-file-preview tfhb-full-width" v-if="imageUrl">
+        <!-- Single File Preview -->
+        <div class="upload-file-preview tfhb-full-width" v-if="!props.multiple && imageUrl">
             <div class="upload-file-preview-items tfhb-flexbox tfhb-justify-between tfhb-gap-16">
                 <div class="tfhb-flexbox tfhb-upload-flie-img-wrap tfhb-gap-16">
                     <img :src="imageUrl" alt="Uploaded Image">
+                    
                     <span class="file-name">{{ fileName || 'Uploaded Image' }}</span>
                 </div>
                 
-                <span class="remove-icon" @click="removeImage"> 
+                <span class="remove-icon" @click="removeImage()"> 
+                    <Icon name="X" size=16 />
+                </span>
+            </div>
+        </div>
+
+        <!-- Multiple Files Preview -->
+        <div class="upload-files-preview tfhb-full-width" v-if="props.multiple && imageUrls.length > 0">
+            <div v-for="(url, index) in imageUrls" :key="index" class="upload-file-preview-items tfhb-flexbox tfhb-justify-between tfhb-gap-16">
+                <div class="tfhb-flexbox tfhb-upload-flie-img-wrap tfhb-gap-16">
+                    <img :src="url" alt="Uploaded Image">
+                    <span class="file-name">{{ fileNames[index] || 'Uploaded Image' }}</span>
+                </div>
+                
+                <span class="remove-icon" @click="removeImage(index)"> 
                     <Icon name="X" size=16 />
                 </span>
             </div>
@@ -217,6 +301,8 @@ watch(() => props.modelValue, (newVal) => {
         transition: 0.3s ease;
         cursor: pointer;
         position: relative;
+        
+
 
         .tfhb-drag-drop-text { 
             flex-direction: column;
@@ -235,7 +321,8 @@ watch(() => props.modelValue, (newVal) => {
         border-color: #68a868;
     }
 
-    .upload-file-preview { 
+    .upload-file-preview,
+    .upload-files-preview { 
         margin-top: 16px;
         
         .upload-file-preview-items {
@@ -245,6 +332,7 @@ watch(() => props.modelValue, (newVal) => {
             display: flex;
             align-items: center;
             gap: 16px;
+            margin-bottom: 8px;
             
             .remove-icon { 
                 flex-shrink: 0;

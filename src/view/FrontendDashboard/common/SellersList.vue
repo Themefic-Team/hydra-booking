@@ -338,7 +338,8 @@ const redirectToChat = (user_id) => {
                         class="seller-card"
                         :class="{ 'selected': selectedSeller && selectedSeller.id === seller.id }" 
                     >
-                    <!-- {{ seller }} -->
+                    <!-- {{ seller.data }} -->
+                      
                         <div class="seller-card-header">
                             <div class="seller-avatar">
                                 <img v-if="seller.data.avatar && seller.data.avatar.startsWith('http')" :src="seller.data.avatar" alt="Seller Avatar">
@@ -772,6 +773,10 @@ const redirectToChat = (user_id) => {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
 }
 
 .seller-details-header {
@@ -821,6 +826,7 @@ const redirectToChat = (user_id) => {
     flex: 1;
     padding: 24px;
     overflow-y: auto;
+    min-height: 0; /* Allows flex item to shrink below content size */
 }
 
 .seller-profile {
@@ -989,6 +995,8 @@ const redirectToChat = (user_id) => {
     .seller-details-sidebar {
         flex: none;
         width: 100%;
+        position: static; /* Remove sticky behavior on mobile */
+        max-height: none;
     }
     
     .sellers-list.with-details {

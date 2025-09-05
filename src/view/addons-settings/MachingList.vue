@@ -9,6 +9,7 @@ import Header from '@/components/Header.vue';
 import { toast } from "vue3-toastify";
 import { Notification } from '@/store/notification';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 // Reactive data
 const matchingData = ref([]);
 const sellers = ref([]);
@@ -47,14 +48,17 @@ const endItem = computed(() => {
 const loadData = async () => {
   loading.value = true;
   try {
-    const response = await fetch(`/wp-json/hydra-booking/v1/addons/matching-list?${new URLSearchParams(filters)}`, {
+    // const response = await fetch(`/wp-json/hydra-booking/v1/addons/matching-list?${new URLSearchParams(filters)}`, {
+      const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/matching-list', {
+        filters: filters
+      }, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-WP-Nonce': wpApiSettings?.nonce || getNonce() || ''
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce
       }
     });
-    const data = await response.json();
+    const data = await response.data;
     
     if (data.success) {
       matchingData.value = data.data.matching;
@@ -76,24 +80,24 @@ const loadData = async () => {
 const loadSellersAndBuyers = async () => {
   try {
     const [sellersResponse, buyersResponse] = await Promise.all([
-      fetch('/wp-json/hydra-booking/v1/addons/sellers-list', {
-        method: 'GET',
+      // fetch('/wp-json/hydra-booking/v1/addons/sellers-list', {
+      axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/sellers-list', {
         headers: {
           'Content-Type': 'application/json',
-          'X-WP-Nonce': wpApiSettings?.nonce || getNonce() || ''
+          'X-WP-Nonce': tfhb_core_apps.rest_nonce
         }
       }),
-      fetch('/wp-json/hydra-booking/v1/addons/buyers-list', {
-        method: 'GET',
+      // fetch('/wp-json/hydra-booking/v1/addons/buyers-list', {
+      axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/buyers-list', {
         headers: {
           'Content-Type': 'application/json',
-          'X-WP-Nonce': wpApiSettings?.nonce || getNonce() || ''
+          'X-WP-Nonce': tfhb_core_apps.rest_nonce
         }
       })
     ]);
     
-    const sellersData = await sellersResponse.json();
-    const buyersData = await buyersResponse.json();
+    const sellersData = await sellersResponse.data;
+    const buyersData = await buyersResponse.data;
     
     if (sellersData.success) {
       sellers.value = sellersData.data;
@@ -133,16 +137,17 @@ const deleteMatching = async (id) => {
   }
   
   try {
-    const response = await fetch('/wp-json/hydra-booking/v1/addons/delete-matching', {
+    // const response = await fetch('/wp-json/hydra-booking/v1/addons/delete-matching', {
+    const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/delete-matching', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-WP-Nonce': wpApiSettings?.nonce || getNonce() || ''
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce
       },
       body: JSON.stringify({ id })
     });
     
-    const data = await response.json();
+    const data = await response.data;
     
     if (data.success) {
       toast.success('Matching deleted successfully', {
@@ -172,11 +177,12 @@ const applyBulkAction = async () => {
     }
     
     try {
-      const response = await fetch('/wp-json/hydra-booking/v1/addons/bulk-delete-matching', {
+      // const response = await fetch('/wp-json/hydra-booking/v1/addons/bulk-delete-matching', {
+      const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/bulk-delete-matching', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-WP-Nonce': wpApiSettings?.nonce || getNonce() || ''
+          'X-WP-Nonce': tfhb_core_apps.rest_nonce
         },
         body: JSON.stringify({ ids: selectedMatchingIds.value })
       });
@@ -209,11 +215,12 @@ const applyBulkAction = async () => {
 
 const exportMatching = async () => {
   try {
-    const response = await fetch('/wp-json/hydra-booking/v1/addons/export-matching', {
+    // const response = await fetch('/wp-json/hydra-booking/v1/addons/export-matching', {
+    const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/export-matching', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-WP-Nonce': wpApiSettings?.nonce || getNonce() || ''
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce
       },
       body: JSON.stringify({ filters: filters })
     });
