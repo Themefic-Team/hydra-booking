@@ -715,7 +715,7 @@ onBeforeRouteLeave(() => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in paginatedUsers" :key="user.id">
+                        <tr v-for="user in paginatedUsers" :key="user.id"> 
                             <td class="column-cb">
                                 <input 
                                     type="checkbox" 
@@ -725,7 +725,8 @@ onBeforeRouteLeave(() => {
                             </td>
                             <td>
                                 <div class="tfhb-list-data-event-title">
-                                    <strong>{{ user.name || 'N/A' }}</strong>
+                                    <strong>{{ user.name || 'N/A' }}</strong> 
+                                    <strong v-if="user.data.eventuale_altra_denominazione"> ( {{ user.data.eventuale_altra_denominazione|| 'N/A' }} )</strong>
                                 </div>
                             </td>
                             <td>

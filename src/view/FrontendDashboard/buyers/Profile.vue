@@ -406,8 +406,7 @@ document.addEventListener('click', (e) => {
 </script>
 
 <template>   
-    <div :class="{ 'tfhb-skeleton': skeleton }" class="tfhb-admin-card-box tfhb-host-profile-image-wrap">
-    
+    <div :class="{ 'tfhb-skeleton': skeleton }" class="tfhb-admin-card-box tfhb-host-profile-image-wrap"> 
     <div class="tfhb-admin-card-box tfhb-host-profile-image-wrap"   
         :style="{
             'background-image': `url('${userPublicInformation.cover_image || $tfhb_url + '/assets/app/images/meeting-cover.png'}')`, 

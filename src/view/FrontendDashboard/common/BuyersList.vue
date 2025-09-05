@@ -295,6 +295,7 @@ const redirectToChat = (user_id) => {
                         :class="{ 'selected': selectedBuyer && selectedBuyer.id === buyer.id }"
                     >
                     
+                    <!-- {{ buyer }} -->
                         <div class="buyer-card-header">
                             <div class="buyer-avatar">
                                 <img v-if="buyer.data.avatar && buyer.data.avatar.startsWith('http')" :src="buyer.data.avatar" alt="Buyer Avatar">
@@ -321,7 +322,7 @@ const redirectToChat = (user_id) => {
                             <div class="contact-info">
                                 <div class="contact-item">
                                     <Icon name="Mail" size=16 />
-                                    <span>{{ buyer.data.email }}</span>
+                                    <span>{{ buyer.email }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="Phone" size=16 />
@@ -707,6 +708,10 @@ const redirectToChat = (user_id) => {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
 }
 
 .buyer-details-header {
@@ -744,6 +749,7 @@ const redirectToChat = (user_id) => {
     flex: 1;
     padding: 24px;
     overflow-y: auto;
+    min-height: 0; /* Allows flex item to shrink below content size */
 }
 
 .buyer-profile {
@@ -887,6 +893,8 @@ const redirectToChat = (user_id) => {
     .buyer-details-sidebar {
         flex: none;
         width: 100%;
+        position: static; /* Remove sticky behavior on mobile */
+        max-height: none;
     }
     
     .buyers-list.with-details {
