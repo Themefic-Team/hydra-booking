@@ -77,8 +77,8 @@ const redirectToChat = () => {
                         <Icon name="CircleUser" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('My Profile') }}</span>
                     </router-link>
-                </li>   
-                <li v-if="AddonsAuth.loggedInUser?.user_role !== 'tfhb_exhibitors'">
+                </li>    
+                <li v-if="AddonsAuth.loggedInUser?.user_role != 'tfhb_exhibitors' && AddonsAuth.loggedInUser?.user_role != 'exhibitors'">
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 "  :to="'/'+(AddonsAuth.loggedInUser?.user_role || 'buyers')+'/my-appointments'" exact :class="{ 'active': $route.path === '/'+(AddonsAuth.loggedInUser?.user_role || 'buyers')+'/my-appointments' }" >
                         <Icon name="CalendarClock" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('Agenda') }}</span>

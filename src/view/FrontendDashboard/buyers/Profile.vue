@@ -17,6 +17,7 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 const { errors, isEmpty } = useValidators();
 
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 const EditMoreDetailsPopup = ref(false)
 // --- API-driven user public info ---
 const userPublicInformation = reactive({
@@ -324,18 +325,24 @@ const UploadImage = () => {
         title: 'Select or Upload Media',
         button: { text: 'Use this media' },
         multiple: false,
-        library: {
-            // Only show media uploaded by current user
-            author: tfhb_core_apps?.user?.id || 0
+        library: { 
+            type: 'image',
+            author: AddonsAuth.loggedInUser.ID || 0
         }
     })
 
     // Add custom filter to ensure only user's media is shown
     mediaUploader.on('ready', function() {
         // Filter to only show current user's media
-        const currentUserId = tfhb_core_apps?.user?.id || 0;
-        if (currentUserId) {
-            mediaUploader.library.props.set('author', currentUserId);
+        const currentUserId = AddonsAuth.loggedInUser.ID || 0;
+        
+        // Check if library and props exist before accessing
+        if (mediaUploader.library && mediaUploader.library.props && currentUserId) {
+            try {
+                mediaUploader.library.props.set('author', currentUserId);
+            } catch (error) {
+                console.warn('Could not set author filter:', error);
+            }
         }
     })
 
@@ -364,17 +371,23 @@ const UploadImageFeature  = () => {
         button: { text: 'Use this media' },
         multiple: false,
         library: {
-            // Only show media uploaded by current user
-            author: tfhb_core_apps?.user?.id || 0
+            type: 'image',
+            author: AddonsAuth.loggedInUser.ID || 0
         }
     })
 
     // Add custom filter to ensure only user's media is shown
     mediaUploader.on('ready', function() {
         // Filter to only show current user's media
-        const currentUserId = tfhb_core_apps?.user?.id || 0;
-        if (currentUserId) {
-            mediaUploader.library.props.set('author', currentUserId);
+        const currentUserId = AddonsAuth.loggedInUser.ID || 0;
+        
+        // Check if library and props exist before accessing
+        if (mediaUploader.library && mediaUploader.library.props && currentUserId) {
+            try {
+                mediaUploader.library.props.set('author', currentUserId);
+            } catch (error) {
+                console.warn('Could not set author filter:', error);
+            }
         }
     })
 

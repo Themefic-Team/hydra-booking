@@ -49,8 +49,7 @@ const saveError = ref('');
 
 async function fetchUserPublicInfo() {
     loading.value = true;
-    try {
-        console.log('Fetching user public info...');
+    try { 
         const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/exhibitors/user-public-info', {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce,
@@ -59,23 +58,18 @@ async function fetchUserPublicInfo() {
                 user_id: tfhb_core_apps.user.id
             },
             withCredentials: true
-        });
-        
-        console.log('API response:', response.data);
+        }); 
         
         if (response.data.success && response.data.data) {
             // Handle the new data structure: { info: {...}, registration_froms_fields: [...] }
-            if (response.data.data.info) {
-                console.log('Merging info data:', response.data.data.info);
+            if (response.data.data.info) { 
                 Object.assign(userPublicInformation, response.data.data.info);
             }
-            if (response.data.data.registration_froms_fields) {
-                console.log('Setting registration fields:', response.data.data.registration_froms_fields);
+            if (response.data.data.registration_froms_fields) { 
                 userPublicInformation.more_details_fields = response.data.data.registration_froms_fields;
             }
             skeleton.value = false;
-            
-            console.log('Final userPublicInformation:', userPublicInformation);
+             
         }
     } catch (e) {
         console.error('Error fetching user public info:', e);
@@ -170,12 +164,9 @@ const editMoreDetailsError = ref('');
 const editMoreDetailsPopup = ref(false);
 
 // Computed property to filter out fields already present in the main profile section
-const filteredMoreDetailsFields = computed(() => {
-    console.log('Computing filteredMoreDetailsFields...');
-    console.log('more_details_fields:', userPublicInformation.more_details_fields);
+const filteredMoreDetailsFields = computed(() => { 
     
-    if (!userPublicInformation.more_details_fields) {
-        console.log('No more_details_fields found');
+    if (!userPublicInformation.more_details_fields) { 
         return [];
     }
     
@@ -188,8 +179,7 @@ const filteredMoreDetailsFields = computed(() => {
     const filtered = userPublicInformation.more_details_fields.filter(field => 
         !mainProfileFields.includes(field.name)
     );
-    
-    console.log('Filtered fields:', filtered);
+     
     return filtered;
 });
 
@@ -202,18 +192,14 @@ const isEditFormReady = computed(() => {
 async function saveMoreDetails() {
     editMoreDetailsLoading.value = true;
     editMoreDetailsError.value = '';
-    
-    console.log('Saving more details...');
-    console.log('Form data to save:', editMoreDetailsForm);
+     
     
     try {
         // Create the data to send - only include the fields that were edited
         const dataToSend = {
             user_id: tfhb_core_apps.user.id,
             ...editMoreDetailsForm
-        };
-        
-        console.log('Data being sent to API:', dataToSend);
+        }; 
         
         const response = await axios.post(
             tfhb_core_apps.rest_route + 'hydra-booking/v1/exhibitors/user-public-info/update',
@@ -224,18 +210,14 @@ async function saveMoreDetails() {
                 },
                 withCredentials: true
             }
-        );
-        
-        console.log('API response:', response.data);
-        
+        ); 
         if (response.data.success) {
             editMoreDetailsSuccess.value = true;
             
             // Update the local userPublicInformation with the form values
             Object.keys(editMoreDetailsForm).forEach(fieldName => {
                 if (userPublicInformation.hasOwnProperty(fieldName)) {
-                    userPublicInformation[fieldName] = editMoreDetailsForm[fieldName];
-                    console.log(`Updated local data for ${fieldName}:`, userPublicInformation[fieldName]);
+                    userPublicInformation[fieldName] = editMoreDetailsForm[fieldName]; 
                 }
             });
             
@@ -275,16 +257,11 @@ function initializeEditForm() {
     });
     
     // Initialize form with current user data
-    if (filteredMoreDetailsFields.value.length > 0) {
-        console.log('Initializing form with fields:', filteredMoreDetailsFields.value);
-        console.log('Current user data:', userPublicInformation);
-        
+    if (filteredMoreDetailsFields.value.length > 0) { 
         filteredMoreDetailsFields.value.forEach(field => {
             const fieldName = field.name;
             const currentValue = userPublicInformation[fieldName];
-            
-            console.log(`Field: ${fieldName}, Type: ${field.type}, Current Value:`, currentValue);
-            
+             
             if (field.type === 'checkbox' || field.type === 'radio') {
                 // For checkbox/radio fields, ensure it's an array
                 editMoreDetailsForm[fieldName] = Array.isArray(currentValue) ? [...currentValue] : (currentValue ? [currentValue] : []);
@@ -292,11 +269,9 @@ function initializeEditForm() {
                 // For text, select, textarea fields
                 editMoreDetailsForm[fieldName] = currentValue || '';
             }
-            
-            console.log(`Form value for ${fieldName}:`, editMoreDetailsForm[fieldName]);
+             
         });
-        
-        console.log('Final form data:', editMoreDetailsForm);
+         
     } else {
         console.log('No fields available for editing');
     }
@@ -340,7 +315,7 @@ const UploadImage = () => {
         button: { text: 'Use this media' },
         multiple: false,
         library: {
-            // Only show media uploaded by current user
+            type: 'image',
             author: tfhb_core_apps?.user?.id || 0
         }
     })
@@ -349,8 +324,14 @@ const UploadImage = () => {
     mediaUploader.on('ready', function() {
         // Filter to only show current user's media
         const currentUserId = tfhb_core_apps?.user?.id || 0;
-        if (currentUserId) {
-            mediaUploader.library.props.set('author', currentUserId);
+        
+        // Check if library and props exist before accessing
+        if (mediaUploader.library && mediaUploader.library.props && currentUserId) {
+            try {
+                mediaUploader.library.props.set('author', currentUserId);
+            } catch (error) {
+                console.warn('Could not set author filter:', error);
+            }
         }
     })
 
@@ -379,7 +360,7 @@ const UploadImageFeature  = () => {
         button: { text: 'Use this media' },
         multiple: false,
         library: {
-            // Only show media uploaded by current user
+            type: 'image',
             author: tfhb_core_apps?.user?.id || 0
         }
     })
@@ -388,8 +369,14 @@ const UploadImageFeature  = () => {
     mediaUploader.on('ready', function() {
         // Filter to only show current user's media
         const currentUserId = tfhb_core_apps?.user?.id || 0;
-        if (currentUserId) {
-            mediaUploader.library.props.set('author', currentUserId);
+        
+        // Check if library and props exist before accessing
+        if (mediaUploader.library && mediaUploader.library.props && currentUserId) {
+            try {
+                mediaUploader.library.props.set('author', currentUserId);
+            } catch (error) {
+                console.warn('Could not set author filter:', error);
+            }
         }
     })
 

@@ -14,7 +14,9 @@ import useValidators from '@/store/validator'
 import axios from 'axios';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import HbPopup from '@/components/widgets/HbPopup.vue'
+import HbPopup from '@/components/widgets/HbPopup.vue';
+
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 const { errors, isEmpty } = useValidators();
 
 // --- API-driven user public info ---
@@ -301,17 +303,23 @@ const UploadImage = () => {
         button: { text: 'Use this media' },
         multiple: false,
         library: {
-            // Only show media uploaded by current user
-            author: tfhb_core_apps?.user?.id || 0
+            type: 'image',
+            author: AddonsAuth.loggedInUser.ID || 0
         }
     })
 
     // Add custom filter to ensure only user's media is shown
     mediaUploader.on('ready', function() {
         // Filter to only show current user's media
-        const currentUserId = tfhb_core_apps?.user?.id || 0;
-        if (currentUserId) {
-            mediaUploader.library.props.set('author', currentUserId);
+        const currentUserId = AddonsAuth.loggedInUser.ID || 0;
+        
+        // Check if library and props exist before accessing
+        if (mediaUploader.library && mediaUploader.library.props && currentUserId) {
+            try {
+                mediaUploader.library.props.set('author', currentUserId);
+            } catch (error) {
+                console.warn('Could not set author filter:', error);
+            }
         }
     })
 
@@ -340,17 +348,23 @@ const UploadImageFeature  = () => {
         button: { text: 'Use this media' },
         multiple: false,
         library: {
-            // Only show media uploaded by current user
-            author: tfhb_core_apps?.user?.id || 0
+            type: 'image',
+            author: AddonsAuth.loggedInUser.ID || 0
         }
     })
 
     // Add custom filter to ensure only user's media is shown
     mediaUploader.on('ready', function() {
         // Filter to only show current user's media
-        const currentUserId = tfhb_core_apps?.user?.id || 0;
-        if (currentUserId) {
-            mediaUploader.library.props.set('author', currentUserId);
+        const currentUserId = AddonsAuth.loggedInUser.ID || 0;
+        
+        // Check if library and props exist before accessing
+        if (mediaUploader.library && mediaUploader.library.props && currentUserId) {
+            try {
+                mediaUploader.library.props.set('author', currentUserId);
+            } catch (error) {
+                console.warn('Could not set author filter:', error);
+            }
         }
     })
 
@@ -389,8 +403,8 @@ document.addEventListener('click', (e) => {
             'background-image': `url('${userPublicInformation.cover_image || $tfhb_url + '/assets/app/images/meeting-cover.png'}')`, 
         }"
     >
-    <span class="tfhb-profile-overlay"></span>
-       
+        <span class="tfhb-profile-overlay"></span>
+    
         <div class="tfhb-single-form-field-wrap avatar_display-wrap tfhb-flexbox" >
             
             <div   class="tfhb-field-image" > 
@@ -421,7 +435,7 @@ document.addEventListener('click', (e) => {
             /> 
             <transition  name="tfhb-dropdown-transition">
                 <div v-if="activeCoverDropdown" class="tfhb-dropdown-wrap"> 
-                     <span class="tfhb-dropdown-single" @click="UploadImageFeature" > <Icon name="Upload" size=20  /> {{ $tfhb_trans('Upload image') }}</span>
+                    <span class="tfhb-dropdown-single" @click="UploadImageFeature" > <Icon name="Upload" size=20  /> {{ $tfhb_trans('Upload image') }}</span>
             
                     <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="EmptyImageFeatured"  ><Icon name="Trash2" size=20 />{{ $tfhb_trans('Delete') }}</span>
                 </div>
