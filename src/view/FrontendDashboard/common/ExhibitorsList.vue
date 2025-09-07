@@ -39,7 +39,8 @@ onBeforeMount(async () => {
 });
 
 const selectExhibitor = (exhibitor) => {
-    selectedExhibitor.value = exhibitor
+    selectedExhibitor.value = exhibitor;
+    // console.log(selectedExhibitor.value);
 }
 
 const closeExhibitorDetails = () => {
@@ -225,8 +226,7 @@ const redirectToChat = (buyerId) => {
                     </div>
                 </div>
             </div>
-        </div>
-
+        </div> 
         <!-- Main Content Area -->
         <div class="exhibitors-content">
             <!-- Exhibitors List -->
@@ -326,7 +326,8 @@ const redirectToChat = (buyerId) => {
                             /> 
                             <!-- <div class="online-indicator"></div> -->
                         </div>
-                        <h3 v-if="exhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.data.name }}</h3>
+                        <!-- {{ selectedExhibitor }} -->
+                        <h3 v-if="selectedExhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.nome_e_cognome }}</h3>
                         <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.job_title }}</h3>
                         <!-- <p  class="exhibitor-subtitle-large">{{ selectedExhibitor.data.job_title }}</p> -->
                     </div>

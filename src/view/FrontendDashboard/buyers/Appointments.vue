@@ -471,7 +471,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         }
         
         // Extract user data from the complex structure with better fallbacks
-        const userName = user.user_data?.family_name_of_participant || 
+        const userName = user.user_data?.name_of_participant || user.user_data?.name || 
                         (user.first_name && user.last_name ? `${user.first_name} ${user.last_name}`.trim() : '') || 
                         user.display_name || 
                         'User Name';
