@@ -307,8 +307,9 @@ const redirectToChat = (user_id) => {
                                 /> 
                             </div>
                             <div class="buyer-info">
-                                <h3 class="buyer-name">{{ buyer.data.name_of_participant }}</h3>
-                                <p class="buyer-role">{{ buyer.data.job_title }}</p>
+                                <!-- <h3 class="buyer-name">{{ buyer.data.name_of_participant }}</h3> -->
+                                <h3 class="buyer-name">{{ buyer.data.job_title }}</h3>
+                                <!-- <p class="buyer-role">{{ buyer.data.job_title }}</p> -->
                             </div>
                             <div class="buyer-status">
                               
@@ -321,13 +322,17 @@ const redirectToChat = (user_id) => {
                         <div class="buyer-card-content">
                             <div class="contact-info">
                                 <div class="contact-item">
+                                    <Icon name="User" size=16 />
+                                    <span>{{ buyer.data.name_of_participant }}</span>
+                                </div>
+                                <div class="contact-item">
                                     <Icon name="Mail" size=16 />
                                     <span>{{ buyer.email }}</span>
                                 </div>
-                                <div class="contact-item">
+                                <!-- <div class="contact-item">
                                     <Icon name="Phone" size=16 />
                                     <span>{{ buyer.data.mobile_no }}</span>
-                                </div>
+                                </div> -->
                                 <div class="contact-item">
                                     <Icon name="MapPin" size=16 />
                                     <span>{{ buyer.data.address }}</span>
@@ -376,8 +381,9 @@ const redirectToChat = (user_id) => {
                                 /> 
                             <!-- <div class="online-indicator"></div> -->
                         </div>
-                        <h3 class="buyer-name-large">{{ selectedBuyer.data.name_of_participant }}</h3>
-                        <p class="buyer-role-large">{{ selectedBuyer.data.job_title }}</p>
+                        <!-- <h3 class="buyer-name-large">{{ selectedBuyer.data.name_of_participant }}</h3> -->
+                        <h3 class="buyer-name-large">{{ selectedBuyer.data.job_title }}</h3>
+                        <!-- <p class="buyer-role-large">{{ selectedBuyer.data.job_title }}</p> -->
                     </div>
 
                     <div class="buyer-details-sections">

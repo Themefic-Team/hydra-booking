@@ -251,25 +251,35 @@ const redirectToChat = (buyerId) => {
                                 /> 
                             </div>
                             <div class="exhibitor-info">
-                                <h3 class="exhibitor-name">{{ exhibitor.data.name }}</h3>
-                                <p class="exhibitor-subtitle">{{ exhibitor.data.ambito_di_attività }}</p>
+                                <h3 v-if="exhibitor.data.nome_e_cognome != ''" class="exhibitor-name">{{ exhibitor.data.nome_e_cognome  }}</h3>
+                                <h3 v-else class="exhibitor-name">{{ selectedExhibitor.data.job_title }}</h3>
+                                <!-- <p class="exhibitor-subtitle">{{ exhibitor.data.ambito_di_attività }}</p> -->
                             </div> 
                         </div>
                         
                         <div class="exhibitor-card-content">
                             <div class="contact-info">
                                 <div class="contact-item">
+                                    <Icon name="User" size=16 />
+                                    <span>{{ exhibitor.data.name }}</span>
+                                </div>
+                                <div class="contact-item">
                                     <Icon name="Mail" size=16 />
                                     <span>{{ exhibitor.data.email }}</span>
                                 </div>
-                                <div class="contact-item">
+                                <!-- <div class="contact-item">
                                     <Icon name="Phone" size=16 />
                                     <span>{{ exhibitor.data.telefono_diretto }}</span>
-                                </div>
+                                </div> -->
                                 <div  v-if="exhibitor.data.location" 
                                 class="contact-item">
                                     <Icon name="MapPin" size=16 />
                                     <span>{{ exhibitor.data.location }}</span>
+                                </div>
+                                <div v-else 
+                                class="contact-item">
+                                    <Icon name="MapPin" size=16 />
+                                    <span>{{ exhibitor.data.sede_legale_dell_attivit }}</span>
                                 </div>
                             </div>
                         </div>
@@ -316,8 +326,9 @@ const redirectToChat = (buyerId) => {
                             /> 
                             <!-- <div class="online-indicator"></div> -->
                         </div>
-                        <h3 class="exhibitor-name-large">{{ selectedExhibitor.data.name }}</h3>
-                        <p class="exhibitor-subtitle-large">{{ selectedExhibitor.data.job_title }}</p>
+                        <h3 v-if="exhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.data.name }}</h3>
+                        <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.job_title }}</h3>
+                        <!-- <p  class="exhibitor-subtitle-large">{{ selectedExhibitor.data.job_title }}</p> -->
                     </div>
 
                     <div class="exhibitor-details-sections">
@@ -327,9 +338,9 @@ const redirectToChat = (buyerId) => {
                             <!-- <a href="#" class="read-more">read more</a> -->
                         </div>
 
-                        <div class="detail-section">
+                        <div v-if="selectedExhibitor.data.sito_internet_aziendale != ''" class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedExhibitor.data.sito_internet }}</p>
+                            <p>{{ selectedExhibitor.data.sito_internet_aziendale }}</p>
                         </div>
 
                         <div class="detail-section">
@@ -337,12 +348,12 @@ const redirectToChat = (buyerId) => {
                             <p>{{ selectedExhibitor.data.email }}</p>
                         </div>
 
-                        <div v-if="selectedExhibitor.data.location"  class="detail-section">
+                        <div v-if="selectedExhibitor.data.telefono_diretto"  class="detail-section">
                             <h4>PHONE</h4>
                             <p>{{ selectedExhibitor.data.telefono_diretto }}</p>
                         </div>
 
-                        <div class="detail-section">
+                        <div v-if="selectedExhibitor.data.location" class="detail-section">
                             <h4>LOCATION</h4>
                             <p>{{ selectedExhibitor.data.location }}</p>
                         </div>

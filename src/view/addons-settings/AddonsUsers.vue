@@ -187,7 +187,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         
         // Create QR code data
         // const qr_data = user.name + ' ' + user.email;
-        console.log(user);
+        // console.log(user);
 
          // Create QR code data with more comprehensive information
          const qr_data = `Name: ${user.name} | Role: ${user.role} | Email: ${user.email}`;
@@ -726,7 +726,7 @@ onBeforeRouteLeave(() => {
                             <td>
                                 <div class="tfhb-list-data-event-title">
                                     <strong>{{ user.name || 'N/A' }}</strong> 
-                                    <strong v-if="user.data.eventuale_altra_denominazione"> ( {{ user.data.eventuale_altra_denominazione|| 'N/A' }} )</strong>
+                                    <!-- <strong v-if="user.data.eventuale_altra_denominazione"> ( {{ user.data.eventuale_altra_denominazione|| 'N/A' }} )</strong> -->
                                 </div>
                             </td>
                             <td>

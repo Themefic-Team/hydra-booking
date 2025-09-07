@@ -351,7 +351,8 @@ const redirectToChat = (user_id) => {
                                 /> 
                             </div>
                             <div class="seller-info">
-                                <h3 class="seller-name">{{ seller.data.name }}</h3>
+                                <h3 class="seller-name" v-if="seller.data.eventuale_altra_denominazione != ''">{{ seller.data.eventuale_altra_denominazione }}</h3>
+                                <h3 class="seller-name" v-if="seller.data.eventuale_altra_denominazione == ''">{{ seller.data.name }}</h3>
                                 <p class="seller-subtitle">{{ seller.data.ambito_di_attività }}</p>
                             </div> 
                         </div>
@@ -359,17 +360,26 @@ const redirectToChat = (user_id) => {
                         <div class="seller-card-content">
                             <div class="contact-info">
                                 <div class="contact-item">
+                                    <Icon name="User" size=16 />
+                                    <span>{{ seller.data.name }}</span>
+                                </div>
+                                <div class="contact-item">
                                     <Icon name="Mail" size=16 />
                                     <span>{{ seller.data.email }}</span>
                                 </div>
-                                <div class="contact-item">
+                                <!-- <div class="contact-item">
                                     <Icon name="Phone" size=16 />
                                     <span>{{ seller.data.telefono_diretto }}</span>
-                                </div>
+                                </div> -->
                                 <div  v-if="seller.data.location" 
                                 class="contact-item">
                                     <Icon name="MapPin" size=16 />
                                     <span>{{ seller.data.location }}</span>
+                                </div>
+                                <div  else
+                                class="contact-item">
+                                    <Icon name="MapPin" size=16 />
+                                    <span>{{ seller.data.regione }}</span>
                                 </div>
                             </div>
                         </div>
@@ -416,8 +426,11 @@ const redirectToChat = (user_id) => {
                             /> 
                             <!-- <div class="online-indicator"></div> -->
                         </div>
-                        <h3 class="seller-name-large">{{ selectedSeller.data.name }}</h3>
-                        <p class="seller-subtitle-large">{{ selectedSeller.data.job_title }}</p>
+                        <!-- <h3 class="seller-name-large">{{ selectedSeller.data.name }}</h3> -->
+                          <h3 class="seller-name-large" v-if="selectedSeller.data.eventuale_altra_denominazione != ''">{{ selectedSeller.data.eventuale_altra_denominazione }}</h3>
+                        <h3 class="selectedSeller-name-large" v-if="selectedSeller.data.eventuale_altra_denominazione == ''">{{ selectedSeller.data.name }}</h3>
+                               
+                        <p class="seller-subtitle-large">{{ selectedSeller.data.ambito_di_attività }}</p>
                     </div>
 
                     <div class="seller-details-sections">
@@ -435,14 +448,13 @@ const redirectToChat = (user_id) => {
                         <div class="detail-section">
                             <h4>EMAIL</h4>
                             <p>{{ selectedSeller.data.email }}</p>
-                        </div>
-
-                        <div v-if="selectedSeller.data.location"  class="detail-section">
+                        </div> 
+                        <div v-if="selectedSeller.data.telefono_diretto !=''"  class="detail-section">
                             <h4>PHONE</h4>
                             <p>{{ selectedSeller.data.telefono_diretto }}</p>
                         </div>
 
-                        <div class="detail-section">
+                        <div v-if="selectedSeller.data.location !=''" class="detail-section">
                             <h4>LOCATION</h4>
                             <p>{{ selectedSeller.data.location }}</p>
                         </div>
@@ -458,8 +470,8 @@ const redirectToChat = (user_id) => {
                                 </div>
                             </div>
                         </div> -->
-
-                        <div class="detail-section">
+ 
+                        <div v-if="selectedSeller.data.provenienza_Buyer_interesse !=''" class="detail-section">
                             <h4>aree di provenienza Buyer di interesse</h4>
                             <div class="tags-container">
                                 <span v-for="workshop in selectedSeller.data.provenienza_Buyer_interesse" :key="workshop" class="tag">
@@ -473,6 +485,14 @@ const redirectToChat = (user_id) => {
                             <div class="tags-container">
                                 <span v-for="region in selectedSeller.data.specializzazione" :key="region" class="tag">
                                     {{ region }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="detail-section">
+                            <h4> Region:</h4>
+                            <div class="tags-container">
+                                <span class="tag">
+                                    {{ selectedSeller.data.regione }}
                                 </span>
                             </div>
                         </div>

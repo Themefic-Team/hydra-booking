@@ -186,7 +186,7 @@ const copyShortcodeCode = () => {
             />
         </div> 
         <div class="tfhb-admin-title" >
-            <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Seller Registration Forms Builders') }}   </h2> 
+            <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Buyer Registration Forms Builders') }}   </h2> 
             <p>{{ $tfhb_trans('Create and customize the information fields for your hosts') }}</p>
         </div>
         <div class="tfhb-admin-card-box  tfhb-gap-24 tfhb-m-0"  >   
@@ -207,7 +207,7 @@ const copyShortcodeCode = () => {
 
             <HbPopup :isOpen="informationPopup" @modal-close="informationPopup = false" max_width="400px" name="first-modal">
                 <template #header> 
-                    <h3>{{ $tfhb_trans('Add Information for Hosts') }}</h3>
+                    <h3>{{ $tfhb_trans('Add Information for Buyers') }}</h3>
                 </template>
 
                 <template #content>  

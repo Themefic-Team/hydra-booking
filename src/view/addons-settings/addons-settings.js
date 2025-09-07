@@ -10,6 +10,11 @@ const AddonsUsers = reactive({
         sellers: [],
         exhibitors: []
     },
+    filtered_users: {
+        buyers: [],
+        sellers: [],
+        exhibitors: []
+    },
     current_tab: 'sellers',
     search_query: '',
     selected_users: [],
@@ -68,6 +73,9 @@ const AddonsUsers = reactive({
                     console.log(`User ${user.id} (${user.name}) status: "${user.status}" (type: ${typeof user.status})`);
                 });
                 
+                // Initialize filtered users with all users
+                this.filtered_users[userType] = [...this.users[userType]];
+                
                 this.updatePagination();
             }
         } catch (error) {
@@ -109,6 +117,12 @@ const AddonsUsers = reactive({
                 if (userIndex !== -1) {
                     this.users[userType][userIndex].status = action === 'activate' ? 'active' : 'inactive';
                     console.log(`Updated local user status to: ${this.users[userType][userIndex].status}`);
+                    
+                    // Update filtered users as well
+                    const filteredUserIndex = this.filtered_users[userType].findIndex(user => user.id === userId);
+                    if (filteredUserIndex !== -1) {
+                        this.filtered_users[userType][filteredUserIndex].status = action === 'activate' ? 'active' : 'inactive';
+                    }
                 }
 
                 toast.success(response.data.message || `User ${action}d successfully`, {
@@ -173,6 +187,13 @@ const AddonsUsers = reactive({
                         console.log(`Updated user ${user.id} status to: ${user.status}`);
                     }
                 });
+                
+                // Update filtered users as well
+                this.filtered_users[this.current_tab].forEach(user => {
+                    if (this.selected_users.includes(user.id)) {
+                        user.status = action === 'activate' ? 'active' : 'inactive';
+                    }
+                });
 
                 // Clear selections
                 this.selected_users = [];
@@ -220,15 +241,28 @@ const AddonsUsers = reactive({
 
     // Filter users based on current filters
     filterUsers() {
-        // This would typically be handled by the backend API
-        // For now, we'll just reset pagination
+        const currentTab = this.current_tab;
+        const searchQuery = this.search_query.toLowerCase().trim();
+        
+        if (!searchQuery) {
+            // If no search query, show all users
+            this.filtered_users[currentTab] = [...this.users[currentTab]];
+        } else {
+            // Filter users based on search query
+            this.filtered_users[currentTab] = this.users[currentTab].filter(user => {
+                const name = (user.name || '').toLowerCase();
+                const email = (user.email || '').toLowerCase();
+                return name.includes(searchQuery) || email.includes(searchQuery);
+            });
+        }
+        
         this.pagination.current_page = 1;
         this.updatePagination();
     },
 
     // Update pagination
     updatePagination() {
-        const totalItems = this.users[this.current_tab].length;
+        const totalItems = this.filtered_users[this.current_tab].length;
         this.pagination.total_items = totalItems;
         this.pagination.total_pages = Math.ceil(totalItems / this.pagination.per_page);
         
@@ -241,7 +275,7 @@ const AddonsUsers = reactive({
     getPaginatedUsers() {
         const start = (this.pagination.current_page - 1) * this.pagination.per_page;
         const end = start + this.pagination.per_page;
-        return this.users[this.current_tab].slice(start, end);
+        return this.filtered_users[this.current_tab].slice(start, end);
     },
 
     // Change page
@@ -449,6 +483,8 @@ const AddonsUsers = reactive({
         this.search_query = '';
         this.pagination.current_page = 1;
         this.fetchUsers(tab);
+        // Filter users after fetching
+        this.filterUsers();
     },
 
     // Initialize
