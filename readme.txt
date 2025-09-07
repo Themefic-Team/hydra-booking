@@ -217,7 +217,7 @@ Although there are some good WordPress appointment plugins like "Amelia Booking 
 
 = 1.1.23 – September 7, 2025 =
 
-- Fixed: Broken HTML issue in meeting titles.
+- Fixed: Broken HTML issue in meeting email subject title.
 
 = 1.1.22 – August 11, 2025 =
 
