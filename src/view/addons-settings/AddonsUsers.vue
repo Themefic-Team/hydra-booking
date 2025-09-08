@@ -708,7 +708,7 @@ onBeforeRouteLeave(() => {
                                     @change="handleAllUsersSelection"
                                 />
                             </th>
-                            <th>{{ $tfhb_trans('Name') }}</th>
+                            <th>{{ $tfhb_trans('Company Name') }}</th>
                             <th>{{ $tfhb_trans('Email') }}</th>
                             <th>{{ $tfhb_trans('Status') }}</th>
                             <th>{{ $tfhb_trans('Actions') }}</th>
@@ -716,7 +716,9 @@ onBeforeRouteLeave(() => {
                     </thead>
                     <tbody>
                         <tr v-for="user in paginatedUsers" :key="user.id"> 
+                          
                             <td class="column-cb">
+                                
                                 <input 
                                     type="checkbox" 
                                     :checked="AddonsUsers.selected_users.includes(user.id)"
@@ -725,7 +727,11 @@ onBeforeRouteLeave(() => {
                             </td>
                             <td>
                                 <div class="tfhb-list-data-event-title">
-                                    <strong>{{ user.name || 'N/A' }}</strong> 
+                                    <!-- {{ user.data }} -->
+                                    <!-- <strong v-if="AddonsUsers.current_tab == 'sellers'">{{ user.data.denominazione_operatore_azienda  || 'N/A' }}</strong> 
+                                    <strong v-if="AddonsUsers.current_tab == 'buyers'">{{ user.data.travel_agent_name  || 'N/A' }}</strong> 
+                                    <strong v-if="AddonsUsers.current_tab == 'exhibitors'">{{ user.data.name  || 'N/A' }}</strong>  -->
+                                    <strong>{{ user.data.company_name || 'N/A' }}</strong> 
                                     <!-- <strong v-if="user.data.eventuale_altra_denominazione"> ( {{ user.data.eventuale_altra_denominazione|| 'N/A' }} )</strong> -->
                                 </div>
                             </td>

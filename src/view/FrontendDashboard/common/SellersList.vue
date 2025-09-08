@@ -351,8 +351,8 @@ const redirectToChat = (user_id) => {
                                 /> 
                             </div>
                             <div class="seller-info">
-                                <h3 class="seller-name" v-if="seller.data.eventuale_altra_denominazione != ''">{{ seller.data.eventuale_altra_denominazione }}</h3>
-                                <h3 class="seller-name" v-if="seller.data.eventuale_altra_denominazione == ''">{{ seller.data.name }}</h3>
+                                <h3 class="seller-name" v-if="seller.data.company_name != ''">{{ seller.data.company_name }}</h3>
+                                <h3 class="seller-name" v-if="seller.data.company_name == ''">{{ seller.data.name }}</h3>
                                 <p class="seller-subtitle">{{ seller.data.ambito_di_attività }}</p>
                             </div> 
                         </div>
