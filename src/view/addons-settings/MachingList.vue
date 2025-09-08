@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
               :filter="true"
               :placeholder="$tfhb_trans('All Sellers')"
               :option="sellers.map(seller => ({
-                name: seller.email,
+                name: (seller.data.denominazione_operatore_azienda ? ' (' + seller.data.denominazione_operatore_azienda + ') ' : '') + seller.email,
                 value: seller.id
               }))"
               @tfhb-onchange="applyFilters"
@@ -343,7 +343,7 @@ onBeforeUnmount(() => {
               :filter="true"
               :placeholder="$tfhb_trans('All Buyers')"
               :option="buyers.map(buyer => ({
-                name: buyer.email,
+                name:  (buyer.data.travel_agent_name ? ' (' + buyer.data.travel_agent_name + ') ' : '') + buyer.email,
                 value: buyer.id
               }))"
               @tfhb-onchange="applyFilters"
@@ -451,9 +451,11 @@ onBeforeUnmount(() => {
               </td>
               <td>{{ matching.id }}</td>
               <td>
+           
                 <div v-if="matching.buyers && matching.buyers.display_name" class="tfhb-user-info">
-                  <strong>{{ matching.buyers.display_name }}</strong>
-                  <small>{{ matching.buyers.user_email }}</small>
+                  <strong>{{ matching.buyers.meta.tfhb_buyers_data.travel_agent_name !='' ? matching.buyers.meta.tfhb_buyers_data.travel_agent_name : 'N/A' }}</strong>
+                  <small>{{ matching.buyers.user_email }}</small> 
+                  <small>{{ matching.buyers.display_name }}</small>
                   <div v-if="matching.buyers.meta && matching.buyers.meta.tfhb_buyers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.buyers.meta.tfhb_buyers_status) }}
                   </div>
@@ -464,8 +466,9 @@ onBeforeUnmount(() => {
               </td>
               <td>
                 <div v-if="matching.sellers && matching.sellers.display_name" class="tfhb-user-info">
-                  <strong>{{ matching.sellers.display_name }}</strong>
+                  <strong>{{ matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda !='' ? matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda : 'N/A' }}</strong> 
                   <small>{{ matching.sellers.user_email }}</small>
+                  <small>{{ matching.sellers.display_name }}</small>
                   <div v-if="matching.sellers.meta && matching.sellers.meta.tfhb_sellers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.sellers.meta.tfhb_sellers_status) }}
                   </div>

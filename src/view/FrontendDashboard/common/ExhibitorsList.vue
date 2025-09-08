@@ -249,10 +249,10 @@ const redirectToChat = (buyerId) => {
                                     alt="Event Logo" 
                                     class="event-logo"
                                 /> 
-                            </div>
+                            </div> 
                             <div class="exhibitor-info">
                                 <h3 v-if="exhibitor.data.nome_e_cognome != ''" class="exhibitor-name">{{ exhibitor.data.nome_e_cognome  }}</h3>
-                                <h3 v-else class="exhibitor-name">{{ selectedExhibitor.data.job_title }}</h3>
+                                <!-- <h3 v-else class="exhibitor-name">{{ selectedExhibitor.data.job_title }}</h3> -->
                                 <!-- <p class="exhibitor-subtitle">{{ exhibitor.data.ambito_di_attività }}</p> -->
                             </div> 
                         </div>
@@ -327,9 +327,9 @@ const redirectToChat = (buyerId) => {
                             <!-- <div class="online-indicator"></div> -->
                         </div>
                         <!-- {{ selectedExhibitor }} -->
-                        <h3 v-if="selectedExhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.nome_e_cognome }}</h3>
+                        <h3 v-if="selectedExhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.data.nome_e_cognome }}</h3>
                         <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.job_title }}</h3>
-                        <!-- <p  class="exhibitor-subtitle-large">{{ selectedExhibitor.data.job_title }}</p> -->
+                        <p  class="exhibitor-subtitle-large">{{ selectedExhibitor.data.sede_legale_dell_attivit }}</p>
                     </div>
 
                     <div class="exhibitor-details-sections">

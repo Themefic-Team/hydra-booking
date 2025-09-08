@@ -338,8 +338,7 @@ const redirectToChat = (user_id) => {
                         class="seller-card"
                         :class="{ 'selected': selectedSeller && selectedSeller.id === seller.id }" 
                     >
-                    <!-- {{ seller.data }} -->
-                      
+ 
                         <div class="seller-card-header">
                             <div class="seller-avatar">
                                 <img v-if="seller.data.avatar && seller.data.avatar.startsWith('http')" :src="seller.data.avatar" alt="Seller Avatar">
@@ -351,8 +350,8 @@ const redirectToChat = (user_id) => {
                                 /> 
                             </div>
                             <div class="seller-info">
-                                <h3 class="seller-name" v-if="seller.data.company_name != ''">{{ seller.data.company_name }}</h3>
-                                <h3 class="seller-name" v-if="seller.data.company_name == ''">{{ seller.data.name }}</h3>
+                                <h3 class="seller-name" v-if="seller.data.denominazione_operatore_azienda != ''">{{ seller.data.denominazione_operatore_azienda }}</h3>
+                                <h3 class="seller-name" v-if="seller.data.denominazione_operatore_azienda == ''">N/A</h3>
                                 <p class="seller-subtitle">{{ seller.data.ambito_di_attività }}</p>
                             </div> 
                         </div>

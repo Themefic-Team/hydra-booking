@@ -308,7 +308,8 @@ const redirectToChat = (user_id) => {
                             </div>
                             <div class="buyer-info">
                                 <!-- <h3 class="buyer-name">{{ buyer.data.name_of_participant }}</h3> -->
-                                <h3 class="buyer-name">{{ buyer.data.job_title }}</h3>
+                                <!-- <h3 class="buyer-name">{{ buyer.data.travel_agent_name }}</h3> -->
+                                <h3 class="buyer-name">{{ buyer.data.travel_agent_name == '' ? 'N/A' : buyer.data.travel_agent_name }}</h3>
                                 <!-- <p class="buyer-role">{{ buyer.data.job_title }}</p> -->
                             </div>
                             <div class="buyer-status">
@@ -335,7 +336,7 @@ const redirectToChat = (user_id) => {
                                 </div> -->
                                 <div class="contact-item">
                                     <Icon name="MapPin" size=16 />
-                                    <span>{{ buyer.data.address }}</span>
+                                    <span>{{ buyer.data.state }}</span>
                                 </div>
                             </div>
                         </div>
@@ -382,7 +383,7 @@ const redirectToChat = (user_id) => {
                             <!-- <div class="online-indicator"></div> -->
                         </div>
                         <!-- <h3 class="buyer-name-large">{{ selectedBuyer.data.name_of_participant }}</h3> -->
-                        <h3 class="buyer-name-large">{{ selectedBuyer.data.job_title }}</h3>
+                        <h3 class="buyer-name-large">{{ selectedBuyer.data.travel_agent_name == '' ? 'N/A' : selectedBuyer.data.travel_agent_name }}</h3>
                         <!-- <p class="buyer-role-large">{{ selectedBuyer.data.job_title }}</p> -->
                     </div>
 
@@ -392,10 +393,10 @@ const redirectToChat = (user_id) => {
                             <p>{{ selectedBuyer.data.description }}</p>
                             <!-- <a href="#" class="read-more">read more</a> -->
                         </div>
-
+                        
                         <div class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedBuyer.data.website }}</p>
+                            <p>{{ selectedBuyer.data.company_website }}</p>
                         </div>
 
                         <div class="detail-section">

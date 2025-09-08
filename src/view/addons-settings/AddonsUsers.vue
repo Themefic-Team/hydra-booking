@@ -728,10 +728,10 @@ onBeforeRouteLeave(() => {
                             <td>
                                 <div class="tfhb-list-data-event-title">
                                     <!-- {{ user.data }} -->
-                                    <!-- <strong v-if="AddonsUsers.current_tab == 'sellers'">{{ user.data.denominazione_operatore_azienda  || 'N/A' }}</strong> 
+                                    <strong v-if="AddonsUsers.current_tab == 'sellers'">{{ user.data.denominazione_operatore_azienda  || 'N/A' }}</strong> 
                                     <strong v-if="AddonsUsers.current_tab == 'buyers'">{{ user.data.travel_agent_name  || 'N/A' }}</strong> 
-                                    <strong v-if="AddonsUsers.current_tab == 'exhibitors'">{{ user.data.name  || 'N/A' }}</strong>  -->
-                                    <strong>{{ user.data.company_name || 'N/A' }}</strong> 
+                                    <strong v-if="AddonsUsers.current_tab == 'exhibitors'">{{ user.data.nome_e_cognome  || 'N/A' }}</strong> 
+                                    <!-- <strong>{{ user.data.company_name || 'N/A' }}</strong>  -->
                                     <!-- <strong v-if="user.data.eventuale_altra_denominazione"> ( {{ user.data.eventuale_altra_denominazione|| 'N/A' }} )</strong> -->
                                 </div>
                             </td>
