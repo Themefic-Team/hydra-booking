@@ -44,6 +44,12 @@ const endItem = computed(() => {
   return Math.min(currentPage.value * filters.per_page, total.value);
 });
 
+// Computed property to get sequential ID for each matching item
+const getSequentialId = (matching) => {
+  const index = matchingData.value.indexOf(matching);
+  return (currentPage.value - 1) * filters.per_page + index + 1;
+};
+
 // Methods
 const loadData = async () => {
   loading.value = true;
@@ -449,7 +455,7 @@ onBeforeUnmount(() => {
                   name="matching_ids[]"
                 >
               </td>
-              <td>{{ matching.id }}</td>
+              <td>{{ getSequentialId(matching) }}</td>
               <td>
            
                 <div v-if="matching.buyers && matching.buyers.display_name" class="tfhb-user-info">

@@ -50,7 +50,7 @@ const loadInitialData = async () => {
       formData.meeting_id = meetingId.value;
     }
   } catch (error) {
-    console.error('Error loading initial data:', error);
+    // console.error('Error loading initial data:', error);
     toast.error('Error loading initial data', {
       position: 'bottom-right',
       autoClose: 1500,
@@ -58,13 +58,23 @@ const loadInitialData = async () => {
   }
 };
 
-const onSellerChange = async () => {
+const onSellerChange = async () => { 
   if (formData.seller_id) {
     await loadUserInfo(formData.seller_id, 'seller');
     showSellerInfo.value = true;
+    
+    // Reload time slots if date is already selected to check availability
+    if (formData.select_date) {
+      await loadTimeSlots();
+    }
   } else {
     showSellerInfo.value = false;
     sellerDetails.value = '';
+    
+    // Reload time slots if date is already selected
+    if (formData.select_date) {
+      await loadTimeSlots();
+    }
   }
 };
 
@@ -72,9 +82,19 @@ const onBuyerChange = async () => {
   if (formData.buyer_id) {
     await loadUserInfo(formData.buyer_id, 'buyer');
     showBuyerInfo.value = true;
+    
+    // Reload time slots if date is already selected to check availability
+    if (formData.select_date) {
+      await loadTimeSlots();
+    }
   } else {
     showBuyerInfo.value = false;
     buyerDetails.value = '';
+    
+    // Reload time slots if date is already selected
+    if (formData.select_date) {
+      await loadTimeSlots();
+    }
   }
 };
 
@@ -126,7 +146,9 @@ const loadTimeSlots = async () => {
   try {
     const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/time-slots', {
       meeting_id: meetingId.value,
-      selected_date: formData.select_date
+      selected_date: formData.select_date,
+      buyer_id: formData.buyer_id || null,
+      seller_id: formData.seller_id || null
     }, {
       headers: {
         'X-WP-Nonce': tfhb_core_apps.rest_nonce,
@@ -194,6 +216,24 @@ const submitForm = async () => {
   }
 };
 
+const getTimeSlotPlaceholder = () => {
+  if (!formData.select_date) {
+    return 'Please Select Date First';
+  }
+  
+  if (timeSlots.value.length === 0) {
+    if (formData.buyer_id && formData.seller_id) {
+      return 'No Available Time Slots (Buyer or Seller Already Booked)';
+    } else if (formData.buyer_id || formData.seller_id) {
+      return 'No Available Time Slots (User Already Booked)';
+    } else {
+      return 'No Time Slots Available';
+    }
+  }
+  
+  return 'Select Time Slot';
+};
+
 const validateForm = () => {
   if (!formData.seller_id) {
     toast.error('Please select a seller', {
@@ -242,7 +282,7 @@ onMounted(() => {
 <template>
 
   <div class="tfhb-admin-dashboard tfhb-admin-meetings "> 
-    <Header v-if="$front_end_dashboard == false" :title="$tfhb_trans('Add New Matchin')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
+    <Header v-if="$front_end_dashboard == false" :title="$tfhb_trans('Add New Matching')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
      
     <div class="tfhb-admin-card-box tfhb-mt-24" :style="{ maxWidth: '1000px', margin: '0 auto' }">
       <form @submit.prevent="submitForm" id="add-matching-form">
@@ -301,7 +341,7 @@ onMounted(() => {
             <HbDropdown
               v-model="formData.select_time_slot"
               :label="$tfhb_trans('Select Time Slot')"
-              :placeholder="timeSlots.length > 0 ? $tfhb_trans('Select Time Slot') : $tfhb_trans('Please Select Date First')"
+              :placeholder="getTimeSlotPlaceholder()"
               :option="timeSlots.map(slot => ({
                 name: `${slot.start} - ${slot.end}`,
                 value: slot.start,
