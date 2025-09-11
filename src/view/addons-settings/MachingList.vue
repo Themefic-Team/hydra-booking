@@ -47,6 +47,12 @@ const endItem = computed(() => {
 // Computed property to get sequential ID for each matching item
 const getSequentialId = (matching) => {
   const index = matchingData.value.indexOf(matching);
+  // When filters are applied, restart numbering from 1 for filtered results
+  // Otherwise use pagination-based numbering
+  const hasActiveFilters = filters.buyer_id || filters.seller_id || filters.date_search;
+  if (hasActiveFilters) {
+    return index + 1;
+  }
   return (currentPage.value - 1) * filters.per_page + index + 1;
 };
 
@@ -118,6 +124,7 @@ const loadSellersAndBuyers = async () => {
 
 const applyFilters = () => {
   filters.page = 1;
+  // alert(1);
   loadData();
 };
 
@@ -435,7 +442,7 @@ onBeforeUnmount(() => {
                   id="cb-select-all-1"
                 >
               </th>
-              <th>{{ $tfhb_trans('ID') }}</th>
+              <th>{{ $tfhb_trans('SL No') }}</th>
               <th>{{ $tfhb_trans('Buyer') }}</th>
               <th>{{ $tfhb_trans('Seller') }}</th>
               <th>{{ $tfhb_trans('Date') }}</th>
