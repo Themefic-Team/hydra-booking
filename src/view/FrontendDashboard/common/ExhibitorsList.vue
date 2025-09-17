@@ -294,6 +294,9 @@ const redirectToChat = (buyerId) => {
                             <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
                             </button> -->
+                            <a :href="'#/exhibitors-list/profile/'+exhibitor.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                         </div>
                     </div>
                 </div>

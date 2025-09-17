@@ -351,6 +351,8 @@ const redirectToChat = (user_id) => {
                             </div>
                             <div class="seller-info">
                                 <h3 class="seller-name" v-if="seller.data.denominazione_operatore_azienda != ''">{{ seller.data.denominazione_operatore_azienda }}</h3>
+                                
+                             
                                 <h3 class="seller-name" v-if="seller.data.denominazione_operatore_azienda == ''">N/A</h3>
                                 <p class="seller-subtitle">{{ seller.data.ambito_di_attività }}</p>
                             </div> 
@@ -383,13 +385,16 @@ const redirectToChat = (user_id) => {
                             </div>
                         </div>
                         
-                        <div class="seller-card-actions">
+                        <div class="seller-card-actions tfhb-flexbox tfhb-gap-8">
                             <button class="action-btn"  @click="selectSeller(seller)">
                                 <Icon name="Eye" size=16 />
                             </button>
                             <button class="action-btn" @click="redirectToChat(seller.id)">
                                 <Icon name="MessageCircle" size=16 />
                             </button>
+                            <a :href="'#/seller-list/profile/'+seller.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                             <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
                             </button> -->

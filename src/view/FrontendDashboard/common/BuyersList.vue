@@ -336,7 +336,10 @@ const redirectToChat = (user_id) => {
                                 </div> -->
                                 <div class="contact-item">
                                     <Icon name="MapPin" size=16 />
-                                    <span>{{ buyer.data.state }}</span>
+                                    <!-- <span>{{ buyer.data.state }}</span> -->
+                                    <span v-for="region in buyer.data.nation" :key="region" class="tag">
+                                            {{ region }}
+                                        </span>
                                 </div>
                             </div>
                         </div>
@@ -349,6 +352,9 @@ const redirectToChat = (user_id) => {
                             <button class="action-btn" @click="redirectToChat(buyer.id)">
                                 <Icon name="MessageCircle" size=16 />
                             </button>
+                            <a :href="'#/buyer-list/profile/'+buyer.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                             <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
                             </button> -->
