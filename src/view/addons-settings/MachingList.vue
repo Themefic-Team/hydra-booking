@@ -469,9 +469,12 @@ onBeforeUnmount(() => {
                   <strong>{{ matching.buyers.meta.tfhb_buyers_data.travel_agent_name !='' ? matching.buyers.meta.tfhb_buyers_data.travel_agent_name : 'N/A' }}</strong>
                   <small>{{ matching.buyers.user_email }}</small> 
                   <small>{{ matching.buyers.display_name }}</small>
+                  <span>
+                    <small v-for="(nation, index) in matching.buyers.meta.tfhb_buyers_data.nation" :key="nation">{{ nation }}<span v-if="index < matching.buyers.meta.tfhb_buyers_data.nation.length - 1"> | </span></small>
+                  </span>
                   <div v-if="matching.buyers.meta && matching.buyers.meta.tfhb_buyers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.buyers.meta.tfhb_buyers_status) }}
-                  </div>
+                  </div> 
                 </div>
                 <div v-else class="tfhb-user-not-found">
                   <em>{{ $tfhb_trans('Buyer not found') }}</em>
@@ -482,9 +485,12 @@ onBeforeUnmount(() => {
                   <strong>{{ matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda !='' ? matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda : 'N/A' }}</strong> 
                   <small>{{ matching.sellers.user_email }}</small>
                   <small>{{ matching.sellers.display_name }}</small>
+                  <span>
+                    <small v-for="(nation, index) in matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse" :key="nation">{{ nation }}<span v-if="index < matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse.length - 1"> | </span></small>
+                  </span>
                   <div v-if="matching.sellers.meta && matching.sellers.meta.tfhb_sellers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.sellers.meta.tfhb_sellers_status) }}
-                  </div>
+                  </div> 
                 </div>
                 <div v-else class="tfhb-user-not-found">
                   <em>{{ $tfhb_trans('Seller not found') }}</em>

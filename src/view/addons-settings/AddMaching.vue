@@ -43,6 +43,7 @@ const loadInitialData = async () => {
     });
     
     if (response.data.success) {
+     
       sellers.value = response.data.data.sellers;
       buyers.value = response.data.data.buyers;
       meetingDates.value = response.data.data.meeting_availability.dates;
@@ -296,8 +297,8 @@ onMounted(() => {
               :filter="true"
               :placeholder="$tfhb_trans('Select Seller')"
               :option="sellers.map(seller => ({
-                name: `${seller.data.user_email} (${seller.data.user_nicename})`,
-                value: seller.data.ID
+                name: `(${seller.tfhb_sellers_data.denominazione_operatore_azienda}) ${seller.user_email}`,
+                value: seller.ID
               }))"
               @tfhb-onchange="onSellerChange"
               required
@@ -312,8 +313,8 @@ onMounted(() => {
               :filter="true"
               :placeholder="$tfhb_trans('Select Buyer')"
               :option="buyers.map(buyer => ({
-                name: `${buyer.data.user_email} (${buyer.data.user_nicename})`,
-                value: buyer.data.ID
+                name: `(${buyer.tfhb_buyers_data.travel_agent_name}) ${buyer.user_email} `,
+                value: buyer.ID
               }))"
               @tfhb-onchange="onBuyerChange"
               required

@@ -838,11 +838,85 @@ onBeforeRouteLeave(() => {
 
                         <!-- User Data -->
                         <div v-if="AddonsUsers.user_details_popup.user_data.data" class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width">
+                            <!-- {{ AddonsUsers.user_details_popup.user_data.data }} -->
                             <h3>{{ $tfhb_trans('Registration Data') }}</h3>
                             <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12" style="flex-direction: column;">
-                                <div v-for="(value, key) in AddonsUsers.user_details_popup.user_data.data" :key="key" class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: 100% !important;">
-                                    <Icon name="FileText" size="20" />
-                                    <div class="tfhb-booking-details">
+                                <template v-for="(value, key) in AddonsUsers.user_details_popup.user_data.data" :key="key">
+                                    <div v-if="key != 'more_details_fields'"
+                                    class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: 100% !important;">
+                                    <Icon name="FileText" size="20" />  
+                                    <div v-if="key == 'staff'" class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
+                                        <div v-if="Array.isArray(value)" class="tfhb-array-list">
+                                           
+                                            <div v-for="item in value" :key="item" class="tfhb-flexbox tfhb-gap-8"  >
+                                                <img v-if="item.image" :src="item.image" alt="" style="height: 60px; width: 60px; object-fit: cover;"> 
+                                                <div>
+                                                    <h5> <strong>Name: </strong> {{ item.name }} </h5>
+                                                    <p> <strong>Position: </strong>{{ item.position }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div v-else-if="key == 'documents'" class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
+                                        <div v-if="Array.isArray(value)" class="tfhb-array-list">
+                                           
+                                            <div v-for="item in value" :key="item" class="tfhb-flexbox tfhb-gap-8"  >  
+                                                <div>
+                                                    <h5> <strong>Title: </strong> {{ item.title }} </h5>
+                                                    <p> <strong>Subtitle: </strong>{{ item.subtitle }}</p> 
+                                                    <p> <a :href="item.url" target="_blank"> View Document</a></p> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div v-else-if="key == 'links'" class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong> 
+                                        <span v-if="Array.isArray(value)" class="tfhb-array-list">
+                                            <span v-for="item in value" :key="item" class="tfhb-array-item">
+                                                <a :href="item.url" target="_blank"> {{ item.title }}</a>
+                                            </span>
+                                        </span>
+                                    </div> 
+                                    <div v-else-if="key == 'gallery'" class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong> 
+                                        <span v-if="Array.isArray(value)" class="tfhb-array-list">
+                                            <span v-for="item in value" :key="item" class="tfhb-array-item">
+                                                <a :href="item.url" target="_blank"> {{ item.title || 'View Image' }}</a>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div v-else-if="key == 'video'" class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
+                                        <div  >  
+                                            <span><strong>Title : </strong> {{ value.title }}</span>
+                                            <br>
+                                            <span><strong>Description : </strong> {{ value.description }}</span>
+                                            <br>
+                                            <span><strong>Url : </strong>  <a :href="value.url" target="_blank">  View Video</a></span>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="key == 'video'" class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
+                                        <div  >  
+                                            <span><strong>Title : </strong> {{ value.title }}</span>
+                                            <br>
+                                            <span><strong>Description : </strong> {{ value.description }}</span>
+                                            <br>
+                                            <span><strong>Url : </strong>  <a :href="value.url" target="_blank">  View Video</a></span>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="key == 'social_share'" class="tfhb-booking-details">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>   
+                                        <span  class="tfhb-array-list"> 
+                                            <span class="tfhb-array-item">   <a :href="value.instagram" target="_blank"> Instagram</a> </span>
+                                            <span class="tfhb-array-item">   <a :href="value.facebook" target="_blank"> Facebook</a> </span>
+                                            <span class="tfhb-array-item">   <a :href="value.youtube" target="_blank"> Youtube</a> </span>
+                                            <span class="tfhb-array-item">   <a :href="value.linkedin" target="_blank"> Linkedin</a> </span>
+                                        </span>
+                                    </div>
+                                    <div v-else class="tfhb-booking-details">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>
                                         <span v-if="Array.isArray(value)" class="tfhb-array-list">
                                             <span v-for="item in value" :key="item" class="tfhb-array-item"> {{ item }}</span>
@@ -855,7 +929,8 @@ onBeforeRouteLeave(() => {
                                         </span>
                                         <span v-else>{{ value }}</span>
                                     </div>
-                                </div>
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -1072,6 +1147,10 @@ onBeforeRouteLeave(() => {
     padding: 2px 6px;
     border-radius: 8px;
     font-size: 11px;
+}
+
+.tfhb-array-item  a{
+    color: #fff !important; 
 }
 
 .tfhb-object-value {
