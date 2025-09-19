@@ -284,6 +284,9 @@ onBeforeMount(() => {
         </div>
 
         <!-- Program -->
+         
+        <!-- External Links -->
+        <!-- {{event_details.program_items}} -->
         <div class="tfhb-section">
             <h3>{{ $tfhb_trans('Documents') }}</h3>
             <div v-for="(item, index) in event_details.program_items" :key="index" class="tfhb-program-item">
@@ -336,7 +339,6 @@ onBeforeMount(() => {
             />
         </div>
 
-        <!-- External Links -->
         <div class="tfhb-section">
             <h3>{{ $tfhb_trans('External Links') }}</h3>
             <div v-for="(link, index) in event_details.external_links" :key="index" class="tfhb-link-item">

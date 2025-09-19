@@ -132,6 +132,43 @@ function closeGalleryPopup() {
 // onMounted(() => {
 //   fetchEventDetails()
 // })
+
+
+// Computed property to convert video URL to embeddable format
+const embedVideoUrl = computed(() => {
+  if (!AddonsAuth.loggedInUser?.user_data?.video?.url) {
+    return null;
+  }
+  
+  try {
+    const url = new URL(AddonsAuth.loggedInUser?.user_data?.video?.url);
+    
+    // Handle YouTube URLs
+    if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+      let videoId = '';
+      
+      // Handle youtu.be URLs (short format)
+      if (url.hostname.includes('youtu.be')) {
+        videoId = url.pathname.substring(1); // Remove leading slash
+      } 
+      // Handle youtube.com URLs
+      else if (url.hostname.includes('youtube.com')) {
+        videoId = url.searchParams.get('v');
+      }
+      
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
+    
+    // Return original URL for non-YouTube videos
+    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+  } catch (error) {
+    console.error('Error parsing video URL:', error);
+    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+  }
+});
+
 </script>
 
 <template>  
@@ -215,7 +252,8 @@ function closeGalleryPopup() {
             <p class="video-description">{{ userVideo.description }}</p>
             <div class="video-container">
               <iframe 
-                :src="userVideo.url" 
+                v-if="embedVideoUrl"
+                :src="embedVideoUrl" 
                 frameborder="0" 
                 allowfullscreen
                 class="video-iframe"
@@ -236,7 +274,7 @@ function closeGalleryPopup() {
                   <span class="document-size">{{ doc.size }}</span>
                 </div>
                 <a v-if="doc.url" :href="doc.url" target="_blank" class="document-download">
-                  <span>📥</span>
+                  <span style="color: #fff;">Download</span>
                 </a>
               </div>
             </div>
@@ -291,12 +329,13 @@ function closeGalleryPopup() {
           <p class="video-title">{{ userVideo.title }}</p>
           <p class="video-description">{{ userVideo.description }}</p>
           <div class="video-container">
-            <iframe 
-              :src="userVideo.url" 
-              frameborder="0" 
-              allowfullscreen
-              class="video-iframe"
-            ></iframe>
+             <iframe 
+                v-if="embedVideoUrl"
+                :src="embedVideoUrl" 
+                frameborder="0" 
+                allowfullscreen
+                class="video-iframe"
+              ></iframe>
           </div>
         </div>
 
@@ -319,7 +358,7 @@ function closeGalleryPopup() {
                 <span class="document-size">{{ doc.size }}</span>
               </div>
               <a v-if="doc.url" :href="doc.url" target="_blank" class="document-download">
-                <span>📥</span>
+                <span style="color: #fff;">Download</span>
               </a>
             </div>
           </div>
@@ -360,10 +399,10 @@ function closeGalleryPopup() {
             </a>
           </div>
           
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.mobile_no">
+          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.telefono_diretto">
             <span class="contact-label">PHONE</span>
             <div class="phone-numbers">
-              <div>{{ AddonsAuth.loggedInUser.user_data.mobile_no }}</div>
+              <div>{{ AddonsAuth.loggedInUser.user_data.telefono_diretto }}</div>
             </div>
           </div>
           

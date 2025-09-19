@@ -612,12 +612,12 @@ document.addEventListener('click', (e) => {
                             file_format="jpg,jpeg,png"
                             width="100"
                         />
-                        <HbText  
+                        <!-- <HbText  
                             v-model="image.title"  
                             :label="$tfhb_trans('Title')"  
                             :placeholder="$tfhb_trans('Image title')" 
                             width="100"
-                        />
+                        /> -->
                         <HbButton 
                             classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                             @click="userPublicInformation.gallery.splice(index, 1)"

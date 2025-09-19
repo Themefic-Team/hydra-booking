@@ -673,12 +673,12 @@ document.addEventListener('click', (e) => {
                             file_format="pdf,doc,docx,xls,xlsx"
                             width="50"
                         />
-                        <HbText  
+                        <!-- <HbText  
                             v-model="doc.size"  
                             :label="$tfhb_trans('File Size')"  
                             :placeholder="$tfhb_trans('e.g., 900 kb')" 
                             width="50"
-                        />
+                        /> -->
                         <HbButton 
                             classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                             @click="userPublicInformation.documents.splice(index, 1)"

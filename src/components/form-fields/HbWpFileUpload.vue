@@ -13,10 +13,11 @@ const props = defineProps([
     'width',
     'subtitle', 'placeholder', 'description', 'disabled',
     'file_size', // 5 MB
-    'file_format' // jpg, jpeg, png
+    'file_format', // jpg, jpeg, png
+    'multiple' // true for multiple files
 ])
 const emit = defineEmits(['update:modelValue']);
-const imageUrl = ref(props.modelValue);
+const imageUrl = ref(props.multiple ? [] : props.modelValue);
 const dragOver = ref(false);
 const fileName = ref('');
 const isUploading = ref(false);
@@ -38,6 +39,37 @@ const getCurrentUserId = () => {
 
 const extractFileName = (url) => url ? url.split('/').pop().split('?')[0] : '';
 
+const isImageFile = (url) => {
+    if (!url) return false;
+    const extension = url.split('.').pop().toLowerCase();
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+    return imageExtensions.includes(extension);
+};
+
+const getFileIcon = (url) => {
+    if (!url) return 'File';
+    
+    const extension = url.split('.').pop().toLowerCase();
+    
+    // Document icons
+    if (['pdf'].includes(extension)) return 'FileText';
+    if (['doc', 'docx'].includes(extension)) return 'FileText';
+    if (['xls', 'xlsx'].includes(extension)) return 'FileSpreadsheet';
+    if (['ppt', 'pptx'].includes(extension)) return 'Presentation';
+    
+    // Archive icons
+    if (['zip', 'rar', '7z'].includes(extension)) return 'Archive';
+    
+    // Video icons
+    if (['mp4', 'avi', 'mov', 'wmv'].includes(extension)) return 'Video';
+    
+    // Audio icons
+    if (['mp3', 'wav', 'ogg'].includes(extension)) return 'Music';
+    
+    // Default file icon
+    return 'File';
+};
+
 const validateFile = (file) => {  
     if (file.size > MAX_FILE_SIZE) {
         toast.error(`File size exceeds ${props.file_size}MB limit.`, {
@@ -58,17 +90,22 @@ const validateFile = (file) => {
     return true
 } 
 const imageChange = (attachment, type) => {  
-    if(type == 'clicked'){ 
-        imageUrl.value = attachment.url  
-        fileName.value = extractFileName(attachment.url) 
-        emit('update:modelValue', attachment.url)
-    }else{
-        imageUrl.value = attachment.source_url  
-        fileName.value = extractFileName(attachment.source_url) 
-        emit('update:modelValue', attachment.source_url)
-    } 
-    isUploading.value = false
-    uploadProgress.value = 0
+    const url = type == 'clicked' ? attachment.url : attachment.source_url;
+    
+    if (props.multiple) {
+        // For multiple files, add to array
+        if (!imageUrl.value) imageUrl.value = [];
+        imageUrl.value.push(url);
+        emit('update:modelValue', [...imageUrl.value]);
+    } else {
+        // For single file, replace value
+        imageUrl.value = url;
+        fileName.value = extractFileName(url);
+        emit('update:modelValue', url);
+    }
+    
+    isUploading.value = false;
+    uploadProgress.value = 0;
 }
 
 const UploadImage = () => {   
@@ -76,20 +113,54 @@ const UploadImage = () => {
     
     const currentUserId = AddonsAuth.loggedInUser.ID;
     
+    // Determine media type based on file format
+    const getMediaType = () => {
+        if (!props.file_format) return 'image';
+        
+        const formats = props.file_format.toLowerCase().split(',');
+        const imageFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+        const videoFormats = ['mp4', 'avi', 'mov', 'wmv'];
+        const audioFormats = ['mp3', 'wav', 'ogg'];
+        
+        if (formats.some(format => imageFormats.includes(format.trim()))) {
+            return 'image';
+        } else if (formats.some(format => videoFormats.includes(format.trim()))) {
+            return 'video';
+        } else if (formats.some(format => audioFormats.includes(format.trim()))) {
+            return 'audio';
+        } else {
+            return ''; // Empty string means all file types
+        }
+    };
+    
+    const mediaType = getMediaType();
+    const titleText = props.multiple ? 'Upload Files' : 'Upload File';
+    const buttonText = props.multiple ? 'Use these files' : 'Use this file';
+    
     const mediaUploader = wp.media({
-        title: 'Upload Image',
-        button: { text: 'Use this image' },
-        multiple: false,
+        title: titleText,
+        button: { text: buttonText },
+        multiple: props.multiple ? 'add' : false,
         // Filter to show only current user's media
         library: {
-            type: 'image',
+            type: mediaType,
             author: currentUserId
         }
     })
 
     mediaUploader.on('select', function () {
-        const attachment = mediaUploader.state().get('selection').first().toJSON()
-        imageChange(attachment, 'clicked')
+        const selection = mediaUploader.state().get('selection');
+        
+        if (props.multiple) {
+            // Handle multiple files
+            selection.each(function(attachment) {
+                imageChange(attachment.toJSON(), 'clicked');
+            });
+        } else {
+            // Handle single file
+            const attachment = selection.first().toJSON();
+            imageChange(attachment, 'clicked');
+        }
     })
 
     mediaUploader.open()
@@ -99,9 +170,21 @@ const handleDrop = async (event) => {
     event.preventDefault()
     dragOver.value = false
     
-    const file = event.dataTransfer.files[0]
-    if (file && validateFile(file)) {
-        await uploadFileToWordPress(file)
+    const files = Array.from(event.dataTransfer.files);
+    
+    if (props.multiple) {
+        // Handle multiple files
+        for (const file of files) {
+            if (validateFile(file)) {
+                await uploadFileToWordPress(file);
+            }
+        }
+    } else {
+        // Handle single file
+        const file = files[0];
+        if (file && validateFile(file)) {
+            await uploadFileToWordPress(file);
+        }
     }
 }
 
@@ -134,15 +217,32 @@ const uploadFileToWordPress = async (file) => {
     }
 }
 
-const removeImage = () => {
-    imageUrl.value = ''
-    fileName.value = ''
-    emit('update:modelValue', '')
+const removeImage = (index = null) => {
+    if (props.multiple) {
+        // Remove specific image from array
+        if (index !== null) {
+            imageUrl.value.splice(index, 1);
+            emit('update:modelValue', [...imageUrl.value]);
+        } else {
+            // Clear all images
+            imageUrl.value = [];
+            emit('update:modelValue', []);
+        }
+    } else {
+        // Single file mode
+        imageUrl.value = '';
+        fileName.value = '';
+        emit('update:modelValue', '');
+    }
 }
 
 watch(() => props.modelValue, (newVal) => {
-    imageUrl.value = newVal
-    fileName.value = extractFileName(newVal)
+    if (props.multiple) {
+        imageUrl.value = Array.isArray(newVal) ? newVal : [];
+    } else {
+        imageUrl.value = newVal;
+        fileName.value = extractFileName(newVal);
+    }
 }) 
 </script>
 
@@ -188,14 +288,35 @@ watch(() => props.modelValue, (newVal) => {
             <div class="progress-bar" :style="{ width: uploadProgress + '%' }"></div>
         </div>
 
-        <div class="upload-file-preview tfhb-full-width" v-if="imageUrl">
+        <!-- Single file preview -->
+        <div class="upload-file-preview tfhb-full-width" v-if="!multiple && imageUrl">
             <div class="upload-file-preview-items tfhb-flexbox tfhb-justify-between tfhb-gap-16">
                 <div class="tfhb-flexbox tfhb-upload-flie-img-wrap tfhb-gap-16">
-                    <img :src="imageUrl" alt="Uploaded Image">
-                    <span class="file-name">{{ fileName || 'Uploaded Image' }}</span>
+                    <img v-if="isImageFile(imageUrl)" :src="imageUrl" alt="Uploaded File">
+                    <div v-else class="file-icon">
+                        <Icon :name="getFileIcon(imageUrl)" size=24 />
+                    </div>
+                    <span class="file-name">{{ fileName || 'Uploaded File' }}</span>
                 </div>
                 
                 <span class="remove-icon" @click="removeImage"> 
+                    <Icon name="X" size=16 />
+                </span>
+            </div>
+        </div>
+
+        <!-- Multiple files preview -->
+        <div class="upload-file-preview tfhb-full-width" v-if="multiple && imageUrl && imageUrl.length > 0">
+            <div class="upload-file-preview-items tfhb-flexbox tfhb-justify-between tfhb-gap-16" v-for="(url, index) in imageUrl" :key="index">
+                <div class="tfhb-flexbox tfhb-upload-flie-img-wrap tfhb-gap-16">
+                    <img v-if="isImageFile(url)" :src="url" alt="Uploaded File">
+                    <div v-else class="file-icon">
+                        <Icon :name="getFileIcon(url)" size=24 />
+                    </div>
+                    <span class="file-name">{{ extractFileName(url) || 'Uploaded File' }}</span>
+                </div>
+                
+                <span class="remove-icon" @click="removeImage(index)"> 
                     <Icon name="X" size=16 />
                 </span>
             </div>
@@ -269,6 +390,22 @@ watch(() => props.modelValue, (newVal) => {
                     border-radius: 4px;
                     max-width: 200px;
                 }
+                
+                .file-icon {
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #f3f4f6;
+                    border-radius: 4px;
+                    border: 1px solid #d1d5db;
+                    
+                    svg {
+                        color: #6b7280;
+                    }
+                }
+                
                 .file-name { 
                     white-space: nowrap;
                     overflow: hidden;

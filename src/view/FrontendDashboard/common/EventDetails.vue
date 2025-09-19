@@ -197,7 +197,7 @@ const embedVideoUrl = computed(() => {
         <div v-if="activeTab === 'Home'" class="home-content">
           <div class="content-card">
             <h2>Description</h2>
-              <p v-if="AddonsAuth.event.description != null">{{ AddonsAuth.event.description }}</p>
+              <div v-if="AddonsAuth.event.description != null" v-html="AddonsAuth.event.description "> </div>
               <p v-else>No description found</p>
             </div>
 
@@ -243,15 +243,19 @@ const embedVideoUrl = computed(() => {
           <div  class="content-card">
             <h2>Documents</h2>
             <div v-if="AddonsAuth.event.event_details.program_items && AddonsAuth.event.event_details.program_items.length > 0" class="program-list">
-              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" class="program-item" v-if="item && item.program_file != null && item.program_file.length > 0">
-                <div class="program-icon">
-                  <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
-                  <div v-else class="program-icon-placeholder">📋</div>
-                </div>
-                <div class="program-content">
-                  <h3>{{ item.title || 'Untitled' }}</h3>
-                  <p>{{ item.subtitle || 'No description' }}</p>
-                </div>
+              
+              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" >
+                <a  v-if="item && item.program_file != null  " :href="item.program_file" target="_blank" class="program-item" >
+                  
+                  <div class="program-icon">
+                      <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
+                      <div v-else class="program-icon-placeholder">📋</div>
+                    </div>
+                    <div class="program-content">
+                      <h3>{{ item.title || 'Untitled' }}</h3>
+                      <p>{{ item.subtitle || 'No description' }}</p>
+                    </div>
+                  </a>
               </div>
             </div>
             <div v-else class="program-list">
@@ -262,9 +266,11 @@ const embedVideoUrl = computed(() => {
           <div  class="content-card">
             <h2>Links</h2>
             <div v-if="AddonsAuth.event.event_details.external_links != null && AddonsAuth.event.event_details.external_links.length > 0"  class="links-list">
-              <div v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" class="link-item" v-if="link && link.url">
-                <span class="link-icon">🌐</span>
-                <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+              <div  v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" >
+                <div class="link-item" v-if="link && link.url">
+                  <span class="link-icon">🌐</span>
+                  <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+                </div>
               </div>
             </div>
             <div v-else class="links-list">
@@ -276,21 +282,21 @@ const embedVideoUrl = computed(() => {
         <!-- Description Tab -->
         <div v-if="activeTab === 'Description'" class="content-card">
           <h2>Description</h2>
-          <p v-if="AddonsAuth.event.description != null">{{ AddonsAuth.event.description }}</p>
+          <div v-if="AddonsAuth.event.description != null" v-html="AddonsAuth.event.description "> </div>
           <p v-else>No description found</p>
         </div>
 
         <!-- Gallery Tab -->
         <div v-if="activeTab === 'Gallery'" class="content-card">
           <h2>Gallery</h2>
-          <div v-if="AddonsAuth.event.gallery_images != null && AddonsAuth.event.gallery_images.length > 0" class="gallery-grid">
-            <div v-for="(img, index) in eventDetails.gallery_images " :key="index" class="gallery-item">
-              <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+          <div  v-if="AddonsAuth.event.event_details.gallery_images && AddonsAuth.event.event_details.gallery_images.length > 0" class="gallery-grid">
+              <div v-for="(img, index) in AddonsAuth.event.event_details.gallery_images " :key="index" class="gallery-item">
+                <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+              </div>
             </div>
-          </div>
-          <div v-else class="gallery-grid">
-            <p>No gallery images found</p>
-          </div>
+            <div v-else>
+              <p>No gallery images found</p>
+            </div>
         </div>
 
         <!-- Gallery Popup Modal (duplicate for Gallery tab) -->
@@ -332,15 +338,18 @@ const embedVideoUrl = computed(() => {
         <div v-if="activeTab === 'Documents'" class="content-card">
           <h2>Documents</h2>
             <div v-if="AddonsAuth.event.event_details.program_items != null && AddonsAuth.event.event_details.program_items.length > 0" class="program-list">
-              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" class="program-item" v-if="item">
-                <div class="program-icon">
-                  <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
-                  <div v-else class="program-icon-placeholder">📋</div>
-                </div>
-                <div class="program-content">
-                  <h3>{{ item.title || 'Untitled' }}</h3>
-                  <p>{{ item.subtitle || 'No description' }}</p>
-                </div>
+              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" >
+                <a  v-if="item && item.program_file != null  " :href="item.program_file" target="_blank" class="program-item" >
+                  
+                  <div class="program-icon">
+                      <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
+                      <div v-else class="program-icon-placeholder">📋</div>
+                    </div>
+                    <div class="program-content">
+                      <h3>{{ item.title || 'Untitled' }}</h3>
+                      <p>{{ item.subtitle || 'No description' }}</p>
+                    </div>
+                  </a>
               </div>
             </div>
             <div v-else class="program-list">
@@ -352,9 +361,13 @@ const embedVideoUrl = computed(() => {
         <div v-if="activeTab === 'Links'" class="content-card">
           <h2>Links</h2>
           <div v-if="AddonsAuth.event.event_details.external_links != null && AddonsAuth.event.event_details.external_links.length > 0" class="links-list">
-            <div v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" class="link-item" v-if="link && link.url">
-              <span class="link-icon">🌐</span>
-              <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+            <div v-if="AddonsAuth.event.event_details.external_links != null && AddonsAuth.event.event_details.external_links.length > 0"  class="links-list">
+              <div  v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" >
+                <div class="link-item" v-if="link && link.url">
+                  <span class="link-icon">🌐</span>
+                  <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+                </div>
+              </div>
             </div>
           </div>
           <div v-else class="links-list">
