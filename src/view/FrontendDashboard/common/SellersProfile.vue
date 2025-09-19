@@ -112,7 +112,7 @@ const fetchSellerProfile = async () => {
     loading.value = true
     error.value = null
     
-    const response = await axios.get(`/wp-json/hydra-booking/v1/addons/public-seller-profile/${route.params.id}`, {
+    const response = await axios.get(tfhb_core_apps.rest_route + `hydra-booking/v1/addons/public-seller-profile/${route.params.id}`, {
       headers: {
         'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
       }
