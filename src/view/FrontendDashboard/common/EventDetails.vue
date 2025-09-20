@@ -164,8 +164,9 @@ const embedVideoUrl = computed(() => {
       </div>
  
       <!-- Event Title and Date -->
+       <!-- {{ AddonsAuth.event.event_details }} -->
       <div class="event-header">
-        <h1 class="event-title">{{ eventDetails.title  }}</h1>
+        <h1 class="event-title">{{ AddonsAuth.event?.title  }}</h1>
         <!-- <p class="event-subtitle">{{ eventDetails.subtitle || 'Event Subtitle' }}</p> -->
         <!-- <p class="event-date">{{ eventDetails.date || 'Event Date' }}</p> -->
         <span v-if="AddonsAuth.event?.availability_range && AddonsAuth.event?.availability_range?.start && AddonsAuth.event?.availability_range?.end">
