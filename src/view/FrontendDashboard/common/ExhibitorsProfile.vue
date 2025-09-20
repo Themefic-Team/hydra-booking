@@ -939,6 +939,8 @@ const embedVideoUrl = computed(() => {
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .contact-card h3,
@@ -957,6 +959,17 @@ const embedVideoUrl = computed(() => {
 
 .contact-item {
   margin-bottom: 1.5rem;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.contact-item > div:not(.phone-numbers) {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  line-height: 1.4;
 }
 
 .contact-label {
@@ -975,6 +988,12 @@ const embedVideoUrl = computed(() => {
   text-decoration: none;
   font-weight: 500;
   line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  display: block;
+  max-width: 100%;
 }
 
 .contact-item a:hover {
@@ -991,6 +1010,11 @@ const embedVideoUrl = computed(() => {
   color: var(--tfhb-text-title-color, #141915);
   font-weight: 500;
   line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
 }
 
 .social-section h4 {
@@ -1183,6 +1207,19 @@ const embedVideoUrl = computed(() => {
   
   .company-banner {
     height: 200px;
+  }
+  
+  /* Enhanced text wrapping for mobile */
+  .contact-item a,
+  .phone-numbers div,
+  .contact-item > div:not(.phone-numbers) {
+    word-break: break-all;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  
+  .contact-card {
+    padding: 1.5rem;
   }
 }
 
