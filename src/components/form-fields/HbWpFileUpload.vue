@@ -327,6 +327,10 @@ watch(() => props.modelValue, (newVal) => {
 </template>
 
 <style lang="scss">
+#menu-item-upload,
+#menu-item-browse {
+	color: #808285 !important;
+}
 .tfhb-file-upload-wrap {
     .upload-drag-drop-wrap {
         border: 1px dashed #C0D8C4;

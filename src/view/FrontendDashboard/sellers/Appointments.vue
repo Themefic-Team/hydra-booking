@@ -29,7 +29,7 @@ import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
 
 const router = useRouter()
-const bookingView = ref('calendar');
+const bookingView = ref('list');
 
 // Calendar view state
 const currentDate = ref(new Date());
@@ -46,7 +46,7 @@ const selectedType = ref('all');
 const calendarEvents = ref([]);
 
 // List view state
-const currentView = ref('calendar'); // 'calendar' or 'list'
+const currentView = ref('list'); // 'calendar' or 'list'
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 const listEvents = ref([]);
@@ -1122,9 +1122,10 @@ onBeforeMount(() => {
                         class="tfhb-table-row" 
                         @click="handleListEventClick(event)"
                     >
+                    <!-- {{ event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }} -->
                         <div class="tfhb-table-cell tfhb-cell-title">
                             <div class="tfhb-cell-content">
-                                <h4>{{ event.title }}</h4>
+                                <h4>{{ event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4>
                                 <div v-if="event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description" class="tfhb-cell-description">
                                     {{ truncateString(event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.description, 80) }}
                                 </div>
@@ -1228,7 +1229,8 @@ onBeforeMount(() => {
                     'border-radius': '50%'
                   }">
                 </div>
-                <h4 class="tfhb-company-name">{{ selectedEventData.title }}</h4>
+                <h4 class="tfhb-company-name">{{  selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4>
+                 <!-- selectedEventData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4> -->
             </div>
 
             <div class="tfhb-details-section" v-if="selectedEventData.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description">
@@ -1674,35 +1676,41 @@ onBeforeMount(() => {
   align-items: flex-start;
 }
 
-.tfhb-calendar-layout.with-details .tfhb-booking-calendar {
+.tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+.tfhb-calendar-layout.with-details .tfhb-list-view {
   flex: 1;
   max-width: calc(100% - 374px); /* 350px panel + 24px gap */
-  min-width: 600px; /* Ensure minimum width for calendar content */
+  min-width: 600px; /* Ensure minimum width for content */
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #f1f1f1;
 }
 
-.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar {
+.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar,
+.tfhb-calendar-layout.with-details .tfhb-list-view::-webkit-scrollbar {
   height: 8px;
 }
 
-.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar-track {
+.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar-track,
+.tfhb-calendar-layout.with-details .tfhb-list-view::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar-thumb {
+.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar-thumb,
+.tfhb-calendar-layout.with-details .tfhb-list-view::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 4px;
 }
 
-.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar-thumb:hover {
+.tfhb-calendar-layout.with-details .tfhb-booking-calendar::-webkit-scrollbar-thumb:hover,
+.tfhb-calendar-layout.with-details .tfhb-list-view::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
 
-.tfhb-calendar-layout:not(.with-details) .tfhb-booking-calendar {
+.tfhb-calendar-layout:not(.with-details) .tfhb-booking-calendar,
+.tfhb-calendar-layout:not(.with-details) .tfhb-list-view {
   flex: 1;
   width: 100%;
 }
@@ -1722,7 +1730,6 @@ onBeforeMount(() => {
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e8e8e8;
-  margin-left: 24px;
   width: 350px;
   height: fit-content;
   position: sticky;
@@ -1731,6 +1738,7 @@ onBeforeMount(() => {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #f1f1f1;
+  flex-shrink: 0; /* Prevent panel from shrinking */
 }
 
 .tfhb-details-panel::-webkit-scrollbar {
@@ -2259,7 +2267,8 @@ onBeforeMount(() => {
     flex-direction: column;
   }
 
-  .tfhb-calendar-layout.with-details .tfhb-booking-calendar {
+  .tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+  .tfhb-calendar-layout.with-details .tfhb-list-view {
     max-width: 100%;
     min-width: 100%;
     overflow-x: auto;

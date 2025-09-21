@@ -2,17 +2,17 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount, computed, nextTick } from 'vue';
 import axios from 'axios'   
-import { useRouter } from 'vue-router'
-import Icon from '@/components/icon/LucideIcon.vue'
+import { useRouter } from 'vue-router';
+import Icon from '@/components/icon/LucideIcon.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { toast } from "vue3-toastify"; 
 import useDateFormat from '@/store/dateformat'
 const { Tfhb_Date, Tfhb_Time } = useDateFormat();
-import { Meeting } from '@/store/meetings'
+import { Meeting } from '@/store/meetings';
 import { Booking } from '@/store/booking'
-import { Host } from '@/store/hosts'
+import { Host } from '@/store/hosts';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import QRCode from 'qrcode';
@@ -26,10 +26,10 @@ import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 import { AddonsSettings } from '@/store/settings/addons-settings.js';
 
 const router = useRouter()
-const bookingView = ref('calendar');
+const bookingView = ref('list');
 
 // View toggle state
-const currentView = ref('calendar'); // 'calendar' or 'list'
+const currentView = ref('list'); // 'calendar' or 'list'
 
 // List view state
 const currentPage = ref(1);
@@ -443,27 +443,27 @@ const exportAsPDF = () => {
 };
 
 // Test function to debug user data
-const testUserData = (user) => {
-    console.log('=== USER DATA DEBUG ===');
-    console.log('Full user object:', user);
-    console.log('User ID:', user?.ID);
-    console.log('User role:', user?.user_role);
-    console.log('First name:', user?.first_name);
-    console.log('Last name:', user?.last_name);
-    console.log('Display name:', user?.display_name);
-    console.log('User data object:', user?.user_data);
-    if (user?.user_data) {
-        console.log('User data name:', user.user_data.name);
-        console.log('User data email:', user.user_data.email);
-        console.log('User data job_title:', user.user_data.job_title);
-        console.log('User data company:', user.user_data.company_website);
-    }
-    console.log('=== END DEBUG ===');
-};
+// const testUserData = (user) => {
+//     console.log('=== USER DATA DEBUG ===');
+//     console.log('Full user object:', user);
+//     console.log('User ID:', user?.ID);
+//     console.log('User role:', user?.user_role);
+//     console.log('First name:', user?.first_name);
+//     console.log('Last name:', user?.last_name);
+//     console.log('Display name:', user?.display_name);
+//     console.log('User data object:', user?.user_data);
+//     if (user?.user_data) {
+//         console.log('User data name:', user.user_data.name);
+//         console.log('User data email:', user.user_data.email);
+//         console.log('User data job_title:', user.user_data.job_title);
+//         console.log('User data company:', user.user_data.company_website);
+//     }
+//     console.log('=== END DEBUG ===');
+// };
 
 const DownloadBadgePDFWithQRCode = async (user) => {
     try { 
-        console.log('Starting PDF generation for user:', user);
+        // console.log('Starting PDF generation for user:', user);
         
         // Validate user object
         if (!user) {
@@ -496,7 +496,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         // Create QR code data with more comprehensive information
         const qr_data = `Name: ${userName}  | Role: ${userRole} | Email: ${userEmail}`;
         
-        console.log('Generating QR code for data:', qr_data);
+        // console.log('Generating QR code for data:', qr_data);
         
         // Generate QR code as data URL
         const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
@@ -508,7 +508,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             }
         });
         
-        console.log('QR code generated successfully');
+        // console.log('QR code generated successfully');
         
         // Create new PDF document (A4 size)
         const pdf = new jsPDF('portrait', 'mm', 'a4');
@@ -527,7 +527,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             backgroundImageUrl = AddonsSettings?.Exhibitors?.badge_pdf_image || '';
         }
         
-        console.log('Background image URL:', backgroundImageUrl);
+        // console.log('Background image URL:', backgroundImageUrl);
         
         // Function to create PDF without background
         const createPDFWithoutBackground = () => {
@@ -1068,7 +1068,7 @@ onBeforeMount(() => {
                     >
                         <div class="tfhb-table-cell tfhb-cell-title">
                             <div class="tfhb-cell-content">
-                                <h4>{{ event.title }}</h4>
+                                <h4>{{ event.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data.denominazione_operatore_azienda }}</h4>
                                 <div v-if="event.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description" class="tfhb-cell-description">
                                     {{ truncateString(event.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.description, 80) }}
                                 </div>
@@ -1172,7 +1172,7 @@ onBeforeMount(() => {
                     'border-radius': '50%'
                   }">
                 </div>
-                <h4 class="tfhb-company-name">{{ selectedEventData.title }}</h4>
+                <h4 class="tfhb-company-name">{{ selectedEventData.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data.denominazione_operatore_azienda }}</h4>
             </div>
 
             <div class="tfhb-details-section" v-if="selectedEventData.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description">
@@ -2072,8 +2072,7 @@ onBeforeMount(() => {
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e8e8e8;
-  margin-left: 24px;
-  width: 400px;
+  width: 350px;
   height: fit-content;
   position: sticky;
   top: 24px;
@@ -2081,6 +2080,7 @@ onBeforeMount(() => {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #f1f1f1;
+  flex-shrink: 0; /* Prevent panel from shrinking */
 }
 
 .tfhb-details-panel::-webkit-scrollbar {
@@ -2289,8 +2289,9 @@ onBeforeMount(() => {
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .tfhb-calendar-layout.with-details .tfhb-booking-calendar {
-    max-width: calc(100% - 400px);
+  .tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+  .tfhb-calendar-layout.with-details .tfhb-list-view {
+    max-width: calc(100% - 374px);
     min-width: 500px;
   }
   
@@ -2346,6 +2347,16 @@ onBeforeMount(() => {
     max-width: 100%;
     min-width: 100%;
     overflow-x: auto;
+  }
+
+  .tfhb-details-panel {
+    margin-left: 0;
+    margin-top: 24px;
+    width: 100%;
+    position: static;
+    height: auto;
+    overflow-y: visible;
+    max-height: none;
   }
 
   .tfhb-list-table {
