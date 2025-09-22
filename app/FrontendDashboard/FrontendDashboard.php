@@ -78,10 +78,10 @@ class FrontendDashboard {
         add_action( 'wp_ajax_nopriv_tfhb_reset_password', array( $this, 'tfhb_reset_password_callback' ) );
 
         // prevent admin access for roles
-        add_action('admin_init', array( $this, 'tfhb_prevent_admin_access_for_roles' ) ); 
+        // add_action('admin_init', array( $this, 'tfhb_prevent_admin_access_for_roles' ) ); 
 
         // redirect to dashboard after login
-        add_action( 'login_redirect', array( $this, 'tfhb_redirect_to_dashboard' ), 10, 3 );
+        // add_action( 'login_redirect', array( $this, 'tfhb_redirect_to_dashboard' ), 10, 3 );
        
     }
 

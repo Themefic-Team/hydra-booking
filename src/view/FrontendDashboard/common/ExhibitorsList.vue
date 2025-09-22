@@ -26,7 +26,22 @@ async function fetchExhibitors() {
         });
         if (response.data.success && response.data.data) {
             exhibitors.value = response.data.data;
-            filteredExhibitors.value = response.data.data;
+            
+            // Sort exhibitors alphabetically by company name (nome_e_cognome)
+            exhibitors.value.sort((a, b) => {
+                const companyNameA = (a.data?.nome_e_cognome || '').toLowerCase();
+                const companyNameB = (b.data?.nome_e_cognome || '').toLowerCase();
+                
+                // Handle empty values by putting them at the end
+                if (!companyNameA && !companyNameB) return 0;
+                if (!companyNameA) return 1;
+                if (!companyNameB) return -1;
+                
+                // Sort alphabetically
+                return companyNameA.localeCompare(companyNameB);
+            });
+            
+            filteredExhibitors.value = [...exhibitors.value];
         }
     } catch (e) {
         // handle error
@@ -52,7 +67,7 @@ const Tfhb_Exhibitor_Filter = (event) => {
     searchQuery.value = query;
     
     if (!query) {
-        filteredExhibitors.value = exhibitors.value;
+        filteredExhibitors.value = [...exhibitors.value];
         return;
     }
     

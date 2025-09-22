@@ -73,8 +73,34 @@ const AddonsUsers = reactive({
                     console.log(`User ${user.id} (${user.name}) status: "${user.status}" (type: ${typeof user.status})`);
                 });
                 
-                // Initialize filtered users with all users
+                // Initialize filtered users with all users and sort them
                 this.filtered_users[userType] = [...this.users[userType]];
+                
+                // Sort users alphabetically by company name
+                this.filtered_users[userType].sort((a, b) => {
+                    let companyNameA = '';
+                    let companyNameB = '';
+                    
+                    // Get company name based on user type
+                    if (userType === 'sellers') {
+                        companyNameA = (a.data?.denominazione_operatore_azienda || '').toLowerCase();
+                        companyNameB = (b.data?.denominazione_operatore_azienda || '').toLowerCase();
+                    } else if (userType === 'buyers') {
+                        companyNameA = (a.data?.travel_agent_name || '').toLowerCase();
+                        companyNameB = (b.data?.travel_agent_name || '').toLowerCase();
+                    } else if (userType === 'exhibitors') {
+                        companyNameA = (a.data?.nome_e_cognome || '').toLowerCase();
+                        companyNameB = (b.data?.nome_e_cognome || '').toLowerCase();
+                    }
+                    
+                    // Handle empty values by putting them at the end
+                    if (!companyNameA && !companyNameB) return 0;
+                    if (!companyNameA) return 1;
+                    if (!companyNameB) return -1;
+                    
+                    // Sort alphabetically
+                    return companyNameA.localeCompare(companyNameB);
+                });
                 
                 this.updatePagination();
             }
@@ -244,18 +270,47 @@ const AddonsUsers = reactive({
         const currentTab = this.current_tab;
         const searchQuery = this.search_query.toLowerCase().trim();
         
+        let filteredUsers = [];
+        
         if (!searchQuery) {
             // If no search query, show all users
-            this.filtered_users[currentTab] = [...this.users[currentTab]];
+            filteredUsers = [...this.users[currentTab]];
         } else {
             // Filter users based on search query
-            this.filtered_users[currentTab] = this.users[currentTab].filter(user => {
+            filteredUsers = this.users[currentTab].filter(user => {
                 const name = (user.name || '').toLowerCase();
                 const email = (user.email || '').toLowerCase();
                 return name.includes(searchQuery) || email.includes(searchQuery);
             });
         }
         
+        // Sort users alphabetically by company name
+        filteredUsers.sort((a, b) => {
+            let companyNameA = '';
+            let companyNameB = '';
+            
+            // Get company name based on user type
+            if (currentTab === 'sellers') {
+                companyNameA = (a.data?.denominazione_operatore_azienda || '').toLowerCase();
+                companyNameB = (b.data?.denominazione_operatore_azienda || '').toLowerCase();
+            } else if (currentTab === 'buyers') {
+                companyNameA = (a.data?.travel_agent_name || '').toLowerCase();
+                companyNameB = (b.data?.travel_agent_name || '').toLowerCase();
+            } else if (currentTab === 'exhibitors') {
+                companyNameA = (a.data?.nome_e_cognome || '').toLowerCase();
+                companyNameB = (b.data?.nome_e_cognome || '').toLowerCase();
+            }
+            
+            // Handle empty values by putting them at the end
+            if (!companyNameA && !companyNameB) return 0;
+            if (!companyNameA) return 1;
+            if (!companyNameB) return -1;
+            
+            // Sort alphabetically
+            return companyNameA.localeCompare(companyNameB);
+        });
+        
+        this.filtered_users[currentTab] = filteredUsers;
         this.pagination.current_page = 1;
         this.updatePagination();
     },

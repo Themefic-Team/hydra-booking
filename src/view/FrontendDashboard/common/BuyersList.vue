@@ -112,7 +112,22 @@ async function fetchBuyers() {
         });
         if (response.data.success && response.data.data) {
             buyers.value = response.data.data;
-            filteredBuyers.value = response.data.data;
+            
+            // Sort buyers alphabetically by company name (travel_agent_name)
+            buyers.value.sort((a, b) => {
+                const companyNameA = (a.data?.travel_agent_name || '').toLowerCase();
+                const companyNameB = (b.data?.travel_agent_name || '').toLowerCase();
+                
+                // Handle empty values by putting them at the end
+                if (!companyNameA && !companyNameB) return 0;
+                if (!companyNameA) return 1;
+                if (!companyNameB) return -1;
+                
+                // Sort alphabetically
+                return companyNameA.localeCompare(companyNameB);
+            });
+            
+            filteredBuyers.value = [...buyers.value];
         }
     } catch (e) {
         // handle error
@@ -138,7 +153,7 @@ const Tfhb_Buyer_Filter = (event) => {
     searchQuery.value = query;
     
     if (!query) {
-        filteredBuyers.value = buyers.value;
+        filteredBuyers.value = [...buyers.value];
         return;
     }
     

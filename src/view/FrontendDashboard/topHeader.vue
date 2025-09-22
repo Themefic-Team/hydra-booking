@@ -174,6 +174,7 @@ const toggleSidebar = () => {
             <div class="tfhb-dropdown tfhb-header-profile-dropdown">
                 <div @click.stop="profileDropdown = !profileDropdown"  class="tfhb-flexbox tfhb-gap-8">  
                     <img :src="$tfhb_url+'/assets/images/avator.png'" alt="Hosts Avatar">
+                  
                     <span class="tfhb-profile-name">  {{ $tfhb_trans('Hi,') }} <b>{{props.userAuth.first_name}}</b> </span>
                     <span  class="tfhb-dropdown-single" >
                         <Icon  v-if="profileDropdown == false" name="ChevronDown" size=16 /> 

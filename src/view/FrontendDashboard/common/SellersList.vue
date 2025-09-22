@@ -126,7 +126,22 @@ async function fetchSellers() {
         });
         if (response.data.success && response.data.data) {
             sellers.value = response.data.data;
-            filteredSellers.value = response.data.data;
+            
+            // Sort sellers alphabetically by company name (denominazione_operatore_azienda)
+            sellers.value.sort((a, b) => {
+                const companyNameA = (a.data?.denominazione_operatore_azienda || '').toLowerCase();
+                const companyNameB = (b.data?.denominazione_operatore_azienda || '').toLowerCase();
+                
+                // Handle empty values by putting them at the end
+                if (!companyNameA && !companyNameB) return 0;
+                if (!companyNameA) return 1;
+                if (!companyNameB) return -1;
+                
+                // Sort alphabetically
+                return companyNameA.localeCompare(companyNameB);
+            });
+            
+            filteredSellers.value = [...sellers.value];
         }
     } catch (e) {
         // handle error
@@ -152,7 +167,7 @@ const Tfhb_Seller_Filter = (event) => {
     searchQuery.value = query;
     
     if (!query) {
-        filteredSellers.value = sellers.value;
+        filteredSellers.value = [...sellers.value];
         return;
     }
     
