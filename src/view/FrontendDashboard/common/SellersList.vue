@@ -407,11 +407,17 @@ const redirectToChat = (user_id) => {
             <div v-if="selectedSeller" class="seller-details-sidebar">
                 <div class="seller-details-header">
                     <h2 class="details-title">
-                        <Icon name="MessageCircle" size=20 />
+                        <!-- <Icon name="MessageCircle" size=20 /> -->
                         Sellers
-                    </h2>
+                    </h2> 
                     <div class="header-actions">
                         <!-- <span class="match-percentage-large">{{ selectedSeller.data.matchPercentage }}% Mach</span>s -->
+                        <button class="action-btn" @click="redirectToChat(selectedSeller.id)">
+                            <Icon name="MessageCircle" size=16 />
+                        </button>
+                            <a :href="'#/seller-list/profile/'+selectedSeller.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                         <button class="close-btn" @click="closeSellerDetails">
                             <Icon name="X" size=20 />
                         </button>
@@ -968,6 +974,11 @@ const redirectToChat = (user_id) => {
         font-weight: 600;
         color: var(--tfhb-paragraph-color, #273F2B);
     }
+}
+
+.action-btn {
+	border: none;
+	background-color: transparent;
 }
 
 .tags-container {

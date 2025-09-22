@@ -306,11 +306,20 @@ const redirectToChat = (buyerId) => {
             <div v-if="selectedExhibitor" class="exhibitor-details-sidebar">
                 <div class="exhibitor-details-header">
                     <h2 class="details-title">
-                        <Icon name="MessageCircle" size=20 />
+                        <!-- <Icon name="MessageCircle" size=20 /> -->
                         Exhibitors
                     </h2>
                     <div class="header-actions">
                         <!-- <span class="match-percentage-large">{{ selectedExhibitor.data.matchPercentage }}% Mach</span>s -->
+                        <button class="action-btn" @click="redirectToChat(selectedExhibitor.id)">
+                            <Icon name="MessageCircle" size=16 />
+                        </button>
+                        <!-- <button class="action-btn">
+                            <Icon name="MoreVertical" size=16 />
+                        </button> -->
+                        <a :href="'#/exhibitors-list/profile/'+selectedExhibitor.id " class="action-btn" style="font-size: 15px;">
+                            View
+                        </a>
                         <button class="close-btn" @click="closeExhibitorDetails">
                             <Icon name="X" size=20 />
                         </button>

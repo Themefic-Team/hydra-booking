@@ -368,10 +368,16 @@ const redirectToChat = (user_id) => {
                 
                 <div class="buyer-details-header">
                     <h2 class="details-title">
-                        <Icon name="MessageCircle" size=20 />
+                        <!-- <Icon name="MessageCircle" size=20 /> -->
                         Buyer
                     </h2>
                     <button class="close-btn" @click="closeBuyerDetails">
+                        <button class="action-btn" @click="redirectToChat(selectedBuyer.id)">
+                                <Icon name="MessageCircle" size=16 />
+                            </button>
+                            <a :href="'#/buyer-list/profile/'+selectedBuyer.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                         <Icon name="X" size=20 />
                     </button>
                 </div>

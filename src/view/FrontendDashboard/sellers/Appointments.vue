@@ -1,7 +1,7 @@
 
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, computed, nextTick } from 'vue';
+import { ref, reactive, onBeforeMount, computed, nextTick, onMounted, onUnmounted } from 'vue';
 import axios from 'axios'   
 import { useRouter } from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -270,9 +270,7 @@ const calendarOptions = reactive({
     selectable: false,
     editable: false,
     eventClick: (info) => {
-        // Show details panel for all views
-        showDetailsPanel.value = true;
-        selectedEventData.value = info.event;
+        handleCalendarEventClick(info);
     },
     dateSet: (dateInfo) => {
         currentDate.value = dateInfo.start;
@@ -285,6 +283,14 @@ const calendarOptions = reactive({
 
 // Selected event data for details panel
 const selectedEventData = ref(null);
+
+// Responsive state
+const isMobile = ref(false);
+const isTablet = ref(false);
+const isSmallScreen = computed(() => isMobile.value || isTablet.value);
+
+// Details panel popup state for mobile/tablet
+const showDetailsPopup = ref(false);
 
 // Calendar view change handler
 const changeCalendarView = (view) => {
@@ -372,9 +378,53 @@ const prevPage = () => {
 };
 
 const handleListEventClick = (event) => {
-    // Show details panel for list view events
-    showDetailsPanel.value = true;
     selectedEventData.value = event;
+    if (isSmallScreen.value) {
+        showDetailsPopup.value = true;
+    } else {
+        showDetailsPanel.value = true;
+    }
+};
+
+// Calendar event click handler
+const handleCalendarEventClick = (info) => {
+    selectedEventData.value = info.event;
+    if (isSmallScreen.value) {
+        showDetailsPopup.value = true;
+    } else {
+        showDetailsPanel.value = true;
+    }
+};
+
+// Close details handlers
+const closeDetailsPanel = () => {
+    showDetailsPanel.value = false;
+    selectedEventData.value = null;
+};
+
+const closeDetailsPopup = () => {
+    showDetailsPopup.value = false;
+    selectedEventData.value = null;
+};
+
+// Responsive detection
+const checkScreenSize = () => {
+    const width = window.innerWidth;
+    isMobile.value = width <= 768;
+    isTablet.value = width > 768 && width <= 1024;
+    
+    // If we're on small screen and details panel is open, close it and show popup instead
+    if (isSmallScreen.value && showDetailsPanel.value) {
+        showDetailsPanel.value = false;
+        if (selectedEventData.value) {
+            showDetailsPopup.value = true;
+        }
+    }
+};
+
+// Window resize handler
+const handleResize = () => {
+    checkScreenSize();
 };
 
 const exportCalendar = (format) => {
@@ -963,6 +1013,20 @@ onBeforeMount(() => {
         sellersAgenda(AddonsAuth.loggedInUser.ID);
     }
 });
+
+onMounted(() => {
+    // Initialize responsive detection
+    checkScreenSize();
+    window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+const redirectToChat = (user_id) => { 
+    AddonsAuth.chat_user_id = user_id;
+    router.push({ name: 'HydraAddonsMessages' });
+}
 </script>
 
 <template> 
@@ -1203,19 +1267,29 @@ onBeforeMount(() => {
             </div>
         </div>
 
-        <!-- Details Panel (for all views) -->
-        <div v-if="showDetailsPanel && selectedEventData" class="tfhb-details-panel">
+        <!-- Details Panel (for desktop views) -->
+        <div v-if="showDetailsPanel && selectedEventData && !isSmallScreen" class="tfhb-details-panel">
             <div class="tfhb-details-header">
                 <h3>Buyer Details</h3>
                 <div class="tfhb-details-actions">
-                    <Icon name="MessageCircle" size=16 />
-                    <Icon name="X" size=16 @click="showDetailsPanel = false" class="tfhb-close-btn" />
+                   <!-- <span class="match-percentage-large">{{ selectedExhibitor.data.matchPercentage }}% Mach</span>s -->
+                    <!-- {{ selectedEventData.extendedProps.apiData.buyers_data }} -->
+                   <button class="action-btn" @click="redirectToChat(selectedEventData.extendedProps.apiData.buyers_data.ID)">
+                        <Icon name="MessageCircle" size=16 />
+                    </button>
+                    <!-- <button class="action-btn">
+                        <Icon name="MoreVertical" size=16 />
+                    </button> -->
+                    <a :href="'#/buyer-list/profile/'+selectedEventData.extendedProps.apiData.buyers_data.ID" class="action-btn" style="font-size: 15px;">
+                        View
+                    </a>
+                    <Icon name="X" size=16 @click="closeDetailsPanel" class="tfhb-close-btn" />
                 </div>
             </div>
 
             <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
                 <div class="tfhb-company-logo">
-                  <img v-if="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Sellers Avatar"
+                  <img v-if="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" :src="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" alt="Sellers Avatar"
                   :style="{
                     'width': '80px',
                     'height': '80px', 
@@ -1291,6 +1365,110 @@ onBeforeMount(() => {
             </div>
         </div>
     </div>
+
+    <!-- Details Panel Popup (for mobile/tablet views) -->
+    <HbPopup 
+        :isOpen="showDetailsPopup" 
+        @modal-close="closeDetailsPopup" 
+        max_width="95vw" 
+        name="details-modal" 
+        gap="24px" 
+        class="tfhb-details-popup"
+    >
+        <template #header>
+            <div class="tfhb-popup-header">
+                <h3>Buyer Details</h3>
+                <div class="tfhb-popup-actions">
+                    <button class="action-btn" @click="redirectToChat(selectedEventData?.extendedProps?.apiData?.buyers_data?.ID)">
+                        <Icon name="MessageCircle" size=16 />
+                    </button>
+                    <a :href="'#/buyer-list/profile/'+selectedEventData?.extendedProps?.apiData?.buyers_data?.ID" class="action-btn" style="font-size: 15px;">
+                        View
+                    </a>
+                </div>
+            </div>
+        </template>
+
+        <template #content>
+            <div v-if="selectedEventData" class="tfhb-popup-details">
+                <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
+                    <div class="tfhb-company-logo">
+                      <img v-if="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" :src="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" alt="Buyer Avatar"
+                      :style="{
+                        'width': '80px',
+                        'height': '80px', 
+                        'border-radius': '50%'
+                      }"
+                      >
+                      <img v-else :src="$tfhb_url+'/assets/images/avator.png'" alt="Buyer Avatar"
+                      :style="{
+                        'width': '80px',
+                        'height': '80px', 
+                        'border-radius': '50%'
+                      }">
+                    </div>
+                    <h4 class="tfhb-company-name">{{ selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4>
+                </div>
+
+                <div class="tfhb-details-section" v-if="selectedEventData.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description">
+                    <label class="tfhb-section-label">DESCRIPTION</label>
+                    <p class="tfhb-description-text">
+                        {{ selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.description || 'No description available' }}
+                    </p>
+                </div>
+
+                <div class="tfhb-details-section">
+                    <label class="tfhb-section-label">CONTACT PERSON</label>
+                    <div class="tfhb-staff-info">
+                        <div class="tfhb-staff-avatar">
+                            <Icon name="User" size=20 />
+                        </div>
+                        <div class="tfhb-staff-details">
+                            <span class="tfhb-staff-name">
+                                {{ getBuyerName(selectedEventData.extendedProps.apiData) }}
+                            </span>
+                            <span class="tfhb-staff-role">
+                                {{ selectedEventData.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.job_title || 'Travel Agent' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getCompanyWebsite(selectedEventData.extendedProps.apiData)">
+                    <label class="tfhb-section-label">WEBSITE</label>
+                    <p class="tfhb-contact-info">{{ getCompanyWebsite(selectedEventData.extendedProps.apiData) }}</p>
+                </div>
+
+                <div class="tfhb-details-section">
+                    <label class="tfhb-section-label">EMAIL</label>
+                    <p class="tfhb-contact-info">{{ selectedEventData.extendedProps.apiData?.buyers_data?.user_email || 'No email available' }}</p>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getAddress(selectedEventData.extendedProps.apiData)">
+                    <label class="tfhb-section-label">ADDRESS</label>
+                    <p class="tfhb-contact-info">{{ getAddress(selectedEventData.extendedProps.apiData) }}</p>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getAreasOfActivity(selectedEventData.extendedProps.apiData).length">
+                    <label class="tfhb-section-label">AREAS OF ACTIVITY</label>
+                    <div class="tfhb-activity-tags">
+                        <span class="tfhb-tag" v-for="activity in getAreasOfActivity(selectedEventData.extendedProps.apiData)" :key="activity">
+                            {{ activity }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getPreferredMeetings(selectedEventData.extendedProps.apiData).length">
+                    <label class="tfhb-section-label">PREFERRED WORKSHOP MEETINGS</label>
+                    <div class="tfhb-activity-tags">
+                        <span class="tfhb-tag" v-for="meeting in getPreferredMeetings(selectedEventData.extendedProps.apiData)" :key="meeting">
+                            {{ meeting }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </HbPopup>
 </div>
 
 <!-- Booking Calendar Edit Popup (for Week/Month View) -->
@@ -1358,6 +1536,11 @@ onBeforeMount(() => {
 </template>
 
 <style scoped> 
+
+.action-btn {
+	border: none !important;
+	background-color: transparent;
+}
 .tfhb-appointments-container {
   padding: 24px;
   background: var(--tfhb-surface-background-color, #f8f9fa);
@@ -2329,6 +2512,248 @@ onBeforeMount(() => {
 
   .tfhb-page-numbers {
     order: -1;
+  }
+}
+
+/* Details Popup Styles */
+.tfhb-details-popup {
+  max-height: 85vh;
+  overflow-y: auto;
+  max-width: 95vw !important;
+  width: 95vw !important;
+  margin: 20px auto;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 9999 !important;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.tfhb-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.tfhb-popup-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.tfhb-popup-actions {
+  display: flex;
+  gap: 12px;
+  color: #666;
+}
+
+.tfhb-popup-actions svg {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.tfhb-popup-actions svg:hover {
+  color: #4CAF50;
+}
+
+.tfhb-popup-details {
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.tfhb-popup-details::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tfhb-popup-details::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.tfhb-popup-details::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.tfhb-popup-details::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.tfhb-popup-details .tfhb-company-info {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tfhb-popup-details .tfhb-company-logo {
+  margin-bottom: 16px;
+}
+
+.tfhb-popup-details .tfhb-company-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.tfhb-popup-details .tfhb-details-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tfhb-popup-details .tfhb-details-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tfhb-popup-details .tfhb-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.tfhb-popup-details .tfhb-description-text {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.tfhb-popup-details .tfhb-staff-info {
+  display: flex;
+  align-items: center;
+}
+
+.tfhb-popup-details .tfhb-staff-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  color: #666;
+}
+
+.tfhb-popup-details .tfhb-staff-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.tfhb-popup-details .tfhb-staff-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.2;
+}
+
+.tfhb-popup-details .tfhb-staff-role {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+.tfhb-popup-details .tfhb-contact-info {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tfhb-popup-details .tfhb-activity-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tfhb-popup-details .tfhb-tag {
+  background: linear-gradient(135deg, #6c5ce7, #5f3dc4);
+  color: white !important;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Overlay and positioning fixes */
+.tfhb-details-popup :deep(.modal-overlay) {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(5px);
+  z-index: 9998 !important;
+}
+
+.tfhb-details-popup :deep(.modal-content) {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-height: 85vh !important;
+  max-width: 95vw !important;
+  width: 95vw !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+  z-index: 9999 !important;
+  overflow: hidden;
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+  .tfhb-details-popup :deep(.modal-content) {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    max-height: 90vh !important;
+    margin: 10px !important;
+    border-radius: 8px !important;
+  }
+  
+  .tfhb-details-popup {
+    max-width: 98vw !important;
+    width: 98vw !important;
+    max-height: 90vh !important;
+  }
+  
+  .tfhb-popup-details {
+    max-height: 75vh !important;
+    padding: 0 5px;
+  }
+}
+
+/* Responsive Design - Hide details panel on mobile/tablet */
+@media (max-width: 1024px) {
+  .tfhb-details-panel {
+    display: none;
+  }
+  
+  .tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+  .tfhb-calendar-layout.with-details .tfhb-list-view {
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide details panel on mobile - use popup instead */
+  .tfhb-details-panel {
+    display: none;
   }
 }
 </style>
