@@ -320,7 +320,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
         {{ $tfhb_trans('Add Matching Rule') }}
       </button>
  
-      <HbPopup :isOpen="matchingRulePopup" @modal-close="matchingRulePopup = false" max_width="500px" name="matching-rule-modal">
+      <HbPopup :isOpen="matchingRulePopup" @modal-close="matchingRulePopup = false" max_width="700px" name="matching-rule-modal">
         <template #header> 
           <h3>{{ $tfhb_trans('Configure Matching Rule') }}</h3>
         </template>
@@ -432,7 +432,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
       </HbPopup>
 
       <!-- Field Mapping Popup -->
-      <HbPopup :isOpen="fieldMappingPopup" @modal-close="fieldMappingPopup = false" max_width="500px" name="field-mapping-modal">
+      <HbPopup :isOpen="fieldMappingPopup" @modal-close="fieldMappingPopup = false" max_width="700px" name="field-mapping-modal">
         <template #header> 
           <h3>{{ $tfhb_trans('Configure Value Mapping') }}</h3>
           <p class="tfhb-mapping-field-info">
