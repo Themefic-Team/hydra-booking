@@ -197,8 +197,8 @@ const embedVideoUrl = computed(() => {
       <!-- Company Title and Type -->
       <div class="company-header">
         <div class="company-title-section">
-          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.name || 'User' }}</h1>
-          <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'User' }}</span>
+          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.denominazione_operatore_azienda || 'N/A' }}</h1>
+          <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'N/A' }}</span>
           <span class="star-icon">⭐</span>
         </div>
         <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.job_title || '' }}</p>

@@ -207,8 +207,8 @@ onMounted(() => {
       <!-- Company Title and Type -->
       <div class="company-header">
         <div class="company-title-section">
-          <h1 class="company-title">{{ userProfile?.user_data?.name_of_participant || 'User' }}</h1>
-          <span class="company-type">{{ userProfile?.user_role || 'User' }}</span>
+          <h1 class="company-title">{{ userProfile?.user_data?.travel_agent_name || 'N/A' }}</h1>
+          <span class="company-type">{{ userProfile?.user_role || 'N/A' }}</span>
           <span class="star-icon">⭐</span>
         </div>
         <p class="company-subtitle">{{ userProfile?.user_data?.job_title || '' }}</p>
