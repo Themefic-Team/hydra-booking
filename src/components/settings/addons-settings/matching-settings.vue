@@ -521,8 +521,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
 }
 
 .tfhb-popup-actions {
-  margin-top: 1.5rem;
-  justify-content: flex-end;
+  margin-top: 1.5rem; 
 }
 
 .tfhb-form-input {
