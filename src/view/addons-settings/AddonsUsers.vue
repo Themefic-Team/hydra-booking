@@ -242,7 +242,9 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             pdf.setFont('helvetica', 'normal');
             const jobTitle = user.role; // You can make this dynamic if needed
             const jobTitleWidth = pdf.getTextWidth(jobTitle);
-            pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+            const jobTitleUpper = jobTitle ? jobTitle.toUpperCase() : '';
+            pdf.text(jobTitleUpper, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+
             
             // Add user name (centered in bottom right quadrant, below job title)
             pdf.setFontSize(16); // Reduced font size
@@ -251,6 +253,56 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             const nameText = user.name || 'User Name';
             const nameWidth = pdf.getTextWidth(nameText);
             pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+
+            
+            if(user.role == 'Buyers'){ 
+                const companyName = (user.data?.travel_agent_name || '').trim();
+                pdf.setFontSize(10);
+                const companyNameWidth = pdf.getTextWidth(companyName);
+                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
+                
+                // Convert nation object/array to comma-separated string
+                let nation = '';
+                if (Array.isArray(user.data?.nation)) {
+                    nation = user.data.nation.join(', ');
+                } else if (typeof user.data?.nation === 'object' && user.data?.nation !== null) {
+                    nation = Object.values(user.data.nation).join(', ');
+                } else if (typeof user.data?.nation === 'string') {
+                    nation = user.data.nation;
+                }
+                pdf.setFontSize(10);
+                const nationWidth = pdf.getTextWidth(nation);
+                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 142); // Reduced spacing
+
+            }
+
+            if(user.role == 'Sellers'){  
+                const companyName = (user.data?.eventuale_altra_denominazione || '').trim(); 
+                pdf.setFontSize(10);
+                const companyNameWidth = pdf.getTextWidth(companyName);
+                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
+                
+                // Convert nation object/array to comma-separated string
+                nation = user.data.regione;
+                pdf.setFontSize(10);
+                const nationWidth = pdf.getTextWidth(nation);
+                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 142); // Reduced spacing 
+            }
+
+            if(user.role == 'Exhibitors'){  
+                const companyName = (user.data?.nome_e_cognome || '').trim(); 
+                pdf.setFontSize(10);
+                const companyNameWidth = pdf.getTextWidth(companyName);
+                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
+                    
+            }
+                
+
+            
+        
            
             // Save the PDF
             const fileName = `badge_${user.name || 'user'}_${Date.now()}.pdf`;
@@ -300,8 +352,8 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 pdf.setFont('helvetica', 'normal');
                 const jobTitle = user.role; // You can make this dynamic if needed
                 const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
-                
+                const jobTitleUpper = jobTitle ? jobTitle.toUpperCase() : '';
+                pdf.text(jobTitleUpper, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
                 // Add user name (centered in bottom right quadrant, below job title)
                 pdf.setFontSize(16); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
@@ -309,6 +361,55 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const nameText = user.name || 'User Name';
                 const nameWidth = pdf.getTextWidth(nameText);
                 pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+
+
+                         
+                if(user.role == 'Buyers'){ 
+                  
+                    const companyName = (user.data?.travel_agent_name || '').trim(); 
+                    pdf.setFontSize(10);
+                    const companyNameWidth = pdf.getTextWidth(companyName);
+                    pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
+                    
+                    // Convert nation object/array to comma-separated string
+                    let nation = '';
+                    if (Array.isArray(user.data?.nation)) {
+                        nation = user.data.nation.join(', ');
+                    } else if (typeof user.data?.nation === 'object' && user.data?.nation !== null) {
+                        nation = Object.values(user.data.nation).join(', ');
+                    } else if (typeof user.data?.nation === 'string') {
+                        nation = user.data.nation;
+                    }
+                    pdf.setFontSize(10);
+                    const nationWidth = pdf.getTextWidth(nation);
+                    pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 142); // Reduced spacing
+          
+                }
+ 
+                if(user.role == 'Sellers'){  
+                    const companyName = (user.data?.eventuale_altra_denominazione || '').trim(); 
+                    pdf.setFontSize(10);
+                    const companyNameWidth = pdf.getTextWidth(companyName);
+                    pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
+                    
+                    // Convert nation object/array to comma-separated string
+                    const nation = user.data.regione;
+                    pdf.setFontSize(10);
+                    const nationWidth = pdf.getTextWidth(nation);
+                    pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 142); // Reduced spacing 
+                }
+              
+
+                if(user.role == 'Exhibitors'){  
+                    const companyName = (user.data?.nome_e_cognome || '').trim(); 
+                    pdf.setFontSize(10);
+                    const companyNameWidth = pdf.getTextWidth(companyName);
+                    pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
+                     
+                }
                  
                 // Save the PDF
                 const fileName = `badge_${user.name || 'user'}_${Date.now()}.pdf`;

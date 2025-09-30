@@ -224,7 +224,7 @@ const selectedEventData = ref(null);
 // Responsive state
 const isMobile = ref(false);
 const isTablet = ref(false);
-const isSmallScreen = computed(() => isMobile.value || isTablet.value);
+const isSmallScreen = computed(() => isMobile.value || isTablet.value || window.innerWidth < 1500);
 
 // Details panel popup state for mobile/tablet
 const showDetailsPopup = ref(false);
@@ -566,8 +566,31 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const nameText = userName;
                 const nameWidth = pdf.getTextWidth(nameText);
                 pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+
+ 
+                  
+                // Company
+                const companyName = (user.user_data?.travel_agent_name || '').trim(); 
+                pdf.setFontSize(10);
+                const companyNameWidth = pdf.getTextWidth(companyName);
+                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
                 
-     
+                // Convert nation object/array to comma-separated string
+                let nation = '';
+                if (Array.isArray(user.user_data?.nation)) {
+                    nation = user.user_data.nation.join(', ');
+                } else if (typeof user.user_data?.nation === 'object' && user.user_data?.nation !== null) {
+                    nation = Object.values(user.user_data.nation).join(', ');
+                } else if (typeof user.user_data?.nation === 'string') {
+                    nation = user.user_data.nation;
+                }
+                pdf.setFontSize(10);
+                const nationWidth = pdf.getTextWidth(nation);
+                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 142); // Reduced spacing
+         
+
+       
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
@@ -626,6 +649,26 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
                  
                 
+                // Company
+                const companyName = (user.user_data?.travel_agent_name || '').trim(); 
+                pdf.setFontSize(10);
+                const companyNameWidth = pdf.getTextWidth(companyName);
+                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 135); // Reduced spacing
+
+                
+                // Convert nation object/array to comma-separated string
+                let nation = '';
+                if (Array.isArray(user.user_data?.nation)) {
+                    nation = user.user_data.nation.join(', ');
+                } else if (typeof user.user_data?.nation === 'object' && user.user_data?.nation !== null) {
+                    nation = Object.values(user.user_data.nation).join(', ');
+                } else if (typeof user.user_data?.nation === 'string') {
+                    nation = user.user_data.nation;
+                }
+                pdf.setFontSize(10);
+                const nationWidth = pdf.getTextWidth(nation);
+                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 142); // Reduced spacing 
+ 
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
@@ -882,7 +925,7 @@ const prevPage = () => {
 // List view event click handler
 const handleListEventClick = (event) => {
     selectedEventData.value = event;
-    if (isSmallScreen.value) {
+    if (window.innerWidth < 1500) {
         showDetailsPopup.value = true;
     } else {
         showDetailsPanel.value = true;
@@ -892,7 +935,7 @@ const handleListEventClick = (event) => {
 // Calendar event click handler
 const handleCalendarEventClick = (info) => {
     selectedEventData.value = info.event;
-    if (isSmallScreen.value) {
+    if (window.innerWidth < 1500) {
         showDetailsPopup.value = true;
     } else {
         showDetailsPanel.value = true;
@@ -916,8 +959,8 @@ const checkScreenSize = () => {
     isMobile.value = width <= 768;
     isTablet.value = width > 768 && width <= 1024;
     
-    // If we're on small screen and details panel is open, close it and show popup instead
-    if (isSmallScreen.value && showDetailsPanel.value) {
+    // If we're on small screen (below 1500px) and details panel is open, close it and show popup instead
+    if (width < 1500 && showDetailsPanel.value) {
         showDetailsPanel.value = false;
         if (selectedEventData.value) {
             showDetailsPopup.value = true;
@@ -1212,7 +1255,7 @@ const redirectToChat = (user_id) => {
         </div>
 
         <!-- Details Panel (for desktop views) -->
-        <div v-if="showDetailsPanel && selectedEventData && !isSmallScreen" class="tfhb-details-panel">
+        <div v-if="showDetailsPanel && selectedEventData && window.innerWidth >= 1500" class="tfhb-details-panel">
             <div class="tfhb-details-header">
                 <h3>Seller Details</h3>
                 <div class="tfhb-details-actions">
@@ -1320,7 +1363,7 @@ const redirectToChat = (user_id) => {
     <HbPopup 
         :isOpen="showDetailsPopup" 
         @modal-close="closeDetailsPopup" 
-        max_width="95vw" 
+        max_width="500px" 
         name="details-modal" 
         gap="24px" 
         class="tfhb-details-popup"
@@ -1606,7 +1649,7 @@ const redirectToChat = (user_id) => {
 
 .tfhb-cell-title {
   flex: 2;
-  min-width: 200px;
+  min-width: 180px; /* Slightly reduced to give more space to other columns */
 }
 
 .tfhb-cell-date {
@@ -1621,12 +1664,12 @@ const redirectToChat = (user_id) => {
 
 .tfhb-cell-contact {
   flex: 1;
-  min-width: 150px;
+  min-width: 140px; /* Slightly reduced to give more space to status column */
 }
 
 .tfhb-cell-status {
   flex: 1;
-  min-width: 100px;
+  min-width: 120px; /* Increased minimum width to show full status text */
 }
 
 .tfhb-cell-actions {
@@ -1883,6 +1926,18 @@ const redirectToChat = (user_id) => {
   
   .tfhb-pagination .tfhb-btn {
     order: 1;
+  }
+}
+
+/* Additional responsive adjustments for details panel */
+@media (min-width: 1025px) and (max-width: 1400px) {
+  .tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+  .tfhb-calendar-layout.with-details .tfhb-list-view {
+    min-width: 700px; /* Adjusted for medium screens */
+  }
+  
+  .tfhb-details-panel {
+    width: 320px; /* Slightly smaller panel for medium screens */
   }
 }
 .tfhb-btn.secondary-btn {
@@ -2199,7 +2254,7 @@ const redirectToChat = (user_id) => {
 .tfhb-calendar-layout.with-details .tfhb-list-view {
   flex: 1;
   max-width: calc(100% - 374px); /* 350px panel + 24px gap */
-  min-width: 600px; /* Ensure minimum width for content */
+  min-width: 800px; /* Increased minimum width to accommodate all columns */
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
@@ -2481,7 +2536,7 @@ const redirectToChat = (user_id) => {
 }
 
 /* Tablet and Mobile - Use popup for details */
-@media (max-width: 1024px) {
+@media (max-width: 1499px) {
   .tfhb-details-panel {
     display: none;
   }
@@ -2578,7 +2633,7 @@ const redirectToChat = (user_id) => {
   }
 
   .tfhb-cell-status {
-    min-width: 80px;
+    min-width: 100px; /* Increased for mobile to show full status */
   }
 
   .tfhb-cell-actions {
@@ -2601,18 +2656,18 @@ const redirectToChat = (user_id) => {
 
 /* Details Popup Styles */
 .tfhb-details-popup {
-  max-height: 85vh;
+  max-height: 100vh;
   overflow-y: auto;
-  max-width: 95vw !important;
-  width: 95vw !important;
-  margin: 20px auto;
+  max-width: 100vw !important;
+  width: 100vw !important;
+  margin: 0 !important;
   position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
   z-index: 9999 !important;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .tfhb-popup-header {
@@ -2646,7 +2701,7 @@ const redirectToChat = (user_id) => {
 
 .tfhb-popup-details {
   padding: 0;
-  max-height: 70vh;
+  max-height: calc(100vh - 120px);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #f1f1f1;
@@ -2786,15 +2841,15 @@ const redirectToChat = (user_id) => {
 
 .tfhb-details-popup :deep(.modal-content) {
   position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  max-height: 85vh !important;
-  max-width: 95vw !important;
-  width: 95vw !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  max-height: 100vh !important;
+  max-width: 100vw !important;
+  width: 100vw !important;
   margin: 0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   z-index: 9999 !important;
   overflow: hidden;
 }
@@ -2802,22 +2857,22 @@ const redirectToChat = (user_id) => {
 /* Mobile specific adjustments */
 @media (max-width: 768px) {
   .tfhb-details-popup :deep(.modal-content) {
-    width: 98vw !important;
-    max-width: 98vw !important;
-    max-height: 90vh !important;
-    margin: 10px !important;
-    border-radius: 8px !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
   }
   
   .tfhb-details-popup {
-    max-width: 98vw !important;
-    width: 98vw !important;
-    max-height: 90vh !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+    max-height: 100vh !important;
   }
   
   .tfhb-popup-details {
-    max-height: 75vh !important;
-    padding: 0 5px;
+    max-height: calc(100vh - 100px) !important;
+    padding: 0 20px;
   }
 }
 </style>
