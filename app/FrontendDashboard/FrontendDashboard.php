@@ -204,7 +204,8 @@ class FrontendDashboard {
 
                 $link = get_site_url() . '/?hydra-booking=forgot-password&tfhb_verification=' . base64_encode( json_encode( $string ) );
 
-                $subject = '<p>' . esc_html__( 'Password Reset Request', 'hydra-booking' ) . '</p>';
+              
+                $subject = esc_html__( 'Password Reset Request', 'hydra-booking' );
 
                 $message =  '<p>' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $user->first_name . ' ' . $user->last_name . '</p>';
 
