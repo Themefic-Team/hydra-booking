@@ -401,7 +401,7 @@ const redirectToChat = (user_id) => {
             <div class="header-content">
                 <div class="header-left">
                     <h1 class="buyers-title">Buyers</h1>
-                    <p class="buyers-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
+                    <p class="buyers-subtitle">Here below all participating Travel Agents or Tour Operators coming from Argentina, Australia, Brazil, Canada, Mexico, USA, sorted by alphabetical order (Company name)</p>
                 </div>
                 
                 <div class="header-right">

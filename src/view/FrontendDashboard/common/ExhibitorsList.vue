@@ -185,53 +185,14 @@ const redirectToChat = (buyerId) => {
                     <input type="text" @keyup="Tfhb_Exhibitor_Filter" placeholder="Search by name, job title, email, phone, address..." /> 
                     <span><Icon name="Search" size=20 /></span>
                 </div>
-                 <!-- <HbButton 
-                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
-                    :buttonText="$tfhb_trans('Filter')"
-                    icon="SlidersHorizontal"   
-                    :hover_animation="false" 
-                    icon_position = 'left'
-                />  -->
-                <!-- <div class="thb-admin-btn right tfhb-flexbox tfhb-gap-16"> 
-                    <HbButton 
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportExhibitors()"
-                        :buttonText="$tfhb_trans('Export Badge')"
-                        icon="FileDown"   
-                        :hover_animation="false" 
-                        icon_position = 'left'
-                    />   
-                    <HbButton 
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportExhibitors()"
-                        :buttonText="$tfhb_trans('Export')"
-                        icon="FileDown"   
-                        :hover_animation="false" 
-                        icon_position = 'left'
-                    />   
-                    <HbButton 
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'ExhibitorsImport' })"
-                        :buttonText="$tfhb_trans('Import')"
-                        icon="FileUp"   
-                        :hover_animation="false" 
-                        icon_position = 'left'
-                    />   
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn" 
-                        @click="openModal"
-                        :buttonText="$tfhb_trans('Add New Host')"
-                        icon="PlusCircle"  
-                        icon_position="left"
-                    />  
-                </div>   -->
+                
             </div>
 
 
             <div class="header-content">
                 <div class="header-left">
                     <h1 class="exhibitors-title">Exhibitors</h1>
-                    <p class="exhibitors-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
+                    <p class="exhibitors-subtitle">Here below all participating Exhibitors sorted by alphabetical order (Company name) and main contact info.</p>
                 </div>
                 
                 <div class="header-right">

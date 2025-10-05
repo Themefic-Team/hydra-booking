@@ -466,7 +466,7 @@ const redirectToChat = (user_id) => {
             <div class="header-content">
                 <div class="header-left">
                     <h1 class="sellers-title">Sellers</h1>
-                    <p class="sellers-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
+                    <p class="sellers-subtitle">Here below see all participating Italian tourism professionals sorted by alphabetical order (Company name) and main contact info.</p>
                 </div>
                 
                 <div class="header-right">
