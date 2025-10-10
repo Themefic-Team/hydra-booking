@@ -448,18 +448,18 @@ document.addEventListener('click', (e) => {
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
         <HbText  
-            v-model="userPublicInformation.name"  
+            v-model="userPublicInformation.denominazione_operatore_azienda"  
             required= "true"  
-            :label="$tfhb_trans('Name')"  
+            :label="$tfhb_trans('Company Name')"  
             selected = "1"
-            :placeholder="$tfhb_trans('Type your name')" 
+            :placeholder="$tfhb_trans('Type your company name')" 
             width="50"
         /> 
         <HbText  
-            v-model="userPublicInformation.job_title"  
-            :label="$tfhb_trans('Job Title')"  
+            v-model="userPublicInformation.name"  
+            :label="$tfhb_trans('Parsonal Name')"  
             selected = "1"
-            :placeholder="$tfhb_trans('Job Title')" 
+            :placeholder="$tfhb_trans('Type personal name')" 
             width="50"
         />  
         <HbText  
@@ -788,10 +788,7 @@ document.addEventListener('click', (e) => {
         />  
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox" style="flex-direction:column;">
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Company Name') }}:</strong>
-        <span>{{ userPublicInformation['denominazione_operatore_azienda'] }}</span>
-      </div>
+    
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Alternative Company Name') }}:</strong>
         <span>{{ userPublicInformation['eventuale_altra_denominazione'] }}</span>
@@ -841,11 +838,7 @@ document.addEventListener('click', (e) => {
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Position') }}:</strong>
         <span>{{ userPublicInformation.incarico }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Email') }}:</strong>
-        <span>{{ userPublicInformation.email }}</span>
-      </div>
+      </div> 
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Direct Phone') }}:</strong>
         <span>{{ userPublicInformation.telefono_diretto }}</span>

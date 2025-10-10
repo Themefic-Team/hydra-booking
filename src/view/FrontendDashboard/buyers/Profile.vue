@@ -470,18 +470,18 @@ document.addEventListener('click', (e) => {
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
         <HbText  
-            v-model="userPublicInformation.name_of_participant"  
+            v-model="userPublicInformation.travel_agent_name"  
             required= "true"  
-            :label="$tfhb_trans('Name')"  
+            :label="$tfhb_trans('Company Name')"  
             selected = "1"
-            :placeholder="$tfhb_trans('Type your name')" 
+            :placeholder="$tfhb_trans('Type company name')" 
             width="50"
         /> 
         <HbText  
-            v-model="userPublicInformation.job_title"  
-            :label="$tfhb_trans('Job Title')"  
+            v-model="userPublicInformation.name_of_participant"  
+            :label="$tfhb_trans('Parsonal Name')"  
             selected = "1"
-            :placeholder="$tfhb_trans('Job Title')" 
+            :placeholder="$tfhb_trans('Type personal name')" 
             width="50"
         />  
         <HbText  

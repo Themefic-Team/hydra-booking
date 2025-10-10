@@ -296,7 +296,11 @@ onMounted(() => {
               :label="$tfhb_trans('Seller')"
               :filter="true"
               :placeholder="$tfhb_trans('Select Seller')"
-              :option="sellers.map(seller => ({
+              :option="[...sellers].sort((a, b) => {
+                const nameA = a.tfhb_sellers_data.denominazione_operatore_azienda.toLowerCase();
+                const nameB = b.tfhb_sellers_data.denominazione_operatore_azienda.toLowerCase();
+                return nameA.localeCompare(nameB);
+              }).map(seller => ({
                 name: `(${seller.tfhb_sellers_data.denominazione_operatore_azienda}) ${seller.user_email}`,
                 value: seller.ID
               }))"
@@ -312,7 +316,11 @@ onMounted(() => {
               :label="$tfhb_trans('Buyer')"
               :filter="true"
               :placeholder="$tfhb_trans('Select Buyer')"
-              :option="buyers.map(buyer => ({
+              :option="[...buyers].sort((a, b) => {
+                const nameA = a.tfhb_buyers_data.travel_agent_name.toLowerCase();
+                const nameB = b.tfhb_buyers_data.travel_agent_name.toLowerCase();
+                return nameA.localeCompare(nameB);
+              }).map(buyer => ({
                 name: `(${buyer.tfhb_buyers_data.travel_agent_name}) ${buyer.user_email} `,
                 value: buyer.ID
               }))"

@@ -91,7 +91,7 @@ const userVideo = computed(() => userData.value.video || { title: '', descriptio
 const userDocuments = computed(() => userData.value.documents || [])
 const userLinks = computed(() => userData.value.links || [])
 const userSocialShare = computed(() => userData.value.social_share || {})
-
+ 
 // Lightbox state for gallery popup
 const isGalleryPopupOpen = ref(false)
 const popupImageSrc = ref('')
@@ -134,12 +134,12 @@ const fetchSellerProfile = async () => {
 
 // Computed property to convert video URL to embeddable format
 const embedVideoUrl = computed(() => {
-  if (!AddonsAuth.loggedInUser?.user_data?.video?.url) {
+  if (!userVideo.value?.url) {
     return null;
   }
   
   try {
-    const url = new URL(AddonsAuth.loggedInUser?.user_data?.video?.url);
+    const url = new URL(userVideo.value.url);
     
     // Handle YouTube URLs
     if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
@@ -160,10 +160,10 @@ const embedVideoUrl = computed(() => {
     }
     
     // Return original URL for non-YouTube videos
-    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+    return userVideo.value.url;
   } catch (error) {
     console.error('Error parsing video URL:', error);
-    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+    return userVideo.value.url;
   }
 });
 
@@ -211,7 +211,7 @@ onMounted(() => {
           <span class="company-type">{{ userProfile?.user_role || 'User' }}</span>
           <span class="star-icon">⭐</span>
         </div>
-        <p class="company-subtitle">{{ userProfile?.user_data?.job_title || '' }}</p>
+        <p class="company-subtitle">{{ userProfile?.user_data?.name || '' }}</p>
       </div>
 
       <!-- Navigation Tabs -->

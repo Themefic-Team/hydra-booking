@@ -81,6 +81,8 @@ const event_details = reactive({
     contact_info: {
         website: '',
         email: '',
+        email2: '',
+        email3: '',
         phone: '',
         phone2: '',
         phone3: '',
@@ -383,6 +385,18 @@ onBeforeMount(() => {
                 <HbInput
                     v-model="event_details.contact_info.email"
                     :label="$tfhb_trans('EMAIL')"
+                    :placeholder="$tfhb_trans('Enter email address')"
+                    type="email"
+                />
+                <HbInput
+                    v-model="event_details.contact_info.email2"
+                    :label="$tfhb_trans('EMAIL 2')"
+                    :placeholder="$tfhb_trans('Enter email address')"
+                    type="email"
+                />
+                <HbInput
+                    v-model="event_details.contact_info.email3"
+                    :label="$tfhb_trans('EMAIL 3')"
                     :placeholder="$tfhb_trans('Enter email address')"
                     type="email"
                 />

@@ -316,7 +316,7 @@ const redirectToChat = (buyerId) => {
                         </div>
                         <!-- {{ selectedExhibitor }} -->
                         <h3 v-if="selectedExhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.data.nome_e_cognome }}</h3>
-                        <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.job_title }}</h3>
+                        <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.name }}</h3>
                         <p  class="exhibitor-subtitle-large">{{ selectedExhibitor.data.sede_legale_dell_attivit }}</p>
                     </div>
 

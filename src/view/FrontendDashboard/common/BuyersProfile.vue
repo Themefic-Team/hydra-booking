@@ -211,7 +211,7 @@ onMounted(() => {
           <span class="company-type">{{ userProfile?.user_role || 'N/A' }}</span>
           <span class="star-icon">⭐</span>
         </div>
-        <p class="company-subtitle">{{ userProfile?.user_data?.job_title || '' }}</p>
+        <p class="company-subtitle">{{ userProfile?.user_data?.name_of_participant || '' }}</p>
       </div>
 
       <!-- Navigation Tabs -->

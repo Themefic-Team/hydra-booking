@@ -501,15 +501,17 @@ const redirectToChat = (user_id) => {
                         <!-- <Icon name="MessageCircle" size=20 /> -->
                         Buyer
                     </h2>
-                    <button class="close-btn" @click="closeBuyerDetails">
+                    <div class="header-actions">
                         <button class="action-btn" @click="redirectToChat(selectedBuyer.id)">
-                                <Icon name="MessageCircle" size=16 />
-                            </button>
-                            <a :href="'#/buyer-list/profile/'+selectedBuyer.id " class="action-btn" style="font-size: 15px;">
-                                View
-                            </a>
-                        <Icon name="X" size=20 />
-                    </button>
+                            <Icon name="MessageCircle" size=16 />
+                        </button>
+                        <a :href="'#/buyer-list/profile/'+selectedBuyer.id " class="action-btn" style="font-size: 15px;">
+                            View
+                        </a> 
+                        <button class="close-btn" @click="closeBuyerDetails">
+                            <Icon name="X" size=20 />
+                        </button>
+                    </div>
                 </div>
 
                 <div class="buyer-details-content">
@@ -961,7 +963,30 @@ const redirectToChat = (user_id) => {
     overflow-y: auto;
     min-height: 0; /* Allows flex item to shrink below content size */
 }
-
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .match-percentage-large {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--tfhb-primary-color, #2E6B38);
+    }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--tfhb-paragraph-color, #273F2B);
+        
+        &:hover {
+            background: var(--tfhb-surface-background-color, #EEF6F0);
+        }
+    }
+}
 .buyer-profile {
     text-align: center;
     margin-bottom: 32px;

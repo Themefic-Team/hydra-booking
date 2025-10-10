@@ -387,6 +387,14 @@ const embedVideoUrl = computed(() => {
             <a :href="`mailto:${AddonsAuth.event?.event_details?.contact_info?.email || 'info@example.com'}`">
               {{ AddonsAuth.event?.event_details?.contact_info?.email || 'info@example.com' }}
             </a>
+            <br>
+            <a v-if="AddonsAuth.event?.event_details?.contact_info?.email2" :href="`mailto:${AddonsAuth.event?.event_details?.contact_info?.email2 || 'info@example.com'}`">
+              {{ AddonsAuth.event?.event_details?.contact_info?.email2 || 'info@example.com' }}
+            </a>
+            <br>
+            <a v-if="AddonsAuth.event?.event_details?.contact_info?.email3" :href="`mailto:${AddonsAuth.event?.event_details?.contact_info?.email3 || 'info@example.com'}`">
+              {{ AddonsAuth.event?.event_details?.contact_info?.email3 || 'info@example.com' }}
+            </a>
           </div>
           
           <div class="contact-item">

@@ -588,8 +588,8 @@ const redirectToChat = (user_id) => {
                             <!-- <div class="online-indicator"></div> -->
                         </div>
                         <!-- <h3 class="seller-name-large">{{ selectedSeller.data.name }}</h3> -->
-                          <h3 class="seller-name-large" v-if="selectedSeller.data.eventuale_altra_denominazione != ''">{{ selectedSeller.data.eventuale_altra_denominazione }}</h3>
-                        <h3 class="selectedSeller-name-large" v-if="selectedSeller.data.eventuale_altra_denominazione == ''">{{ selectedSeller.data.name }}</h3>
+                          <h3 class="seller-name-large" v-if="selectedSeller.data.denominazione_operatore_azienda != ''">{{ selectedSeller.data.denominazione_operatore_azienda }}</h3>
+                        <h3 class="selectedSeller-name-large" v-if="selectedSeller.data.denominazione_operatore_azienda == ''">{{ selectedSeller.data.name }}</h3>
                                
                         <p class="seller-subtitle-large">{{ selectedSeller.data.ambito_di_attività }}</p>
                     </div>
