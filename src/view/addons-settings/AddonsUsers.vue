@@ -292,7 +292,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             }
 
             if(user.role == 'Exhibitors'){  
-                const companyName = (user.data?.nome_e_cognome || '').trim(); 
+                const companyName = (user.data?.company_name || '').trim(); 
                 pdf.setFontSize(10);
                 const companyNameWidth = pdf.getTextWidth(companyName);
                 pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
@@ -401,7 +401,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
               
 
                 if(user.role == 'Exhibitors'){  
-                    const companyName = (user.data?.nome_e_cognome || '').trim(); 
+                    const companyName = (user.data?.company_name || '').trim(); 
                     pdf.setFontSize(10);
                     const companyNameWidth = pdf.getTextWidth(companyName);
                     pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
@@ -829,7 +829,7 @@ onBeforeRouteLeave(() => {
                                     <!-- {{ user.data }} -->
                                     <strong v-if="AddonsUsers.current_tab == 'sellers'">{{ user.data.denominazione_operatore_azienda  || 'N/A' }}</strong> 
                                     <strong v-if="AddonsUsers.current_tab == 'buyers'">{{ user.data.travel_agent_name  || 'N/A' }}</strong> 
-                                    <strong v-if="AddonsUsers.current_tab == 'exhibitors'">{{ user.data.nome_e_cognome  || 'N/A' }}</strong> 
+                                    <strong v-if="AddonsUsers.current_tab == 'exhibitors'">{{ user.data.company_name  || 'N/A' }}</strong> 
                                     <!-- <strong>{{ user.data.company_name || 'N/A' }}</strong>  -->
                                     <!-- <strong v-if="user.data.eventuale_altra_denominazione"> ( {{ user.data.eventuale_altra_denominazione|| 'N/A' }} )</strong> -->
                                 </div>
