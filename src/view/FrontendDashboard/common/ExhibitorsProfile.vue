@@ -36,9 +36,9 @@ const hasLinksContent = computed(() => userLinks.value.length > 0)
 const hasContactInfo = computed(() => {
   const userData = userProfile.value?.user_data
   return (
-    (userData?.company_website && userData.company_website.trim() !== '') ||
+    (userData?.website && userData.website.trim() !== '') ||
     (userData?.email && userData.email.trim() !== '') ||
-    (userData?.telefono_diretto && userData.telefono_diretto.trim() !== '') ||
+    (userData?.phone && userData.phone.trim() !== '') ||
     (userData?.address && userData.address.trim() !== '') ||
     Object.values(userSocialShare.value).some(link => link && link.trim() !== '')
   )
@@ -206,11 +206,11 @@ const embedVideoUrl = computed(() => {
       <!-- Company Title and Type -->
       <div class="company-header">
         <div class="company-title-section">
-          <h1 class="company-title">{{ userProfile?.user_data?.nome_e_cognome || 'N/A' }}</h1>
+          <h1 class="company-title">{{ userProfile?.user_data?.company_name || 'N/A' }}</h1>
           <span class="company-type">{{ userProfile?.user_role || 'N/A' }}</span>
           <span class="star-icon">⭐</span>
         </div>
-        <p class="company-subtitle">{{ userProfile?.user_data?.name || '' }}</p>
+        <p class="company-subtitle">{{ userProfile?.user_data?.contact_person || '' }}</p>
       </div>
 
       <!-- Navigation Tabs -->
@@ -395,10 +395,10 @@ const embedVideoUrl = computed(() => {
         <h3>Contact information</h3>
         
         <div class="contact-section">
-          <div class="contact-item" v-if="userProfile?.user_data?.company_website">
+          <div class="contact-item" v-if="userProfile?.user_data?.website">
             <span class="contact-label">SITE</span>
-            <a :href="`https://${userProfile.user_data.company_website}`" target="_blank">
-              {{ userProfile.user_data.company_website }}
+            <a :href="`https://${userProfile.user_data.website}`" target="_blank">
+              {{ userProfile.user_data.website }}
             </a>
           </div>
           
@@ -409,10 +409,10 @@ const embedVideoUrl = computed(() => {
             </a>
           </div>
           
-          <div class="contact-item" v-if="userProfile?.user_data?.telefono_diretto">
+          <div class="contact-item" v-if="userProfile?.user_data?.phone">
             <span class="contact-label">PHONE</span>
             <div class="phone-numbers">
-              <div>{{ userProfile.user_data.telefono_diretto }}</div>
+              <div>{{ userProfile.user_data.phone }}</div>
             </div>
           </div>
           

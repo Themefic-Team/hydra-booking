@@ -34,9 +34,9 @@ const hasLinksContent = computed(() => userLinks.value.length > 0)
 const hasContactInfo = computed(() => {
   const userData = AddonsAuth.loggedInUser?.user_data
   return (
-    (userData?.company_website && userData.company_website.trim() !== '') ||
+    (userData?.website && userData.website.trim() !== '') ||
     (userData?.email && userData.email.trim() !== '') ||
-    (userData?.mobile_no && userData.mobile_no.trim() !== '') ||
+    (userData?.phone && userData.phone.trim() !== '') ||
     (userData?.address && userData.address.trim() !== '') ||
     Object.values(userSocialShare.value).some(link => link && link.trim() !== '')
   )
@@ -196,11 +196,11 @@ const embedVideoUrl = computed(() => {
       <!-- Company Title and Type -->
       <div class="company-header">
         <div class="company-title-section">
-          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.nome_e_cognome || 'User' }}</h1>
+          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.company_name || 'Company Name' }}</h1>
           <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'User' }}</span>
           <span class="star-icon">⭐</span>
         </div>
-        <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.name || '' }}</p>
+        <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.contact_person || '' }}</p>
       </div>
 
       <!-- Navigation Tabs -->
@@ -385,10 +385,10 @@ const embedVideoUrl = computed(() => {
         <h3>Contact information</h3>
         
         <div class="contact-section">
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.company_website">
+          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.website">
             <span class="contact-label">SITE</span>
-            <a :href="`https://${AddonsAuth.loggedInUser.user_data.company_website}`" target="_blank">
-              {{ AddonsAuth.loggedInUser.user_data.company_website }}
+            <a :href="`https://${AddonsAuth.loggedInUser.user_data.website}`" target="_blank">
+              {{ AddonsAuth.loggedInUser.user_data.website }}
             </a>
           </div>
           
@@ -399,10 +399,10 @@ const embedVideoUrl = computed(() => {
             </a>
           </div>
           
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.telefono_diretto">
+          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.phone">
             <span class="contact-label">PHONE</span>
             <div class="phone-numbers">
-              <div>{{ AddonsAuth.loggedInUser.user_data.telefono_diretto }}</div>
+              <div>{{ AddonsAuth.loggedInUser.user_data.phone }}</div>
             </div>
           </div>
           

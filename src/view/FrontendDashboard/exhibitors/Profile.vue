@@ -172,8 +172,11 @@ const filteredMoreDetailsFields = computed(() => {
     
     // Fields that are already editable in the main profile section
     const mainProfileFields = [
-        'name', 'job_title', 'email', 'telefono_diretto', 'address', 'sito_internet', 'description',
-        'cover_image', 'avatar', 'staff', 'gallery', 'video', 'documents', 'links', 'social_share'
+        'name', 'nome_e_cognome', 'company_name', 'contact_person',
+        'job_title', 'email', 'telefono_diretto', 'phone', 
+        'address', 'sito_internet', 'website', 'description',
+        'cover_image', 'avatar', 'companey_logo',
+        'staff', 'gallery', 'video', 'documents', 'links', 'social_share'
     ];
     
     const filtered = userPublicInformation.more_details_fields.filter(field => 
@@ -181,6 +184,59 @@ const filteredMoreDetailsFields = computed(() => {
     );
      
     return filtered;
+});
+
+// Computed property to dynamically extract "more details" fields from userPublicInformation
+const dynamicMoreDetailsFields = computed(() => {
+    // Fields that are already shown in the main profile section
+    const mainProfileFields = [
+        'cover_image', 'avatar', 'companey_logo', 'description',
+        'nome_e_cognome', 'name', 'address', 'sito_internet',
+        'staff', 'gallery', 'video', 'documents', 'links', 'social_share',
+        'more_details_fields', 'telefono_diretto'
+    ];
+    
+    // Field name to label mapping
+    const fieldLabels = {
+        'company_name': 'Company Name',
+        'contact_person': 'Contact Person',
+        'email': 'Email',
+        'phone': 'Phone',
+        'website': 'Website',
+        'pi-fc-ex': 'VAT Number / Tax ID',
+        'pi_cf': 'VAT Number',
+        'sede-legale-attivita': 'Registered Office / Activity Location',
+        'stand-espositivo-richiesto': 'Stand Requested',
+        'Interesse-partecipare': 'Interest to Participate',
+        'Interesse_a_partecipare': 'Workshop Interest',
+        'incarico': 'Position / Role',
+        'staff-presente-area': 'Staff Present in Area',
+        'staff_presente_in_area_espositiva': 'Staff in Exhibition Area',
+        'ambito_di_attività': 'Activity Area',
+        'stand_espositivo_richiesto': 'Exhibition Stand Requested',
+        'nome_e_Cognome': 'Responsible Person',
+        'nome_e_cognome ': 'Additional Staff Name',
+        'note': 'Notes'
+    };
+    
+    // Extract fields dynamically from userPublicInformation
+    const fields = [];
+    
+    for (const [key, value] of Object.entries(userPublicInformation)) {
+        // Skip main profile fields and empty/null values
+        if (!mainProfileFields.includes(key) && value !== null && value !== undefined && value !== '') {
+            // Skip empty arrays
+            if (Array.isArray(value) && value.length === 0) continue;
+            
+            fields.push({
+                name: key,
+                label: fieldLabels[key] || key.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                value: value
+            });
+        }
+    }
+    
+    return fields;
 });
 
 // Check if form is ready for submission
@@ -458,9 +514,9 @@ document.addEventListener('click', (e) => {
     <div class="tfhb-admin-title" >
         <h2>{{ $tfhb_trans('Public Information') }}    </h2>  
     </div>
-    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
+    <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">   
         <HbText  
-            v-model="userPublicInformation.nome_e_cognome"  
+            v-model="userPublicInformation.company_name"  
             required= "true"  
             :label="$tfhb_trans('Company Name')"  
             selected = "1"
@@ -468,7 +524,7 @@ document.addEventListener('click', (e) => {
             width="50"
         /> 
         <HbText  
-            v-model="userPublicInformation.name"  
+            v-model="userPublicInformation.contact_person"  
             :label="$tfhb_trans('Parsonal Name')"  
             selected = "1"
             :placeholder="$tfhb_trans('Type personal name')" 
@@ -484,8 +540,8 @@ document.addEventListener('click', (e) => {
             disabled="true"
         /> 
         <HbText  
-            v-model="userPublicInformation.telefono_diretto"   
-            :label="$tfhb_trans('Mobile')"  
+            v-model="userPublicInformation.phone"   
+            :label="$tfhb_trans('Phone')"  
             selected = "1"
             :placeholder="$tfhb_trans('Type your mobile no')" 
             width="50"  
@@ -499,7 +555,7 @@ document.addEventListener('click', (e) => {
             width="50"  
         />     
         <HbText  
-            v-model="userPublicInformation.sito_internet"   
+            v-model="userPublicInformation.website"   
             :label="$tfhb_trans('Website')"  
             selected = "1"
             :placeholder="$tfhb_trans('Type your website')" 
@@ -798,91 +854,45 @@ document.addEventListener('click', (e) => {
             :hover_animation="true" 
         />  
     </div>
+    
     <div class="tfhb-admin-card-box tfhb-flexbox" style="flex-direction:column;">
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Company Name') }}:</strong>
-        <span>{{ userPublicInformation['name'] || 'Not provided' }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('VAT Number') }}:</strong>
-        <span>{{ userPublicInformation['pi_cf'] || 'Not provided' }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Activity Area') }}:</strong>
-        <span>
-          <template v-if="Array.isArray(userPublicInformation.ambito_di_attività)">
-            {{ userPublicInformation.ambito_di_attività.join(', ') }}
-          </template>
-          <template v-else>
-            {{ userPublicInformation.ambito_di_attività || 'Not provided' }}
-          </template>
-        </span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Stand Requested') }}:</strong>
-        <span>
-          <template v-if="Array.isArray(userPublicInformation.stand_espositivo_richiesto)">
-            {{ userPublicInformation.stand_espositivo_richiesto.join(', ') }}
-          </template>
-          <template v-else>
-            {{ userPublicInformation.stand_espositivo_richiesto || 'Not provided' }}
-          </template>
-        </span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Workshop Interest') }}:</strong>
-        <span>
-          <template v-if="Array.isArray(userPublicInformation.Interesse_a_partecipare)">
-            {{ userPublicInformation.Interesse_a_partecipare.join(', ') }}
-          </template>
-          <template v-else>
-            {{ userPublicInformation.Interesse_a_partecipare || 'Not provided' }}
-          </template>
-        </span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Responsible Person') }}:</strong>
-        <span>{{ userPublicInformation.nome_e_Cognome || 'Not provided' }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Position') }}:</strong>
-        <span>{{ userPublicInformation.incarico || 'Not provided' }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Email') }}:</strong>
-        <span>{{ userPublicInformation.email || 'Not provided' }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Direct Phone') }}:</strong>
-        <span>{{ userPublicInformation.telefono_diretto || 'Not provided' }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Staff in Exhibition Area') }}:</strong>
-        <span>
-          <template v-if="Array.isArray(userPublicInformation.staff_presente_in_area_espositiva)">
-            {{ userPublicInformation.staff_presente_in_area_espositiva.join(', ') }}
-          </template>
-          <template v-else>
-            {{ userPublicInformation.staff_presente_in_area_espositiva || 'Not provided' }}
-          </template>
-        </span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Additional Staff Name') }}:</strong>
-        <span>{{ userPublicInformation['nome_e_cognome '] || 'Not provided' }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Notes') }}:</strong>
-        <span>{{ userPublicInformation.note || 'Not provided' }}</span>
-      </div>
+      <!-- Dynamic Fields Display based on more_details_fields structure -->
+      <template v-if="filteredMoreDetailsFields.length > 0">
+        <div 
+          v-for="field in filteredMoreDetailsFields" 
+          :key="field.name" 
+          class="tfhb-info-row"
+        >
+          <strong>{{ $tfhb_trans(field.label) }}:</strong>
+          <span>
+            <!-- For arrays (checkbox/multi-select) -->
+            <template v-if="Array.isArray(userPublicInformation[field.name]) && userPublicInformation[field.name].length > 0">
+              {{ userPublicInformation[field.name].join(', ') }}
+            </template>
+            <!-- For empty arrays -->
+            <template v-else-if="Array.isArray(userPublicInformation[field.name]) && userPublicInformation[field.name].length === 0">
+              Not provided
+            </template>
+            <!-- For objects (like nested structures) -->
+            <template v-else-if="typeof userPublicInformation[field.name] === 'object' && userPublicInformation[field.name] !== null">
+              {{ JSON.stringify(userPublicInformation[field.name]) }}
+            </template>
+            <!-- For regular values with data -->
+            <template v-else-if="userPublicInformation[field.name]">
+              {{ userPublicInformation[field.name] }}
+            </template>
+            <!-- For empty/null/undefined values -->
+            <template v-else>
+              Not provided
+            </template>
+          </span>
+        </div>
+      </template>
       
-      <!-- Debug Section - Remove in production -->
-      <div class="tfhb-info-row" style="background: #f0f8ff; border-left: 4px solid #0066cc;">
-        <strong>{{ $tfhb_trans('Debug Info') }}:</strong>
-        <span>
-          Available fields: {{ filteredMoreDetailsFields.length }} | 
-          Form ready: {{ isEditFormReady ? 'Yes' : 'No' }} | 
-          Popup open: {{ editMoreDetailsPopup ? 'Yes' : 'No' }}
+      <!-- Empty state when no fields available -->
+      <div v-else class="tfhb-info-row" style="background: #f8f9fb; text-align: center; justify-content: center;">
+        <span style="color: #6b7280; font-style: italic;">
+          {{ $tfhb_trans('No additional details available') }}
         </span>
       </div>
     </div>

@@ -27,10 +27,10 @@ async function fetchExhibitors() {
         if (response.data.success && response.data.data) {
             exhibitors.value = response.data.data;
             
-            // Sort exhibitors alphabetically by company name (nome_e_cognome)
+            // Sort exhibitors alphabetically by company name (company_name)
             exhibitors.value.sort((a, b) => {
-                const companyNameA = (a.data?.nome_e_cognome || '').toLowerCase();
-                const companyNameB = (b.data?.nome_e_cognome || '').toLowerCase();
+                const companyNameA = (a.data?.company_name || '').toLowerCase();
+                const companyNameB = (b.data?.company_name || '').toLowerCase();
                 
                 // Handle empty values by putting them at the end
                 if (!companyNameA && !companyNameB) return 0;
@@ -72,15 +72,15 @@ const Tfhb_Exhibitor_Filter = (event) => {
     }
     
     filteredExhibitors.value = exhibitors.value.filter(exhibitor => {
-        // Search in name
-        if (exhibitor.data.name && 
-            exhibitor.data.name.toLowerCase().includes(query)) {
+        // Search in company name
+        if (exhibitor.data.company_name && 
+            exhibitor.data.company_name.toLowerCase().includes(query)) {
             return true;
         }
         
-        // Search in job title
-        if (exhibitor.data.job_title && 
-            exhibitor.data.job_title.toLowerCase().includes(query)) {
+        // Search in contact person name
+        if (exhibitor.data.contact_person && 
+            exhibitor.data.contact_person.toLowerCase().includes(query)) {
             return true;
         }
         
@@ -91,8 +91,8 @@ const Tfhb_Exhibitor_Filter = (event) => {
         }
         
         // Search in phone number
-        if (exhibitor.data.telefono_diretto && 
-            exhibitor.data.telefono_diretto.toLowerCase().includes(query)) {
+        if (exhibitor.data.phone && 
+            exhibitor.data.phone.toLowerCase().includes(query)) {
             return true;
         }
         
@@ -109,8 +109,8 @@ const Tfhb_Exhibitor_Filter = (event) => {
         }
         
         // Search in website
-        if (exhibitor.data.sito_internet && 
-            exhibitor.data.sito_internet.toLowerCase().includes(query)) {
+        if (exhibitor.data.website && 
+            exhibitor.data.website.toLowerCase().includes(query)) {
             return true;
         }
         
@@ -218,7 +218,7 @@ const redirectToChat = (buyerId) => {
                     <!-- {{ exhibitor }} -->
                         <div class="exhibitor-card-header">
                             <div class="exhibitor-avatar">
-                                <img v-if="exhibitor.data.avatar && exhibitor.data.avatar.startsWith('http')" :src="exhibitor.data.avatar" alt="Exhibitor Avatar">
+                                <img v-if="exhibitor.data.companey_logo && exhibitor.data.companey_logo.startsWith('http')" :src="exhibitor.data.companey_logo" alt="Exhibitor Avatar">
                                 <img 
                                     v-else
                                     :src="$tfhb_url+'/assets/images/avator.png'" 
@@ -227,7 +227,7 @@ const redirectToChat = (buyerId) => {
                                 /> 
                             </div> 
                             <div class="exhibitor-info">
-                                <h3 v-if="exhibitor.data.nome_e_cognome != ''" class="exhibitor-name">{{ exhibitor.data.nome_e_cognome  }}</h3>
+                                <h3 v-if="exhibitor.data.company_name != ''" class="exhibitor-name">{{ exhibitor.data.company_name  }}</h3>
                                 <!-- <h3 v-else class="exhibitor-name">{{ selectedExhibitor.data.job_title }}</h3> -->
                                 <!-- <p class="exhibitor-subtitle">{{ exhibitor.data.ambito_di_attività }}</p> -->
                             </div> 
@@ -237,7 +237,7 @@ const redirectToChat = (buyerId) => {
                             <div class="contact-info">
                                 <div class="contact-item">
                                     <Icon name="User" size=16 />
-                                    <span>{{ exhibitor.data.name }}</span>
+                                    <span>{{ exhibitor.data.contact_person }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="Mail" size=16 />
@@ -245,17 +245,17 @@ const redirectToChat = (buyerId) => {
                                 </div>
                                 <!-- <div class="contact-item">
                                     <Icon name="Phone" size=16 />
-                                    <span>{{ exhibitor.data.telefono_diretto }}</span>
+                                    <span>{{ exhibitor.data.phone }}</span>
                                 </div> -->
                                 <div  v-if="exhibitor.data.location" 
                                 class="contact-item">
                                     <Icon name="MapPin" size=16 />
                                     <span>{{ exhibitor.data.location }}</span>
                                 </div>
-                                <div v-else 
+                                <div v-else-if="exhibitor.data['sede-legale-attivita']" 
                                 class="contact-item">
                                     <Icon name="MapPin" size=16 />
-                                    <span>{{ exhibitor.data.sede_legale_dell_attivit }}</span>
+                                    <span>{{ exhibitor.data['sede-legale-attivita'] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -315,8 +315,8 @@ const redirectToChat = (buyerId) => {
                             <!-- <div class="online-indicator"></div> -->
                         </div>
                         <!-- {{ selectedExhibitor }} -->
-                        <h3 v-if="selectedExhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.data.nome_e_cognome }}</h3>
-                        <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.name }}</h3>
+                        <h3 v-if="selectedExhibitor.data.company_name" class="exhibitor-name-large">{{ selectedExhibitor.data.company_name }}</h3>
+                        <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.contact_person }}</h3>
                         <p  class="exhibitor-subtitle-large">{{ selectedExhibitor.data.sede_legale_dell_attivit }}</p>
                     </div>
 
@@ -327,9 +327,9 @@ const redirectToChat = (buyerId) => {
                             <!-- <a href="#" class="read-more">read more</a> -->
                         </div>
 
-                        <div v-if="selectedExhibitor.data.sito_internet_aziendale != ''" class="detail-section">
+                        <div v-if="selectedExhibitor.data.website != ''" class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedExhibitor.data.sito_internet_aziendale }}</p>
+                            <p>{{ selectedExhibitor.data.website }}</p>
                         </div>
 
                         <div class="detail-section">
@@ -337,9 +337,9 @@ const redirectToChat = (buyerId) => {
                             <p>{{ selectedExhibitor.data.email }}</p>
                         </div>
 
-                        <div v-if="selectedExhibitor.data.telefono_diretto"  class="detail-section">
+                        <div v-if="selectedExhibitor.data.phone"  class="detail-section">
                             <h4>PHONE</h4>
-                            <p>{{ selectedExhibitor.data.telefono_diretto }}</p>
+                            <p>{{ selectedExhibitor.data.phone }}</p>
                         </div>
 
                         <div v-if="selectedExhibitor.data.location" class="detail-section">
