@@ -937,90 +937,106 @@ onBeforeRouteLeave(() => {
 
                         <!-- User Data -->
                         <div v-if="AddonsUsers.user_details_popup.user_data.data" class="tfhb-admin-card-box tfhb-booking-info-wrap tfhb-full-width">
-                            <!-- {{ AddonsUsers.user_details_popup.user_data.data }} -->
                             <h3>{{ $tfhb_trans('Registration Data') }}</h3>
                             <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12" style="flex-direction: column;">
                                 <template v-for="(value, key) in AddonsUsers.user_details_popup.user_data.data" :key="key">
                                     <div v-if="key != 'more_details_fields'"
                                     class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8" style="width: 100% !important;">
                                     <Icon name="FileText" size="20" />  
-                                    <div v-if="key == 'staff'" class="tfhb-booking-details">
+                                    
+                                    <!-- Staff Display -->
+                                    <div v-if="key == 'staff'" class="tfhb-booking-details tfhb-full-width">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
-                                        <div v-if="Array.isArray(value)" class="tfhb-array-list">
-                                           
-                                            <div v-for="item in value" :key="item" class="tfhb-flexbox tfhb-gap-8"  >
-                                                <img v-if="item.image" :src="item.image" alt="" style="height: 60px; width: 60px; object-fit: cover;"> 
-                                                <div>
-                                                    <h5> <strong>Name: </strong> {{ item.name }} </h5>
-                                                    <p> <strong>Position: </strong>{{ item.position }}</p>
+                                        <div v-if="Array.isArray(value) && value.length > 0" class="tfhb-staff-preview-list">
+                                            <div v-for="(item, idx) in value" :key="idx" class="tfhb-staff-preview-item">
+                                                <img v-if="item.image" :src="item.image" alt="" class="tfhb-staff-preview-image"> 
+                                                <div class="tfhb-staff-preview-info">
+                                                    <h5> <strong>Name: </strong> {{ item.name || 'N/A' }} </h5>
+                                                    <p> <strong>Position: </strong>{{ item.position || 'N/A' }}</p>
                                                 </div>
                                             </div>
                                         </div>
+                                        <span v-else class="tfhb-empty-value">{{ $tfhb_trans('No staff members added') }}</span>
                                     </div> 
-                                    <div v-else-if="key == 'documents'" class="tfhb-booking-details">
+                                    
+                                    <!-- Documents Display -->
+                                    <div v-else-if="key == 'documents'" class="tfhb-booking-details tfhb-full-width">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
-                                        <div v-if="Array.isArray(value)" class="tfhb-array-list">
-                                           
-                                            <div v-for="item in value" :key="item" class="tfhb-flexbox tfhb-gap-8"  >  
-                                                <div>
-                                                    <h5> <strong>Title: </strong> {{ item.title }} </h5>
-                                                    <p> <strong>Subtitle: </strong>{{ item.subtitle }}</p> 
-                                                    <p> <a :href="item.url" target="_blank"> View Document</a></p> 
+                                        <div v-if="Array.isArray(value) && value.length > 0" class="tfhb-documents-preview-list">
+                                            <div v-for="(item, idx) in value" :key="idx" class="tfhb-document-preview-item">  
+                                                <img v-if="item.icon" :src="item.icon" alt="" class="tfhb-document-preview-icon">
+                                                <div class="tfhb-document-preview-info">
+                                                    <h5> <strong>Title: </strong> {{ item.title || 'N/A' }} </h5>
+                                                    <p v-if="item.subtitle"> <strong>Subtitle: </strong>{{ item.subtitle }}</p> 
+                                                    <p v-if="item.url"> <a :href="item.url" target="_blank" class="tfhb-view-document-link"> 📄 View Document</a></p> 
                                                 </div>
                                             </div>
                                         </div>
+                                        <span v-else class="tfhb-empty-value">{{ $tfhb_trans('No documents added') }}</span>
                                     </div> 
-                                    <div v-else-if="key == 'links'" class="tfhb-booking-details">
+                                    
+                                    <!-- Links Display -->
+                                    <div v-else-if="key == 'links'" class="tfhb-booking-details tfhb-full-width">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong> 
-                                        <span v-if="Array.isArray(value)" class="tfhb-array-list">
-                                            <span v-for="item in value" :key="item" class="tfhb-array-item">
-                                                <a :href="item.url" target="_blank"> {{ item.title }}</a>
+                                        <span v-if="Array.isArray(value) && value.length > 0" class="tfhb-array-list">
+                                            <span v-for="(item, idx) in value" :key="idx" class="tfhb-array-item">
+                                                <a :href="item.url" target="_blank"> 🔗 {{ item.title || item.url }}</a>
                                             </span>
                                         </span>
+                                        <span v-else class="tfhb-empty-value">{{ $tfhb_trans('No links added') }}</span>
                                     </div> 
-                                    <div v-else-if="key == 'gallery'" class="tfhb-booking-details">
+                                    
+                                    <!-- Gallery Display -->
+                                    <div v-else-if="key == 'gallery'" class="tfhb-booking-details tfhb-full-width">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong> 
-                                        <span v-if="Array.isArray(value)" class="tfhb-array-list">
-                                            <span v-for="item in value" :key="item" class="tfhb-array-item">
-                                                <a :href="item.url" target="_blank"> {{ item.title || 'View Image' }}</a>
-                                            </span>
-                                        </span>
-                                    </div>
-                                    <div v-else-if="key == 'video'" class="tfhb-booking-details">
-                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
-                                        <div  >  
-                                            <span><strong>Title : </strong> {{ value.title }}</span>
-                                            <br>
-                                            <span><strong>Description : </strong> {{ value.description }}</span>
-                                            <br>
-                                            <span><strong>Url : </strong>  <a :href="value.url" target="_blank">  View Video</a></span>
+                                        <div v-if="Array.isArray(value) && value.length > 0" class="tfhb-gallery-preview-grid">
+                                            <div v-for="(item, idx) in value" :key="idx" class="tfhb-gallery-preview-item">
+                                                <img v-if="item.url" :src="item.url" :alt="item.title || 'Gallery Image'" class="tfhb-gallery-preview-image">
+                                                <p v-if="item.title" class="tfhb-gallery-preview-title">{{ item.title }}</p>
+                                            </div>
                                         </div>
+                                        <span v-else class="tfhb-empty-value">{{ $tfhb_trans('No gallery images added') }}</span>
                                     </div>
-                                    <div v-else-if="key == 'video'" class="tfhb-booking-details">
+                                    
+                                    <!-- Video Display -->
+                                    <div v-else-if="key == 'video'" class="tfhb-booking-details tfhb-full-width">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>  
-                                        <div  >  
-                                            <span><strong>Title : </strong> {{ value.title }}</span>
-                                            <br>
-                                            <span><strong>Description : </strong> {{ value.description }}</span>
-                                            <br>
-                                            <span><strong>Url : </strong>  <a :href="value.url" target="_blank">  View Video</a></span>
+                                        <div v-if="value && (value.title || value.url)" class="tfhb-video-preview">  
+                                            <p v-if="value.title"><strong>Title: </strong> {{ value.title }}</p>
+                                            <p v-if="value.description"><strong>Description: </strong> {{ value.description }}</p>
+                                            <p v-if="value.url"><strong>URL: </strong>  <a :href="value.url" target="_blank" class="tfhb-view-video-link">📺 View Video</a></p>
                                         </div>
+                                        <span v-else class="tfhb-empty-value">{{ $tfhb_trans('No video added') }}</span>
                                     </div>
-                                    <div v-else-if="key == 'social_share'" class="tfhb-booking-details">
+                                    
+                                    <!-- Social Share Display -->
+                                    <div v-else-if="key == 'social_share'" class="tfhb-booking-details tfhb-full-width">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>   
-                                        <span  class="tfhb-array-list"> 
-                                            <span class="tfhb-array-item">   <a :href="value.instagram" target="_blank"> Instagram</a> </span>
-                                            <span class="tfhb-array-item">   <a :href="value.facebook" target="_blank"> Facebook</a> </span>
-                                            <span class="tfhb-array-item">   <a :href="value.youtube" target="_blank"> Youtube</a> </span>
-                                            <span class="tfhb-array-item">   <a :href="value.linkedin" target="_blank"> Linkedin</a> </span>
-                                        </span>
+                                        <div v-if="value && (value.instagram || value.facebook || value.youtube || value.linkedin)" class="tfhb-social-preview-list"> 
+                                            <a v-if="value.instagram" :href="value.instagram" target="_blank" class="tfhb-social-preview-item">📷 Instagram</a>
+                                            <a v-if="value.facebook" :href="value.facebook" target="_blank" class="tfhb-social-preview-item">📘 Facebook</a>
+                                            <a v-if="value.youtube" :href="value.youtube" target="_blank" class="tfhb-social-preview-item">📺 YouTube</a>
+                                            <a v-if="value.linkedin" :href="value.linkedin" target="_blank" class="tfhb-social-preview-item">💼 LinkedIn</a>
+                                        </div>
+                                        <span v-else class="tfhb-empty-value">{{ $tfhb_trans('No social media links added') }}</span>
                                     </div>
-                                    <div v-else class="tfhb-booking-details">
+                                    
+                                    <!-- Cover Image & Avatar Display -->
+                                    <div v-else-if="key == 'cover_image' || key == 'avatar' || key == 'companey_logo'" class="tfhb-booking-details tfhb-full-width">
+                                        <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>
+                                        <div v-if="value" class="tfhb-image-preview-container">
+                                            <img :src="value" :alt="key" class="tfhb-image-preview">
+                                        </div>
+                                        <span v-else class="tfhb-empty-value">{{ $tfhb_trans('No image uploaded') }}</span>
+                                    </div>
+                                    
+                                    <!-- Default Display for other fields -->
+                                    <div v-else class="tfhb-booking-details tfhb-full-width">
                                         <strong>{{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}:</strong>
                                         <span v-if="Array.isArray(value)" class="tfhb-array-list">
-                                            <span v-for="item in value" :key="item" class="tfhb-array-item"> {{ item }}</span>
+                                            <span v-for="(item, idx) in value" :key="idx" class="tfhb-array-item"> {{ item }}</span>
                                         </span>
-                                        <span v-else-if="typeof value === 'object'" class="tfhb-object-value">
+                                        <span v-else-if="typeof value === 'object' && value !== null" class="tfhb-object-value">
                                             {{ JSON.stringify(value, null, 2) }}
                                         </span>
                                         <span v-else-if="value === '' || value === null || value === undefined" class="tfhb-empty-value">
@@ -1523,6 +1539,237 @@ onBeforeRouteLeave(() => {
     
     .tfhb-checkbox-group {
         padding: 0.75rem;
+    }
+}
+
+/* Preview Styles for Complex Data Structures */
+
+/* Staff Preview */
+.tfhb-staff-preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.tfhb-staff-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fb;
+    border: 1px solid #e3e6ed;
+    border-radius: 8px;
+}
+
+.tfhb-staff-preview-image {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.tfhb-staff-preview-info {
+    flex: 1;
+}
+
+.tfhb-staff-preview-info h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #2d3748;
+}
+
+.tfhb-staff-preview-info p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #4a5568;
+}
+
+/* Documents Preview */
+.tfhb-documents-preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.tfhb-document-preview-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fb;
+    border: 1px solid #e3e6ed;
+    border-left: 4px solid #0073aa;
+    border-radius: 8px;
+}
+
+.tfhb-document-preview-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.tfhb-document-preview-info {
+    flex: 1;
+}
+
+.tfhb-document-preview-info h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #2d3748;
+}
+
+.tfhb-document-preview-info p {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.875rem;
+    color: #4a5568;
+}
+
+.tfhb-view-document-link {
+    color: #0073aa !important;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tfhb-view-document-link:hover {
+    text-decoration: underline;
+}
+
+/* Gallery Preview */
+.tfhb-gallery-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.tfhb-gallery-preview-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tfhb-gallery-preview-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e3e6ed;
+}
+
+.tfhb-gallery-preview-title {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #4a5568;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Video Preview */
+.tfhb-video-preview {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: #f8f9fb;
+    border: 1px solid #e3e6ed;
+    border-radius: 8px;
+}
+
+.tfhb-video-preview p {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    color: #4a5568;
+}
+
+.tfhb-video-preview p:last-child {
+    margin-bottom: 0;
+}
+
+.tfhb-view-video-link {
+    color: #0073aa !important;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tfhb-view-video-link:hover {
+    text-decoration: underline;
+}
+
+/* Social Media Preview */
+.tfhb-social-preview-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.tfhb-social-preview-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #0073aa;
+    color: #fff !important;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.tfhb-social-preview-item:hover {
+    background: #005a87;
+}
+
+/* Image Preview */
+.tfhb-image-preview-container {
+    margin-top: 0.5rem;
+}
+
+.tfhb-image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e3e6ed;
+}
+
+/* Full Width Helper */
+.tfhb-full-width {
+    width: 100% !important;
+}
+
+/* Responsive Adjustments for Previews */
+@media (max-width: 768px) {
+    .tfhb-staff-preview-item,
+    .tfhb-document-preview-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .tfhb-gallery-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .tfhb-gallery-preview-image {
+        height: 100px;
+    }
+    
+    .tfhb-social-preview-list {
+        flex-direction: column;
+    }
+    
+    .tfhb-social-preview-item {
+        width: 100%;
+        justify-content: center;
     }
 }
 </style>
