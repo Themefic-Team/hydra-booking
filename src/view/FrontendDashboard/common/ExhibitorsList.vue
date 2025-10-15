@@ -305,7 +305,7 @@ const redirectToChat = (buyerId) => {
                 <div class="exhibitor-details-content">
                     <div class="exhibitor-profile">
                         <div class="exhibitor-avatar-large">
-                            <img v-if="selectedExhibitor.data.avatar && selectedExhibitor.data.avatar.startsWith('http')" :src="selectedExhibitor.data.avatar" alt="Exhibitor Avatar">
+                            <img v-if="selectedExhibitor.data.companey_logo && selectedExhibitor.data.companey_logo.startsWith('http')" :src="selectedExhibitor.data.companey_logo" alt="Exhibitor Avatar">
                             <img 
                                 v-else
                                 :src="$tfhb_url+'/assets/images/avator.png'" 

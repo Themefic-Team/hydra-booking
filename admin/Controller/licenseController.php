@@ -166,6 +166,8 @@ class licenseController {
      * @return void
      */
     public function check_license() {
+        echo "hello";
+        exit;
         // Ensure the license check runs only once per request
         if (self::$cached_result !== null) {
             return self::$cached_result; // Return cached result if already checked

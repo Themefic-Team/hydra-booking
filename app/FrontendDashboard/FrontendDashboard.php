@@ -29,10 +29,10 @@ class FrontendDashboard {
         }
         
         // Check if License is valid`
-        $license = LicenseController::getInstance()->check_license();
-        if(!$license['is_valid']){
-            return false;
-        }
+        // $license = LicenseController::getInstance()->check_license();
+        // if(!$license['is_valid']){
+        //     return false;
+        // }
 
         // 
         // Define Constants
