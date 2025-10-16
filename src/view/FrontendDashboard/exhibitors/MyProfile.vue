@@ -1,9 +1,14 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onBeforeMount, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
+import QRCode from 'qrcode'
+import jsPDF from 'jspdf'
+import { toast } from "vue3-toastify"
 
-import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
+import Icon from '@/components/icon/LucideIcon.vue'
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon'
+import { AddonsSettings } from '@/store/settings/addons-settings.js';
 const route = useRoute()
 const eventDetails = ref({})
 const skeleton = ref(true)
@@ -168,7 +173,143 @@ const embedVideoUrl = computed(() => {
     return AddonsAuth.loggedInUser?.user_data?.video?.url;
   }
 });
+const DownloadBadgePDFWithQRCode = async (user) => {
+  try {
+    // Validate user object
+    if (!user) {
+      toast.error('User information is not available', {
+        position: 'bottom-right',
+        autoClose: 3000,
+      });
+      return;
+    }
 
+    // Extract user data
+    const userName = user.user_data?.contact_person || 'User Name';
+    const userEmail = user.user_data?.email || 'No Email';
+    const userRole = user.user_role || 'Exhibitor';
+    const companyName = user.user_data?.company_name || '';
+
+    // Create QR code data
+    const qr_data = `Name: ${userName} | Role: ${userRole} | Email: ${userEmail}`;
+
+    // Generate QR code as data URL
+    const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
+      width: 150,
+      margin: 2,
+      color: {
+        dark: '#000000',
+        light: '#FFFFFF'
+      }
+    });
+
+    // Create new PDF document (A4 size)
+    const pdf = new jsPDF('portrait', 'mm', 'a4');
+
+    // A4 dimensions: 210mm x 297mm
+    const pageWidth = 210;
+    const pageHeight = 297;
+
+    // Get background image URL
+    const backgroundImageUrl = AddonsSettings.Exhibitors?.badge_pdf_image || '';
+
+    // Function to create PDF content
+    const createPDFContent = (withBackground = false) => {
+      try {
+        // Add background image if available and requested
+        if (withBackground && backgroundImageUrl) {
+          pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+        }
+
+        // Calculate bottom right quadrant positions
+        const quadrantWidth = pageWidth / 2;
+        const quadrantHeight = pageHeight / 2;
+        const startX = quadrantWidth; // Start from right half
+        const startY = quadrantHeight; // Start from bottom half
+
+        // Add QR code (centered in bottom right quadrant)
+        const qrSize = 35; // 35mm x 35mm
+        const qrX = startX + (quadrantWidth - qrSize) / 2;
+        const qrY = startY + 70;
+        pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+
+        // Add job title (centered in bottom right quadrant, below QR code)
+        pdf.setFontSize(11);
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFont('helvetica', 'normal');
+        const jobTitleUpper = userRole ? userRole.toUpperCase() : '';
+        const jobTitleWidth = pdf.getTextWidth(jobTitleUpper);
+        pdf.text(jobTitleUpper, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 110);
+
+        // Add user name (centered in bottom right quadrant, below job title)
+        pdf.setFontSize(16);
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFont('helvetica', 'bold');
+        const nameWidth = pdf.getTextWidth(userName);
+        pdf.text(userName, startX + (quadrantWidth - nameWidth) / 2, startY + 118);
+
+        // Add company name if available
+        if (companyName) {
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          const companyNameWidth = pdf.getTextWidth(companyName);
+          pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125);
+        }
+
+        // Save the PDF
+        const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+        pdf.save(fileName);
+
+        toast.success(`Badge PDF generated successfully!${!withBackground ? ' (without background)' : ''}`, {
+          position: 'bottom-right',
+          autoClose: 3000,
+        });
+      } catch (error) {
+        console.error('Error creating PDF content:', error);
+        throw error;
+      }
+    };
+
+    // Try to load the background image first
+    if (backgroundImageUrl) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // Handle CORS if needed
+
+      img.onload = () => {
+        try {
+          createPDFContent(true);
+        } catch (error) {
+          console.error('Error creating PDF with background:', error);
+          // Fallback to creating PDF without background
+          createPDFContent(false);
+        }
+      };
+
+      img.onerror = () => {
+        console.warn('Background image failed to load, creating PDF without background');
+        createPDFContent(false);
+      };
+
+      // Start loading the image
+      img.src = backgroundImageUrl;
+    } else {
+      // No background image, create PDF directly
+      createPDFContent(false);
+    }
+
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    toast.error('Failed to generate PDF. Please try again.', {
+      position: 'bottom-right',
+      autoClose: 3000,
+    });
+  }
+}
+
+// Lifecycle hook to fetch addon settings
+onBeforeMount(() => {
+  AddonsSettings.FetchAddonsSettings();
+})
 </script>
 
 <template>  
@@ -212,6 +353,10 @@ const embedVideoUrl = computed(() => {
           @click="activeTab = tab"
         >
           {{ tab }}
+        </button>
+        <button class="tab-button" @click="DownloadBadgePDFWithQRCode(AddonsAuth.loggedInUser)" :disabled="!AddonsAuth.loggedInUser">
+            <!-- <Icon name="FileText" size=16 /> -->
+            Export Badge PDF
         </button>
       </div>
 

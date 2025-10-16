@@ -20,8 +20,6 @@ class Enqueue {
 
 	// constaract
 	public function __construct() { 
-		
-		
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) ); 
 		add_action( 'wp_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'script_loader_tag', array( $this, 'thb_loadScriptAsModule' ), 10, 3 );
@@ -80,18 +78,19 @@ class Enqueue {
 		// enqueue styles
 		wp_enqueue_style( 'tfhb-admin-style', TFHB_URL . 'assets/admin/css/tfhb-admin-style.css', array(), null );
  
-		
-		wp_enqueue_scrispt( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true ); 
-
+	
+		// wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true ); 
 		//  Build the core script.
-		// wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		// wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
+		wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
+		wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
  
 		// Localize the script.
 		$embed_script_link = esc_html('<script src="' .TFHB_URL . 'assets/app/js/widget.js"></script>');
 		$trans_string = array_merge(TransStrings::getTransStrings(), TransStrings::calendarTransString());
+
 		// $license = LicenseController::getInstance()->check_license();
-	
+		// tfhb_print_r($license);
+		// exit;
 		wp_localize_script(
 			'tfhb-admin-core',
 			'tfhb_core_apps',
@@ -100,8 +99,8 @@ class Enqueue {
 				'rest_nonce'           => wp_create_nonce( 'wp_rest' ),
 				// 'tfhb_license_type' =>  $license['license_type'],
                 // 'tfhb_is_valid'  =>  $license['is_valid'],
-				'tfhb_license_type' =>  'pro',
-                'tfhb_is_valid'  =>  true,
+				'tfhb_license_type' 	=>  'pro',
+                'tfhb_is_valid'  		=>  true,
 				'admin_url'            => site_url(),
 				'rest_route'           => get_rest_url(),
 				'embed_script_link'    => esc_html( $embed_script_link ),
