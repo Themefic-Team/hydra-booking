@@ -603,13 +603,13 @@ onBeforeUnmount(() => {
               <td>
            
                 <div v-if="matching.buyers && matching.buyers.display_name" class="tfhb-user-info">
-                  <strong>{{ matching.buyers.meta.tfhb_buyers_data.travel_agent_name !='' ? matching.buyers.meta.tfhb_buyers_data.travel_agent_name : 'N/A' }}</strong>
+                  <strong>{{ matching.buyers?.meta?.tfhb_buyers_data?.travel_agent_name || 'N/A' }}</strong>
                   <small>{{ matching.buyers.user_email }}</small> 
                   <small>{{ matching.buyers.display_name }}</small>
-                  <span>
+                  <span v-if="matching.buyers?.meta?.tfhb_buyers_data?.nation && matching.buyers.meta.tfhb_buyers_data.nation.length > 0">
                     <small v-for="(nation, index) in matching.buyers.meta.tfhb_buyers_data.nation" :key="nation">{{ nation }}<span v-if="index < matching.buyers.meta.tfhb_buyers_data.nation.length - 1"> | </span></small>
                   </span>
-                  <div v-if="matching.buyers.meta && matching.buyers.meta.tfhb_buyers_status" class="tfhb-user-status">
+                  <div v-if="matching.buyers?.meta?.tfhb_buyers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.buyers.meta.tfhb_buyers_status) }}
                   </div> 
                 </div>
@@ -619,13 +619,13 @@ onBeforeUnmount(() => {
               </td>
               <td>
                 <div v-if="matching.sellers && matching.sellers.display_name" class="tfhb-user-info">
-                  <strong>{{ matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda !='' ? matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda : 'N/A' }}</strong> 
+                  <strong>{{ matching.sellers?.meta?.tfhb_sellers_data?.denominazione_operatore_azienda || 'N/A' }}</strong> 
                   <small>{{ matching.sellers.user_email }}</small>
                   <small>{{ matching.sellers.display_name }}</small>
-                  <span>
+                  <span v-if="matching.sellers?.meta?.tfhb_sellers_data?.provenienza_Buyer_interesse && matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse.length > 0">
                     <small v-for="(nation, index) in matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse" :key="nation">{{ nation }}<span v-if="index < matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse.length - 1"> | </span></small>
                   </span>
-                  <div v-if="matching.sellers.meta && matching.sellers.meta.tfhb_sellers_status" class="tfhb-user-status">
+                  <div v-if="matching.sellers?.meta?.tfhb_sellers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.sellers.meta.tfhb_sellers_status) }}
                   </div> 
                 </div>

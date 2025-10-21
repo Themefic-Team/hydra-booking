@@ -57,29 +57,32 @@ const convertApiDataToCalendarEvents = (apiData) => {
     
     return apiData.map(item => {
         // Parse date and time
-        const date = item.date; // Format: 2025-08-19
-        const startTime = item.start_time; // Format: 16:45
-        const endTime = item.end_time; // Format: 17:00
+        const date = item.date; // Format: 2025-11-18
+        const startTime = item.start_time; // Format: 17:45
+        const endTime = item.end_time; // Format: 18:00
         
         // Convert to ISO datetime format
         const startDateTime = `${date}T${startTime}:00`;
         const endDateTime = `${date}T${endTime}:00`;
         
         // Get buyer name from API data
-        const buyerName = item.buyers_data?.user_meta?.tfhb_buyers_data?.name_of_participant || 
-                         item.buyers_data?.user_meta?.tfhb_buyers_data?.family_name_of_participant ||
+        const buyerData = item.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const buyerName = buyerData.name || 
+                         buyerData.name_of_participant || 
+                         buyerData.family_name_of_participant ||
                          item.buyers_data?.display_name ||
                          'Unknown Buyer';
         
         // Get seller name from API data
-        const sellerName = item.sellers_data?.user_meta?.tfhb_sellers_data?.name ||
+        const sellerData = item.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        const sellerName = sellerData.name ||
                           item.sellers_data?.display_name ||
                           'Unknown Seller';
         
-        // Get company name
-        const companyName = item.buyers_data?.user_meta?.tfhb_buyers_data?.company_website ||
-                           item.sellers_data?.user_meta?.tfhb_sellers_data?.['denominazione-operatore-azienda'] ||
-                           '';
+        // Get company name from buyers data first, then sellers
+        const buyerCompany = buyerData.company_name || buyerData.travel_agent_name || '';
+        const sellerCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+        const companyName = buyerCompany || sellerCompany;
         
         // Create title with company name if available
         const title = companyName ? `${companyName} - ${buyerName}` : buyerName;
@@ -124,17 +127,20 @@ const convertApiDataToCalendarEvents = (apiData) => {
             backgroundColor: backgroundColor,
             borderColor: borderColor,
             extendedProps: {
-                booking_id: item.booking_id.toString(),
+                booking_id: item.booking_id ? item.booking_id.toString() : '',
                 status: item.status,
                 booking_date: date,
                 booking_time: bookingTime,
                 host_id: item.host_id?.toString() || '0',
                 meeting_type: item.meeting_data?.meeting_type || 'one-to-one',
+                meeting_id: item.meeting_id?.toString() || '',
+                meeting_title: item.meeting_data?.title || '',
                 attendees: [
                     {
                         attendee_name: buyerName,
                         email: item.buyers_data?.user_email || '',
-                        status: item.status
+                        status: item.status,
+                        company: companyName
                     }
                 ],
                 // Store full API data for details panel
@@ -146,14 +152,20 @@ const convertApiDataToCalendarEvents = (apiData) => {
 
 // Helper functions for details panel
 const getCompanyInitials = (apiData) => {
-    if (!apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.company_website) return 'TA';
-    const company = apiData.buyers_data.user_meta.tfhb_buyers_data.company_website;
+    const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+    const company = buyerData.company_name || buyerData.travel_agent_name || '';
+    if (!company) return 'TA';
     return company.replace(/[^a-zA-Z]/g, '').substring(0, 2).toUpperCase();
 };
 
 const getBuyerName = (apiData) => {
     if (!apiData?.buyers_data?.user_meta?.tfhb_buyers_data) return 'Unknown Buyer';
     const buyerData = apiData.buyers_data.user_meta.tfhb_buyers_data;
+    
+    // Try to get full name first
+    if (buyerData.name) return buyerData.name;
+    
+    // Otherwise combine first and last name
     const firstName = buyerData.name_of_participant || '';
     const lastName = buyerData.family_name_of_participant || '';
     return `${firstName} ${lastName}`.trim() || apiData.buyers_data.display_name || 'Unknown Buyer';
@@ -187,30 +199,34 @@ const filteredListEvents = computed(() => {
     
     const query = searchQuery.value.toLowerCase().trim();
     return listEvents.value.filter(event => {
+        const apiData = event.extendedProps.apiData || {};
+        const buyerData = apiData.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const sellerData = apiData.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        
         // Search in title
         if (event.title.toLowerCase().includes(query)) {
             return true;
         }
         
         // Search in buyer name
-        const buyerName = event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.name_of_participant ||
-                         event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.family_name_of_participant ||
-                         event.extendedProps.apiData?.buyers_data?.display_name ||
+        const buyerName = buyerData.name ||
+                         buyerData.name_of_participant ||
+                         buyerData.family_name_of_participant ||
+                         apiData.buyers_data?.display_name ||
                          '';
         if (buyerName.toLowerCase().includes(query)) {
             return true;
         }
         
-        // Search in company name
-        const companyName = event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.company_website ||
-                           event.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.['denominazione-operatore-azienda'] ||
-                           '';
-        if (companyName.toLowerCase().includes(query)) {
+        // Search in company name (both buyer and seller)
+        const buyerCompany = buyerData.company_name || buyerData.travel_agent_name || '';
+        const sellerCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+        if (buyerCompany.toLowerCase().includes(query) || sellerCompany.toLowerCase().includes(query)) {
             return true;
         }
         
         // Search in description
-        const description = event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description || '';
+        const description = buyerData.description || '';
         if (description.toLowerCase().includes(query)) {
             return true;
         }
@@ -379,7 +395,7 @@ const prevPage = () => {
 
 const handleListEventClick = (event) => {
     selectedEventData.value = event;
-    if (window.innerWidth < 1500) {
+    if (isSmallScreen.value) {
         showDetailsPopup.value = true;
     } else {
         showDetailsPanel.value = true;
@@ -389,7 +405,7 @@ const handleListEventClick = (event) => {
 // Calendar event click handler
 const handleCalendarEventClick = (info) => {
     selectedEventData.value = info.event;
-    if (window.innerWidth < 1500) {
+    if (isSmallScreen.value) {
         showDetailsPopup.value = true;
     } else {
         showDetailsPanel.value = true;
@@ -434,6 +450,7 @@ const exportCalendar = (format) => {
         exportAsPDF();
     }
 };
+
 
 // Export as iCal function
 const exportAsICal = () => {
@@ -511,202 +528,172 @@ const exportAsPDF = () => {
         return;
     }
 
-    // Create a temporary container for PDF generation
-    const createPDFContainer = () => {
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.left = '-9999px';
-        container.style.top = '0';
-        container.style.width = '800px';
-        container.style.padding = '40px';
-        container.style.backgroundColor = 'white';
-        container.style.fontFamily = 'Arial, sans-serif';
-        container.style.fontSize = '12px';
-        container.style.lineHeight = '1.4';
-        
-        const currentDate = new Date().toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+    // Get buyer company name for header
+    const getBuyerCompanyName = (apiData) => {
+        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        return buyerData.company_name || buyerData.travel_agent_name || apiData?.buyers_data?.display_name || 'Name Brand';
+    };
 
-        // Create header
-        const header = document.createElement('div');
-        header.innerHTML = `
-            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px;">
-                <h1 style="color: #333; margin: 0 0 10px 0; font-size: 24px;">Calendar Export</h1>
-                <p style="color: #666; margin: 5px 0; font-size: 14px;">Generated on ${currentDate}</p>
-                <p style="color: #666; margin: 5px 0; font-size: 14px;">Total Events: ${calendarEvents.value.length}</p>
-            </div>
-        `;
-        container.appendChild(header);
+    // Get buyer nation for conditional display
+    const getBuyerNation = (apiData) => {
+        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        return buyerData.nation || '';
+    };
 
-        if (calendarEvents.value.length === 0) {
-            const noEvents = document.createElement('div');
-            noEvents.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No events to display</p>';
-            container.appendChild(noEvents);
-        } else {
-            // Sort events by date
-            const sortedEvents = [...calendarEvents.value].sort((a, b) => new Date(a.start) - new Date(b.start));
-            
-            sortedEvents.forEach(event => {
-                const startDate = new Date(event.start);
-                const endDate = new Date(event.end);
-                const formattedDate = startDate.toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                const formattedTime = startDate.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }) + ' - ' + endDate.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                const apiData = event.extendedProps.apiData;
-                const buyerName = getBuyerName(apiData);
-                const companyName = getCompanyWebsite(apiData);
-                const address = getAddress(apiData);
-                const description = apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description || 'No description available';
-
-                // Get status color
-                let statusColor = '#666';
-                switch (event.extendedProps.status) {
-                    case 'confirmed':
-                        statusColor = '#2e7d32';
-                        break;
-                    case 'pending':
-                        statusColor = '#f57c00';
-                        break;
-                    case 'canceled':
-                        statusColor = '#c62828';
-                        break;
-                }
-
-                const eventDiv = document.createElement('div');
-                eventDiv.style.border = '1px solid #ddd';
-                eventDiv.style.marginBottom = '20px';
-                eventDiv.style.padding = '15px';
-                eventDiv.style.borderRadius = '8px';
-                eventDiv.style.pageBreakInside = 'avoid';
-                eventDiv.innerHTML = `
-                    <div style="font-weight: bold; font-size: 16px; color: #333; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
-                        ${event.title}
-                    </div>
-                    <div style="color: #666; font-size: 14px; line-height: 1.6;">
-                        <div style="margin-bottom: 8px;"><strong>Date:</strong> ${formattedDate}</div>
-                        <div style="margin-bottom: 8px;"><strong>Time:</strong> ${formattedTime}</div>
-                        <div style="margin-bottom: 8px;">
-                            <strong>Status:</strong> 
-                            <span style="color: ${statusColor}; font-weight: bold; text-transform: uppercase;">${event.extendedProps.status}</span>
-                        </div>
-                        <div style="margin-bottom: 8px;"><strong>Contact:</strong> ${buyerName}</div>
-                        ${companyName ? `<div style="margin-bottom: 8px;"><strong>Company:</strong> ${companyName}</div>` : ''}
-                        ${address ? `<div style="margin-bottom: 8px;"><strong>Address:</strong> ${address}</div>` : ''}
-                        <div style="margin-bottom: 8px;"><strong>Description:</strong> ${description}</div>
-                    </div>
-                `;
-                container.appendChild(eventDiv);
-            });
-        }
-
-        return container;
+    // Get seller region for conditional display
+    const getSellerRegion = (apiData) => {
+        const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        return sellerData.regione || '';
     };
 
     try {
-        const container = createPDFContainer();
-        document.body.appendChild(container);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 20;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = margin;
 
-        // Convert to canvas and then to PDF
-        html2canvas(container, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff'
-        }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgWidth = 210; // A4 width in mm
-            const pageHeight = 295; // A4 height in mm
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
+        // Add header with logo and company information
+        const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const headerCompanyName = calendarEvents.value.length > 0 ? getBuyerCompanyName(calendarEvents.value[0].extendedProps.apiData) : 'Name Brand';
+        
+        // Get additional company information
+        const firstEventData = calendarEvents.value.length > 0 ? calendarEvents.value[0].extendedProps.apiData : null;
+        const buyerData = firstEventData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const companyWebsite = buyerData.company_website || '';
+        const companyAddress = buyerData.address || buyerData.state || '';
+        
+        // Create header with better space utilization
+        const headerHeight = 40;
+        
+        // Add logo placeholder (left side)
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Logo Events', margin, yPosition + 5);
+        
+        // Add buyer company information (right side of logo)
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Buyer', margin + 30, yPosition + 5);
+        pdf.setFontSize(14);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(headerCompanyName, margin + 60, yPosition + 5);
+        
+        // Add main title (centered, below logo/buyer info)
+        pdf.setFontSize(16);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Calendar Export', pageWidth / 2, yPosition + 15, { align: 'center' });
+        
+        // Add generation info (centered, below title)
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(`Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, pageWidth / 2, yPosition + 25, { align: 'center' });
+        
+        yPosition += headerHeight;
 
-            let position = 0;
+        // Add horizontal line
+        pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+        yPosition += 10;
 
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+        // Sort events by date
+        const sortedEvents = [...calendarEvents.value].sort((a, b) => new Date(a.start) - new Date(b.start));
 
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
+        sortedEvents.forEach((event, index) => {
+            // Check if we need a new page
+            if (yPosition > pageHeight - 80) {
                 pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+                yPosition = margin;
             }
 
-            // Save the PDF
-            const fileName = `calendar-export-${new Date().toISOString().split('T')[0]}.pdf`;
-            pdf.save(fileName);
-
-            // Clean up
-            document.body.removeChild(container);
-
-            toast.success('Calendar exported as PDF successfully', {
-                position: 'bottom-right',
-                "autoClose": 1500,
-            });
-        }).catch(error => {
-            console.error('PDF generation error:', error);
-            document.body.removeChild(container);
+            const startDate = new Date(event.start);
+            const endDate = new Date(event.end);
+            const apiData = event.extendedProps.apiData;
             
-            // Fallback to print method
-            toast.error('PDF generation failed. Using print method instead.', {
-                position: 'bottom-right',
-                "autoClose": 3000,
+            // Format date and time
+            const formattedDate = startDate.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
             });
+            const formattedTime = startDate.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            }) + ' - ' + endDate.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+
+            // Get participant names
+            const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+            const buyerName = buyerData.name || 
+                             buyerData.name_of_participant || 
+                             buyerData.family_name_of_participant ||
+                             apiData.buyers_data?.display_name ||
+                             'Unknown Buyer';
+
+            const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+            const sellerName = sellerData.name ||
+                              apiData.sellers_data?.display_name ||
+                              'Unknown Seller';
+
+            // Add event header with participant names
+            pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'bold');
+            const participantNames = `${buyerName} - ${sellerName}`;
+            pdf.text(participantNames, margin, yPosition);
+            yPosition += 8;
+
+            // Add event details (only essential information)
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'normal');
             
-            // Fallback to print method
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Calendar Export</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .event { border: 1px solid #ddd; margin-bottom: 15px; padding: 15px; }
-                        .event-title { font-weight: bold; font-size: 16px; margin-bottom: 8px; }
-                        .event-details { color: #666; font-size: 14px; line-height: 1.4; }
-                    </style>
-                </head>
-                <body>
-                    <h1>Calendar Export</h1>
-                    <p>Generated on ${new Date().toLocaleDateString()}</p>
-                    ${calendarEvents.value.map(event => `
-                        <div class="event">
-                            <div class="event-title">${event.title}</div>
-                            <div class="event-details">
-                                <strong>Date:</strong> ${new Date(event.start).toLocaleDateString()}<br>
-                                <strong>Time:</strong> ${new Date(event.start).toLocaleTimeString()} - ${new Date(event.end).toLocaleTimeString()}<br>
-                                <strong>Status:</strong> ${event.extendedProps.status}
-                            </div>
-                        </div>
-                    `).join('')}
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-            printWindow.close();
+            // Date
+            pdf.text(`Date: ${formattedDate}`, margin, yPosition);
+            yPosition += 5;
+            
+            // Time
+            pdf.text(`Time: ${formattedTime}`, margin, yPosition);
+            yPosition += 5;
+            
+            // Contact
+            pdf.text(`Contact: ${buyerName}`, margin, yPosition);
+            yPosition += 5;
+            
+            // Nation (for buyers) or Region (for sellers)
+            const userRole = AddonsAuth.loggedInUser?.user_role;
+            if (userRole === 'sellers' || userRole === 'Sellers') {
+                const region = getSellerRegion(apiData);
+                if (region) {
+                    pdf.text(`Region: ${region}`, margin, yPosition);
+                    yPosition += 5;
+                }
+            } else {
+                const nation = getBuyerNation(apiData);
+                if (nation) {
+                    pdf.text(`Nation: ${nation}`, margin, yPosition);
+                    yPosition += 5;
+                }
+            }
+
+            // Add space between events
+            yPosition += 10;
+
+            // Add page break if needed for next event
+            if (index < sortedEvents.length - 1 && yPosition > pageHeight - 60) {
+                pdf.addPage();
+                yPosition = margin;
+            }
         });
+
+        const fileName = `calendar-export-${new Date().toISOString().split('T')[0]}.pdf`;
+        pdf.save(fileName);
+        toast.success('Calendar exported as PDF successfully', { position: 'bottom-right', "autoClose": 1500 });
+
     } catch (error) {
         console.error('PDF generation error:', error);
-        toast.error('PDF generation failed', {
-            position: 'bottom-right',
-            "autoClose": 1500,
-        });
+        toast.error('PDF generation failed', { position: 'bottom-right', "autoClose": 1500 });
     }
 };
 
@@ -746,12 +733,13 @@ const sellersAgenda = async (id) => {
           } 
       });
       
-
-      if (response.data.status) {  
+      if (response.data && response.data.status && response.data.agenda) {  
           // Convert API data to calendar events
-          const convertedEvents = convertApiDataToCalendarEvents(response.data.agenda);
+          const agendaData = Array.isArray(response.data.agenda) ? response.data.agenda : [];
+          const convertedEvents = convertApiDataToCalendarEvents(agendaData);
+          
           calendarEvents.value = convertedEvents;
-          listEvents.value = [...convertedEvents]; // Added this line
+          listEvents.value = [...convertedEvents];
           
           // Update calendar with new events
           if (calendarRef.value) {
@@ -761,9 +749,15 @@ const sellersAgenda = async (id) => {
                   calendarApi.addEventSource(convertedEvents);
               }
           }
+      } else {
+          console.warn('Invalid response format from sellers-agenda API');
+          calendarEvents.value = [];
+          listEvents.value = [];
       }
   } catch (error) {
-      // Handle error silently
+      console.error('Error fetching sellers agenda:', error);
+      calendarEvents.value = [];
+      listEvents.value = [];
   } 
 }
 
@@ -1294,7 +1288,7 @@ const redirectToChat = (user_id) => {
         </div>
 
         <!-- Details Panel (for desktop views) -->
-        <div v-if="showDetailsPanel && selectedEventData && window.innerWidth >= 1500" class="tfhb-details-panel">
+        <div v-if="showDetailsPanel && selectedEventData && !isSmallScreen" class="tfhb-details-panel">
             <div class="tfhb-details-header">
                 <h3>Buyer Details</h3>
                 <div class="tfhb-details-actions">
