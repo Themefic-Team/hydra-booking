@@ -350,16 +350,16 @@ const exportAsICal = () => {
     toast.success('Calendar exported as .iCal successfully', { position: 'bottom-right', "autoClose": 1500 });
 };
 
-const exportAsPDF = () => {
+const exportAsPDF = async () => {
     if (!calendarEvents.value || calendarEvents.value.length === 0) {
         toast.error('No events to export', { position: 'bottom-right', "autoClose": 1500 });
         return;
     }
 
-    // Get seller company name for header
-    const getSellerCompanyName = (apiData) => {
-        const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-        return sellerData.company_name || sellerData.denominazione_operatore_azienda || apiData?.sellers_data?.display_name || 'Name Brand';
+    // Get buyer company name for header
+    const getBuyerCompanyName = (apiData) => {
+        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        return buyerData.company_name || buyerData.travel_agent_name || apiData?.buyers_data?.display_name || 'Name Brand';
     };
 
     // Get buyer nation for conditional display
@@ -384,54 +384,100 @@ const exportAsPDF = () => {
 
         // Add header with logo and company information
         const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        const headerCompanyName = calendarEvents.value.length > 0 ? getSellerCompanyName(calendarEvents.value[0].extendedProps.apiData) : 'Name Brand';
+        const headerCompanyName = calendarEvents.value.length > 0 ? getBuyerCompanyName(calendarEvents.value[0].extendedProps.apiData) : 'Name Brand';
         
         // Get additional company information
         const firstEventData = calendarEvents.value.length > 0 ? calendarEvents.value[0].extendedProps.apiData : null;
-        const sellerData = firstEventData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-        const companyWebsite = sellerData.sito_internet || '';
-        const companyAddress = sellerData['sede-legale-attivita'] || sellerData.regione || '';
+        const buyerData = firstEventData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const companyWebsite = buyerData.company_website || '';
+        const companyAddress = buyerData.address || buyerData.state || '';
         
-        // Create header with better space utilization
-        const headerHeight = 40;
+        // Create header with two-column layout
+        const headerHeight = 25;
+        const leftColumnWidth = 60; // Width for logo column
+        const rightColumnStart = margin + leftColumnWidth + 10; // Start position for right column
         
-        // Add logo placeholder (left side)
-        pdf.setFontSize(10);
+        // LEFT COLUMN - Logo or placeholder
+        if (AddonsAuth.event?.event_details?.event_logo) {
+            try {
+                const logoUrl = AddonsAuth.event.event_details.event_logo;
+                const maxLogoHeight = 80; // Maximum height in pixels
+                
+                // Create an image element to get dimensions
+                const img = new Image();
+                img.src = logoUrl;
+                
+                // Wait for image to load
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                });
+                
+                // Calculate dimensions while maintaining aspect ratio
+                let logoWidth = img.width;
+                let logoHeight = img.height;
+                
+                if (logoHeight > maxLogoHeight) {
+                    const ratio = maxLogoHeight / logoHeight;
+                    logoHeight = maxLogoHeight;
+                    logoWidth = logoWidth * ratio;
+                }
+                
+                // Add logo to PDF
+                pdf.addImage(logoUrl, 'PNG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333); // Convert px to mm (1px = 0.264583333mm)
+            } catch (error) {
+                console.error('Error loading logo:', error);
+                // Fallback to placeholder text if logo fails to load
+                pdf.setFontSize(12);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Logo Events', margin, yPosition + 5);
+            }
+        } else {
+            // Show placeholder text if no logo
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Logo Events', margin, yPosition + 5);
+        }
+        
+        // RIGHT COLUMN - Content block (left aligned)
+        // 1. User role (H5 style, capital letters)
+        pdf.setFontSize(8);
         pdf.setFont('helvetica', 'bold');
-        pdf.text('Logo Events', margin, yPosition + 5);
+        const userRole = AddonsAuth.loggedInUser?.user_role || 'BUYERS';
+        pdf.text(userRole.toUpperCase(), rightColumnStart, yPosition + 3);
         
-        // Add seller company information (right side of logo)
+        // 2. Current user brand name
         pdf.setFontSize(12);
         pdf.setFont('helvetica', 'bold');
-        pdf.text('Seller', margin + 30, yPosition + 5);
-        pdf.setFontSize(14);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(headerCompanyName, margin + 60, yPosition + 5);
+        pdf.text(headerCompanyName, rightColumnStart, yPosition + 8);
         
-        // Add main title (centered, below logo/seller info)
-        pdf.setFontSize(16);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('Calendar Export', pageWidth / 2, yPosition + 15, { align: 'center' });
-        
-        // Add generation info (centered, below title)
+        // 3. Calendar export info
         pdf.setFontSize(10);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, pageWidth / 2, yPosition + 25, { align: 'center' });
+        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, rightColumnStart, yPosition + 15);
         
         yPosition += headerHeight;
 
         // Add horizontal line
         pdf.line(margin, yPosition, pageWidth - margin, yPosition);
-        yPosition += 10;
+        yPosition += 5;
 
         // Sort events by date
         const sortedEvents = [...calendarEvents.value].sort((a, b) => new Date(a.start) - new Date(b.start));
 
+        let currentPageNumber = 1;
+        let itemsOnCurrentPage = 0;
+
         sortedEvents.forEach((event, index) => {
-            // Check if we need a new page
-            if (yPosition > pageHeight - 80) {
+            // Determine max items for current page (5 for first page, 6 for subsequent pages)
+            const maxItemsPerPage = currentPageNumber === 1 ? 5 : 6;
+            
+            // Check if we need a new page based on item count
+            if (itemsOnCurrentPage >= maxItemsPerPage) {
                 pdf.addPage();
                 yPosition = margin;
+                currentPageNumber++;
+                itemsOnCurrentPage = 0;
             }
 
             const startDate = new Date(event.start);
@@ -465,11 +511,19 @@ const exportAsPDF = () => {
             const sellerName = sellerData.name ||
                               apiData.sellers_data?.display_name ||
                               'Unknown Seller';
+            const sellersCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || 'Unknown Seller';
 
-            // Add event header with participant names
+            // Add spacing before the title for proper border gap
+            yPosition += 3;
+            
+            // Calculate content height for border
+            const contentStartY = yPosition;
+            let contentHeight = 8; // Initial height for participant names
+
+            // Add event header with seller company name
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
-            const participantNames = `${buyerName} - ${sellerName}`;
+            const participantNames = `${sellersCompany}`;
             pdf.text(participantNames, margin, yPosition);
             yPosition += 8;
 
@@ -480,14 +534,17 @@ const exportAsPDF = () => {
             // Date
             pdf.text(`Date: ${formattedDate}`, margin, yPosition);
             yPosition += 5;
+            contentHeight += 5;
             
             // Time
             pdf.text(`Time: ${formattedTime}`, margin, yPosition);
             yPosition += 5;
+            contentHeight += 5;
             
             // Contact
             pdf.text(`Contact: ${sellerName}`, margin, yPosition);
             yPosition += 5;
+            contentHeight += 5;
             
             // Nation (for buyers) or Region (for sellers)
             const userRole = AddonsAuth.loggedInUser?.user_role;
@@ -496,23 +553,34 @@ const exportAsPDF = () => {
                 if (nation) {
                     pdf.text(`Nation: ${nation}`, margin, yPosition);
                     yPosition += 5;
+                    contentHeight += 5;
                 }
             } else {
                 const region = getSellerRegion(apiData);
                 if (region) {
                     pdf.text(`Region: ${region}`, margin, yPosition);
                     yPosition += 5;
+                    contentHeight += 5;
                 }
             }
+
+            // Add border around the entire event block
+            const borderPadding = 2;
+            const borderStartY = contentStartY - borderPadding;
+            const borderEndY = yPosition + borderPadding;
+            const borderStartX = margin;
+            const borderEndX = pageWidth - margin;
+            
+            // Draw bottom border line with lighter color (#ddd = RGB 221, 221, 221)
+            pdf.setDrawColor(221, 221, 221); // Light gray border
+            pdf.setLineWidth(0.3); // Thinner line (1px equivalent)
+            pdf.line(borderStartX, borderEndY, borderEndX, borderEndY);
 
             // Add space between events
             yPosition += 10;
 
-            // Add page break if needed for next event
-            if (index < sortedEvents.length - 1 && yPosition > pageHeight - 60) {
-                pdf.addPage();
-                yPosition = margin;
-            }
+            // Increment items counter for current page
+            itemsOnCurrentPage++;
         });
 
         const fileName = `calendar-export-${new Date().toISOString().split('T')[0]}.pdf`;

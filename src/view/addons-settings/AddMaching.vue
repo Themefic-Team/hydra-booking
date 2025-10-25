@@ -65,17 +65,15 @@ const onSellerChange = async () => {
     showSellerInfo.value = true;
     
     // Reload time slots if date is already selected to check availability
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   } else {
     showSellerInfo.value = false;
     sellerDetails.value = '';
     
     // Reload time slots if date is already selected
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   }
 };
 
@@ -85,17 +83,15 @@ const onBuyerChange = async () => {
     showBuyerInfo.value = true;
     
     // Reload time slots if date is already selected to check availability
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   } else {
     showBuyerInfo.value = false;
     buyerDetails.value = '';
     
     // Reload time slots if date is already selected
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   }
 };
 
@@ -198,8 +194,12 @@ const submitForm = async () => {
         autoClose: 1500,
       });
       // Redirect to matching list vue example
-      router.push('/addons-view-matching');
-      // window.location.href = `${window.location.origin}/wp-admin/admin.php?page=hydra-addons-matching`;
+      // router.push('/addons-view-matching');
+      // reloiad page after 1 second
+      setTimeout(() => {
+        // windows reload
+        window.location.reload();
+      }, 1000);
     } else {
       toast.error(response.data.message || 'Error adding matching', {
         position: 'bottom-right',

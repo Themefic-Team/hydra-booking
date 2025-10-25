@@ -9,7 +9,11 @@ const props = defineProps([
     'question_value',
     'skip_remove',
 ])
-const emit = defineEmits(['update:modelValue', 'question-edit', 'question-remove'])
+const emit = defineEmits(['update:modelValue', 'question-edit', 'question-remove', 'question-toggle'])
+
+const handleToggle = (index, value) => {
+    emit('question-toggle', index, value)
+}
 
 const capitalizedFirstChar = (value) => {
     // if first character is lowercase, convert it to uppercase 
@@ -19,6 +23,7 @@ const capitalizedFirstChar = (value) => {
 
 <template>
     <div class="tfhb-question-box"> 
+     
         <div class="tfhb-single-form-field tfhb-flexbox tfhb-gap-24" :style="{ 'width': '100%' }"> 
             <div class="tfhb-single-form-field-wrap tfhb-single-question-box tfhb-full-width" v-for="(question, key)  in question_value" :key="key"
             :class="{ 'tfhb-disable': question.enable == 0 }"
@@ -41,7 +46,8 @@ const capitalizedFirstChar = (value) => {
                         /> 
                     </div>
                     <HbSwitch 
-                        v-model="question.enable"
+                        :modelValue="question.enable"
+                        @update:modelValue="handleToggle(key, $event)"
                         v-if="key > skip_remove"
                         class="tfhb-tooltip"
                         :tooltip="true"
