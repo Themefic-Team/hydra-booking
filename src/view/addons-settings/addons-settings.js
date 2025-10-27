@@ -280,7 +280,24 @@ const AddonsUsers = reactive({
             filteredUsers = this.users[currentTab].filter(user => {
                 const name = (user.name || '').toLowerCase();
                 const email = (user.email || '').toLowerCase();
-                return name.includes(searchQuery) || email.includes(searchQuery);
+                
+                // Get company name based on user type
+                let companyName = '';
+                let alternativeCompanyName = '';
+                
+                if (currentTab === 'sellers') {
+                    companyName = (user.data?.denominazione_operatore_azienda || '').toLowerCase();
+                    alternativeCompanyName = (user.data?.eventuale_altra_denominazione || '').toLowerCase();
+                } else if (currentTab === 'buyers') {
+                    companyName = (user.data?.travel_agent_name || '').toLowerCase();
+                } else if (currentTab === 'exhibitors') {
+                    companyName = (user.data?.company_name || '').toLowerCase();
+                }
+                
+                return name.includes(searchQuery) || 
+                       email.includes(searchQuery) || 
+                       companyName.includes(searchQuery) ||
+                       (alternativeCompanyName && alternativeCompanyName.includes(searchQuery));
             });
         }
         

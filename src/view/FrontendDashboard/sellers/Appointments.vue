@@ -577,6 +577,7 @@ const exportAsPDF = async () => {
                 
                 // Create an image element to get dimensions
                 const img = new Image();
+                img.crossOrigin = 'anonymous'; // Handle CORS
                 img.src = logoUrl;
                 
                 // Wait for image to load
@@ -595,8 +596,24 @@ const exportAsPDF = async () => {
                     logoWidth = logoWidth * ratio;
                 }
                 
+                // Create canvas to preprocess the image (removes artifacts and fixes colors)
+                const canvas = document.createElement('canvas');
+                canvas.width = logoWidth;
+                canvas.height = logoHeight;
+                const ctx = canvas.getContext('2d');
+                
+                // Fill with white background to remove transparency artifacts
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the image on top
+                ctx.drawImage(img, 0, 0, logoWidth, logoHeight);
+                
+                // Convert canvas to high-quality JPEG data URL
+                const processedLogoUrl = canvas.toDataURL('image/jpeg', 1.0);
+                
                 // Add logo to PDF
-                pdf.addImage(logoUrl, 'PNG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333); // Convert px to mm (1px = 0.264583333mm)
+                pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333); // Convert px to mm (1px = 0.264583333mm)
             } catch (error) {
                 console.error('Error loading logo:', error);
                 // Fallback to placeholder text if logo fails to load
@@ -936,34 +953,90 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const qrY = startY + 70; // Moved up 10mm from 80 to 70
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
                  
+                // Helper function to fit text within available width
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    // Try to shrink font size first
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    // If still too wide, split into multiple lines
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
                 
                 // Add job title (centered in bottom right quadrant, below QR code)
-                pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(userRole);
-                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 110); // Moved up 10mm from 120 to 110
+                const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                pdf.setFontSize(jobTitleResult.fontSize);
+                let currentY = startY + 110;
+                jobTitleResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                });
                 
                 // Add user name (centered in bottom right quadrant, below job title)
-                pdf.setFontSize(16); // Reduced font size
+                currentY += 8;
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'bold');
-                const nameText = userName;
-                const nameWidth = pdf.getTextWidth(nameText);
-                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 118); // Moved up 10mm from 128 to 118
+                const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
 
                 // Company
+                currentY += 7;
                 const companyName = (user.user_data?.eventuale_altra_denominazione || '').trim(); 
-                pdf.setFontSize(10);
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
+                pdf.setFont('helvetica', 'normal');
+                const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                pdf.setFontSize(companyResult.fontSize);
+                companyResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < companyResult.lines.length - 1) currentY += 5;
+                });
 
-                
                 // Convert nation object/array to comma-separated string
-                const nation = user.user_data.regione;
-                pdf.setFontSize(10);
-                const nationWidth = pdf.getTextWidth(nation);
-                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 132); // Moved up 10mm from 142 to 132 
+                currentY += 7;
+                const nation = user.user_data.regione || '';
+                const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                pdf.setFontSize(nationResult.fontSize);
+                nationResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nationResult.lines.length - 1) currentY += 5;
+                }); 
                  
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
@@ -1006,36 +1079,92 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 const qrY = startY + 70; // Moved up 10mm from 80 to 70
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
                 
+                // Helper function to fit text within available width
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    // Try to shrink font size first
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    // If still too wide, split into multiple lines
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
  
                 // Add job title (centered in bottom right quadrant, below QR code)
-                pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(userRole);
-                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 110); // Moved up 10mm from 120 to 110
+                const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                pdf.setFontSize(jobTitleResult.fontSize);
+                let currentY = startY + 110;
+                jobTitleResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                });
                 
                 // Add user name (centered in bottom right quadrant, below job title)
-                pdf.setFontSize(16); // Reduced font size
+                currentY += 8;
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'bold');
-                const nameText = userName;
-                const nameWidth = pdf.getTextWidth(nameText);
-                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 118); // Moved up 10mm from 128 to 118
+                const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
                 
 
                 // Company
+                currentY += 7;
                 const companyName = (user.user_data?.eventuale_altra_denominazione || '').trim(); 
-                pdf.setFontSize(10);
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
+                pdf.setFont('helvetica', 'normal');
+                const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                pdf.setFontSize(companyResult.fontSize);
+                companyResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < companyResult.lines.length - 1) currentY += 5;
+                });
 
-                
                 // Convert nation object/array to comma-separated string
-                const nation = user.user_data.regione;
-                pdf.setFontSize(10);
-                const nationWidth = pdf.getTextWidth(nation);
-                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 132); // Moved up 10mm from 142 to 132 
- 
+                currentY += 7;
+                const nation = user.user_data.regione || '';
+                const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                pdf.setFontSize(nationResult.fontSize);
+                nationResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nationResult.lines.length - 1) currentY += 5;
+                }); 
+
                 // Save the PDF
                 const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
