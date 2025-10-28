@@ -628,7 +628,7 @@ class HydraBookingShortcode {
 			// Add to cart
 			$product_id = $meta_data['payment_meta']['product_id'];
 			$data['booking_id'] = $attendee_data['booking_id'];
-
+			$data['added_time'] = time();
 			$woo_booking = new WooBooking();
 			$woo_booking->add_to_cart( $product_id, $data, $attendee_data );
 			$response['redirect'] = wc_get_checkout_url();

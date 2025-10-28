@@ -28,6 +28,7 @@ class WooBooking {
 		$order_meta                                   = array();
 		$order_meta['tfhb_order_meta']['booking_id']  = $data['booking_id'];
 		$order_meta['tfhb_order_meta']['attendee_id']  = $attendee_data['id'];
+		$order_meta['tfhb_order_meta']['added_time']  = time();
 		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_data['attendee_time_zone'] . ' )';
 		$cart = WC()->cart;
 		$cart->add_to_cart( $product_id, 1, 0, array(), $order_meta );
@@ -53,6 +54,7 @@ class WooBooking {
 		$booking_id  = ! empty( $values['tfhb_order_meta']['booking_id'] ) ? $values['tfhb_order_meta']['booking_id'] : '';
 		$attendee_id  = ! empty( $values['tfhb_order_meta']['attendee_id'] ) ? $values['tfhb_order_meta']['attendee_id'] : '';
 		$appointment = ! empty( $values['tfhb_order_meta']['Appointment'] ) ? $values['tfhb_order_meta']['Appointment'] : '';
+		$added_time  = ! empty( $values['tfhb_order_meta']['added_time'] ) ? $values['tfhb_order_meta']['added_time'] : '';
 
 		if ( $booking_id ) {
 			$item->update_meta_data( '_tfhb_booking_id', $booking_id, true );
@@ -63,6 +65,9 @@ class WooBooking {
 
 		if ( $appointment ) {
 			$item->update_meta_data( 'tfhb_appointment', $appointment, true );
+		}
+		if ( $appointment ) {
+			$item->update_meta_data( '_added_time', $added_time, true );
 		}
 	}
 
@@ -193,9 +198,54 @@ class WooBooking {
 					)
 				);
 
+				// Update Booking based on General Status
+				$booking = new Booking();
+				$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
+				$updat_booking['id'] = $booking_id;
+				$updat_booking['status'] = 'pending';
+				if(isset($general_settings['booking_status']) && $general_settings['booking_status'] == 1){
+					$updat_booking['status'] = 'confirmed';
+				}
+				if(!isset($general_settings['booking_status'])){
+					$updat_booking['status'] = 'confirmed';
+				}
+				$booking->update( $updat_booking );
 				
 				// Update Transaction ID Data 
+
 				$Attendees = new Attendees();
+				// Attendees update
+				$updat_attendee['id'] = $attendee_id;
+				$updat_attendee['status'] = 'pending';
+				if(isset($general_settings['booking_status']) && $general_settings['booking_status'] == 1){
+					$updat_attendee['status'] = 'confirmed';
+				}
+				if(!isset($general_settings['booking_status'])){
+					$updat_attendee['status'] = 'confirmed';
+				}
+				$Attendees->update( $updat_attendee );
+
+				$attendeeBooking =  $Attendees->getAttendeeWithBooking( 
+					array(
+						array('id', '=',$attendee_id),
+					),
+					1,
+					'DESC'
+				); 
+
+				if($attendeeBooking->status == 'confirmed'){
+					// Single Booking & Mail Notification, Google Calendar // Zoom Meeting
+					do_action( 'hydra_booking/after_booking_confirmed', $attendeeBooking ); 
+				}  
+				if($attendeeBooking->status == 'pending'){  
+					do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
+				}
+
+				$notification = new Notification();
+				$notification->AddNotification($attendeeBooking);
+
+				
+				// Update Transaction ID Data 
 				$get_attendee = $Attendees->getAttendeeWithBooking( $attendee_id  ); 
 								
 				$transactions = new Transactions();
