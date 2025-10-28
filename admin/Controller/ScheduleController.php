@@ -143,7 +143,7 @@ class ScheduleController {
 		return $schedules;
 	}
 	function tfhb_cart_auto_remover_schedule_callback() {
-		error_log("hi jahid");
+
 		// Get all WooCommerce sessions
 		global $wpdb;
 		$table = $wpdb->prefix . 'woocommerce_sessions';
