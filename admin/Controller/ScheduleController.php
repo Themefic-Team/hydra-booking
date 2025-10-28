@@ -143,7 +143,7 @@ class ScheduleController {
 		return $schedules;
 	}
 	function tfhb_cart_auto_remover_schedule_callback() {
-
+		error_log("hi jahid");
 		// Get all WooCommerce sessions
 		global $wpdb;
 		$table = $wpdb->prefix . 'woocommerce_sessions';
@@ -152,7 +152,7 @@ class ScheduleController {
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
 		$every_minute     = ! empty( $general_settings['after_cart_expire'] ) ? $general_settings['after_cart_expire'] : 60; // minutes
 
-		$every_minute = $every_minute * 60;
+		$every_minute = intval($every_minute * 60);
 
 		foreach ($sessions as $session) {
 			$session_data = maybe_unserialize($session->session_value);
@@ -161,7 +161,8 @@ class ScheduleController {
 				$cart = maybe_unserialize($session_data['cart']);
 
 				foreach ($cart as $key => $item) {
-					if ( isset($item['tfhb_order_meta']['added_time']) && (time() - $item['tfhb_order_meta']['added_time']) > $every_minute ) {
+					$added_time = !empty($item['tfhb_order_meta']['added_time']) ? intval($item['tfhb_order_meta']['added_time']) : 0;
+					if ( !empty($added_time) && (time() - $added_time) > $every_minute ) {
 
 						// Update Booking
 						if( !empty($item['tfhb_order_meta']['booking_id']) ){
