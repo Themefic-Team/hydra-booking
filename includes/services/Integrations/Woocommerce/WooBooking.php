@@ -47,6 +47,63 @@ class WooBooking {
 		return $item_data;
 	}
 
+	public function woocommerce_cart_loaded_from_session_callback($cart) {
+		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
+		$expire_minutes = !empty($general_settings['after_cart_expire']) ? intval($general_settings['after_cart_expire']) : 60;
+		$expire_seconds = $expire_minutes * 60;
+	
+		foreach ($cart->get_cart() as $key => $item) {
+			$added_time = isset($item['tfhb_order_meta']['added_time']) ? intval($item['tfhb_order_meta']['added_time']) : 0;
+			if ($added_time && (time() - $added_time) > $expire_seconds) {
+	
+				// Update Booking
+				if (!empty($item['tfhb_order_meta']['booking_id'])) {
+					$booking = new Booking();
+					$booking->update([
+						'id'     => $item['tfhb_order_meta']['booking_id'],
+						'status' => 'canceled',
+					]);
+				}
+	
+				// Update Attendee
+				if (!empty($item['tfhb_order_meta']['attendee_id'])) {
+					$Attendees = new Attendees();
+					$Attendees->update([
+						'id'     => $item['tfhb_order_meta']['attendee_id'],
+						'status' => 'canceled',
+					]);
+				}
+	
+				$cart->remove_cart_item($key);
+			}
+		}
+	}
+
+	public function woocommerce_remove_cart_item_callback($cart_item_key, $cart) {
+		$cart_item = $cart->get_cart_item($cart_item_key);
+		if (!$cart_item) return;
+	
+		// Update Booking
+		if (!empty($cart_item['tfhb_order_meta']['booking_id'])) {
+			$booking = new Booking();
+			$booking->update([
+				'id'     => $cart_item['tfhb_order_meta']['booking_id'],
+				'status' => 'canceled',
+			]);
+		}
+	
+		// Update Attendee
+		if (!empty($cart_item['tfhb_order_meta']['attendee_id'])) {
+			$Attendees = new Attendees();
+			$Attendees->update([
+				'id'     => $cart_item['tfhb_order_meta']['attendee_id'],
+				'status' => 'canceled',
+			]);
+		}
+	
+	}
+	
+	
 	// update order meta data
 	public function tfhb_booking_custom_order_data( $item, $cart_item_key, $values, $order ) {
 
