@@ -151,7 +151,7 @@ class ScheduleController {
 	
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
 		$every_minute     = ! empty( $general_settings['after_cart_expire'] ) ? $general_settings['after_cart_expire'] : 60; // minutes
-		
+
 		$every_minute = $every_minute * 60;
 
 		foreach ($sessions as $session) {
