@@ -528,52 +528,42 @@ const exportAsPDF = async () => {
         return;
     }
 
-    // Get buyer company name for header
-    const getBuyerCompanyName = (apiData) => {
-        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-        return buyerData.company_name || buyerData.travel_agent_name || apiData?.buyers_data?.display_name || 'Name Brand';
-    };
-
-    // Get buyer nation for conditional display
-    const getBuyerNation = (apiData) => {
-        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-        return buyerData.nation || '';
-    };
-
-    // Get seller region for conditional display
-    const getSellerRegion = (apiData) => {
+    // Get seller company name for header
+    const getSellerCompanyName = (apiData) => {
         const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-        return sellerData.regione || '';
+        return sellerData.company_name || sellerData.denominazione_operatore_azienda || apiData?.sellers_data?.display_name || 'Company Name';
+    };
+
+    // Get buyer location
+    const getBuyerLocation = (apiData) => {
+        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        return buyerData.nation || buyerData.state || '';
     };
 
     try {
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pageWidth = 210;
         const pageHeight = 297;
-        const margin = 20;
+        const margin = 15;
         const contentWidth = pageWidth - (2 * margin);
         let yPosition = margin;
 
-        // Add header with logo and company information
+        // Get event information
         const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        const headerCompanyName = calendarEvents.value.length > 0 ? getBuyerCompanyName(calendarEvents.value[0].extendedProps.apiData) : 'Name Brand';
-        
-        // Get additional company information
         const firstEventData = calendarEvents.value.length > 0 ? calendarEvents.value[0].extendedProps.apiData : null;
-        const buyerData = firstEventData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-        const companyWebsite = buyerData.company_website || '';
-        const companyAddress = buyerData.address || buyerData.state || '';
+        const sellerData = firstEventData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        const headerCompanyName = sellerData.company_name || sellerData.denominazione_operatore_azienda || firstEventData?.sellers_data?.display_name || 'Company Name';
         
         // Create header with two-column layout
-        const headerHeight = 25;
-        const leftColumnWidth = 60; // Width for logo column
-        const rightColumnStart = margin + leftColumnWidth + 10; // Start position for right column
+        const headerHeight = 20;
+        const leftColumnWidth = 50; // Width for logo column (reduced from 60)
+        const rightColumnStart = margin + leftColumnWidth + 8; // Start position for right column
         
         // LEFT COLUMN - Logo or placeholder
         if (AddonsAuth.event?.event_details?.event_logo) {
             try {
                 const logoUrl = AddonsAuth.event.event_details.event_logo;
-                const maxLogoHeight = 80; // Maximum height in pixels
+                const maxLogoHeight = 60; // Reduced from 80 pixels
                 
                 // Create an image element to get dimensions
                 const img = new Image();
@@ -613,167 +603,162 @@ const exportAsPDF = async () => {
                 const processedLogoUrl = canvas.toDataURL('image/jpeg', 1.0);
                 
                 // Add logo to PDF
-                pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333); // Convert px to mm (1px = 0.264583333mm)
+                pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333);
             } catch (error) {
                 console.error('Error loading logo:', error);
                 // Fallback to placeholder text if logo fails to load
-                pdf.setFontSize(12);
+                pdf.setFontSize(10);
                 pdf.setFont('helvetica', 'bold');
-                pdf.text('Logo Events', margin, yPosition + 5);
+                pdf.text('Logo Events', margin, yPosition + 4);
             }
         } else {
             // Show placeholder text if no logo
-            pdf.setFontSize(12);
+            pdf.setFontSize(10);
             pdf.setFont('helvetica', 'bold');
-            pdf.text('Logo Events', margin, yPosition + 5);
+            pdf.text('Logo Events', margin, yPosition + 4);
         }
         
         // RIGHT COLUMN - Content block (left aligned)
-        // 1. User role (H5 style, capital letters)
-        pdf.setFontSize(8);
+        // 1. User role (reduced font size)
+        pdf.setFontSize(7);
         pdf.setFont('helvetica', 'bold');
         const userRole = AddonsAuth.loggedInUser?.user_role || 'SELLERS';
         pdf.text(userRole.toUpperCase(), rightColumnStart, yPosition + 3);
         
-        // 2. Current user brand name
-        pdf.setFontSize(12);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(headerCompanyName, rightColumnStart, yPosition + 8);
-        
-        // 3. Calendar export info
+        // 2. Current user brand name (reduced font size)
         pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(headerCompanyName, rightColumnStart, yPosition + 7);
+        
+        // 3. Calendar export info (reduced font size)
+        pdf.setFontSize(8);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, rightColumnStart, yPosition + 15);
+        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, rightColumnStart, yPosition + 12);
         
         yPosition += headerHeight;
 
         // Add horizontal line
         pdf.line(margin, yPosition, pageWidth - margin, yPosition);
-        yPosition += 5;
+        yPosition += 4;
 
-        // Sort events by date
+        // Get date range from events
         const sortedEvents = [...calendarEvents.value].sort((a, b) => new Date(a.start) - new Date(b.start));
 
-        let currentPageNumber = 1;
-        let itemsOnCurrentPage = 0;
-
-        sortedEvents.forEach((event, index) => {
-            // Determine max items for current page (5 for first page, 6 for subsequent pages)
-            const maxItemsPerPage = currentPageNumber === 1 ? 5 : 6;
-            
-            // Check if we need a new page based on item count
-            if (itemsOnCurrentPage >= maxItemsPerPage) {
-                pdf.addPage();
-                yPosition = margin;
-                currentPageNumber++;
-                itemsOnCurrentPage = 0;
-            }
-
-            const startDate = new Date(event.start);
-            const endDate = new Date(event.end);
-            const apiData = event.extendedProps.apiData;
-            
-            // Format date and time
-            const formattedDate = startDate.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+        // Group events by day
+        const eventsByDay = {};
+        sortedEvents.forEach(event => {
+            const eventDate = new Date(event.start);
+            const dayKey = eventDate.toLocaleDateString('en-US', { 
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
             });
-            const formattedTime = startDate.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            }) + ' - ' + endDate.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-
-            // Get participant names
-            const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-            const buyerName = buyerData.name || 
-                             buyerData.name_of_participant || 
-                             buyerData.family_name_of_participant ||
-                             apiData.buyers_data?.display_name ||
-                             'Unknown Buyer';
-            const buyersCompaney = buyerData.travel_agent_name || 'Unknown Buyer';
-
-            const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-            const sellerName = sellerData.name ||
-                              apiData.sellers_data?.display_name ||
-                              'Unknown Seller';
-
-            // Add spacing before the title for proper border gap
-            yPosition += 3;
-            
-            // Calculate content height for border
-            const contentStartY = yPosition;
-            let contentHeight = 8; // Initial height for participant names
-
-            // Add event header with participant names
-            pdf.setFontSize(14);
-            pdf.setFont('helvetica', 'bold');
-            // const participantNames = `${buyerName} - ${sellerName}`;
-            const participantNames = `${buyersCompaney}`;
-            pdf.text(participantNames, margin, yPosition);
-            yPosition += 8;
-
-            // Add event details (only essential information)
-            pdf.setFontSize(10);
-            pdf.setFont('helvetica', 'normal');
-            
-            // Date
-            pdf.text(`Date: ${formattedDate}`, margin, yPosition);
-            yPosition += 5;
-            contentHeight += 5;
-            
-            // Time
-            pdf.text(`Time: ${formattedTime}`, margin, yPosition);
-            yPosition += 5;
-            contentHeight += 5;
-            
-            // Contact
-            pdf.text(`Contact: ${buyerName}`, margin, yPosition);
-            yPosition += 5;
-            contentHeight += 5;
-            
-            // Nation (for buyers) or Region (for sellers)
-            const userRole = AddonsAuth.loggedInUser?.user_role;
-            if (userRole === 'sellers' || userRole === 'Sellers') {
-                const region = getSellerRegion(apiData);
-                if (region) {
-                    pdf.text(`Region: ${region}`, margin, yPosition);
-                    yPosition += 5;
-                    contentHeight += 5;
-                }
-            } else {
-                const nation = getBuyerNation(apiData);
-                if (nation) {
-                    pdf.text(`Nation: ${nation}`, margin, yPosition);
-                    yPosition += 5;
-                    contentHeight += 5;
-                }
+            if (!eventsByDay[dayKey]) {
+                eventsByDay[dayKey] = [];
             }
-
-            // Add border around the entire event block
-            const borderPadding = 2;
-            const borderStartY = contentStartY - borderPadding;
-            const borderEndY = yPosition + borderPadding;
-            const borderStartX = margin;
-            const borderEndX = pageWidth - margin;
-            
-            // Draw bottom border line with lighter color (#ddd = RGB 221, 221, 221)
-            pdf.setDrawColor(221, 221, 221); // Light gray border
-            pdf.setLineWidth(0.3); // Thinner line (1px equivalent)
-            pdf.line(borderStartX, borderEndY, borderEndX, borderEndY);
-
-            // Add space between events
-            yPosition += 10;
-
-            // Increment items counter for current page
-            itemsOnCurrentPage++;
+            eventsByDay[dayKey].push(event);
         });
 
-        const fileName = `calendar-export-${new Date().toISOString().split('T')[0]}.pdf`;
+        // Render events day by day
+        Object.keys(eventsByDay).forEach((dayKey, dayIndex) => {
+            const dayEvents = eventsByDay[dayKey];
+            
+            // Check if we need a new page (leave space for day header + at least 3 appointments)
+            if (yPosition > pageHeight - 60) {
+                pdf.addPage();
+                yPosition = margin;
+            }
+
+            // Day header
+            pdf.setFontSize(9);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(dayKey, margin, yPosition);
+            yPosition += 5;
+
+            // Draw separator line
+            pdf.setDrawColor(200, 200, 200);
+            pdf.setLineWidth(0.2);
+            pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+            yPosition += 3;
+
+            // Column widths for compact two-column layout
+            const timeColWidth = 30; // Width for time column
+            const timeColX = margin;
+            const detailsColX = margin + timeColWidth + 3;
+            const detailsColWidth = contentWidth - timeColWidth - 3;
+
+            // Render appointments for this day
+            dayEvents.forEach((event, index) => {
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                const apiData = event.extendedProps.apiData;
+
+                // Check if we need a new page (keep ~18mm per appointment max)
+                if (yPosition > pageHeight - 18) {
+                    pdf.addPage();
+                    yPosition = margin;
+                }
+
+                const rowStartY = yPosition;
+
+                // Format time (compact format)
+                const formatTime = (date) => {
+                    return date.toLocaleTimeString('en-US', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        hour12: false
+                    });
+                };
+                const timeText = `${formatTime(startDate)} - ${formatTime(endDate)}`;
+
+                // TIME COLUMN (LEFT)
+                pdf.setFontSize(8);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(timeText, timeColX, yPosition + 3);
+
+                // DETAILS COLUMN (RIGHT)
+                let detailsY = yPosition;
+
+                // Meeting title (buyer company)
+                const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+                const buyersCompany = buyerData.company_name || buyerData.travel_agent_name || 'Company';
+                
+                pdf.setFontSize(9);
+                pdf.setFont('helvetica', 'bold');
+                const titleLines = pdf.splitTextToSize(`Meeting with ${buyersCompany}`, detailsColWidth);
+                pdf.text(titleLines[0], detailsColX, detailsY + 3);
+                detailsY += 4;
+
+                // Contact person and location
+                const buyerName = buyerData.name || buyerData.name_of_participant || apiData.buyers_data?.display_name || 'Contact';
+                const location = getBuyerLocation(apiData);
+                
+                pdf.setFontSize(7);
+                pdf.setFont('helvetica', 'normal');
+                const contactText = `${buyerName}${location ? ' from ' + location : ''}`;
+                const contactLines = pdf.splitTextToSize(contactText, detailsColWidth);
+                pdf.text(contactLines[0], detailsColX, detailsY + 2.5);
+                detailsY += 3.5;
+
+                // Calculate row height and add separator
+                const rowHeight = Math.max(10, detailsY - rowStartY + 2);
+                yPosition += rowHeight;
+
+                // Draw light separator line between appointments
+                if (index < dayEvents.length - 1) {
+                    pdf.setDrawColor(230, 230, 230);
+                    pdf.setLineWidth(0.1);
+                    pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+                    yPosition += 1;
+                }
+            });
+
+            // Add space between days
+            yPosition += 4;
+        });
+
+        const fileName = `agenda-${new Date().toISOString().split('T')[0]}.pdf`;
         pdf.save(fileName);
         toast.success('Calendar exported as PDF successfully', { position: 'bottom-right', "autoClose": 1500 });
 

@@ -48,8 +48,9 @@ button.tfhb-btn {
 
         &:hover,
         &:focus,
-        &:active {
-            background-color: $primary-hover;
+        &:active,
+        &.active {
+            background-color: $primary-hover !important;
             color: $primary-text !important;
         }
 

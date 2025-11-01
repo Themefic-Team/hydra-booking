@@ -184,13 +184,25 @@ const getFieldType = (fieldName) => {
 
 const DownloadBadgePDFWithQRCode = async (user) => {
     try { 
+        // Validate user object
+        if (!user) {
+            throw new Error('User object is required');
+        }
         
-        // Create QR code data
-        // const qr_data = user.name + ' ' + user.email;
-        // console.log(user);
-
-         // Create QR code data with more comprehensive information
-         const qr_data = `Name: ${user.name} | Role: ${user.role} | Email: ${user.email}`;
+        // Extract user data with better fallbacks
+        const userName = user.name || 
+                        (user.first_name && user.last_name ? `${user.first_name} ${user.last_name}`.trim() : '') || 
+                        user.display_name || 
+                        'User Name';
+        
+        const userEmail = user.email || 
+                          user.user_email || 
+                          'No Email';
+        
+        const userRole = user.role || 'Participant';
+        
+        // Create QR code data with more comprehensive information
+        const qr_data = `Name: ${userName} | Role: ${userRole} | Email: ${userEmail}`;
         
         // Generate QR code as data URL
         const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
@@ -209,168 +221,109 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         const pageWidth = 210;
         const pageHeight = 297;
         let backgroundImageUrl = '';
-        if(user.role == 'Buyers'){
-            // Background image URL
-            backgroundImageUrl = AddonsSettings.buyers.badge_pdf_image;
-        }else if(user.role == 'Sellers'){
-            // Background image URL
-            backgroundImageUrl = AddonsSettings.Sellers.badge_pdf_image;
-        }else if(user.role == 'Exhibitors'){
-            // Background image URL
-            backgroundImageUrl = AddonsSettings.Exhibitors.badge_pdf_image;
-        } 
-        // Function to load image and create PDF
-        const createPDFWithBackground = () => {
-            // Add background image
-            pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
-            
-            // Calculate bottom right quadrant positions
-            const quadrantWidth = pageWidth / 2;
-            const quadrantHeight = pageHeight / 2;
-            const startX = quadrantWidth; // Start from right half
-            const startY = quadrantHeight; // Start from bottom half
-            
-            // Add QR code (centered in bottom right quadrant)
-            const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
-            const qrX = startX + (quadrantWidth - qrSize) / 2;
-            const qrY = startY + 70; // Moved up 10mm from 80 to 70
-            pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
-            
-            // Add job title (centered in bottom right quadrant, below QR code)
-            pdf.setFontSize(11); // Reduced font size
-            pdf.setTextColor(0, 0, 0);
-            pdf.setFont('helvetica', 'normal');
-            const jobTitle = user.role; // You can make this dynamic if needed
-            const jobTitleWidth = pdf.getTextWidth(jobTitle);
-            const jobTitleUpper = jobTitle ? jobTitle.toUpperCase() : '';
-            pdf.text(jobTitleUpper, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 110); // Moved up 10mm from 120 to 110
-
-            
-            // Add user name (centered in bottom right quadrant, below job title)
-            pdf.setFontSize(16); // Reduced font size
-            pdf.setTextColor(0, 0, 0);
-            pdf.setFont('helvetica', 'bold');
-            const nameText = user.name || 'User Name';
-            const nameWidth = pdf.getTextWidth(nameText);
-            pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 118); // Moved up 10mm from 128 to 118
-
-            
-            if(user.role == 'Buyers'){ 
-                const companyName = (user.data?.travel_agent_name || '').trim();
-                pdf.setFontSize(10);
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
-
-                
-                // Convert nation object/array to comma-separated string
-                let nation = '';
-                if (Array.isArray(user.data?.nation)) {
-                    nation = user.data.nation.join(', ');
-                } else if (typeof user.data?.nation === 'object' && user.data?.nation !== null) {
-                    nation = Object.values(user.data.nation).join(', ');
-                } else if (typeof user.data?.nation === 'string') {
-                    nation = user.data.nation;
-                }
-                pdf.setFontSize(10);
-                const nationWidth = pdf.getTextWidth(nation);
-                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 132); // Moved up 10mm from 142 to 132
-
-            } 
-
-            if(user.role == 'Sellers'){  
-                const companyName = (user.data?.eventuale_altra_denominazione || '').trim(); 
-                pdf.setFontSize(10);
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
-
-                
-                // Convert nation object/array to comma-separated string
-                let nation = user.data.regione;
-                pdf.setFontSize(10);
-                const nationWidth = pdf.getTextWidth(nation);
-                pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 132); // Moved up 10mm from 142 to 132
-            }
-
-            if(user.role == 'Exhibitors'){  
-                const companyName = (user.data?.company_name || '').trim(); 
-                pdf.setFontSize(10);
-                const companyNameWidth = pdf.getTextWidth(companyName);
-                pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
-
-                    
-            }
-                
-
-           
-            // Save the PDF
-            const fileName = `badge_${user.name || 'user'}_${Date.now()}.pdf`;
-            pdf.save(fileName);
-            
-            toast.success('Badge PDF generated successfully!', {
-                position: 'bottom-right',
-                autoClose: 3000,
-            });
-        };
         
-        // Try to load the background image first
-        const img = new Image();
-        img.crossOrigin = 'anonymous'; // Handle CORS if needed
+        // Determine background image based on user role
+        if (user.role === 'buyers' || user.role === 'Buyers') {
+            backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || '';
+        } else if (user.role === 'sellers' || user.role === 'Sellers') {
+            backgroundImageUrl = AddonsSettings?.Sellers?.badge_pdf_image || '';
+        } else if (user.role === 'exhibitors' || user.role === 'Exhibitors') {
+            backgroundImageUrl = AddonsSettings?.Exhibitors?.badge_pdf_image || '';
+        }
         
-        img.onload = () => {
-            try {
-                createPDFWithBackground();
-            } catch (error) {
-                console.error('Error creating PDF:', error);
-                toast.error('Failed to create PDF. Please try again.', {
-                    position: 'bottom-right',
-                    autoClose: 3000,
-                });
-            }
-        };
-        
-        img.onerror = () => {
-            console.warn('Background image failed to load, creating PDF without background');
-            // Create PDF without background image
+        // Function to create PDF without background
+        const createPDFWithoutBackground = () => {
             try {
                 // Calculate bottom right quadrant positions
                 const quadrantWidth = pageWidth / 2;
                 const quadrantHeight = pageHeight / 2;
-                const startX = quadrantWidth; // Start from right half
-                const startY = quadrantHeight; // Start from bottom half
+                const startX = quadrantWidth;
+                const startY = quadrantHeight;
                 
                 // Add QR code (centered in bottom right quadrant)
-                const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
+                const qrSize = 35;
                 const qrX = startX + (quadrantWidth - qrSize) / 2;
-                const qrY = startY + 70; // Moved up 10mm from 80 to 70
+                const qrY = startY + 70;
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
                 
-                // Add job title (centered in bottom right quadrant, below QR code)
-                pdf.setFontSize(11); // Reduced font size
+                // Helper function to fit text within available width
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
+                
+                // Add role (centered in bottom right quadrant, below QR code)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitle = user.role; // You can make this dynamic if needed
-                const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                const jobTitleUpper = jobTitle ? jobTitle.toUpperCase() : '';
-                pdf.text(jobTitleUpper, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 110); // Moved up 10mm from 120 to 110
-                // Add user name (centered in bottom right quadrant, below job title)
-                pdf.setFontSize(16); // Reduced font size
+                const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                pdf.setFontSize(jobTitleResult.fontSize);
+                let currentY = startY + 110;
+                jobTitleResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add user name
+                currentY += 8;
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'bold');
-                const nameText = user.name || 'User Name';
-                const nameWidth = pdf.getTextWidth(nameText);
-                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 118); // Moved up 10mm from 128 to 118
+                const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
 
+                // Role-specific data
+                if (user.role === 'Buyers' || user.role === 'buyers') {
+                    // Company name
+                    currentY += 7;
+                    const companyName = (user.data?.travel_agent_name || '').trim();
+                    if (companyName) {
+                        pdf.setFont('helvetica', 'normal');
+                        const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                        pdf.setFontSize(companyResult.fontSize);
+                        companyResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < companyResult.lines.length - 1) currentY += 5;
+                        });
+                    }
 
-                         
-                if(user.role == 'Buyers'){ 
-                  
-                    const companyName = (user.data?.travel_agent_name || '').trim(); 
-                    pdf.setFontSize(10);
-                    const companyNameWidth = pdf.getTextWidth(companyName);
-                    pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
-
-                    
-                    // Convert nation object/array to comma-separated string
+                    // Nation
+                    currentY += 7;
                     let nation = '';
                     if (Array.isArray(user.data?.nation)) {
                         nation = user.data.nation.join(', ');
@@ -379,38 +332,64 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                     } else if (typeof user.data?.nation === 'string') {
                         nation = user.data.nation;
                     }
-                    pdf.setFontSize(10);
-                    const nationWidth = pdf.getTextWidth(nation);
-                    pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 132); // Moved up 10mm from 142 to 132
-          
+                    if (nation) {
+                        const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                        pdf.setFontSize(nationResult.fontSize);
+                        nationResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < nationResult.lines.length - 1) currentY += 5;
+                        });
+                    }
                 }
- 
-                if(user.role == 'Sellers'){  
-                    const companyName = (user.data?.eventuale_altra_denominazione || '').trim(); 
-                    pdf.setFontSize(10);
-                    const companyNameWidth = pdf.getTextWidth(companyName);
-                    pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
 
-                    
-                    // Convert nation object/array to comma-separated string
-                    const nation = user.data.regione;
-                    pdf.setFontSize(10);
-                    const nationWidth = pdf.getTextWidth(nation);
-                    pdf.text(nation, startX + (quadrantWidth - nationWidth) / 2, startY + 132); // Moved up 10mm from 142 to 132
+                if (user.role === 'Sellers' || user.role === 'sellers') {
+                    // Company name
+                    currentY += 7;
+                    const companyName = (user.data?.eventuale_altra_denominazione || '').trim();
+                    if (companyName) {
+                        pdf.setFont('helvetica', 'normal');
+                        const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                        pdf.setFontSize(companyResult.fontSize);
+                        companyResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < companyResult.lines.length - 1) currentY += 5;
+                        });
+                    }
+
+                    // Region
+                    currentY += 7;
+                    const nation = user.data?.regione || '';
+                    if (nation) {
+                        const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                        pdf.setFontSize(nationResult.fontSize);
+                        nationResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < nationResult.lines.length - 1) currentY += 5;
+                        });
+                    }
                 }
-              
 
-                if(user.role == 'Exhibitors'){  
-                    const companyName = (user.data?.company_name || '').trim(); 
-                    pdf.setFontSize(10);
-                    const companyNameWidth = pdf.getTextWidth(companyName);
-                    pdf.text(companyName, startX + (quadrantWidth - companyNameWidth) / 2, startY + 125); // Moved up 10mm from 135 to 125
-
-                     
+                if (user.role === 'Exhibitors' || user.role === 'exhibitors') {
+                    // Company name
+                    currentY += 7;
+                    const companyName = (user.data?.company_name || '').trim();
+                    if (companyName) {
+                        pdf.setFont('helvetica', 'normal');
+                        const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                        pdf.setFontSize(companyResult.fontSize);
+                        companyResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < companyResult.lines.length - 1) currentY += 5;
+                        });
+                    }
                 }
-                 
+                
                 // Save the PDF
-                const fileName = `badge_${user.name || 'user'}_${Date.now()}.pdf`;
+                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 toast.success('Badge PDF generated successfully! (without background)', {
@@ -426,14 +405,213 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             }
         };
         
-        // Start loading the image
-        img.src = backgroundImageUrl;
+        // Function to load image and create PDF
+        const createPDFWithBackground = () => {
+            try {
+                // Add background image if available
+                if (backgroundImageUrl) {
+                    pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                }
+                
+                // Calculate bottom right quadrant positions
+                const quadrantWidth = pageWidth / 2;
+                const quadrantHeight = pageHeight / 2;
+                const startX = quadrantWidth;
+                const startY = quadrantHeight;
+                
+                // Add QR code (centered in bottom right quadrant)
+                const qrSize = 35;
+                const qrX = startX + (quadrantWidth - qrSize) / 2;
+                const qrY = startY + 70;
+                pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                
+                // Helper function to fit text within available width
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
+                
+                // Add role (centered in bottom right quadrant, below QR code)
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                pdf.setFontSize(jobTitleResult.fontSize);
+                let currentY = startY + 110;
+                jobTitleResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add user name
+                currentY += 8;
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'bold');
+                const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
+
+                // Role-specific data
+                if (user.role === 'Buyers' || user.role === 'buyers') {
+                    // Company name
+                    currentY += 7;
+                    const companyName = (user.data?.travel_agent_name || '').trim();
+                    if (companyName) {
+                        pdf.setFont('helvetica', 'normal');
+                        const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                        pdf.setFontSize(companyResult.fontSize);
+                        companyResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < companyResult.lines.length - 1) currentY += 5;
+                        });
+                    }
+
+                    // Nation
+                    currentY += 7;
+                    let nation = '';
+                    if (Array.isArray(user.data?.nation)) {
+                        nation = user.data.nation.join(', ');
+                    } else if (typeof user.data?.nation === 'object' && user.data?.nation !== null) {
+                        nation = Object.values(user.data.nation).join(', ');
+                    } else if (typeof user.data?.nation === 'string') {
+                        nation = user.data.nation;
+                    }
+                    if (nation) {
+                        const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                        pdf.setFontSize(nationResult.fontSize);
+                        nationResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < nationResult.lines.length - 1) currentY += 5;
+                        });
+                    }
+                }
+
+                if (user.role === 'Sellers' || user.role === 'sellers') {
+                    // Company name
+                    currentY += 7;
+                    const companyName = (user.data?.eventuale_altra_denominazione || '').trim();
+                    if (companyName) {
+                        pdf.setFont('helvetica', 'normal');
+                        const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                        pdf.setFontSize(companyResult.fontSize);
+                        companyResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < companyResult.lines.length - 1) currentY += 5;
+                        });
+                    }
+
+                    // Region
+                    currentY += 7;
+                    const nation = user.data?.regione || '';
+                    if (nation) {
+                        const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                        pdf.setFontSize(nationResult.fontSize);
+                        nationResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < nationResult.lines.length - 1) currentY += 5;
+                        });
+                    }
+                }
+
+                if (user.role === 'Exhibitors' || user.role === 'exhibitors') {
+                    // Company name
+                    currentY += 7;
+                    const companyName = (user.data?.company_name || '').trim();
+                    if (companyName) {
+                        pdf.setFont('helvetica', 'normal');
+                        const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                        pdf.setFontSize(companyResult.fontSize);
+                        companyResult.lines.forEach((line, index) => {
+                            const lineWidth = pdf.getTextWidth(line);
+                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                            if (index < companyResult.lines.length - 1) currentY += 5;
+                        });
+                    }
+                }
+                
+                // Save the PDF
+                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                pdf.save(fileName);
+                
+                toast.success('Badge PDF generated successfully!', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            } catch (error) {
+                console.error('Error creating PDF with background:', error);
+                // Fallback to creating PDF without background
+                createPDFWithoutBackground();
+            }
+        };
+        
+        // Try to load the background image first
+        if (backgroundImageUrl) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = () => {
+                try {
+                    createPDFWithBackground();
+                } catch (error) {
+                    console.error('Error creating PDF with background:', error);
+                    createPDFWithoutBackground();
+                }
+            };
+            
+            img.onerror = () => {
+                console.warn('Background image failed to load, creating PDF without background');
+                createPDFWithoutBackground();
+            };
+            
+            img.src = backgroundImageUrl;
+        } else {
+            // No background image, create PDF directly
+            createPDFWithoutBackground();
+        }
         
     } catch (error) {
         console.error('Error generating PDF:', error);
-        toast.error('Failed to generate PDF. Please try again.', {
+        toast.error(`Failed to generate PDF: ${error.message}`, {
             position: 'bottom-right',
-            autoClose: 3000,
+            autoClose: 5000,
         });
     }
 }
@@ -527,8 +705,20 @@ const handleBulkBadgeExport = async () => {
                     }, TIMEOUT_PER_USER);
                     
                     try {
+                        // Extract user data with better fallbacks
+                        const userName = user.name || 
+                                        (user.first_name && user.last_name ? `${user.first_name} ${user.last_name}`.trim() : '') || 
+                                        user.display_name || 
+                                        'User Name';
+                        
+                        const userEmail = user.email || 
+                                          user.user_email || 
+                                          'No Email';
+                        
+                        const userRole = user.role || 'Participant';
+                        
                         // Create QR code data
-                        const qr_data = `Name: ${user.name} | Role: ${user.role} | Email: ${user.email}`;
+                        const qr_data = `Name: ${userName} | Role: ${userRole} | Email: ${userEmail}`;
                         
                         // Generate QR code as data URL
                         const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
@@ -548,19 +738,52 @@ const handleBulkBadgeExport = async () => {
                         const pageHeight = 297;
                         let backgroundImageUrl = '';
                         
-                        if(user.role == 'Buyers'){
-                            backgroundImageUrl = AddonsSettings.buyers.badge_pdf_image;
-                        } else if(user.role == 'Sellers'){
-                            backgroundImageUrl = AddonsSettings.Sellers.badge_pdf_image;
-                        } else if(user.role == 'Exhibitors'){
-                            backgroundImageUrl = AddonsSettings.Exhibitors.badge_pdf_image;
+                        if (user.role === 'buyers' || user.role === 'Buyers') {
+                            backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || '';
+                        } else if (user.role === 'sellers' || user.role === 'Sellers') {
+                            backgroundImageUrl = AddonsSettings?.Sellers?.badge_pdf_image || '';
+                        } else if (user.role === 'exhibitors' || user.role === 'Exhibitors') {
+                            backgroundImageUrl = AddonsSettings?.Exhibitors?.badge_pdf_image || '';
                         }
 
-                        // Function to create PDF with background
-                        const createPDFWithBackground = () => {
-                            // Add background image
-                            pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                        // Helper function to fit text within available width
+                        const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                            pdf.setFontSize(initialFontSize);
+                            let currentWidth = pdf.getTextWidth(text);
+                            let fontSize = initialFontSize;
                             
+                            while (currentWidth > maxWidth && fontSize > minFontSize) {
+                                fontSize -= 0.5;
+                                pdf.setFontSize(fontSize);
+                                currentWidth = pdf.getTextWidth(text);
+                            }
+                            
+                            if (currentWidth > maxWidth) {
+                                const words = text.split(' ');
+                                const lines = [];
+                                let currentLine = '';
+                                
+                                for (let i = 0; i < words.length; i++) {
+                                    const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                                    const testWidth = pdf.getTextWidth(testLine);
+                                    
+                                    if (testWidth > maxWidth && currentLine) {
+                                        lines.push(currentLine);
+                                        currentLine = words[i];
+                                    } else {
+                                        currentLine = testLine;
+                                    }
+                                }
+                                if (currentLine) lines.push(currentLine);
+                                
+                                return { lines, fontSize };
+                            }
+                            
+                            return { lines: [text], fontSize };
+                        };
+
+                        // Function to add content to PDF (without background)
+                        const addPDFContent = () => {
                             // Calculate bottom right quadrant positions
                             const quadrantWidth = pageWidth / 2;
                             const quadrantHeight = pageHeight / 2;
@@ -570,83 +793,153 @@ const handleBulkBadgeExport = async () => {
                             // Add QR code
                             const qrSize = 35;
                             const qrX = startX + (quadrantWidth - qrSize) / 2;
-                            const qrY = startY + 70; // Moved up 10mm from 80 to 70
+                            const qrY = startY + 70;
                             pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
                             
-                            // Add job title
-                            pdf.setFontSize(11);
+                            // Add role
                             pdf.setTextColor(0, 0, 0);
                             pdf.setFont('helvetica', 'normal');
-                            const jobTitle = user.role;
-                            const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                            pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 110); // Moved up 10mm from 120 to 110
+                            const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                            pdf.setFontSize(jobTitleResult.fontSize);
+                            let currentY = startY + 110;
+                            jobTitleResult.lines.forEach((line, index) => {
+                                const lineWidth = pdf.getTextWidth(line);
+                                pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                            });
                             
                             // Add user name
-                            pdf.setFontSize(16);
+                            currentY += 8;
                             pdf.setTextColor(0, 0, 0);
                             pdf.setFont('helvetica', 'bold');
-                            const nameText = user.name || 'User Name';
-                            const nameWidth = pdf.getTextWidth(nameText);
-                            pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 118); // Moved up 10mm from 128 to 118
-                            
-                            return pdf;
+                            const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                            pdf.setFontSize(nameResult.fontSize);
+                            nameResult.lines.forEach((line, index) => {
+                                const lineWidth = pdf.getTextWidth(line);
+                                pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                if (index < nameResult.lines.length - 1) currentY += 5;
+                            });
+
+                            // Role-specific data
+                            if (user.role === 'Buyers' || user.role === 'buyers') {
+                                currentY += 7;
+                                const companyName = (user.data?.travel_agent_name || '').trim();
+                                if (companyName) {
+                                    pdf.setFont('helvetica', 'normal');
+                                    const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                                    pdf.setFontSize(companyResult.fontSize);
+                                    companyResult.lines.forEach((line, index) => {
+                                        const lineWidth = pdf.getTextWidth(line);
+                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                        if (index < companyResult.lines.length - 1) currentY += 5;
+                                    });
+                                }
+
+                                currentY += 7;
+                                let nation = '';
+                                if (Array.isArray(user.data?.nation)) {
+                                    nation = user.data.nation.join(', ');
+                                } else if (typeof user.data?.nation === 'object' && user.data?.nation !== null) {
+                                    nation = Object.values(user.data.nation).join(', ');
+                                } else if (typeof user.data?.nation === 'string') {
+                                    nation = user.data.nation;
+                                }
+                                if (nation) {
+                                    const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                                    pdf.setFontSize(nationResult.fontSize);
+                                    nationResult.lines.forEach((line, index) => {
+                                        const lineWidth = pdf.getTextWidth(line);
+                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                        if (index < nationResult.lines.length - 1) currentY += 5;
+                                    });
+                                }
+                            }
+
+                            if (user.role === 'Sellers' || user.role === 'sellers') {
+                                currentY += 7;
+                                const companyName = (user.data?.eventuale_altra_denominazione || '').trim();
+                                if (companyName) {
+                                    pdf.setFont('helvetica', 'normal');
+                                    const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                                    pdf.setFontSize(companyResult.fontSize);
+                                    companyResult.lines.forEach((line, index) => {
+                                        const lineWidth = pdf.getTextWidth(line);
+                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                        if (index < companyResult.lines.length - 1) currentY += 5;
+                                    });
+                                }
+
+                                currentY += 7;
+                                const nation = user.data?.regione || '';
+                                if (nation) {
+                                    const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                                    pdf.setFontSize(nationResult.fontSize);
+                                    nationResult.lines.forEach((line, index) => {
+                                        const lineWidth = pdf.getTextWidth(line);
+                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                        if (index < nationResult.lines.length - 1) currentY += 5;
+                                    });
+                                }
+                            }
+
+                            if (user.role === 'Exhibitors' || user.role === 'exhibitors') {
+                                currentY += 7;
+                                const companyName = (user.data?.company_name || '').trim();
+                                if (companyName) {
+                                    pdf.setFont('helvetica', 'normal');
+                                    const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                                    pdf.setFontSize(companyResult.fontSize);
+                                    companyResult.lines.forEach((line, index) => {
+                                        const lineWidth = pdf.getTextWidth(line);
+                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                        if (index < companyResult.lines.length - 1) currentY += 5;
+                                    });
+                                }
+                            }
                         };
 
-                        // Try to load background image first
-                        const img = new Image();
-                        img.crossOrigin = 'anonymous';
-                        
-                        const pdfPromise = new Promise((resolve, reject) => {
-                            img.onload = () => {
-                                try {
-                                    const pdfDoc = createPDFWithBackground();
-                                    resolve(pdfDoc);
-                                } catch (error) {
-                                    reject(error);
-                                }
-                            };
+                        // Try to load background image first if URL exists
+                        let pdfDoc;
+                        if (backgroundImageUrl) {
+                            const img = new Image();
+                            img.crossOrigin = 'anonymous';
                             
-                            img.onerror = () => {
-                                try {
-                                    // Create PDF without background
-                                    const quadrantWidth = pageWidth / 2;
-                                    const quadrantHeight = pageHeight / 2;
-                                    const startX = quadrantWidth;
-                                    const startY = quadrantHeight;
-                                    
-                                    const qrSize = 35;
-                                    const qrX = startX + (quadrantWidth - qrSize) / 2;
-                                    const qrY = startY + 70; // Moved up 10mm from 80 to 70
-                                    pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
-                                    
-                                    pdf.setFontSize(11);
-                                    pdf.setTextColor(0, 0, 0);
-                                    pdf.setFont('helvetica', 'normal');
-                                    const jobTitle = user.role;
-                                    const jobTitleWidth = pdf.getTextWidth(jobTitle);
-                                    pdf.text(jobTitle, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 110); // Moved up 10mm from 120 to 110
-                                    
-                                    pdf.setFontSize(16);
-                                    pdf.setTextColor(0, 0, 0);
-                                    pdf.setFont('helvetica', 'bold');
-                                    const nameText = user.name || 'User Name';
-                                    const nameWidth = pdf.getTextWidth(nameText);
-                                    pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 118); // Moved up 10mm from 128 to 118
-                                    
-                                    resolve(pdf);
-                                } catch (error) {
-                                    reject(error);
-                                }
-                            };
-                            
-                            img.src = backgroundImageUrl;
-                        });
+                            const pdfPromise = new Promise((resolve, reject) => {
+                                img.onload = () => {
+                                    try {
+                                        // Add background image
+                                        pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                                        addPDFContent();
+                                        resolve(pdf);
+                                    } catch (error) {
+                                        reject(error);
+                                    }
+                                };
+                                
+                                img.onerror = () => {
+                                    try {
+                                        // Create PDF without background
+                                        addPDFContent();
+                                        resolve(pdf);
+                                    } catch (error) {
+                                        reject(error);
+                                    }
+                                };
+                                
+                                img.src = backgroundImageUrl;
+                            });
 
-                        const pdfDoc = await pdfPromise;
+                            pdfDoc = await pdfPromise;
+                        } else {
+                            // No background image, create PDF directly
+                            addPDFContent();
+                            pdfDoc = pdf;
+                        }
+
                         const pdfBlob = pdfDoc.output('blob');
                         
                         // Add PDF to zip with sanitized filename
-                        const sanitizedName = user.name.replace(/[^a-zA-Z0-9]/g, '_') || 'user';
+                        const sanitizedName = userName.replace(/[^a-zA-Z0-9]/g, '_') || 'user';
                         const fileName = `badge_${sanitizedName}_${user.id}.pdf`;
                         zip.file(fileName, pdfBlob);
                         
@@ -1208,11 +1501,7 @@ onBeforeRouteLeave(() => {
 .tfhb-tab-buttons {
     gap: 8px;
 }
-
-.tfhb-tab-buttons .tfhb-btn.active {
-    background: #0073aa;
-    color: white;
-}
+ 
 
  .tfhb-filter-box {
      align-items: center;
