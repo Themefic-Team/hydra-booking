@@ -335,6 +335,12 @@ class HydraBookingShortcode {
 		$start_time =  $start_time->format( 'h:i A' );
 		$end_time =  $end_time->format( 'h:i A' );
 
+		// Checking Hold Booking
+		$hold_booking = new Booking();
+		$get_hold_booking = $hold_booking->getHoldBooking( $data['meeting_id'], $data['meeting_dates'], $start_time, $end_time );
+		if(!empty($get_hold_booking)){
+			wp_send_json_error( array( 'message' => esc_html(__('This time slot is currently on hold. Please try again later or choose a different time.', 'hydra-booking')) ) );
+		}
  
 		$data['host_id']            = isset( $_POST['host_id'] ) ? sanitize_text_field( $_POST['host_id'] ) : 0;
 		$data['attendee_id']        = isset( $_POST['attendee_id'] ) ? sanitize_text_field( $_POST['attendee_id'] ) : 0;
@@ -512,6 +518,9 @@ class HydraBookingShortcode {
 		if(!$attendee_data['payment_method'] == 'free' && $attendee_data['payment_status'] == 'pending'){
 			$booking_status = 'pending';
 		}
+		if(true == $meta_data['payment_status'] && 'woo_payment'==$meta_data['payment_method'] && !empty($meta_data['payment_meta']['product_id'])){
+			$booking_status = 'hold';
+		}
 
 		$data['status'] = $booking_status;
 		$attendee_data['status'] = $booking_status;
@@ -619,7 +628,7 @@ class HydraBookingShortcode {
 			// Add to cart
 			$product_id = $meta_data['payment_meta']['product_id'];
 			$data['booking_id'] = $attendee_data['booking_id'];
-
+			$data['added_time'] = time();
 			$woo_booking = new WooBooking();
 			$woo_booking->add_to_cart( $product_id, $data, $attendee_data );
 			$response['redirect'] = wc_get_checkout_url();

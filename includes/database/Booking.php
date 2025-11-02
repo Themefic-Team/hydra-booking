@@ -526,6 +526,27 @@ class Booking {
 		return $data;
 		 
 	}
+
+	//CheckHoldBooking
+	public function getHoldBooking( $meeting_id, $meeting_dates, $start_time, $end_time ) {
+
+		// get all bookings order by id desc
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s AND start_time = %s AND end_time = %s";
+
+		$sql .= " AND status = 'hold'";
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare( $sql, $meeting_id, $meeting_dates, $start_time, $end_time )
+		);
+
+		return $data;
+		 
+	}
 	// delete
 	public function delete( $id ) {
 		global $wpdb;
