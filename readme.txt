@@ -215,6 +215,10 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
+= 1.1.26 – Nov 02, 2025 =
+
+- Updated: readme.txt information.
+
 = 1.1.25 – Nov 02, 2025 =
 
 - Improved: Added “WooCommerce Payment on Hold Until Payment” feature.
