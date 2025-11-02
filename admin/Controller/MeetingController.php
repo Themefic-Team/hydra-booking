@@ -773,13 +773,15 @@ class MeetingController {
 	}
 
 	private function ensureBuilderKeyExists(&$notifications) {
-        foreach ($notifications as $role => &$notificationsData) {
-            foreach ($notificationsData as $key => &$notification) {
-                if (!isset($notification['builder'])) {
-                    $notification['builder'] = '';
-                }
-            }
-        }
+		if(!empty($notifications)){
+			foreach ($notifications as $role => &$notificationsData) {
+				foreach ($notificationsData as $key => &$notification) {
+					if (!isset($notification['builder'])) {
+						$notification['builder'] = '';
+					}
+				}
+			}
+		}
     }
 
 	private function ensure_notification_channel_defaults( &$notification, $channel ) {

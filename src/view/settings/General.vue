@@ -25,6 +25,7 @@ const generalSettings = reactive({
   country: '',
   currency: 'USD',
   after_booking_completed: '10',
+  after_cart_expire: '60',
   booking_status: 1,
   reschedule_status: '',
   allowed_reschedule_before_meeting_start: '10', 
@@ -78,6 +79,9 @@ const fetchGeneralSettings = async () => {
                 generalSettings.country = response.data.general_settings.country;
                 generalSettings.currency = response.data.general_settings.currency;
                 generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
+
+                generalSettings.after_cart_expire = response.data.general_settings.after_cart_expire != '' ? response.data.general_settings.after_cart_expire : '60';
+                
                 generalSettings.booking_status = response.data.general_settings.booking_status;
                 generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
                 generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
@@ -346,6 +350,27 @@ onBeforeMount(() => {
                     ]" 
                 />
                 <!-- Minimum time required before Booking/Cancel/Reschedule -->
+
+                <!-- Bookings will be completed automatically after -->
+                <HbDropdown 
+                    
+                    v-model="generalSettings.after_cart_expire"  
+                    required= "true" 
+                    :label="$tfhb_trans('Cart items expire if payment isn’t completed in time.')"    
+                    width="50"
+                    selected = "1"
+                    :placeholder="$tfhb_trans('Select Time')"  
+                    :option = "[
+                        {'name': '5 Minutes', 'value': '5'},  
+                        {'name': '10 Minutes', 'value': '10'},   
+                        {'name': '20 Minutes', 'value': '20'},  
+                        {'name': '30 Minutes', 'value': '30'},  
+                        {'name': '40 Minutes', 'value': '40'},
+                        {'name': '50 Minutes', 'value': '50'},
+                        {'name': '1 Hour', 'value': '60'}
+                    ]" 
+                /> 
+                <!-- Bookings will be completed automatically after -->
 
                  <!-- Default status of bookings Approved if checkbox is checked --> 
 
