@@ -4,7 +4,7 @@ Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.26
+Stable tag: 1.1.25
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -215,14 +215,10 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
-= 1.1.26 – Nov 02, 2025 =
+= 1.1.25 – Nov 02, 2025 =
 
 - Improved: Added “WooCommerce Payment on Hold Until Payment” feature.
 - Improved: Enhanced system stability for better overall performance.
-
-= 1.1.25 – October 07, 2025 =
-
-- Update: Readme.txt information updated
 
 = 1.1.24 – October 05, 2025 =
 
