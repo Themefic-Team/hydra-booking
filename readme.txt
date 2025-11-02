@@ -4,7 +4,7 @@ Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.25
+Stable tag: 1.1.26
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -214,6 +214,11 @@ There are several well-known appointment booking plugins available for WordPress
 13. Slack, Twilio, Telegram settings
 
 == Changelog ==
+
+= 1.1.26 – Nov 02, 2025 =
+
+- Improved: Added “WooCommerce Payment on Hold Until Payment” feature.
+- Improved: Enhanced system stability for better overall performance.
 
 = 1.1.25 – October 07, 2025 =
 
