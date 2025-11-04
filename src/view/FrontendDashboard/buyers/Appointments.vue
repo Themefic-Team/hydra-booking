@@ -1289,7 +1289,7 @@ const redirectToChat = (user_id) => {
             <!-- View Toggle (Calendar/List) -->
             <div class="tfhb-view-toggle tfhb-flexbox tfhb-gap-8">
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="currentView === 'calendar' ? 'active' : ''"
                     @click="toggleView('calendar')"
                 >
@@ -1297,7 +1297,7 @@ const redirectToChat = (user_id) => {
                     {{ $tfhb_trans('Calendar') }}
                 </button>
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="currentView === 'list' ? 'active' : ''"
                     @click="toggleView('list')"
                 >
@@ -1313,7 +1313,7 @@ const redirectToChat = (user_id) => {
         <div  v-if="currentView === 'calendar'" class="tfhb-calendar-date-display tfhb-flexbox tfhb-gap-16 tfhb-align-center">
           <div class="tfhb-calendar-view-toggle tfhb-flexbox tfhb-gap-8">
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="calendarView === 'timeGridDay' ? 'active' : ''"
                     @click="changeCalendarView('timeGridDay')"
                 >
@@ -1321,7 +1321,7 @@ const redirectToChat = (user_id) => {
                     {{ $tfhb_trans('Day') }}
                 </button>
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="calendarView === 'timeGridWeek' ? 'active' : ''"
                     @click="changeCalendarView('timeGridWeek')"
                 >
@@ -1329,7 +1329,7 @@ const redirectToChat = (user_id) => {
                     {{ $tfhb_trans('Week') }}
                 </button>
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="calendarView === 'dayGridMonth' ? 'active' : ''"
                     @click="changeCalendarView('dayGridMonth')"
                 >
@@ -2161,11 +2161,8 @@ const redirectToChat = (user_id) => {
   transform: translateY(-1px);
 }
 
-.tfhb-view-toggle .tfhb-btn.active {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  border-color: #4CAF50;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+.tfhb-view-toggle .tfhb-btn.active { 
+  color: #fff !important; 
 }
 
 /* Responsive Design for List View */
@@ -2244,11 +2241,8 @@ const redirectToChat = (user_id) => {
   transform: translateY(-1px);
 }
 
-.tfhb-calendar-view-toggle .tfhb-btn.active {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  border-color: #4CAF50;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+.tfhb-calendar-view-toggle .tfhb-btn.active { 
+  color: #fff !important; 
 }
 
 .tfhb-current-date {

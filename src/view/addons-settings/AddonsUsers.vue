@@ -1377,13 +1377,14 @@ onBeforeRouteLeave(() => {
                                 <div class="tfhb-form-section">
                                     <h4>{{ $tfhb_trans('Basic Information') }}</h4>
                                     <div class="tfhb-form-single-column">
+                               
                                         <div v-for="(value, key) in AddonsUsers.edit_user_popup.form_data" :key="key" class="tfhb-form-field">
                                             <label :for="key" class="tfhb-field-label">
                                                 {{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
                                             </label>
-                                            
+                                        
                                             <!-- Text Input -->
-                                            <div v-if="typeof value === 'string' && !key.includes('url') && !key.includes('image')" class="tfhb-field-input">
+                                            <div v-if="typeof value === 'string' && !key.includes('url') && !key.includes('image') && !getFieldType(key) === 'select'" class="tfhb-field-input">
                                                 <input 
                                                     :type="key === 'email' ? 'email' : 'text'"
                                                     :id="key"
@@ -1404,7 +1405,20 @@ onBeforeRouteLeave(() => {
                                                     class="tfhb-input"
                                                 />
                                             </div>
-                                            
+                                            <!-- Select Input (for select fields from registration) -->
+                                            <div v-else-if="getFieldType(key) === 'select'" class="tfhb-field-input">
+                                                
+                                                <select 
+                                                    :id="key"
+                                                    v-model="AddonsUsers.edit_user_popup.form_data[key]"
+                                                    class="tfhb-select"
+                                                >
+                                                    <option value="">{{ $tfhb_trans('Select an option') }}</option>
+                                                    <option v-for="option in getFieldOptions(key)" :key="option" :value="option">
+                                                        {{ option }}
+                                                    </option>
+                                                </select>
+                                            </div>
                                             <!-- Array Input (for checkbox fields from registration) -->
                                             <div v-else-if="Array.isArray(value)" class="tfhb-field-input">
                                                 <div class="tfhb-checkbox-group">
@@ -1420,19 +1434,7 @@ onBeforeRouteLeave(() => {
                                                 </div>
                                             </div>
                                             
-                                            <!-- Select Input (for select fields from registration) -->
-                                            <div v-else-if="getFieldType(key) === 'select'" class="tfhb-field-input">
-                                                <select 
-                                                    :id="key"
-                                                    v-model="AddonsUsers.edit_user_popup.form_data[key]"
-                                                    class="tfhb-select"
-                                                >
-                                                    <option value="">{{ $tfhb_trans('Select an option') }}</option>
-                                                    <option v-for="option in getFieldOptions(key)" :key="option" :value="option">
-                                                        {{ option }}
-                                                    </option>
-                                                </select>
-                                            </div>
+                                            
                                             
                                             
                                             
