@@ -1002,7 +1002,8 @@ const DownloadBadgePDFWithQRCode = async (user) => {
 
                 // Company
                 currentY += 7;
-                const companyName = (user.user_data?.eventuale_altra_denominazione || '').trim(); 
+                const companyName = (user.user_data?.denominazione_operatore_azienda || '').trim();
+ 
                 pdf.setFont('helvetica', 'normal');
                 const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
                 pdf.setFontSize(companyResult.fontSize);
@@ -1129,7 +1130,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
 
                 // Company
                 currentY += 7;
-                const companyName = (user.user_data?.eventuale_altra_denominazione || '').trim(); 
+                const companyName = (user.user_data?.denominazione_operatore_azienda || '').trim(); 
                 pdf.setFont('helvetica', 'normal');
                 const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
                 pdf.setFontSize(companyResult.fontSize);

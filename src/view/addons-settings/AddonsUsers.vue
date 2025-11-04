@@ -346,7 +346,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 if (user.role === 'Sellers' || user.role === 'sellers') {
                     // Company name
                     currentY += 7;
-                    const companyName = (user.data?.eventuale_altra_denominazione || '').trim();
+                    const companyName = (user.data?.denominazione_operatore_azienda || '').trim();
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -525,7 +525,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 if (user.role === 'Sellers' || user.role === 'sellers') {
                     // Company name
                     currentY += 7;
-                    const companyName = (user.data?.eventuale_altra_denominazione || '').trim();
+                    const companyName = (user.data?.denominazione_operatore_azienda || '').trim();
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -857,7 +857,7 @@ const handleBulkBadgeExport = async () => {
 
                             if (user.role === 'Sellers' || user.role === 'sellers') {
                                 currentY += 7;
-                                const companyName = (user.data?.eventuale_altra_denominazione || '').trim();
+                                const companyName = (user.data?.denominazione_operatore_azienda || '').trim();
                                 if (companyName) {
                                     pdf.setFont('helvetica', 'normal');
                                     const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
