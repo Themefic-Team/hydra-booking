@@ -61,7 +61,7 @@ class Login {
                     <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
                     <!-- go to dashboard button -->
                     <br>
-                    <a class="tfhb-from-btn" href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
+                    <a class="tfhb-from-btn" href="<?php echo esc_url( get_permalink( $tfhb_dashboard_page_id ) ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
                     
                 </div>
             </div>
@@ -136,7 +136,7 @@ class Login {
                     </div>
 
                     <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">
-                         <p><?php  echo  esc_html(__('Need an account ?', 'hydra-booking')) ?>  <a href="<?php echo get_permalink( $registration_page_id ) ?>"><?php echo esc_html(__('Sign up', 'hydra-booking')) ?> </a></p>
+                         <p><?php  echo  esc_html(__('Need an account ?', 'hydra-booking')) ?>  <a href="<?php echo esc_url( get_permalink( $registration_page_id ) ) ?>"><?php echo esc_html(__('Sign up', 'hydra-booking')) ?> </a></p>
                     </div>
                    
                 </div>

@@ -24,9 +24,9 @@ if ( isset( $wp_query->query_vars['hydra-booking'] ) ) {
 
 	if($attendee_can_reschedule == false ){
 		if(!in_array('administrator', haystack: $userRole) || (!in_array('tfhb_host', haystack: $userRole) && $user_id != $meeting->user_id)){
-			echo '<div class="tfhb-single-meeting-section">';
-			echo '<h2>'.__('You are not allowed to reschedule this meeting', 'hydra-booking').'</h2>';
-			echo '</div>';
+		echo '<div class="tfhb-single-meeting-section">';
+		echo '<h2>'.esc_html__('You are not allowed to reschedule this meeting', 'hydra-booking').'</h2>';
+		echo '</div>';
 			return;
 		}
 	}

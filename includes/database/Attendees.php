@@ -16,10 +16,12 @@ class Attendees {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$sql = "CREATE TABLE $table_name (
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT, 
                 booking_id INT(11) NULL,
                 meeting_id INT(11) NULL,
@@ -51,10 +53,11 @@ class Attendees {
 	/**
 	 * Rollback the database migration.
 	 */
-	public function rollback() {
-		global $wpdb;
-		$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_bookings");
-	}
+public function rollback() {
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_bookings");
+}
 
 	/**
 	 * Create the database Booking.
@@ -67,13 +70,14 @@ class Attendees {
 
 		// json encode meeting locations
 		if(isset($request['others_info']) && is_array($request['others_info'])){ 
-			$request['others_info']       = wp_json_encode( $request['others_info'] );
-		} 
-		// insert Booking
-		$result = $wpdb->insert(
-			$table_name,
-			$request
-		);
+		$request['others_info']       = wp_json_encode( $request['others_info'] );
+	} 
+	// insert Booking
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->insert(
+		$table_name,
+		$request
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -97,17 +101,18 @@ class Attendees {
 		unset( $request['id'] );
 
 		
-		if(isset($request['others_info']) && is_array($request['others_info'])){ 
-			$request['others_info']       = wp_json_encode( $request['others_info'] );
-		} 
-		 
-	
-		// Update Booking
-		$result = $wpdb->update(
-			$table_name,
-			$request,
-			array( 'id' => $id )
-		);
+	if(isset($request['others_info']) && is_array($request['others_info'])){ 
+		$request['others_info']       = wp_json_encode( $request['others_info'] );
+	} 
+	 
+
+	// Update Booking
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->update(
+		$table_name,
+		$request,
+		array( 'id' => $id )
+	);
  
 		if ( $result === false ) {
 			return false;
@@ -189,17 +194,19 @@ class Attendees {
 				$sql .= " LIMIT $limit";
 			}   
  
+		
+		// Prepare the SQL query 
+		$query = $wpdb->prepare($sql, $data);
+		
+		// Get the results
+		if($limit == 1) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$results = $wpdb->get_row($query); 
 			
-			// Prepare the SQL query 
-			$query = $wpdb->prepare($sql, $data);
-			
-			// Get the results
-			if($limit == 1) {
-				$results = $wpdb->get_row($query); 
-				
-			} else {
-				$results = $wpdb->get_results($query);
-			}  
+		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$results = $wpdb->get_results($query);
+		}
  
 		return $results;
 	}
@@ -209,12 +216,13 @@ class Attendees {
 	public function countAvailableAttendees($booking_id) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
+	$table_name = $wpdb->prefix . $this->table;
 
-		$sql = "SELECT COUNT(*) as total FROM $table_name WHERE booking_id = %d "; 
-		$data = $wpdb->get_row(
-			$wpdb->prepare( $sql, $booking_id )
-		);
+	$sql = "SELECT COUNT(*) as total FROM $table_name WHERE booking_id = %d "; 
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_row(
+		$wpdb->prepare( $sql, $booking_id )
+	);
 		return $data;
 
 	}
@@ -229,13 +237,14 @@ class Attendees {
 	public function getByMeetingIdDates($meeting_id, $dates) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
+	$table_name = $wpdb->prefix . $this->table;
  
-		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s"; 
-		$sql .= " AND status != 'canceled'";
-		$data = $wpdb->get_results(
-			$wpdb->prepare( $sql, $meeting_id, $dates )
-		);
+	$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s"; 
+	$sql .= " AND status != 'canceled'";
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_results(
+		$wpdb->prepare( $sql, $meeting_id, $dates )
+	);
 		return $data;
 
 	}
@@ -281,13 +290,14 @@ class Attendees {
               LEFT JOIN $host_table AS h ON b.host_id = h.id
               WHERE 1=1";
 
-		// Apply filter to match meeting title or host name
-		if ( ! empty( $filterData['name'] ) ) {
-		$title = '%' . $wpdb->esc_like( $filterData['name'] ) . '%';
-		$query .= $wpdb->prepare(" AND (m.title LIKE %s OR h.first_name LIKE %s OR h.last_name LIKE %s)", $title, $title, $title);
-		}
+	// Apply filter to match meeting title or host name
+	if ( ! empty( $filterData['name'] ) ) {
+	$title = '%' . $wpdb->esc_like( $filterData['name'] ) . '%';
+	$query .= $wpdb->prepare(" AND (m.title LIKE %s OR h.first_name LIKE %s OR h.last_name LIKE %s)", $title, $title, $title);
+	}
 
-		return $wpdb->get_results( $query );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	return $wpdb->get_results( $query );
 
 	}
 
@@ -295,18 +305,19 @@ class Attendees {
 
 		global $wpdb;
 	
-		$table_name    = $wpdb->prefix . $this->table;
-		$meeting_table = $wpdb->prefix . 'tfhb_meetings';
-	
-		$query = $wpdb->prepare(
-			"SELECT b.*, m.*
-			 FROM $table_name AS b
-			 LEFT JOIN $meeting_table AS m ON b.meeting_id = m.id
-			 WHERE b.id = %d",
-			$booking_id
-		);
-	
-		return $wpdb->get_row( $query );
+	$table_name    = $wpdb->prefix . $this->table;
+	$meeting_table = $wpdb->prefix . 'tfhb_meetings';
+
+	$query = $wpdb->prepare(
+		"SELECT b.*, m.*
+		 FROM $table_name AS b
+		 LEFT JOIN $meeting_table AS m ON b.meeting_id = m.id
+		 WHERE b.id = %d",
+		$booking_id
+	);
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	return $wpdb->get_row( $query );
 	}
 
 	//getCheckBooking
@@ -318,24 +329,26 @@ class Attendees {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s AND start_time = %s AND end_time = %s";
+	$sql = "SELECT * FROM $table_name WHERE meeting_id = %d AND meeting_dates = %s AND start_time = %s AND end_time = %s";
 
-		// stats != canceled
-		$sql .= " AND status != 'canceled'";
+	// stats != canceled
+	$sql .= " AND status != 'canceled'";
 
-		$data = $wpdb->get_results(
-			$wpdb->prepare( $sql, $meeting_id, $meeting_dates, $start_time, $end_time )
-		);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_results(
+		$wpdb->prepare( $sql, $meeting_id, $meeting_dates, $start_time, $end_time )
+	);
 
 		return $data;
 		 
 	}
-	// delete
-	public function delete( $id ) {
-		global $wpdb;
+// delete
+public function delete( $id ) {
+	global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
-		$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
+	$table_name = $wpdb->prefix . $this->table;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
 		if ( $result === false ) {
 			return false;
 		} else {
@@ -355,20 +368,22 @@ class Attendees {
 				$sql .= ' WHERE ' . $value['column'] . ' ' . $value['operator'] . ' ' . $value['value'] . '';
 
 			}
-		} else {
-			$sql .= ' ORDER BY id DESC';
-		}
-		$data = $wpdb->get_results( $sql );
-		return $data;
+	} else {
+		$sql .= ' ORDER BY id DESC';
+	}
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_results( $sql );
+	return $data;
 	}
 
 
-	// Get Only column list as array
-	public function getColumns() {
-		global $wpdb;
-		$table_name = $wpdb->prefix . $this->table;
-		$sql        = "SHOW COLUMNS FROM $table_name";
-		$data       = $wpdb->get_results( $sql );
+// Get Only column list as array
+public function getColumns() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . $this->table;
+	$sql        = "SHOW COLUMNS FROM $table_name";
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data       = $wpdb->get_results( $sql );
 		$columns    = array();
 
 		foreach ( $data as $key => $value ) {
@@ -420,9 +435,10 @@ class Attendees {
 				) . ')';
 			}
 			++$i;
-		}
-		// echo $sql;
-		// exit;
-		$wpdb->query( $sql );
 	}
+	// echo $sql;
+	// exit;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query( $sql );
+}
 }

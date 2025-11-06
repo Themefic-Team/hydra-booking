@@ -496,16 +496,18 @@ class ZoomServices {
 		$zoom_meeting['app_secret_key']    = sanitize_text_field( $data['app_secret_key'] );
 
 		$response = $this->generateAccessToken();
-
+	
 		if ( isset( $response['error'] ) ) {
+		
 			$data = array(
 				'status'  => false,
 				'message' => $response['reason'],
 			);
 			return $data;
 		} else { 
+			 
 			$_tfhb_host_integration_settings['zoom_meeting'] = $zoom_meeting; 
-
+		
 			// update user meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
 

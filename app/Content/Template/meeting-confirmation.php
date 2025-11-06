@@ -117,13 +117,13 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 							}else{
 								$icon =  '<img src="'.esc_url(TFHB_URL . 'assets/app/images/location.svg').'" alt="Location">';
 							}
-							echo '<li class="tfhb-flexbox tfhb-gap-8">
-										<div class="tfhb-icon">
-											'.$icon.'  
-										</div> 
-										' . 
-										esc_html( $address ) . '
-									</li>';
+						echo '<li class="tfhb-flexbox tfhb-gap-8">
+									<div class="tfhb-icon">
+										'.wp_kses( $icon, array( 'img' => array( 'src' => array(), 'alt' => array(), 'class' => array(), 'width' => array(), 'height' => array() ) ) ).'  
+									</div> 
+									' . 
+									esc_html( $address ) . '
+								</li>';
 						}
 					}
 					?>
@@ -132,15 +132,15 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 
 					
 			<div class="tfhb-meeting-bookmark-action tfhb-text-center">
-				<p><?php echo esc_html(__('Add to calender', 'hydra_booking')) ?></p>
+				<p><?php echo esc_html(__('Add to calender', 'hydra-booking')) ?></p>
 				<div class="tfhb-meeting-bookmark-list">
 					<!-- Bookmarks -->
 					<?php 
-						foreach ($getBookmark as $key => $bookmark){
-							echo '<a href="'.$bookmark['url'].'" target="_blank">
-								<img src="'.esc_url($bookmark['icon']).'" alt="'.$bookmark['title'].'" />
-							</a>';
-						}
+	foreach ($getBookmark as $key => $bookmark){
+						echo '<a href="'.esc_url($bookmark['url']).'" target="_blank">
+							<img src="'.esc_url($bookmark['icon']).'" alt="'.esc_attr($bookmark['title']).'" />
+						</a>';
+					}
 					?>
 				</div>
 				
@@ -159,7 +159,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						),
 						home_url()
 					);
-					echo '<a href="' . esc_attr( $cancel ) . '">'.esc_html__('Cancel booking', 'hydra_booking').'</a>';
+					echo '<a href="' . esc_attr( $cancel ) . '">'.esc_html__('Cancel booking', 'hydra-booking').'</a>';
 				}
 				if ( true == $data->attendee_can_reschedule ) {
 
@@ -173,7 +173,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						home_url()
 					);
 
-					echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html__('Reschedule', 'hydra_booking').'</a>';
+					echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html__('Reschedule', 'hydra-booking').'</a>';
 				}
 				?>
 			</div>

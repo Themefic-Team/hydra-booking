@@ -73,7 +73,7 @@ $availability_time_zone = isset($availability_data['time_zone']) ? $availability
                     } 
                     $date_strings = rtrim( $date_strings, '| ' );
 
-                    echo  $date_strings;
+                    echo esc_html( $date_strings );
                 
                 echo ' (' . esc_html( $booking_data->attendee_time_zone ) . ')</p>';
                 echo '</div>';

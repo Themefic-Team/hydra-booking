@@ -18,10 +18,12 @@ class BookingMeta {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$sql = "CREATE TABLE $table_name (
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT, 
                 booking_id INT(11) NULL,  
                 meta_key VARCHAR(255) NULL,  
@@ -54,15 +56,16 @@ class BookingMeta {
 		if($request['booking_id'] == null) {
 			return false;
 		}
-		if($request['value'] && is_array($request['value'])) {
-			$request['value'] = json_encode($request['value']);
-		}
+	if($request['value'] && is_array($request['value'])) {
+		$request['value'] = json_encode($request['value']);
+	}
 
-		// insert availability
-		$result = $wpdb->insert(
-			$table_name,
-			$request
-		);
+	// insert availability
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->insert(
+		$table_name,
+		$request
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -85,15 +88,16 @@ class BookingMeta {
 		$id = $request['id'];
 		unset( $request['id'] );
 
-		if($request['value'] && is_array($request['value'])) {
-			$request['value'] = json_encode($request['value']);
-		}
-		// Update availability
-		$result = $wpdb->update(
-			$table_name,
-			$request,
-			array( 'id' => $id )
-		);
+	if($request['value'] && is_array($request['value'])) {
+		$request['value'] = json_encode($request['value']);
+	}
+	// Update availability
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->update(
+		$table_name,
+		$request,
+		array( 'id' => $id )
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -108,15 +112,16 @@ class BookingMeta {
 	 */
 	public function get( $id ) {
 
-		global $wpdb;
+	global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
+	$table_name = $wpdb->prefix . $this->table;
 
-		$data = $wpdb->get_row(
-			$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE id = %d", $id)
-		);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_row(
+		$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE id = %d", $id)
+	);
 
-		return $data;
+	return $data;
  
 	}
 
@@ -130,23 +135,26 @@ class BookingMeta {
 
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
+	$table_name = $wpdb->prefix . $this->table;
 
-		if($limit > 1) { 
-			$data = $wpdb->get_results(
-				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s  LIMIT %d", $id, $key, $limit)
+	if($limit > 1) { 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results(
+			$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s  LIMIT %d", $id, $key, $limit)
+		);
+	} else {
+		if($limit == 1) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$data = $wpdb->get_row(
+				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s ORDER BY id DESC", $id, $key)
 			);
 		} else {
-			if($limit == 1) {
-				$data = $wpdb->get_row(
-					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s ORDER BY id DESC", $id, $key)
-				);
-			} else {
-				$data = $wpdb->get_results(
-					$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s ORDER BY id DESC", $id, $key)
-				);
-			} 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$data = $wpdb->get_results(
+				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE booking_id = %d AND meta_key = %s ORDER BY id DESC", $id, $key)
+			);
 		} 
+	}
 
 		return $data;
 	}
@@ -170,11 +178,12 @@ class BookingMeta {
 		// Merge $ids and $key into a single array of arguments
 		$params = array_merge($ids, [$key]);
 	
-		// Use call_user_func_array to dynamically apply $params to $wpdb->prepare
-		$query = call_user_func_array([$wpdb, 'prepare'], array_merge([$sql], $params));
-	
-		// Fetch the first matching row
-		$data = $wpdb->get_row($query); 
+	// Use call_user_func_array to dynamically apply $params to $wpdb->prepare
+	$query = call_user_func_array([$wpdb, 'prepare'], array_merge([$sql], $params));
+
+	// Fetch the first matching row
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_row($query);
 		if($data) {
 			return $data;
 		} else {
@@ -200,18 +209,20 @@ class BookingMeta {
 					$sql .= " $key = $value";
 				} else {
 					$sql .= " AND $key = $value";
-				}
-				++$i;
 			}
-			$data = $wpdb->get_row(
-				$wpdb->prepare( $sql )
-			);
-		} else {
-			$data = $wpdb->get_row(
-				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE id = %d", $where)
-			);
-
+			++$i;
 		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_row(
+			$wpdb->prepare( $sql )
+		);
+	} else {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_row(
+			$wpdb->prepare("SELECT * FROM {$wpdb->prefix}tfhb_booking_meta WHERE id = %d", $where)
+		);
+
+	}
 
 		return $data;
 	}
@@ -219,16 +230,17 @@ class BookingMeta {
 
 
 
-	// delete
-	public function delete( $id ) {
-		global $wpdb;
+// delete
+public function delete( $id ) {
+	global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
+	$table_name = $wpdb->prefix . $this->table;
 
-		$result = $wpdb->delete(
-			$table_name,
-			array( 'id' => $id )
-		);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->delete(
+		$table_name,
+		array( 'id' => $id )
+	);
 
 		if ( $result === false ) {
 			return false;

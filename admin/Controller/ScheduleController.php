@@ -144,10 +144,11 @@ class ScheduleController {
 	}
 	function tfhb_cart_auto_remover_schedule_callback() {
 
-		// Get all WooCommerce sessions
-		global $wpdb;
-		$table = $wpdb->prefix . 'woocommerce_sessions';
-		$sessions = $wpdb->get_results("SELECT session_key, session_value FROM $table");
+	// Get all WooCommerce sessions
+	global $wpdb;
+	$table = $wpdb->prefix . 'woocommerce_sessions';
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$sessions = $wpdb->get_results( $wpdb->prepare( "SELECT session_key, session_value FROM `{$wpdb->prefix}woocommerce_sessions`" ) );
 	
 		$general_settings = get_option( '_tfhb_general_settings', true ) ? get_option( '_tfhb_general_settings', true ) : array();
 		$every_minute     = ! empty( $general_settings['after_cart_expire'] ) ? $general_settings['after_cart_expire'] : 60; // minutes
@@ -188,6 +189,7 @@ class ScheduleController {
 	
 				// Save updated session
 				$session_data['cart'] = $cart;
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->update(
 					$table,
 					[ 'session_value' => maybe_serialize($session_data) ],

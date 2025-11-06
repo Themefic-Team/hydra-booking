@@ -324,6 +324,7 @@ class FrontendDashboard {
             reset_password( $user, $field['tfhb_password'] );
             $response['success'] = true;
             $response['message'] = sprintf(
+                /* translators: %s: Login page URL */
                 __( 'Password changed successfully. You can <a href="%s">login here</a>.', 'hydra-booking' ),
                 get_permalink( $login_page_id )
             );
@@ -372,7 +373,7 @@ class FrontendDashboard {
                     exit; // Prevent further script execution after redirection
                 } else {
                     // Handle the case where the login page URL is not set
-                    wp_die( __( 'Login page URL not found. Please configure the settings.', 'hydra-booking' ) );
+                    wp_die( esc_html__( 'Login page URL not found. Please configure the settings.', 'hydra-booking' ) );
                 }
 
             }
@@ -450,11 +451,12 @@ class FrontendDashboard {
 			return - 1;
 		}
 
-		$page_found = null;
+	$page_found = null;
 
-		if ( $slug ) {
-			$page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_name = %s LIMIT 1;", $slug ) );
-		}
+	if ( $slug ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_name = %s LIMIT 1;", $slug ) );
+	}
         
 		if ( $page_found ) {
 			if ( ! $option ) {

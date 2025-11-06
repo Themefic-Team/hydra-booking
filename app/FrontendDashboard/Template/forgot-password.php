@@ -26,7 +26,7 @@ if( is_user_logged_in() ) {
             <h3><?php echo esc_html(__('You are already logged in', 'hydra-booking')) ?></h3>
             <!-- go to dashboard button -->
             <br>
-            <a class="tfhb-from-btn" href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
+            <a class="tfhb-from-btn" href="<?php echo esc_url( get_permalink( $tfhb_dashboard_page_id ) ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
             
         </div>
     </div>
@@ -46,7 +46,7 @@ if( is_user_logged_in() ) {
         ?>
         <div class="tfhb-frontend-from">
             <div class="tfhb-frontend-from__title">
-                <h3 style="text-align: center;"><?php echo $check->get_error_message(); ?></h3>
+                <h3 style="text-align: center;"><?php echo esc_html( $check->get_error_message() ); ?></h3>
                 <br>
                 <!-- go to dashboard button -->
                 <div class="tfhb-frontend-from__field-item tfhb-frontend-from__field-item--center">

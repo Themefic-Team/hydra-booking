@@ -64,17 +64,18 @@ class Migrator {
 		$tfhb_integration_settings['google_calendar']['secret_key'] = isset( $fcal_google['secret_key'] ) ? $fcal_google['secret_key'] : $tfhb_integration_settings['google_calendar']['secret_key'];
 
 		// Zoom Integration
-		// Get Wpdb prefix
-		$prefix = $wpdb->prefix;
-		// custom query with prepare statement
-		$zoom_integration = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}fcal_meta WHERE object_type = %s AND object_id = %s  AND  `key` = %s",
-				'user_meta',
-				1,
-				'zoom_credentials'
-			)
-		);
+	// Get Wpdb prefix
+	$prefix = $wpdb->prefix;
+	// custom query with prepare statement
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$zoom_integration = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT * FROM {$wpdb->prefix}fcal_meta WHERE object_type = %s AND object_id = %s  AND  `key` = %s",
+			'user_meta',
+			1,
+			'zoom_credentials'
+		)
+	);
 
 		$zoom_integration_value                                      = maybe_unserialize( $zoom_integration->value );
 		$tfhb_integration_settings['zoom_meeting']['account_id']     = isset( $zoom_integration_value['account_id'] ) ? $zoom_integration_value['account_id'] . '2' : $tfhb_integration_settings['zoom_meeting']['account_id'];
@@ -97,6 +98,7 @@ class Migrator {
 		$days = array( 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' );
 
 		// Get all availability
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$availabilities = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->prefix}fcal_meta WHERE object_type = %s",
@@ -163,29 +165,32 @@ class Migrator {
 	// Migrate Meeting
 	public function migrateMeeting() {
 
-		global $wpdb;
+	global $wpdb;
 
-		// Get all booking
-		$fluent_calender = $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}fcal_calendars"
-		);
+	// Get all booking
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$fluent_calender = $wpdb->get_results(
+		"SELECT * FROM {$wpdb->prefix}fcal_calendars"
+	);
 
-		// Get all booking
-		$meeting = $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}tfhb_meetings"
-		);
+	// Get all booking
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$meeting = $wpdb->get_results(
+		"SELECT * FROM {$wpdb->prefix}tfhb_meetings"
+	);
 
 		foreach ( $fluent_calender as $key => $value ) {
-			// Convert object to array
-			$value = (array) $value;
+		// Convert object to array
+		$value = (array) $value;
 
-			// Get all booking
-			$fluent_calender_event = (array) $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM {$wpdb->prefix}fcal_calendar_events where calendar_id = %s",
-					$value['id']
-				)
-			);
+		// Get all booking
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$fluent_calender_event = (array) $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}fcal_calendar_events where calendar_id = %s",
+				$value['id']
+			)
+		);
 			$settings              = maybe_unserialize( $fluent_calender_event['settings'] );
 			$location_settings     = maybe_unserialize( $fluent_calender_event['location_settings'] );
 			$location              = array();
@@ -263,29 +268,32 @@ class Migrator {
 
 	// Migrate Host
 	public function migrateHost() {
-		global $wpdb;
+	global $wpdb;
 
-		// Get all booking
-		$fluent_calender = $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}fcal_calendars"
+	// Get all booking
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$fluent_calender = $wpdb->get_results(
+		"SELECT * FROM {$wpdb->prefix}fcal_calendars"
+	);
+	foreach ( $fluent_calender as $key => $value ) {
+
+		$user_id              = $value->user_id;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$fluent_calender_meta = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}fcal_meta where object_type = %s AND object_id = %s",
+				'Calendar',
+				$value->id
+			)
 		);
-		foreach ( $fluent_calender as $key => $value ) {
-
-			$user_id              = $value->user_id;
-			$fluent_calender_meta = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM {$wpdb->prefix}fcal_meta where object_type = %s AND object_id = %s",
-					'Calendar',
-					$value->id
-				)
-			);
-			$wp_tfhb_bookings     = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM {$wpdb->prefix}fcal_meta where object_type = %s AND object_id = %s",
-					'Calendar',
-					$value->id
-				)
-			);
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wp_tfhb_bookings     = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}fcal_meta where object_type = %s AND object_id = %s",
+				'Calendar',
+				$value->id
+			)
+		);
 
 			$profile_photo_url  = '';
 			$featured_image_url = '';
@@ -341,13 +349,14 @@ class Migrator {
 		exit;
 	}
 
-	// Migrate Booking
-	public function migrateBooking() {
-		global $wpdb;
+// Migrate Booking
+public function migrateBooking() {
+	global $wpdb;
 
-		$fluent_booking = $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}fcal_bookings"
-		);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$fluent_booking = $wpdb->get_results(
+		"SELECT * FROM {$wpdb->prefix}fcal_bookings"
+	);
 		$booking        = new Booking();
 		$tfhb_booking   = $booking->get( 7 );
 		foreach ( $fluent_booking as $key => $value ) {

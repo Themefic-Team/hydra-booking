@@ -18,10 +18,12 @@ class Meta {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$sql = "CREATE TABLE $table_name (
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT, 
                 object_id INT(11) NOT NULL, 
                 object_type VARCHAR(255) NOT NULL,  
@@ -49,14 +51,15 @@ class Meta {
 	 */
 	public function add( $request ) {
 
-		global $wpdb;
-		$table_name = $wpdb->prefix . $this->table;
+	global $wpdb;
+	$table_name = $wpdb->prefix . $this->table;
 
-		// insert availability
-		$result = $wpdb->insert(
-			$table_name,
-			$request
-		);
+	// insert availability
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->insert(
+		$table_name,
+		$request
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -76,16 +79,17 @@ class Meta {
 
 		$table_name = $wpdb->prefix . $this->table; 
 		
-		$id = $request['id'];
-		unset( $request['id'] );
+	$id = $request['id'];
+	unset( $request['id'] );
 
-		// Update availability
+	// Update availability
 
-		$result = $wpdb->update(
-			$table_name,
-			$request,
-			array( 'id' => $id )
-		);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->update(
+		$table_name,
+		$request,
+		array( 'id' => $id )
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -124,12 +128,13 @@ class Meta {
 		}  
 		$sql .= ' ORDER BY id DESC';
 		// limit
-		if ( $limit != false ) {
-			$sql .= " LIMIT $limit";
-		}   
-		$query = $wpdb->prepare($sql, $data);
-		$data = $wpdb->get_results( $query ); 
-		return $data;
+	if ( $limit != false ) {
+		$sql .= " LIMIT $limit";
+	}   
+	$query = $wpdb->prepare($sql, $data);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_results( $query ); 
+	return $data;
 	}
 
 	// delete

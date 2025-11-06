@@ -16,10 +16,12 @@ class Transactions {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$sql = "CREATE TABLE $table_name (
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT,
                 booking_id INT(11) NOT NULL,
                 attendee_id INT(11) NOT NULL,
@@ -45,6 +47,7 @@ class Transactions {
 	 */
 	public function rollback() {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_transactions" );
 	}
 
@@ -55,14 +58,15 @@ class Transactions {
 
 		global $wpdb;
  
-		$table_name                    = $wpdb->prefix . $this->table;
-		$request['transation_history'] = is_array( $request['transation_history'] ) ? json_encode( $request['transation_history'], true ) : $request['transation_history'];
+	$table_name                    = $wpdb->prefix . $this->table;
+	$request['transation_history'] = is_array( $request['transation_history'] ) ? json_encode( $request['transation_history'], true ) : $request['transation_history'];
 
-		// insert transactions
-		$result = $wpdb->insert(
-			$table_name,
-			$request
-		);
+	// insert transactions
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->insert(
+		$table_name,
+		$request
+	);
  
 		if ( $result === false ) {
 			return false;
@@ -82,14 +86,15 @@ class Transactions {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$id = $request['id'];
-		unset( $request['id'] );
-		// Update transactions
-		$result = $wpdb->update(
-			$table_name,
-			$request,
-			array( 'id' => $id )
-		);
+	$id = $request['id'];
+	unset( $request['id'] );
+	// Update transactions
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->update(
+		$table_name,
+		$request,
+		array( 'id' => $id )
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -147,13 +152,15 @@ class Transactions {
 		if($orderBy != null) {
 			$sql .= " ORDER BY %s";
 			$data[] = $orderBy;
-		}
-	
-		if($limit == 1){
-			$data = $wpdb->get_row( $wpdb->prepare( $sql, $data ) );
-		}else{ 
-			$data = $wpdb->get_results( $wpdb->prepare( $sql, $data ) );
-		}
+	}
+
+	if($limit == 1){
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_row( $wpdb->prepare( $sql, $data ) );
+	}else{ 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results( $wpdb->prepare( $sql, $data ) );
+	}
 	 
 
 
@@ -172,20 +179,22 @@ class Transactions {
 		$sql = "SELECT  SUM($table_name.total) AS total_sum FROM $table_name
 		LEFT JOIN $host_table ON $table_name.host_id = $host_table.id
 		WHERE $table_name.created_at BETWEEN '$previous_date' AND '$current_date'";
-		if ($user_id) {
-			$sql .= " AND $host_table.id = '$user_id'";
-		} 
-		$data = $wpdb->get_var($sql);
-		return $data;
+	if ($user_id) {
+		$sql .= " AND $host_table.id = '$user_id'";
+	} 
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_var($sql);
+	return $data;
 
 	}
 
 	// delete
 	public function delete( $id ) {
-		global $wpdb;
+	global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
-		$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
+	$table_name = $wpdb->prefix . $this->table;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
 		if ( $result === false ) {
 			return false;
 		} else {

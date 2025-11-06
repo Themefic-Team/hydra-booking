@@ -16,10 +16,12 @@ class Meeting {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$sql = "CREATE TABLE $table_name (
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT, 
                 slug VARCHAR(255) NULL,
                 host_id INT(11) NULL,
@@ -76,10 +78,11 @@ class Meeting {
 	/**
 	 * Rollback the database migration.
 	 */
-	public function rollback() {
-		global $wpdb;
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_meetings" );
-	}
+public function rollback() {
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_meetings" );
+}
 
 	/**
 	 * Create the database meeting.
@@ -89,12 +92,13 @@ class Meeting {
 		global $wpdb;
 
 
-		$table_name = $wpdb->prefix . $this->table;
-		// insert meeting
-		$result = $wpdb->insert(
-			$table_name,
-			$request
-		);
+	$table_name = $wpdb->prefix . $this->table;
+	// insert meeting
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->insert(
+		$table_name,
+		$request
+	);
 
 		
 		 
@@ -148,12 +152,13 @@ class Meeting {
 			$request['payment_meta'] = wp_json_encode( $request['payment_meta'] );
 		}
 
-		// Update meeting
-		$result = $wpdb->update(
-			$table_name,
-			$request,
-			array( 'id' => $id )
-		);
+	// Update meeting
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->update(
+		$table_name,
+		$request,
+		array( 'id' => $id )
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -173,14 +178,15 @@ class Meeting {
 
 		$table_name = $wpdb->prefix . $this->table;
 		$host_table = $wpdb->prefix . 'tfhb_hosts';
-		$booking_table = $wpdb->prefix . 'tfhb_bookings';
-		if ( $id ) {
-			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name
-				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id
-				LEFT JOIN $host_table ON $table_name.host_id = $host_table.id 
-				WHERE $table_name.id = %s GROUP BY $table_name.id", $id )
-			);
+	$booking_table = $wpdb->prefix . 'tfhb_bookings';
+	if ( $id ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_row(
+			$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name
+			LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id
+			LEFT JOIN $host_table ON $table_name.host_id = $host_table.id 
+			WHERE $table_name.id = %s GROUP BY $table_name.id", $id )
+		);
 		} elseif ( ! empty( $filterData['title'] ) || ! empty( $filterData['fhosts'] ) || ! empty( $filterData['fcategory'] ) || ( ! empty( $filterData['startDate'] ) && ! empty( $filterData['endDate'] ) ) ) {
 			$sql = "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id LEFT JOIN $host_table ON $table_name.host_id = $host_table.id WHERE";
 
@@ -202,28 +208,31 @@ class Meeting {
 				$sql         .= " $table_name.meeting_category IN ($category_ids)";
 			}
 
-			$sql .= " GROUP BY $table_name.id" ;  
+		$sql .= " GROUP BY $table_name.id" ;  
 
-			$sql .= " ORDER BY $table_name.id DESC";
+		$sql .= " ORDER BY $table_name.id DESC";
 
-			$data = $wpdb->get_results( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results( $sql );
 
-		 
-		} elseif ( ! empty( $user_id ) ) {
-			$data = $wpdb->get_results(
-				$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name
-				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id LEFT JOIN $host_table ON $table_name.host_id = $host_table.id WHERE $table_name.user_id = %s GROUP BY $table_name.id  ORDER BY $table_name.id DESC", $user_id ) 
-			);
-		} else {
+	 
+	} elseif ( ! empty( $user_id ) ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results(
+			$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name
+			LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id LEFT JOIN $host_table ON $table_name.host_id = $host_table.id WHERE $table_name.user_id = %s GROUP BY $table_name.id  ORDER BY $table_name.id DESC", $user_id ) 
+		);
+	} else {
 
-			$data = $wpdb->get_results(
-				"SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name  FROM $table_name
-				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id
-				LEFT JOIN $host_table ON $table_name.host_id = $host_table.id
-				GROUP BY $table_name.id  ORDER BY $table_name.id DESC
-				"
-			);
-		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results(
+			"SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name  FROM $table_name
+			LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id
+			LEFT JOIN $host_table ON $table_name.host_id = $host_table.id
+			GROUP BY $table_name.id  ORDER BY $table_name.id DESC
+			"
+		);
+	}
 
 		// if any data has json data decode that data
 
@@ -296,16 +305,18 @@ class Meeting {
 			}   
 	
 			
-			// Prepare the SQL query 
-			$query = $wpdb->prepare($sql, $data);
-		
-			// Get the results
-			if($limit == 1) {
-				$results = $wpdb->get_row($query); 
-				
-			} else {
-				$results = $wpdb->get_results($query);
-			} 
+		// Prepare the SQL query 
+		$query = $wpdb->prepare($sql, $data);
+	
+		// Get the results
+		if($limit == 1) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$results = $wpdb->get_row($query); 
+			
+		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$results = $wpdb->get_results($query);
+		}
 
 			
 			
@@ -388,6 +399,7 @@ class Meeting {
 		}else{
 			$query = $sql;
 		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$data = $wpdb->get_results($query);  
  
 
@@ -402,11 +414,12 @@ class Meeting {
 	 public function getWithID( $id ) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table; 
+ $table_name = $wpdb->prefix . $this->table; 
 
-		$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s", $id ) );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s", $id ) );
 
-		return $data;
+	return $data;
 	 }
 
 
@@ -428,20 +441,22 @@ class Meeting {
 				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id";
 
 		if($user_id) {
-			$sql .= $wpdb->prepare( " WHERE $table_name.user_id = %s", $user_id );
-		}
-		$sql .= " GROUP BY $table_name.id" ;
+		$sql .= $wpdb->prepare( " WHERE $table_name.user_id = %s", $user_id );
+	}
+	$sql .= " GROUP BY $table_name.id" ;
 
-		$data = $wpdb->get_results( $wpdb->prepare( $sql )); 
-		return $data;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_results( $wpdb->prepare( $sql )); 
+	return $data;
 	}
 	
 	// Get Only column list as array
 	public function getColumns() {
-		global $wpdb;
-		$table_name = $wpdb->prefix . $this->table;
-		$sql        = "SHOW COLUMNS FROM $table_name";
-		$data       = $wpdb->get_results( $sql );
+	global $wpdb;
+	$table_name = $wpdb->prefix . $this->table;
+	$sql        = "SHOW COLUMNS FROM $table_name";
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data       = $wpdb->get_results( $sql );
 		$columns    = array();
 
 	 
@@ -476,10 +491,11 @@ class Meeting {
 			INSERT INTO $table_name (" . implode(',', $columns) . ")
 			VALUES " . implode(', ', $values);
 
-			echo $sql;
-			exit;
-		// Execute the query
-		$wpdb->query($sql); 
+		// echo $sql;
+		// exit;
+	// Execute the query
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query($sql);
 		
 	}
 
@@ -488,8 +504,9 @@ class Meeting {
 	public function delete( $id ) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
-		$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
+	$table_name = $wpdb->prefix . $this->table;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
 		if ( $result === false ) {
 			return false;
 		} else {

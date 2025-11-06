@@ -997,16 +997,19 @@ class MeetingController {
 			$fluentcrm_Data['status'] = false;
 		}
 		if ( $fluentcrm_Data['status'] ) {
-			global $wpdb;
-			// Check if table exists
-			$fluent_crm_tags    = $wpdb->prefix . 'fc_tags';
-			$fluent_crm_lists   = $wpdb->prefix . 'fc_lists';
-			$tags_table_exists  = $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}fc_tags'" ) == $fluent_crm_tags;
-			$lists_table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}fc_lists'" ) == $fluent_crm_lists;
+	global $wpdb;
+	// Check if table exists
+	$fluent_crm_tags    = $wpdb->prefix . 'fc_tags';
+	$fluent_crm_lists   = $wpdb->prefix . 'fc_lists';
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$tags_table_exists  = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . 'fc_tags' ) ) == $fluent_crm_tags;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$lists_table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . 'fc_lists' ) ) == $fluent_crm_lists;
 
-			if ( $tags_table_exists ) {
-				// Table exists, retrieve data
-				$results = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}fc_tags", ARRAY_A );
+	if ( $tags_table_exists ) {
+		// Table exists, retrieve data
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$results = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}fc_tags", ARRAY_A );
 
 				// Check if results are not empty
 				if ( ! empty( $results ) ) {
@@ -1022,9 +1025,10 @@ class MeetingController {
 				}
 			}
 
-			if ( $lists_table_exists ) {
-				// Table exists, retrieve data
-				$results = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}fc_lists", ARRAY_A );
+	if ( $lists_table_exists ) {
+		// Table exists, retrieve data
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$results = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}fc_lists", ARRAY_A );
 
 				// Check if results are not empty
 				if ( ! empty( $results ) ) {
@@ -1753,20 +1757,22 @@ class MeetingController {
 					'value' => $form->ID,
 				);
 			}
-		} elseif ( $form_type == 'fluent-forms' ) {
-			// Query arguments get custom fluentform_forms data all into custom database table
-			global $wpdb;
-			$results    = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}fluentform_forms" );
+} elseif ( $form_type == 'fluent-forms' ) {
+	// Query arguments get custom fluentform_forms data all into custom database table
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$results    = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}fluentform_forms" );
 			foreach ( $results as $form ) {
 				$questionForms[] = array(
 					'name'  => $form->title,
 					'value' => $form->id,
 				);
 			}
-		} elseif ( $form_type == 'gravityforms' ) {
-			// Query arguments get custom fluentform_forms data all into custom database table
-			global $wpdb;
-			$results    = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}gf_form" );
+} elseif ( $form_type == 'gravityforms' ) {
+	// Query arguments get custom fluentform_forms data all into custom database table
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$results    = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}gf_form" );
 			foreach ( $results as $form ) {
 				$questionForms[] = array(
 					'name'  => $form->title,

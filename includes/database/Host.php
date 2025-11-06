@@ -16,10 +16,12 @@ class Host {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$sql = "CREATE TABLE $table_name (
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT, 
                 user_id INT(11) NOT NULL, 
                 first_name VARCHAR(100) NOT NULL,  
@@ -47,10 +49,11 @@ class Host {
 	/**
 	 * Rollback the database migration.
 	 */
-	public function rollback() {
-		global $wpdb;
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_hosts" );
-	}
+public function rollback() {
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_hosts" );
+}
 
 	/**
 	 * Create the database availability.
@@ -59,13 +62,14 @@ class Host {
 
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
+	$table_name = $wpdb->prefix . $this->table;
 
-		// insert availability
-		$result = $wpdb->insert(
-			$table_name,
-			$request
-		);
+	// insert availability
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->insert(
+		$table_name,
+		$request
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -89,16 +93,17 @@ class Host {
 			$request['others_information'] = wp_json_encode( $request['others_information'] );
 		}
 
-		$id = $request['id'];
-		unset( $request['id'] );
+	$id = $request['id'];
+	unset( $request['id'] );
 
-		// Update availability
+	// Update availability
 
-		$result = $wpdb->update(
-			$table_name,
-			$request,
-			array( 'id' => $id )
-		);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->update(
+		$table_name,
+		$request,
+		array( 'id' => $id )
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -126,23 +131,27 @@ class Host {
 					$sql .= " $k = $v";
 				} else {
 					$sql .= " AND $k = $v";
-				}
-				++$i;
 			}
-			$data = $wpdb->get_results(
-				$wpdb->prepare( $sql )
-			);
-		} elseif ( $where != null ) {
-			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE id = %d",$where )
-			);
-		} elseif ( ! empty( $filterData['name'] ) ) {
-			// Corrected SQL query for searching by name
-			$data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE concat(first_name, last_name) LIKE %s", '%' . $filterData['name'] . '%' ) );
-
-		} else {
-			$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_hosts");
+			++$i;
 		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results(
+			$wpdb->prepare( $sql )
+		);
+	} elseif ( $where != null ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE id = %d",$where )
+		);
+	} elseif ( ! empty( $filterData['name'] ) ) {
+		// Corrected SQL query for searching by name
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_hosts WHERE concat(first_name, last_name) LIKE %s", '%' . $filterData['name'] . '%' ) );
+
+	} else {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_hosts");
+	}
 		// Get all data
 
 		return $data;
@@ -152,13 +161,14 @@ class Host {
 	public function getHostByUserId( $user_id ) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
+	$table_name = $wpdb->prefix . $this->table;
 
-		$data = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id )
-		);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data = $wpdb->get_row(
+		$wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id )
+	);
 
-		return $data;
+	return $data;
 	}
 
 	// Get Host By ID
@@ -176,10 +186,11 @@ class Host {
 	// get column 
 	// Get Only column list as array
 	public function getColumns() {
-		global $wpdb;
-		$table_name = $wpdb->prefix . $this->table;
-		$sql        = "SHOW COLUMNS FROM $table_name";
-		$data       = $wpdb->get_results( $sql );
+	global $wpdb;
+	$table_name = $wpdb->prefix . $this->table;
+	$sql        = "SHOW COLUMNS FROM $table_name";
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$data       = $wpdb->get_results( $sql );
 		$columns    = array();
 		
 	 
@@ -267,6 +278,7 @@ class Host {
 		} else {
             $query = $sql;
         }
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$data = $wpdb->get_results($query);  
  
 
@@ -278,8 +290,9 @@ class Host {
 	public function delete( $id ) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
-		$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
+	$table_name = $wpdb->prefix . $this->table;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
 		if ( $result === false ) {
 			return false;
 		} else {

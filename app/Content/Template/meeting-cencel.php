@@ -91,9 +91,9 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 				</div>
  
 				<?php if ( $data->status == 'canceled' ) : ?>
-					<div class="tfhb-notice notice-error" > 
-						<span><?php echo esc_html_( 'This meeting has been cancelled by the ', 'hydra-booking' ) . esc_attr($data->cancelled_by) . '.'; ?></span>
-					</div>
+				<div class="tfhb-notice notice-error" > 
+					<span><?php echo esc_html__( 'This meeting has been cancelled by the ', 'hydra-booking' ) . esc_html( $data->cancelled_by ) . '.'; ?></span>
+				</div>
 				<?php else : ?>
 				<div class="hidden-field"> 
 					<input type="hidden" id="attendee_hash" name="attendee_hash" value="<?php echo esc_attr($data->hash); ?>"> 

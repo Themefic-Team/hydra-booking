@@ -790,10 +790,12 @@ class HostsController {
 
 		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 		$responseData = array();
+		
 		if ( $key == 'zoom_meeting' ) {
 
 			$zoom = new ZoomServices();
 			$response = $zoom->updateHostsZoomSettings( $data, $user_id );
+		
 			$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings', true );
 			if($response['status'] == false){
 				return rest_ensure_response( $response );
@@ -801,6 +803,7 @@ class HostsController {
 			$responseData['status'] = true;
 			$responseData['type'] =  'zoom_meeting';
 			$responseData['message'] = $response['message']; 
+		
 		
 
 		} elseif ( $key == 'woo_payment' ) {

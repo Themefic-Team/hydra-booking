@@ -42,7 +42,9 @@ class UpdateController {
             global $wpdb;
             $table_name = $wpdb->prefix . 'tfhb_transactions';
             // add column in one query
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             if( $wpdb->get_var("SHOW COLUMNS FROM $table_name LIKE 'booking_id'") != 'attendees_id' ) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
                 $wpdb->query("ALTER TABLE $table_name ADD attendee_id INT(11) NOT NULL AFTER id");
             }
             // tfhb_print_r('Update 1.0.5 to 1.0.6');
@@ -123,6 +125,7 @@ class UpdateController {
             global $wpdb;
             $table_name = $wpdb->prefix . 'tfhb_bookings';
             // drop column in one query
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
             $wpdb->query("ALTER TABLE $table_name 
                 DROP COLUMN order_id, 
                 DROP COLUMN attendee_time_zone, 
@@ -141,6 +144,7 @@ class UpdateController {
                 ",
                 
             );
+            // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 
            
             // update version

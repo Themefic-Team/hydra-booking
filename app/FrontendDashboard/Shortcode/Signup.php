@@ -63,7 +63,7 @@ class Signup {
                     <!-- go to dashboard button -->
 
                     <br>
-                    <a class="tfhb-from-btn" href="<?php echo get_permalink( $tfhb_dashboard_page_id ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
+                    <a class="tfhb-from-btn" href="<?php echo esc_url( get_permalink( $tfhb_dashboard_page_id ) ) ?>"><?php echo esc_html(__('Go to dashboard', 'hydra-booking')) ?></a>
                     
                 </div>
             </div>

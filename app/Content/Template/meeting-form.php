@@ -135,26 +135,26 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 
 						echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . ' placeholder="' . esc_attr(TransStrings::tfhbTranslate($placehoder)) . '">' . esc_html($value) . '</textarea>';
 
-					} elseif ( $question['type'] == 'checkbox' ) { 
-						echo '<div class="tfhb-checkbox-group">';
-						foreach ( $question['options'] as $key => $option ) { 
-							echo '<label class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name)  .'_'.$key.'">
-                                            <input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.$key.'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' >
+				} elseif ( $question['type'] == 'checkbox' ) { 
+					echo '<div class="tfhb-checkbox-group">';
+					foreach ( $question['options'] as $key => $option ) { 
+						echo '<label class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name)  .'_'.esc_attr($key).'">
+                                            <input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.esc_attr($key).'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' >
                                             <span class="checkmark"></span> ' . esc_attr($option) . '
                                         </label>';
-						}
-						echo '</div>';
+					}
+					echo '</div>';
 						
 
-					}elseif ( $question['type'] == 'radio' ) { 
-						echo '<div class="tfhb-radio-group">';
-						foreach ( $question['options'] as $key => $option ) {  
-							echo '<label  class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name) .'_'.$key.'">
-										<input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.$key.'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
-										<span class="checkmark"></span> ' . esc_attr($option) . '
-									</label>';
-						}
-						echo '</div>';
+				}elseif ( $question['type'] == 'radio' ) { 
+					echo '<div class="tfhb-radio-group">';
+					foreach ( $question['options'] as $key => $option ) {  
+						echo '<label  class="tfhb-field-'. esc_attr($question['type']) .'" for="' . esc_attr($name) .'_'.esc_attr($key).'">
+									<input name="' . esc_attr($name) . '" value="'.esc_attr($option).'"  id="' . esc_attr($name)  .'_'.esc_attr($key).'"  type="' . esc_attr($question['type']) . '" ' . esc_attr($disable) . ' ' . esc_attr($required) . '>
+									<span class="checkmark"></span> ' . esc_attr($option) . '
+								</label>';
+					}
+					echo '</div>';
 						
 
 					}  else {

@@ -16,10 +16,12 @@ class Availability {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$sql = "CREATE TABLE $table_name (
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$sql = "CREATE TABLE $table_name (
                 id INT(11) NOT NULL AUTO_INCREMENT,
                 host INT(11) NULL,
                 title VARCHAR(100) NOT NULL,
@@ -43,10 +45,11 @@ class Availability {
 	/**
 	 * Rollback the database migration.
 	 */
-	public function rollback() {
-		global $wpdb;
-		$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_availability");
-	}
+public function rollback() {
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}tfhb_availability");
+}
 
 	/**
 	 * Create the database availability.
@@ -59,13 +62,14 @@ class Availability {
 		$request['time_slots'] = maybe_serialize( $request['time_slots'] );
 		if(isset($request['date_status'])){
 			$request['date_status'] = maybe_serialize( $request['date_status'] );
-		} 
+	} 
 
-		// insert availability
-		$result = $wpdb->insert(
-			$table_name,
-			$request
-		);
+	// insert availability
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->insert(
+		$table_name,
+		$request
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -85,14 +89,15 @@ class Availability {
 
 		$table_name = $wpdb->prefix . $this->table;
 
-		$id = $request['id'];
-		unset( $request['id'] );
-		// Update availability
-		$result = $wpdb->update(
-			$table_name,
-			$request,
-			array( 'id' => $id )
-		);
+	$id = $request['id'];
+	unset( $request['id'] );
+	// Update availability
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result = $wpdb->update(
+		$table_name,
+		$request,
+		array( 'id' => $id )
+	);
 
 		if ( $result === false ) {
 			return false;
@@ -107,12 +112,13 @@ class Availability {
 	 */
 	public function get( $where = null, $join = false, $FirstOrFaill = false, $limit = false ) {
 
-		global $wpdb;
+	global $wpdb;
 
-		if ( $where  != null && !is_array($where) ) {
-			$data = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_availability WHERE id = %d", $where )
-			);
+	if ( $where  != null && !is_array($where) ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tfhb_availability WHERE id = %d", $where )
+		);
 		}elseif ( $where  != null && is_array($where) ) {
 			$sql = "SELECT * FROM {$wpdb->prefix}tfhb_availability WHERE ";
 			$i   = 0;
@@ -125,32 +131,36 @@ class Availability {
 				++$i;
 			}
 
-			if($FirstOrFaill == true){
-				$data = $wpdb->get_row(
-					$wpdb->prepare( $sql )
-				);
-			}else{
-				$data = $wpdb->get_results(
-					$wpdb->prepare( $sql )
-				);
-			}
+		if($FirstOrFaill == true){
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$data = $wpdb->get_row(
+				$wpdb->prepare( $sql )
+			);
+		}else{
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$data = $wpdb->get_results(
+				$wpdb->prepare( $sql )
+			);
+		}
 			
-		}
-		 else {
-			$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_availability");
-		}
+	}
+	 else {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tfhb_availability");
+	}
 
 		// Get all data
 
 		return $data;
 	}
 
-	// delete
-	public function delete( $id ) {
-		global $wpdb;
+// delete
+public function delete( $id ) {
+	global $wpdb;
 
-		$table_name = $wpdb->prefix . $this->table;
-		$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
+	$table_name = $wpdb->prefix . $this->table;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$result     = $wpdb->delete( $table_name, array( 'id' => $id ) );
 		if ( $result === false ) {
 			return false;
 		} else {

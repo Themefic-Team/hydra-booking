@@ -66,7 +66,7 @@ class BookingBookmarks {
         $end_time_google = $dtEnd->format("Ymd\THis"); 
         // Google Calendar Link with Timezone
         $bookmarks['google'] = [
-            'title' => __('Google Calendar', 'fluent-booking'),
+            'title' => __('Google Calendar', 'hydra-booking'),
             'url'   => add_query_arg([
                 'dates'    => $start_time_google . '/' . $end_time_google,
                 'text'     => $bookingTitle,
@@ -83,7 +83,7 @@ class BookingBookmarks {
         $end_time_outlook = $dtEnd->format("Y-m-d\TH:i:s");
         // Outlook Calendar Link
         $bookmarks['outlook'] = [
-            'title' => __('Outlook', 'fluent-booking'),
+            'title' => __('Outlook', 'hydra-booking'),
             'url'   => add_query_arg([
                 'startdt'  => $start_time_outlook,
                 'enddt'    => $end_time_outlook,
@@ -125,7 +125,7 @@ class BookingBookmarks {
 
         // Yahoo Calendar Link with dynamic duration
         $bookmarks['yahoo'] = [
-            'title' => __('Yahoo Calendar', 'fluent-booking'),
+            'title' => __('Yahoo Calendar', 'hydra-booking'),
             'url'   => add_query_arg([
                 'v'        => 60,
                 'view'     => 'd',
@@ -139,7 +139,7 @@ class BookingBookmarks {
             'icon' => esc_url(TFHB_URL . 'assets/app/images/yahoo-calendar.svg'), 
         ];
         $bookmarks['other']    = [
-            'title' => __('Other Calendar', 'fluent-booking'), 
+            'title' => __('Other Calendar', 'hydra-booking'), 
             'url'   => $this->GetBookingIcsUrl($data), 
             'icon' => esc_url(TFHB_URL . 'assets/app/images/other-calendar.svg'), 
         ];
@@ -185,6 +185,8 @@ class BookingBookmarks {
         // Send Headers
         header('Content-Type: text/calendar; charset=utf-8');
         header('Content-Disposition: attachment; filename="booking-event.ics"');
+        
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ICS file output, fields are sanitized above
         echo $ics_content;
         exit;
     }
