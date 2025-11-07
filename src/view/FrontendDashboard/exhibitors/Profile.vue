@@ -10,6 +10,7 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
 import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import useValidators from '@/store/validator'
 import axios from 'axios';
 import { toast } from "vue3-toastify";
@@ -40,7 +41,8 @@ const userPublicInformation = reactive({
         linkedin: ''
     },
     // More details fields will be populated from API
-    more_details_fields: []
+    more_details_fields: [],
+    settings : [],
 });
 const loading = ref(false);
 const skeleton = ref(true);
@@ -67,6 +69,9 @@ async function fetchUserPublicInfo() {
             }
             if (response.data.data.registration_froms_fields) { 
                 userPublicInformation.more_details_fields = response.data.data.registration_froms_fields;
+            }
+            if (response.data.data.settings) { 
+                userPublicInformation.settings = response.data.data.settings;
             }
             skeleton.value = false;
              
@@ -607,6 +612,19 @@ document.addEventListener('click', (e) => {
                             :placeholder="$tfhb_trans('Job position')" 
                             width="50"
                         />
+                        <HbDropdown 
+                            
+                            v-model="member.is_present_at_event"  
+                            required= "true"  
+                            width="50"
+                            :selected = "0" 
+                            :label="$tfhb_trans('Is Present At Event')"  
+                            :placeholder="$tfhb_trans('Is Present At Event')"  
+                            :option = "[
+                                {'name': 'Yes', 'value': '1'}, 
+                                {'name': 'No', 'value': '0'}
+                            ]"
+                        />
                         <HbWpFileUpload
                             :name="`staff_image_${index}`"
                             v-model="member.image"
@@ -624,9 +642,20 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
+                    <br> 
+                    <HbInfoBox icon="Info" name="first-modal">
+                        <template #content>
+                            <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
+                                <div class="tfhb-admin-title tfhb-m-0"> 
+                                    <h2 >{{ $tfhb_trans('Maximum Number Of Staff :') }}  {{ userPublicInformation.settings.maximum_number_of_staff }}</h2>  
+                                    <h2 >{{ $tfhb_trans('Maximum Number Of Staff Present At The Event :') }}  {{ userPublicInformation.settings.maximum_number_of_staff_present }}</h2>   
+                                </div>
+                            </div>  
+                        </template>
+                    </HbInfoBox> 
                     <HbButton 
                         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.staff.push({name: '', position: '', image: ''})"
+                        @click="userPublicInformation.staff.push({name: '', position: '', image: '', is_present_at_event : '0'})"
                         :buttonText="$tfhb_trans('Add Staff Member')"
                         icon="UserPlus"
                         hover_icon="UserPlus"

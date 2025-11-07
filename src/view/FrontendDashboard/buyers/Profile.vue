@@ -8,6 +8,7 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
@@ -33,6 +34,7 @@ const userPublicInformation = reactive({
         description: '',
         url: ''
     },
+    settings : [],
     documents: [],
     links: [],
     social_share: {
@@ -104,6 +106,7 @@ async function fetchUserPublicInfo() {
         if (response.data.success && response.data.data) {
             Object.assign(userPublicInformation, response.data.data.info);
             userPublicInformation.more_details_fields = response.data.data.registration_froms_fields;
+            userPublicInformation.settings = response.data.data.settings;
             skeleton.value = false;
         }
     } catch (e) {
@@ -142,7 +145,7 @@ async function saveUserPublicInfo() {
         loading.value = false;
         setTimeout(() => { saveSuccess.value = false; }, 2000);
         // windows reload 
-        window.location.reload();
+        // window.location.reload();
     }
 }
 
@@ -403,6 +406,7 @@ const UploadImageFeature  = () => {
 const EmptyImageFeatured  = () => {
     userPublicInformation.cover_image = '';
 } 
+ 
 // Profile Image and cover image dropdown
 const activeCoverDropdown = ref(false);
 const activeProfileDropdown = ref(false);
@@ -416,6 +420,8 @@ document.addEventListener('click', (e) => {
         activeCoverDropdown.value = false;
     }
 });
+
+
 </script>
 
 <template>   
@@ -553,7 +559,7 @@ document.addEventListener('click', (e) => {
                 <div class="tfhb-section-title">
                     <h3>{{ $tfhb_trans('Staff') }}</h3>
                 </div>
-                <div class="tfhb-staff-section">
+                <div class="tfhb-staff-section"> 
                     <div v-for="(member, index) in userPublicInformation.staff" :key="index" class="tfhb-staff-item tfhb-flexbox tfhb-gap-16">
                         <HbText  
                             v-model="member.name"  
@@ -566,6 +572,20 @@ document.addEventListener('click', (e) => {
                             :label="$tfhb_trans('Position')"  
                             :placeholder="$tfhb_trans('Job position')" 
                             width="50"
+                        /> 
+                        <!-- Time format -->
+                        <HbDropdown 
+                            
+                            v-model="member.is_present_at_event"  
+                            required= "true"  
+                            width="50"
+                            :selected = "0" 
+                            :label="$tfhb_trans('Is Present At Event')"  
+                            :placeholder="$tfhb_trans('Is Present At Event')"  
+                            :option = "[
+                                {'name': 'Yes', 'value': '1'}, 
+                                {'name': 'No', 'value': '0'}
+                            ]"
                         />
                         <HbWpFileUpload
                             :name="`staff_image_${index}`"
@@ -586,12 +606,23 @@ document.addEventListener('click', (e) => {
                     </div>
                     <HbButton 
                         classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.staff.push({name: '', position: '', image: ''})"
+                        @click="userPublicInformation.staff.push({name: '', position: '', image: '', is_present_at_event: 0})"
                         :buttonText="$tfhb_trans('Add Staff Member')"
                         icon="UserPlus"
                         hover_icon="UserPlus"
                         :hover_animation="true"
                     />
+                    <br> 
+                    <HbInfoBox icon="Info" name="first-modal">
+                        <template #content>
+                            <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
+                                <div class="tfhb-admin-title tfhb-m-0"> 
+                                    <h2 >{{ $tfhb_trans('Maximum Number Of Staff :') }}  {{ userPublicInformation.settings.maximum_number_of_staff }}</h2>  
+                                    <h2 >{{ $tfhb_trans('Maximum Number Of Staff Present At The Event :') }}  {{ userPublicInformation.settings.maximum_number_of_staff_present }}</h2>   
+                                </div>
+                            </div>  
+                        </template>
+                    </HbInfoBox> 
                 </div>
             </div>
 

@@ -18,6 +18,8 @@ const AddonsSettings = reactive({
         enable_registration : 0,
         default_account_status : 'active',
         badge_pdf_image : '',
+        maximum_number_of_staff : '',
+        maximum_number_of_staff_present : '',
     },
     buyers: {
         registration_froms_fields : [],
@@ -26,6 +28,8 @@ const AddonsSettings = reactive({
         enable_registration : 0,
         default_account_status : 'active',
         badge_pdf_image : '',
+        maximum_number_of_staff : '',
+        maximum_number_of_staff_present : '',
     },
     Exhibitors: {
         registration_froms_fields : [],
@@ -34,6 +38,8 @@ const AddonsSettings = reactive({
         enable_registration : 0,
         default_account_status : 'active',
         badge_pdf_image : '',
+        maximum_number_of_staff : '',
+        maximum_number_of_staff_present : '',
     },
     // Matching Settings
     matching_settings: {

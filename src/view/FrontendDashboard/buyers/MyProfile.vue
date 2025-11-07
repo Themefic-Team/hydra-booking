@@ -231,9 +231,10 @@ onMounted(() => {
             <h2>Staff</h2>
             <div class="staff-list">
               <div v-for="(member, index) in userStaff" :key="index" class="staff-item">
-                <img :src="member.image" :alt="member.name" class="staff-image" />
+                <img v-if="member.image && member.image.trim() !== ''" :src="member.image" :alt="member.name" class="staff-image" />
+                <img v-else :src="$tfhb_url+'/assets/images/avator.png'" :alt="member.name" class="staff-image" />
                 <div class="staff-info">
-                  <h3>{{ member.name }}</h3>
+                  <h3>{{ member.name }}</h3> 
                   <p>{{ member.position }}</p>
                 </div>
               </div>
@@ -305,7 +306,8 @@ onMounted(() => {
           <h2>Staff</h2>
           <div class="staff-list" v-if="userStaff.length > 0">
             <div v-for="(member, index) in userStaff" :key="index" class="staff-item">
-              <img :src="member.image" :alt="member.name" class="staff-image" />
+              <img v-if="member.image && member.image.trim() !== ''" :src="member.image" :alt="member.name" class="staff-image" />
+              <img v-else :src="$tfhb_url+'/assets/images/avator.png'" :alt="member.name" class="staff-image" />
               <div class="staff-info">
                 <h3>{{ member.name }}</h3>
                 <p>{{ member.position }}</p>

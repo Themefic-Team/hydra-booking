@@ -616,6 +616,247 @@ const DownloadBadgePDFWithQRCode = async (user) => {
     }
 }
 
+const DownloadBadgeStaffPDFWithQRCode = async (user) => {
+    try { 
+        console.log('Starting staff badge generation for user:', user);
+        
+        // Validate user object
+        if (!user || !user.data) {
+            throw new Error('User object or user data is required');
+        }
+        
+        // Get staff array from user data
+        const staffArray = user.data.staff || [];
+        console.log('Staff array:', staffArray);
+        
+        if (!Array.isArray(staffArray) || staffArray.length === 0) {
+            toast.warning('No staff members found', {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+            return;
+        }
+        
+        // Filter staff members who are present at event
+        const presentStaff = staffArray.filter(member => member.is_present_at_event === '1' || member.is_present_at_event === 1);
+        console.log('Present staff:', presentStaff);
+        
+        if (presentStaff.length === 0) {
+            toast.warning('No staff members marked as present at event', {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+            return;
+        }
+        
+        toast.info(`Generating ${presentStaff.length} staff badge(s)...`, {
+            position: 'bottom-right',
+            autoClose: 2000,
+        });
+        
+        // Create a new JSZip instance
+        const zip = new JSZip();
+        
+        // Determine user role and get appropriate company name and badge image
+        let companyName = '';
+        let backgroundImageUrl = '';
+        const userRole = (user.role || '').toLowerCase();
+        
+        if (userRole === 'buyers' || userRole === 'buyer') {
+            companyName = (user.data?.travel_agent_name || '').trim();
+            backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || '';
+        } else if (userRole === 'sellers' || userRole === 'seller') {
+            companyName = (user.data?.denominazione_operatore_azienda || '').trim();
+            backgroundImageUrl = AddonsSettings?.Sellers?.badge_pdf_image || '';
+        } else if (userRole === 'exhibitors' || userRole === 'exhibitor') {
+            companyName = (user.data?.company_name || '').trim();
+            backgroundImageUrl = AddonsSettings?.Exhibitors?.badge_pdf_image || '';
+        } else {
+            // Fallback for unknown roles
+            companyName = (user.data?.company_name || user.data?.denominazione_operatore_azienda || user.data?.travel_agent_name || '').trim();
+        }
+        
+        // Generate PDF for each present staff member
+        for (let i = 0; i < presentStaff.length; i++) {
+            const member = presentStaff[i];
+            const staffName = member.name || `Staff ${i + 1}`;
+            const staffPosition = member.position || 'Staff';
+            
+            try {
+                // Create QR code data for staff member
+                const qr_data = `Name: ${staffName} | Role: Staff | Position: ${staffPosition} | Company: ${companyName}`;
+                
+                // Generate QR code as data URL
+                const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
+                    width: 150,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                });
+                
+                // Create new PDF document (A4 size)
+                const pdf = new jsPDF('portrait', 'mm', 'a4');
+                
+                // A4 dimensions: 210mm x 297mm
+                const pageWidth = 210;
+                const pageHeight = 297;
+                
+                // Add background image if available and valid
+                if (backgroundImageUrl && backgroundImageUrl.trim() !== '') {
+                    try {
+                        // Try to add the background image
+                        pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                    } catch (imgError) {
+                        console.warn(`Could not add background image for ${staffName}:`, imgError);
+                        // Continue without background image
+                    }
+                }
+                
+                // Calculate bottom right quadrant positions
+                const quadrantWidth = pageWidth / 2;
+                const quadrantHeight = pageHeight / 2;
+                const startX = quadrantWidth; // Start from right half
+                const startY = quadrantHeight; // Start from bottom half
+                
+                // Add QR code (centered in bottom right quadrant)
+                const qrSize = 35;
+                const qrX = startX + (quadrantWidth - qrSize) / 2;
+                const qrY = startY + 70;
+                pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                
+                // Helper function to fit text within available width
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    // Try to shrink font size first
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    // If still too wide, split into multiple lines
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
+                
+                // Add role/position label (centered in bottom right quadrant, below QR code)
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const roleLabel = 'STAFF';
+                const roleLabelResult = fitTextToWidth(roleLabel, quadrantWidth - 10, 10);
+                pdf.setFontSize(roleLabelResult.fontSize);
+                let currentY = startY + 110;
+                roleLabelResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < roleLabelResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add staff name (centered in bottom right quadrant, below role - BOLD and larger)
+                currentY += 8;
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'bold');
+                const nameResult = fitTextToWidth(staffName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add company name (centered, below name)
+                currentY += 7;
+                pdf.setFont('helvetica', 'normal');
+                const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                pdf.setFontSize(companyResult.fontSize);
+                companyResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < companyResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add position (centered, below company)
+                currentY += 7;
+                pdf.setFont('helvetica', 'normal');
+                const positionResult = fitTextToWidth(staffPosition, quadrantWidth - 10, 9);
+                pdf.setFontSize(positionResult.fontSize);
+                positionResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < positionResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Get PDF as blob
+                const pdfBlob = pdf.output('blob');
+                
+                // Add to zip file with sanitized filename
+                const fileName = `staff_badge_${staffName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${Date.now()}_${i}.pdf`;
+                zip.file(fileName, pdfBlob);
+                
+                console.log(`PDF generated for staff: ${staffName}`);
+                
+            } catch (error) {
+                console.error(`Error generating PDF for staff ${staffName}:`, error);
+                toast.error(`Failed to generate badge for ${staffName}`, {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            }
+        }
+        
+        // Generate zip file
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(zipBlob);
+        link.download = `staff_badges_${companyName.replace(/\s+/g, '_')}_${Date.now()}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up object URL
+        URL.revokeObjectURL(link.href);
+        
+        toast.success(`Successfully generated ${presentStaff.length} staff badge(s) as ZIP file!`, {
+            position: 'bottom-right',
+            autoClose: 3000,
+        });
+        
+    } catch (error) {
+        console.error('Error downloading staff badge PDF:', error);
+        toast.error('Failed to generate staff badges. Please try again.', {
+            position: 'bottom-right',
+            autoClose: 3000,
+        });
+    }
+}
+
 // Bulk badge export function
 const handleBulkBadgeExport = async () => {
     if (AddonsUsers.selected_users.length === 0) {
@@ -1149,6 +1390,9 @@ onBeforeRouteLeave(() => {
                                     </span>
                                     <span @click.stop="DownloadBadgePDFWithQRCode(user)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
                                         {{ $tfhb_trans('Badge') }}
+                                    </span>
+                                    <span @click.stop="DownloadBadgeStaffPDFWithQRCode(user)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
+                                        {{ $tfhb_trans('Staff Badge') }}
                                     </span>
                                     <span v-if="isUserInactive(user.status)" @click.stop="handleStatusUpdate(user.id, 'activate')" class="tfhb-activate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
                                         <Icon name="Check" width="16" />
