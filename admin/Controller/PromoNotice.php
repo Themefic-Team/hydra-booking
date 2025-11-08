@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PromoNotice {
 
-    private $api_url = 'https://api.themefic.com/';
+    private $api_url = 'https://api.themefic.com/test';
     private $args = array();
     private $responsed = false; 
     private $tfhb_promo_option = false; 
@@ -112,7 +112,7 @@ class PromoNotice {
                 // Mark that one Themefic widget already exists
                 update_option('tf_promo_widget_exists', 'hydra');
 
-                add_action('init', [$this, 'init_dashboard_notice_widget']);
+                add_action('admin_init', [$this, 'init_dashboard_notice_widget']);
                 add_action('wp_ajax_tfhb_dashboard_widget_dismiss', [$this, 'ajax_dashboard_widget_dismiss']);
             }
 
@@ -162,9 +162,9 @@ class PromoNotice {
         $footer    = isset($dashboard_widget['footer']) ? $dashboard_widget['footer'] : [];
 
         ?>
-        <div class="uawpf-dashboard-widget" style="position:relative;">
+        <div class="tfhb-dashboard-widget" style="position:relative;">
             <?php if (!empty($dashboard_widget['dismiss_status'])) : ?>
-                <button type="button" class="notice-dismiss uawpf-dashboard-dismiss" style="position:absolute; top:10px; right:10px;"></button>
+                <button type="button" class="notice-dismiss tfhb-dashboard-dismiss" style="position:absolute; top:10px; right:10px;"></button>
             <?php endif; ?>
 
             <?php if (!empty($highlight)) : ?>
@@ -220,7 +220,7 @@ class PromoNotice {
         </div>
 
         <style>
-            .uawpf-dashboard-widget {
+            .tfhb-dashboard-widget {
                 background: #fff;
                 border-radius: 4px;
                 padding: 0;
@@ -229,7 +229,7 @@ class PromoNotice {
                 color: #23282d;
             }
 
-            .uawpf-dashboard-widget .header {
+            .tfhb-dashboard-widget .header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -238,7 +238,7 @@ class PromoNotice {
                 border-bottom: 1px solid #ddd;
             }
 
-            .uawpf-dashboard-widget .highlight {
+            .tfhb-dashboard-widget .highlight {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -250,28 +250,28 @@ class PromoNotice {
                 gap: 10px;
             }
 
-            .uawpf-dashboard-widget .highlight .before-img {
+            .tfhb-dashboard-widget .highlight .before-img {
                 width: 58px;
                 height: 58px;
             }
-            .uawpf-dashboard-widget .highlight .after-img {
+            .tfhb-dashboard-widget .highlight .after-img {
                 width: 100px;
                 height: 60px;
             }
-            .uawpf-dashboard-widget .highlight .content {
+            .tfhb-dashboard-widget .highlight .content {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
                 flex-direction: column;
             }
-            .uawpf-dashboard-widget .highlight .content p{
+            .tfhb-dashboard-widget .highlight .content p{
                 color: #1D2327;
                 font-family: "Roboto", sans-serif;
                 font-size: 13px;
                 font-weight: 500;
                 line-height: 19.6px;
             }
-            .uawpf-dashboard-widget .highlight .content .button{
+            .tfhb-dashboard-widget .highlight .content .button{
                 height: 30px;
                 color: #FFF;
                 font-family: "Roboto", sans-serif;
@@ -281,7 +281,7 @@ class PromoNotice {
                 background: #2271B1;
             }
 
-            .uawpf-dashboard-widget ul li a {
+            .tfhb-dashboard-widget ul li a {
                 color: #2271B1;
                 font-family: "Roboto", sans-serif;
                 font-size: 13px;
@@ -289,7 +289,7 @@ class PromoNotice {
                 line-height: 120%;
             }
 
-            .uawpf-dashboard-widget .new-tag {
+            .tfhb-dashboard-widget .new-tag {
                 padding: 3px 6px;
                 border-radius: 3px;
                 background-color: #0A875A;
@@ -302,7 +302,7 @@ class PromoNotice {
                 text-transform: uppercase;
             }
 
-            .uawpf-dashboard-widget .footer {
+            .tfhb-dashboard-widget .footer {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -311,7 +311,7 @@ class PromoNotice {
                 background: #fff;
             }
 
-            .uawpf-dashboard-widget .footer a {
+            .tfhb-dashboard-widget .footer a {
                 text-decoration: none;
                 font-weight: 500;
                 color: #2271B1;
@@ -321,7 +321,7 @@ class PromoNotice {
                 line-height: 15.6px;
             }
 
-            .uawpf-dashboard-widget .footer a svg {
+            .tfhb-dashboard-widget .footer a svg {
                 padding-left: 4px;
             }
 
@@ -329,8 +329,8 @@ class PromoNotice {
 
         <script>
         jQuery(document).ready(function($){
-            $(document).on('click', '.uawpf-dashboard-dismiss', function(){
-                $(this).closest('.uawpf-dashboard-widget').fadeOut(300);
+            $(document).on('click', '.tfhb-dashboard-dismiss', function(){
+                $(this).closest('.tfhb-dashboard-widget').fadeOut(300);
                 $.post(ajaxurl, { action: 'tfhb_dashboard_widget_dismiss' });
             });
         });
@@ -348,7 +348,7 @@ class PromoNotice {
 
     public function tfhb_get_api_response(){
         $query_params = array(
-            'plugin' => 'uawpf', 
+            'plugin' => 'hydra', 
         );
         $response = wp_remote_post($this->api_url, array(
             'body'    => json_encode($query_params),
@@ -504,7 +504,7 @@ class PromoNotice {
             
             ?>
            
-            <div class="tfhb_promo_side_preview" style="text-align: center; overflow: hidden; margin: 10px; position: relative;">
+            <div class="tfhb_promo_side_preview" style="text-align: center; overflow: hidden; margin-top: 15px; position: relative;">
                 <a href="<?php echo esc_attr($deal_link); ?>" target="_blank" >
                     <img  style="width: 100%;" src="<?php echo esc_attr($image_url); ?>" alt="">
                 </a>  
@@ -536,7 +536,7 @@ class PromoNotice {
                     });
                 });";
 
-            wp_add_inline_script('ultrawpf-admin-script', $inline_js);
+            wp_add_inline_script('tfhb-admin-core', $inline_js);
          endif; ?>
         <?php
 	}

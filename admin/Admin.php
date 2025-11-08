@@ -184,7 +184,7 @@ class Admin {
 		<div class="tfhb-dashboard-sidebar-content" style="display: none;">
 			<div class="tfhb-sidebar-wrap">
 				<!-- promo banner  -->
-				<?php echo apply_filters('tfhb_dashboard_helper_banner', ''); ?>
+				<?php echo do_action('tfhb_sidebar_promo_banner', ''); ?>
 				 
 				<div class="tfhb-sidebar-content">
 
