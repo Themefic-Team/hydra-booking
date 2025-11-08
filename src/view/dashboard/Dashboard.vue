@@ -17,27 +17,41 @@ const datachart_dropdown = ref(false);
 
 const sidebarContentSelector = '.tfhb-dashboard-sidebar-content';
 const sidebarTargetSelector = '.tfhb-dashboard-sidebar';
+const sidebarCloneDataKey = 'tfhbSidebarCloneLoaded';
 const sidebarMoveMaxAttempts = 10;
 let sidebarMoveAttempts = 0;
 let sidebarMoveTimeoutId = null;
 
-const moveSidebarContentIntoDashboard = () => {
-    const sidebarContent = document.querySelector(sidebarContentSelector);
-    const sidebarTarget = document.querySelector(sidebarTargetSelector);
+const cloneSidebarContentIntoDashboard = () => {
+    const $ = window.jQuery;
 
-    if (!sidebarContent || !sidebarTarget) {
+    if (!$) {
         return false;
     }
 
-    sidebarTarget.innerHTML = '';
-    sidebarTarget.appendChild(sidebarContent);
-    sidebarContent.style.removeProperty('display');
+    const $sidebarContent = $(sidebarContentSelector).first();
+    const $sidebarTarget = $(sidebarTargetSelector);
+
+    if (!$sidebarContent.length || !$sidebarTarget.length) {
+        return false;
+    }
+
+    if ($sidebarTarget.data(sidebarCloneDataKey)) {
+        return true;
+    }
+
+    const $clone = $sidebarContent.clone(true, true);
+    $clone.removeAttr('style');
+    $clone.attr('data-tfhb-dashboard-sidebar-clone', 'true');
+
+    $sidebarTarget.empty().append($clone);
+    $sidebarTarget.data(sidebarCloneDataKey, true);
 
     return true;
 };
 
 const ensureSidebarContent = () => {
-    if (moveSidebarContentIntoDashboard()) {
+    if (cloneSidebarContentIntoDashboard()) {
         return;
     }
 
