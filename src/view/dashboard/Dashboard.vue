@@ -15,10 +15,60 @@ import { Notification } from '@/store/notification';
 const datachart_box_dropdown = ref(false);
 const datachart_dropdown = ref(false);
 
+const sidebarContentSelector = '.tfhb-dashboard-sidebar-content';
+const sidebarTargetSelector = '.tfhb-dashboard-sidebar';
+const sidebarCloneDataKey = 'tfhbSidebarCloneLoaded';
+const sidebarMoveMaxAttempts = 10;
+let sidebarMoveAttempts = 0;
+let sidebarMoveTimeoutId = null;
+
+const cloneSidebarContentIntoDashboard = () => {
+    const $ = window.jQuery;
+
+    if (!$) {
+        return false;
+    }
+
+    const $sidebarContent = $(sidebarContentSelector).first();
+    const $sidebarTarget = $(sidebarTargetSelector);
+
+    if (!$sidebarContent.length || !$sidebarTarget.length) {
+        return false;
+    }
+
+    if ($sidebarTarget.data(sidebarCloneDataKey)) {
+        return true;
+    }
+
+    const $clone = $sidebarContent.clone(true, true);
+    $clone.removeAttr('style');
+    $clone.attr('data-tfhb-dashboard-sidebar-clone', 'true');
+
+    $sidebarTarget.empty().append($clone);
+    $sidebarTarget.data(sidebarCloneDataKey, true);
+
+    return true;
+};
+
+const ensureSidebarContent = () => {
+    if (cloneSidebarContentIntoDashboard()) {
+        return;
+    }
+
+    if (sidebarMoveAttempts >= sidebarMoveMaxAttempts) {
+        return;
+    }
+
+    sidebarMoveAttempts += 1;
+    sidebarMoveTimeoutId = window.setTimeout(ensureSidebarContent, 200);
+};
+
 onMounted(() => {
     Dashboard.fetcDashboard(); 
     Dashboard.fetcDashboardStatistics();
     Notification.fetchNotifications();
+    sidebarMoveAttempts = 0;
+    ensureSidebarContent();
 }); 
 
 const updateDashboardDay = (day) => { 
@@ -69,6 +119,9 @@ onBeforeRouteLeave((to, from, next) => {
     datachart_box_dropdown.value = 0;
     datachart_dropdown.value = 0;
     window.removeEventListener('click', hideDropdownOutsideClick);
+    if (sidebarMoveTimeoutId) {
+        clearTimeout(sidebarMoveTimeoutId);
+    }
     next();
 })
 
@@ -158,281 +211,287 @@ const upCommingBookingTitle = (data) => {
             </transition>
         </div>
     </div>
-    <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-wrap">
-   
-        <div :class="{ 'tfhb-skeleton': Dashboard.skeleton_chartbox }"  class="tfhb-dashboard-chartbox tfhb-flexbox tfhb-gap-24">
+   <div class="tfhb-dashboard-section-wrap">
+        <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-wrap">
+            
+            <div :class="{ 'tfhb-skeleton': Dashboard.skeleton_chartbox }"  class="tfhb-dashboard-chartbox tfhb-flexbox tfhb-gap-24">
 
-            <!-- Single Chartbox -->
-            <div class="tfhb-single-chartbox">
-                <div class="tfhb-single-chartbox-wrap gradient-1">
-                    <span class="tfhb-adminchartbox-shape">
-                        <!-- <img  :src="$tfhb_url+'/assets/images/shape-1.svg'" alt=""> -->
-                    </span>
-
-                    <span class="cartbox-title">{{ $tfhb_trans('Total Booking') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
-                        <div class="tfhb-single-chartbox-content">
-                            <span class="cartbox-value ">{{Dashboard.data.total_bookings.total}}</span>
-                            
-                        </div>
-                        <div class="tfhb-chartbox-icon">
-                            <img  :src="$tfhb_url+'/assets/images/total-booking.svg'" alt="">
-
-                        </div>
-                    </div>
-                    
-                    <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
-                            :class = "{
-                                'badge-down': Dashboard.data.total_bookings.growth == 'decrease',
-                                'badge-up': Dashboard.data.total_bookings.growth == 'increase',
-                            }"
-                        >
-                            <Icon v-if="Dashboard.data.total_bookings.growth == 'increase'" name="ArrowUp" size=15 />
-                            <Icon v-else name="ArrowDown" size=15 />
-                            <span> {{Dashboard.data.total_bookings.percentage}}%</span>
+                <!-- Single Chartbox -->
+                <div class="tfhb-single-chartbox">
+                    <div class="tfhb-single-chartbox-wrap gradient-1">
+                        <span class="tfhb-adminchartbox-shape">
+                            <!-- <img  :src="$tfhb_url+'/assets/images/shape-1.svg'" alt=""> -->
                         </span>
-                        <span> {{ $tfhb_trans('VS') }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Single Chartbox --> 
-            <!-- Single Chartbox -->
-            <div class="tfhb-single-chartbox">
-                <div class="tfhb-single-chartbox-wrap gradient-2">
-                    <span class="tfhb-adminchartbox-shape">
-                        <!-- <img  :src="$tfhb_url+'/assets/images/shape-2.svg'" alt=""> -->
-                    </span>
 
-                    <span class="cartbox-title">{{ $tfhb_trans('Total Earnings') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
-                        <div class="tfhb-single-chartbox-content">
-                            <span class="cartbox-value ">{{Dashboard.data.total_earning.total}}</span>
-                            
-                        </div>
-                        <div class="tfhb-chartbox-icon">
-                            <img  :src="$tfhb_url+'/assets/images/total-earning.svg'" alt="">
+                        <span class="cartbox-title">{{ $tfhb_trans('Total Booking') }}</span> 
+                        <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
+                            <div class="tfhb-single-chartbox-content">
+                                <span class="cartbox-value ">{{Dashboard.data.total_bookings.total}}</span>
+                                
+                            </div>
+                            <div class="tfhb-chartbox-icon">
+                                <img  :src="$tfhb_url+'/assets/images/total-booking.svg'" alt="">
 
-                        </div>
-                    </div>
-                    
-                    <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
-                            :class = "{
-                                'badge-down': Dashboard.data.total_earning.growth == 'decrease',
-                                'badge-up': Dashboard.data.total_earning.growth == 'increase',
-                            }"
-                        >
-                            <Icon v-if="Dashboard.data.total_earning.growth == 'increase'" name="ArrowUp" size=15 />
-                            <Icon v-else name="ArrowDown" size=15 />
-                            <span> {{Dashboard.data.total_earning.percentage}}%</span>
-                        </span>
-                        <span> {{ $tfhb_trans('VS') }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Single Chartbox --> 
-
-            <!-- Single Chartbox -->
-            <div class="tfhb-single-chartbox">
-                <div class="tfhb-single-chartbox-wrap gradient-3">
-                    <span class="tfhb-adminchartbox-shape">
-                        <!-- <img  :src="$tfhb_url+'/assets/images/shape-3.svg'" alt=""> -->
-                    </span>
-
-                    <span class="cartbox-title">{{ $tfhb_trans('Completed Bookings') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
-                        <div class="tfhb-single-chartbox-content">
-                            <span class="cartbox-value ">{{Dashboard.data.total_completed_bookings.total}}</span>
-                            
-                        </div>
-                        <div class="tfhb-chartbox-icon">
-                            <img  :src="$tfhb_url+'/assets/images/complete-booking.svg'" alt="">
-
-                        </div>
-                    </div>
-                    
-                    <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
-                            :class = "{
-                                'badge-down': Dashboard.data.total_completed_bookings.growth == 'decrease',
-                                'badge-up': Dashboard.data.total_completed_bookings.growth == 'increase',
-                            }"
-                        >
-                            <Icon v-if="Dashboard.data.total_completed_bookings.growth == 'increase'" name="ArrowUp" size=15 />
-                            <Icon v-else name="ArrowDown" size=15 />
-                            <span> {{Dashboard.data.total_completed_bookings.percentage}}%</span>
-                        </span>
-                        <span> {{ $tfhb_trans('VS') }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Single Chartbox --> 
-            <!-- Single Chartbox -->
-            <div class="tfhb-single-chartbox">
-                <div class="tfhb-single-chartbox-wrap gradient-4">
-                    <span class="tfhb-adminchartbox-shape">
-                        <!-- <img  :src="$tfhb_url+'/assets/images/shape-4.svg'" alt=""> -->
-                    </span>
-
-                    <span class="cartbox-title">{{ $tfhb_trans('Canceled Bookings') }}</span> 
-                    <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
-                        <div class="tfhb-single-chartbox-content">
-                            <span class="cartbox-value ">{{Dashboard.data.total_cancelled_bookings.total}}</span>
-                            
-                        </div>
-                        <div class="tfhb-chartbox-icon">
-                            <img  :src="$tfhb_url+'/assets/images/cancel-booking.svg'" alt="">
-
-                        </div>
-                    </div>
-                    
-                    <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
-                        <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
-                            :class = "{
-                                'badge-down': Dashboard.data.total_cancelled_bookings.growth == 'decrease',
-                                'badge-up': Dashboard.data.total_cancelled_bookings.growth == 'increase',
-                            }"
-                        >
-                            <Icon v-if="Dashboard.data.total_cancelled_bookings.growth == 'increase'" name="ArrowUp" size=15 />
-                            <Icon v-else name="ArrowDown" size=15 />
-                            <span> {{Dashboard.data.total_cancelled_bookings.percentage}}%</span>
-                        </span>
-                        <span> {{ $tfhb_trans('VS') }} </span>
-                        <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Single Chartbox --> 
-
-                
-        </div>
-
-        
-        <!-- Notice Box -->
-        <div :class="{ 'tfhb-skeleton': Dashboard.skeleton_chartbox }"  class="tfhb-flexbox tfhb-dashboard-notice-box tfhb-gap-24">
-
-            <div class="tfhb-dashboard-notice-box-inner">
-                <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
-
-                    <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Recent Bookings') }}</h3>
-                    <!-- Single Notice Box -->
-                    <div  v-if="Dashboard.data.recent_booking.length > 0"  class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width">
-                        <div class=" tfhb-flexbox tfhb-gap-16 tfhb-full-width">
-                            <div
-                                v-for="(data, index) in Dashboard.data.recent_booking"
-                                    :key="index" 
-                                class="tfhb-dashboard-notice-single-box tfhb-full-width" 
-                            > 
-                                <div class="tfhb-admin-card-box tfhb-p-16">
-                                    
-                                    <p>{{truncateString(data.title, 70)}}    </p>
-                                    <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
-                                        <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
-                                        <span  class="tfhb-flexbox tfhb-gap-8">
-                                            <Icon name="UserRound" size=15 /> 
-                                            <Icon name="ArrowRight" size=15 /> 
-                                            <Icon name="UserRound" size=15 /> 
-                                            <Icon v-if="data.meeting_type != 'one-to-one'" name="UserRound" size=15 /> 
-                                        </span>
-
-                                        <span v-if="data.meeting_payment_status == true"  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.meeting_price}} {{ data.payment_currency }} </span>
-                                        <span v-else  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{ $tfhb_trans('Free') }}  </span>
-                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}} </span>
-                                    </div>
-                                </div> 
-                            </div> 
+                            </div>
                         </div>
                         
-                    </div>
-                    <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
-                        <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-                        <p>{{ $tfhb_trans('No Recent Bookings') }}</p> 
-                    </div>
-                    
-                    <!-- Single Notice Box -->
-                    
-                </div>
-            </div>
-
-            <div class="tfhb-dashboard-notice-box-inner">
-                <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
-                    <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Upcoming Meetings') }}</h3>
-
-                    <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width" >
-                        <!-- Single Notice Box -->
-                        <div class="tfhb-flexbox tfhb-gap-16 tfhb-full-width">
-                            <div 
-                                v-for="(data, index) in Dashboard.data.upcoming_booking"
-                                :key="index" 
-                                class="tfhb-dashboard-notice-single-box tfhb-flexbox tfhb-gap-8 tfhb-full-width"
+                        <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
+                            <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
+                                :class = "{
+                                    'badge-down': Dashboard.data.total_bookings.growth == 'decrease',
+                                    'badge-up': Dashboard.data.total_bookings.growth == 'increase',
+                                }"
                             >
-                                <span > {{ data.start_time}} </span>
-                                <div class="tfhb-admin-card-box tfhb-p-16">
-                                    <p>  {{ upCommingBookingTitle(data)}}   </p>
-                                    <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
-                                        <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
-                                            <!-- convert 2024-05-29 to 25 Sep, 24 -->   
-
-                                            {{ FormatDate(data.meeting_dates) }}
-                                        </span> 
-                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.availability_time_zone}}</span>
-                                        <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}}</span>
-                                    </div>
-                                </div> 
-                            </div> 
+                                <Icon v-if="Dashboard.data.total_bookings.growth == 'increase'" name="ArrowUp" size=15 />
+                                <Icon v-else name="ArrowDown" size=15 />
+                                <span> {{Dashboard.data.total_bookings.percentage}}%</span>
+                            </span>
+                            <span> {{ $tfhb_trans('VS') }} </span>
+                            <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
                         </div>
-                    </div> 
-                    <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
-                        <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
-                        <p>{{ $tfhb_trans('No Upcoming Meetings') }}</p> 
                     </div>
-
                 </div>
-            </div>
+                <!-- Single Chartbox --> 
+                <!-- Single Chartbox -->
+                <div class="tfhb-single-chartbox">
+                    <div class="tfhb-single-chartbox-wrap gradient-2">
+                        <span class="tfhb-adminchartbox-shape">
+                            <!-- <img  :src="$tfhb_url+'/assets/images/shape-2.svg'" alt=""> -->
+                        </span>
 
+                        <span class="cartbox-title">{{ $tfhb_trans('Total Earnings') }}</span> 
+                        <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
+                            <div class="tfhb-single-chartbox-content">
+                                <span class="cartbox-value ">{{Dashboard.data.total_earning.total}}</span>
+                                
+                            </div>
+                            <div class="tfhb-chartbox-icon">
+                                <img  :src="$tfhb_url+'/assets/images/total-earning.svg'" alt="">
 
-
-        </div>
-
-        <!-- Cart statistic -->
-        <div   class="tfhb-chart-statistic-wrap tfhb-dashboard-notice-box"> 
-            <div class="tfhb-dashboard-notice-box-wrap" >
-                <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
-                    <div class="tfhb-admin-title"> 
-                        <h3 >{{ $tfhb_trans('Booking Statistics') }}</h3>  
+                            </div>
+                        </div>
+                        
+                        <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
+                            <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
+                                :class = "{
+                                    'badge-down': Dashboard.data.total_earning.growth == 'decrease',
+                                    'badge-up': Dashboard.data.total_earning.growth == 'increase',
+                                }"
+                            >
+                                <Icon v-if="Dashboard.data.total_earning.growth == 'increase'" name="ArrowUp" size=15 />
+                                <Icon v-else name="ArrowDown" size=15 />
+                                <span> {{Dashboard.data.total_earning.percentage}}%</span>
+                            </span>
+                            <span> {{ $tfhb_trans('VS') }} </span>
+                            <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
+                        </div>
                     </div>
-                    <div class="thb-admin-btn right"> 
-                        <div class="tfhb-dropdown datachart-dropdown  " id="datachart-dropdown-filter">
-                            <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" >  {{ $tfhb_trans('Last 7 Days') }} 
-                                <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-if="datachart_dropdown == false" name="ChevronDown" size=20 /> 
-                                <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-else name="ChevronUp" size=20 /> 
-                            </a>
-                            <transition name="tfhb-dropdown-transition">
-                                <div   
-                                v-show="datachart_dropdown"
-                                    class="tfhb-dropdown-wrap"
+                </div>
+                <!-- Single Chartbox --> 
+
+                <!-- Single Chartbox -->
+                <div class="tfhb-single-chartbox">
+                    <div class="tfhb-single-chartbox-wrap gradient-3">
+                        <span class="tfhb-adminchartbox-shape">
+                            <!-- <img  :src="$tfhb_url+'/assets/images/shape-3.svg'" alt=""> -->
+                        </span>
+
+                        <span class="cartbox-title">{{ $tfhb_trans('Completed Bookings') }}</span> 
+                        <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
+                            <div class="tfhb-single-chartbox-content">
+                                <span class="cartbox-value ">{{Dashboard.data.total_completed_bookings.total}}</span>
+                                
+                            </div>
+                            <div class="tfhb-chartbox-icon">
+                                <img  :src="$tfhb_url+'/assets/images/complete-booking.svg'" alt="">
+
+                            </div>
+                        </div>
+                        
+                        <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
+                            <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
+                                :class = "{
+                                    'badge-down': Dashboard.data.total_completed_bookings.growth == 'decrease',
+                                    'badge-up': Dashboard.data.total_completed_bookings.growth == 'increase',
+                                }"
+                            >
+                                <Icon v-if="Dashboard.data.total_completed_bookings.growth == 'increase'" name="ArrowUp" size=15 />
+                                <Icon v-else name="ArrowDown" size=15 />
+                                <span> {{Dashboard.data.total_completed_bookings.percentage}}%</span>
+                            </span>
+                            <span> {{ $tfhb_trans('VS') }} </span>
+                            <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Chartbox --> 
+                <!-- Single Chartbox -->
+                <div class="tfhb-single-chartbox">
+                    <div class="tfhb-single-chartbox-wrap gradient-4">
+                        <span class="tfhb-adminchartbox-shape">
+                            <!-- <img  :src="$tfhb_url+'/assets/images/shape-4.svg'" alt=""> -->
+                        </span>
+
+                        <span class="cartbox-title">{{ $tfhb_trans('Canceled Bookings') }}</span> 
+                        <div class="tfhb-single-cartbox-inner tfhb-flexbox tfhb-gap-8 tfhb-justify-between">
+                            <div class="tfhb-single-chartbox-content">
+                                <span class="cartbox-value ">{{Dashboard.data.total_cancelled_bookings.total}}</span>
+                                
+                            </div>
+                            <div class="tfhb-chartbox-icon">
+                                <img  :src="$tfhb_url+'/assets/images/cancel-booking.svg'" alt="">
+
+                            </div>
+                        </div>
+                        
+                        <div class="cartbox-meta tfhb-flexbox tfhb-gap-8">
+                            <span class="cartbox-badge tfhb-flexbox tfhb-gap-4"
+                                :class = "{
+                                    'badge-down': Dashboard.data.total_cancelled_bookings.growth == 'decrease',
+                                    'badge-up': Dashboard.data.total_cancelled_bookings.growth == 'increase',
+                                }"
+                            >
+                                <Icon v-if="Dashboard.data.total_cancelled_bookings.growth == 'increase'" name="ArrowUp" size=15 />
+                                <Icon v-else name="ArrowDown" size=15 />
+                                <span> {{Dashboard.data.total_cancelled_bookings.percentage}}%</span>
+                            </span>
+                            <span> {{ $tfhb_trans('VS') }} </span>
+                            <span class="cartbox-date">{{ $tfhb_trans('Last') }} {{Dashboard.data_request.days}} {{ $tfhb_trans('days') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Chartbox --> 
+
+                    
+            </div>
+            
+
+            
+            <!-- Notice Box -->
+            <div :class="{ 'tfhb-skeleton': Dashboard.skeleton_chartbox }"  class="tfhb-flexbox tfhb-dashboard-notice-box tfhb-gap-24">
+
+                <div class="tfhb-dashboard-notice-box-inner">
+                    <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
+
+                        <h3 class="tfhb-dashboard-notice-box-title tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Recent Bookings') }}</h3>
+                        <!-- Single Notice Box -->
+                        <div  v-if="Dashboard.data.recent_booking.length > 0"  class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width">
+                            <div class=" tfhb-flexbox tfhb-gap-16 tfhb-full-width">
+                                <div
+                                    v-for="(data, index) in Dashboard.data.recent_booking"
+                                        :key="index" 
+                                    class="tfhb-dashboard-notice-single-box tfhb-full-width" 
                                 > 
-                                    <!-- route link --> 
-                                    <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans('Last 7 Days') }}</span> 
-                                    <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ $tfhb_trans('This month') }}</span> 
-                                    <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ $tfhb_trans('Last 3 months') }}</span> 
-                                    <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ $tfhb_trans('This Year') }}</span> 
-                                    
-                                </div>
-                            </transition>
-                        </div> 
-                    </div> 
+                                    <div class="tfhb-admin-card-box tfhb-p-16">
+                                        
+                                        <p>{{truncateString(data.title, 70)}}    </p>
+                                        <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
+                                            <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
+                                            <span  class="tfhb-flexbox tfhb-gap-8">
+                                                <Icon name="UserRound" size=15 /> 
+                                                <Icon name="ArrowRight" size=15 /> 
+                                                <Icon name="UserRound" size=15 /> 
+                                                <Icon v-if="data.meeting_type != 'one-to-one'" name="UserRound" size=15 /> 
+                                            </span>
+
+                                            <span v-if="data.meeting_payment_status == true"  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{data.meeting_price}} {{ data.payment_currency }} </span>
+                                            <span v-else  class="tfhb-flexbox tfhb-gap-8"><Icon name="Banknote" size=15 /> {{ $tfhb_trans('Free') }}  </span>
+                                            <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}} </span>
+                                        </div>
+                                    </div> 
+                                </div> 
+                            </div>
+                            
+                        </div>
+                        <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+                            <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
+                            <p>{{ $tfhb_trans('No Recent Bookings') }}</p> 
+                        </div>
+                        
+                        <!-- Single Notice Box -->
+                        
+                    </div>
                 </div>
-                
-                <Chart :class="{ 'tfhb-skeleton': Dashboard.skeleton_chart }" type="line" :data="Dashboard.chartData" :options="Dashboard.chartOptions" />
-    
+
+                <div class="tfhb-dashboard-notice-box-inner">
+                    <div class="tfhb-dashboard-notice-box-wrap tfhb-flexbox tfhb-gap-16">
+                        <h3 class="tfhb-dashboard-notice-box-title tfhb-mb-24  tfhb-m-0 tfhb-full-width">{{ $tfhb_trans('Upcoming Meetings') }}</h3>
+
+                        <div v-if="Dashboard.data.upcoming_booking.length > 0" class="tfhb-dashboard-notice-box-content tfhb-scrollbar tfhb-full-width" >
+                            <!-- Single Notice Box -->
+                            <div class="tfhb-flexbox tfhb-gap-16 tfhb-full-width">
+                                <div 
+                                    v-for="(data, index) in Dashboard.data.upcoming_booking"
+                                    :key="index" 
+                                    class="tfhb-dashboard-notice-single-box tfhb-flexbox tfhb-gap-8 tfhb-full-width"
+                                >
+                                    <span > {{ data.start_time}} </span>
+                                    <div class="tfhb-admin-card-box tfhb-p-16">
+                                        <p>  {{ upCommingBookingTitle(data)}}   </p>
+                                        <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
+                                            <span class="tfhb-flexbox tfhb-gap-8"><Icon name="CalendarDays" size=15 /> 
+                                                <!-- convert 2024-05-29 to 25 Sep, 24 -->   
+
+                                                {{ FormatDate(data.meeting_dates) }}
+                                            </span> 
+                                            <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 /> {{ data.availability_time_zone}}</span>
+                                            <span  class="tfhb-flexbox tfhb-gap-8"><Icon name="UserRound" size=15 /> {{data.host_first_name}} {{ data.host_last_name}}</span>
+                                        </div>
+                                    </div> 
+                                </div> 
+                            </div>
+                        </div> 
+                        <div v-else class="tfhb-empty-notice-box-wrap tfhb-flexbox tfhb-gap-16 tfhb-full-width">  
+                            <img :src="$tfhb_url+'/assets/images/icon-calendar.svg'" alt="" >
+                            <p>{{ $tfhb_trans('No Upcoming Meetings') }}</p> 
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <!-- Cart statistic -->
+            <div   class="tfhb-chart-statistic-wrap tfhb-dashboard-notice-box"> 
+                <div class="tfhb-dashboard-notice-box-wrap" >
+                    <div  class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
+                        <div class="tfhb-admin-title"> 
+                            <h3 >{{ $tfhb_trans('Booking Statistics') }}</h3>  
+                        </div>
+                        <div class="thb-admin-btn right"> 
+                            <div class="tfhb-dropdown datachart-dropdown  " id="datachart-dropdown-filter">
+                                <a class="tfhb-flexbox tfhb-gap-8 tfhb-btn"  @click="datachart_dropdown = !datachart_dropdown" id="tfhb-chart-filter" >  {{ $tfhb_trans('Last 7 Days') }} 
+                                    <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-if="datachart_dropdown == false" name="ChevronDown" size=20 /> 
+                                    <Icon click.stop="datachart_dropdown = !datachart_dropdown"  v-else name="ChevronUp" size=20 /> 
+                                </a>
+                                <transition name="tfhb-dropdown-transition">
+                                    <div   
+                                    v-show="datachart_dropdown"
+                                        class="tfhb-dropdown-wrap"
+                                    > 
+                                        <!-- route link --> 
+                                        <span class="tfhb-dropdown-single" data-name="Last 7 Days" @click="ChangeStatisticData(7)">{{ $tfhb_trans('Last 7 Days') }}</span> 
+                                        <span class="tfhb-dropdown-single" data-name="This month" @click="ChangeStatisticData(30)">{{ $tfhb_trans('This month') }}</span> 
+                                        <span class="tfhb-dropdown-single" data-name="Last 3 months" @click="ChangeStatisticData(3)">{{ $tfhb_trans('Last 3 months') }}</span> 
+                                        <span class="tfhb-dropdown-single" data-name="This Year" @click="ChangeStatisticData(12)">{{ $tfhb_trans('This Year') }}</span> 
+                                        
+                                    </div>
+                                </transition>
+                            </div> 
+                        </div> 
+                    </div>
+                    
+                    <Chart :class="{ 'tfhb-skeleton': Dashboard.skeleton_chart }" type="line" :data="Dashboard.chartData" :options="Dashboard.chartOptions" />
+
+                </div>
             </div>
         </div>
-    </div> 
+        <div class="tfhb-dashboard-sidebar">
+            
+        </div>
+   </div> 
 </div> 
 </template>
  

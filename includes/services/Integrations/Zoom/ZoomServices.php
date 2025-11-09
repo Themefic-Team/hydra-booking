@@ -478,6 +478,9 @@ class ZoomServices {
 
 		$_tfhb_host_integration_settings = get_user_meta( $user_id, '_tfhb_host_integration_settings', true );
 
+		if(empty($_tfhb_host_integration_settings) || !is_array($_tfhb_host_integration_settings)){
+			$_tfhb_host_integration_settings = array();
+		} 
 		// return error message if data is not set
 		if ( ! isset( $data['account_id'] ) || ! isset( $data['app_client_id'] ) || ! isset( $data['app_secret_key'] ) ) {
 

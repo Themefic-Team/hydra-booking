@@ -4,7 +4,7 @@ Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.26
+Stable tag: 1.1.27
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -21,6 +21,7 @@ Hydra Booking is a flexible appointment scheduling and calendar management solut
 👉 Our [Documentation](https://themefic.com/docs/hydrabooking/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=plugin_docs)
 👉 Get Support: [Click Here](https://portal.themefic.com/support/?utm_source=wp_readme&utm_medium=hydra_top_slot&utm_campaign=plugin_support)
 👉 Join Our [Facebook Group](https://www.facebook.com/groups/hydra-booking)
+👉 Join Our [Community](https://community.themefic.com/feed/)
 
 Hydra Booking is a WordPress plugin that provides a complete appointment scheduling and calendar management system. It supports unlimited appointments and integrates with WooCommerce for payment processing. With its intuitive interface, Hydra Booking helps businesses of all sizes manage appointments and bookings efficiently.
 
@@ -214,6 +215,13 @@ There are several well-known appointment booking plugins available for WordPress
 13. Slack, Twilio, Telegram settings
 
 == Changelog ==
+
+= 1.1.27 – Nov 09, 2025 =
+
+- Fixed: Zoom host update settings error resolved.
+- Updated: Information in readme.txt file.
+- Compatibility: Fully compatible with WordPress v10.3.
+- Improved: System stability and overall performance.
 
 = 1.1.26 – Nov 02, 2025 =
 
