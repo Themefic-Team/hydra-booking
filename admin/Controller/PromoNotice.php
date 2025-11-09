@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PromoNotice {
 
-    private $api_url = 'https://api.themefic.com/test';
+    private $api_url = 'https://api.themefic.com/';
     private $args = array();
     private $responsed = false; 
     private $tfhb_promo_option = false; 
@@ -43,8 +43,6 @@ class PromoNotice {
 	}
 
     public function __construct() {
-
-        // $this->tfhb_promo__schedule_callback();
         
         if(in_array(date('F'), $this->months)){  
 
@@ -253,6 +251,7 @@ class PromoNotice {
             .tfhb-dashboard-widget .highlight .before-img {
                 width: 58px;
                 height: 58px;
+                flex: 0 0 58px;
             }
             .tfhb-dashboard-widget .highlight .after-img {
                 width: 100px;
@@ -263,6 +262,8 @@ class PromoNotice {
                 justify-content: space-between;
                 align-items: flex-start;
                 flex-direction: column;
+                flex: 1;
+                width: 100%;
             }
             .tfhb-dashboard-widget .highlight .content p{
                 color: #1D2327;
