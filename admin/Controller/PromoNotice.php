@@ -514,10 +514,7 @@ class PromoNotice {
                 
             </div>
             <script>
-                
-            </script>
-            <?php 
-            $inline_js = "jQuery(document).ready(function($) {
+                jQuery(document).ready(function($) {
                     $(document).on('click', '.tfhb_promo_side_notice_dismiss', function( event ) { 
                         jQuery('.tfhb_promo_side_preview').css('display', 'none')
                         data = {
@@ -534,9 +531,9 @@ class PromoNotice {
                             }
                         });
                     });
-                });";
-
-            wp_add_inline_script('tfhb-admin-core', $inline_js);
+                });
+            </script>
+            <?php 
          endif; ?>
         <?php
 	}
