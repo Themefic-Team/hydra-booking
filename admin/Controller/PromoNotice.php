@@ -246,6 +246,7 @@ class PromoNotice {
                 margin-bottom:8px; 
                 text-align:left;
                 gap: 10px;
+                padding-top: 0px;
             }
 
             .tfhb-dashboard-widget .highlight .before-img {
