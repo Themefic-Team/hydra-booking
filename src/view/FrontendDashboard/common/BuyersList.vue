@@ -199,64 +199,73 @@ function applyFilters() {
     let filtered = [...buyers.value];
     
     // Apply search filter
-    if (searchQuery.value) {
+    const query = (searchQuery.value || '').trim().toLowerCase();
+    if (query) {
         filtered = filtered.filter(buyer => {
+            const buyerData = buyer.data || {};
+
             // Search in name
-            if (buyer.data.name_of_participant && 
-                buyer.data.name_of_participant.toLowerCase().includes(searchQuery.value)) {
+            if (buyerData.name_of_participant && 
+                buyerData.name_of_participant.toLowerCase().includes(query)) {
+                return true;
+            }
+
+            // Search in travel agent name / company name
+            if (buyerData.travel_agent_name && 
+                buyerData.travel_agent_name.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in job title
-            if (buyer.data.job_title && 
-                buyer.data.job_title.toLowerCase().includes(searchQuery.value)) {
+            if (buyerData.job_title && 
+                buyerData.job_title.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in email
-            if (buyer.data.email && 
-                buyer.data.email.toLowerCase().includes(searchQuery.value)) {
+            if (buyerData.email && 
+                buyerData.email.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in phone number
-            if (buyer.data.mobile_no && 
-                buyer.data.mobile_no.toLowerCase().includes(searchQuery.value)) {
+            if (buyerData.mobile_no && 
+                buyerData.mobile_no.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in address
-            if (buyer.data.address && 
-                buyer.data.address.toLowerCase().includes(searchQuery.value)) {
+            if (buyerData.address && 
+                buyerData.address.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in description
-            if (buyer.data.description && 
-                buyer.data.description.toLowerCase().includes(searchQuery.value)) {
+            if (buyerData.description && 
+                buyerData.description.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in website
-            if (buyer.data.website && 
-                buyer.data.website.toLowerCase().includes(searchQuery.value)) {
+            if (buyerData.website && 
+                buyerData.website.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in preferred workshop meetings
-            if (buyer.data.preferred_workshop_meetings && 
-                Array.isArray(buyer.data.preferred_workshop_meetings)) {
-                const workshopMatch = buyer.data.preferred_workshop_meetings.some(workshop => 
-                    workshop.toLowerCase().includes(searchQuery.value)
+            if (buyerData.preferred_workshop_meetings && 
+                Array.isArray(buyerData.preferred_workshop_meetings)) {
+                const workshopMatch = buyerData.preferred_workshop_meetings.some(workshop => 
+                    typeof workshop === 'string' && workshop.toLowerCase().includes(query)
                 );
                 if (workshopMatch) return true;
             }
             
             // Search in nation
-            if (buyer.data.nation && 
-                Array.isArray(buyer.data.nation)) {
-                const nationMatch = buyer.data.nation.some(nation => 
-                    nation.toLowerCase().includes(searchQuery.value)
+            if (buyerData.nation && 
+                Array.isArray(buyerData.nation)) {
+                const nationMatch = buyerData.nation.some(nation => 
+                    typeof nation === 'string' && nation.toLowerCase().includes(query)
                 );
                 if (nationMatch) return true;
             }

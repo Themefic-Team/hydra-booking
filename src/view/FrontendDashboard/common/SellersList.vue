@@ -218,95 +218,92 @@ function applyFilters() {
     let filtered = [...sellers.value];
     
     // Apply search filter
-    if (searchQuery.value) {
+    const query = (searchQuery.value || '').trim().toLowerCase();
+    if (query) {
         filtered = filtered.filter(seller => {
+            const sellerData = seller.data || {};
+
             // Search in name
-            if (seller.data.name && 
-                seller.data.name.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.name && sellerData.name.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in job title
-            if (seller.data.job_title && 
-                seller.data.job_title.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.job_title && sellerData.job_title.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in email
-            if (seller.data.email && 
-                seller.data.email.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.email && sellerData.email.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in phone number
-            if (seller.data.telefono_diretto && 
-                seller.data.telefono_diretto.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.telefono_diretto && sellerData.telefono_diretto.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in address/location
-            if (seller.data.location && 
-                seller.data.location.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.location && sellerData.location.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in description
-            if (seller.data.description && 
-                seller.data.description.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.description && sellerData.description.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in website
-            if (seller.data.sito_internet && 
-                seller.data.sito_internet.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.sito_internet && sellerData.sito_internet.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in company name
-            if (seller.data['denominazione-operatore-azienda'] && 
-                seller.data['denominazione-operatore-azienda'].toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.denominazione_operatore_azienda && 
+                sellerData.denominazione_operatore_azienda.toLowerCase().includes(query)) {
+                return true;
+            }
+            if (sellerData['denominazione-operatore-azienda'] && 
+                sellerData['denominazione-operatore-azienda'].toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in alternative company name
-            if (seller.data['eventuale-altra-denominazione'] && 
-                seller.data['eventuale-altra-denominazione'].toLowerCase().includes(searchQuery.value)) {
+            if (sellerData['eventuale-altra-denominazione'] && 
+                sellerData['eventuale-altra-denominazione'].toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in VAT number
-            if (seller.data['pi_cf'] && 
-                seller.data['pi_cf'].toLowerCase().includes(searchQuery.value)) {
+            if (sellerData['pi_cf'] && sellerData['pi_cf'].toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in activity area
-            if (seller.data.ambito_di_attivita && 
-                seller.data.ambito_di_attivita.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.ambito_di_attivita && sellerData.ambito_di_attivita.toLowerCase().includes(query)) {
                 return true;
             }
             
             // Search in specialization
-            if (seller.data.specializzazione && 
-                Array.isArray(seller.data.specializzazione)) {
-                const specializationMatch = seller.data.specializzazione.some(spec => 
-                    spec.toLowerCase().includes(searchQuery.value)
+            if (sellerData.specializzazione && 
+                Array.isArray(sellerData.specializzazione)) {
+                const specializationMatch = sellerData.specializzazione.some(spec => 
+                    typeof spec === 'string' && spec.toLowerCase().includes(query)
                 );
                 if (specializationMatch) return true;
             }
             
             // Search in buyer interest origin
-            if (seller.data.provenienza_buyer_interesse && 
-                Array.isArray(seller.data.provenienza_buyer_interesse)) {
-                const buyerMatch = seller.data.provenienza_buyer_interesse.some(buyer => 
-                    buyer.toLowerCase().includes(searchQuery.value)
+            if (sellerData.provenienza_buyer_interesse && 
+                Array.isArray(sellerData.provenienza_buyer_interesse)) {
+                const buyerMatch = sellerData.provenienza_buyer_interesse.some(buyer => 
+                    typeof buyer === 'string' && buyer.toLowerCase().includes(query)
                 );
                 if (buyerMatch) return true;
             }
             
             // Search in region
-            if (seller.data.regione && 
-                seller.data.regione.toLowerCase().includes(searchQuery.value)) {
+            if (sellerData.regione && sellerData.regione.toLowerCase().includes(query)) {
                 return true;
             }
             

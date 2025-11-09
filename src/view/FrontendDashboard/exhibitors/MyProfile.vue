@@ -1595,6 +1595,8 @@ onBeforeMount(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+  overflow: scroll;
 }
 
 .gallery-popup-content img {

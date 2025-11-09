@@ -1628,10 +1628,8 @@ const redirectToChat = (user_id) => {
                     <!-- {{ event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }} -->
                         <div class="tfhb-table-cell tfhb-cell-title">
                             <div class="tfhb-cell-content">
-                                <h4>{{ event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4>
-                                <div v-if="event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description" class="tfhb-cell-description">
-                                    {{ truncateString(event.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.description, 80) }}
-                                </div>
+                                <h4>{{ event.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.travel_agent_name || getBuyerName(event.extendedProps.apiData) }}</h4>
+                           
                             </div>
                         </div>
                         <div class="tfhb-table-cell tfhb-cell-date">
@@ -1728,7 +1726,7 @@ const redirectToChat = (user_id) => {
 
             <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
                 <div class="tfhb-company-logo">
-                  <img v-if="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" :src="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" alt="Sellers Avatar"
+                  <img v-if="selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.avatar" :src="selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.avatar" alt="Sellers Avatar"
                   :style="{
                     'width': '80px',
                     'height': '80px', 
@@ -1742,14 +1740,14 @@ const redirectToChat = (user_id) => {
                     'border-radius': '50%'
                   }">
                 </div>
-                <h4 class="tfhb-company-name">{{  selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4>
+                <h4 class="tfhb-company-name">{{ selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.travel_agent_name || getBuyerName(selectedEventData?.extendedProps?.apiData) }}</h4>
                  <!-- selectedEventData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4> -->
             </div>
 
             <div class="tfhb-details-section" v-if="selectedEventData.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description">
                 <label class="tfhb-section-label">DESCRIPTION</label>
                 <p class="tfhb-description-text">
-                    {{ selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.description || 'No description available' }}
+                    {{ selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description || 'No description available' }}
                 </p>
             </div>
 
@@ -1764,7 +1762,7 @@ const redirectToChat = (user_id) => {
                             {{ getBuyerName(selectedEventData.extendedProps.apiData) }}
                         </span>
                         <span class="tfhb-staff-role">
-                            {{ selectedEventData.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.job_title || 'Travel Agent' }}
+                            {{ selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.job_title || 'Travel Agent' }}
                         </span>
                     </div>
                 </div>
@@ -1832,7 +1830,7 @@ const redirectToChat = (user_id) => {
             <div v-if="selectedEventData" class="tfhb-popup-details">
                 <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
                     <div class="tfhb-company-logo">
-                      <img v-if="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" :src="selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.avatar" alt="Buyer Avatar"
+                      <img v-if="selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.avatar" :src="selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.avatar" alt="Buyer Avatar"
                       :style="{
                         'width': '80px',
                         'height': '80px', 
@@ -1846,13 +1844,13 @@ const redirectToChat = (user_id) => {
                         'border-radius': '50%'
                       }">
                     </div>
-                    <h4 class="tfhb-company-name">{{ selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.travel_agent_name }}</h4>
+                    <h4 class="tfhb-company-name">{{ selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.travel_agent_name || getBuyerName(selectedEventData?.extendedProps?.apiData) }}</h4>
                 </div>
 
                 <div class="tfhb-details-section" v-if="selectedEventData.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description">
                     <label class="tfhb-section-label">DESCRIPTION</label>
                     <p class="tfhb-description-text">
-                        {{ selectedEventData.extendedProps.apiData.buyers_data.user_meta.tfhb_buyers_data.description || 'No description available' }}
+                        {{ selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.description || 'No description available' }}
                     </p>
                 </div>
 
@@ -1867,7 +1865,7 @@ const redirectToChat = (user_id) => {
                                 {{ getBuyerName(selectedEventData.extendedProps.apiData) }}
                             </span>
                             <span class="tfhb-staff-role">
-                                {{ selectedEventData.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.job_title || 'Travel Agent' }}
+                                {{ selectedEventData?.extendedProps?.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.job_title || 'Travel Agent' }}
                             </span>
                         </div>
                     </div>

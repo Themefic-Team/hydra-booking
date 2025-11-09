@@ -1678,9 +1678,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
                         <div class="tfhb-table-cell tfhb-cell-title">
                             <div class="tfhb-cell-content">
                                 <h4>{{ getSellerCompanyName(event.extendedProps?.apiData) }}</h4>
-                                <div v-if="event.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description" class="tfhb-cell-description">
-                                    {{ truncateString(event.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.description, 80) }}
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="tfhb-table-cell tfhb-cell-date">
@@ -1775,7 +1773,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
 
             <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
                 <div class="tfhb-company-logo">
-                  <img v-if="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_buyers_data.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Buyers Avatar"
+                  <img v-if="selectedEventData?.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Buyers Avatar"
                   :style="{
                     'width': '80px',
                     'height': '80px', 
@@ -1887,7 +1885,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
             <div v-if="selectedEventData" class="tfhb-popup-details">
                 <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
                     <div class="tfhb-company-logo">
-                      <img v-if="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Seller Avatar"
+                      <img v-if="selectedEventData?.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Seller Avatar"
                       :style="{
                         'width': '80px',
                         'height': '80px', 
