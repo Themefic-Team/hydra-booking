@@ -4,7 +4,7 @@ Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.27
+Stable tag: 1.1.28
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -216,11 +216,16 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
+= 1.1.28 – Nov 10, 2025 =
+
+- Improved: Vulnerability issue resolved for security.
+- Improved: Overall system security strengthened.
+
 = 1.1.27 – Nov 09, 2025 =
 
 - Fixed: Zoom host update settings error resolved.
 - Updated: Information in readme.txt file.
-- Compatibility: Fully compatible with WordPress v10.3.
+- Compatibility: Fully compatible with WooCommerce v10.3.
 - Improved: System stability and overall performance.
 
 = 1.1.26 – Nov 02, 2025 =
