@@ -119,6 +119,199 @@ const isUserInactive = (status) => {
     return statusStr === 'inactive' || statusStr === '0' || statusStr === 'false' || statusStr === '';
 };
 
+const getCompanyNameForUser = (user) => {
+    if (!user || !user.data) {
+        return '';
+    }
+
+    const role = (user.role || '').toLowerCase();
+
+    if (role === 'buyers' || role === 'buyer') {
+        return (user.data?.travel_agent_name || '').trim();
+    }
+
+    if (role === 'sellers' || role === 'seller') {
+        return (user.data?.denominazione_operatore_azienda || '').trim();
+    }
+
+    if (role === 'exhibitors' || role === 'exhibitor') {
+        return (user.data?.company_name || '').trim();
+    }
+
+    return (user.data?.company_name ||
+        user.data?.denominazione_operatore_azienda ||
+        user.data?.travel_agent_name ||
+        '').trim();
+};
+
+const sanitizeFileNameSegment = (value) => {
+    if (!value) {
+        return '';
+    }
+
+    return String(value)
+        .trim()
+        .replace(/\s+/g, '_')
+        .replace(/[^a-zA-Z0-9_-]/g, '');
+};
+
+const getBackgroundImageForRole = (role) => {
+    const normalizedRole = (role || '').toLowerCase();
+
+    if (normalizedRole === 'buyers' || normalizedRole === 'buyer') {
+        return AddonsSettings?.buyers?.badge_pdf_image || '';
+    }
+
+    if (normalizedRole === 'sellers' || normalizedRole === 'seller') {
+        return AddonsSettings?.Sellers?.badge_pdf_image || '';
+    }
+
+    if (normalizedRole === 'exhibitors' || normalizedRole === 'exhibitor') {
+        return AddonsSettings?.Exhibitors?.badge_pdf_image || '';
+    }
+
+    return '';
+};
+
+const getPresentStaffMembers = (user) => {
+    const staffArray = user?.data?.staff;
+
+    if (!Array.isArray(staffArray)) {
+        return [];
+    }
+
+    return staffArray.filter((member) => {
+        const flag = member?.is_present_at_event;
+        return flag === '1' || flag === 1 || flag === true;
+    });
+};
+
+const getUserDisplayInfo = (user) => {
+    const userName = user?.name ||
+        (user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}`.trim() : '') ||
+        user?.display_name ||
+        'User Name';
+
+    const userEmail = user?.email ||
+        user?.user_email ||
+        'No Email';
+
+    const userRole = user?.role || 'Participant';
+
+    return { userName, userEmail, userRole };
+};
+
+const generateStaffBadgePdf = async ({ staffName, staffPosition, companyName, backgroundImageUrl }) => {
+    const qrData = `Name: ${staffName} | Role: Staff | Position: ${staffPosition} | Company: ${companyName || 'N/A'}`;
+    const qrCodeDataURL = await QRCode.toDataURL(qrData, {
+        width: 150,
+        margin: 2,
+        color: {
+            dark: '#000000',
+            light: '#FFFFFF',
+        },
+    });
+
+    const pdf = new jsPDF('portrait', 'mm', 'a4');
+    const pageWidth = 210;
+    const pageHeight = 297;
+
+    if (backgroundImageUrl && backgroundImageUrl.trim() !== '') {
+        try {
+            pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+        } catch (imgError) {
+            console.warn(`Could not add background image for staff ${staffName}:`, imgError);
+        }
+    }
+
+    const quadrantWidth = pageWidth / 2;
+    const quadrantHeight = pageHeight / 2;
+    const startX = quadrantWidth;
+    const startY = quadrantHeight;
+
+    const qrSize = 35;
+    const qrX = startX + (quadrantWidth - qrSize) / 2;
+    const qrY = startY + 70;
+    pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+
+    const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+        pdf.setFontSize(initialFontSize);
+        let currentWidth = pdf.getTextWidth(text);
+        let fontSize = initialFontSize;
+
+        while (currentWidth > maxWidth && fontSize > minFontSize) {
+            fontSize -= 0.5;
+            pdf.setFontSize(fontSize);
+            currentWidth = pdf.getTextWidth(text);
+        }
+
+        if (currentWidth > maxWidth) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            for (let i = 0; i < words.length; i++) {
+                const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                const testWidth = pdf.getTextWidth(testLine);
+
+                if (testWidth > maxWidth && currentLine) {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+
+            return { lines, fontSize };
+        }
+
+        return { lines: [text], fontSize };
+    };
+
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFont('helvetica', 'normal');
+    const roleLabelResult = fitTextToWidth('STAFF', quadrantWidth - 10, 10);
+    pdf.setFontSize(roleLabelResult.fontSize);
+    let currentY = startY + 110;
+    roleLabelResult.lines.forEach((line, index) => {
+        const lineWidth = pdf.getTextWidth(line);
+        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+        if (index < roleLabelResult.lines.length - 1) currentY += 5;
+    });
+
+    currentY += 8;
+    pdf.setFont('helvetica', 'bold');
+    const nameResult = fitTextToWidth(staffName, quadrantWidth - 10, 14, 9);
+    pdf.setFontSize(nameResult.fontSize);
+    nameResult.lines.forEach((line, index) => {
+        const lineWidth = pdf.getTextWidth(line);
+        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+        if (index < nameResult.lines.length - 1) currentY += 5;
+    });
+
+    currentY += 7;
+    pdf.setFont('helvetica', 'normal');
+    const companyResult = fitTextToWidth(companyName || '', quadrantWidth - 10, 9);
+    pdf.setFontSize(companyResult.fontSize);
+    companyResult.lines.forEach((line, index) => {
+        const lineWidth = pdf.getTextWidth(line);
+        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+        if (index < companyResult.lines.length - 1) currentY += 5;
+    });
+
+    currentY += 7;
+    const positionResult = fitTextToWidth(staffPosition, quadrantWidth - 10, 9);
+    pdf.setFontSize(positionResult.fontSize);
+    positionResult.lines.forEach((line, index) => {
+        const lineWidth = pdf.getTextWidth(line);
+        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+        if (index < positionResult.lines.length - 1) currentY += 5;
+    });
+
+    return pdf.output('blob');
+};
+
 // Get field options for checkbox/select fields based on user type
 const getFieldOptions = (fieldName) => {
     const userType = AddonsUsers.edit_user_popup.user_type;
@@ -306,11 +499,16 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                     if (index < nameResult.lines.length - 1) currentY += 5;
                 });
 
+                let companyNameForFile = '';
+
                 // Role-specific data
                 if (user.role === 'Buyers' || user.role === 'buyers') {
                     // Company name
                     currentY += 7;
                     const companyName = (user.data?.travel_agent_name || '').trim();
+                    if (!companyNameForFile && companyName) {
+                        companyNameForFile = companyName;
+                    }
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -347,6 +545,9 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                     // Company name
                     currentY += 7;
                     const companyName = (user.data?.denominazione_operatore_azienda || '').trim();
+                    if (!companyNameForFile && companyName) {
+                        companyNameForFile = companyName;
+                    }
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -376,6 +577,9 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                     // Company name
                     currentY += 7;
                     const companyName = (user.data?.company_name || '').trim();
+                    if (!companyNameForFile && companyName) {
+                        companyNameForFile = companyName;
+                    }
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -388,8 +592,19 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                     }
                 }
                 
+                if (!companyNameForFile) {
+                    const fallbackCompany =
+                        (typeof user.data?.company_name === 'string' && user.data.company_name.trim()) ||
+                        (typeof user.data?.company === 'string' && user.data.company.trim()) ||
+                        '';
+                    if (fallbackCompany) {
+                        companyNameForFile = fallbackCompany;
+                    }
+                }
+
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileNameBase = companyNameForFile || userName || userRole || 'badge';
+                const fileName = `badge_${fileNameBase.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 toast.success('Badge PDF generated successfully! (without background)', {
@@ -568,7 +783,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 }
                 
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 toast.success('Badge PDF generated successfully!', {
@@ -868,21 +1083,18 @@ const handleBulkBadgeExport = async () => {
     }
 
     try {
-        // Check if JSZip is available (try multiple sources)
         let JSZipInstance = JSZip;
         if (typeof JSZipInstance === 'undefined') {
-            // Try to get JSZip from global scope
             JSZipInstance = window.JSZip;
         }
         if (typeof JSZipInstance === 'undefined') {
-            // Try to get JSZip from require if available
             try {
                 JSZipInstance = require('jszip');
             } catch (e) {
                 // Ignore require error
             }
         }
-        
+
         if (typeof JSZipInstance === 'undefined') {
             toast.error('JSZip library not available. Please contact administrator.', {
                 position: 'bottom-right',
@@ -896,13 +1108,22 @@ const handleBulkBadgeExport = async () => {
             autoClose: 2000,
         });
 
-        const zip = new JSZipInstance();
-        const selectedUsers = AddonsUsers.users[AddonsUsers.current_tab].filter(user => 
+        const outerZip = new JSZipInstance();
+        const selectedUsers = AddonsUsers.users[AddonsUsers.current_tab].filter((user) =>
             AddonsUsers.selected_users.includes(user.id)
         );
 
-        // Validate that selected users have required data
-        const validUsers = selectedUsers.filter(user => user.name && user.role);
+        const validUsers = selectedUsers.filter((user) => {
+            if (!user) return false;
+            const hasName = Boolean(
+                user.name ||
+                (user.first_name && user.last_name) ||
+                user.display_name
+            );
+            const hasRole = Boolean(user.role);
+            return hasName && hasRole;
+        });
+
         if (validUsers.length === 0) {
             toast.error('Selected users must have valid names and roles', {
                 position: 'bottom-right',
@@ -918,7 +1139,6 @@ const handleBulkBadgeExport = async () => {
             });
         }
 
-        // Check for reasonable limit to prevent performance issues
         const MAX_USERS = 100;
         if (validUsers.length > MAX_USERS) {
             toast.warning(`Large number of users selected (${validUsers.length}). This may take some time.`, {
@@ -927,313 +1147,294 @@ const handleBulkBadgeExport = async () => {
             });
         }
 
-        // Show initial progress toast
         toast.info(`Starting bulk badge generation for ${validUsers.length} users...`, {
             position: 'bottom-right',
             autoClose: 3000,
         });
 
-        // Generate PDFs for each valid user with timeout protection
-        const TIMEOUT_PER_USER = 10000; // 10 seconds per user
+        const TIMEOUT_PER_USER = 10000;
+        let totalStaffBadges = 0;
+
         for (let i = 0; i < validUsers.length; i++) {
             const user = validUsers[i];
-            
+            const { userName, userEmail, userRole } = getUserDisplayInfo(user);
+            const companyName = getCompanyNameForUser(user);
+            const backgroundImageUrl = getBackgroundImageForRole(user.role);
+            const sanitizedCompanySegment = sanitizeFileNameSegment(companyName);
+            const sanitizedUserSegment = sanitizeFileNameSegment(userName);
+            const baseFileSegment = sanitizedCompanySegment || sanitizedUserSegment || `user_${user.id}`;
+            const userZip = new JSZipInstance();
+
             try {
-                // Add timeout protection for each user
-                const userPromise = new Promise(async (resolve, reject) => {
+                const userBadgeBlob = await new Promise((resolve, reject) => {
                     const timeoutId = setTimeout(() => {
-                        reject(new Error(`Timeout generating badge for ${user.name}`));
+                        reject(new Error(`Timeout generating badge for ${userName}`));
                     }, TIMEOUT_PER_USER);
-                    
-                    try {
-                        // Extract user data with better fallbacks
-                        const userName = user.name || 
-                                        (user.first_name && user.last_name ? `${user.first_name} ${user.last_name}`.trim() : '') || 
-                                        user.display_name || 
-                                        'User Name';
-                        
-                        const userEmail = user.email || 
-                                          user.user_email || 
-                                          'No Email';
-                        
-                        const userRole = user.role || 'Participant';
-                        
-                        // Create QR code data
-                        const qr_data = `Name: ${userName} | Role: ${userRole} | Email: ${userEmail}`;
-                        
-                        // Generate QR code as data URL
-                        const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
-                            width: 150,
-                            margin: 2,
-                            color: {
-                                dark: '#000000',
-                                light: '#FFFFFF'
-                            }
-                        });
 
-                        // Create new PDF document (A4 size)
-                        const pdf = new jsPDF('portrait', 'mm', 'a4');
-                        
-                        // A4 dimensions: 210mm x 297mm
-                        const pageWidth = 210;
-                        const pageHeight = 297;
-                        let backgroundImageUrl = '';
-                        
-                        if (user.role === 'buyers' || user.role === 'Buyers') {
-                            backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || '';
-                        } else if (user.role === 'sellers' || user.role === 'Sellers') {
-                            backgroundImageUrl = AddonsSettings?.Sellers?.badge_pdf_image || '';
-                        } else if (user.role === 'exhibitors' || user.role === 'Exhibitors') {
-                            backgroundImageUrl = AddonsSettings?.Exhibitors?.badge_pdf_image || '';
+                    (async () => {
+                        try {
+                            const qrData = `Name: ${userName} | Role: ${userRole} | Email: ${userEmail}`;
+                            const qrCodeDataURL = await QRCode.toDataURL(qrData, {
+                                width: 150,
+                                margin: 2,
+                                color: {
+                                    dark: '#000000',
+                                    light: '#FFFFFF',
+                                },
+                            });
+
+                            const pdf = new jsPDF('portrait', 'mm', 'a4');
+                            const pageWidth = 210;
+                            const pageHeight = 297;
+
+                            const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                                pdf.setFontSize(initialFontSize);
+                                let currentWidth = pdf.getTextWidth(text);
+                                let fontSize = initialFontSize;
+
+                                while (currentWidth > maxWidth && fontSize > minFontSize) {
+                                    fontSize -= 0.5;
+                                    pdf.setFontSize(fontSize);
+                                    currentWidth = pdf.getTextWidth(text);
+                                }
+
+                                if (currentWidth > maxWidth) {
+                                    const words = text.split(' ');
+                                    const lines = [];
+                                    let currentLine = '';
+
+                                    for (let idx = 0; idx < words.length; idx++) {
+                                        const testLine = currentLine + (currentLine ? ' ' : '') + words[idx];
+                                        const testWidth = pdf.getTextWidth(testLine);
+
+                                        if (testWidth > maxWidth && currentLine) {
+                                            lines.push(currentLine);
+                                            currentLine = words[idx];
+                                        } else {
+                                            currentLine = testLine;
+                                        }
+                                    }
+
+                                    if (currentLine) lines.push(currentLine);
+
+                                    return { lines, fontSize };
+                                }
+
+                                return { lines: [text], fontSize };
+                            };
+
+                            const addPDFContent = () => {
+                                const quadrantWidth = pageWidth / 2;
+                                const quadrantHeight = pageHeight / 2;
+                                const startX = quadrantWidth;
+                                const startY = quadrantHeight;
+
+                                const qrSize = 35;
+                                const qrX = startX + (quadrantWidth - qrSize) / 2;
+                                const qrY = startY + 70;
+                                pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+
+                                pdf.setTextColor(0, 0, 0);
+                                pdf.setFont('helvetica', 'normal');
+                                const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                                pdf.setFontSize(jobTitleResult.fontSize);
+                                let currentY = startY + 110;
+                                jobTitleResult.lines.forEach((line, index) => {
+                                    const lineWidth = pdf.getTextWidth(line);
+                                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                    if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                                });
+
+                                currentY += 8;
+                                pdf.setFont('helvetica', 'bold');
+                                const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                                pdf.setFontSize(nameResult.fontSize);
+                                nameResult.lines.forEach((line, index) => {
+                                    const lineWidth = pdf.getTextWidth(line);
+                                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                    if (index < nameResult.lines.length - 1) currentY += 5;
+                                });
+
+                                if (user.role === 'Buyers' || user.role === 'buyers') {
+                                    currentY += 7;
+                                    const buyerCompanyName = (user.data?.travel_agent_name || '').trim();
+                                    if (buyerCompanyName) {
+                                        pdf.setFont('helvetica', 'normal');
+                                        const companyResult = fitTextToWidth(buyerCompanyName, quadrantWidth - 10, 9);
+                                        pdf.setFontSize(companyResult.fontSize);
+                                        companyResult.lines.forEach((line, index) => {
+                                            const lineWidth = pdf.getTextWidth(line);
+                                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                            if (index < companyResult.lines.length - 1) currentY += 5;
+                                        });
+                                    }
+
+                                    currentY += 7;
+                                    let nation = '';
+                                    if (Array.isArray(user.data?.nation)) {
+                                        nation = user.data.nation.join(', ');
+                                    } else if (typeof user.data?.nation === 'object' && user.data?.nation !== null) {
+                                        nation = Object.values(user.data.nation).join(', ');
+                                    } else if (typeof user.data?.nation === 'string') {
+                                        nation = user.data.nation;
+                                    }
+                                    if (nation) {
+                                        const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                                        pdf.setFontSize(nationResult.fontSize);
+                                        nationResult.lines.forEach((line, index) => {
+                                            const lineWidth = pdf.getTextWidth(line);
+                                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                            if (index < nationResult.lines.length - 1) currentY += 5;
+                                        });
+                                    }
+                                }
+
+                                if (user.role === 'Sellers' || user.role === 'sellers') {
+                                    currentY += 7;
+                                    const sellerCompanyName = (user.data?.denominazione_operatore_azienda || '').trim();
+                                    if (sellerCompanyName) {
+                                        pdf.setFont('helvetica', 'normal');
+                                        const companyResult = fitTextToWidth(sellerCompanyName, quadrantWidth - 10, 9);
+                                        pdf.setFontSize(companyResult.fontSize);
+                                        companyResult.lines.forEach((line, index) => {
+                                            const lineWidth = pdf.getTextWidth(line);
+                                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                            if (index < companyResult.lines.length - 1) currentY += 5;
+                                        });
+                                    }
+
+                                    currentY += 7;
+                                    const nation = user.data?.regione || '';
+                                    if (nation) {
+                                        const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                                        pdf.setFontSize(nationResult.fontSize);
+                                        nationResult.lines.forEach((line, index) => {
+                                            const lineWidth = pdf.getTextWidth(line);
+                                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                            if (index < nationResult.lines.length - 1) currentY += 5;
+                                        });
+                                    }
+                                }
+
+                                if (user.role === 'Exhibitors' || user.role === 'exhibitors') {
+                                    currentY += 7;
+                                    const exhibitorCompanyName = (user.data?.company_name || '').trim();
+                                    if (exhibitorCompanyName) {
+                                        pdf.setFont('helvetica', 'normal');
+                                        const companyResult = fitTextToWidth(exhibitorCompanyName, quadrantWidth - 10, 9);
+                                        pdf.setFontSize(companyResult.fontSize);
+                                        companyResult.lines.forEach((line, index) => {
+                                            const lineWidth = pdf.getTextWidth(line);
+                                            pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                                            if (index < companyResult.lines.length - 1) currentY += 5;
+                                        });
+                                    }
+                                }
+                            };
+
+                            const pdfDoc = await (async () => {
+                                if (backgroundImageUrl) {
+                                    return new Promise((resolvePdf, rejectPdf) => {
+                                        const img = new Image();
+                                        img.crossOrigin = 'anonymous';
+
+                                        img.onload = () => {
+                                            try {
+                                                pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                                                addPDFContent();
+                                                resolvePdf(pdf);
+                                            } catch (err) {
+                                                rejectPdf(err);
+                                            }
+                                        };
+
+                                        img.onerror = () => {
+                                            try {
+                                                addPDFContent();
+                                                resolvePdf(pdf);
+                                            } catch (err) {
+                                                rejectPdf(err);
+                                            }
+                                        };
+
+                                        img.src = backgroundImageUrl;
+                                    });
+                                }
+
+                                addPDFContent();
+                                return pdf;
+                            })();
+
+                            const pdfBlob = pdfDoc.output('blob');
+                            clearTimeout(timeoutId);
+                            resolve(pdfBlob);
+                        } catch (err) {
+                            clearTimeout(timeoutId);
+                            reject(err);
                         }
-
-                        // Helper function to fit text within available width
-                        const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
-                            pdf.setFontSize(initialFontSize);
-                            let currentWidth = pdf.getTextWidth(text);
-                            let fontSize = initialFontSize;
-                            
-                            while (currentWidth > maxWidth && fontSize > minFontSize) {
-                                fontSize -= 0.5;
-                                pdf.setFontSize(fontSize);
-                                currentWidth = pdf.getTextWidth(text);
-                            }
-                            
-                            if (currentWidth > maxWidth) {
-                                const words = text.split(' ');
-                                const lines = [];
-                                let currentLine = '';
-                                
-                                for (let i = 0; i < words.length; i++) {
-                                    const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-                                    const testWidth = pdf.getTextWidth(testLine);
-                                    
-                                    if (testWidth > maxWidth && currentLine) {
-                                        lines.push(currentLine);
-                                        currentLine = words[i];
-                                    } else {
-                                        currentLine = testLine;
-                                    }
-                                }
-                                if (currentLine) lines.push(currentLine);
-                                
-                                return { lines, fontSize };
-                            }
-                            
-                            return { lines: [text], fontSize };
-                        };
-
-                        // Function to add content to PDF (without background)
-                        const addPDFContent = () => {
-                            // Calculate bottom right quadrant positions
-                            const quadrantWidth = pageWidth / 2;
-                            const quadrantHeight = pageHeight / 2;
-                            const startX = quadrantWidth;
-                            const startY = quadrantHeight;
-                            
-                            // Add QR code
-                            const qrSize = 35;
-                            const qrX = startX + (quadrantWidth - qrSize) / 2;
-                            const qrY = startY + 70;
-                            pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
-                            
-                            // Add role
-                            pdf.setTextColor(0, 0, 0);
-                            pdf.setFont('helvetica', 'normal');
-                            const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
-                            pdf.setFontSize(jobTitleResult.fontSize);
-                            let currentY = startY + 110;
-                            jobTitleResult.lines.forEach((line, index) => {
-                                const lineWidth = pdf.getTextWidth(line);
-                                pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
-                                if (index < jobTitleResult.lines.length - 1) currentY += 5;
-                            });
-                            
-                            // Add user name
-                            currentY += 8;
-                            pdf.setTextColor(0, 0, 0);
-                            pdf.setFont('helvetica', 'bold');
-                            const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
-                            pdf.setFontSize(nameResult.fontSize);
-                            nameResult.lines.forEach((line, index) => {
-                                const lineWidth = pdf.getTextWidth(line);
-                                pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
-                                if (index < nameResult.lines.length - 1) currentY += 5;
-                            });
-
-                            // Role-specific data
-                            if (user.role === 'Buyers' || user.role === 'buyers') {
-                                currentY += 7;
-                                const companyName = (user.data?.travel_agent_name || '').trim();
-                                if (companyName) {
-                                    pdf.setFont('helvetica', 'normal');
-                                    const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
-                                    pdf.setFontSize(companyResult.fontSize);
-                                    companyResult.lines.forEach((line, index) => {
-                                        const lineWidth = pdf.getTextWidth(line);
-                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
-                                        if (index < companyResult.lines.length - 1) currentY += 5;
-                                    });
-                                }
-
-                                currentY += 7;
-                                let nation = '';
-                                if (Array.isArray(user.data?.nation)) {
-                                    nation = user.data.nation.join(', ');
-                                } else if (typeof user.data?.nation === 'object' && user.data?.nation !== null) {
-                                    nation = Object.values(user.data.nation).join(', ');
-                                } else if (typeof user.data?.nation === 'string') {
-                                    nation = user.data.nation;
-                                }
-                                if (nation) {
-                                    const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
-                                    pdf.setFontSize(nationResult.fontSize);
-                                    nationResult.lines.forEach((line, index) => {
-                                        const lineWidth = pdf.getTextWidth(line);
-                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
-                                        if (index < nationResult.lines.length - 1) currentY += 5;
-                                    });
-                                }
-                            }
-
-                            if (user.role === 'Sellers' || user.role === 'sellers') {
-                                currentY += 7;
-                                const companyName = (user.data?.denominazione_operatore_azienda || '').trim();
-                                if (companyName) {
-                                    pdf.setFont('helvetica', 'normal');
-                                    const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
-                                    pdf.setFontSize(companyResult.fontSize);
-                                    companyResult.lines.forEach((line, index) => {
-                                        const lineWidth = pdf.getTextWidth(line);
-                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
-                                        if (index < companyResult.lines.length - 1) currentY += 5;
-                                    });
-                                }
-
-                                currentY += 7;
-                                const nation = user.data?.regione || '';
-                                if (nation) {
-                                    const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
-                                    pdf.setFontSize(nationResult.fontSize);
-                                    nationResult.lines.forEach((line, index) => {
-                                        const lineWidth = pdf.getTextWidth(line);
-                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
-                                        if (index < nationResult.lines.length - 1) currentY += 5;
-                                    });
-                                }
-                            }
-
-                            if (user.role === 'Exhibitors' || user.role === 'exhibitors') {
-                                currentY += 7;
-                                const companyName = (user.data?.company_name || '').trim();
-                                if (companyName) {
-                                    pdf.setFont('helvetica', 'normal');
-                                    const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
-                                    pdf.setFontSize(companyResult.fontSize);
-                                    companyResult.lines.forEach((line, index) => {
-                                        const lineWidth = pdf.getTextWidth(line);
-                                        pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
-                                        if (index < companyResult.lines.length - 1) currentY += 5;
-                                    });
-                                }
-                            }
-                        };
-
-                        // Try to load background image first if URL exists
-                        let pdfDoc;
-                        if (backgroundImageUrl) {
-                            const img = new Image();
-                            img.crossOrigin = 'anonymous';
-                            
-                            const pdfPromise = new Promise((resolve, reject) => {
-                                img.onload = () => {
-                                    try {
-                                        // Add background image
-                                        pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
-                                        addPDFContent();
-                                        resolve(pdf);
-                                    } catch (error) {
-                                        reject(error);
-                                    }
-                                };
-                                
-                                img.onerror = () => {
-                                    try {
-                                        // Create PDF without background
-                                        addPDFContent();
-                                        resolve(pdf);
-                                    } catch (error) {
-                                        reject(error);
-                                    }
-                                };
-                                
-                                img.src = backgroundImageUrl;
-                            });
-
-                            pdfDoc = await pdfPromise;
-                        } else {
-                            // No background image, create PDF directly
-                            addPDFContent();
-                            pdfDoc = pdf;
-                        }
-
-                        const pdfBlob = pdfDoc.output('blob');
-                        
-                        // Add PDF to zip with sanitized filename
-                        const sanitizedName = userName.replace(/[^a-zA-Z0-9]/g, '_') || 'user';
-                        const fileName = `badge_${sanitizedName}_${user.id}.pdf`;
-                        zip.file(fileName, pdfBlob);
-                        
-                        clearTimeout(timeoutId);
-                        resolve();
-                    } catch (error) {
-                        clearTimeout(timeoutId);
-                        reject(error);
-                    }
+                    })();
                 });
-                
-                await userPromise;
-                
-                // Show progress only at key milestones (25%, 50%, 75%, 100%)
+
+                userZip.file(`badge_${baseFileSegment}_${user.id}.pdf`, userBadgeBlob);
+
+                const presentStaff = getPresentStaffMembers(user);
+                if (presentStaff.length > 0) {
+                    for (let j = 0; j < presentStaff.length; j++) {
+                        const member = presentStaff[j];
+                        const staffName = member?.name || `Staff_${j + 1}`;
+                        const staffPosition = member?.position || 'Staff';
+
+                        try {
+                            const staffBadgeBlob = await generateStaffBadgePdf({
+                                staffName,
+                                staffPosition,
+                                companyName,
+                                backgroundImageUrl,
+                            });
+
+                            const sanitizedStaffSegment = sanitizeFileNameSegment(staffName) || `staff_${j + 1}`;
+                            userZip.file(`staff_badge_${sanitizedStaffSegment}_${user.id}_${j + 1}.pdf`, staffBadgeBlob);
+                            totalStaffBadges += 1;
+                        } catch (staffError) {
+                            console.error(`Error generating staff badge for ${staffName}:`, staffError);
+                        }
+                    }
+                }
+
+                const userZipBlob = await userZip.generateAsync({ type: 'blob' });
+                const innerZipName = `${baseFileSegment}_${user.id}.zip`;
+                outerZip.file(innerZipName, userZipBlob);
+
                 const progress = Math.round(((i + 1) / validUsers.length) * 100);
                 if (progress === 25 || progress === 50 || progress === 75 || progress === 100) {
-                    toast.info(`Progress: ${progress}% (${i + 1}/${validUsers.length} badges generated)`, {
+                    toast.info(`Progress: ${progress}% (${i + 1}/${validUsers.length} users processed)`, {
                         position: 'bottom-right',
                         autoClose: 2000,
                     });
                 }
-                
             } catch (error) {
-                console.error(`Error generating badge for user ${user.name}:`, error);
-                // Continue with other users even if one fails
+                console.error(`Error generating package for user ${userName}:`, error);
             }
         }
 
-        // Progress complete
+        const outerZipBlob = await outerZip.generateAsync({ type: 'blob' });
+        const outerZipUrl = URL.createObjectURL(outerZipBlob);
 
-        // Generate and download ZIP file
-        const zipBlob = await zip.generateAsync({ type: 'blob' });
-        const zipUrl = URL.createObjectURL(zipBlob);
-        
-        // Create download link
         const link = document.createElement('a');
-        link.href = zipUrl;
+        link.href = outerZipUrl;
         link.download = `bulk_badges_${AddonsUsers.current_tab}_${Date.now()}.zip`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
-        // Clean up
-        URL.revokeObjectURL(zipUrl);
-        
-        // Clear selections
+
+        URL.revokeObjectURL(outerZipUrl);
+
         AddonsUsers.selected_users = [];
-        
-        toast.success(`✅ Bulk export complete! ${validUsers.length} badges generated and downloaded as ZIP file.`, {
+
+        toast.success(`✅ Bulk export complete! ${validUsers.length} user package(s) and ${totalStaffBadges} staff badge(s) generated.`, {
             position: 'bottom-right',
             autoClose: 4000,
         });
-        
     } catch (error) {
         console.error('Error generating bulk badges:', error);
         toast.error('Failed to generate bulk badges. Please try again.', {
@@ -1269,6 +1470,7 @@ onBeforeRouteLeave(() => {
                     <input 
                         type="text"  
                         :placeholder="$tfhb_trans('Search users...')" 
+                        :label="$tfhb_trans('Search')" 
                         :value="AddonsUsers.search_query"
                         @input="handleSearch"
                     /> 
@@ -1276,15 +1478,34 @@ onBeforeRouteLeave(() => {
                 </div>
 
                 <!-- Bulk Actions -->
-                <div class="tfhb-bulk-actions tfhb-flexbox tfhb-align-center tfhb-gap-8">
+                <div class="tfhb-bulk-actions tfhb-flexbox tfhb-align-center tfhb-gap-8" style="width: 50%;">
+                 <!-- need to add dropdown to chouse custom painate per pages  -->
+                 <HbDropdown
+                        v-model="AddonsUsers.pagination.per_page"
+                        :label="$tfhb_trans('Per Page')"
+                        :placeholder="$tfhb_trans('Custom Pagination')"
+                        :option="[
+                            {'name': '10', 'value': 10},
+                            {'name': '20', 'value': 20},
+                            {'name': '50', 'value': 50},
+                            {'name': '100', 'value': 100},
+                            {'name': '200', 'value': 200},
+                            {'name': '500', 'value': 500},
+                            {'name': '1000', 'value': 1000}
+                        ]"
+                        width="50"
+                        @tfhb-onchange="[]"
+                    />
                     <HbDropdown
                         v-model="AddonsUsers.bulk_action"
                         :placeholder="$tfhb_trans('Bulk Actions')"
+                        :label="$tfhb_trans('Bulk Actions')"
                         :option="[
                             {'name': 'Active', 'value': 'activate'},
                             {'name': 'Deactive', 'value': 'deactivate'},
                             {'name': 'Export Badge', 'value': 'badge'}
                         ]"
+                        width="50"
                         @tfhb-onchange="[]"
                     />
                     <HbButton 

@@ -86,6 +86,13 @@ const loadData = async () => {
   }
 };
 
+const handlePerPageChange = (value) => {
+  filters.per_page = value;
+  currentPage.value = 1;
+  filters.page = 1;
+  loadData();
+};
+
 const loadSellersAndBuyers = async () => {
   try {
     const [sellersResponse, buyersResponse] = await Promise.all([
@@ -525,7 +532,23 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </form>
-
+      <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8" style="width: 200px;"> 
+        <HbDropdown
+              v-model="filters.per_page"
+              :label="$tfhb_trans('Per Page')"
+              :placeholder="$tfhb_trans('Custom Pagination')"
+              :option="[
+                  {'name': '10', 'value': 10},
+                  {'name': '20', 'value': 20},
+                  {'name': '50', 'value': 50},
+                  {'name': '100', 'value': 100},
+                  {'name': '200', 'value': 200},
+                  {'name': '500', 'value': 500},
+                  {'name': '1000', 'value': 1000}
+              ]" 
+              @tfhb-onchange="handlePerPageChange"
+          />
+      </div>
       <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8">
         <HbButton
           classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"

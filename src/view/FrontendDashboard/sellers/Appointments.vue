@@ -532,7 +532,7 @@ const exportAsPDF = async () => {
     // Get seller company name for header
     const getSellerCompanyName = (apiData) => {
         const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-        return sellerData.company_name || sellerData.denominazione_operatore_azienda || apiData?.sellers_data?.display_name || 'Company Name';
+        return sellerData.denominazione_operatore_azienda || sellerData.company_name || apiData?.sellers_data?.display_name || 'Company Name';
     };
 
     // Get buyer location
@@ -553,7 +553,7 @@ const exportAsPDF = async () => {
         const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         const firstEventData = calendarEvents.value.length > 0 ? calendarEvents.value[0].extendedProps.apiData : null;
         const sellerData = firstEventData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-        const headerCompanyName = sellerData.company_name || sellerData.denominazione_operatore_azienda || firstEventData?.sellers_data?.display_name || 'Company Name';
+        const headerCompanyName = sellerData.denominazione_operatore_azienda || sellerData.company_name || firstEventData?.sellers_data?.display_name || 'Company Name';
         
         // Create header with two-column layout
         const headerHeight = 20;
@@ -1026,7 +1026,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 }); 
                  
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 console.log('PDF saved successfully:', fileName);
@@ -1153,7 +1153,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 }); 
 
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 console.log('PDF saved successfully:', fileName);

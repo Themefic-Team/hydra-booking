@@ -381,7 +381,7 @@ const exportAsPDF = async () => {
         const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         const firstEventData = calendarEvents.value.length > 0 ? calendarEvents.value[0].extendedProps.apiData : null;
         const buyerData = firstEventData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-        const headerCompanyName = buyerData.company_name || buyerData.travel_agent_name || firstEventData?.buyers_data?.display_name || 'Name Brand';
+        const headerCompanyName = buyerData.travel_agent_name || buyerData.company_name || firstEventData?.buyers_data?.display_name || 'Name Brand';
         
         // Create header with two-column layout
         const headerHeight = 20;
@@ -796,7 +796,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
 
        
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 console.log('PDF saved successfully:', fileName);
@@ -929,7 +929,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 });
  
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 console.log('PDF saved successfully:', fileName);
