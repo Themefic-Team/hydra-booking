@@ -1468,7 +1468,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
                 const pdfBlob = pdf.output('blob');
                 
                 // Add to zip file with sanitized filename
-                const fileName = `staff_badge_${staffName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${Date.now()}_${i}.pdf`;
+                const fileName = `staff_badge_${companyName.replace(/\s+/g, '_')}_${staffName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${Date.now()}_${i}.pdf`;
                 zip.file(fileName, pdfBlob);
                 
                 console.log(`PDF generated for staff: ${staffName}`);

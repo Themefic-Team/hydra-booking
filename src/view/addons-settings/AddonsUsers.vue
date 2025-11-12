@@ -1030,7 +1030,7 @@ const DownloadBadgeStaffPDFWithQRCode = async (user) => {
                 const pdfBlob = pdf.output('blob');
                 
                 // Add to zip file with sanitized filename
-                const fileName = `staff_badge_${staffName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${Date.now()}_${i}.pdf`;
+                const fileName = `staff_badge_${companyName.replace(/\s+/g, '_')}_${staffName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${Date.now()}_${i}.pdf`;
                 zip.file(fileName, pdfBlob);
                 
                 console.log(`PDF generated for staff: ${staffName}`);
@@ -1393,7 +1393,7 @@ const handleBulkBadgeExport = async () => {
                             });
 
                             const sanitizedStaffSegment = sanitizeFileNameSegment(staffName) || `staff_${j + 1}`;
-                            userZip.file(`staff_badge_${sanitizedStaffSegment}_${user.id}_${j + 1}.pdf`, staffBadgeBlob);
+                            userZip.file(`staff_badge_${companyName.replace(/\s+/g, '_')}_${sanitizedStaffSegment}_${Date.now()}_${i}.pdf`, staffBadgeBlob);
                             totalStaffBadges += 1;
                         } catch (staffError) {
                             console.error(`Error generating staff badge for ${staffName}:`, staffError);
