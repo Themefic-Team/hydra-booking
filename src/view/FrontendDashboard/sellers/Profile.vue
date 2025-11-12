@@ -8,6 +8,7 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
+import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
@@ -531,6 +532,7 @@ document.addEventListener('click', (e) => {
                     <h3>{{ $tfhb_trans('Staff') }}</h3>
                 </div>
                 <div class="tfhb-staff-section">
+                    {{userPublicInformation.staff}}
                     <div v-for="(member, index) in userPublicInformation.staff" :key="index" class="tfhb-staff-item tfhb-flexbox tfhb-gap-16">
                         <HbText  
                             v-model="member.name"  
@@ -543,19 +545,11 @@ document.addEventListener('click', (e) => {
                             :label="$tfhb_trans('Position')"  
                             :placeholder="$tfhb_trans('Job position')" 
                             width="50"
-                        />
-                        <HbDropdown 
-                            
-                            v-model="member.is_present_at_event"  
-                            required= "true"  
-                            width="50"
-                            :selected = "0" 
-                            :label="$tfhb_trans('Is Present At Event')"  
-                            :placeholder="$tfhb_trans('Is Present At Event')"  
-                            :option = "[
-                                {'name': 'Yes', 'value': '1'}, 
-                                {'name': 'No', 'value': '0'}
-                            ]"
+                        /> 
+                        <HbSwitch 
+                            v-model="member.is_present_at_event"
+                            width="100"
+                            :label="$tfhb_trans('Present at event')"  
                         />
                         <HbWpFileUpload
                             :name="`staff_image_${index}`"

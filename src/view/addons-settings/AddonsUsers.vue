@@ -201,7 +201,7 @@ const getUserDisplayInfo = (user) => {
     return { userName, userEmail, userRole };
 };
 
-const generateStaffBadgePdf = async ({ staffName, staffPosition, companyName, backgroundImageUrl }) => {
+const generateStaffBadgePdf = async ({ staffName, staffPosition, companyName, backgroundImageUrl, staffRole }) => {
     const qrData = `Name: ${staffName} | Role: Staff | Position: ${staffPosition} | Company: ${companyName || 'N/A'}`;
     const qrCodeDataURL = await QRCode.toDataURL(qrData, {
         width: 150,
@@ -271,7 +271,8 @@ const generateStaffBadgePdf = async ({ staffName, staffPosition, companyName, ba
 
     pdf.setTextColor(0, 0, 0);
     pdf.setFont('helvetica', 'normal');
-    const roleLabelResult = fitTextToWidth('STAFF', quadrantWidth - 10, 10);
+    // staffRole should be upper case  
+    const roleLabelResult = fitTextToWidth(staffRole.toUpperCase(), quadrantWidth - 10, 10);
     pdf.setFontSize(roleLabelResult.fontSize);
     let currentY = startY + 110;
     roleLabelResult.lines.forEach((line, index) => {
@@ -982,8 +983,8 @@ const DownloadBadgeStaffPDFWithQRCode = async (user) => {
                 // Add role/position label (centered in bottom right quadrant, below QR code)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const roleLabel = 'STAFF';
-                const roleLabelResult = fitTextToWidth(roleLabel, quadrantWidth - 10, 10);
+                // staffRole should be upper case  
+                const roleLabelResult = fitTextToWidth(user.role.toUpperCase(), quadrantWidth - 10, 10);
                 pdf.setFontSize(roleLabelResult.fontSize);
                 let currentY = startY + 110;
                 roleLabelResult.lines.forEach((line, index) => {
@@ -1383,13 +1384,14 @@ const handleBulkBadgeExport = async () => {
                         const member = presentStaff[j];
                         const staffName = member?.name || `Staff_${j + 1}`;
                         const staffPosition = member?.position || 'Staff';
-
+                        const staffRole = user?.role || 'Staff';
                         try {
                             const staffBadgeBlob = await generateStaffBadgePdf({
                                 staffName,
                                 staffPosition,
                                 companyName,
                                 backgroundImageUrl,
+                                staffRole,
                             });
 
                             const sanitizedStaffSegment = sanitizeFileNameSegment(staffName) || `staff_${j + 1}`;

@@ -446,7 +446,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
                 // Using "Staff" as the role label (similar to "exhibitors" in exhibitor badge)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const roleLabel = 'STAFF';
+                const roleLabel = 'EXHIBITORS';
                 const roleLabelResult = fitTextToWidth(roleLabel, quadrantWidth - 10, 10);
                 pdf.setFontSize(roleLabelResult.fontSize);
                 let currentY = startY + 110;

@@ -7,6 +7,7 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
+import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbRadio from '@/components/form-fields/HbRadio.vue'
 import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -612,18 +613,10 @@ document.addEventListener('click', (e) => {
                             :placeholder="$tfhb_trans('Job position')" 
                             width="50"
                         />
-                        <HbDropdown 
-                            
-                            v-model="member.is_present_at_event"  
-                            required= "true"  
-                            width="50"
-                            :selected = "0" 
-                            :label="$tfhb_trans('Is Present At Event')"  
-                            :placeholder="$tfhb_trans('Is Present At Event')"  
-                            :option = "[
-                                {'name': 'Yes', 'value': '1'}, 
-                                {'name': 'No', 'value': '0'}
-                            ]"
+                        <HbSwitch 
+                            v-model="member.is_present_at_event"
+                            width="100"
+                            :label="$tfhb_trans('Present at event')"  
                         />
                         <HbWpFileUpload
                             :name="`staff_image_${index}`"

@@ -1326,8 +1326,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
         const companyName = (user.user_data?.travel_agent_name || '').trim(); 
         
         // Get background image for staff badges (using buyers badge template)
-        const backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || '';
-        
+        const backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || ''; 
         // Generate PDF for each present staff member
         for (let i = 0; i < presentStaff.length; i++) {
             const member = presentStaff[i];
@@ -1420,7 +1419,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
                 // Using "Staff" as the role label (similar to "buyers" in buyer badge)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const roleLabel = 'STAFF';
+                const roleLabel = 'BUYERS';
                 const roleLabelResult = fitTextToWidth(roleLabel, quadrantWidth - 10, 10);
                 pdf.setFontSize(roleLabelResult.fontSize);
                 let currentY = startY + 110;
