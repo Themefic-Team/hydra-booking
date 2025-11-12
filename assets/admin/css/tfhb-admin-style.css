@@ -26,10 +26,10 @@
   margin-right: 16px;
 }
 .tfhb-dashboard-wrap {
-  width: calc(100% - 404px);
+  width: calc(100% - 446px);
 }
 .tfhb-dashboard-sidebar {
-  width: 380px;
+  width: 422px;
 }
 
 .tfhb-sidebar-wrap{
@@ -117,7 +117,7 @@
                 }
                 p {
                     color: #5D5676;
-                    font-size: 15px !important;
+                    font-size: 14px !important;
                     font-weight: 400 !important;
                     line-height: 24px !important;
                     margin: 0 !important;
@@ -209,7 +209,7 @@
 
     /* Customization */
     .tfhb-customization-quote{
-        background: #fff;
+        background: #F8F7FD;
         padding: 16px;
         border-radius: 6px;
         margin: 16px 0 16px 0;
@@ -248,7 +248,7 @@
     }
 
     .tfhb-quick-access {
-        background: #F7F8FA;
+        background: #F8F7FD;
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 16px;

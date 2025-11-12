@@ -189,8 +189,8 @@ class Admin {
 
 					<div class="tfhb-customization-quote">
 						<div class="tfhb-quote-content">
-							<h3><?php echo esc_html__('Need Help Customizing Your WordPress Site?', 'hydra-booking');  ?></h3>
-							<p><?php echo esc_html__('Want to tweak a theme, adjust a plugin like Ultra Addons or add custom functionality to your site? Our expert WordPress developers can tailor it just the way you need. We only charge $29/hour.', 'hydra-booking'); ?></p>
+							<h3><?php echo esc_html__('Need Help Tweaking Your WordPress Site?', 'hydra-booking');  ?></h3>
+							<p><?php echo esc_html__('Want to make small changes, add features, or need customization? Our team can do it for you — just $29/hour, no hassle.', 'hydra-booking'); ?></p>
 							<a href="<?php echo esc_url( tfhb_utm_generator( 'https://portal.themefic.com/hire-us/', array( 'utm_medium' => 'dashboard_free_quote' ) ) ); ?>" target="_blank" class="tfhb-admin-btn tfhb-btn-secondary">
 							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<g clip-path="url(#clip0_1066_1543)">
@@ -266,29 +266,13 @@ class Admin {
 	public function tfhb_get_sidebar_plugin_list(){
 
 		$plugins = [
-			// [
-			// 	'name'       => 'tfhb',
-			// 	'slug'       => 'ultimate-addons-for-contact-form-7',
-			// 	'file_name'  => 'ultimate-addons-for-contact-form-7',
-			// 	'subtitle'   => '40+ Essential Addons for Contact Form 7',
-			// 	'image'      => 'https://ps.w.org/ultimate-addons-for-contact-form-7/assets/icon-128x128.png',
-			// 	// 'pro'        => [
-			// 	// 	'slug'      => 'ultimate-addons-for-contact-form-7-pro',
-			// 	// 	'file_name' => 'ultimate-addons-for-contact-form-7-pro',
-			// 	// 	'url'       => 'https://cf7addons.com/pricing/',
-			// 	// ],
-			// ],
 			[
-				'name'       => 'Hydra',
-				'slug'       => 'hydra-booking',
-				'file_name'  => 'hydra-booking',
-				'subtitle'   => 'All in One Appointment Booking System',
-				'image'      => 'https://ps.w.org/hydra-booking/assets/icon-128x128.jpg',
-				// 'pro'        => [
-				// 	'slug'      => 'hydra-booking-pro',
-				// 	'file_name' => 'hydra-booking-pro',
-				// 	'url'       => 'https://hydrabooking.com/',
-				// ],
+				'name'       => 'UACF7',
+				'slug'       => 'ultimate-addons-for-contact-form-7',
+				'file_name'  => 'ultimate-addons-for-contact-form-7',
+				'subtitle'   => '40+ Essential Addons for Contact Form 7',
+				'image'      => 'https://ps.w.org/ultimate-addons-for-contact-form-7/assets/icon-128x128.png',
+				
 			],
 			[
 				'name'       => 'BEAF',
@@ -296,11 +280,7 @@ class Admin {
 				'file_name'  => 'before-and-after-gallery',
 				'subtitle'   => 'Ultimate Before After Image Slider & Gallery',
 				'image'      => 'https://ps.w.org/beaf-before-and-after-gallery/assets/icon-128x128.png',
-				// 'pro'        => [
-				// 	'slug'      => 'beaf-before-and-after-gallery-pro',
-				// 	'file_name' => 'before-and-after-gallery-pro',
-				// 	'url'       => 'https://themefic.com/plugins/beaf/pro/',
-				// ],
+				
 			],
 			[
 				'name'       => 'Tourfic',
@@ -308,11 +288,7 @@ class Admin {
 				'file_name'  => 'tourfic',
 				'subtitle'   => 'Travel, Hotel Booking & Car Rental WP Plugin',
 				'image'      => 'https://ps.w.org/tourfic/assets/icon-128x128.gif',
-				// 'pro'        => [
-				// 	'slug'      => 'tourfic-pro',
-				// 	'file_name' => 'tourfic-pro',
-				// 	'url'       => 'https://themefic.com/tourfic/',
-				// ],
+				
 			],
 			[
 				'name'       => 'Instantio',
@@ -320,24 +296,8 @@ class Admin {
 				'file_name'  => 'instantio',
 				'subtitle'   => 'WooCommerce Quick & Direct Checkout',
 				'image'      => 'https://ps.w.org/instantio/assets/icon-128x128.png',
-				// 'pro'        => [
-				// 	'slug'      => 'wooinstant',
-				// 	'file_name' => 'wooinstant',
-				// 	'url'       => 'https://themefic.com/instantio/',
-				// ],
-			],
-			// [
-			// 	'name'       => 'Before After Slider for WooCommerce – eBEAF',
-			// 	'slug'       => 'before-after-for-woocommerce',
-			// 	'file_name'  => 'before-after-for-woocommerce',
-			// 	'image'      => 'https://ps.w.org/before-after-for-woocommerce/assets/icon-128x128.gif',
-			// 	'pro_url'    => '',
-			// 	'pro'        => [
-			// 		'slug'      => 'before-after-for-woocommerce-pro',
-			// 		'file_name' => 'before-after-for-woocommerce-pro',
-			// 		'url'       => 'https://themefic.com/plugins/ebeaf/pro/',
-			// 	],
-			// ],
+			
+			]
 		];
 
 		?>
@@ -359,7 +319,7 @@ class Admin {
 
 				?>
 
-				<li class="tfhb-plugin-item <?php echo esc_attr($plugin['slug'] == 'hydra-booking' ? 'featured' : ''); ?>" data-plugin-slug="<?php echo esc_attr($plugin['slug']); ?>">
+				<li class="tfhb-plugin-item <?php echo esc_attr($plugin['slug'] == 'ultimate-addons-for-contact-form-7' ? 'featured' : ''); ?>" data-plugin-slug="<?php echo esc_attr($plugin['slug']); ?>">
 					<div class="tfhb-plugin-info-wrapper">
 						<div class="tfhb-plugin-content">
 							<div class="tfhb-plugin-image">
