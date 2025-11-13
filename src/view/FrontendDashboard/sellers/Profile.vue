@@ -531,8 +531,7 @@ document.addEventListener('click', (e) => {
                 <div class="tfhb-section-title">
                     <h3>{{ $tfhb_trans('Staff') }}</h3>
                 </div>
-                <div class="tfhb-staff-section">
-                    {{userPublicInformation.staff}}
+                <div class="tfhb-staff-section"> 
                     <div v-for="(member, index) in userPublicInformation.staff" :key="index" class="tfhb-staff-item tfhb-flexbox tfhb-gap-16">
                         <HbText  
                             v-model="member.name"  
