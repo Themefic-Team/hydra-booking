@@ -82,6 +82,9 @@ class THB_INIT {
 			new HydraBooking\Admin\Admin();
 		}
 
+		// load Promo Notice
+		new HydraBooking\Admin\Controller\PromoNotice();
+
 		// Load App Class
 		new HydraBooking\App\App();
 	}

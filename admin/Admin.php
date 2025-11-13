@@ -7,7 +7,6 @@ use HydraBooking\Admin\Controller\UpdateController;
 use HydraBooking\Services\Integrations\Zoom\ZoomServices;
 use HydraBooking\Migration\Migration;
 use HydraBooking\Admin\Controller\NoticeController;
-use HydraBooking\Admin\Controller\PromoNotice;
 use HydraBooking\Admin\Controller\licenseController;
 use HydraBooking\License\HydraBooking; 
 // Load Migrator
@@ -31,9 +30,6 @@ class Admin {
 
 		// update controller
 		new UpdateController();
-		
-		// promo notice
-		new PromoNotice();
 
 		// notice controller
 		new NoticeController();
