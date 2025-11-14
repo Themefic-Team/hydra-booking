@@ -578,7 +578,7 @@ document.addEventListener('click', (e) => {
                         <HbSwitch 
                             v-model="member.is_present_at_event"
                             width="100"
-                            :label="$tfhb_trans('Present at event')"  
+                            :label="$tfhb_trans('Enable badge (Present at event)')"  
                         />
                         <HbWpFileUpload
                             :name="`staff_image_${index}`"
@@ -597,14 +597,26 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.staff.push({name: '', position: '', image: '', is_present_at_event: 0})"
-                        :buttonText="$tfhb_trans('Add Staff Member')"
-                        icon="UserPlus"
-                        hover_icon="UserPlus"
-                        :hover_animation="true"
-                    />
+                  
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.staff.push({name: '', position: '', image: '', is_present_at_event: 0})"
+                            :buttonText="$tfhb_trans('Add Staff Member')"
+                            icon="UserPlus"
+                            hover_icon="UserPlus"
+                            :hover_animation="true"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
                     <br> 
                     <HbInfoBox icon="Info" name="first-modal">
                         <template #content>
@@ -649,14 +661,26 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.gallery.push({url: '', title: ''})"
-                        :buttonText="$tfhb_trans('Add Gallery Image')"
-                        icon="ImagePlus"
-                        hover_icon="ImagePlus"
-                        :hover_animation="true"
-                    />
+               
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.gallery.push({url: '', title: ''})"
+                            :buttonText="$tfhb_trans('Add Gallery Image')"
+                            icon="ImagePlus"
+                            hover_icon="ImagePlus"
+                            :hover_animation="true"
+                        /> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
                 </div>
             </div>
 
@@ -683,6 +707,18 @@ document.addEventListener('click', (e) => {
                     :placeholder="$tfhb_trans('Enter video URL (YouTube, Vimeo, etc.)')" 
                     width="100"
                 />
+                <br>
+                <div class="tfhb-flexbox tfhb-gap-16">  
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="saveUserPublicInfo"
+                        :buttonText="$tfhb_trans('Save & Continue')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true"
+                        :pre_loader="loading"
+                    /> 
+                </div>
             </div>
 
             <!-- Documents Section -->
@@ -737,14 +773,28 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.documents.push({title: '', subtitle: '', icon: '', url: '', size: ''})"
-                        :buttonText="$tfhb_trans('Add Document')"
-                        icon="FileText"
-                        hover_icon="FileText"
-                        :hover_animation="true"
-                    />
+                   
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                 
+                        
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.documents.push({title: '', subtitle: '', icon: '', url: '', size: ''})"
+                            :buttonText="$tfhb_trans('Add Document')"
+                            icon="FileText"
+                            hover_icon="FileText"
+                            :hover_animation="true"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
                 </div>
             </div>
 
@@ -774,14 +824,27 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.links.push({title: '', url: ''})"
-                        :buttonText="$tfhb_trans('Add Link')"
-                        icon="Link"
-                        hover_icon="Link"
-                        :hover_animation="true"
-                    />
+                   
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.links.push({title: '', url: ''})"
+                            :buttonText="$tfhb_trans('Add Link')"
+                            icon="Link"
+                            hover_icon="Link"
+                            :hover_animation="true"
+                        />
+                        
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
                 </div>
             </div>
 

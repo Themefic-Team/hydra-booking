@@ -272,7 +272,7 @@ const generateStaffBadgePdf = async ({ staffName, staffPosition, companyName, ba
     pdf.setTextColor(0, 0, 0);
     pdf.setFont('helvetica', 'normal');
     // staffRole should be upper case  
-    const roleLabelResult = fitTextToWidth(staffRole.toUpperCase(), quadrantWidth - 10, 10);
+    const roleLabelResult = fitTextToWidth(staffRole.charAt(0).toUpperCase() + staffRole.slice(1), quadrantWidth - 10, 10);
     pdf.setFontSize(roleLabelResult.fontSize);
     let currentY = startY + 110;
     roleLabelResult.lines.forEach((line, index) => {
@@ -622,7 +622,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         };
         
         // Function to load image and create PDF
-        const createPDFWithBackground = () => {
+        const createPDFWithBackground = () => { 
             try {
                 // Add background image if available
                 if (backgroundImageUrl) {
@@ -705,7 +705,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 if (user.role === 'Buyers' || user.role === 'buyers') {
                     // Company name
                     currentY += 7;
-                    const companyName = (user.data?.travel_agent_name || '').trim();
+                    let companyName = (user.data?.travel_agent_name || '').trim();
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -741,7 +741,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 if (user.role === 'Sellers' || user.role === 'sellers') {
                     // Company name
                     currentY += 7;
-                    const companyName = (user.data?.denominazione_operatore_azienda || '').trim();
+                    let companyName = (user.data?.denominazione_operatore_azienda || '').trim();
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -770,7 +770,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 if (user.role === 'Exhibitors' || user.role === 'exhibitors') {
                     // Company name
                     currentY += 7;
-                    const companyName = (user.data?.company_name || '').trim();
+                    let companyName = (user.data?.company_name || '').trim();
                     if (companyName) {
                         pdf.setFont('helvetica', 'normal');
                         const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
@@ -782,7 +782,6 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                         });
                     }
                 }
-                
                 // Save the PDF
                 const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
@@ -983,8 +982,8 @@ const DownloadBadgeStaffPDFWithQRCode = async (user) => {
                 // Add role/position label (centered in bottom right quadrant, below QR code)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                // staffRole should be upper case  
-                const roleLabelResult = fitTextToWidth(user.role.toUpperCase(), quadrantWidth - 10, 10);
+                // staffRole should be upper case  frist word capitalize
+                const roleLabelResult = fitTextToWidth(user.role.charAt(0).toUpperCase() + user.role.slice(1), quadrantWidth - 10, 10);
                 pdf.setFontSize(roleLabelResult.fontSize);
                 let currentY = startY + 110;
                 roleLabelResult.lines.forEach((line, index) => {

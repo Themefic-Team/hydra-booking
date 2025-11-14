@@ -742,7 +742,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 // Add job title (centered in bottom right quadrant, below QR code)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                const jobTitleResult = fitTextToWidth(userRole.charAt(0).toUpperCase() + userRole.slice(1), quadrantWidth - 10, 10);
                 pdf.setFontSize(jobTitleResult.fontSize);
                 let currentY = startY + 110;
                 jobTitleResult.lines.forEach((line, index) => {
@@ -877,7 +877,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 // Add job title (centered in bottom right quadrant, below QR code)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleResult = fitTextToWidth(userRole, quadrantWidth - 10, 10);
+                const jobTitleResult = fitTextToWidth(userRole.charAt(0).toUpperCase() + userRole.slice(1), quadrantWidth - 10, 10);
                 pdf.setFontSize(jobTitleResult.fontSize);
                 let currentY = startY + 110;
                 jobTitleResult.lines.forEach((line, index) => {
@@ -1419,7 +1419,7 @@ const DownloadStaffBadgePDFWithQRCode = async (user) => {
                 // Using "Staff" as the role label (similar to "buyers" in buyer badge)
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const roleLabel = 'BUYERS';
+                const roleLabel = 'Buyers';
                 const roleLabelResult = fitTextToWidth(roleLabel, quadrantWidth - 10, 10);
                 pdf.setFontSize(roleLabelResult.fontSize);
                 let currentY = startY + 110;
