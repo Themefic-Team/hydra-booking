@@ -554,6 +554,11 @@ const exportAsPDF = async () => {
         const firstEventData = calendarEvents.value.length > 0 ? calendarEvents.value[0].extendedProps.apiData : null;
         const sellerData = firstEventData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
         const headerCompanyName = sellerData.denominazione_operatore_azienda || sellerData.company_name || firstEventData?.sellers_data?.display_name || 'Company Name';
+        const contactName = sellerData.name 
+            || sellerData.referente 
+            || AddonsAuth.loggedInUser?.user_data?.name 
+            || AddonsAuth.loggedInUser?.display_name 
+            || '';
         
         // Create header with two-column layout
         const headerHeight = 20;
@@ -625,16 +630,22 @@ const exportAsPDF = async () => {
         pdf.setFont('helvetica', 'bold');
         const userRole = AddonsAuth.loggedInUser?.user_role || 'SELLERS';
         pdf.text(userRole.toUpperCase(), rightColumnStart, yPosition + 3);
+
+        if (contactName) {
+            pdf.setFontSize(8);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(contactName, rightColumnStart, yPosition + 6);
+        }
         
         // 2. Current user brand name (reduced font size)
         pdf.setFontSize(10);
         pdf.setFont('helvetica', 'bold');
-        pdf.text(headerCompanyName, rightColumnStart, yPosition + 7);
+        pdf.text(headerCompanyName, rightColumnStart, yPosition + 10);
         
         // 3. Calendar export info (reduced font size)
         pdf.setFontSize(8);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, rightColumnStart, yPosition + 12);
+        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, rightColumnStart, yPosition + 15);
         
         yPosition += headerHeight;
 

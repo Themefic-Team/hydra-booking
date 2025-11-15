@@ -1,7 +1,7 @@
 <script setup>
 import { __ } from '@wordpress/i18n'; 
 import { ref, onMounted, onBeforeMount, computed } from 'vue';
-import { onBeforeRouteLeave } from 'vue-router' 
+import { onBeforeRouteLeave, useRouter } from 'vue-router' 
 import Header from '@/components/Header.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
@@ -72,10 +72,42 @@ const handleAllUsersSelection = () => {
     AddonsUsers.toggleAllUsersSelection();
 };
 
+const router = useRouter();
+
 const showUserDetails = (user) => {
     AddonsUsers.showUserDetails(user, AddonsUsers.current_tab);
 };
 
+const getProfileRoute = (user) => {
+    if (!user?.id) {
+        return null;
+    }
+
+    const role = (AddonsUsers.current_tab || user.role || '').toLowerCase();
+
+    if (role === 'sellers' || role === 'seller') {
+        return { name: 'BuyersDashboardViewSellersProfile', params: { id: user.id } };
+    }
+
+    if (role === 'buyers' || role === 'buyer') {
+        return { name: 'SellersDashboardViewBuyersProfile', params: { id: user.id } };
+    }
+
+    if (role === 'exhibitors' || role === 'exhibitor') {
+        return { name: 'ExhibitorsListProfile', params: { id: user.id } };
+    }
+
+    return null;
+};
+
+const getProfileHref = (user) => {
+    const route = getProfileRoute(user);
+    if (!route) {
+        return '';
+    }
+    return router.resolve(route).href;
+};
+ 
 const closeUserDetails = () => {
     AddonsUsers.closeUserDetails();
 };
@@ -1607,6 +1639,14 @@ onBeforeRouteLeave(() => {
                                     <span @click.stop="showUserDetails(user)">
                                         <Icon name="Eye" width="20" />
                                     </span>
+                                    <a
+                                        v-if="getProfileHref(user)"
+                                        :href="getProfileHref(user)"
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+                                        View Profile
+                                    </a>
                                     <span @click.stop="AddonsUsers.showEditUser(user, AddonsUsers.current_tab)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
                                         {{ $tfhb_trans('Edit') }}
                                     </span>
@@ -1899,10 +1939,6 @@ onBeforeRouteLeave(() => {
                                                     </label>
                                                 </div>
                                             </div>
-                                            
-                                            
-                                            
-                                            
                                             
                                             <!-- Default Input -->
                                             <div v-else class="tfhb-field-input">
