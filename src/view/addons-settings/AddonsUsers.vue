@@ -17,6 +17,8 @@ import QRCode from 'qrcode';
 import jsPDF from 'jspdf';
 // Import JSZip properly for this environment
 import JSZip from 'jszip';
+import axios from 'axios';
+import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 
 // Computed properties
 const paginatedUsers = computed(() => {
@@ -53,6 +55,8 @@ const handleBulkAction = async () => {
     
     if (AddonsUsers.bulk_action === 'badge') {
         await handleBulkBadgeExport();
+    }else if (AddonsUsers.bulk_action === 'agenda') {
+        await handleBulkAgendaExport();
     } else {
         await AddonsUsers.bulkUpdateStatus(AddonsUsers.bulk_action);
     }
@@ -379,6 +383,8 @@ const getBulkActionButtonText = () => {
         return `Make Deactive ${selectedCount.value} Users`;
     } else if (AddonsUsers.bulk_action === 'badge') {
         return `Export Badges (${selectedCount.value} Users)`;
+    }else if(AddonsUsers.bulk_action === 'agenda') {
+        return `Export Agenda (${selectedCount.value} Users)`;
     }
     return '';
 };
@@ -1477,10 +1483,779 @@ const handleBulkBadgeExport = async () => {
     }
 };
 
+// Bulk agenda export function
+const handleBulkAgendaExport = async () => {
+	if (AddonsUsers.selected_users.length === 0) {
+		toast.warning('Please select users first', {
+			position: 'bottom-right',
+			autoClose: 1500,
+		});
+		return;
+	}
+
+	try {
+		AddonsUsers.update_preloader = true;
+
+		let JSZipInstance = JSZip;
+		if (typeof JSZipInstance === 'undefined') {
+			JSZipInstance = window.JSZip;
+		}
+		if (typeof JSZipInstance === 'undefined') {
+			try {
+				JSZipInstance = require('jszip');
+			} catch (e) { /* ignore */ }
+		}
+		if (typeof JSZipInstance === 'undefined') {
+			toast.error('JSZip library not available. Please contact administrator.', {
+				position: 'bottom-right',
+				autoClose: 3000,
+			});
+			AddonsUsers.update_preloader = false;
+			return;
+		}
+
+		toast.info('Preparing bulk agendas...', { position: 'bottom-right', autoClose: 1500 });
+
+		const zip = new JSZipInstance();
+		const roleTab = (AddonsUsers.current_tab || '').toLowerCase(); // buyers/sellers/exhibitors
+		const selectedUsers = AddonsUsers.users[AddonsUsers.current_tab].filter((user) =>
+			AddonsUsers.selected_users.includes(user.id)
+		);
+
+		const fetchAgendaForUser = async (user) => {
+			const role = (user.role || roleTab || '').toLowerCase();
+			if (role === 'buyers' || role === 'buyer') {
+				const res = await axios.post(
+					window.tfhb_core_apps.rest_route + 'hydra-booking/v1/buyers/buyers-agenda',
+					{ buyers_id: user.id },
+					{ headers: { 'X-WP-Nonce': window.tfhb_core_apps.rest_nonce } }
+				);
+				return { role: 'buyers', agenda: Array.isArray(res?.data?.agenda) ? res.data.agenda : [] };
+			} else if (role === 'sellers' || role === 'seller') {
+				const res = await axios.post(
+					window.tfhb_core_apps.rest_route + 'hydra-booking/v1/sellers/sellers-agenda',
+					{ sellers_id: user.id },
+					{ headers: { 'X-WP-Nonce': window.tfhb_core_apps.rest_nonce } }
+				);
+				return { role: 'sellers', agenda: Array.isArray(res?.data?.agenda) ? res.data.agenda : [] };
+			}
+			return { role, agenda: [] };
+		};
+
+		const sanitizeForFile = (str) => (str || '')
+			.toString()
+			.trim()
+			.replace(/\s+/g, '_')
+			.replace(/[^\w\-]+/g, '')
+			.toLowerCase();
+
+		// Helpers to build PDF as Blob with consistent naming
+		const buildBuyerAgendaBlob = async (events) => {
+			const firstEventData = events[0]?.extendedProps?.apiData || null;
+			const buyerData = firstEventData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+			const headerCompanyName = buyerData.travel_agent_name || buyerData.company_name || firstEventData?.buyers_data?.display_name || 'name_brand';
+			const participantName = buyerData.name_of_participant || '';
+
+			const pdf = new jsPDF('p', 'mm', 'a4');
+			const pageWidth = 210, pageHeight = 297, margin = 15, contentWidth = pageWidth - (2 * margin);
+			let yPosition = margin;
+
+			try {
+				const logoUrl =
+					AddonsAuth?.event?.event_details?.event_logo ||
+					AddonsSettings?.event_details?.event_logo ||
+					window?.tfhb_core_apps?.event?.event_details?.event_logo ||
+					window?.tfhb_core_apps?.event_details?.event_logo || '';
+				if (logoUrl) {
+					const maxLogoHeight = 60;
+					const img = new Image(); img.crossOrigin = 'anonymous'; img.src = logoUrl;
+					await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+					let lw = img.width, lh = img.height;
+					if (lh > maxLogoHeight) { const r = maxLogoHeight / lh; lh = maxLogoHeight; lw = lw * r; }
+					const canvas = document.createElement('canvas'); canvas.width = lw; canvas.height = lh;
+					const ctx = canvas.getContext('2d'); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0,0,canvas.width,canvas.height);
+					ctx.drawImage(img, 0, 0, lw, lh);
+					const processedLogoUrl = canvas.toDataURL('image/jpeg', 1.0);
+					pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, lw * 0.2645833333, lh * 0.2645833333);
+				}
+			} catch (_) {}
+
+			const headerHeight = 20;
+			const rightColumnStart = margin + 50 + 8;
+			const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+			pdf.setFontSize(7); pdf.setFont('helvetica', 'bold'); pdf.text('BUYERS', rightColumnStart, yPosition + 3);
+			if (participantName) { pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(participantName, rightColumnStart, yPosition + 6); }
+			pdf.setFontSize(10); pdf.setFont('helvetica', 'bold'); pdf.text(headerCompanyName, rightColumnStart, yPosition + 10);
+			pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${events.length}`, rightColumnStart, yPosition + 15);
+			yPosition += headerHeight; pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 4;
+
+			const sortedEvents = [...events].sort((a, b) => new Date(a.start) - new Date(b.start));
+			const eventsByDay = {};
+			sortedEvents.forEach(event => {
+				const eventDate = new Date(event.start);
+				const dayKey = eventDate.toLocaleDateString('en-US', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+				if (!eventsByDay[dayKey]) eventsByDay[dayKey] = []; eventsByDay[dayKey].push(event);
+			});
+			Object.keys(eventsByDay).forEach((dayKey) => {
+				const dayEvents = eventsByDay[dayKey];
+				if (yPosition > pageHeight - 60) { pdf.addPage(); yPosition = margin; }
+				pdf.setFontSize(9); pdf.setFont('helvetica', 'bold'); pdf.text(dayKey, margin, yPosition); yPosition += 5;
+				pdf.setDrawColor(200, 200, 200); pdf.setLineWidth(0.2); pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 3;
+				const timeColWidth = 30, timeColX = margin, detailsColX = margin + timeColWidth + 3, detailsColWidth = contentWidth - timeColWidth - 3;
+				dayEvents.forEach((event, index) => {
+					const startDate = new Date(event.start), endDate = new Date(event.end);
+					if (yPosition > pageHeight - 18) { pdf.addPage(); yPosition = margin; }
+					const rowStartY = yPosition;
+					const formatTime = (d) => d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+					const timeText = `${formatTime(startDate)} - ${formatTime(endDate)}`;
+					pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(timeText, timeColX, yPosition + 3);
+					let detailsY = yPosition;
+					const apiData = event.extendedProps.apiData;
+					const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+					const sellersCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || 'Company';
+					pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
+					const titleLines = pdf.splitTextToSize(`Meeting with ${sellersCompany}`, detailsColWidth);
+					pdf.text(titleLines[0], detailsColX, detailsY + 3); detailsY += 4;
+					const sellerName = sellerData.name || apiData.sellers_data?.display_name || 'Contact';
+					const location = (apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.regione || '');
+					pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+					const contactText = `${sellerName}${location ? ' at ' + location : ''}`;
+					const contactLines = pdf.splitTextToSize(contactText, detailsColWidth);
+					pdf.text(contactLines[0], detailsColX, detailsY + 2.5); detailsY += 3.5;
+					const rowHeight = Math.max(10, detailsY - rowStartY + 2); yPosition += rowHeight;
+					if (index < dayEvents.length - 1) { pdf.setDrawColor(230,230,230); pdf.setLineWidth(0.1); pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 1; }
+				});
+				yPosition += 4;
+			});
+			const dateStr = new Date().toISOString().split('T')[0];
+			const safeCompany = sanitizeForFile(headerCompanyName) || 'company';
+			const safePerson = sanitizeForFile(participantName) || 'participant';
+			const filename = `agenda-${safeCompany}-${safePerson}-${dateStr}.pdf`;
+			return { blob: pdf.output('blob'), filename };
+		};
+
+		const buildSellerAgendaBlob = async (events) => {
+			const firstEventData = events[0]?.extendedProps?.apiData || null;
+			const sellerData = firstEventData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+			const headerCompanyName = sellerData.denominazione_operatore_azienda || sellerData.company_name || firstEventData?.sellers_data?.display_name || 'company_name';
+			const contactName = sellerData.name || sellerData.referente || '';
+
+			const pdf = new jsPDF('p', 'mm', 'a4');
+			const pageWidth = 210, pageHeight = 297, margin = 15, contentWidth = pageWidth - (2 * margin);
+			let yPosition = margin;
+
+			try {
+				const logoUrl =
+					AddonsAuth?.event?.event_details?.event_logo ||
+					AddonsSettings?.event_details?.event_logo ||
+					window?.tfhb_core_apps?.event?.event_details?.event_logo ||
+					window?.tfhb_core_apps?.event_details?.event_logo || '';
+				if (logoUrl) {
+					const maxLogoHeight = 60;
+					const img = new Image(); img.crossOrigin = 'anonymous'; img.src = logoUrl;
+					await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+					let lw = img.width, lh = img.height;
+					if (lh > maxLogoHeight) { const r = maxLogoHeight / lh; lh = maxLogoHeight; lw = lw * r; }
+					const canvas = document.createElement('canvas'); canvas.width = lw; canvas.height = lh;
+					const ctx = canvas.getContext('2d'); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0,0,canvas.width,canvas.height);
+					ctx.drawImage(img, 0, 0, lw, lh);
+					const processedLogoUrl = canvas.toDataURL('image/jpeg', 1.0);
+					pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, lw * 0.2645833333, lh * 0.2645833333);
+				}
+			} catch (_) {}
+
+			const headerHeight = 20;
+			const rightColumnStart = margin + 50 + 8;
+			const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+			pdf.setFontSize(7); pdf.setFont('helvetica', 'bold'); pdf.text('SELLERS', rightColumnStart, yPosition + 3);
+			if (contactName) { pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(contactName, rightColumnStart, yPosition + 6); }
+			pdf.setFontSize(10); pdf.setFont('helvetica', 'bold'); pdf.text(headerCompanyName, rightColumnStart, yPosition + 10);
+			pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${events.length}`, rightColumnStart, yPosition + 15);
+			yPosition += headerHeight; pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 4;
+
+			const sortedEvents = [...events].sort((a, b) => new Date(a.start) - new Date(b.start));
+			const eventsByDay = {};
+			sortedEvents.forEach(event => {
+				const eventDate = new Date(event.start);
+				const dayKey = eventDate.toLocaleDateString('en-US', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+				if (!eventsByDay[dayKey]) eventsByDay[dayKey] = []; eventsByDay[dayKey].push(event);
+			});
+			Object.keys(eventsByDay).forEach((dayKey) => {
+				const dayEvents = eventsByDay[dayKey];
+				if (yPosition > pageHeight - 60) { pdf.addPage(); yPosition = margin; }
+				pdf.setFontSize(9); pdf.setFont('helvetica', 'bold'); pdf.text(dayKey, margin, yPosition); yPosition += 5;
+				pdf.setDrawColor(200, 200, 200); pdf.setLineWidth(0.2); pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 3;
+				const timeColWidth = 30, timeColX = margin, detailsColX = margin + timeColWidth + 3, detailsColWidth = contentWidth - timeColWidth - 3;
+				dayEvents.forEach((event, index) => {
+					const startDate = new Date(event.start), endDate = new Date(event.end);
+					if (yPosition > pageHeight - 18) { pdf.addPage(); yPosition = margin; }
+					const rowStartY = yPosition;
+					const formatTime = (d) => d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+					const timeText = `${formatTime(startDate)} - ${formatTime(endDate)}`;
+					pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(timeText, timeColX, yPosition + 3);
+					let detailsY = yPosition;
+					const apiData = event.extendedProps.apiData;
+					const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+					const buyersCompany = buyerData.company_name || buyerData.travel_agent_name || 'Company';
+					pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
+					const titleLines = pdf.splitTextToSize(`Meeting with ${buyersCompany}`, detailsColWidth);
+					pdf.text(titleLines[0], detailsColX, detailsY + 3); detailsY += 4;
+					const buyerName = buyerData.name || buyerData.name_of_participant || apiData.buyers_data?.display_name || 'Contact';
+					const location = (buyerData.nation || buyerData.state || '');
+					pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+					const contactText = `${buyerName}${location ? ' from ' + location : ''}`;
+					const contactLines = pdf.splitTextToSize(contactText, detailsColWidth);
+					pdf.text(contactLines[0], detailsColX, detailsY + 2.5); detailsY += 3.5;
+					const rowHeight = Math.max(10, detailsY - rowStartY + 2); yPosition += rowHeight;
+					if (index < dayEvents.length - 1) { pdf.setDrawColor(230,230,230); pdf.setLineWidth(0.1); pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 1; }
+				});
+				yPosition += 4;
+			});
+			const dateStr = new Date().toISOString().split('T')[0];
+			const safeCompany = sanitizeForFile(headerCompanyName) || 'company';
+			const safePerson = sanitizeForFile(contactName) || 'participant';
+			const filename = `agenda-${safeCompany}-${safePerson}-${dateStr}.pdf`;
+			return { blob: pdf.output('blob'), filename };
+		};
+
+		let addedCount = 0;
+		for (let i = 0; i < selectedUsers.length; i++) {
+			const user = selectedUsers[i];
+			const { role, agenda } = await fetchAgendaForUser(user);
+			if (!agenda || agenda.length === 0) {
+				continue;
+			}
+			if (role === 'buyers') {
+				const events = convertBuyerAgendaToEvents(agenda);
+				const { blob, filename } = await buildBuyerAgendaBlob(events);
+				zip.file(filename, blob);
+				addedCount++;
+			} else if (role === 'sellers') {
+				const events = convertSellerAgendaToEvents(agenda);
+				const { blob, filename } = await buildSellerAgendaBlob(events);
+				zip.file(filename, blob);
+				addedCount++;
+			}
+		}
+
+		if (addedCount === 0) {
+			toast.warning('No agendas available for selected users', { position: 'bottom-right', autoClose: 2000 });
+			AddonsUsers.update_preloader = false;
+			return;
+		}
+
+		const zipBlob = await zip.generateAsync({ type: 'blob' });
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(zipBlob);
+		const dateStr = new Date().toISOString().replace(/[:.]/g, '-');
+		const roleName = (roleTab || 'agendas');
+		link.download = `bulk_agendas_${roleName}_${dateStr}.zip`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(link.href);
+
+		toast.success(`Successfully generated ${addedCount} agenda PDF(s) as ZIP!`, {
+			position: 'bottom-right',
+			autoClose: 3000,
+		});
+	} catch (error) {
+		console.error('Error generating bulk agendas:', error);
+		toast.error('Failed to generate bulk agendas. Please try again.', {
+			position: 'bottom-right',
+			autoClose: 3000,
+		});
+	} finally {
+		AddonsUsers.update_preloader = false;
+	}
+};
+
+// ---- Agenda Export (Buyers/Sellers) ----
+const convertBuyerAgendaToEvents = (apiData) => {
+    if (!apiData || !Array.isArray(apiData)) return [];
+    return apiData.map(item => {
+        const date = item.date;
+        const startTime = item.start_time;
+        const endTime = item.end_time;
+        const startDateTime = `${date}T${startTime}:00`;
+        const endDateTime = `${date}T${endTime}:00`;
+
+        const sellerData = item.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        const sellerName = sellerData.name || item.sellers_data?.display_name || 'Unknown Seller';
+        const sellerCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+        const companyName = sellerCompany || sellerName;
+
+        // booking time display
+        const formatTime = (time) => {
+            if (!time) return '';
+            const [hours, minutes] = time.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        };
+        const bookingTime = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+
+        let backgroundColor, borderColor;
+        switch (item.status) {
+            case 'confirmed':
+                backgroundColor = '#e8f5e8'; borderColor = '#c8e6c9'; break;
+            case 'pending':
+                backgroundColor = '#fff3e0'; borderColor = '#ffcc80'; break;
+            case 'canceled':
+                backgroundColor = '#ffebee'; borderColor = '#ffcdd2'; break;
+            default:
+                backgroundColor = '#f0f0f0'; borderColor = '#d0d0d0';
+        }
+
+        return {
+            id: String(item.id ?? `${date}-${startTime}-${endTime}-${companyName}`),
+            title: companyName,
+            start: startDateTime,
+            end: endDateTime,
+            backgroundColor,
+            borderColor,
+            extendedProps: {
+                booking_id: item.booking_id ? String(item.booking_id) : '',
+                status: item.status,
+                booking_date: date,
+                booking_time: bookingTime,
+                host_id: item.host_id?.toString() || '0',
+                meeting_type: item.meeting_data?.meeting_type || 'one-to-one',
+                meeting_id: item.meeting_id?.toString() || '',
+                meeting_title: item.meeting_data?.title || '',
+                apiData: item
+            }
+        };
+    });
+};
+
+const convertSellerAgendaToEvents = (apiData) => {
+    if (!apiData || !Array.isArray(apiData)) return [];
+    return apiData.map(item => {
+        const date = item.date;
+        const startTime = item.start_time;
+        const endTime = item.end_time;
+        const startDateTime = `${date}T${startTime}:00`;
+        const endDateTime = `${date}T${endTime}:00`;
+
+        const buyerData = item.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const buyerName = buyerData.name || buyerData.name_of_participant || buyerData.family_name_of_participant || item.buyers_data?.display_name || 'Unknown Buyer';
+        const buyerCompany = buyerData.company_name || buyerData.travel_agent_name || '';
+        const title = buyerCompany ? `${buyerCompany} - ${buyerName}` : buyerName;
+
+        const formatTime = (time) => {
+            if (!time) return '';
+            const [hours, minutes] = time.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        };
+        const bookingTime = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+
+        let backgroundColor, borderColor;
+        switch (item.status) {
+            case 'confirmed':
+                backgroundColor = '#e8f5e8'; borderColor = '#c8e6c9'; break;
+            case 'pending':
+                backgroundColor = '#fff3e0'; borderColor = '#ffcc80'; break;
+            case 'canceled':
+                backgroundColor = '#ffebee'; borderColor = '#ffcdd2'; break;
+            default:
+                backgroundColor = '#f0f0f0'; borderColor = '#d0d0d0';
+        }
+
+        return {
+            id: String(item.id ?? `${date}-${startTime}-${endTime}-${buyerName}`),
+            title,
+            start: startDateTime,
+            end: endDateTime,
+            backgroundColor,
+            borderColor,
+            extendedProps: {
+                booking_id: item.booking_id ? String(item.booking_id) : '',
+                status: item.status,
+                booking_date: date,
+                booking_time: bookingTime,
+                host_id: item.host_id?.toString() || '0',
+                meeting_type: item.meeting_data?.meeting_type || 'one-to-one',
+                meeting_id: item.meeting_id?.toString() || '',
+                meeting_title: item.meeting_data?.title || '',
+                apiData: item
+            }
+        };
+    });
+};
+
+const exportBuyerAgendaPDF = async (events) => {
+    if (!events || events.length === 0) {
+        toast.error('No events to export', { position: 'bottom-right', "autoClose": 1500 });
+        return;
+    }
+
+	// Resolve event logo from multiple possible sources (admin/frontend parity)
+	const getEventLogoUrl = () => {
+ 
+		return (
+			AddonsAuth?.event?.event_details?.event_logo ||
+			AddonsSettings?.event_details?.event_logo ||
+			window?.tfhb_core_apps?.event?.event_details?.event_logo ||
+			window?.tfhb_core_apps?.event_details?.event_logo ||
+			''
+		);
+	};
+
+    const getSellerLocation = (apiData) => {
+        const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        return sellerData.regione || '';
+    };
+
+    try {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 15;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = margin;
+
+        const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const firstEventData = events[0]?.extendedProps?.apiData || null;
+        const buyerData = firstEventData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const headerCompanyName = buyerData.travel_agent_name || buyerData.company_name || firstEventData?.buyers_data?.display_name || 'Name Brand';
+        const participantName = buyerData.name_of_participant || '';
+
+        const headerHeight = 20;
+        const leftColumnWidth = 50;
+        const rightColumnStart = margin + leftColumnWidth + 8;
+
+		// Add event logo (same behavior as dashboard appointments)
+		try {
+			const logoUrl = getEventLogoUrl();
+			if (logoUrl) {
+				const maxLogoHeight = 60;
+				const img = new Image();
+				img.crossOrigin = 'anonymous';
+				img.src = logoUrl;
+				await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+				let logoWidth = img.width, logoHeight = img.height;
+				if (logoHeight > maxLogoHeight) {
+					const ratio = maxLogoHeight / logoHeight;
+					logoHeight = maxLogoHeight; logoWidth = logoWidth * ratio;
+				}
+				const canvas = document.createElement('canvas');
+				canvas.width = logoWidth; canvas.height = logoHeight;
+				const ctx = canvas.getContext('2d');
+				ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+				ctx.drawImage(img, 0, 0, logoWidth, logoHeight);
+				const processedLogoUrl = canvas.toDataURL('image/jpeg', 1.0);
+				pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333);
+			} else {
+				pdf.setFontSize(10); pdf.setFont('helvetica', 'bold'); pdf.text('Logo Events', margin, yPosition + 4);
+			}
+		} catch (_) {
+			pdf.setFontSize(10); pdf.setFont('helvetica', 'bold'); pdf.text('Logo Events', margin, yPosition + 4);
+		}
+
+        pdf.setFontSize(7); pdf.setFont('helvetica', 'bold');
+        pdf.text('BUYERS', rightColumnStart, yPosition + 3);
+        if (participantName) {
+            pdf.setFontSize(8); pdf.setFont('helvetica', 'normal');
+            pdf.text(participantName, rightColumnStart, yPosition + 6);
+        }
+        pdf.setFontSize(10); pdf.setFont('helvetica', 'bold');
+        pdf.text(headerCompanyName, rightColumnStart, yPosition + 10);
+        pdf.setFontSize(8); pdf.setFont('helvetica', 'normal');
+        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${events.length}`, rightColumnStart, yPosition + 15);
+
+        yPosition += headerHeight;
+        pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+        yPosition += 4;
+
+        const sortedEvents = [...events].sort((a, b) => new Date(a.start) - new Date(b.start));
+        const eventsByDay = {};
+        sortedEvents.forEach(event => {
+            const eventDate = new Date(event.start);
+            const dayKey = eventDate.toLocaleDateString('en-US', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+            if (!eventsByDay[dayKey]) eventsByDay[dayKey] = [];
+            eventsByDay[dayKey].push(event);
+        });
+
+        Object.keys(eventsByDay).forEach((dayKey) => {
+            const dayEvents = eventsByDay[dayKey];
+            if (yPosition > pageHeight - 60) { pdf.addPage(); yPosition = margin; }
+
+            pdf.setFontSize(9); pdf.setFont('helvetica', 'bold'); pdf.text(dayKey, margin, yPosition); yPosition += 5;
+            pdf.setDrawColor(200, 200, 200); pdf.setLineWidth(0.2); pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 3;
+
+            const timeColWidth = 30, timeColX = margin;
+            const detailsColX = margin + timeColWidth + 3;
+            const detailsColWidth = contentWidth - timeColWidth - 3;
+
+            dayEvents.forEach((event, index) => {
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                const apiData = event.extendedProps.apiData;
+
+                if (yPosition > pageHeight - 18) { pdf.addPage(); yPosition = margin; }
+
+                const rowStartY = yPosition;
+                const formatTime = (date) => date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                const timeText = `${formatTime(startDate)} - ${formatTime(endDate)}`;
+
+                pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(timeText, timeColX, yPosition + 3);
+
+                let detailsY = yPosition;
+                const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+                const sellersCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || 'Company';
+
+                pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
+                const titleLines = pdf.splitTextToSize(`Meeting with ${sellersCompany}`, detailsColWidth);
+                pdf.text(titleLines[0], detailsColX, detailsY + 3);
+                detailsY += 4;
+
+                const sellerName = sellerData.name || apiData.sellers_data?.display_name || 'Contact';
+                const location = getSellerLocation(apiData);
+                pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+                const contactText = `${sellerName}${location ? ' at ' + location : ''}`;
+                const contactLines = pdf.splitTextToSize(contactText, detailsColWidth);
+                pdf.text(contactLines[0], detailsColX, detailsY + 2.5);
+                detailsY += 3.5;
+
+                const rowHeight = Math.max(10, detailsY - rowStartY + 2);
+                yPosition += rowHeight;
+
+                if (index < dayEvents.length - 1) {
+                    pdf.setDrawColor(230, 230, 230); pdf.setLineWidth(0.1);
+                    pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 1;
+                }
+            });
+            yPosition += 4;
+        });
+
+        const dateStr = new Date().toISOString().split('T')[0];
+        const sanitizeForFile = (str) => (str || '').toString().trim().replace(/\s+/g, '_').replace(/[^\w\-]+/g, '').toLowerCase();
+        const safeCompany = sanitizeForFile(headerCompanyName) || 'company';
+        const safePerson = sanitizeForFile(participantName) || 'participant';
+        const fileName = `agenda-${safeCompany}-${safePerson}-${dateStr}.pdf`;
+        pdf.save(fileName);
+        toast.success('Calendar exported as PDF successfully', { position: 'bottom-right', "autoClose": 1500 });
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        toast.error('PDF generation failed', { position: 'bottom-right', "autoClose": 1500 });
+    }
+};
+
+const exportSellerAgendaPDF = async (events) => {
+    if (!events || events.length === 0) {
+        toast.error('No events to export', { position: 'bottom-right', "autoClose": 1500 });
+        return;
+    }
+
+	// Resolve event logo from multiple possible sources (admin/frontend parity)
+	const getEventLogoUrl = () => {
+		return (
+			AddonsAuth?.event?.event_details?.event_logo ||
+			AddonsSettings?.event_details?.event_logo ||
+			window?.tfhb_core_apps?.event?.event_details?.event_logo ||
+			window?.tfhb_core_apps?.event_details?.event_logo ||
+			''
+		);
+	};
+
+    const getBuyerLocation = (apiData) => {
+        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        return buyerData.nation || buyerData.state || '';
+    };
+
+    try {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 15;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = margin;
+
+        const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const firstEventData = events[0]?.extendedProps?.apiData || null;
+        const sellerData = firstEventData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        const headerCompanyName = sellerData.denominazione_operatore_azienda || sellerData.company_name || firstEventData?.sellers_data?.display_name || 'Company Name';
+        const contactName = sellerData.name || sellerData.referente || '';
+
+        const headerHeight = 20;
+        const leftColumnWidth = 50;
+        const rightColumnStart = margin + leftColumnWidth + 8;
+
+		// Add event logo (same behavior as dashboard appointments)
+		try {
+			const logoUrl = getEventLogoUrl();
+			if (logoUrl) {
+				const maxLogoHeight = 60;
+				const img = new Image();
+				img.crossOrigin = 'anonymous';
+				img.src = logoUrl;
+				await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+				let logoWidth = img.width, logoHeight = img.height;
+				if (logoHeight > maxLogoHeight) {
+					const ratio = maxLogoHeight / logoHeight;
+					logoHeight = maxLogoHeight; logoWidth = logoWidth * ratio;
+				}
+				const canvas = document.createElement('canvas');
+				canvas.width = logoWidth; canvas.height = logoHeight;
+				const ctx = canvas.getContext('2d');
+				ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+				ctx.drawImage(img, 0, 0, logoWidth, logoHeight);
+				const processedLogoUrl = canvas.toDataURL('image/jpeg', 1.0);
+				pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333);
+			} else {
+				pdf.setFontSize(10); pdf.setFont('helvetica', 'bold'); pdf.text('Logo Events', margin, yPosition + 4);
+			}
+		} catch (_) {
+			pdf.setFontSize(10); pdf.setFont('helvetica', 'bold'); pdf.text('Logo Events', margin, yPosition + 4);
+		}
+
+        pdf.setFontSize(7); pdf.setFont('helvetica', 'bold');
+        pdf.text('SELLERS', rightColumnStart, yPosition + 3);
+        if (contactName) {
+            pdf.setFontSize(8); pdf.setFont('helvetica', 'normal');
+            pdf.text(contactName, rightColumnStart, yPosition + 6);
+        }
+        pdf.setFontSize(10); pdf.setFont('helvetica', 'bold');
+        pdf.text(headerCompanyName, rightColumnStart, yPosition + 10);
+        pdf.setFontSize(8); pdf.setFont('helvetica', 'normal');
+        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${events.length}`, rightColumnStart, yPosition + 15);
+
+        yPosition += headerHeight;
+        pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+        yPosition += 4;
+
+        const sortedEvents = [...events].sort((a, b) => new Date(a.start) - new Date(b.start));
+        const eventsByDay = {};
+        sortedEvents.forEach(event => {
+            const eventDate = new Date(event.start);
+            const dayKey = eventDate.toLocaleDateString('en-US', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+            if (!eventsByDay[dayKey]) eventsByDay[dayKey] = [];
+            eventsByDay[dayKey].push(event);
+        });
+
+        Object.keys(eventsByDay).forEach((dayKey) => {
+            const dayEvents = eventsByDay[dayKey];
+            if (yPosition > pageHeight - 60) { pdf.addPage(); yPosition = margin; }
+
+            pdf.setFontSize(9); pdf.setFont('helvetica', 'bold'); pdf.text(dayKey, margin, yPosition); yPosition += 5;
+            pdf.setDrawColor(200, 200, 200); pdf.setLineWidth(0.2); pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 3;
+
+            const timeColWidth = 30, timeColX = margin;
+            const detailsColX = margin + timeColWidth + 3;
+            const detailsColWidth = contentWidth - timeColWidth - 3;
+
+            dayEvents.forEach((event, index) => {
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                const apiData = event.extendedProps.apiData;
+
+                if (yPosition > pageHeight - 18) { pdf.addPage(); yPosition = margin; }
+
+                const rowStartY = yPosition;
+                const formatTime = (date) => date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                const timeText = `${formatTime(startDate)} - ${formatTime(endDate)}`;
+
+                pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.text(timeText, timeColX, yPosition + 3);
+
+                let detailsY = yPosition;
+                const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+                const buyersCompany = buyerData.company_name || buyerData.travel_agent_name || 'Company';
+
+                pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
+                const titleLines = pdf.splitTextToSize(`Meeting with ${buyersCompany}`, detailsColWidth);
+                pdf.text(titleLines[0], detailsColX, detailsY + 3);
+                detailsY += 4;
+
+                const buyerName = buyerData.name || buyerData.name_of_participant || apiData.buyers_data?.display_name || 'Contact';
+                const location = getBuyerLocation(apiData);
+                pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+                const contactText = `${buyerName}${location ? ' from ' + location : ''}`;
+                const contactLines = pdf.splitTextToSize(contactText, detailsColWidth);
+                pdf.text(contactLines[0], detailsColX, detailsY + 2.5);
+                detailsY += 3.5;
+
+                const rowHeight = Math.max(10, detailsY - rowStartY + 2);
+                yPosition += rowHeight;
+
+                if (index < dayEvents.length - 1) {
+                    pdf.setDrawColor(230, 230, 230); pdf.setLineWidth(0.1);
+                    pdf.line(margin, yPosition, pageWidth - margin, yPosition); yPosition += 1;
+                }
+            });
+            yPosition += 4;
+        });
+
+        const dateStr = new Date().toISOString().split('T')[0];
+        const sanitizeForFile = (str) => (str || '').toString().trim().replace(/\s+/g, '_').replace(/[^\w\-]+/g, '').toLowerCase();
+        const safeCompany = sanitizeForFile(headerCompanyName) || 'company';
+        const safePerson = sanitizeForFile(contactName) || 'participant';
+        const fileName = `agenda-${safeCompany}-${safePerson}-${dateStr}.pdf`;
+        pdf.save(fileName);
+        toast.success('Calendar exported as PDF successfully', { position: 'bottom-right', "autoClose": 1500 });
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        toast.error('PDF generation failed', { position: 'bottom-right', "autoClose": 1500 });
+    }
+};
+
+const ExportAgendaPDF = async (user) => {
+    try {
+        if (!user?.id) {
+            toast.error('Invalid user selected', { position: 'bottom-right', autoClose: 1500 });
+            return;
+        }
+        const role = (user.role || AddonsUsers.current_tab || '').toLowerCase();
+
+        if (role !== 'buyers' && role !== 'sellers' && role !== 'buyer' && role !== 'seller') {
+            toast.warning('Agenda export is available for Buyers and Sellers only', { position: 'bottom-right', autoClose: 2000 });
+            return;
+        }
+
+        let endpoint = '';
+        let payload = {};
+        if (role === 'buyers' || role === 'buyer') {
+            endpoint = 'hydra-booking/v1/buyers/buyers-agenda';
+            payload = { buyers_id: user.id };
+        } else {
+            endpoint = 'hydra-booking/v1/sellers/sellers-agenda';
+            payload = { sellers_id: user.id };
+        }
+
+        const response = await axios.post(
+            window.tfhb_core_apps.rest_route + endpoint,
+            payload,
+            { headers: { 'X-WP-Nonce': window.tfhb_core_apps.rest_nonce } }
+        );
+
+        if (!(response?.data?.status) || !Array.isArray(response?.data?.agenda)) {
+            toast.error('No agenda found for this user', { position: 'bottom-right', autoClose: 2000 });
+            return;
+        }
+
+        const agendaArray = response.data.agenda;
+        if (role === 'buyers' || role === 'buyer') {
+            const events = convertBuyerAgendaToEvents(agendaArray);
+            await exportBuyerAgendaPDF(events);
+        } else {
+            const events = convertSellerAgendaToEvents(agendaArray);
+            await exportSellerAgendaPDF(events);
+        }
+    } catch (error) {
+        console.error('Export agenda error:', error);
+        toast.error('Failed to export agenda PDF', { position: 'bottom-right', autoClose: 2000 });
+    }
+};
+
 // Lifecycle
 onBeforeMount(() => {
     AddonsUsers.init();
     AddonsSettings.FetchAddonsSettings();
+    AddonsAuth.FetchSettings();
 });
 
 onBeforeRouteLeave(() => {
@@ -1536,7 +2311,8 @@ onBeforeRouteLeave(() => {
                         :option="[
                             {'name': 'Active', 'value': 'activate'},
                             {'name': 'Deactive', 'value': 'deactivate'},
-                            {'name': 'Export Badge', 'value': 'badge'}
+                            {'name': 'Export Badge', 'value': 'badge'},
+                            {'name': 'Export Agenda', 'value': 'agenda'}
                         ]"
                         width="50"
                         @tfhb-onchange="[]"
@@ -1602,8 +2378,7 @@ onBeforeRouteLeave(() => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in paginatedUsers" :key="user.id"> 
-                          
+                        <tr v-for="user in paginatedUsers" :key="user.id">  
                             <td class="column-cb">
                                 
                                 <input 
@@ -1655,6 +2430,9 @@ onBeforeRouteLeave(() => {
                                     </span>
                                     <span @click.stop="DownloadBadgeStaffPDFWithQRCode(user)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
                                         {{ $tfhb_trans('Staff Badge') }}
+                                    </span>
+                                    <span v-if="user.role == 'Sellers' || user.role == 'Buyers' " @click.stop="ExportAgendaPDF(user)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
+                                        {{ $tfhb_trans('Export Agenda') }}
                                     </span>
                                     <span v-if="isUserInactive(user.status)" @click.stop="handleStatusUpdate(user.id, 'activate')" class="tfhb-activate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
                                         <Icon name="Check" width="16" />
