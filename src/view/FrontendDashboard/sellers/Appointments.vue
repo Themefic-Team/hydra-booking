@@ -770,7 +770,16 @@ const exportAsPDF = async () => {
             yPosition += 4;
         });
 
-        const fileName = `agenda-${new Date().toISOString().split('T')[0]}.pdf`;
+        const dateStr = new Date().toISOString().split('T')[0];
+        const sanitizeForFile = (str) => (str || '')
+            .toString()
+            .trim()
+            .replace(/\s+/g, '_')
+            .replace(/[^\w\-]+/g, '')
+            .toLowerCase();
+        const safeCompany = sanitizeForFile(headerCompanyName) || 'company';
+        const safePerson = sanitizeForFile(contactName) || 'participant';
+        const fileName = `agenda-${safeCompany}-${safePerson}-${dateStr}.pdf`;
         pdf.save(fileName);
         toast.success('Calendar exported as PDF successfully', { position: 'bottom-right', "autoClose": 1500 });
 
