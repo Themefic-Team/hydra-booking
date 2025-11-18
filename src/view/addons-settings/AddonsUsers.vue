@@ -1612,7 +1612,7 @@ const handleBulkAgendaExport = async () => {
 					let detailsY = yPosition;
 					const apiData = event.extendedProps.apiData;
 					const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-					const sellersCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || 'Company';
+					const sellersCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || 'Company';
 					pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
 					const titleLines = pdf.splitTextToSize(`Meeting with ${sellersCompany}`, detailsColWidth);
 					pdf.text(titleLines[0], detailsColX, detailsY + 3); detailsY += 4;
@@ -1696,7 +1696,7 @@ const handleBulkAgendaExport = async () => {
 					let detailsY = yPosition;
 					const apiData = event.extendedProps.apiData;
 					const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-					const buyersCompany = buyerData.company_name || buyerData.travel_agent_name || 'Company';
+					const buyersCompany = buyerData.travel_agent_name || buyerData.company_name || 'Company';
 					pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
 					const titleLines = pdf.splitTextToSize(`Meeting with ${buyersCompany}`, detailsColWidth);
 					pdf.text(titleLines[0], detailsColX, detailsY + 3); detailsY += 4;
@@ -1841,7 +1841,7 @@ const convertSellerAgendaToEvents = (apiData) => {
 
         const buyerData = item.buyers_data?.user_meta?.tfhb_buyers_data || {};
         const buyerName = buyerData.name || buyerData.name_of_participant || buyerData.family_name_of_participant || item.buyers_data?.display_name || 'Unknown Buyer';
-        const buyerCompany = buyerData.company_name || buyerData.travel_agent_name || '';
+        const buyerCompany = buyerData.travel_agent_name || buyerData.company_name || '';
         const title = buyerCompany ? `${buyerCompany} - ${buyerName}` : buyerName;
 
         const formatTime = (time) => {
@@ -2007,7 +2007,7 @@ const exportBuyerAgendaPDF = async (events) => {
 
                 let detailsY = yPosition;
                 const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-                const sellersCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || 'Company';
+                const sellersCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || 'Company';
 
                 pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
                 const titleLines = pdf.splitTextToSize(`Meeting with ${sellersCompany}`, detailsColWidth);
@@ -2164,7 +2164,7 @@ const exportSellerAgendaPDF = async (events) => {
 
                 let detailsY = yPosition;
                 const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-                const buyersCompany = buyerData.company_name || buyerData.travel_agent_name || 'Company';
+                const buyersCompany = buyerData.travel_agent_name || buyerData.company_name || 'Company';
 
                 pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
                 const titleLines = pdf.splitTextToSize(`Meeting with ${buyersCompany}`, detailsColWidth);

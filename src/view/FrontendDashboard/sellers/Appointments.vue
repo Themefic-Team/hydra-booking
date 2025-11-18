@@ -81,8 +81,8 @@ const convertApiDataToCalendarEvents = (apiData) => {
                           'Unknown Seller';
         
         // Get company name from buyers data first, then sellers
-        const buyerCompany = buyerData.company_name || buyerData.travel_agent_name || '';
-        const sellerCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+        const buyerCompany = buyerData.travel_agent_name || buyerData.company_name || '';
+        const sellerCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
         const companyName = buyerCompany || sellerCompany;
         
         // Create title with company name if available
@@ -154,7 +154,7 @@ const convertApiDataToCalendarEvents = (apiData) => {
 // Helper functions for details panel
 const getCompanyInitials = (apiData) => {
     const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-    const company = buyerData.company_name || buyerData.travel_agent_name || '';
+    const company = buyerData.travel_agent_name || buyerData.company_name || '';
     if (!company) return 'TA';
     return company.replace(/[^a-zA-Z]/g, '').substring(0, 2).toUpperCase();
 };
@@ -220,8 +220,8 @@ const filteredListEvents = computed(() => {
         }
         
         // Search in company name (both buyer and seller)
-        const buyerCompany = buyerData.company_name || buyerData.travel_agent_name || '';
-        const sellerCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+        const buyerCompany = buyerData.travel_agent_name || buyerData.company_name || '';
+        const sellerCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
         if (buyerCompany.toLowerCase().includes(query) || sellerCompany.toLowerCase().includes(query)) {
             return true;
         }
@@ -734,7 +734,7 @@ const exportAsPDF = async () => {
 
                 // Meeting title (buyer company)
                 const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-                const buyersCompany = buyerData.company_name || buyerData.travel_agent_name || 'Company';
+                const buyersCompany = buyerData.travel_agent_name || buyerData.company_name || 'Company';
                 
                 pdf.setFontSize(9);
                 pdf.setFont('helvetica', 'bold');

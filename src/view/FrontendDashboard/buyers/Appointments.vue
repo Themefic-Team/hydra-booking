@@ -79,7 +79,7 @@ const convertApiDataToCalendarEvents = (apiData) => {
                           'Unknown Seller';
         
         // Get seller company name (this is what buyers want to see)
-        const sellerCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+        const sellerCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
         const companyName = sellerCompany || sellerName;
         
         // Create title with seller company/name
@@ -151,7 +151,7 @@ const convertApiDataToCalendarEvents = (apiData) => {
 // Helper functions for details panel
 const getCompanyInitials = (apiData) => {
     const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-    const company = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+    const company = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
     if (!company) return 'SE';
     return company.replace(/[^a-zA-Z]/g, '').substring(0, 2).toUpperCase();
 };
@@ -195,7 +195,7 @@ const getBuyerInterests = (apiData) => {
 
 const getSellerCompanyName = (apiData) => {
     const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-    return sellerData.company_name || sellerData.denominazione_operatore_azienda || apiData?.sellers_data?.display_name || 'Unknown Seller';
+    return sellerData.denominazione_operatore_azienda || sellerData.company_name || apiData?.sellers_data?.display_name || 'Unknown Seller';
 };
 
 // Calendar configuration
@@ -360,7 +360,7 @@ const exportAsPDF = async () => {
     // Get buyer company name for header
     const getBuyerCompanyName = (apiData) => {
         const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
-        return buyerData.company_name || buyerData.travel_agent_name || apiData?.buyers_data?.display_name || 'Name Brand';
+        return buyerData.travel_agent_name || buyerData.company_name || apiData?.buyers_data?.display_name || 'Name Brand';
     };
 
     // Get seller location
@@ -561,7 +561,7 @@ const exportAsPDF = async () => {
 
                 // Meeting title (seller company)
                 const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
-                const sellersCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || 'Company';
+                const sellersCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || 'Company';
                 
                 pdf.setFontSize(9);
                 pdf.setFont('helvetica', 'bold');
@@ -1121,7 +1121,7 @@ const filteredListEvents = computed(() => {
         }
         
         // Search in seller company name
-        const sellerCompany = sellerData.company_name || sellerData.denominazione_operatore_azienda || '';
+        const sellerCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
         if (sellerCompany.toLowerCase().includes(query)) {
             return true;
         }

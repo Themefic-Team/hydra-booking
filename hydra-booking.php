@@ -3,7 +3,7 @@
  * Plugin Name: Hydra Booking - All in One Appointment Booking System with Automated Appointment Scheduling.
  * Plugin URI: https://hydrabooking.com/
  * Description: Appointment Booking Plugin with Automated Scheduling - Apple/Outlook/ Google Calendar, WooCommerce, Zoom, Fluent Forms, Zapier, Mailchimp & CRM Integration.
- * Version: 111.1.29
+ * Version: 111.1.30
  * Tested up to: 6.8
  * Author: Themefic
  * Author URI: https://themefic.com/
