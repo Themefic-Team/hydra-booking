@@ -141,6 +141,45 @@ function hideDropdownOutsideClick(e) {
     
     
 }
+
+
+const ChangeAttendeeStatus  = async (attendee_id, booking_id, status) => { 
+    
+    let data = {
+        attendee_id: attendee_id,
+        status: status
+    }
+    try { 
+        // axisos sent dataHeader Nonce Data
+        const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/change-attendee-status', data, {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
+            } 
+        } );
+
+        if (response.data.status) {  
+            //   update booking data using booking id and attendee id form paginatedBooking  
+
+            toast.success(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+            
+            BookingDetails.fetchBookingsDetails(bookingId, router);
+
+        }else{
+
+            toast.error(response.data.message, {
+                position: 'bottom-right', // Set the desired position
+                "autoClose": 1500,
+            });
+
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+}
+
 onBeforeMount(() => {  
     BookingDetails.fetchBookingsDetails(bookingId, router);
     window.addEventListener('click', hideDropdownOutsideClick);
@@ -591,7 +630,8 @@ const TfhbPrevNavigator = () => {
                              <div class="tfhb-b-d-icon-box tfhb-flexbox tfhb-gap-8 tfhb-align-normal"> 
                                  <div class="tfhb-b-d-icon-content"> 
                                     <p> 
-                                        {{attendees.attendee_name}}  
+                                        {{attendees.attendee_name}}   
+                                        
                                     </p>
                                  </div>
                              </div>  
@@ -632,7 +672,13 @@ const TfhbPrevNavigator = () => {
                                         <transition name="tfhb-dropdown-transition">
                                             <div v-show="activeAttendeeAction.includes(attendees.id)" class="tfhb-dropdown-wrap ">  
                                                 <span class="tfhb-dropdown-single"  @click.stop="goForReschedule(attendees)"><Icon name="RefreshCw" size=16 />{{ $tfhb_trans('Re-Schedule') }}</span> 
+
+                                                 <span class="tfhb-dropdown-single" v-if="attendees.status == 'pending'" @click="ChangeAttendeeStatus(attendees.id, BookingDetails.booking.id, 'confirmed')"><Icon name="CalendarCheck2" size=16   /> {{ $tfhb_trans('Confirm') }} </span>
+                                                <span class="tfhb-dropdown-single " v-if="attendees.status == 'confirmed'" @click="ChangeAttendeeStatus(attendees.id, BookingDetails.booking.id, 'pending')" ><Icon name="CalendarClock" size=16  /> {{ $tfhb_trans('Pending') }} </span>
+                                                
                                                 <span class="tfhb-dropdown-single " @click="cancelAttendee(attendees)"><Icon name="X" size=16 />{{ $tfhb_trans('Cancel') }}</span>  
+                                                
+                                               
                                             </div>
                                         </transition>
                                     </div>
