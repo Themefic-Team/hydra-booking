@@ -212,7 +212,7 @@ const upCommingBookingTitle = (data) => {
         </div>
     </div>
    <div class="tfhb-dashboard-section-wrap">
-        <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-wrap">
+        <div  :class="{ 'tfhb-skeleton': Dashboard.skeleton }"  class="tfhb-dashboard-wrap" :style="{'width': $front_end_dashboard == true ? '100%' : '', 'margin-right': $front_end_dashboard == true ? '0px' : '' }">
             
             <div :class="{ 'tfhb-skeleton': Dashboard.skeleton_chartbox }"  class="tfhb-dashboard-chartbox tfhb-flexbox tfhb-gap-24">
 
@@ -488,7 +488,7 @@ const upCommingBookingTitle = (data) => {
                 </div>
             </div>
         </div>
-        <div class="tfhb-dashboard-sidebar">
+        <div class="tfhb-dashboard-sidebar" v-if="$front_end_dashboard == false">
             
         </div>
    </div> 
