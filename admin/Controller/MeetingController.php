@@ -621,8 +621,19 @@ class MeetingController {
 	}
 
 	// Meeting Filter
-	public function filterMeetings( $request ) {
+	public function filterMeetings( $request ) { 
+		// Capability check: only users with tfhb_manage_options may filter
+		if ( ! current_user_can( 'tfhb_manage_meetings' ) ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __( 'You do not have permission to filter meetings.', 'hydra-booking' ),
+				)
+			);
+		}
 		$filterData = $request->get_param( 'filterData' ); 
+		// filderd only current users meetings
+		
 		// Meeting Lists
 		$meeting      = new Meeting();
 		$MeetingsList = $meeting->get( '', $filterData );
