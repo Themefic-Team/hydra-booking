@@ -632,7 +632,14 @@ class MeetingController {
 			);
 		}
 		$filterData = $request->get_param( 'filterData' ); 
-		// filderd only current users meetings
+		// Filter meetings by current user if not admin
+		$current_user = wp_get_current_user();
+		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
+		$current_user_id   = $current_user->ID;
+
+		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) { 
+			$filterData['user_id'] = $current_user_id;
+		}
 		
 		// Meeting Lists
 		$meeting      = new Meeting();
