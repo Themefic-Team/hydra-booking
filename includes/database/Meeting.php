@@ -181,7 +181,7 @@ class Meeting {
 				LEFT JOIN $host_table ON $table_name.host_id = $host_table.id 
 				WHERE $table_name.id = %s GROUP BY $table_name.id", $id )
 			);
-		} elseif ( ! empty( $filterData['title'] ) || ! empty( $filterData['fhosts'] ) || ! empty( $filterData['fcategory'] ) || ( ! empty( $filterData['startDate'] ) && ! empty( $filterData['endDate'] ) ) ) {
+		} elseif ( ! empty( $filterData['title'] ) || ! empty( $filterData['fhosts'] ) || ! empty( $filterData['user_id'] ) || ! empty( $filterData['fcategory'] ) || ( ! empty( $filterData['startDate'] ) && ! empty( $filterData['endDate'] ) ) ) {
 			$sql = "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id LEFT JOIN $host_table ON $table_name.host_id = $host_table.id WHERE";
 
 			if ( ! empty( $filterData['title'] ) ) {
@@ -201,10 +201,14 @@ class Meeting {
 				$sql         .= ( ! empty( $filterData['title'] ) || isset( $filterData['fhosts'] ) ) ? ' AND' : '';
 				$sql         .= " $table_name.meeting_category IN ($category_ids)";
 			}
+			if ( isset( $filterData['user_id'] ) ) { 
+				$sql         .= ( ! empty( $filterData['title'] ) || isset( $filterData['fhosts'] ) || isset( $filterData['fcategory'] ) ) ? ' AND' : '';
+				$sql         .= $wpdb->prepare( " $table_name.user_id = %s", $filterData['user_id'] );
+			}
 
 			$sql .= " GROUP BY $table_name.id" ;  
 
-			$sql .= " ORDER BY $table_name.id DESC";
+			$sql .= " ORDER BY $table_name.id DESC"; 
 
 			$data = $wpdb->get_results( $sql );
 
@@ -214,8 +218,7 @@ class Meeting {
 				$wpdb->prepare( "SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name FROM $table_name
 				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id LEFT JOIN $host_table ON $table_name.host_id = $host_table.id WHERE $table_name.user_id = %s GROUP BY $table_name.id  ORDER BY $table_name.id DESC", $user_id ) 
 			);
-		} else {
-
+		} else {  
 			$data = $wpdb->get_results(
 				"SELECT $table_name.*, COUNT($booking_table.id) as total_booking, $host_table.first_name as host_first_name,  $host_table.last_name as host_last_name  FROM $table_name
 				LEFT JOIN $booking_table ON $table_name.id = $booking_table.meeting_id

@@ -621,8 +621,26 @@ class MeetingController {
 	}
 
 	// Meeting Filter
-	public function filterMeetings( $request ) {
+	public function filterMeetings( $request ) { 
+		// Capability check: only users with tfhb_manage_options may filter
+		if ( ! current_user_can( 'tfhb_manage_meetings' ) ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __( 'You do not have permission to filter meetings.', 'hydra-booking' ),
+				)
+			);
+		}
 		$filterData = $request->get_param( 'filterData' ); 
+		// Filter meetings by current user if not admin
+		$current_user = wp_get_current_user();
+		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
+		$current_user_id   = $current_user->ID;
+
+		if ( ! empty( $current_user_role ) && 'tfhb_host' == $current_user_role ) { 
+			$filterData['user_id'] = $current_user_id;
+		}
+		
 		// Meeting Lists
 		$meeting      = new Meeting();
 		$MeetingsList = $meeting->get( '', $filterData );

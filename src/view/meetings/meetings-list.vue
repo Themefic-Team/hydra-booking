@@ -173,8 +173,8 @@ const exportData = reactive({
     <HbProPopup  v-if="tfhb_is_pro == false || $tfhb_license_status == false" :isOpen="ProPopup" @modal-close="ProPopup = false" max_width="500px" name="first-modal" gap="32px" />   
     
     <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between" >
-        <div class="tfhb-filter-box tfhb-flexbox">
-            <div class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
+        <div class="tfhb-filter-box tfhb-flexbox"> 
+            <div v-if="$user.role[0] != 'tfhb_host' " class="tfhb-filter-content-wrap " :class="FilterPreview ? 'active' : ''">
                 <div class="tfhb-filter-icon tfhb-filter-btn tfhb-flexbox"  @click="FilterPreview=!FilterPreview"><Icon name="Filter" size=20 /> 
                 {{ $tfhb_trans('Filter') }}</div>
                 <transition name="tfhb-dropdown-transition">
