@@ -220,9 +220,9 @@ const GetFormsData = async (value) => {
                 />
               
 
-                <!-- Time format -->
+                <!-- Time format --> 
                <HbDropdown 
-                    v-if = "meeting.questions_form_type != ''"
+                    v-if = "meeting.questions_form_type != '' && ( integrations.gravity_status == false || integrations.cf7_status == false || integrations.fluent_status == false )"
                     v-model="meeting.questions_form"  
                     required= "true" 
                     :label="$tfhb_trans('Select Form')"  

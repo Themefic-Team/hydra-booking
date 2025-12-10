@@ -205,6 +205,9 @@ class HydraBookingShortcode {
 		// Availability Range
 		$availability_range      = isset( $data['availability_range'] ) ? $data['availability_range'] : array();
 		$availability_range_type = isset( $data['availability_range_type'] ) ? $data['availability_range_type'] : array();
+		$questions_type = isset( $data['questions_type'] ) ? $data['questions_type'] : array();
+		$questions_form_type = isset( $data['questions_form_type'] ) ? $data['questions_form_type'] : array();
+		$questions_form = isset( $data['questions_form'] ) ? $data['questions_form'] : array(); 
 
 		// Duration
 		$duration = isset( $data['duration'] ) && ! empty( $data['duration'] ) ? $data['duration'] : 30;
@@ -259,6 +262,10 @@ class HydraBookingShortcode {
 			'availability'            => $availability_data,
 			'availability_range'      => $availability_range,
 			'availability_range_type' => $availability_range_type,
+			'questions_type' => $questions_type,
+			'questions_form_type' => $questions_form_type,
+			'questions_form' => $questions_form,
+
 		);
 		
 
