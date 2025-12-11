@@ -219,7 +219,7 @@ There are several well-known appointment booking plugins available for WordPress
 = 1.1.32 – Dec 11, 2025 =
 
 - Compatibility: Fully compatible with Contact Form 7 (v6.1.4).
-- Fixed: Booking issue with Contact Form 7 resolved.
+- Resolved: The booking issue occurring when using Contact Form 7.
 
 = 1.1.31 – Dec 08, 2025 =
 
