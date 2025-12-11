@@ -409,12 +409,16 @@
 			});
 			document.addEventListener( 'wpcf7mailsent', function( event ) {
 				var data = event.detail.formData; 
-				var InformationData = {};
-				data.forEach(function(value, key){
-					InformationData[key] = value;
-				}); 
+				if(calenderData.questions_type == 'existing' && calenderData.questions_form_type == 'wpcf7'){ 
+					if(event.detail.contactFormId == calenderData.questions_form){  
+						var InformationData = {};
+						data.forEach(function(value, key){
+							InformationData[key] = value;
+						});   
+						tfhb_from_submission($this, preloader, InformationData, calenderData);
+					}
+				}
 				
-				tfhb_from_submission($this, preloader, InformationData, calenderData);
 			});
  
 			// Forminator Form Submission
