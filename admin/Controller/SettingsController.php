@@ -976,6 +976,17 @@ class SettingsController {
 		$request              = json_decode( file_get_contents( 'php://input' ), true );
 		$_tfhb_hosts_settings = ! empty( get_option( '_tfhb_hosts_settings' ) ) ? get_option( '_tfhb_hosts_settings' ) : array();
 
+		// Checked current user can manage option
+		if (  ! current_user_can( 'manage_options' ) ) {
+			// woocommerce payment
+			$data = array(
+				'status'  => false,
+				'message' => __( 'You do not have permission to access this page', 'hydra-booking' ),
+				'data'    => $_tfhb_hosts_settings,
+			);
+			return rest_ensure_response( $data );
+		}
+		
 
 
 		if ( isset( $request['hosts_settings']['others_information']['enable_others_information'] ) ) {

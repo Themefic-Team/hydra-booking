@@ -31,8 +31,12 @@ const LicenseBase = reactive({
                 const licenseTitle = response.data.data.data.license_title || "";
                 this.license_type = licenseTitle.toLowerCase().includes("free") ? 'free' : 'pro';
                 this.license_active = true;
-            }else{
+            }else{ 
                 this.skeleton = false;
+                toast.error(response.data.data.message, {
+                    position: 'bottom-right', // Set the desired position
+                    "autoClose": 1500,
+                });
             }
         } catch (error) {
             this.skeleton = false;
