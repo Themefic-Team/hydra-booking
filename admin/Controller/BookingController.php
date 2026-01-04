@@ -929,7 +929,7 @@ class BookingController {
 		$request       = json_decode( file_get_contents( 'php://input' ), true );
 		$booking_id    = $request['id'];
 		$booking_owner = $request['host'];
-
+	
 		if ( empty( $booking_id ) || $booking_id == 0 ) {
 			return rest_ensure_response(
 				array(
@@ -955,7 +955,7 @@ class BookingController {
 			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->host_id );
 
 		}
-
+		
 		$extractedBookings = array_map(
 			function ( $booking ) {
 				return array(
