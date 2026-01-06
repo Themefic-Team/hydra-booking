@@ -220,7 +220,7 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
-= 1.1.35 – Jan 05, 2025 =
+= 1.1.35 – Jan 06, 2025 =
 
 - Tweak: Updated changelog information.
 
