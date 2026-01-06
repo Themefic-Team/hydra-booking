@@ -216,9 +216,10 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
-= 1.1.33 – Dec 20, 2025 =
+= 1.1.33 – Jan 20, 2025 =
 
- - Fixed: Security vulnerability resolved.
+- Fixed: Security vulnerability resolved.
+- Fixed: Notice issue on dashboard. 
 
 = 1.1.32 – Dec 11, 2025 =
 
