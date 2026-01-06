@@ -222,7 +222,7 @@ There are several well-known appointment booking plugins available for WordPress
 
 = 1.1.34 – Jan 05, 2025 =
 
-- Added: FAQ info added for security details
+- Added: FAQ information related to security details.
 
 = 1.1.33 – Jan 05, 2025 =
 
