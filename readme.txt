@@ -4,7 +4,7 @@ Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.1.34
+Stable tag: 1.1.35
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -176,7 +176,7 @@ Hydra Booking uses [Appsero](https://appsero.com/) SDK to collect some telemetry
 
 = Where do I report security bugs found in this plugin? =
 
-Please report security bugs found in the source code of the undefined plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/102a9c8a-34e4-4c9f-a150-7ae9c8ee1e75). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+Please report security bugs found in the source code of the Hydra Booking plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/725d056b-231b-4012-a3bd-b43dfa7e9246). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 = Can Hydra Booking be used for multiple business types? =
 Yes, Hydra Booking is designed to be versatile, making it suitable for businesses like spas, salons, medical practices, and beyond.
@@ -219,6 +219,10 @@ There are several well-known appointment booking plugins available for WordPress
 13. Slack, Twilio, Telegram settings
 
 == Changelog ==
+
+= 1.1.35 – Jan 05, 2025 =
+
+- Added: Changelog info Updated
 
 = 1.1.34 – Jan 05, 2025 =
 
