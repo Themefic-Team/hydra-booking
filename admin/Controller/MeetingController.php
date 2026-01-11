@@ -791,7 +791,7 @@ class MeetingController {
 	}
 
 	private function ensureBuilderKeyExists(&$notifications) {
-		if(!empty($notifications)){
+		if(is_array($notifications)|| is_object($notifications)){
 			foreach ($notifications as $role => &$notificationsData) {
 				foreach ($notificationsData as $key => &$notification) {
 					if (!isset($notification['builder'])) {
@@ -890,28 +890,33 @@ class MeetingController {
 
 		$this->ensureBuilderKeyExists($MeetingData->notification);
 		
-
-		if(is_array( $MeetingData->notification)){
-			if(empty($MeetingData->notification['slack'])){
-				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'slack' );
+		// Ensure slack, telegram, twilio default notification channels exist
+		if(isset($MeetingData->notification)){
+			// Work with objects for consistency
+			$isArray = is_array($MeetingData->notification);
+			
+			// Convert to object for processing
+			if($isArray){
+				$MeetingData->notification = json_decode(json_encode($MeetingData->notification));
 			}
-			if(empty($MeetingData->notification['telegram'])){
-				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'telegram' );
+			
+			// Now work with object
+			if(is_object($MeetingData->notification)){
+				if(empty($MeetingData->notification->slack)){
+					$this->ensure_notification_channel_defaults( $MeetingData->notification, 'slack' );
+				}
+				if(empty($MeetingData->notification->telegram)){
+					$this->ensure_notification_channel_defaults( $MeetingData->notification, 'telegram' );
+				}
+				if(empty($MeetingData->notification->twilio)){
+					$this->ensure_notification_channel_defaults( $MeetingData->notification, 'twilio' );
+				}
 			}
-			if(empty($MeetingData->notification['twilio'])){
-				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'twilio' );
-			}
-		}
-		if( is_object($MeetingData->notification) ){
-			if(empty($MeetingData->notification->slack)){
-				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'slack' );
-			}
-			if(empty($MeetingData->notification->telegram)){
-				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'telegram' );
-			}
-			if(empty($MeetingData->notification->twilio)){
-				$this->ensure_notification_channel_defaults( $MeetingData->notification, 'twilio' );
-			}
+			
+			// Convert back to array if it was originally an array
+			if($isArray){
+				$MeetingData->notification = json_decode(json_encode($MeetingData->notification), true);
+			} 
 		}
 		
 
