@@ -820,6 +820,7 @@
 				lit += `<li class="inactive">${tfhbTranslateNumber(monthlastdate - i + 1)}</li>`;
 			}
 		
+	
 			//  Current month dates
 			for (let i = 1; i <= lastdate; i++) { 
 				let isToday = i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? "active" : "";
@@ -834,6 +835,8 @@
 				}
 		
 				let currentDayName = dayNameText[new Date(year, month, i).getDay()]; 
+				 
+			 
 				if (DisableDays.includes(currentDayName)) {
 					availabilityClass = "inactive ";
 					dataAvailable = "unavailable";
@@ -847,6 +850,11 @@
 						dataAvailable = "unavailable";
 						isToday = "";
 					}
+				} 
+
+				if(typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available == '') {
+					availabilityClass = " ";
+					dataAvailable = "available";
 				}
 		
 				if ('active' === isToday) {
