@@ -8,7 +8,7 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
-
+import HbCounter from '@/components/meetings/HbCounter.vue'
 
 // import Form Field  
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
@@ -28,7 +28,12 @@ const generalSettings = reactive({
   after_cart_expire: '60',
   booking_status: 1,
   reschedule_status: '',
-  allowed_reschedule_before_meeting_start: '10', 
+   allowed_reschedule_before_meeting_start:[
+        {
+            limit: 10,
+            times:'minutes'
+        }
+    ],
 });
 
 // Field Validator
@@ -133,6 +138,15 @@ const UpdateGeneralSettings = async () => {
         return
     }
 
+    // if  generalSettings.allowed_reschedule_before_meeting_start is not number 
+    if(!Number(generalSettings.allowed_reschedule_before_meeting_start[0].limit)){ 
+            toast.error('Minimum time required before Booking/Cancel/Reschedule must be a number', {
+            position: 'bottom-right', // Set the desired position
+            "autoClose": 1500,
+        });
+        
+        return 
+    }
 
     generalSettings_pre_loader.value = true;
 
@@ -332,22 +346,17 @@ onBeforeMount(() => {
                
                 
                 <!-- Minimum time required before Booking/Cancel/Reschedule -->
-                <HbDropdown 
-                    v-model="generalSettings.allowed_reschedule_before_meeting_start"  
+                 <HbCounter
+                    :label="$tfhb_trans('Minimum time required before Booking/Cancel/Reschedule')"
+                    width="50" 
                     required= "true" 
-                    :label="$tfhb_trans('Minimum time required before Booking/Cancel/Reschedule')"  
-                    selected = "1"
-                    width="50"
-                    :placeholder="$tfhb_trans('Select Time')"  
-                    :option = "[
-                        {'name': '5 Minutes', 'value': '5'},  
-                        {'name': '10 Minutes', 'value': '10'},   
-                        {'name': '20 Minutes', 'value': '20'},  
-                        {'name': '30 Minutes', 'value': '30'},  
-                        {'name': '40 Minutes', 'value': '40'},
-                        {'name': '50 Minutes', 'value': '50'},
-                        {'name': '1 Hour', 'value': '60'}
-                    ]" 
+                    :repater="false"
+                    :counter_value="generalSettings.allowed_reschedule_before_meeting_start"
+                    limit="1"
+                    :option = "[ 
+                        {'name': 'Minutes', 'value': 'minutes'},   
+                        {'name': 'Hours', 'value': 'hours'}
+                    ]"
                 />
                 <!-- Minimum time required before Booking/Cancel/Reschedule -->
 
