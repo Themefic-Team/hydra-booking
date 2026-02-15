@@ -107,7 +107,7 @@ class ActivationHooks {
 			$pro_link = sprintf(
 				'<a href="%s" style="color: #b32d2e; font-weight: bold;" target="_blank">%s</a>',
 				'https://hydrabooking.com/pricing/',
-				__( 'GO PRO', 'hydra-booking' )
+				__( 'GET PRO', 'hydra-booking' )
 			);
 			array_unshift( $links, $settings_link, $pro_link, $docs_link );
 		} else {
