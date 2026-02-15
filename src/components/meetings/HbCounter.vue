@@ -13,6 +13,7 @@ const props = defineProps([
     'subtitle',
     'counter_value',
     'description', 
+    'option', 
     'repater', 
     'limit'
 ])
@@ -30,12 +31,24 @@ function CounterDec(key){
         props.counter_value[key].limit --;
     }
 }
+function getTheOption(){
+    if (props.option) {
+        return props.option;
+    } else {
+        return [ 
+            {'name': 'Days', 'value': 'days'},  
+            {'name': 'Weeks', 'value': 'weeks'},  
+            {'name': 'Months', 'value': 'months'},  
+            {'name': 'Years', 'value': 'years'},
+        ]
+    }
+}
 
 </script>
 
 <template>
     <div class="tfhb-counter-box " :class="name" 
-            :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }">
+            :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }"> 
         <div class="tfhb-single-form-field">
             <div class="tfhb-single-form-field-wrap">
                 <label v-if="label" :for="name">{{ label }} <span  v-if="required == 'true'"> *</span> </label>
@@ -47,7 +60,7 @@ function CounterDec(key){
                         </div>
 
                         <span>
-                            <input type="text" v-model=" counter.limit" >
+                            <input :type="props.type ? props.type : 'text'" v-model=" counter.limit" >
                             <!-- {{ counter.limit = counter.limit}}  -->
                             {{ counterLabel }}</span>
                         <div class="tfhb-inc" @click="CounterInc(key)">
@@ -61,12 +74,7 @@ function CounterDec(key){
                         width="50"
                         :selected = "1"   
                         placeholder="Select" 
-                        :option = "[ 
-                            {'name': 'Days', 'value': 'days'},  
-                            {'name': 'Weeks', 'value': 'weeks'},  
-                            {'name': 'Months', 'value': 'months'},  
-                            {'name': 'Years', 'value': 'years'},
-                        ]"
+                        :option = "getTheOption()"
                     /> 
 
                     <div v-if="repater && key == 0" class="tfhb-availability-schedule-clone-single">
