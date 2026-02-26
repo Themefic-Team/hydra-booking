@@ -1,11 +1,13 @@
 {
-  "name": "vue",
-  "version": "0.0.0",
+  "name": "hydra-booking",
+  "version": "1.1.36",
+  "textdomain": "hydra-booking",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && grunt build --gruntfile Gruntfile.js",
+    "build:zip": "grunt build --gruntfile Gruntfile.js",
     "preview": "vite preview",
     "watch:scss": "sass --watch sass/css/global.scss:assets/app/css/style.css",
     "watch:app-js": "vite build --watch --config ./config/vite.config.public.js",
@@ -35,6 +37,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.6.2",
+    "grunt": "^1.6.1",
+    "grunt-contrib-clean": "^2.0.1",
+    "grunt-contrib-compress": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "load-grunt-tasks": "^5.1.0",
     "sass": "^1.70.0",
     "vite": "^5.0.10",
     "vite-plugin-minify": "^2.1.0"

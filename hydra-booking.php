@@ -28,7 +28,7 @@ class THB_INIT {
 
 		define( 'TFHB_VERSION', '1.1.38' );
 		define( 'TFHB_BASE_FILE', __FILE__);
-		define( 'TFHB_DEV_MODE', false ); // Set true to enable dev mode
+		define( 'TFHB_DEV_MODE', true ); // Set true to enable dev mode
 
 
 		// Load Vendor Auto Load

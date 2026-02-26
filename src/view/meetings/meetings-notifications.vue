@@ -153,6 +153,7 @@ const UpdateNotification = async () => {
                 <div class="tfhb-integration-notification-box" v-show="EmailPreview">
                     <div v-if="currentTabs=='host'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
                         <!-- Single Notification  -->
+                         
                         <MailNotifications 
                             :title="$tfhb_trans('Booking Confirmation to Host')"  
                             :label="$tfhb_trans('Booking Confirmation')" 

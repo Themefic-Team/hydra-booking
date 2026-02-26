@@ -310,6 +310,24 @@ const emailBuilder = ref([
         }
     },
     {
+        id: 'add_to_calendar',
+        order: 5,
+        status: 1,
+        title: 'Add to Calendar',
+        border_color: '#C0D8C4',
+        content: {
+            description: {
+                status: 1,
+                content: 'Add to calendar'
+            },
+            list: {
+                status: 1,
+                content: '<div><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.google}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/google-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.outlook}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/outlook-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.yahoo}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/yahoo-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.other}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/other-calendar.svg\' alt=\'icon\' /></a></div>'
+                
+            }, 
+        }
+    },
+    {
         id: 'footer',
         order: 6,
         status: 1,
@@ -587,6 +605,17 @@ const emailTemplate = computed(() => {
                         }
                     emailContent += `</td></tr>`;
                 }
+            emailContent += `</table></td></tr></table>`;
+        }
+        
+        if (section.status && section.id === 'add_to_calendar') { 
+            emailContent += `<table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding-bottom: 16px;width: 100%; max-width: 600px; margin: 0 auto;"  ><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            emailContent += ` <tr>
+                <td style="font-size: 15px;padding: 8px 0 12px 0; text-align: center;">${emailBuilder.value[key].content.description.content}</td>  
+            </tr>`;
+            emailContent += ` <tr>
+                <td style="font-size: 15px;padding: 8px 0 8px 0; text-align: center;">${emailBuilder.value[key].content.list.content}</td>  
+            </tr>`;
             emailContent += `</table></td></tr></table>`;
         }
 
