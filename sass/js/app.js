@@ -780,6 +780,18 @@
 			let availability_range_type = calender_data.availability_range_type;   
 			let availabilitys_range_start = calender_data.availability_range.start;   
 			let availabilitys_range_end = calender_data.availability_range.end;   
+			let availabilityRangeStartDate = null;
+			let availabilityRangeEndDate = null;
+			if (availabilitys_range_start) {
+				availabilityRangeStartDate = (availabilitys_range_start.includes('T') || availabilitys_range_start.includes(' '))
+					? new Date(availabilitys_range_start)
+					: new Date(availabilitys_range_start + 'T00:00:00');
+			}
+			if (availabilitys_range_end) {
+				availabilityRangeEndDate = (availabilitys_range_end.includes('T') || availabilitys_range_end.includes(' '))
+					? new Date(availabilitys_range_end)
+					: new Date(availabilitys_range_end + 'T23:59:59.999');
+			}
 		
 			let dayNameText = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 			let dayShortText = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -843,9 +855,9 @@
 					isToday = '';
 				}
 		
-				if (availability_range_type !== 'indefinitely') {
+				if (availability_range_type !== 'indefinitely' && availabilityRangeStartDate && availabilityRangeEndDate) {
 					let currDate = new Date(year, month, i);
-					if (currDate < new Date(availabilitys_range_start) || currDate > new Date(availabilitys_range_end)) {
+					if (currDate < availabilityRangeStartDate || currDate > availabilityRangeEndDate) {
 						availabilityClass = "inactive ";
 						dataAvailable = "unavailable";
 						isToday = "";
