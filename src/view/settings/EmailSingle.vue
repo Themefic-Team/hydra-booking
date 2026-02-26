@@ -322,21 +322,8 @@ const emailBuilder = ref([
             },
             list: {
                 status: 1,
-                content: `<div class="tfhb-meeting-bookmark-list text-center">
-                    <a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"> 
-                        <img src="${props.mediaurl}/assets/app/images/google-calendar.svg" alt="icon" />
-                    </a>
-                    <a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank">
-                        <img src="${props.mediaurl}/assets/app/images/outlook-calendar.svg" alt="icon" /> 
-                    </a>
-                    <a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"> 
-                        <img src="${props.mediaurl}/assets/app/images/yahoo-calendar.svg" alt="icon" />
-                    </a>
-                    <a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank">
-                        <img src="${props.mediaurl}/assets/app/images/other-calendar.svg" alt="icon" />
-                    </a>
-                    
-                </div>`
+                content: '<div><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.google}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/google-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.outlook}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/outlook-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.yahoo}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/yahoo-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.other}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/other-calendar.svg\' alt=\'icon\' /></a></div>'
+                
             }, 
         }
     },
@@ -621,15 +608,14 @@ const emailTemplate = computed(() => {
             emailContent += `</table></td></tr></table>`;
         }
         
-        if (section.status && section.id === 'add_to_calendar') {
-            console.log('add_to_calendar section', emailBuilder.value[key].content);
-            emailContent += ` <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding: 16px 0;width: 100%; max-width: 600px; margin: 0 auto;" class="tfhb-cancel-reschedule-btn"><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
-                emailContent += ` <tr>
-                    <td style="font-size: 15px;padding: 8px 0 12px 0;">${emailBuilder.value[key].content.description.content}</td>  
-                </tr>`;
-                emailContent += ` <tr>
-                    <td style="font-size: 15px;padding: 8px 0 8px 0; margin: 0 auto;">${emailBuilder.value[key].content.list.content}</td>  
-                </tr>`;
+        if (section.status && section.id === 'add_to_calendar') { 
+            emailContent += `<table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding-bottom: 16px;width: 100%; max-width: 600px; margin: 0 auto;"  ><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            emailContent += ` <tr>
+                <td style="font-size: 15px;padding: 8px 0 12px 0; text-align: center;">${emailBuilder.value[key].content.description.content}</td>  
+            </tr>`;
+            emailContent += ` <tr>
+                <td style="font-size: 15px;padding: 8px 0 8px 0; text-align: center;">${emailBuilder.value[key].content.list.content}</td>  
+            </tr>`;
             emailContent += `</table></td></tr></table>`;
         }
 
@@ -715,16 +701,16 @@ const fetchNotification = async () => {
             } 
         });
         if (response.data.status) { 
-            // Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
-            // Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
-            // Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
-            // Notification.twilio = response.data.notification_settings.twilio ? response.data.notification_settings.twilio : Notification.twilio;
-            // Notification.slack = response.data.notification_settings.slack ? response.data.notification_settings.slack : Notification.slack;
-            // if(response.data.notification_settings[route.params.type][route.params.id].builder==''){
-            //     Notification[route.params.type][route.params.id].builder = emailBuilder.value;
-            // }else{
-            //     emailBuilder.value = response.data.notification_settings[route.params.type][route.params.id].builder;
-            // }
+            Notification.host = response.data.notification_settings.host ? response.data.notification_settings.host : Notification.host; 
+            Notification.attendee = response.data.notification_settings.attendee ? response.data.notification_settings.attendee : Notification.attendee;
+            Notification.telegram = response.data.notification_settings.telegram ? response.data.notification_settings.telegram : Notification.telegram;
+            Notification.twilio = response.data.notification_settings.twilio ? response.data.notification_settings.twilio : Notification.twilio;
+            Notification.slack = response.data.notification_settings.slack ? response.data.notification_settings.slack : Notification.slack;
+            if(response.data.notification_settings[route.params.type][route.params.id].builder==''){
+                Notification[route.params.type][route.params.id].builder = emailBuilder.value;
+            }else{
+                emailBuilder.value = response.data.notification_settings[route.params.type][route.params.id].builder;
+            }
             
             skeleton.value = false;
         }
