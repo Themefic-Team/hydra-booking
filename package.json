@@ -1,6 +1,6 @@
 {
   "name": "hydra-booking",
-  "version": "1.1.36",
+  "version": "1.1.38",
   "textdomain": "hydra-booking",
   "private": true,
   "type": "commonjs",

@@ -75,7 +75,7 @@ class MailHooks {
 				
 				// Setting Body
 				$mailbody = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['body'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['body'] : ''; 
- 		tfhb_print_r($mailbody);
+ 	 
 				// Replace Shortcode to Values
 				$finalbody = $this->replace_mail_tags( $mailbody, $attendees->id );
 		 
