@@ -849,11 +849,11 @@ class MailHooks {
 			'{{host.phone}}'       => ! empty( $attendeeBooking->host_phone ) ? $attendeeBooking->host_phone : '',
 			'{{attendee.name}}'    => ! empty( $attendeeBooking->attendee_name ) ? $attendeeBooking->attendee_name : '',
 			'{{attendee.email}}'   => ! empty( $attendeeBooking->email ) ? $attendeeBooking->email : '', 
-		'{{booking.add_to_calendar.google}}'   => ! empty( $google_calendar_link ) ? htmlspecialchars($google_calendar_link, ENT_QUOTES, 'UTF-8') : '#', 
-		'{{booking.add_to_calendar.outlook}}'   => ! empty( $outlook_calendar_link ) ? htmlspecialchars($outlook_calendar_link, ENT_QUOTES, 'UTF-8') : '#', 
-		'{{booking.add_to_calendar.yahoo}}'   => ! empty( $yahoo_calendar_link ) ? htmlspecialchars($yahoo_calendar_link, ENT_QUOTES, 'UTF-8') : '#', 
-		'{{booking.add_to_calendar.other}}'   => ! empty( $other_calendar_link ) ? htmlspecialchars($other_calendar_link, ENT_QUOTES, 'UTF-8') : '#',
- 
+			'{{booking.add_to_calendar.google}}'   => ! empty( $google_calendar_link ) ? htmlspecialchars($google_calendar_link, ENT_QUOTES, 'UTF-8') : '#', 
+			'{{booking.add_to_calendar.outlook}}'   => ! empty( $outlook_calendar_link ) ? htmlspecialchars($outlook_calendar_link, ENT_QUOTES, 'UTF-8') : '#', 
+			'{{booking.add_to_calendar.yahoo}}'   => ! empty( $yahoo_calendar_link ) ? htmlspecialchars($yahoo_calendar_link, ENT_QUOTES, 'UTF-8') : '#', 
+			'{{booking.add_to_calendar.other}}'   => ! empty( $other_calendar_link ) ? htmlspecialchars($other_calendar_link, ENT_QUOTES, 'UTF-8') : '#',
+	
 		);
 		// tfhb_print_r($replacements);
 		
