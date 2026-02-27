@@ -322,7 +322,7 @@ const emailBuilder = ref([
             },
             list: {
                 status: 1,
-                content: '<div><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.google}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/google-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.outlook}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/outlook-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.yahoo}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/yahoo-calendar.svg\' alt=\'icon\' /></a><a style=\'margin-right: 8px;\' href=\'{{booking.add_to_calendar.other}}\' target=\'_blank\'><img src=\'${props.mediaurl}/assets/app/images/other-calendar.svg\' alt=\'icon\' /></a></div>'
+                content: '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img  style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/g-calendar.png" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/outlook-icon.png" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/yahoo-icon.png" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/other-calendar.png" alt="icon" /></a></div>'
                 
             }, 
         }

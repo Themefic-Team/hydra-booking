@@ -29,10 +29,12 @@ class Helper {
         $location_image_url = plugins_url('assets/images/Location.png', dirname(__FILE__, 2));
         $mail_image_url = plugins_url('assets/images/mail.png', dirname(__FILE__, 2));
         $phone_image_url = plugins_url('assets/images/phone.png', dirname(__FILE__, 2));
-        $google_calendar_image_url = plugins_url('assets/app/images/google-calendar.svg', dirname(__FILE__, 2));
-        $outlook_calendar_image_url = plugins_url('assets/app/images/outlook-calendar.svg', dirname(__FILE__, 2));
-        $yahoo_calendar_image_url = plugins_url('assets/app/images/yahoo-calendar.svg', dirname(__FILE__, 2));
-        $other_calendar_image_url = plugins_url('assets/app/images/other-calendar.svg', dirname(__FILE__, 2));
+        $google_calendar_image_url = plugins_url('assets/app/images/g-calendar.png', dirname(__FILE__, 2));
+        $outlook_calendar_image_url = plugins_url('assets/app/images/outlook-icon.png', dirname(__FILE__, 2));
+        $yahoo_calendar_image_url = plugins_url('assets/app/images/yahoo-icon.png', dirname(__FILE__, 2));
+        $other_calendar_image_url = plugins_url('assets/app/images/other-calendar.png', dirname(__FILE__, 2));
+
+        $add_to_calendar_content = '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img style="height: 20px; width: 20px;" src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img style="height: 20px; width: 20px;" src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img style="height: 20px; width: 20px;" src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img style="height: 20px; width: 20px;" src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>';
         
 
         //  Host Notification
@@ -465,7 +467,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -930,7 +932,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -1270,7 +1272,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -1948,7 +1950,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -2328,7 +2330,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -2684,7 +2686,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -3039,7 +3041,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -3380,7 +3382,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
@@ -3718,7 +3720,7 @@ class Helper {
                         ),
                         'list' => array(
                             'status' => 1,
-                            'content' => '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img src="'.esc_url($google_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img src="'.esc_url($outlook_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img src="'.esc_url($yahoo_calendar_image_url).'" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img src="'.esc_url($other_calendar_image_url).'" alt="icon" /></a></div>'
+                            'content' => $add_to_calendar_content
                         ), 
                     )
                 ),
