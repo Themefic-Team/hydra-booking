@@ -1229,10 +1229,12 @@ const getAvailabilityTimeSlot = (value) => {
                     </td>
                     <td>
                         <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
-                            <span @click.stop="Tfhb_Booking_View(book.id)">
+                            <span @click.stop="Tfhb_Booking_View(book.id)" class="tfhb-tooltip">
+                                <span class="tfhb-tooltiptext">{{ $tfhb_trans('View Booking') }}</span>
                                 <Icon name="Eye" width="20" />
                             </span>
-                            <span @click.stop="bookingReminder(book)">
+                            <span @click.stop="bookingReminder(book)" class="tfhb-tooltip">
+                                <span class="tfhb-tooltiptext">{{ $tfhb_trans('Send Reminder') }}</span>
                                 <Icon name="AlarmClock" width="20" />
                             </span>
                             <!-- <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">
