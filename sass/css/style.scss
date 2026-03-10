@@ -900,6 +900,13 @@
                 flex-wrap: wrap;
                 gap: 16px;
                 margin-top: 16px;
+               
+
+                .tfhb-form-fields{
+                    max-height: 450px;
+                    overflow: auto;
+                    padding-right: 20px;
+                }
 
                 .tfhb-meeting-form {
                     width: 100%;
@@ -932,6 +939,7 @@
                             width: 100%;
                             padding: 8px 12px;
                             box-sizing: border-box;
+                            font-size: 13px;
                             &:focus {
                                 outline: none;
                                 box-shadow: none;

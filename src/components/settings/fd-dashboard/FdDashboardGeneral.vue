@@ -120,7 +120,7 @@ const ChangeColors = (value,  colors) => {
     <div v-if="props.FrontendDashboard.fd_dashboard.general.colors_palette == 'custom'" class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-tb-24 tfhb-gap-16">
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.primery_default" 
-            key = "paragraph_color"  
+            pickerKey = "paragraph_color"  
             :label="$tfhb_trans('Primary Color (Default)')"
             name="Primary"
             selected = "1" 
@@ -128,35 +128,35 @@ const ChangeColors = (value,  colors) => {
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.primery_hover"
-            key = "primery_hover"     
+            pickerKey = "primery_hover"     
             :label="$tfhb_trans('Primary Color (Hover)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.secondary_default" 
-            key = "secondary_default"    
+            pickerKey = "secondary_default"    
             :label="$tfhb_trans('Secondary Color (Default)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.secondary_hover"
-            key = "secondary_hover"     
+            pickerKey = "secondary_hover"     
             :label="$tfhb_trans('Secondary Color (Hover)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.text_title" 
-            key = "text_title"    
+            pickerKey = "text_title"    
             :label="$tfhb_trans('Text Color (Title)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.text_paragraph" 
-            key = "text_paragraph"    
+            pickerKey = "text_paragraph"    
             :label="$tfhb_trans('Text Color (Paragraph)')"  
             selected = "1" 
             width="50" 
@@ -165,35 +165,35 @@ const ChangeColors = (value,  colors) => {
         <!--  -->
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.surface_primary" 
-            key = "surface_primary"    
+            pickerKey = "surface_primary"    
             :label="$tfhb_trans('Surface Color (Primary)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.surface_background" 
-            key = "surface_background"    
+            pickerKey = "surface_background"    
             :label="$tfhb_trans('Surface Color (Background)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.surface_border"  
-            key = "surface_border"   
+            pickerKey = "surface_border"   
             :label="$tfhb_trans('Surface Color (Border)')"  
             selected = "1" 
             width="50" 
         />  
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.surface_border_hover"  
-            key = "surface_border_hover"   
+            pickerKey = "surface_border_hover"   
             :label="$tfhb_trans('Surface Color (Border Hover)')"  
             selected = "1" 
             width="50" 
         />
         <HbColor  
             v-model="props.FrontendDashboard.fd_dashboard.general.surface_input_field"  
-            key = "surface_input_field"   
+            pickerKey = "surface_input_field"   
             :label="$tfhb_trans('Surface Color (Input Field)')"  
             selected = "1" 
             width="50" 

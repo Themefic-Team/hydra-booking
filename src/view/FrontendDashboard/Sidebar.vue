@@ -65,7 +65,7 @@ const toggleSidebarResponsive= () => {
                     </router-link>
                 </li> 
  
-                <li v-if="$user.caps.tfhb_manage_settings == true ">
+                <li v-if="$user.caps.tfhb_manage_settings == true && $user.role[0] != 'tfhb_host' ">
                     <router-link  @click="showGeneralMenu = false" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12 " to="/settings/integrations/#all" exact :class="{ 'active': $route.path === '/settings/integrations' }">
                         <Icon name="Unplug" size="20" /> 
                         <span v-if="!collapsed" > {{ $tfhb_trans('Integrations') }}</span>
@@ -133,7 +133,7 @@ const toggleSidebarResponsive= () => {
                                     <span >{{ $tfhb_trans('Import/Export') }}</span>
                                 </router-link>
                             </li>
-                            <li>
+                            <li v-if="$user.role[0] != 'tfhb_host' ">
                                 <router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
                                     <Icon name="UserCog" size="20" /> 
                                     <span >{{ $tfhb_trans('Host Settings') }}</span>
@@ -146,7 +146,7 @@ const toggleSidebarResponsive= () => {
                                     <span >{{ $tfhb_trans('Shortcodes') }}</span>
                                 </router-link>
                             </li> 
-                            <li>
+                            <li v-if="$user.role[0] != 'tfhb_host' ">
                                 <router-link to="/settings/license" exact :class="{ 'active': $route.path.startsWith('/settings/license') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
                                     <Icon name="FileLock2" size="20" /> 
                                     <span >{{ $tfhb_trans('License') }}</span>

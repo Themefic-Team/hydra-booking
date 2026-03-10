@@ -16,6 +16,7 @@ html {
         min-height: 60px;
         height: auto;
 
+       
         .tfhb-header-profile-dropdown {
             img {
                 height: 40px;
@@ -153,8 +154,8 @@ html {
             .tfhb-flat-icon {
                 position: absolute;
                 right: 8px;
-                top: 6px;
-                bottom: auto;
+                // top: 6px;
+                bottom: 6px;
             }
         }
         .tfhb-popup-wrap{
@@ -189,6 +190,9 @@ html {
                 border: 1px solid $surface-border;
             }
 
+            .tfhb-host-single-information{
+                width: 100%;
+            }
             .tfhb-admin-frontend-end-wrap,
             .tfhb-admin-booking,
             .tfhb-admin-dashboard {

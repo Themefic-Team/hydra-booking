@@ -486,15 +486,23 @@ window.addEventListener('click', function(e) {
                 <!-- CF7 -->
 
                 
-                <!-- CF7 -->
-
-                <!-- gravity -->
-                <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
-                :gravity_data="Integration.gravity" 
+                <!-- Fluent -->
+                <ForminatorIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
+                :forminator_data="Integration.forminator" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
                 />
+                <!-- CF7 -->
+
+                
+                <!-- gravity -->
+                <!-- <GravityFormsIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
+                :gravity_data="Integration.gravity" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration"   
+                v-if="currentHash === 'all' || currentHash === 'forms'"
+                /> -->
                 <!-- gravity -->
 
                 <!-- webhook -->

@@ -410,7 +410,6 @@ class HydraBookingShortcode {
 					},
 					ARRAY_FILTER_USE_KEY
 				);
-
 				if ( isset( $_POST['names'] ) && is_array( $_POST['names'] ) ) {
 					$attendee_data['attendee_name'] = $_POST['names']['first_name'] . ' ' . $_POST['names']['last_name'];
 				}
@@ -478,6 +477,8 @@ class HydraBookingShortcode {
 
 		if ( isset( $questions ) && ! empty( $questions ) ) {
 			foreach ( $questions as $key => $question ) {
+				// remove question_ from key
+				$key = str_replace( 'question_', '', $key );
 				$attendee_data['others_info'][ $key ] = sanitize_text_field( $question );
 			}
 		}

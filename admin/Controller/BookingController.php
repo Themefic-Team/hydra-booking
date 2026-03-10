@@ -738,10 +738,7 @@ class BookingController {
 
 		// Buffer Time After
 		$buffer_time_after = isset( $data['buffer_time_after'] ) && ! empty( $data['buffer_time_after'] ) ? $data['buffer_time_after'] : 0;
-
-		// Meeting Interval
-		$meeting_interval = isset( $data['meeting_interval'] ) && ! empty( $data['meeting_interval'] ) ? $data['meeting_interval'] : 0;
-
+ 
 		// Disable Dates
 		$disabled_dates = array();
 		if ( $availability_data['date_slots'] != '' ) {
@@ -1324,9 +1321,7 @@ class BookingController {
 		// Buffer Time After
 		$buffer_time_after = isset( $data['buffer_time_after'] ) && ! empty( $data['buffer_time_after'] ) ? $data['buffer_time_after'] : 0;
 
-		// Meeting Interval
-		$meeting_interval = isset( $data['meeting_interval'] ) && ! empty( $data['meeting_interval'] ) ? $data['meeting_interval'] : 0;
-
+	 
 		// Disable Dates
 
 		// Get All Booking Data.

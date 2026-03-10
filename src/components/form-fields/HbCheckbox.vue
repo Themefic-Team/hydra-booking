@@ -21,6 +21,19 @@ const props = defineProps( {
 const emit = defineEmits(['update:modelValue']);
 const groupsvalue = reactive([]);
 
+const getOptionValue = (option) => {
+    return option && typeof option === 'object' && 'value' in option ? option.value : option;
+}
+
+const getOptionLabel = (option) => {
+    return option && typeof option === 'object' && 'label' in option ? option.label : option;
+}
+
+const hasCheckedValue = (option) => {
+    const currentValue = Array.isArray(props.modelValue) ? props.modelValue : [];
+    return currentValue.includes(getOptionValue(option));
+}
+
 const checkedValue = (e) => {   
     if(e.target.checked){
         emit('update:modelValue',  1);
@@ -78,12 +91,12 @@ const MulticheckedValue = (e) => {
                 :v-model="groupsvalue"  
                 @change="MulticheckedValue" 
                 :name="name"
-                :value="value"
+                :value="getOptionValue(value)"
                 type="checkbox"
-                :checked="modelValue.includes(value)"
+                :checked="hasCheckedValue(value)"
                 />     
                 <span class="checkmark"></span>
-                {{ value }} 
+                {{ getOptionLabel(value) }} 
             </label>
         </div>
     </div> 
