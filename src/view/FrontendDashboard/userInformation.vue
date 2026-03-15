@@ -1,10 +1,13 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
 import { reactive, onBeforeMount, ref, nextTick } from 'vue';
-import { useRouter, useRoute, RouterView } from 'vue-router' 
+import { useRouter, useRoute, RouterView } from 'vue-router'  
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
-import HbText from '@/components/form-fields/HbText.vue' 
-import HbButton from '@/components/form-fields/HbButton.vue' 
+import HbText from '@/components/form-fields/HbText.vue'
+import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import HbTextarea from '@/components/form-fields/HbTextarea.vue'
+import HbButton from '@/components/form-fields/HbButton.vue'
+import HbRadio from '@/components/form-fields/HbRadio.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
@@ -81,6 +84,32 @@ const props = defineProps({
     }
 
 }); 
+
+if (!props.host.others_information || typeof props.host.others_information !== 'object') {
+    props.host.others_information = {};
+}
+
+if (!FdDashboard.userAuth.others_information || typeof FdDashboard.userAuth.others_information !== 'object') {
+    FdDashboard.userAuth.others_information = {};
+}
+
+const normalizeFieldOptions = (options) => {
+    if (!Array.isArray(options)) {
+        return [];
+    }
+
+    return options.map((option) => {
+        if (option && typeof option === 'object' && 'label' in option && 'value' in option) {
+            return option;
+        }
+
+        return {
+            label: option,
+            value: option,
+        };
+    });
+}
+ 
  
 
 </script>
@@ -177,17 +206,19 @@ const props = defineProps({
                 <div v-if="hosts_settings.others_information && hosts_settings.others_information.enable_others_information == true && hosts_settings.others_information.fields" class="tfhb-flexbox">  
                      
                     <div class="tfhb-host-single-information" v-for="(field, index) in hosts_settings.others_information.fields" :key="index">  
-                        <!-- {{field}} -->
+                       
                        
                             <!--  --> 
                             <div v-if="field.type == 'checkbox' && field.enable == 1" class="tfhb-hosts-single-information-wrap"> 
+                                <!-- {{field}} -->
                                 <HbCheckbox 
                                     v-model="FdDashboard.userAuth.others_information[field.name]" 
                                     :names="FdDashboard.userAuth.others_information[field.name]"
+                                    :name="field.name"
                                     :label="field.label"  
-                                    :placeholder="field.placeholder" 
+                                    :placeholder="field.placeholder"  
                                     :groups="true"
-                                    :options="field.options" 
+                                    :options="normalizeFieldOptions(field.options)" 
                                 />
                             </div>
                             <div v-else-if="field.type == 'textarea' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
@@ -205,11 +236,11 @@ const props = defineProps({
                                 <HbRadio 
                                     v-model="FdDashboard.userAuth.others_information[field.name]" 
                                     :names="FdDashboard.userAuth.others_information[field.name]"
+                                    :name="field.name"
                                     :label="field.label"  
                                     :placeholder="field.placeholder"  
                                     :groups="true"
-                                    :options="field.options"   
-                                    :name="FdDashboard.userAuth.others_information[field.name]"
+                                    :options="normalizeFieldOptions(field.options)"   
                                 />
                             </div>
                             <div v-else-if="field.type == 'select' && field.enable == 1" class="tfhb-hosts-single-information-wrap">

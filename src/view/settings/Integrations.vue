@@ -517,19 +517,19 @@ onBeforeMount(() => {
                 <!-- CF7 -->
 
                 <!-- Forminator -->
-                <!-- <ForminatorIntegrations 
+                <ForminatorIntegrations 
                 :forminator_data="Integration.forminator" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
-                /> -->
+                />
                 <!-- CF7 -->
 
                 <!-- gravity -->
-                <GravityFormsIntegrations 
+                <!-- <GravityFormsIntegrations 
                 :gravity_data="Integration.gravity" 
                 @update-integrations="UpdateIntegration"   
                 v-if="currentHash === 'all' || currentHash === 'forms'"
-                />
+                /> -->
                 <!-- gravity -->
 
                 <!-- webhook -->

@@ -163,7 +163,7 @@
             text-align: center;
             padding: 5px 10px;
             border-radius: 6px;
-            min-width: 200px;
+            // min-width: 200px;
             border-radius: $border-radius-medium;
             /* Position the tooltip */
             position: absolute;
@@ -177,6 +177,7 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s;
+            display: block ruby;
 
             /* Arrow */
             &:after {
