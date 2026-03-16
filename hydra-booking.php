@@ -13,7 +13,7 @@
  * Domain Path: /languages
  */
 
-// don't load directly
+// don't load directly 
 defined( 'ABSPATH' ) || exit;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
