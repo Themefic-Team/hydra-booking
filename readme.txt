@@ -220,7 +220,7 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
-= 1.1.40 – Mar 15, 2026 =
+= 1.1.40 – Mar 16, 2026 =
 
 - New: Added Forminator feature.
 - New: Added default email template.
