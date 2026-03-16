@@ -1052,6 +1052,7 @@ class MeetingController {
 		$integrations['zoho_crm_status'] = isset( $_tfhb_integration_settings['zoho_crm']['status'] ) ? $_tfhb_integration_settings['zoho_crm']['status'] : 0;
 		$integrations['pabbly_status'] = isset( $_tfhb_integration_settings['pabbly']['status'] ) ? $_tfhb_integration_settings['pabbly']['status'] : 0;
 		$integrations['zapier_status'] = isset( $_tfhb_integration_settings['zapier']['status'] ) ? $_tfhb_integration_settings['zapier']['status'] : 0;
+		$integrations['aweber_status'] = isset( $_tfhb_integration_settings['aweber']['status'] ) ? $_tfhb_integration_settings['aweber']['status'] : 0;
 		 
 
 		// Meeting Category
@@ -1087,6 +1088,8 @@ class MeetingController {
 		} else {
 			$mailchimp_Data['status'] = false;
 		}
+
+	 
 
 		// FluentCRM
 		$fluentcrm_Data = array();
@@ -1249,6 +1252,8 @@ class MeetingController {
 			'twilio'           => $twilio_Data,
 			'message'          =>  __( 'Meeting Data','hydra-booking' ),
 		);
+		$data = apply_filters( 'tfhb_single_meeting_data_response', $data, $MeetingData );
+		 
 		return rest_ensure_response( $data );
 	}
 
@@ -1605,6 +1610,7 @@ class MeetingController {
 	public function getIntegrationModulsFields( $request ) {
 		$host      = ! empty( $request['host_id'] ) ? $request['host_id'] : '';
 		$hook_type = ! empty( $request['webhook'] ) ? $request['webhook'] : '';
+		
 
 		$_tfhb_host_integration_settings = is_array( get_user_meta( $host, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $host, '_tfhb_host_integration_settings', true ) : array();
 
@@ -1674,6 +1680,18 @@ class MeetingController {
 					}
 				}
 			}
+		}elseif ( 'Aweber' == $hook_type ) {
+
+			$request_data = [
+				'host_id' => $host,
+				'webhook' => $hook_type,
+				'module' => $request['module'],
+			];
+
+			$fields = apply_filters( 'tfhb_aweber_fields', array(), $request_data );
+	 
+			 
+
 		} else {
 			$fields = array(
 				array(

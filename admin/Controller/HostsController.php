@@ -700,8 +700,10 @@ class HostsController {
 		}else{
 			$mailchimp['type']              = 'mailchimp';
 			$mailchimp['status']            = 0; 
-			$mailchimp['connection_status']            = 0; 
+			$mailchimp['connection_status'] = 0; 
 		}
+
+		
 
 		// Telegram
 		$telegram = isset( $_tfhb_host_integration_settings['telegram'] ) ? $_tfhb_host_integration_settings['telegram'] : array();
@@ -781,6 +783,7 @@ class HostsController {
 			'zoom_meeting'               => $zoom_meeting, 
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
+			'aweber'                     => $aweber,
 			'zoho'                       => $zoho,
 			'telegram'                   => $telegram,
 			'twilio'                     => $twilio,

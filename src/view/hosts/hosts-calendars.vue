@@ -10,10 +10,7 @@ import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import GoogleCalendarIntegrations from '@/components/hosts/GoogleCalendarIntegrations.vue';
-import OutlookCalendarIntegrations from '@/components/hosts/OutlookCalendarIntegrations.vue';
-import AppleCalendarIntegrations from '@/components/hosts/AppleCalendarIntegrations.vue';
-import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue';
-import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
+import OutlookCalendarIntegrations from '@/components/hosts/OutlookCalendarIntegrations.vue'; 
 
 const route = useRoute();
 const router = useRouter();

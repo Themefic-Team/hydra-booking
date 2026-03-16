@@ -14,6 +14,7 @@ import OutlookCalendarIntegrations from '@/components/integrations/OutlookCalend
 import AppleCalendarIntegrations from '@/components/integrations/AppleCalendarIntegrations.vue'; 
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue'; 
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
+import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
 import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
 import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
@@ -40,6 +41,7 @@ const popup = ref(false);
 const gpopup = ref(false);
 const spopup = ref(false);
 const mailpopup = ref(false);
+const aweberpopup = ref(false);
 const outlookpopup = ref(false);
 const paypalpopup = ref(false);
 const tpopup = ref(false);
@@ -98,6 +100,13 @@ const ismailchimpPopupOpen = () => {
 }
 const ismailchimpPopupClose = (data) => {
     mailpopup.value = false;
+}
+
+const isAWeberPopupOpen = () => { 
+    aweberpopup.value = true;
+}
+const isAWeberPopupClose = (data) => {
+    aweberpopup.value = false;
 }
 
 const ispaypalPopupOpen = () => {
@@ -204,6 +213,15 @@ const Integration = reactive( {
         status: 0, 
         key: ''
     },
+    aweber : {
+        type: 'aweber', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: 0, 
+        auth_data: [],
+        list: [],
+        selected_subscriber_list: '',
+    },
     paypal : {
         type: 'paypal', 
         environment: '',
@@ -276,6 +294,7 @@ const fetchIntegration = async () => {
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
+            Integration.aweber= response.data.integration_settings.aweber ? response.data.integration_settings.aweber : Integration.aweber;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             Integration.cf7= response.data.integration_settings.cf7 ? response.data.integration_settings.cf7 : Integration.cf7;
             Integration.fluent= response.data.integration_settings.fluent ? response.data.integration_settings.fluent : Integration.fluent;
@@ -317,6 +336,7 @@ const UpdateIntegration = async (key, value) => {
             wpopup.value = false;
             twpopup.value = false;
             mailpopup.value = false;
+            aweberpopup.value = false;
             paypalpopup.value = false;
             slpopup.value = false;
             
@@ -330,6 +350,7 @@ const UpdateIntegration = async (key, value) => {
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
+            // Integration.aweber= response.data.integration_settings.aweber ? response.data.integration_settings.aweber : Integration.aweber;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
@@ -542,14 +563,24 @@ onBeforeMount(() => {
           
                 <!-- Mailchimp intrigation -->
                 <MailchimpIntegrations 
-                :mail_data="Integration.mailchimp" 
-                @update-integrations="UpdateIntegration" 
-                :ispopup="mailpopup"
-                @popup-open-control="ismailchimpPopupOpen"
-                @popup-close-control="ismailchimpPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                    :mail_data="Integration.mailchimp" 
+                    @update-integrations="UpdateIntegration" 
+                    :ispopup="mailpopup"
+                    @popup-open-control="ismailchimpPopupOpen"
+                    @popup-close-control="ismailchimpPopupClose" 
+                    v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Mailchimp intrigation -->
+                <!-- AWeber intrigation -->
+                <AWeberIntegrations 
+                    :aweber_data="Integration.aweber" 
+                    @update-integrations="UpdateIntegration" 
+                    :ispopup="aweberpopup"
+                    @popup-open-control="isAWeberPopupOpen"
+                    @popup-close-control="isAWeberPopupClose" 
+                    v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- AWeber intrigation -->
 
                 <!-- Fluent CRM -->
                 <FluentCRMIntegrations 
