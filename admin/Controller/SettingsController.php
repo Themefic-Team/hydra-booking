@@ -774,6 +774,7 @@ class SettingsController {
 			); 
 			
 			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			// tfhb_print_r($option);
 
 			$data['integration_settings'] = $option;
 			return rest_ensure_response( $data );

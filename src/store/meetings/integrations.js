@@ -15,6 +15,7 @@ const IntegrationsValue = reactive({
         url: '',  
         request_body: 'all',  
         audience: '',  
+        lists: '',  
         modules: '',  
         tags: '',  
         fields: '',  
@@ -33,7 +34,7 @@ const IntegrationsValue = reactive({
 
     // Meeting List
     async updateIntegrations() {
-
+ 
         // Api Submission
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/integration/update', this.integrationsData, {

@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, } from 'vue'; 
+import { ref, toRef, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { RouterView } from 'vue-router' 
 // import Form Field 
@@ -9,7 +9,7 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import HbSwitch from '@/components/form-fields/HbSwitch.vue';  
 import HbButton from '@/components/form-fields/HbButton.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
-
+import HbInfoBox from '../widgets/HbInfoBox.vue';
 import useValidators from '@/store/validator';
 const { errors, isEmpty } = useValidators();
 
@@ -23,13 +23,28 @@ const props = defineProps([
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
+const aweber_data = toRef( props, 'aweber_data' );
+
 const closePopup = () => { 
-    emit('popup-close-control', false)
+    emit('popup-close-control', false);
+}
+
+const RedirectToAweberAuthUrl = (url) => {
+    window.open(url, '_blank');
+}
+
+const RemoveIntegration = (type) => { 
+    emit('update-integrations', type, {
+        status: 0,
+        connection_status: 0,
+        auth_data: null,
+        authorize_url: aweber_data.value.authorize_url
+    })
 }
 
 </script>
 
-<template>
+<template> 
       <!-- Mailchimp Integrations  -->
       <div   class="tfhb-integrations-single-block tfhb-admin-card-box "
         :class="props.class, {
@@ -48,20 +63,18 @@ const closePopup = () => {
             </div>
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <!-- {{ aweber_data }} -->
-            
             <button  v-if=" props.from == 'host' && aweber_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Connected') }} </button>
             <router-link v-else-if="props.from == 'host' && aweber_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <HbButton  
                 v-else @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="props.aweber_data.status == 1 && aweber_data.key != '' &&  aweber_data.key  != null ? 'Connected' : 'Connect' " 
+                :buttonText="props.aweber_data.status == 1 && Number(aweber_data.connection_status) == 1 ? 'Connected' : 'Connect' " 
                 :hover_animation="false"    
             /> 
 
             <HbSwitch
-            v-if="aweber_data.client_id != '' &&  aweber_data.client_id  != null " 
+            v-if="aweber_data.authorize_url != '' &&  aweber_data.authorize_url  != null " 
                 @change="emit('update-integrations', 'aweber', aweber_data)" v-model="aweber_data.status"   
             />
             <!-- Swicher --> 
@@ -69,56 +82,45 @@ const closePopup = () => {
  
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
-            <template #header> 
-                <!-- {{ google_calendar }} -->
-                <h2>{{ $tfhb_trans('Connect Your AWeber API') }}</h2>
-                
+            <template #header>
+                <h2>{{ $tfhb_trans('Connect Your AWeber API') }}</h2> 
             </template>
-
             <template #content>  
                 
                <p>
                     {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from AWeber Account') }}
 
                     <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/aweber/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
-                </p> 
-
-                <div v-if="aweber_data.connection_status == 0" class="tfhb-alert tfhb-alert-success">
+                </p>  
+                <div v-if="Number(aweber_data.connection_status) != 1 &&  props.from != 'host'" class="tfhb-alert tfhb-alert-success">
                     <!-- add button connect with api -->
-                    <a :href="aweber_data.authorize_url" target="_blank" class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Configure with AWeber') }}</a>
-            
+                    <a :href="aweber_data.authorize_url" target="_blank" class="connect-with-aweber tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with AWeber') }}</a> 
                 
                 </div>
-                <div v-if="aweber_data.connection_status == 0" class="tfhb-alert tfhb-alert-success">
+                <div v-else-if="props.from == 'host' && (aweber_data.auth_data == null || aweber_data.auth_data.length === 0)  " class="tfhb-alert tfhb-alert-success">
                     <!-- add button connect with api -->
-                    <a :href="aweber_data.authorize_url" target="_blank" class="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Configure with AWeber') }}</a>
-            
+                    <a :href="aweber_data.authorize_url" target="_blank" class="connect-with-aweber tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with AWeber') }}</a> 
                 
                 </div>
-                <div v-else class="tfhb-flexbox tfhb-gap-12 tfhb-flex-direction-column">
-                    {{ props.aweber_data.selected_subscriber_list }}
-                    <!-- Time Zone -->
-                    <HbDropdown 
-                            
-                        v-model="props.aweber_data.selected_subscriber_list"  
-                        required= "true"  
-                        :label="$tfhb_trans('Subscriber List')"  
-                        selected = "1"
-                        :filter="true"
-                        :placeholder="$tfhb_trans('Select Subscriber List')"   
-                        :option = "props.aweber_data.lists" 
-                        :errors="errors.selected_subscriber_list"
-                    /> 
-                    <!-- Time Zone --> 
 
-                    <HbButton  
-                        @click.stop="emit('update-integrations', 'aweber', props.aweber_data, ['selected_subscriber_list', ])"
-                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"  
-                        :buttonText="'Save & Validate' "
-                        icon="ChevronRight" 
-                        hover_icon="ArrowRight" 
-                        :hover_animation="true" 
-                        :pre_loader="props.pre_loader"
+                <div v-else class="tfhb-flexbox tfhb-gap-12 tfhb-flex-direction-column"> 
+                     
+                     <HbInfoBox  name="first-modal">
+        
+                        <template #content>
+                            <div class="tfhb-flexbox tfhb-justify-between tfhb-align-center">
+                                <span>
+                                    {{ $tfhb_trans('AWeber Configuration is complete.') }}
+                                </span>  
+                            </div>
+                        </template>
+                    </HbInfoBox>
+
+                    <HbButton   
+                        classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8"  
+                        :buttonText="'Disconnect AWeber'"
+                        @click="RemoveIntegration('aweber')"
+                        icon="ChevronRight"  
                     />   
 
                 </div>
@@ -133,4 +135,7 @@ const closePopup = () => {
 </template>
 
 <style scoped>
+.connect-with-aweber:hover {
+  color: #fff !important;
+}
 </style> 

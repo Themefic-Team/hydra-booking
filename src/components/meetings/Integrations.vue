@@ -76,7 +76,7 @@ const moduleFields = async (e) => {
             <p>{{ $tfhb_trans('Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.') }}</p> 
         </div>
     </div>
- {{ meeting.aweber }}
+ <!-- {{ meeting.aweber }} -->
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width">
 
         <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationscreate" @click="props.IntegrationsValue.backtointegrationsList">
@@ -114,7 +114,7 @@ const moduleFields = async (e) => {
         </div>
 
         <div class="tfhb-admin-card-box tfhb-webhook-box tfhb-full-width tfhb-gap-24" v-if="props.IntegrationsValue.integrationscreate">
-            {{ IntegrationsValue.integrationsData }}
+            <!-- {{ IntegrationsValue.integrationsData }} -->
             <HbText  
                 v-model="props.IntegrationsValue.integrationsData.title"
                 required= "true"  
@@ -147,7 +147,7 @@ const moduleFields = async (e) => {
            
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsData.webhook=='Aweber'"
-                v-model="props.IntegrationsValue.integrationsData.lists"
+                v-model="props.IntegrationsValue.integrationsData.audience"
                 required= "true"  
                 :label="$tfhb_trans('Select Audience')"   
                 width="50"

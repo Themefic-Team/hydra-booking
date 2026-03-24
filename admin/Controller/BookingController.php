@@ -301,9 +301,6 @@ class BookingController {
 			// Get all order by desc 
 		}
 		
-
-
-		
 		if ( 'administrator' != $current_user_role && 'tfhb_host' != $current_user_role ) {
 			return rest_ensure_response(
 				array(

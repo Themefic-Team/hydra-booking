@@ -279,6 +279,7 @@ const fetchIntegration = async () => {
             } 
         });
         if (response.data.status) { 
+       
             
             // console.log(response.data.integration_settings);
             Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
@@ -302,7 +303,8 @@ const fetchIntegration = async () => {
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
             Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
-
+    //  console.log(response.data.integration_settings.aweber);
+    //         alert(1);
             skeleton.value = false;
         }
     } catch (error) {
@@ -350,7 +352,7 @@ const UpdateIntegration = async (key, value) => {
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
-            // Integration.aweber= response.data.integration_settings.aweber ? response.data.integration_settings.aweber : Integration.aweber;
+            Integration.aweber= response.data.integration_settings.aweber ? response.data.integration_settings.aweber : Integration.aweber;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;

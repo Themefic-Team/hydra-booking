@@ -475,7 +475,7 @@ class MeetingController {
 	// Integrations
 	public function updateMeetingIntegration() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
-
+		// tfhb_print_r($request);
 		// Get Meeting
 		$meeting     = new Meeting();
 		$MeetingData = $meeting->get( $request['meeting_id'] );
@@ -492,7 +492,7 @@ class MeetingController {
 			'bodys'    => ! empty( $request['bodys'] ) ? $request['bodys'] : '',
 			'events'   => ! empty( $request['events'] ) ? $request['events'] : '',
 			'url'      => ! empty( $request['url'] ) ? $request['url'] : '',
-			'audience' => 'Mailchimp' == $request['webhook'] && ! empty( $request['audience'] ) ? $request['audience'] : '',
+			'audience' => ! empty( $request['audience'] ) ? $request['audience'] : '',
 			'tags'     => 'FluentCRM' == $request['webhook'] && ! empty( $request['tags'] ) ? $request['tags'] : '',
 			'lists'    => 'FluentCRM' == $request['webhook'] && ! empty( $request['lists'] ) ? $request['lists'] : '',
 			'modules'  => 'ZohoCRM' == $request['webhook'] && ! empty( $request['modules'] ) ? $request['modules'] : '',
@@ -508,7 +508,7 @@ class MeetingController {
 			// Append the new webhook data
 			$Integrationsdata[] = $newIntegrationsdata;
 		}
-
+		 
 		// Encode the updated webhook data back to JSON
 		$encodedIntegrationsdata = wp_json_encode( $Integrationsdata );
 
