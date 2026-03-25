@@ -179,10 +179,13 @@ const Integration = reactive( {
         public_key: '',
         secret_key: '',
     },
-    mailchimp : {
-        type: 'mailchimp', 
+    aweber : {
+        type: 'aweber', 
         status: 0, 
-        key: ''
+        connection_status: 0, 
+        authorize_url: 0, 
+        redirect_url: '', 
+        auth_data: [], 
     },
     aweber : {
         type: 'aweber', 

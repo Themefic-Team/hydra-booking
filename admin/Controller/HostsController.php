@@ -937,6 +937,8 @@ class HostsController {
 			$_tfhb_host_integration_settings['aweber']['type']          = 'aweber';
 			$_tfhb_host_integration_settings['aweber']['status']        = sanitize_text_field( $data['status'] );
 			$_tfhb_host_integration_settings['aweber']['connection_status']        = sanitize_text_field( $data['connection_status'] );
+			$_tfhb_host_integration_settings['aweber']['client_id']     = $data['client_id'];
+			$_tfhb_host_integration_settings['aweber']['redirect_url']     = $data['redirect_url'];
 			$_tfhb_host_integration_settings['aweber']['auth_data']     = $data['auth_data'];
 			$_tfhb_host_integration_settings['aweber']['authorize_url'] = $data['authorize_url']; 
 			

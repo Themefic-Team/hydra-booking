@@ -143,9 +143,8 @@ const Integration = reactive( {
         status: 0, 
         connection_status: 0, 
         authorize_url: 0, 
-        auth_data: [],
-        list: [],
-        selected_subscriber_list: '',
+        redirect_url: '', 
+        auth_data: [], 
     },
     zoho : {
         type: 'zoho', 
@@ -198,7 +197,7 @@ const fetchIntegration = async () => {
             } 
         } );
 
-        if (response.data.status) {   
+        if (response.data.status) {    
             Integration.zoom_meeting= response.data.zoom_meeting ? response.data.zoom_meeting : Integration.zoom_meeting;
             Integration.google_calendar= response.data.google_calendar ? response.data.google_calendar : Integration.google_calendar;  
             Integration.outlook_calendar = response.data.outlook_calendar  ? response.data.outlook_calendar  : Integration.outlook_calendar ;  

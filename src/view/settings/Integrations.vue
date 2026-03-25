@@ -218,6 +218,7 @@ const Integration = reactive( {
         status: 0, 
         connection_status: 0, 
         authorize_url: 0, 
+        redirect_url: '', 
         auth_data: [],
         list: [],
         selected_subscriber_list: '',

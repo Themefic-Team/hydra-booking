@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { ref, toRef, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { RouterView } from 'vue-router' 
+import { toast } from "vue3-toastify"; 
 // import Form Field 
 import HbText from '@/components/form-fields/HbText.vue' 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
@@ -41,6 +42,23 @@ const RemoveIntegration = (type) => {
         authorize_url: aweber_data.value.authorize_url
     })
 }
+const UpdateAweberData = () => { 
+    // if client id is empty then show error toster message
+    if(aweber_data.value.client_id == '' || aweber_data.value.client_id == null){
+        toast.error( 'Client ID is required' , {
+            position: 'bottom-right', // Set the desired position
+            duration: 2000 // Set the desired duration
+        });
+        return;
+    }
+     
+    emit('update-integrations', 'aweber', aweber_data.value);
+    // if client id is
+    // after update need to redirect ot authorize_url
+    if(aweber_data.value.authorize_url != '' && aweber_data.value.authorize_url != null){ 
+        RedirectToAweberAuthUrl(aweber_data.value.authorize_url);
+    }
+}
 
 </script>
 
@@ -50,7 +68,7 @@ const RemoveIntegration = (type) => {
         :class="props.class, {
             'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
         }"
-      > 
+      >  
         <span v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
          
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
@@ -62,7 +80,12 @@ const RemoveIntegration = (type) => {
                 <p>{{ $tfhb_trans('Integrate AWeber API to collect attendee emails and info.') }}</p>
             </div>
         </div>
-        <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+        <div v-if="!$tfhb_is_pro || !$tfhb_license_status" class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
+            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+ 
+            <!-- Swicher --> 
+        </div>
+        <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <button  v-if=" props.from == 'host' && aweber_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Connected') }} </button>
             <router-link v-else-if="props.from == 'host' && aweber_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
@@ -85,17 +108,48 @@ const RemoveIntegration = (type) => {
             <template #header>
                 <h2>{{ $tfhb_trans('Connect Your AWeber API') }}</h2> 
             </template>
-            <template #content>  
-                
-               <p>
+           
+            <template #content>   
+                <p>
                     {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from AWeber Account') }}
 
                     <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/aweber/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                 </p>  
-                <div v-if="Number(aweber_data.connection_status) != 1 &&  props.from != 'host'" class="tfhb-alert tfhb-alert-success">
-                    <!-- add button connect with api -->
-                    <a :href="aweber_data.authorize_url" target="_blank" class="connect-with-aweber tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with AWeber') }}</a> 
+                <div v-if="Number(aweber_data.connection_status) != 1 &&  props.from != 'host'"  style="width: 100%;">
+                    <div clas="tfhb-flexbox tfhb-gap-12 tfhb-flex-direction-colum">
+                        <HbText  
+                            v-model="aweber_data.client_id"  
+                            required= "true"  
+                            name="client_id"
+                            :errors="errors.client_id"  
+                            :label="$tfhb_trans('Client ID')"  
+                            selected = "1"
+                            :placeholder="$tfhb_trans('Enter Client ID')"  
+                        />  
+                        <div class="tfhb-google-calender-redirection-url tfhb-full-width"  >
+                            <HbText  
+                                v-model="aweber_data.redirect_url"  
+                                required= "true"
+                                :readonly="true"
+                                name="redirect_url"
+                                :errors="errors.redirect_url"  
+                                :label="$tfhb_trans('Redirect Url')"  
+                                selected = "1" 
+                                :placeholder="$tfhb_trans('Enter Redirect Url')"  
+                            /> 
+                            <HbButton 
+                                classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 " 
+                                @click="copyRedirectionURL()" 
+                                :buttonText="$tfhb_trans('Copy URL')" 
+                            /> 
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; display: inline-block;" class="tfhb-alert tfhb-alert-success" > 
+                          
+                        <!-- add button connect with api -->
+                        <a @click="UpdateAweberData" target="_blank" class="connect-with-aweber tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with AWeber') }}</a> 
                 
+                    </div>
                 </div>
                 <div v-else-if="props.from == 'host' && (aweber_data.auth_data == null || aweber_data.auth_data.length === 0)  " class="tfhb-alert tfhb-alert-success">
                     <!-- add button connect with api -->
