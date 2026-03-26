@@ -60,6 +60,26 @@ const UpdateAweberData = () => {
     }
 }
 
+const copyRedirectionURL = () => {
+    //  copy to clipboard without navigator 
+    const textarea = document.createElement('textarea');
+    textarea.value = props.aweber_data.redirect_url;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Show a toast notification or perform any other action 
+    // success mess into bottom right
+    toast.success( props.aweber_data.redirect_url + ' is Copied' , {
+        position: 'bottom-right', // Set the desired position
+        duration: 2000 // Set the desired duration
+    });
+}
+
 </script>
 
 <template> 
@@ -81,7 +101,7 @@ const UpdateAweberData = () => {
             </div>
         </div>
         <div v-if="!$tfhb_is_pro || !$tfhb_license_status" class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <router-link to="/settings/license" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></router-link>
  
             <!-- Swicher --> 
         </div>

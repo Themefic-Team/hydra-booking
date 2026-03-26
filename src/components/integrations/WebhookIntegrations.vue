@@ -46,7 +46,7 @@ const closePopup = () => {
 
             <HbSwitch v-if="$tfhb_is_pro == true && $tfhb_license_status == true" @change="emit('update-integrations', 'webhook', webhook_data)" v-model="webhook_data.status"    />
             
-            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <router-link v-else to="/settings/license" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></router-link>
  
         </div>
 
