@@ -43,6 +43,7 @@ const spopup = ref(false);
 const mailpopup = ref(false);
 const aweberpopup = ref(false);
 const outlookpopup = ref(false);
+const applepopup = ref(false);
 const paypalpopup = ref(false);
 const tpopup = ref(false);
 const wpopup = ref(false);
@@ -87,6 +88,12 @@ const isOutlookPopupOpen = () => {
 }
 const isOutlookPopupClose = (data) => {
     outlookpopup.value = false;
+}
+const isApplePopupOpen = () => {
+    applepopup.value = true;
+}
+const isApplePopupClose = (data) => {
+    applepopup.value = false;
 }
 const isstripePopupOpen = () => {
     spopup.value = true;
@@ -201,6 +208,9 @@ const Integration = reactive( {
         type: 'calendar', 
         status: 0,
         connection_status: 0,
+        apple_id: '',
+        app_password: '',
+        app_password_set: 0,
     },
     stripe : {
         type: 'stripe', 
@@ -333,7 +343,8 @@ const UpdateIntegration = async (key, value) => {
 
             popup.value = false;
             gpopup.value = false;
-            spopup.value = false;
+            outlookpopup.value = false;
+            applepopup.value = false;
             spopup.value = false;
             tpopup.value = false;
             wpopup.value = false;
@@ -367,6 +378,7 @@ const UpdateIntegration = async (key, value) => {
             popup.value = false;
             gpopup.value = false;
             outlookpopup.value = false;
+            applepopup.value = false;
             tpopup.value = false;
             wpopup.value = false;
             twpopup.value = false;
@@ -491,12 +503,14 @@ onBeforeMount(() => {
                 <!-- Outlook intrigation -->
 
                 <!-- Apple intrigation -->
-                <!-- <AppleCalendarIntegrations 
+                <AppleCalendarIntegrations 
                 :apple_calendar="Integration.apple_calendar" 
                 @update-integrations="UpdateIntegration"
-                :ispopup="outlookpopup" 
+                :ispopup="applepopup"
+                @popup-open-control="isApplePopupOpen"
+                @popup-close-control="isApplePopupClose"
                 v-if="currentHash === 'all' || currentHash === 'calendars'"
-                /> -->
+                />
                 <!-- Apple intrigation -->
 
                 <!-- stripe intrigation -->

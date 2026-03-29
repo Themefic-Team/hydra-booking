@@ -11,6 +11,7 @@ import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import GoogleCalendarIntegrations from '@/components/hosts/GoogleCalendarIntegrations.vue';
 import OutlookCalendarIntegrations from '@/components/hosts/OutlookCalendarIntegrations.vue'; 
+import AppleCalendarIntegrations from '@/components/hosts/AppleCalendarIntegrations.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -101,9 +102,11 @@ const Integration = reactive( {
     apple_calendar : {
         type: 'calendar', 
         status: 0,
+        host_status: 0,
         connection_status: 0, 
         apple_id: '',
         app_password: '',
+        app_password_set: 0,
 
     },
     stripe : {
@@ -213,7 +216,7 @@ onBeforeMount(() => {
         <!-- Host Integration -->
         <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
         <OutlookCalendarIntegrations  display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
-        <!-- <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" /> -->
+        <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" />
  
 
     </div> 

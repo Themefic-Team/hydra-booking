@@ -235,6 +235,7 @@ class SettingsController {
 
 
 		// senitaized
+		$_tfhb_general_settings['admin_email']                               = sanitize_email( $request['admin_email'] );
 		$_tfhb_general_settings['time_zone']                               = sanitize_text_field( $request['time_zone'] );
 		$_tfhb_general_settings['time_format']                             = sanitize_text_field( $request['time_format'] );
 		$_tfhb_general_settings['week_start_from']                         = sanitize_text_field( $request['week_start_from'] );
@@ -564,17 +565,39 @@ class SettingsController {
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'apple_calendar' ) {
-			$_tfhb_integration_settings['apple_calendar']['type']              = sanitize_text_field( $data['type'] );
-			$_tfhb_integration_settings['apple_calendar']['connection_status'] = sanitize_text_field( $data['connection_status'] );
+			$_tfhb_integration_settings['apple_calendar']['type']    = sanitize_text_field( $data['type'] );
+			$_tfhb_integration_settings['apple_calendar']['status']  = sanitize_text_field( $data['status'] );
+			$_tfhb_integration_settings['apple_calendar']['apple_id'] = sanitize_email( $data['apple_id'] );
+
+			// Clear all credentials when apple_id is empty (disconnect)
+			if ( empty( $data['apple_id'] ) ) {
+				$_tfhb_integration_settings['apple_calendar']['app_password']     = '';
+				$_tfhb_integration_settings['apple_calendar']['connection_status'] = 0;
+			} else {
+				// Only update password if a new one was provided
+				if ( ! empty( $data['app_password'] ) ) {
+					$_tfhb_integration_settings['apple_calendar']['app_password'] = self::encrypt_value( sanitize_text_field( $data['app_password'] ) );
+				}
+				// connection_status = 1 when both apple_id and app_password are stored
+				$has_credentials = ! empty( $_tfhb_integration_settings['apple_calendar']['apple_id'] )
+				                   && ! empty( $_tfhb_integration_settings['apple_calendar']['app_password'] );
+				$_tfhb_integration_settings['apple_calendar']['connection_status'] = $has_credentials ? 1 : 0;
+			}
+
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
 			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
 
-			// woocommerce payment
+			// Mask password in response – never expose the encrypted value
+			if ( isset( $option['apple_calendar'] ) ) {
+				$option['apple_calendar']['app_password_set'] = ! empty( $option['apple_calendar']['app_password'] ) ? 1 : 0;
+				$option['apple_calendar']['app_password']     = '';
+			}
+
 			$data = array(
-				'status'  => true,
-				'integration_settings'  => $option,
-				'message' => __('Apple Calendar Settings Updated Successfully', 'hydra-booking')
+				'status'               => true,
+				'integration_settings' => $option,
+				'message'              => __( 'Apple Calendar Settings Updated Successfully', 'hydra-booking' ),
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'mailchimp' ) {
@@ -1316,5 +1339,39 @@ class SettingsController {
         }
 		return rest_ensure_response( $data );
 		 
+	}
+
+	/**
+	 * Encrypt a value for secure storage.
+	 */
+	private static function encrypt_value( $value ) {
+		if ( empty( $value ) || ! function_exists( 'openssl_encrypt' ) ) {
+			return $value;
+		}
+		$key = substr( hash( 'sha256', AUTH_SALT . SECURE_AUTH_SALT, true ), 0, 32 );
+		$iv  = openssl_random_pseudo_bytes( 16 );
+		$encrypted = openssl_encrypt( $value, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv );
+		if ( $encrypted === false ) {
+			return $value;
+		}
+		return base64_encode( $iv . $encrypted );
+	}
+
+	/**
+	 * Decrypt a value previously encrypted with encrypt_value().
+	 */
+	public static function decrypt_value( $stored ) {
+		if ( empty( $stored ) || ! function_exists( 'openssl_decrypt' ) ) {
+			return '';
+		}
+		$decoded = base64_decode( $stored, true );
+		if ( $decoded === false || strlen( $decoded ) <= 16 ) {
+			return '';
+		}
+		$key       = substr( hash( 'sha256', AUTH_SALT . SECURE_AUTH_SALT, true ), 0, 32 );
+		$iv        = substr( $decoded, 0, 16 );
+		$encrypted = substr( $decoded, 16 );
+		$decrypted = openssl_decrypt( $encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv );
+		return $decrypted !== false ? $decrypted : '';
 	}
 }
