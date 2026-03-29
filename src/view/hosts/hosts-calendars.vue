@@ -179,6 +179,18 @@ const UpdateIntegration = async (key, value) => {
             gpopup.value = false;
             spopup.value = false;
             mailpopup.value = false;
+
+            // Immediately update apple_calendar reactive state so the UI reflects
+            // the new connection_status / app_password_set without a page reload.
+            if ( key === 'apple_calendar' && response.data.host_integration_settings?.apple_calendar ) {
+                const stored = response.data.host_integration_settings.apple_calendar;
+                const hasCredentials = !!( stored.apple_id && stored.app_password );
+                Integration.apple_calendar.connection_status = hasCredentials ? 1 : 0;
+                Integration.apple_calendar.app_password_set  = hasCredentials ? 1 : 0;
+                Integration.apple_calendar.apple_id          = stored.apple_id || '';
+                Integration.apple_calendar.host_status       = stored.host_status !== undefined ? parseInt( stored.host_status ) : 0;
+                Integration.apple_calendar.app_password      = '';
+            }
             
         }else{
             toast.error(response.data.message, {
