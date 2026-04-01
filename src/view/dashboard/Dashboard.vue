@@ -6,11 +6,14 @@ import { onBeforeRouteLeave  } from 'vue-router'
 import Header from '@/components/Header.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
+import useDateFormat from '@/store/dateformat'
 
 
 // Store 
 import { Dashboard } from '@/store/dashboard';
 import { Notification } from '@/store/notification';
+
+const { Tfhb_Date } = useDateFormat();
  
 const datachart_box_dropdown = ref(false);
 const datachart_dropdown = ref(false);
@@ -126,15 +129,12 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 const FormatDate = (date) => {   
-    // convert 2024-11-15,2024-11-16,2024-11-17
-    const dates = date.split(',');
-    // get first one 
-    const first_date = dates[0];
-    const d = new Date(first_date);
-    const ye = new Intl.DateTimeFormat('en', { year: '2-digit' }).format(d);
-    const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
-    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
-    return `${da} ${mo}, ${ye}`;
+    if (!date) {
+        return '';
+    }
+
+    const firstDate = date.split(',')[0]?.trim();
+    return Tfhb_Date(firstDate);
 }
 
 const truncateString = (str, num) => {

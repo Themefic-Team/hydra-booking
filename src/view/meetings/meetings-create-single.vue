@@ -16,7 +16,9 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import useValidators from '@/store/validator';
 import { toast } from "vue3-toastify"; 
 import axios from 'axios' 
+import useDateFormat from '@/store/dateformat'
 const { errors, isEmpty } = useValidators();
+const { Tfhb_Date } = useDateFormat();
 import { Meeting } from '@/store/meetings';
 import { Host } from '@/store/hosts';
 
@@ -734,7 +736,7 @@ const getLatestEndTime = (day) => {
                         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Settings_avalibility.availability.date_slots" :key="key">
                             <div class="tfhb-flexbox tfhb-full-width">
                                 <div class="tfhb-overrides-date">
-                                    <h4>{{ date_slot.date }}</h4>
+                                    <h4>{{ Tfhb_Date(date_slot.date) }}</h4>
                                     <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                                 </div>
                             </div>
@@ -819,7 +821,7 @@ const getLatestEndTime = (day) => {
                         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Meeting.singleMeeting.MeetingData.availability_custom.date_slots" :key="key">
                             <div class="tfhb-flexbox tfhb-full-width">
                                 <div class="tfhb-overrides-date">
-                                    <h4>{{ date_slot.date }}</h4>
+                                    <h4>{{ Tfhb_Date(date_slot.date) }}</h4>
                                     <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                                 </div>
                                 <div class="tfhb-overrides-action tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">

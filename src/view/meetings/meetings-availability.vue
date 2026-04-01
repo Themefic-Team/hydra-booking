@@ -13,7 +13,9 @@ import { Availability } from '@/store/availability';
 import AvailabilityTime from '@/store/times'
 import { toast } from "vue3-toastify"; 
 import { Host } from '@/store/hosts';
+import useDateFormat from '@/store/dateformat'
 const { errors, isEmpty } = useValidators();
+const { Tfhb_Date } = useDateFormat();
 
 const user = tfhb_core_apps.user || '';
 const user_id = user.id || '';
@@ -542,7 +544,7 @@ const filteredDateSlots = computed(() => {
             <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Settings_avalibility.availability.date_slots" :key="key">
                 <div class="tfhb-flexbox tfhb-full-width">
                     <div class="tfhb-overrides-date">
-                        <h4>{{ date_slot.date }}</h4>
+                        <h4>{{ Tfhb_Date(date_slot.date) }}</h4>
                         <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                     </div>
                 </div>
@@ -629,7 +631,7 @@ const filteredDateSlots = computed(() => {
             <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                 <div class="tfhb-flexbox tfhb-full-width">
                     <div class="tfhb-overrides-date">
-                        <h4>{{ date_slot.date }}</h4>
+                        <h4>{{ Tfhb_Date(date_slot.date) }}</h4>
                         <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                     </div>
                     <div class="tfhb-overrides-action tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">

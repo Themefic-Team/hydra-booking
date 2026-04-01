@@ -1,7 +1,7 @@
 <script setup> 
 import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
-import { ref, reactive, onBeforeMount } from 'vue';
+import { ref, reactive, onBeforeMount, watch } from 'vue';
 import { useRouter } from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -21,7 +21,7 @@ const generalSettings = reactive({
   time_zone: local_time_zone,
   time_format: '12',
   week_start_from: 'Sunday',
-  date_format: '',
+    date_format: 'F j, Y',
   country: '',
   currency: 'USD',
   after_booking_completed: '10',
@@ -34,6 +34,61 @@ const generalSettings = reactive({
             times:'minutes'
         }
     ],
+});
+
+const defaultDateFormat = 'F j, Y';
+const dateFormatOptions = [
+    { name: 'F j, Y', value: 'F j, Y' },
+    { name: 'j F Y', value: 'j F Y' },
+    { name: 'l, F j, Y', value: 'l, F j, Y' },
+    { name: 'D, M j, Y', value: 'D, M j, Y' },
+    { name: 'M j, Y', value: 'M j, Y' },
+    { name: 'j M Y', value: 'j M Y' },
+    { name: 'Y F j', value: 'Y F j' },
+    { name: 'Y-m-d', value: 'Y-m-d' },
+    { name: 'Y/m/d', value: 'Y/m/d' },
+    { name: 'Y.m.d', value: 'Y.m.d' },
+    { name: 'Ymd', value: 'Ymd' },
+    { name: 'y-m-d', value: 'y-m-d' },
+    { name: 'd-m-Y', value: 'd-m-Y' },
+    { name: 'd/m/Y', value: 'd/m/Y' },
+    { name: 'd.m.Y', value: 'd.m.Y' },
+    { name: 'd M Y', value: 'd M Y' },
+    { name: 'd F Y', value: 'd F Y' },
+    { name: 'd-m-y', value: 'd-m-y' },
+    { name: 'd/m/y', value: 'd/m/y' },
+    { name: 'm-d-Y', value: 'm-d-Y' },
+    { name: 'm/d/Y', value: 'm/d/Y' },
+    { name: 'm.d.Y', value: 'm.d.Y' },
+    { name: 'm-d-y', value: 'm-d-y' },
+    { name: 'm/d/y', value: 'm/d/y' },
+    { name: 'n/j/Y', value: 'n/j/Y' },
+    { name: 'j/n/Y', value: 'j/n/Y' },
+    // { name: 'dmy', value: 'dmy' },
+    // { name: 'mdy', value: 'mdy' },
+    // { name: 'ymd', value: 'ymd' },
+    // { name: 'U (Unix Timestamp)', value: 'U' },
+    // { name: 'c (ISO 8601)', value: 'c' },
+    // { name: 'r (RFC 2822)', value: 'r' },
+    // { name: 'Custom', value: 'custom' },
+];
+const dateFormatPresetValues = dateFormatOptions
+    .filter((item) => item.value !== 'custom')
+    .map((item) => item.value);
+const dateFormatType = ref(defaultDateFormat);
+
+const applyFetchedDateFormat = (dateFormatValue) => {
+    const normalizedDateFormat =
+        dateFormatValue && dateFormatPresetValues.includes(dateFormatValue)
+            ? dateFormatValue
+            : defaultDateFormat;
+
+    dateFormatType.value = normalizedDateFormat;
+    generalSettings.date_format = normalizedDateFormat;
+};
+
+watch(dateFormatType, (selectedType) => {
+    generalSettings.date_format = selectedType;
 });
 
 // Field Validator
@@ -80,7 +135,7 @@ const fetchGeneralSettings = async () => {
                 generalSettings.time_zone = response.data.general_settings.time_zone;
                 generalSettings.time_format = response.data.general_settings.time_format != '' ? response.data.general_settings.time_format : '12';
                 generalSettings.week_start_from = response.data.general_settings.week_start_from != '' ? response.data.general_settings.week_start_from : 'Sunday';
-                generalSettings.date_format = response.data.general_settings.date_format;
+                applyFetchedDateFormat(response.data.general_settings.date_format);
                 generalSettings.country = response.data.general_settings.country;
                 generalSettings.currency = response.data.general_settings.currency;
                 generalSettings.after_booking_completed = response.data.general_settings.after_booking_completed != '' ? response.data.general_settings.after_booking_completed : '10';
@@ -91,6 +146,9 @@ const fetchGeneralSettings = async () => {
                 generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
                 generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
 
+            }
+            else {
+                applyFetchedDateFormat(defaultDateFormat);
             }
            
 
@@ -109,7 +167,7 @@ const UpdateGeneralSettings = async () => {
     });
     
     // Errors Added
-    let validator_field = ['admin_email', 'time_zone', 'time_format', 'week_start_from', 'country', 'currency']
+    let validator_field = ['admin_email', 'time_zone', 'time_format', 'week_start_from', 'date_format', 'country', 'currency']
     if(validator_field){
         validator_field.forEach(field => {
 
@@ -147,6 +205,8 @@ const UpdateGeneralSettings = async () => {
         
         return 
     }
+
+    generalSettings.date_format = dateFormatType.value;
 
     generalSettings_pre_loader.value = true;
 
@@ -266,24 +326,7 @@ onBeforeMount(() => {
                     
                 />
                 <!-- Week start from -->
-                
-                <!-- Date Format -->
-                <!-- <HbDropdown 
-                    
-                    v-model="generalSettings.date_format"  
-                    required= "true" 
-                    :label="$tfhb_trans('Date format')"   
-                    width="50"
-                    selected = "1"
-                    placeholder="Select Date Format"   
-                    :option = "[
-                        {'name': 'g:i a', 'value': 'g:i a'},  
-                    ]"
-                    @add-change="tfhbValidateInput('date_format')" 
-                    @add-click="tfhbValidateInput('date_format')" 
-                    :errors="errors.date_format"
-                /> -->
-                <!-- Date Format -->
+        
 
                 <!-- Select countr -->
                 <HbDropdown 
@@ -313,6 +356,31 @@ onBeforeMount(() => {
                     :errors="errors.currency"
                 />
                 <!-- Select countr --> 
+
+                        
+                <!-- Date Format -->
+                <HbDropdown
+                    v-model="dateFormatType"
+                    required="true"
+                    :label="$tfhb_trans('Date format')"
+                    width="50"
+                    selected="1"
+                    :placeholder="$tfhb_trans('Select Date Format')"
+                    :option="dateFormatOptions"
+                    :errors="errors.date_format"
+                    @add-change="tfhbValidateInput('date_format')"
+                />
+
+                <!-- <HbText
+                    v-if="dateFormatType === 'custom'"
+                    v-model="customDateFormat"
+                    required="true"
+                    :label="$tfhb_trans('Custom date format')"
+                    :placeholder="$tfhb_trans('Type custom date format (example: Y-m-d)')"
+                    width="50"
+                    :errors="errors.date_format_custom"
+                /> -->
+                <!-- Date Format -->
             </div>  
             <!-- Date And Time -->
 

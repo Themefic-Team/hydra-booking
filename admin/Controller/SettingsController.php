@@ -209,6 +209,14 @@ class SettingsController {
 		$country_list           = $country->country_list();
 		$currency_list           = $country->currency_list();
 		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+		if ( ! is_array( $_tfhb_general_settings ) ) {
+			$_tfhb_general_settings = array();
+		}
+
+		if ( empty( $_tfhb_general_settings['date_format'] ) ) {
+			$_tfhb_general_settings['date_format'] = 'F j, Y';
+		}
+
 		if( isset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) && !is_array($_tfhb_general_settings['allowed_reschedule_before_meeting_start'])){
 			$old_value = $_tfhb_general_settings['allowed_reschedule_before_meeting_start'];
 			unset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']); 
@@ -232,13 +240,22 @@ class SettingsController {
 	public function UpdateGeneralSettings() {
 		$request                = json_decode( file_get_contents( 'php://input' ), true );
 		$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+		$date_format            = isset( $request['date_format'] ) ? sanitize_text_field( $request['date_format'] ) : '';
+
+		if ( empty( $date_format ) || ! $this->is_valid_date_format( $date_format ) ) {
+			$data = array(
+				'status'  => false,
+				'message' => __( 'Invalid date format selected', 'hydra-booking' ),
+			);
+			return rest_ensure_response( $data );
+		}
 
 
 		// senitaized
 		$_tfhb_general_settings['time_zone']                               = sanitize_text_field( $request['time_zone'] );
 		$_tfhb_general_settings['time_format']                             = sanitize_text_field( $request['time_format'] );
 		$_tfhb_general_settings['week_start_from']                         = sanitize_text_field( $request['week_start_from'] );
-		$_tfhb_general_settings['date_format']                             = sanitize_text_field( $request['date_format'] );
+		$_tfhb_general_settings['date_format']                             = $date_format;
 		$_tfhb_general_settings['country']                                 = sanitize_text_field( $request['country'] );
 		$_tfhb_general_settings['currency']                                 = sanitize_text_field( $request['currency'] );
 		$_tfhb_general_settings['after_booking_completed']                 = sanitize_text_field( $request['after_booking_completed'] );
@@ -256,6 +273,41 @@ class SettingsController {
 			'message' =>  __('General Settings Updated Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
+	}
+
+	private function is_valid_date_format( $date_format ) {
+		if ( empty( $date_format ) || ! is_string( $date_format ) ) {
+			return false;
+		}
+
+		$allowed_tokens = array(
+			'd', 'D', 'j', 'l', 'N', 'S', 'w', 'z',
+			'W', 'F', 'm', 'M', 'n', 't', 'L', 'o',
+			'Y', 'y', 'a', 'A', 'g', 'G', 'h', 'H',
+			'i', 's', 'u', 'e', 'I', 'O', 'P', 'T',
+			'Z', 'c', 'r', 'U',
+		);
+
+		$length = strlen( $date_format );
+		$has_token = false;
+
+		for ( $i = 0; $i < $length; $i++ ) {
+			$current_char = $date_format[ $i ];
+
+			if ( '\\' === $current_char ) {
+				$i++;
+				continue;
+			}
+
+			if ( ctype_alpha( $current_char ) ) {
+				if ( ! in_array( $current_char, $allowed_tokens, true ) ) {
+					return false;
+				}
+				$has_token = true;
+			}
+		}
+
+		return $has_token;
 	}
 
 	// Get Availability Settings

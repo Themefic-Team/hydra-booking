@@ -7,7 +7,9 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
 import { LicenseBase } from '@/store/license'; 
 import useValidators from '@/store/validator'
+import useDateFormat from '@/store/dateformat'
 const { errors, isEmpty } = useValidators();
+const { Tfhb_Date } = useDateFormat();
 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 // import Form Field   
@@ -182,7 +184,7 @@ const upgradeToPro = async (key) => {
                 <li>
                     <div>
                         <span class="el-license-info-title">{{ $tfhb_trans('License Expired on') }}</span>
-                        {{ LicenseBase.LicenseData.expire_date }} 
+                        {{ Tfhb_Date(LicenseBase.LicenseData.expire_date) }} 
                     
                         
                     </div>
@@ -191,7 +193,7 @@ const upgradeToPro = async (key) => {
                 <li>
                     <div>
                         <span class="el-license-info-title">{{ $tfhb_trans('Support Expired on') }}</span>
-                        {{ LicenseBase.LicenseData.support_end }}
+                        {{ Tfhb_Date(LicenseBase.LicenseData.support_end) }}
                     </div>
                 </li>
                     <li>

@@ -6,7 +6,8 @@ use HydraBooking\DB\Meeting;
 use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\BookingMeta;
-use HydraBooking\Admin\Controller\DateTimeController; 
+use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Admin\Controller\Helper;
 
 
 class MailHooks {
@@ -33,6 +34,11 @@ class MailHooks {
 
 		// Send Mail Booking with All attendees Schedule
 		add_action( 'hydra_booking/send_booking_with_all_attendees_schedule', array( $this, 'send_booking_with_all_attendees_schedule' ), 10, 1 );
+	}
+
+	private function get_activity_datetime() {
+		$helper = new Helper();
+		return wp_date( $helper->get_date_time_format_from_settings( 'M d, Y', 'h:i A' ) );
 	}
 
 	// Get Meeting Data
@@ -99,7 +105,7 @@ class MailHooks {
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
-							'datetime' => date('M d, Y, h:i A'), 
+							'datetime' => $this->get_activity_datetime(), 
 							'title' => 'Confirmation Email Sent', // translate it from Vue
 							'description' => 'Confirmation Email Sent to Host',  // translate it from Vue
 						)
@@ -148,7 +154,7 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array(
 							 
-							'datetime' => date('M d, Y, h:i A'), 
+							'datetime' => $this->get_activity_datetime(), 
 							'title' =>  'Confirmation Email Sent', // translate it from Vue
 							'description' => 'Confirmation Email Sent to Attendee', // translate it from Vue
 						)
@@ -205,7 +211,7 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array(
 							 
-							'datetime' => date('M d, Y, h:i A'),  
+							'datetime' => $this->get_activity_datetime(),  
 							'title' => 'Pending Email Sent', // translate it from Vue
 							'description' => 'Pending Email Sent to Host', // translate it from Vue
 						)
@@ -249,7 +255,7 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array(
 							 
-							'datetime' => date('M d, Y, h:i A'),   
+							'datetime' => $this->get_activity_datetime(),   
 							'title' => 'Pending Email Sent', // translate it from Vue
 							'description' => 'Pending Email Sent to Attendee', // translate it from Vue
 						)
@@ -304,7 +310,7 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array(
 							 
-							'datetime' => date('M d, Y, h:i A'),    
+							'datetime' => $this->get_activity_datetime(),    
 							'title' => 'Canceled Email Sent', // translate it from Vue
 							'description' => 'Canceled Email Sent to Host', // translate it from Vue
 						)
@@ -347,7 +353,7 @@ class MailHooks {
 					'meta_key' => 'booking_activity',
 					'value' => array(
 							 
-							'datetime' => date('M d, Y, h:i A'),
+							'datetime' => $this->get_activity_datetime(),
 							'title' => 'Canceled Email Sent', // translate it from Vue
 							'description' => 'Canceled Email Sent to Attendee', // translate it from Vue
 						)
@@ -402,7 +408,7 @@ class MailHooks {
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
-							'datetime' => date('M d, Y, h:i A'),
+							'datetime' => $this->get_activity_datetime(),
 							'title' => 'ReSchedule Email Sent', // translate it from Vue
 							'description' => 'ReSchedule Email Sent to Host', // translate it from Vue
 						)
@@ -444,7 +450,7 @@ class MailHooks {
 					'booking_id' => $attendees->booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
-							'datetime' => date('M d, Y, h:i A'),
+							'datetime' => $this->get_activity_datetime(),
 							'title' => 'ReSchedule Email Sent', // translate it from Vue
 							'description' => 'ReSchedule Email Sent to Attendee', // translate it from Vue
 						)
@@ -500,7 +506,7 @@ class MailHooks {
 						'booking_id' => $attendees->booking_id,
 						'meta_key' => 'booking_activity',
 						'value' => array( 
-								'datetime' => date('M d, Y, h:i A'), 
+								'datetime' => $this->get_activity_datetime(), 
 								'title' => 'Reminder Email Sent', // translate it from Vue
 								'description' => 'Reminder Email Sent to Attendee', // translate it from Vue
 							)
@@ -559,7 +565,7 @@ class MailHooks {
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
-							'datetime' => date('M d, Y, h:i A'),  
+							'datetime' => $this->get_activity_datetime(),  
 							'title' => 'Booking Has Been Confirmed', // translate it from Vue
 							'description' => 'Confirmation Email Sent to Attendee', // translate it from Vue
 						)
@@ -616,7 +622,7 @@ class MailHooks {
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
-							'datetime' => date('M d, Y, h:i A'),   
+							'datetime' => $this->get_activity_datetime(),   
 							'title' => 'Booking Has Been Pending', // translate it from Vue
 							'description' => 'Pending Email Sent to Attendee', // translate it from Vue
 						)
@@ -674,7 +680,7 @@ class MailHooks {
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
-							'datetime' => date('M d, Y, h:i A'),    
+							'datetime' => $this->get_activity_datetime(),    
 							'title' => 'Booking Has Been Canceled', // translate it from Vue
 							'description' => 'Canceled Email Sent to Attendee', // translate it from Vue
 						)
@@ -735,7 +741,7 @@ class MailHooks {
 					'booking_id' => $booking->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
-							'datetime' => date('M d, Y, h:i A'),     
+							'datetime' => $this->get_activity_datetime(),     
 							'title' => 'Booking Has Been Rescheduled', // translate it from Vue
 							'description' => 'ReSchedule Email Sent to Attendee', // translate it from Vue
 						)
