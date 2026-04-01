@@ -11,6 +11,7 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
+import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
 import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
 import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
 import SlackIntegration from '@/components/integrations/SlackIntegrations.vue'
@@ -42,6 +43,7 @@ const paypalpopup = ref(false);
 const spopup = ref(false);
 const zohopopup = ref(false);
 const mailpopup = ref(false);
+const aweberpopup = ref(false);
 const telepopup = ref(false);
 const twpopup = ref(false);
 const skpopup = ref(false);
@@ -78,9 +80,17 @@ const isskPopupClose = (data) => {
 const ismailchimpPopupOpen = () => {
     mailpopup.value = true;
 }
+
 const ismailchimpPopupClose = (data) => {
     mailpopup.value = false;
+} 
+const isAWeberPopupOpen = () => {
+    aweberpopup.value = true;
 }
+const isAWeberPopupClose = (data) => {
+    aweberpopup.value = false;
+}
+
 
 
 const Integration = reactive( {
@@ -127,6 +137,14 @@ const Integration = reactive( {
         status: 0, 
         connection_status: 0, 
         key: ''
+    },
+    aweber : {
+        type: 'aweber', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: 0, 
+        redirect_url: '', 
+        auth_data: [], 
     },
     zoho : {
         type: 'zoho', 
@@ -179,12 +197,13 @@ const fetchIntegration = async () => {
             } 
         } );
 
-        if (response.data.status) {   
+        if (response.data.status) {    
             Integration.zoom_meeting= response.data.zoom_meeting ? response.data.zoom_meeting : Integration.zoom_meeting;
             Integration.google_calendar= response.data.google_calendar ? response.data.google_calendar : Integration.google_calendar;  
             Integration.outlook_calendar = response.data.outlook_calendar  ? response.data.outlook_calendar  : Integration.outlook_calendar ;  
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
+            Integration.aweber = response.data.aweber  ? response.data.aweber  : Integration.aweber ;   
             Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
             Integration.telegram = response.data.telegram  ? response.data.telegram  : Integration.telegram ; 
             Integration.twilio = response.data.twilio  ? response.data.twilio  : Integration.twilio ; 
@@ -277,14 +296,25 @@ onBeforeMount(() => {
 
         <!-- Mailchimp intrigation -->
         <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
-        :mail_data="Integration.mailchimp" 
-        @update-integrations="UpdateIntegration" 
-        from="host"
-        :ispopup="mailpopup"
-        @popup-open-control="ismailchimpPopupOpen"
-        @popup-close-control="ismailchimpPopupClose" 
+            :mail_data="Integration.mailchimp" 
+            @update-integrations="UpdateIntegration" 
+            from="host"
+            :ispopup="mailpopup"
+            @popup-open-control="ismailchimpPopupOpen"
+            @popup-close-control="ismailchimpPopupClose" 
         />
         <!-- Mailchimp intrigation -->
+
+        <!-- AWeber intrigation -->
+        <AWeberIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+            :aweber_data="Integration.aweber" 
+            @update-integrations="UpdateIntegration" 
+            from="host"
+            :ispopup="aweberpopup"
+            @popup-open-control="isAWeberPopupOpen"
+            @popup-close-control="isAWeberPopupClose" 
+        />
+        <!-- AWeber intrigation -->
 
         <!-- Zoho intrigation -->
         <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  

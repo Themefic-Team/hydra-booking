@@ -700,8 +700,10 @@ class HostsController {
 		}else{
 			$mailchimp['type']              = 'mailchimp';
 			$mailchimp['status']            = 0; 
-			$mailchimp['connection_status']            = 0; 
+			$mailchimp['connection_status'] = 0; 
 		}
+
+		
 
 		// Telegram
 		$telegram = isset( $_tfhb_host_integration_settings['telegram'] ) ? $_tfhb_host_integration_settings['telegram'] : array();
@@ -781,6 +783,7 @@ class HostsController {
 			'zoom_meeting'               => $zoom_meeting, 
 			'apple_calendar'             => $apple_calendar,
 			'mailchimp'                  => $mailchimp,
+			'aweber'                     => $aweber,
 			'zoho'                       => $zoho,
 			'telegram'                   => $telegram,
 			'twilio'                     => $twilio,
@@ -929,6 +932,22 @@ class HostsController {
 			 
 			$responseData['status'] = true;
 			$responseData['message'] = esc_html(__('Zoho Settings Updated Successfully', 'hydra-booking')); 
+			 
+		} elseif ( $key == 'aweber' ) {
+			$_tfhb_host_integration_settings['aweber']['type']          = 'aweber';
+			$_tfhb_host_integration_settings['aweber']['status']        = sanitize_text_field( $data['status'] );
+			$_tfhb_host_integration_settings['aweber']['connection_status']        = sanitize_text_field( $data['connection_status'] );
+			$_tfhb_host_integration_settings['aweber']['client_id']     = $data['client_id'];
+			$_tfhb_host_integration_settings['aweber']['redirect_url']     = $data['redirect_url'];
+			$_tfhb_host_integration_settings['aweber']['auth_data']     = $data['auth_data'];
+			$_tfhb_host_integration_settings['aweber']['authorize_url'] = $data['authorize_url']; 
+			
+			// update User Meta
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+
+			 
+			$responseData['status'] = true;
+			$responseData['message'] = esc_html(__('AWeber Settings Updated Successfully', 'hydra-booking')); 
 			 
 		}
 		

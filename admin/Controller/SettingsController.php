@@ -507,6 +507,7 @@ class SettingsController {
 			$_tfhb_integration_settings['google_calendar']['redirect_url']      = $GoogleCalendar->redirectUrl;
 
 		}
+		 
 		$_tfhb_integration_settings = apply_filters( 'tfhb_get_integration_settings', $_tfhb_integration_settings );
 		// Checked if woo
 		$data = array(
@@ -591,7 +592,7 @@ class SettingsController {
 				'message' => __('Mailchimp Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
-		} elseif ( $key == 'paypal' ) {
+		}elseif ( $key == 'paypal' ) {
 			$_tfhb_integration_settings['paypal']['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['paypal']['status']      = sanitize_text_field( $data['status'] );
 			$_tfhb_integration_settings['paypal']['client_id']   = sanitize_text_field( $data['client_id'] );
@@ -773,6 +774,7 @@ class SettingsController {
 			); 
 			
 			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			// tfhb_print_r($option);
 
 			$data['integration_settings'] = $option;
 			return rest_ensure_response( $data );
