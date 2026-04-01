@@ -902,11 +902,17 @@
                 margin-top: 16px;
                
 
-                .tfhb-form-fields{
-                    max-height: 450px;
+                .tfhb-form-fields, .wpcf7-form, .fluentform, .forminator-ui  {
+                    max-height: 400px;
                     overflow: auto;
                     padding-right: 20px;
                 }
+                 .forminator-ui{
+                    .forminator-row{ 
+                        margin-left: 0 !important;
+                        margin-right: 0 !important;
+                    }
+                 }
 
                 .tfhb-meeting-form {
                     width: 100%;
