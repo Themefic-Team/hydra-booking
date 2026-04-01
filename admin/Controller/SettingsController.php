@@ -214,7 +214,7 @@ class SettingsController {
 		}
 
 		if ( empty( $_tfhb_general_settings['date_format'] ) ) {
-			$_tfhb_general_settings['date_format'] = 'F j, Y';
+			$_tfhb_general_settings['date_format'] = 'default';
 		}
 
 		if( isset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) && !is_array($_tfhb_general_settings['allowed_reschedule_before_meeting_start'])){
@@ -241,8 +241,9 @@ class SettingsController {
 		$request                = json_decode( file_get_contents( 'php://input' ), true );
 		$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
 		$date_format            = isset( $request['date_format'] ) ? sanitize_text_field( $request['date_format'] ) : '';
+		$date_format            = ! empty( $date_format ) ? trim( $date_format ) : 'default';
 
-		if ( empty( $date_format ) || ! $this->is_valid_date_format( $date_format ) ) {
+		if ( 'default' !== strtolower( $date_format ) && ! $this->is_valid_date_format( $date_format ) ) {
 			$data = array(
 				'status'  => false,
 				'message' => __( 'Invalid date format selected', 'hydra-booking' ),

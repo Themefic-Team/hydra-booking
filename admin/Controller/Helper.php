@@ -3868,9 +3868,14 @@ class Helper {
     public function get_date_format_from_settings( $existing_format = 'Y-m-d' ) {
         $general_settings = get_option( '_tfhb_general_settings' );
         $date_format = isset( $general_settings['date_format'] ) && ! empty( $general_settings['date_format'] )
-            ? $general_settings['date_format']
+            ? trim( (string) $general_settings['date_format'] )
             : '';
-        return ! empty( $date_format ) ? $date_format : $existing_format;
+
+        if ( empty( $date_format ) || 'default' === strtolower( $date_format ) ) {
+            return $existing_format;
+        }
+
+        return $date_format;
     }
 
     /**

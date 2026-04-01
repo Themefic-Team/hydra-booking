@@ -23,7 +23,7 @@ $confirmation_page = isset( $args['confirmation_page'] ) ? $args['confirmation_p
 
 $date_time = new DateTimeController( 'UTC' );
 $helper = new Helper();
-$display_date_format = 'l, F j';
+$display_date_format = $helper->get_date_format_from_settings( 'l, F j' );
 $availability_data = $date_time->GetAvailabilityData($data);    
 $availability_time_zone = $availability_data['time_zone'];  
 $Bookmark = new BookingBookmarks();

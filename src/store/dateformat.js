@@ -5,7 +5,12 @@ export default function useDateFormat() {
             return '';
         }
 
-        return (tfhb_core_apps.date_format || '').toString().trim();
+        const format = (tfhb_core_apps.date_format || '').toString().trim();
+        if (!format || format.toLowerCase() === 'default') {
+            return '';
+        }
+
+        return format;
     };
 
     const pad = (value) => String(value).padStart(2, '0');

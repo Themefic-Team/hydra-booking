@@ -36,8 +36,7 @@ class THB_INIT {
 			require_once TFHB_PATH . '/vendor/autoload.php';
 		}
 
-		// Helper Function
-		// Load Vendor Auto Load
+		// Helper Functions
 		if ( file_exists( TFHB_PATH . '/includes/Includes.php' ) ) {
 
 			require_once TFHB_PATH . '/includes/Includes.php';

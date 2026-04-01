@@ -21,7 +21,7 @@ const generalSettings = reactive({
   time_zone: local_time_zone,
   time_format: '12',
   week_start_from: 'Sunday',
-    date_format: 'F j, Y',
+        date_format: 'default',
   country: '',
   currency: 'USD',
   after_booking_completed: '10',
@@ -36,8 +36,41 @@ const generalSettings = reactive({
     ],
 });
 
-const defaultDateFormat = 'F j, Y';
+const defaultDateFormat = 'default';
+const defaultAllowedRescheduleBeforeMeetingStart = [
+    {
+        limit: 10,
+        times: 'minutes'
+    }
+];
+
+const normalizeAllowedRescheduleBeforeMeetingStart = (value) => {
+    if (Array.isArray(value) && value.length > 0) {
+        return value.map((item) => ({
+            limit: Number(item?.limit) || 10,
+            times: item?.times || 'minutes'
+        }));
+    }
+
+    if (value && typeof value === 'object') {
+        return [{
+            limit: Number(value?.limit) || 10,
+            times: value?.times || 'minutes'
+        }];
+    }
+
+    if (value !== '' && value !== null && typeof value !== 'undefined') {
+        const numericValue = Number(value);
+        if (!Number.isNaN(numericValue) && numericValue > 0) {
+            return [{ limit: numericValue, times: 'minutes' }];
+        }
+    }
+
+    return [...defaultAllowedRescheduleBeforeMeetingStart];
+};
+
 const dateFormatOptions = [
+    { name: 'Default', value: 'default' },
     { name: 'F j, Y', value: 'F j, Y' },
     { name: 'j F Y', value: 'j F Y' },
     { name: 'l, F j, Y', value: 'l, F j, Y' },
@@ -144,11 +177,14 @@ const fetchGeneralSettings = async () => {
                 
                 generalSettings.booking_status = response.data.general_settings.booking_status;
                 generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
-                generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
+                generalSettings.allowed_reschedule_before_meeting_start = normalizeAllowedRescheduleBeforeMeetingStart(
+                    response.data.general_settings.allowed_reschedule_before_meeting_start
+                );
 
             }
             else {
                 applyFetchedDateFormat(defaultDateFormat);
+                generalSettings.allowed_reschedule_before_meeting_start = [...defaultAllowedRescheduleBeforeMeetingStart];
             }
            
 
