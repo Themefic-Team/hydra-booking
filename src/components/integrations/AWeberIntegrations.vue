@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, toRef, onBeforeMount, } from 'vue'; 
+import { ref, toRef, watch, onBeforeMount, } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { RouterView } from 'vue-router' 
 import { toast } from "vue3-toastify"; 
@@ -25,8 +25,40 @@ const props = defineProps([
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
 const aweber_data = toRef( props, 'aweber_data' );
+const shouldRedirectAfterUpdate = ref(false);
+const pendingClientId = ref('');
+
+watch(
+    () => aweber_data.value,
+    (newData) => {
+        if (!shouldRedirectAfterUpdate.value || !newData) {
+            return;
+        }
+
+        // Only redirect for the same client id that triggered the update.
+        if (newData.client_id != pendingClientId.value) {
+            return;
+        }
+
+        shouldRedirectAfterUpdate.value = false;
+        pendingClientId.value = '';
+
+        if (newData.authorize_url != '' && newData.authorize_url != null) {
+            RedirectToAweberAuthUrl(newData.authorize_url);
+            return;
+        }
+
+        toast.error('Unable to generate AWeber authorize URL. Please try again.', {
+            position: 'bottom-right',
+            duration: 2000
+        });
+    },
+    { deep: false }
+);
 
 const closePopup = () => { 
+    shouldRedirectAfterUpdate.value = false;
+    pendingClientId.value = '';
     emit('popup-close-control', false);
 }
 
@@ -35,6 +67,8 @@ const RedirectToAweberAuthUrl = (url) => {
 }
 
 const RemoveIntegration = (type) => { 
+    shouldRedirectAfterUpdate.value = false;
+    pendingClientId.value = '';
     emit('update-integrations', type, {
         status: 0,
         connection_status: 0,
@@ -51,13 +85,11 @@ const UpdateAweberData = () => {
         });
         return;
     }
-     
+
+    shouldRedirectAfterUpdate.value = true;
+    pendingClientId.value = aweber_data.value.client_id;
+
     emit('update-integrations', 'aweber', aweber_data.value);
-    // if client id is
-    // after update need to redirect ot authorize_url
-    if(aweber_data.value.authorize_url != '' && aweber_data.value.authorize_url != null){ 
-        RedirectToAweberAuthUrl(aweber_data.value.authorize_url);
-    }
 }
 
 const copyRedirectionURL = () => {
