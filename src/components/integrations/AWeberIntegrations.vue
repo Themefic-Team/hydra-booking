@@ -27,10 +27,12 @@ const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-c
 const aweber_data = toRef( props, 'aweber_data' );
 const shouldRedirectAfterUpdate = ref(false);
 const pendingClientId = ref('');
+const previousAuthorizeUrl = ref('');
 
 watch(
-    () => aweber_data.value,
-    (newData) => {
+    () => [aweber_data.value?.client_id, aweber_data.value?.authorize_url],
+    () => {
+        const newData = aweber_data.value;
         if (!shouldRedirectAfterUpdate.value || !newData) {
             return;
         }
@@ -40,8 +42,18 @@ watch(
             return;
         }
 
+        if (newData.authorize_url == '' || newData.authorize_url == null) {
+            return;
+        }
+
+        // Prevent redirecting with the stale URL that existed before the update.
+        if (newData.authorize_url == previousAuthorizeUrl.value) {
+            return;
+        }
+
         shouldRedirectAfterUpdate.value = false;
         pendingClientId.value = '';
+        previousAuthorizeUrl.value = '';
 
         if (newData.authorize_url != '' && newData.authorize_url != null) {
             RedirectToAweberAuthUrl(newData.authorize_url);
@@ -59,6 +71,7 @@ watch(
 const closePopup = () => { 
     shouldRedirectAfterUpdate.value = false;
     pendingClientId.value = '';
+    previousAuthorizeUrl.value = '';
     emit('popup-close-control', false);
 }
 
@@ -69,6 +82,7 @@ const RedirectToAweberAuthUrl = (url) => {
 const RemoveIntegration = (type) => { 
     shouldRedirectAfterUpdate.value = false;
     pendingClientId.value = '';
+    previousAuthorizeUrl.value = '';
     emit('update-integrations', type, {
         status: 0,
         connection_status: 0,
@@ -88,8 +102,16 @@ const UpdateAweberData = () => {
 
     shouldRedirectAfterUpdate.value = true;
     pendingClientId.value = aweber_data.value.client_id;
+    previousAuthorizeUrl.value = aweber_data.value.authorize_url ? String(aweber_data.value.authorize_url) : '';
 
-    emit('update-integrations', 'aweber', aweber_data.value);
+    // Clear stale URL so redirect can only happen when backend sends a refreshed one.
+    const payload = {
+        ...aweber_data.value,
+        authorize_url: ''
+    };
+    aweber_data.value.authorize_url = '';
+
+    emit('update-integrations', 'aweber', payload);
 }
 
 const copyRedirectionURL = () => {
