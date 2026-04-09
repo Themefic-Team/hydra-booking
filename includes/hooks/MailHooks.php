@@ -915,7 +915,7 @@ class MailHooks {
 			}
 		}
 
-		return $template;
+		return $template; 
 	}
 
 	/**
