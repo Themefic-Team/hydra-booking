@@ -111,14 +111,14 @@ const TfhbMeetingType = (type, router) => {
     // return false;
     if(type == 'one-to-group' && typeof tfhb_core_apps_pro === 'undefined' ) { 
        
-        toast.error('This feature is only available in pro version', {
+        toast.error((tfhb_core_apps.trans['This feature is only available in pro version'] || 'This feature is only available in pro version'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
         return;
     }
     if((type == 'one-to-group' && tfhb_core_apps_pro.tfhb_is_pro !=true)) {  
-        toast.error('This feature is only available in pro version', {
+        toast.error((tfhb_core_apps.trans['This feature is only available in pro version'] || 'This feature is only available in pro version'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });

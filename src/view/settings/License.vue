@@ -52,7 +52,7 @@ const updateLicense = async (validator_field) => {
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         }); 
@@ -61,7 +61,7 @@ const updateLicense = async (validator_field) => {
 
     // if LicenseBase.license_email is not email address then return
     if(LicenseBase.license_email && !LicenseBase.license_email.includes('@')){
-        toast.error(' Please enter a valid email address', {
+        toast.error((tfhb_core_apps.trans['Please enter a valid email address'] || 'Please enter a valid email address'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });

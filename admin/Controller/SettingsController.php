@@ -1056,7 +1056,7 @@ class SettingsController {
 
 		$data = array(
 			'status'         => true,
-			'message'        => 'Hosts Settings',
+			'message'        => __( 'Hosts Settings', 'hydra-booking' ),
 			'hosts_settings' => $_tfhb_hosts_settings,
 		);
 		return rest_ensure_response( $data );
@@ -1145,7 +1145,7 @@ class SettingsController {
 		$_tfhb_appearance_settings = get_option( '_tfhb_appearance_settings' );
 		$data                      = array(
 			'status'              => true,
-			'message'             => 'Appearance Settings',
+			'message'             => __( 'Appearance Settings', 'hydra-booking' ),
 			'appearance_settings' => $_tfhb_appearance_settings,
 		);
 		return rest_ensure_response( $data );
@@ -1280,7 +1280,7 @@ class SettingsController {
 		// 
 		$data = array(
 			'status'  => true,
-            'message' => 'Shortcode Settings',
+	            'message' => __( 'Shortcode Settings', 'hydra-booking' ),
             'hostsList' => $hostsList,
             'categoryList' => $categoryList, 
 		);
@@ -1304,14 +1304,14 @@ class SettingsController {
 			$shortcodeHTML = ob_get_clean();
 			$data = array(
                 'status'  => true,
-                'message' => 'Shortcode Preview',
+	                'message' => __( 'Shortcode Preview', 'hydra-booking' ),
                 'output' => $shortcodeHTML, 
             );
 
 		}  else {
 			$data = array(
                 'status'  => false,
-                'message' => 'No Shortcode provided',
+	                'message' => __( 'No Shortcode provided', 'hydra-booking' ),
             );
         }
 		return rest_ensure_response( $data );

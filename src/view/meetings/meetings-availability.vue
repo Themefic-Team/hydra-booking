@@ -289,7 +289,7 @@ const TfhbStartDataEvent = (key, skey, startTime) => {
      const latestEndTime = getLatestEndTime(day);  
  
      if (startTime >= latestEndTime){
-         toast.error("Your start time will be over the: " + latestEndTime, {
+         toast.error((tfhb_core_apps.trans['Your start time will be over the: '] || 'Your start time will be over the: ') + latestEndTime, {
                  position: 'bottom-right', // Set the desired position
                  "autoClose": 1500,
              });
@@ -305,7 +305,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start + (tfhb_core_apps.trans[' And Less than '] || ' And Less than ') + NextdayData, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -313,7 +313,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -330,7 +330,7 @@ const CheckDateRangeStart = (date) => {
     // if end date below of the sart date then set a alert and empty the end date
     if(props.meeting.availability_range.end!= '' && date > props.meeting.availability_range.end){
          
-         toast.error("End date should be greater than or equal to Start dates", {
+         toast.error((tfhb_core_apps.trans['End date should be greater than or equal to Start dates'] || 'End date should be greater than or equal to Start dates'), {
              position: 'bottom-right', // Set the desired position
              "autoClose": 1500,
          });   
@@ -340,7 +340,7 @@ const CheckDateRangeEnd = (date) => {
     // if end date below of the sart date then set a alert and empty the end date
     if(props.meeting.availability_range.start!= '' && date < props.meeting.availability_range.start){
          
-        toast.error("End date should be greater than or equal to Start dates", {
+        toast.error((tfhb_core_apps.trans['End date should be greater than or equal to Start dates'] || 'End date should be greater than or equal to Start dates'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });   

@@ -1737,7 +1737,7 @@ class MeetingController {
 		$data = array(
 			'status'  => true,
 			'fields'  => $fields,
-			'message' => 'Fields Data',
+			'message' => __( 'Fields Data', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -1823,7 +1823,7 @@ class MeetingController {
 		$data = array(
 			'status'        => true,
 			'questionForms' => $questionForms,
-			'message'       => 'Question Forms Data',
+			'message'       => __( 'Question Forms Data', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}

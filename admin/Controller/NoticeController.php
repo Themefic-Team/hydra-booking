@@ -22,7 +22,7 @@ class NoticeController {
         check_ajax_referer('wp_rest', 'nonce');
 
         if (!isset($_POST['email']) || !is_email($_POST['email'])) {
-            wp_send_json_error(['message' => 'Invalid email address.']);
+            wp_send_json_error(['message' => __( 'Invalid email address.', 'hydra-booking' )]);
         }
 
         $email = sanitize_email($_POST['email']);
@@ -38,13 +38,13 @@ class NoticeController {
         tfhb_print_r($response);
 
         if (is_wp_error($response)) {
-            wp_send_json_error(['message' => 'API request failed: ' . $response->get_error_message()]);
+            wp_send_json_error(['message' => sprintf( __( 'API request failed: %s', 'hydra-booking' ), $response->get_error_message() )]);
         }
 
         $response_body = json_decode(wp_remote_retrieve_body($response), true);
 
         if ($response_body['data']['status']) {
-            wp_send_json_success(['message' => 'Check your inbox and set a password for free licensing!']);
+            wp_send_json_success(['message' => __( 'Check your inbox and set a password for free licensing!', 'hydra-booking' )]);
         } else {
             if(!empty($response_body['data']['exits'])){
                 wp_send_json_error([
@@ -52,7 +52,7 @@ class NoticeController {
                     'exits'   => $response_body['data']['exits']
                 ]);
             }else{
-                wp_send_json_error(['message' => $response_body['data']['message'] ?? 'Something went wrong.']);
+                wp_send_json_error(['message' => $response_body['data']['message'] ?? __( 'Something went wrong.', 'hydra-booking' )]);
             }
         }
 
@@ -64,7 +64,7 @@ class NoticeController {
         check_ajax_referer('wp_rest', 'nonce');
 
         if (!isset($_POST['key'])) {
-            wp_send_json_error(['message' => 'Invalid Key.']);
+            wp_send_json_error(['message' => __( 'Invalid Key.', 'hydra-booking' )]);
         }
 
         $key = sanitize_text_field($_POST['key']);
@@ -80,18 +80,18 @@ class NoticeController {
         ]);
 
         if (is_wp_error($response)) {
-            wp_send_json_error(['message' => 'API request failed: ' . $response->get_error_message()]);
+            wp_send_json_error(['message' => sprintf( __( 'API request failed: %s', 'hydra-booking' ), $response->get_error_message() )]);
         }
 
         $response_body = json_decode(wp_remote_retrieve_body($response), true);
 
         if (!empty($response_body['data']['message'])) {
             wp_send_json_success([
-                'message' => 'Product added to remote cart successfully!',
+                'message' => __( 'Product added to remote cart successfully!', 'hydra-booking' ),
                 'url' => $response_body['data']['cart_url']
             ]);
         } else {
-            wp_send_json_error(['message' => $response_body['data']['message'] ?? 'Something went wrong.']);
+            wp_send_json_error(['message' => $response_body['data']['message'] ?? __( 'Something went wrong.', 'hydra-booking' )]);
         }
 
         wp_die();

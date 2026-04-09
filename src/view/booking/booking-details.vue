@@ -98,7 +98,7 @@ const goForReschedule = (attendee) => {
 // Cencel Attendee  
 const cancelAttendee = (attendee) => {    
     if(attendee.status == 'canceled'){ 
-        toast.error('Already Canceled', {
+        toast.error((tfhb_core_apps.trans['Already Canceled'] || 'Already Canceled'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });

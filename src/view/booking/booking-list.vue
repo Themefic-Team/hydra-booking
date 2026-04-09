@@ -510,13 +510,13 @@ const getMinDate = (value) => {
 const changeToDate = (value) => {  
     if( Booking.filter_data.date_range.from == ''){
  
-        toast.error('Please select from date first', {
+        toast.error((tfhb_core_apps.trans['Please select from date first'] || 'Please select from date first'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
     } 
     if( Booking.filter_data.date_range.from > value){
-        toast.error('To date should be greater than from date', {
+        toast.error((tfhb_core_apps.trans['To date should be greater than from date'] || 'To date should be greater than from date'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });

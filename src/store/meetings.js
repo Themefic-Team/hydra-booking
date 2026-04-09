@@ -520,7 +520,7 @@ const Meeting = reactive({
     // Delete Meeting
     async deleteMeeting ($id, $post_id){ 
         if($id == '' || $post_id == ''){
-            toast.error('Something went wrong. Please try again', {
+            toast.error((tfhb_core_apps.trans['Something went wrong. Please try again'] || 'Something went wrong. Please try again'), {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });

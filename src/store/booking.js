@@ -114,7 +114,7 @@ const Booking = reactive({
         if(this.reBook.availability_time_zone == '' || this.reBook.select_date == '' || this.reBook.select_time_slot == '' || this.reBook.select_status == ''  ){
             // error message 
             this.reBookPreLoader = false;
-            toast.error('Please fill all the fields', {
+            toast.error((tfhb_core_apps.trans['Please fill all the fields'] || 'Please fill all the fields'), {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             })

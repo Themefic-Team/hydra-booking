@@ -35,7 +35,7 @@ function copyToClipboard(text) {
     input.select();
     document.execCommand('copy');
     document.body.removeChild(input);
-    toast.success('Shortcode copied to clipboard', {
+    toast.success((tfhb_core_apps.trans['Shortcode copied to clipboard'] || 'Shortcode copied to clipboard'), {
         position: 'bottom-right', // Set the desired position
         "autoClose": 1500,
     });  

@@ -202,7 +202,7 @@ function updateMeetingData(validator_field){
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
@@ -368,7 +368,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start + (tfhb_core_apps.trans[' And Less than '] || ' And Less than ') + NextdayData, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -376,7 +376,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -391,7 +391,7 @@ const TfhbStartDataEvent = (key, skey, startTime) => {
     const latestEndTime = getLatestEndTime(day);  
 
     if (startTime >= latestEndTime){
-        toast.error("Your start time will be over the: " + latestEndTime, {
+        toast.error((tfhb_core_apps.trans['Your start time will be over the: '] || 'Your start time will be over the: ') + latestEndTime, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });

@@ -60,7 +60,7 @@ watch(
             return;
         }
 
-        toast.error('Unable to generate AWeber authorize URL. Please try again.', {
+        toast.error((tfhb_core_apps.trans['Unable to generate AWeber authorize URL. Please try again.'] || 'Unable to generate AWeber authorize URL. Please try again.'), {
             position: 'bottom-right',
             duration: 2000
         });
@@ -93,7 +93,7 @@ const RemoveIntegration = (type) => {
 const UpdateAweberData = () => { 
     // if client id is empty then show error toster message
     if(aweber_data.value.client_id == '' || aweber_data.value.client_id == null){
-        toast.error( 'Client ID is required' , {
+        toast.error( (tfhb_core_apps.trans['Client ID is required'] || 'Client ID is required') , {
             position: 'bottom-right', // Set the desired position
             duration: 2000 // Set the desired duration
         });

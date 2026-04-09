@@ -131,7 +131,7 @@ const UpdateGeneralSettings = async () => {
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         }); 
@@ -140,7 +140,7 @@ const UpdateGeneralSettings = async () => {
 
     // if  generalSettings.allowed_reschedule_before_meeting_start is not number 
     if(!Number(generalSettings.allowed_reschedule_before_meeting_start[0].limit)){ 
-            toast.error('Minimum time required before Booking/Cancel/Reschedule must be a number', {
+            toast.error((tfhb_core_apps.trans['Minimum time required before Booking/Cancel/Reschedule must be a number'] || 'Minimum time required before Booking/Cancel/Reschedule must be a number'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
@@ -167,7 +167,7 @@ const UpdateGeneralSettings = async () => {
             
         }
     } catch (error) {
-        toast.error('Action successful', {
+        toast.error((tfhb_core_apps.trans['Action successful'] || 'Action successful'), {
             position: 'bottom-right', // Set the desired position
         });
         generalSettings_pre_loader.value = false;
