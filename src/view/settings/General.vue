@@ -165,6 +165,7 @@ const fetchGeneralSettings = async () => {
             currencyList.value = response.data.currency_list;  
             // Set General Settings
             if(response.data.general_settings != false){
+                generalSettings.admin_email = response.data.general_settings.admin_email;
                 generalSettings.time_zone = response.data.general_settings.time_zone;
                 generalSettings.time_format = response.data.general_settings.time_format != '' ? response.data.general_settings.time_format : '12';
                 generalSettings.week_start_from = response.data.general_settings.week_start_from != '' ? response.data.general_settings.week_start_from : 'Sunday';

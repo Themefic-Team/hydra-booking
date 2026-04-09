@@ -54,6 +54,12 @@ class MailHooks {
 		$host_data = $host->getHostById(  $host_id );
 		return $host_data;
 	}
+	// get admin email from general settings
+	public function getAdminEmail() {
+		$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+		$admin_email = isset($_tfhb_general_settings['admin_email']) && !empty($_tfhb_general_settings['admin_email']) && $_tfhb_general_settings['admin_email'] != '{{wp.admin_email}}' ? sanitize_email($_tfhb_general_settings['admin_email']) : get_bloginfo( 'admin_email' );
+		return $admin_email;
+	}
 
 	// If booking Status is Complted
 	public function pushBookingToConfirmed( $attendees ) {
@@ -67,10 +73,11 @@ class MailHooks {
 
 			// Host Confirmation Email, If Settings Enable for Host Confirmation
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['status'] ) ) {
-				
+				     
+			
 				
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['form'] : $this->getAdminEmail();
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['host']['booking_confirmation']['subject'] : 'Booking Confirmation';
@@ -118,7 +125,7 @@ class MailHooks {
 				
 				
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] : $this->getAdminEmail();
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] : 'Booking Confirmation';
@@ -179,7 +186,7 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_pending']['status'] ) ) {
 				
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_pending']['form'] ) ? $_tfhb_notification_settings['host']['booking_pending']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_pending']['form'] ) ? $_tfhb_notification_settings['host']['booking_pending']['form'] : $this->getAdminEmail();
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['host']['booking_pending']['subject'] : 'Booking Pending';
@@ -222,7 +229,7 @@ class MailHooks {
 			// Attendee Pending Email, If Settings Enable for Attendee Pending
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['status'] ) ) {
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['form'] : $this->getAdminEmail();
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['subject'] : 'Booking Pending';
@@ -279,7 +286,7 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_cancel']['status'] ) ) {
 
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_cancel']['form'] ) ? $_tfhb_notification_settings['host']['booking_cancel']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_cancel']['form'] ) ? $_tfhb_notification_settings['host']['booking_cancel']['form'] : $this->getAdminEmail();
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['host']['booking_cancel']['subject'] : 'Booking Canceled';
@@ -321,7 +328,7 @@ class MailHooks {
 			// Attendee Canceled Email, If Settings Enable for Attendee Canceled
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['status'] ) ) {
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['form'] : $this->getAdminEmail();
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] : 'Booking Canceled';
@@ -376,7 +383,7 @@ class MailHooks {
 			// Host ReSchedule Email, If Settings Enable for Host ReSchedule
 			if ( ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['status'] ) ) {
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['form'] : $this->getAdminEmail();
  
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['host']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['host']['booking_reschedule']['subject'] : 'Booking ReSchedule';
@@ -419,7 +426,7 @@ class MailHooks {
 			// Attendee ReSchedule Email, If Settings Enable for Attendee ReSchedule
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['status'] ) ) {
 				// From Email
-				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] : get_option( 'admin_email' );
+				$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] : $this->getAdminEmail();
 
 				// Email Subject
 				$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] : 'Booking ReSchedule';
@@ -476,7 +483,7 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['status'] ) ) {
 				foreach($attendees as $key => $attendee_data){
 					// From Email
-					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['form'] : get_option( 'admin_email' );
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['form'] : $this->getAdminEmail();
 
 					// Email Subject
 					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reminder']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reminder']['subject'] : 'Booking ReSchedule';
@@ -533,7 +540,7 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['status'] ) ) {
 				foreach($attendees as $key => $attendee_data){
 					// From Email
-					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] : get_option( 'admin_email' );
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['form'] : $this->getAdminEmail();
 
 					// Email Subject
 					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_confirmation']['subject'] : 'Booking ReSchedule';
@@ -590,7 +597,7 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['status'] ) ) {
 				foreach($attendees as $key => $attendee_data){
 					// From Email
-					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['form'] : get_option( 'admin_email' );
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['form'] : $this->getAdminEmail();
 
 					// Email Subject
 					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_pending']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_pending']['subject'] : 'Booking ReSchedule';
@@ -648,7 +655,7 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['status'] ) ) {
 				foreach($attendees as $key => $attendee_data){
 					// From Email
-					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['form'] : get_option( 'admin_email' );
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['form'] : $this->getAdminEmail();
 
 					// Email Subject
 					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_cancel']['subject'] : 'Booking ReSchedule';
@@ -708,7 +715,7 @@ class MailHooks {
 			if ( ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['status'] ) ) {
 				foreach($attendees as $key => $attendee_data){
 					// From Email
-					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] : get_option( 'admin_email' );
+					$replyTo = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['form'] : $this->getAdminEmail();
 
 					// Email Subject
 					$subject = ! empty( $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] ) ? $_tfhb_notification_settings['attendee']['booking_reschedule']['subject'] : 'Booking ReSchedule';

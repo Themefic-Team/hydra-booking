@@ -11,6 +11,7 @@ import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import GoogleCalendarIntegrations from '@/components/hosts/GoogleCalendarIntegrations.vue';
 import OutlookCalendarIntegrations from '@/components/hosts/OutlookCalendarIntegrations.vue'; 
+import AppleCalendarIntegrations from '@/components/hosts/AppleCalendarIntegrations.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -101,9 +102,11 @@ const Integration = reactive( {
     apple_calendar : {
         type: 'calendar', 
         status: 0,
+        host_status: 0,
         connection_status: 0, 
         apple_id: '',
         app_password: '',
+        app_password_set: 0,
 
     },
     stripe : {
@@ -176,6 +179,18 @@ const UpdateIntegration = async (key, value) => {
             gpopup.value = false;
             spopup.value = false;
             mailpopup.value = false;
+
+            // Immediately update apple_calendar reactive state so the UI reflects
+            // the new connection_status / app_password_set without a page reload.
+            if ( key === 'apple_calendar' && response.data.host_integration_settings?.apple_calendar ) {
+                const stored = response.data.host_integration_settings.apple_calendar;
+                const hasCredentials = !!( stored.apple_id && stored.app_password );
+                Integration.apple_calendar.connection_status = hasCredentials ? 1 : 0;
+                Integration.apple_calendar.app_password_set  = hasCredentials ? 1 : 0;
+                Integration.apple_calendar.apple_id          = stored.apple_id || '';
+                Integration.apple_calendar.host_status       = stored.host_status !== undefined ? parseInt( stored.host_status ) : 0;
+                Integration.apple_calendar.app_password      = '';
+            }
             
         }else{
             toast.error(response.data.message, {
@@ -213,7 +228,7 @@ onBeforeMount(() => {
         <!-- Host Integration -->
         <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
         <OutlookCalendarIntegrations  display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
-        <!-- <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" /> -->
+        <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" />
  
 
     </div> 
