@@ -83,7 +83,7 @@ const closePopup = () => {
             <template #content>
                 <p>
                     {{ $tfhb_trans('Enter your Apple ID (iCloud email) and an App-Specific Password generated from your Apple ID account settings.') }}
-                    <a href="https://support.apple.com/en-us/102654" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">
+                    <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/apple-calendar-integration/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">
                         {{ $tfhb_trans('Read Documentation') }}
                     </a>
                 </p>
