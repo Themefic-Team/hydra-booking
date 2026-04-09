@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "watch:scss": "sass --watch sass/css/global.scss:assets/app/css/style.css",
     "watch:app-js": "vite build --watch --config ./config/vite.config.public.js",
-    "watch:trans-string": "wp i18n make-pot ."
+    "watch:trans-string": "php -d memory_limit=512M C:/wp-cli/wp-cli.phar i18n make-pot . languages/hydra-booking.pot --domain=hydra-booking --exclude=.git,node_modules,vendor,build,assets,languages"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.14",
