@@ -12,7 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class DateTimeController extends \DateTimeZone {
 	public function TimeZone() {
-		$time_zone_data = $this->listIdentifiers();
+		// Include backward-compatible identifiers so browser-reported aliases
+		// (for example Europe/Kiev or Asia/Calcutta) can still be matched.
+		$time_zone_data = $this->listIdentifiers( \DateTimeZone::ALL_WITH_BC );
 		$time_zone      = array();
 		// make array in this format { value: 'New York', name: 'NY' },
 
