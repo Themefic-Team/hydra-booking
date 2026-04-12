@@ -137,6 +137,9 @@ class DashboardWidget {
 				<li>
 					<a href="<?php echo esc_url( 'https://hydrabooking.com/maximize-efficiency-with-google-booking-calendar/' ); ?>" target="_blank"><?php esc_html_e( 'Maximize Efficiency with Google Booking Calendar', 'hydra-booking' ); ?></a>
 				</li>
+				<li>
+					<a href="<?php echo esc_url( 'https://hydrabooking.com/understanding-round-robin-scheduling/' ); ?>" target="_blank"><?php esc_html_e( 'Understanding Round Robin Scheduling', 'hydra-booking' ); ?></a>
+				</li>
 			</ul>
 
             <!-- Footer -->
