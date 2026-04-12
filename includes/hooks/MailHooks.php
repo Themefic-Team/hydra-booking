@@ -792,6 +792,9 @@ class MailHooks {
 			'DESC'
 		); 
 
+		// Initialize Helper to use settings-based date format
+		$helper = new Helper();
+		$date_format = $helper->get_date_format_from_settings( 'M d, Y' );
 
 		$google_calendar_link  = '#';
 		$outlook_calendar_link = '#';
@@ -848,12 +851,22 @@ class MailHooks {
 				}
 			}
 		}
-		 
+		
+		// Format meeting date using settings-based date format
+		$formatted_meeting_date = '';
+		if ( ! empty( $attendeeBooking->meeting_dates ) ) {
+			$date_obj = \DateTime::createFromFormat( 'Y-m-d', trim( $attendeeBooking->meeting_dates ) );
+			if ( $date_obj !== false ) {
+				$formatted_meeting_date = $date_obj->format( $date_format );
+			} else {
+				$formatted_meeting_date = $attendeeBooking->meeting_dates;
+			}
+		}
 
 		$replacements = array(
 			'{{meeting.title}}'    => ! empty( $attendeeBooking->meeting_title ) ? $attendeeBooking->meeting_title : '',
 			'{{meeting.content}}'  => ! empty( $attendeeBooking->meeting_content ) ? $attendeeBooking->meeting_content : '',
-			'{{meeting.date}}'     => ! empty( $attendeeBooking->meeting_dates ) ? $attendeeBooking->meeting_dates : '',
+			'{{meeting.date}}'     => $formatted_meeting_date,
 			'{{meeting.location}}' => implode( ', ', $locations ),
 			'{{meeting.duration}}' => $attendeeBooking->duration,
 			'{{meeting.time}}'     => $attendeeBooking->start_time . '-' . $attendeeBooking->end_time,
