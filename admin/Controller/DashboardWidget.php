@@ -22,7 +22,7 @@ class DashboardWidget {
     }
 
     public function tfhb_register_dashboard_widget() {
-        wp_add_dashboard_widget( 'tfhb_widget', __( 'TFHB Overview', 'bafg' ), array( $this, 'tfhb_display_dashboard_widget' ) , null, null, 'normal', 'high' );
+        wp_add_dashboard_widget( 'tfhb_widget', __( 'TFHB Overview', 'hydra-booking' ), array( $this, 'tfhb_display_dashboard_widget' ) , null, null, 'normal', 'high' );
     }
 
     public function tfhb_widget_enqueue_assets( $screen ) {
@@ -54,11 +54,11 @@ class DashboardWidget {
             <div class="tfhb-stats">
                 <div class="tfhb-stat"> 
                     <strong><?php echo esc_html( $bookings['total'] ); ?></strong>
-                    <span><?php esc_html_e( 'Total Bookings', 'bafg' ); ?></span>
+                    <span><?php esc_html_e( 'Total Bookings', 'hydra-booking' ); ?></span>
                 </div>
                 <div class="tfhb-stat"> 
                     <strong><?php echo esc_html( $earnings['total'] ); ?></strong>
-                    <span><?php esc_html_e( 'Total Earnings', 'bafg' ); ?></span>
+                    <span><?php esc_html_e( 'Total Earnings', 'hydra-booking' ); ?></span>
                 </div>
                 
             </div>
@@ -66,40 +66,40 @@ class DashboardWidget {
             <!-- Quick Actions -->
             <div class="tfhb-actions">
                 <a href="<?php echo esc_url( $meetings_url ); ?>" class="button button-primary">
-                    <?php esc_html_e( 'Create Meeting', 'bafg' ); ?>
+                    <?php esc_html_e( 'Create Meeting', 'hydra-booking' ); ?>
                 </a>
                 <a href="<?php echo esc_url( $booking_url ); ?>" class="button">
-                    <?php esc_html_e( 'View Bookings', 'bafg' ); ?>
+                    <?php esc_html_e( 'View Bookings', 'hydra-booking' ); ?>
                 </a>
                 <a href="<?php echo esc_url( $settings_url ); ?>" class="button">
-                    <?php esc_html_e( 'Hydra Settings', 'bafg' ); ?>
+                    <?php esc_html_e( 'Hydra Settings', 'hydra-booking' ); ?>
                 </a>
             </div>
             
             <!-- Popular Integrations -->
             <div class="tfhb-section tfhb-integrations">
-                <h4><?php esc_html_e( 'Popular Features', 'bafg' ); ?></h4>
+                <h4><?php esc_html_e( 'Popular Features', 'hydra-booking' ); ?></h4>
 
                 <div class="tfhb-integration-grid">
                     <div  class="tfhb-integration-item">
                         <img style="width: 32px; " src="<?php echo esc_url( TFHB_URL . 'assets/images/google-calendar.png' ); ?>" alt="">
-                        <span><?php esc_html_e( 'Google Calendar/Meet', 'bafg' ); ?></span>
+                        <span><?php esc_html_e( 'Google Calendar/Meet', 'hydra-booking' ); ?></span>
                     </div>
 
                     <div class="tfhb-integration-item">
                         <img style="width: 32px; " src="<?php echo esc_url( TFHB_URL . 'assets/images/Woo.png' ); ?>" alt="">
-                        <span><?php esc_html_e( 'Woo Payment', 'bafg' ); ?></span>
+                        <span><?php esc_html_e( 'Woo Payment', 'hydra-booking' ); ?></span>
                     </div> 
 
                     <div class="tfhb-integration-item">
                         <img style="width: 32px; " src="<?php echo esc_url( TFHB_URL . 'assets/images/Mailchimp.svg' ); ?>" alt="">
-                        <span><?php esc_html_e( 'Mailchimp Interaction', 'bafg' ); ?></span>
+                        <span><?php esc_html_e( 'Mailchimp Interaction', 'hydra-booking' ); ?></span>
                     </div>
 
                     <div class="tfhb-integration-item">
                         <img style="width: 32px; " src="<?php echo esc_url( TFHB_URL . 'assets/images/paypal.png' ); ?>" alt="">
                   
-                        <span><?php esc_html_e( 'PayPal Interaction', 'bafg' ); ?></span>
+                        <span><?php esc_html_e( 'PayPal Interaction', 'hydra-booking' ); ?></span>
                     </div>
 
                 </div>
@@ -108,53 +108,53 @@ class DashboardWidget {
             <!-- Button for more integrations -->
             <div class="tfhb-actions">
                 <a href="<?php echo esc_url( $integration_url ); ?>" target="_blank" class="button">
-                    <?php esc_html_e( 'Check More Features', 'bafg' ); ?>
+                    <?php esc_html_e( 'Check More Features', 'hydra-booking' ); ?>
                 </a>
             </div>
 
             <?php if(!class_exists('TFHB_INIT_PRO')){  ?>
             <!-- Upsell -->
             <div class="tfhb-upsell">
-                <h4><?php esc_html_e( 'Unlock Pro Features', 'bafg' ); ?></h4>
+                <h4><?php esc_html_e( 'Unlock Pro Features', 'hydra-booking' ); ?></h4>
                 <ul>
-                    <li><?php esc_html_e( '✔ One-to-Group booking', 'bafg' ); ?></li>
-                    <li><?php esc_html_e( '✔ Recurring booking', 'bafg' ); ?></li>
-                    <li><?php esc_html_e( '✔ 10+ Pro Features', 'bafg' ); ?></li> 
+                    <li><?php esc_html_e( '✔ One-to-Group booking', 'hydra-booking' ); ?></li>
+                    <li><?php esc_html_e( '✔ Recurring booking', 'hydra-booking' ); ?></li>
+                    <li><?php esc_html_e( '✔ 10+ Pro Features', 'hydra-booking' ); ?></li> 
                 </ul>
                 <a href="<?php echo esc_url( 'https://hydrabooking.com/pricing/' ); ?>" target="_blank" class="button button-primary go-pro">
-                    <?php esc_html_e( 'Upgrade Now', 'bafg' ); ?>
+                    <?php esc_html_e( 'Upgrade Now', 'hydra-booking' ); ?>
                 </a>
             </div>
             <?php } ?>
 
             <!-- Blog Section -->
-			<div class="tfhb-section-title"><?php esc_html_e( 'Latest posts from Hydra Booking', 'bafg' ); ?></div>
+			<div class="tfhb-section-title"><?php esc_html_e( 'Latest posts from Hydra Booking', 'hydra-booking' ); ?></div>
 			<ul class="tfhb-blog-list">
 				<li>
-					<span class="tfhb-badge"><?php esc_html_e( 'NEW', 'bafg' ); ?></span>
-					<a href="<?php echo esc_url( 'https://hydrabooking.com/how-to-sync-two-google-calendars/' ); ?>" target="_blank"><?php esc_html_e( 'How to Sync Two Google Calendars? Step-by-Step Guide', 'bafg' ); ?></a>
+					<span class="tfhb-badge"><?php esc_html_e( 'NEW', 'hydra-booking' ); ?></span>
+					<a href="<?php echo esc_url( 'https://hydrabooking.com/how-to-sync-two-google-calendars/' ); ?>" target="_blank"><?php esc_html_e( 'How to Sync Two Google Calendars? Step-by-Step Guide', 'hydra-booking' ); ?></a>
 				</li>
 				<li>
-					<a href="<?php echo esc_url( 'https://hydrabooking.com/maximize-efficiency-with-google-booking-calendar/' ); ?>" target="_blank"><?php esc_html_e( 'Maximize Efficiency with Google Booking Calendar', 'bafg' ); ?></a>
+					<a href="<?php echo esc_url( 'https://hydrabooking.com/maximize-efficiency-with-google-booking-calendar/' ); ?>" target="_blank"><?php esc_html_e( 'Maximize Efficiency with Google Booking Calendar', 'hydra-booking' ); ?></a>
 				</li>
 			</ul>
 
             <!-- Footer -->
             <div class="tfhb-footer">
                 <a href="<?php echo esc_url( 'https://themefic.com/docs/hydrabooking/' ); ?>" target="_blank">
-                    <?php esc_html_e( 'Docs', 'bafg' ); ?>
+                    <?php esc_html_e( 'Docs', 'hydra-booking' ); ?>
                     <span aria-hidden="true" class="dashicons dashicons-external"></span>
                 </a>
                 <a href="<?php echo esc_url( 'https://portal.themefic.com/support/' ); ?>" target="_blank">
-                    <?php esc_html_e( 'Support', 'bafg' ); ?>
+                    <?php esc_html_e( 'Support', 'hydra-booking' ); ?>
                     <span aria-hidden="true" class="dashicons dashicons-external"></span>
                 </a>
                 <a href="<?php echo esc_url( 'https://hydrabooking.com/blog/' ); ?>" target="_blank">
-                    <?php esc_html_e( 'Blog', 'bafg' ); ?>
+                    <?php esc_html_e( 'Blog', 'hydra-booking' ); ?>
                     <span aria-hidden="true" class="dashicons dashicons-external"></span>
                 </a>
                 <a href="<?php echo esc_url( 'https://hydrabooking.com/pricing/' ); ?>" target="_blank" class="go-pro">
-                    <?php esc_html_e( 'Buy Now', 'bafg' ); ?>
+                    <?php esc_html_e( 'Buy Now', 'hydra-booking' ); ?>
                     <span aria-hidden="true" class="dashicons dashicons-external"></span>
                 </a>
             </div>
