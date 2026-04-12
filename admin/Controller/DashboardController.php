@@ -50,9 +50,9 @@ class DashboardController {
 	public function getDashboardsData() {
 
 		$request   = json_decode( file_get_contents( 'php://input' ), true );
-		$days      = $request['days']; // exp 1
-		$from_date = $request['from_date']; // exp 2021-09-01
-		$to_date   = $request['to_date']; // exp 2021-09-01
+		$days      = isset($request['days']) ? $request['days'] : 30; // exp 1
+		$from_date = isset($request['from_date']) ? $request['from_date'] : null; // exp 2021-09-01
+		$to_date   = isset($request['to_date']) ? $request['to_date'] : null; // exp 2021-09-01
 
 		// calculate Days based on form day and to day
 		$days = $from_date != null && $to_date != null ? ( strtotime( $to_date ) - strtotime( $from_date ) ) / ( 60 * 60 * 24 ) : $days; // exp 1

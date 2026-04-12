@@ -3843,14 +3843,7 @@ class Helper {
                 <p> {{meeting.title}} with {{attendee.name}}</p> 
                 <p> Date: {{meeting.date}} </p>'
         );
-
-        // $notification = $this->append_add_to_calendar_default_section(
-        //     $notification,
-        //     $google_calendar_image_url,
-        //     $outlook_calendar_image_url,
-        //     $yahoo_calendar_image_url,
-        //     $other_calendar_image_url
-        // );
+ 
 
         return $notification;
         
