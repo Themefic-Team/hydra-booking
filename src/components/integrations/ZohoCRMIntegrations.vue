@@ -39,7 +39,7 @@ const emit = defineEmits([ "update-integrations" ]);
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <HbSwitch v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true"  @change="emit('update-integrations', 'zoho_crm', zoho_crm_data)" v-model="zoho_crm_data.status"    />
-            <a v-else href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <router-link v-else to="/settings/license" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></router-link>
  
         </div>
 

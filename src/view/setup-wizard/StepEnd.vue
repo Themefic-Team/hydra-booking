@@ -20,6 +20,7 @@ import OutlookCalendarIntegrations from '@/components/integrations/OutlookCalend
 import AppleCalendarIntegrations from '@/components/integrations/AppleCalendarIntegrations.vue'; 
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue'; 
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
+import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
 import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
 import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
@@ -48,6 +49,7 @@ const popup = ref(false);
 const gpopup = ref(false);
 const spopup = ref(false);
 const mailpopup = ref(false);
+const aweberpopup = ref(false);
 const outlookpopup = ref(false);
 const paypalpopup = ref(false);
 
@@ -123,6 +125,15 @@ const ispaypalPopupOpen = () => {
 const ispaypalPopupClose = (data) => {
     paypalpopup.value = false;
 }
+
+
+const isAWeberPopupOpen = () => {
+    aweberpopup.value = true;
+}
+const isAWeberPopupClose = (data) => {
+    aweberpopup.value = false;
+}
+
 const submit_preloader = ref(false);
 const Integration = reactive( {
     woo_payment : {
@@ -168,8 +179,16 @@ const Integration = reactive( {
         public_key: '',
         secret_key: '',
     },
-    mailchimp : {
-        type: 'mailchimp', 
+    aweber : {
+        type: 'aweber', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: 0, 
+        redirect_url: '', 
+        auth_data: [], 
+    },
+    aweber : {
+        type: 'aweber', 
         status: 0, 
         key: ''
     },
@@ -233,6 +252,7 @@ const fetchIntegration = async () => {
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
+            Integration.aweber= response.data.integration_settings.aweber ? response.data.integration_settings.aweber : Integration.aweber;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
 
             skeleton.value = false;
@@ -516,15 +536,27 @@ window.addEventListener('click', function(e) {
           
                 <!-- Mailchimp intrigation -->
                 <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
-                :mail_data="Integration.mailchimp" 
-                :pre_loader="submit_preloader" 
-                @update-integrations="UpdateIntegration" 
-                :ispopup="mailpopup"
-                @popup-open-control="ismailchimpPopupOpen"
-                @popup-close-control="ismailchimpPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'all'"
+                    :mail_data="Integration.mailchimp" 
+                    :pre_loader="submit_preloader" 
+                    @update-integrations="UpdateIntegration" 
+                    :ispopup="mailpopup"
+                    @popup-open-control="ismailchimpPopupOpen"
+                    @popup-close-control="ismailchimpPopupClose" 
+                    v-if="currentHash === 'all' || currentHash === 'all'"
                 />
                 <!-- Mailchimp intrigation -->
+
+                <!-- AWeber intrigation -->
+                <AWeberIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
+                    :aweber_data="Integration.aweber" 
+                    :pre_loader="submit_preloader" 
+                    @update-integrations="UpdateIntegration" 
+                    :ispopup="aweberpopup"
+                    @popup-open-control="isAWeberPopupOpen"
+                    @popup-close-control="isAWeberPopupClose" 
+                    v-if="currentHash === 'all' || currentHash === 'all'"
+                />
+                <!-- AWeber intrigation -->
 
                 <!-- Fluent CRM -->
                 <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"

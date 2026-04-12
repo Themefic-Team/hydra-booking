@@ -1023,7 +1023,7 @@ const getAvailabilityTimeSlot = (value) => {
                     </div>  
                     <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="CalendarDays" size=20 /> 
-                        {{singleBookingData.meeting_dates }}
+                        {{ Tfhb_Date(singleBookingData.meeting_dates) }}
                     </div>   
                 </div>
             </div>
@@ -1101,7 +1101,7 @@ const getAvailabilityTimeSlot = (value) => {
                 <label>{{$tfhb_trans('Date')}}</label>
                 <div class="tfhb-time-date-view tfhb-flexbox">
                     <Icon name="CalendarDays" size=20 />
-                    <input type="text" readonly :value="singleCalendarBookingData.booking_date">
+                    <input type="text" readonly :value="Tfhb_Date(singleCalendarBookingData.booking_date)">
                 </div>
             </div>
         </div>

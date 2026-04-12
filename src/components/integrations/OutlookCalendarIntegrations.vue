@@ -67,7 +67,7 @@ const copyRedirectionURL = () => {
             </div>
         </div>
         <div v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <a  href="#" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <router-link to="/settings/license" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></router-link>
  
         </div>
         <!-- <div v-if="$tfhb_is_pro == true &&  $tfhb_license_status == true" class="tfhb-integrations-single-block-btn tfhb-flexbox">

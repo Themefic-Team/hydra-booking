@@ -10,6 +10,7 @@ const front_end_dashboard =  tfhb_core_apps.front_end_dashboard || false;
 const tfhb_license_type =  tfhb_core_apps.tfhb_license_type || false;   
 const tfhb_is_valid =  tfhb_core_apps.tfhb_is_valid || false;   
 const user =  tfhb_core_apps.user || '';    
+const date_format =  tfhb_core_apps.date_format || '';    
 // console.log(tfhb_core_apps); 
 // Pro Plugins  checked  first tfhb_core_apps_pro is not defined
 const tfhb_core_apps_pro_data = typeof tfhb_core_apps_pro !== 'undefined' ? tfhb_core_apps_pro : '';
@@ -26,6 +27,7 @@ tfhbApps.config.globalProperties.$tfhb_license_type = tfhb_license_type;
 tfhbApps.config.globalProperties.$tfhb_is_valid = tfhb_is_valid;   
 tfhbApps.config.globalProperties.$front_end_dashboard = front_end_dashboard;   
 tfhbApps.config.globalProperties.$user = user; 
+tfhbApps.config.globalProperties.$date_format = date_format;    
 tfhbApps.config.globalProperties.$tfhb_is_pro = tfhb_is_pro; 
 tfhbApps.config.globalProperties.$tfhb_license_status = tfhb_license_status;  
 tfhbApps.config.globalProperties.$tfhb_trans = function (text) { 

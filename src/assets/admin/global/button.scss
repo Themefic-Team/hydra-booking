@@ -50,7 +50,7 @@ button.tfhb-btn {
         &:focus,
         &:active {
             background-color: $primary-hover;
-            color: $primary-text;
+            color: $primary-text !important;
         }
 
         span {

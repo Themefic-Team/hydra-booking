@@ -11,6 +11,9 @@ import { Host } from '@/store/hosts';
 import { Availability } from '@/store/availability';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import useDateFormat from '@/store/dateformat'
+
+const { Tfhb_Date } = useDateFormat();
 
 const emit = defineEmits(["availability-tabs", "save-host-info"]); 
 const props = defineProps({
@@ -434,7 +437,7 @@ const deletePopupToggle = (key, id, user_id) => {
         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in Settings_avalibility.availability.date_slots" :key="key">
             <div class="tfhb-flexbox">
                 <div class="tfhb-overrides-date">
-                    <h4>{{ date_slot.date }}</h4>
+                    <h4>{{ Tfhb_Date(date_slot.date) }}</h4>
                     <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                 </div>
             </div>

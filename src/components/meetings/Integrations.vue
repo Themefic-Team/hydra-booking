@@ -35,6 +35,9 @@ const changeIntegrations = (value) => {
     if(value == 'Zapier' && !props.integrations.zapier_status == true){
         return;
     }
+    if(value == 'Aweber' && !props.integrations.aweber_status == true){
+        return;
+    }
     
     
     props.IntegrationsValue.addNewIntegrations(value)
@@ -73,7 +76,7 @@ const moduleFields = async (e) => {
             <p>{{ $tfhb_trans('Integrate Mailchimp, FluentCRM, and Zoho for managing emails, tracking leads, and enhancing customer engagement.') }}</p> 
         </div>
     </div>
-
+ <!-- {{ meeting.aweber }} -->
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width">
 
         <button class="tfhb-btn tfhb-flexbox tfhb-gap-8" v-if="props.IntegrationsValue.integrationscreate" @click="props.IntegrationsValue.backtointegrationsList">
@@ -111,7 +114,7 @@ const moduleFields = async (e) => {
         </div>
 
         <div class="tfhb-admin-card-box tfhb-webhook-box tfhb-full-width tfhb-gap-24" v-if="props.IntegrationsValue.integrationscreate">
-
+            <!-- {{ IntegrationsValue.integrationsData }} -->
             <HbText  
                 v-model="props.IntegrationsValue.integrationsData.title"
                 required= "true"  
@@ -139,6 +142,29 @@ const moduleFields = async (e) => {
                 selected = "1"
                 placeholder="Select Audience"  
                 :option = "meeting.mailchimp.audience"
+                @tfhb-onchange="moduleFields" 
+            />
+           
+            <HbDropdown  
+                v-if="props.IntegrationsValue.integrationsData.webhook=='Aweber'"
+                v-model="props.IntegrationsValue.integrationsData.audience"
+                required= "true"  
+                :label="$tfhb_trans('Select Audience')"   
+                width="50"
+                selected = "1"
+                placeholder="Select Audience"  
+                :option = "meeting.aweber.lists"
+                @tfhb-onchange="moduleFields" 
+            />
+            <HbDropdown  
+                v-if="props.IntegrationsValue.integrationsData.webhook=='Mailchimp'"
+                v-model="props.IntegrationsValue.integrationsData.audience"
+                required= "true"  
+                :label="$tfhb_trans('Select Audience')"   
+                width="50"
+                selected = "1"
+                placeholder="Select Audience"  
+                :option = "meeting.mailchimp.lists"
                 @tfhb-onchange="moduleFields" 
             />
 
@@ -186,10 +212,12 @@ const moduleFields = async (e) => {
                 :options="['Booking Confirmed', 'Booking Canceled', 'Booking Completed']" 
             />
 
-            <div class="tfhb-headers tfhb-full-width">
+            <div
+            v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
+            class="tfhb-headers tfhb-full-width">
                 <p>{{ $tfhb_trans('Other Fields') }}</p>
                 <HbRadio 
-                    v-if="props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier'"
+                  
                     required= "true"
                     v-model="props.IntegrationsValue.integrationsData.request_body"
                     name="request_body"
@@ -342,6 +370,7 @@ const moduleFields = async (e) => {
                 :placeholder="$tfhb_trans('Select integrations')"
                 :option = "[
                     {name: 'Mailchimp', value: 'Mailchimp', icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
+                    {name: 'AWeber', value: 'Aweber', icon: $tfhb_url+'assets/images/Awever.svg',},  
                     {name: 'FluentCRM', value: 'FluentCRM', icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
                     {name: 'ZohoCRM', value: 'ZohoCRM', icon: $tfhb_url+'/assets/images/Zoho.svg',},
                     {name: 'Pabbly', value: 'Pabbly', icon: $tfhb_url+'/assets/images/pabbly-small.svg',},

@@ -14,6 +14,7 @@ import OutlookCalendarIntegrations from '@/components/integrations/OutlookCalend
 import AppleCalendarIntegrations from '@/components/integrations/AppleCalendarIntegrations.vue'; 
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue'; 
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
+import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
 import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
 import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
@@ -40,7 +41,9 @@ const popup = ref(false);
 const gpopup = ref(false);
 const spopup = ref(false);
 const mailpopup = ref(false);
+const aweberpopup = ref(false);
 const outlookpopup = ref(false);
+const applepopup = ref(false);
 const paypalpopup = ref(false);
 const tpopup = ref(false);
 const wpopup = ref(false);
@@ -86,6 +89,12 @@ const isOutlookPopupOpen = () => {
 const isOutlookPopupClose = (data) => {
     outlookpopup.value = false;
 }
+const isApplePopupOpen = () => {
+    applepopup.value = true;
+}
+const isApplePopupClose = (data) => {
+    applepopup.value = false;
+}
 const isstripePopupOpen = () => {
     spopup.value = true;
 }
@@ -98,6 +107,13 @@ const ismailchimpPopupOpen = () => {
 }
 const ismailchimpPopupClose = (data) => {
     mailpopup.value = false;
+}
+
+const isAWeberPopupOpen = () => { 
+    aweberpopup.value = true;
+}
+const isAWeberPopupClose = (data) => {
+    aweberpopup.value = false;
 }
 
 const ispaypalPopupOpen = () => {
@@ -192,6 +208,9 @@ const Integration = reactive( {
         type: 'calendar', 
         status: 0,
         connection_status: 0,
+        apple_id: '',
+        app_password: '',
+        app_password_set: 0,
     },
     stripe : {
         type: 'stripe', 
@@ -203,6 +222,16 @@ const Integration = reactive( {
         type: 'mailchimp', 
         status: 0, 
         key: ''
+    },
+    aweber : {
+        type: 'aweber', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: 0, 
+        redirect_url: '', 
+        auth_data: [],
+        list: [],
+        selected_subscriber_list: '',
     },
     paypal : {
         type: 'paypal', 
@@ -261,6 +290,7 @@ const fetchIntegration = async () => {
             } 
         });
         if (response.data.status) { 
+       
             
             // console.log(response.data.integration_settings);
             Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
@@ -276,6 +306,7 @@ const fetchIntegration = async () => {
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
+            Integration.aweber= response.data.integration_settings.aweber ? response.data.integration_settings.aweber : Integration.aweber;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             Integration.cf7= response.data.integration_settings.cf7 ? response.data.integration_settings.cf7 : Integration.cf7;
             Integration.fluent= response.data.integration_settings.fluent ? response.data.integration_settings.fluent : Integration.fluent;
@@ -283,7 +314,8 @@ const fetchIntegration = async () => {
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
             Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
-
+    //  console.log(response.data.integration_settings.aweber);
+    //         alert(1);
             skeleton.value = false;
         }
     } catch (error) {
@@ -311,12 +343,14 @@ const UpdateIntegration = async (key, value) => {
 
             popup.value = false;
             gpopup.value = false;
-            spopup.value = false;
+            outlookpopup.value = false;
+            applepopup.value = false;
             spopup.value = false;
             tpopup.value = false;
             wpopup.value = false;
             twpopup.value = false;
             mailpopup.value = false;
+            aweberpopup.value = false;
             paypalpopup.value = false;
             slpopup.value = false;
             
@@ -330,6 +364,7 @@ const UpdateIntegration = async (key, value) => {
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
+            Integration.aweber= response.data.integration_settings.aweber ? response.data.integration_settings.aweber : Integration.aweber;
             Integration.paypal= response.data.integration_settings.paypal ? response.data.integration_settings.paypal : Integration.paypal;
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
@@ -343,6 +378,7 @@ const UpdateIntegration = async (key, value) => {
             popup.value = false;
             gpopup.value = false;
             outlookpopup.value = false;
+            applepopup.value = false;
             tpopup.value = false;
             wpopup.value = false;
             twpopup.value = false;
@@ -467,12 +503,14 @@ onBeforeMount(() => {
                 <!-- Outlook intrigation -->
 
                 <!-- Apple intrigation -->
-                <!-- <AppleCalendarIntegrations 
+                <AppleCalendarIntegrations 
                 :apple_calendar="Integration.apple_calendar" 
                 @update-integrations="UpdateIntegration"
-                :ispopup="outlookpopup" 
+                :ispopup="applepopup"
+                @popup-open-control="isApplePopupOpen"
+                @popup-close-control="isApplePopupClose"
                 v-if="currentHash === 'all' || currentHash === 'calendars'"
-                /> -->
+                />
                 <!-- Apple intrigation -->
 
                 <!-- stripe intrigation -->
@@ -542,14 +580,24 @@ onBeforeMount(() => {
           
                 <!-- Mailchimp intrigation -->
                 <MailchimpIntegrations 
-                :mail_data="Integration.mailchimp" 
-                @update-integrations="UpdateIntegration" 
-                :ispopup="mailpopup"
-                @popup-open-control="ismailchimpPopupOpen"
-                @popup-close-control="ismailchimpPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                    :mail_data="Integration.mailchimp" 
+                    @update-integrations="UpdateIntegration" 
+                    :ispopup="mailpopup"
+                    @popup-open-control="ismailchimpPopupOpen"
+                    @popup-close-control="ismailchimpPopupClose" 
+                    v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- Mailchimp intrigation -->
+                <!-- AWeber intrigation -->
+                <AWeberIntegrations 
+                    :aweber_data="Integration.aweber" 
+                    @update-integrations="UpdateIntegration" 
+                    :ispopup="aweberpopup"
+                    @popup-open-control="isAWeberPopupOpen"
+                    @popup-close-control="isAWeberPopupClose" 
+                    v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- AWeber intrigation -->
 
                 <!-- Fluent CRM -->
                 <FluentCRMIntegrations 
