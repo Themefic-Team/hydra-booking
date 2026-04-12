@@ -22,7 +22,7 @@ class DashboardWidget {
     }
 
     public function tfhb_register_dashboard_widget() {
-        wp_add_dashboard_widget( 'tfhb_widget', __( 'TFHB Overview', 'hydra-booking' ), array( $this, 'tfhb_display_dashboard_widget' ) , null, null, 'normal', 'high' );
+        wp_add_dashboard_widget( 'tfhb_widget', __( 'Hydra Booking Overview', 'hydra-booking' ), array( $this, 'tfhb_display_dashboard_widget' ) , null, null, 'normal', 'high' );
     }
 
     public function tfhb_widget_enqueue_assets( $screen ) {
@@ -31,7 +31,7 @@ class DashboardWidget {
 		 * Admin Dashboard CSS
 		 */
 		if ( $screen == 'index.php' ) {
-			wp_enqueue_style( 'tfhb-admin-dashboard', TFHB_URL . 'assets/admin/css/tfhb-admin-dashboard.css', '', BEAF_VERSION );
+			wp_enqueue_style( 'tfhb-admin-dashboard', TFHB_URL . 'assets/admin/css/tfhb-admin-dashboard.css', '', TFHB_VERSION );
 		}
 
     }
