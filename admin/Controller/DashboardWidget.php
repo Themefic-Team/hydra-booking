@@ -107,7 +107,7 @@ class DashboardWidget {
 
             <!-- Button for more integrations -->
             <div class="tfhb-actions">
-                <a href="<?php echo esc_url( $integration_url ); ?>" target="_blank" class="button">
+                <a href="<?php echo esc_url( $integration_url ); ?>" class="button">
                     <?php esc_html_e( 'Check More Features', 'hydra-booking' ); ?>
                 </a>
             </div>
