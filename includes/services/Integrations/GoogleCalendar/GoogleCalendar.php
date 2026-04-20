@@ -32,7 +32,7 @@ class GoogleCalendar {
 
 	public function __construct() {
 
-		$this->setClientData();
+		$this->setClientData(); 
  
 
 		
@@ -67,6 +67,62 @@ class GoogleCalendar {
 		// example : wp-json/hydra-booking/v1/integration/google-api
 		return get_rest_url() . 'hydra-booking/v1/integration/google-api';
 	}
+
+	private function get_oauth_state_key( $state ) {
+		return 'tfhb_google_oauth_' . md5( $state );
+	}
+
+	private function create_oauth_state( $user_id ) {
+		$user_id = absint( $user_id );
+
+		if ( ! $user_id || ! get_userdata( $user_id ) ) {
+			return '';
+		}
+
+		$state = wp_generate_password( 32, false, false );
+
+		set_transient(
+			$this->get_oauth_state_key( $state ),
+			array(
+				'user_id'       => $user_id,
+				'initiated_by'  => get_current_user_id(),
+				'session_token' => wp_get_session_token(),
+			),
+			HOUR_IN_SECONDS
+		);
+
+		return $state;
+	}
+
+	private function get_oauth_state_data( $state ) {
+		$state = sanitize_text_field( wp_unslash( $state ) );
+
+		if ( empty( $state ) ) {
+			return false;
+		}
+
+		$state_data = get_transient( $this->get_oauth_state_key( $state ) );
+
+		if ( ! is_array( $state_data ) || empty( $state_data['user_id'] ) ) {
+			return false;
+		}
+
+		$current_session_token = wp_get_session_token();
+
+		if ( ! empty( $state_data['session_token'] ) && ! hash_equals( $state_data['session_token'], $current_session_token ) ) {
+			return false;
+		}
+
+		return $state_data;
+	}
+
+	private function delete_oauth_state( $state ) {
+		$state = sanitize_text_field( wp_unslash( $state ) );
+
+		if ( ! empty( $state ) ) {
+			delete_transient( $this->get_oauth_state_key( $state ) );
+		}
+	}
 	// Set Access Token
 	public function setAccessToken( $user_id ) {
 
@@ -87,59 +143,109 @@ class GoogleCalendar {
 			)
 		);
 	}
-	public function permission_callback() { 
+	public function permission_callback( $request ) {
+		$state = $request instanceof \WP_REST_Request ? $request->get_param( 'state' ) : '';
+
+		if ( false === $this->get_oauth_state_data( $state ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to do that.', 'hydra-booking' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
 		return true;
 	}
 
-	public function GetAccessData() {
+	public function GetAccessData( $request ) {
+		$code  = $request instanceof \WP_REST_Request ? $request->get_param( 'code' ) : ( isset( $_GET['code'] ) ? wp_unslash( $_GET['code'] ) : '' );
+		$state = $request instanceof \WP_REST_Request ? $request->get_param( 'state' ) : ( isset( $_GET['state'] ) ? wp_unslash( $_GET['state'] ) : '' );
+		$error = $request instanceof \WP_REST_Request ? $request->get_param( 'error' ) : ( isset( $_GET['error'] ) ? wp_unslash( $_GET['error'] ) : '' );
 
-		// Set the Client Data
-		if ( isset( $_GET['code'] ) && isset( $_GET['state'] ) ) {
+		$state_data = $this->get_oauth_state_data( $state );
 
-			try {
+		if ( false === $state_data ) {
+			return new \WP_Error(
+				'invalid_google_oauth_state',
+				__( 'Invalid or expired Google authorization state.', 'hydra-booking' ),
+				array( 'status' => 403 )
+			);
+		}
 
-				$user_id = $_GET['state'];
+		$user_id      = absint( $state_data['user_id'] );
+		$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $user_id . '/calendars';
 
-				$data  = $this->GetAccessToken( $_GET['code'] ); 
-				$email = $this->getEmailByIdToken( $data['id_token'] );
+		if ( ! empty( $error ) ) {
+			$this->delete_oauth_state( $state );
+			wp_safe_redirect( add_query_arg( 'google_calendar_error', sanitize_text_field( $error ), $redirect_url ) );
+			exit;
+		}
 
-				// Get all calendar in the account
-				$url      = 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
-				$response = wp_remote_get( $url, array( 'headers' => array( 'Authorization' => 'Bearer ' . $data['access_token'] ) ) );
-				$body     = wp_remote_retrieve_body( $response );
-				$body     = json_decode( $body, true );
+		if ( empty( $code ) ) {
+			$this->delete_oauth_state( $state );
+			return new \WP_Error(
+				'missing_google_oauth_code',
+				__( 'Missing Google authorization code.', 'hydra-booking' ),
+				array( 'status' => 400 )
+			);
+		}
 
-				$data['email'] = $email;
+		try {
+			$data = $this->GetAccessToken( sanitize_text_field( $code ) );
 
+			if ( empty( $data['access_token'] ) || empty( $data['id_token'] ) ) {
+				$this->delete_oauth_state( $state );
+				return new \WP_Error(
+					'google_oauth_token_error',
+					__( 'Unable to validate the Google authorization response.', 'hydra-booking' ),
+					array( 'status' => 400 )
+				);
+			}
+
+			$email = $this->getEmailByIdToken( $data['id_token'] );
+
+			// Get all calendar in the account
+			$url      = 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
+			$response = wp_remote_get( $url, array( 'headers' => array( 'Authorization' => 'Bearer ' . $data['access_token'] ) ) );
+			$body     = wp_remote_retrieve_body( $response );
+			$body     = json_decode( $body, true );
+
+			$data['email'] = sanitize_email( $email );
+			$data['items'] = array();
+
+			if ( isset( $body['items'] ) && is_array( $body['items'] ) ) {
 				foreach ( $body['items'] as $calendar ) {
-					if ( $calendar['accessRole'] == 'owner' || $calendar['accessRole'] == 'writer' ) {
+					if ( isset( $calendar['accessRole'] ) && ( 'owner' === $calendar['accessRole'] || 'writer' === $calendar['accessRole'] ) ) {
 						$data['items'][] = array(
-							'id'           => $calendar['id'],
-							'title'        => $calendar['summary'],
+							'id'           => isset( $calendar['id'] ) ? $calendar['id'] : '',
+							'title'        => isset( $calendar['summary'] ) ? $calendar['summary'] : '',
 							'write_status' => 0,
 						);
 					}
 				}
-
-				// remove the Id Token
-				unset( $data['id_token'] );
-
-				$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
-
-				$_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar'] = $data;
-
-				// save to user metadata
-				update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
-
-				$redirect_url = get_site_url() . '/wp-admin/admin.php?page=hydra-booking#/hosts/profile/' . $user_id . '/calendars';
-
-				wp_redirect( $redirect_url );
-				 
-
-			} catch ( Exception $e ) {
-				echo esc_html($e->getMessage());
-				exit();
 			}
+
+			// remove the Id Token
+			unset( $data['id_token'] );
+
+			$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
+
+			$_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar'] = $data;
+
+			// save to user metadata
+			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+			$this->delete_oauth_state( $state );
+
+			wp_safe_redirect( $redirect_url );
+			exit;
+
+		} catch ( \Exception $e ) {
+			$this->delete_oauth_state( $state );
+			return new \WP_Error(
+				'google_oauth_error',
+				esc_html( $e->getMessage() ),
+				array( 'status' => 400 )
+			);
 		}
 	}
 
@@ -207,7 +313,24 @@ class GoogleCalendar {
 	}
 
 	public function GetAccessTokenUrl( $user_id ) {
-		return $this->authUrl . '?client_id=' . $this->clientId . '&redirect_uri=' . $this->redirectUrl . '&scope=' . $this->authScope . '&response_type=code&access_type=offline&prompt=consent&state=' . $user_id;
+		$state = $this->create_oauth_state( $user_id );
+
+		if ( empty( $state ) ) {
+			return '';
+		}
+
+		return add_query_arg(
+			array(
+				'client_id'     => $this->clientId,
+				'redirect_uri'  => $this->redirectUrl,
+				'scope'         => $this->authScope,
+				'response_type' => 'code',
+				'access_type'   => 'offline',
+				'prompt'        => 'consent',
+				'state'         => $state,
+			),
+			$this->authUrl
+		);
 	}
 
 
