@@ -246,6 +246,9 @@ class SettingsController {
 		$_tfhb_general_settings['booking_status']                          = sanitize_text_field( $request['booking_status'] );
 		$_tfhb_general_settings['reschedule_status']                       = sanitize_text_field( $request['reschedule_status'] );
 		$_tfhb_general_settings['allowed_reschedule_before_meeting_start'] =  $request['allowed_reschedule_before_meeting_start'];
+
+		$_tfhb_general_settings['meeting_url_generation'] = isset( $request['meeting_url_generation'] ) ? (int) $request['meeting_url_generation'] : 1;
+
 		// update option
 		update_option( '_tfhb_general_settings', $_tfhb_general_settings );
 		$ScheduleController = new ScheduleController();

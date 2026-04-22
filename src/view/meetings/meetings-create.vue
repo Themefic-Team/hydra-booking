@@ -15,6 +15,7 @@ const { errors } = useValidators();
 const route = useRoute();
 const router = useRouter();
 const skeleton = ref(true);
+const meeting_url_generation = typeof tfhb_core_apps !== 'undefined' ? tfhb_core_apps.meeting_url_generation : 1;
 const timeZone = reactive({});
 const meetingCategory = reactive({});
 const wcProduct = reactive({});
@@ -625,6 +626,7 @@ const fetchMeeting = async () => {
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
             meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';
+            meetingData.preview_link	= response.data.meeting.preview_link ? response.data.meeting.preview_link : '';
             meetingData.telegram = response.data.telegram.status ? response.data.telegram.status : '';
             meetingData.slack = response.data.slack.status ? response.data.slack.status : '';
             meetingData.twilio = response.data.twilio.status ? response.data.twilio.status : '';
@@ -694,6 +696,7 @@ const UpdateMeetingData = async (validator_field) => {
             meetingData.slug = response.data.meeting.slug; 
            
             meetingData.permalink = response.data.meeting.permalink; 
+            meetingData.preview_link = response.data.meeting.preview_link ? response.data.meeting.preview_link : '';
             // toast.success(response.data.message, {
             //         position: 'bottom-right', // Set the Fdesired position
             //         "autoClose": 1500,
@@ -798,7 +801,7 @@ const shareData = reactive({
     embed: ''
 })
 const sharePopupData = () => {   
-    shareData.share_type = 'link'
+    shareData.share_type = meeting_url_generation == 0 ? 'short' : 'link'
     shareData.title = meetingData.title
     shareData.time = meetingData.duration
     shareData.meeting_type = meetingData.meeting_type
@@ -840,7 +843,7 @@ const truncateString = (str, num) => {
             </div>
            
             <div class="thb-admin-btn right"> 
-                <button  @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size=20 /></button>
+                <button @click="sharePopupData()" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Share') }}  <Icon name="ArrowUpRight" size=20 /></button>
             </div> 
         </div>
         <nav class="tfhb-booking-tabs tfhb-meeting-tabs tfhb-mb-32"> 

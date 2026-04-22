@@ -776,6 +776,7 @@ namespace HydraBooking\Admin\Controller;
             'Your End time will be over the: ' =>  __('Your End time will be over the: ', 'hydra-booking'),
             ' And Less than ' =>  __(' And Less than ', 'hydra-booking'),
             'End date should be greater than or equal to Start dates' =>  __('End date should be greater than or equal to Start dates', 'hydra-booking'),
+            'When disabled, meeting public pages will return 404 and the share link feature will be hidden.' =>  __('When disabled, meeting public pages will return 404 and the share link feature will be hidden.', 'hydra-booking'),
             'hello' =>  __('hello', 'hydra-booking'),
         );
      } 

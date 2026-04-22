@@ -21,6 +21,7 @@ const FilterPreview = ref(false);
 const FilterHostPreview = ref(true);
 const FilterCatgoryPreview = ref(true); 
 const ProPopup = ref(false);
+const meeting_url_generation = typeof tfhb_core_apps !== 'undefined' ? tfhb_core_apps.meeting_url_generation : 1;
 const deletePopup = ref(false)
 const deleteItem = reactive({
     id: 0,
@@ -92,7 +93,7 @@ const sharePopup = reactive({
 })
 
 const sharePopupData = (data) => { 
-    shareData.share_type = 'link'
+    shareData.share_type = meeting_url_generation == 0 ? 'short' : 'link'
     shareData.title = data.title
     shareData.time = data.duration
     shareData.meeting_type = data.meeting_type
@@ -524,7 +525,7 @@ const exportData = reactive({
                     </div>
                 </div>
                 <div class="single-meeting-action-btn tfhb-flexbox tfhb-justify-between">
-                    <a :href="smeeting.permalink" class="tfhb-flexbox" target="_blank">
+                    <a :href="meeting_url_generation != 0 ? smeeting.permalink : smeeting.preview_link" class="tfhb-flexbox" target="_blank">
                         <Icon name="Eye" size=20 /> 
                         {{ $tfhb_trans('Preview') }}
                     </a>

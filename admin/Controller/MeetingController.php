@@ -224,10 +224,11 @@ class MeetingController {
 			$MeetingsList = $meeting->get( null, null, $current_user_id );
 		}
 
-		// add meeting permalink key into the meeting list using post id using array map
+		// add meeting permalink and preview_link into the meeting list
 		$MeetingsList = array_map(
 			function ( $meeting ) {
-				$meeting->permalink = get_permalink( $meeting->post_id );
+				$meeting->permalink    = get_permalink( $meeting->post_id );
+				$meeting->preview_link = get_preview_post_link( $meeting->post_id );
 				return $meeting;
 			},
 			$MeetingsList
@@ -1229,9 +1230,10 @@ class MeetingController {
 			$formsList = $this->getQuestionFormsData( $questions_form_type );
 		}
 
-		// add permalink into getMeetingData 
+		// add permalink and preview_link into getMeetingData
 		$meetingData = (array) $MeetingData;
-		$meetingData['permalink'] = get_permalink($MeetingData->post_id);
+		$meetingData['permalink']    = get_permalink( $MeetingData->post_id );
+		$meetingData['preview_link'] = get_preview_post_link( $MeetingData->post_id );
 		// again array to object
 		$MeetingData = (object) $meetingData;
 
@@ -1414,7 +1416,8 @@ class MeetingController {
 		$GetMeeting =  (array) $meeting->get( $meeting_id ); 
 
 		
-		$GetMeeting['permalink'] = get_permalink($GetMeeting['post_id']); 
+		$GetMeeting['permalink']    = get_permalink( $GetMeeting['post_id'] );
+		$GetMeeting['preview_link'] = get_preview_post_link( $GetMeeting['post_id'] );
 		// Return response
 		$data = array(
 			'status'  => true,
