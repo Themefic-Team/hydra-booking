@@ -56,7 +56,8 @@ const meetingData = reactive({
     availability_range_type: 'indefinitely',
     availability_range: {
         start: '',
-        end: ''
+        end: '',
+        within_days: [{ limit: 30, times: 'days' }]
     },
     availability_type: 'settings',
     availability_id : '',
@@ -537,7 +538,12 @@ const fetchMeeting = async () => {
 
             meetingData.availability_range_type = response.data.meeting.availability_range_type ? response.data.meeting.availability_range_type : 'indefinitely'
 
-            meetingData.availability_range = response.data.meeting.availability_range ? JSON.parse(response.data.meeting.availability_range) : {}
+            const _loadedRange = response.data.meeting.availability_range ? JSON.parse(response.data.meeting.availability_range) : {}
+            meetingData.availability_range = {
+                start:       _loadedRange.start       ?? '',
+                end:         _loadedRange.end         ?? '',
+                within_days: _loadedRange.within_days ?? [{ limit: 30, times: 'days' }]
+            }
            
             if(response.data.meeting.availability_custom){
                  

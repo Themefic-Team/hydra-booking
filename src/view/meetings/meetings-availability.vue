@@ -8,6 +8,7 @@ import HbText from '@/components/form-fields/HbText.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbCounter from '@/components/meetings/HbCounter.vue';
 import useValidators from '@/store/validator'
 import { Availability } from '@/store/availability';
 import AvailabilityTime from '@/store/times'
@@ -362,7 +363,7 @@ const filteredDateSlots = computed(() => {
                 <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
             </div>
 
-            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
+            <div class="tfhb-flexbox tfhb-gap-16 tfhb-align-normal tfhb-justify-between">
                 <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline">
                     <label for="tfhb_continuos_date" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                         <div class="tfhb-range-checkbox">
@@ -411,6 +412,33 @@ const filteredDateSlots = computed(() => {
 
                     </div>
                 </div>
+                <!-- Within future days -->
+                <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline">
+                    <label for="tfhb_within_days" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
+                        <div class="tfhb-range-checkbox">
+                            <input id="tfhb_within_days" name="tfhb_range_date" type="radio" value="within_days" v-model="meeting.availability_range_type" :checked="meeting.availability_range_type == 'within_days' ? true : false">
+                            <span class="checkmark"></span>
+                        </div>
+                        <div class="tfhb-range-title">
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Within future days') }}</h4>
+                            <p class="tfhb-m-0">{{ $tfhb_trans('Meeting is available from today up to a rolling number of days/weeks/months') }}</p>
+                        </div>
+                    </label>
+                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-4 tfhb-justify-between " style="width: 55%;" v-if="meeting.availability_range_type == 'within_days'">
+                        <HbCounter
+                            :repater="false"
+                            :counter_value="meeting.availability_range.within_days"
+                            limit="1"
+                            :width="100"
+                            :option="[
+                                { name: $tfhb_trans('Days'),   value: 'days'   },
+                                { name: $tfhb_trans('Weeks'),  value: 'weeks'  },
+                                { name: $tfhb_trans('Months'), value: 'months' }
+                            ]"
+                        />
+                    </div>
+                </div>
+                <!-- /Within future days -->
             </div>
         </div>
         <!-- Select Host --> 

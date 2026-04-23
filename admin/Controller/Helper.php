@@ -2241,7 +2241,7 @@ class Helper {
                         'data_time' => array(
                             'status' => 1,
                             'title' => 'Date & Time:',
-                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Attendee time: {{booking.start_date_time_for_attendee}} - {{booking.full_start_end_attendee_timezone}}'
                         ),
                         'host' => array(
                             'status' => 1,
@@ -2597,7 +2597,7 @@ class Helper {
                         'data_time' => array(
                             'status' => 1,
                             'title' => 'Date & Time:',
-                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Attendee time: {{booking.start_date_time_for_attendee}} - {{booking.full_start_end_attendee_timezone}}'
                         ),
                         'host' => array(
                             'status' => 1,
@@ -2952,7 +2952,7 @@ class Helper {
                         'data_time' => array(
                             'status' => 1,
                             'title' => 'Date & Time:',
-                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Attendee time: {{booking.start_date_time_for_attendee}} - {{booking.full_start_end_attendee_timezone}}'
                         ),
                         'host' => array(
                             'status' => 1,
@@ -3293,7 +3293,7 @@ class Helper {
                         'data_time' => array(
                             'status' => 1,
                             'title' => 'Date & Time:',
-                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Attendee time: {{booking.start_date_time_for_attendee}} - {{booking.full_start_end_attendee_timezone}}'
                         ),
                         'host' => array(
                             'status' => 1,
@@ -3631,7 +3631,7 @@ class Helper {
                         'data_time' => array(
                             'status' => 1,
                             'title' => 'Date & Time:',
-                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Host time: {{booking.start_date_time_for_host}} - {{booking.full_start_end_host_timezone}}'
+                            'content' => '<strong>{{meeting.date}} - {{meeting.time}}</strong> <br>Attendee time: {{booking.start_date_time_for_attendee}} - {{booking.full_start_end_attendee_timezone}}'
                         ),
                         'host' => array(
                             'status' => 1,
