@@ -43,6 +43,32 @@ class GoogleCalendar {
 		return wp_date( $helper->get_date_time_format_from_settings( 'M d, Y', 'h:i A' ) );
 	}
 
+	private function set_event_time_from_booking( &$event, $booking_data, $meeting_date = '' ) {
+		if ( empty( $meeting_date ) ) {
+			$meeting_date = isset( $booking_data->meeting_dates ) ? $booking_data->meeting_dates : '';
+		}
+
+		if ( empty( $meeting_date ) || empty( $booking_data->start_time ) || empty( $booking_data->end_time ) ) {
+			return;
+		}
+
+		$start_time = strtotime( $booking_data->start_time );
+		$end_time   = strtotime( $booking_data->end_time );
+
+		$start_date = gmdate( 'Y-m-d', strtotime( $meeting_date ) ) . 'T' . gmdate( 'H:i:s', $start_time );
+		$end_date   = gmdate( 'Y-m-d', strtotime( $meeting_date ) ) . 'T' . gmdate( 'H:i:s', $end_time );
+
+		$event->start = array(
+			'dateTime' => $start_date,
+			'timeZone' => $booking_data->availability_time_zone,
+		);
+
+		$event->end = array(
+			'dateTime' => $end_date,
+			'timeZone' => $booking_data->availability_time_zone,
+		);
+	}
+
 	// Update Google Calender
 	public function checkConnectionStatus(){
 		if($this->clientId != '' && $this->clientSecret != '' && $this->redirectUrl != ''){
@@ -647,6 +673,54 @@ class GoogleCalendar {
 	 * @param $data
 	 * @return mixed
 	 */
+	/**
+	 * Delete all Google Calendar events stored for a booking and remove the meta record.
+	 * Passing sendUpdates=all causes Google to email cancellation notices to all attendees.
+	 *
+	 * @param object $booking_meta  Row from BookingMeta (must have ->id and ->value).
+	 * @param int    $host_id
+	 * @return void
+	 */
+	private function delete_google_calendar_events( $booking_meta, $host_id ) {
+		$host     = new Host();
+		$hostData = $host->get( $host_id );
+
+		if ( ! $hostData ) {
+			return;
+		}
+
+		$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
+		$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
+		$calendarId                      = isset( $google_calendar['selected_calendar_id'] ) && ! empty( $google_calendar['selected_calendar_id'] ) ? $google_calendar['selected_calendar_id'] : ( isset( $google_calendar['tfhb_google_calendar']['email'] ) ? $google_calendar['tfhb_google_calendar']['email'] : '' );
+
+		if ( ! $calendarId ) {
+			return;
+		}
+
+		$value  = json_decode( $booking_meta->value );
+		$events = isset( $value->google_calendar ) ? $value->google_calendar : array();
+
+		foreach ( $events as $event ) {
+			$event_id = isset( $event->id ) ? $event->id : '';
+			if ( empty( $event_id ) ) {
+				continue;
+			}
+
+			// DELETE with sendUpdates=all → Google sends cancellation emails to all guests.
+			wp_remote_request(
+				$this->calendarEvent . $calendarId . '/events/' . $event_id . '?sendUpdates=all',
+				array(
+					'headers' => array( 'Authorization' => 'Bearer ' . $this->accessToken ),
+					'method'  => 'DELETE',
+				)
+			);
+		}
+
+		// Remove the stored calendar meta so InsertGoogleCalender creates a fresh record.
+		$BookingMeta = new BookingMeta();
+		$BookingMeta->delete( $booking_meta->id );
+	}
+
 	public function remove_attendde_event_from_existing_booking( $old_booking_id, $attendee){ 
 		
 		 
@@ -655,15 +729,49 @@ class GoogleCalendar {
 			//  Get Booking With Attendee
 			$booking = new Booking();
 			$booking_data = $booking->get( $booking_id ); 
+			if ( ! $booking_data ) {
+				return;
+			}
+
+			$is_same_booking_reschedule = ! empty( $attendee ) && isset( $attendee->booking_id ) && absint( $attendee->booking_id ) === absint( $old_booking_id );
 			$this->refreshToken( $booking_data->host_id );
+			$meeting_dates = ! empty( $booking_data->meeting_dates ) ? explode( ',', $booking_data->meeting_dates ) : array();
 				// if is not array or not object json decode
-			$locations = !empty($attendee->meeting_locations) ? $attendee->meeting_locations : array(); 
+			$locations = ! empty( $attendee ) && isset( $attendee->meeting_locations ) ? $attendee->meeting_locations : array(); 
 
 			$_tfhb_integration_settings = get_option( '_tfhb_integration_settings' );
 			 
 			$BookingMeta = new BookingMeta();
 			$booking_meta = $BookingMeta->getWithIdKey( $booking_data->id, 'booking_calendar', 1);
-			
+
+			// ----------------------------------------------------------------
+			// Same-booking reschedule: cancel the old event (Google sends cancel
+			// emails) then create a fresh event at the new time (Google sends
+			// a new invite). No attendee-filter PUT is needed.
+			// ----------------------------------------------------------------
+			if ( $is_same_booking_reschedule ) {
+				if ( $booking_meta ) {
+					$this->delete_google_calendar_events( $booking_meta, $booking_data->host_id );
+				}
+
+				// InsertGoogleCalender reads meeting_dates/start_time/end_time from the
+				// booking row which already holds the rescheduled values at this point.
+				$this->InsertGoogleCalender( $attendee );
+
+				$ActivityMeta = new BookingMeta();
+				$ActivityMeta->add( array(
+					'booking_id' => $attendee->booking_id,
+					'meta_key'   => 'booking_activity',
+					'value'      => array(
+						'datetime'    => $this->get_activity_datetime(),
+						'title'       => 'Updated Google Calendar Event',
+						'description' => 'Google Calendar event cancelled and recreated at new time',
+					),
+				) );
+
+				return;
+			}
+			// ----------------------------------------------------------------
 			
 			if($booking_meta){
 
@@ -674,16 +782,20 @@ class GoogleCalendar {
 				$hostData = $host->get( $booking_data->host_id ); 
 
 				$google_calendar_body = array();
-				foreach ( $events as $event ) {
+				foreach ( $events as $index => $event ) {
 					$event_id = $event->id;
+					$meeting_date = isset( $meeting_dates[ $index ] ) ? trim( $meeting_dates[ $index ] ) : ( isset( $meeting_dates[0] ) ? trim( $meeting_dates[0] ) : '' );
+					$this->set_event_time_from_booking( $event, $booking_data, $meeting_date );
 
 					
-					$attendees_data = $event->attendees; 
+					$attendees_data = isset( $event->attendees ) && is_array( $event->attendees ) ? $event->attendees : array(); 
 					
 					// remove existing attendee
-					$attendees_data = array_filter($attendees_data, function($value) use ($attendee) {
-						return $value->email != $attendee->email;
-					}); 
+					if ( ! empty( $attendee ) && isset( $attendee->email ) ) {
+						$attendees_data = array_filter($attendees_data, function($value) use ($attendee) {
+							return isset( $value->email ) && $value->email != $attendee->email;
+						});
+					}
 					
 					$event->attendees = $attendees_data; 
 
@@ -723,7 +835,7 @@ class GoogleCalendar {
 
 				// Add activity after email sent
 				$UpdateBookingMeta->add([
-					'booking_id' => $attendee->booking_id,
+					'booking_id' => ! empty( $attendee ) && isset( $attendee->booking_id ) ? $attendee->booking_id : $booking_data->id,
 					'meta_key' => 'booking_activity',
 					'value' => array( 
 							'datetime' => $this->get_activity_datetime(), 
@@ -734,7 +846,9 @@ class GoogleCalendar {
 				);
 			} 
 		} 
-		$this->insert_calender_after_booking_confirmed($attendee);
+		if ( ! empty( $attendee ) && isset( $attendee->booking_id ) ) {
+			$this->insert_calender_after_booking_confirmed($attendee);
+		}
 			 
 
 	}
@@ -745,14 +859,40 @@ class GoogleCalendar {
 		$this->refreshToken( $booking->host_id );
 		$events =  json_decode($BookingMeta->value);
 		$events = $events->google_calendar; 
+		$meeting_dates = ! empty( $booking->meeting_dates ) ? explode( ',', $booking->meeting_dates ) : array();
 		$host = new Host();
 		$hostData = $host->get( $booking->host_id ); 
 
 		$google_calendar_body = array();
-		foreach ( $events as $event ) {
+		foreach ( $events as $index => $event ) {
 			$event_id = $event->id;
+			$meeting_date = isset( $meeting_dates[ $index ] ) ? trim( $meeting_dates[ $index ] ) : ( isset( $meeting_dates[0] ) ? trim( $meeting_dates[0] ) : '' );
+			$this->set_event_time_from_booking( $event, $booking, $meeting_date );
  
-			$event->attendees[] = array('email' => $booking->email);; 
+			if ( ! isset( $event->attendees ) || ! is_array( $event->attendees ) ) {
+				$event->attendees = array();
+			}
+
+			if ( ! empty( $booking->email ) ) {
+				$existing_attendee_emails = array_map(
+					function( $attendee ) {
+						if ( is_object( $attendee ) && isset( $attendee->email ) ) {
+							return $attendee->email;
+						}
+
+						if ( is_array( $attendee ) && isset( $attendee['email'] ) ) {
+							return $attendee['email'];
+						}
+
+						return '';
+					},
+					$event->attendees
+				);
+
+				if ( ! in_array( $booking->email, $existing_attendee_emails, true ) ) {
+					$event->attendees[] = array('email' => $booking->email);
+				}
+			}
 
 			$_tfhb_host_integration_settings = is_array( get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $hostData->user_id, '_tfhb_host_integration_settings', true ) : array();
 			$google_calendar                 = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
