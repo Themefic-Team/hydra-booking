@@ -134,7 +134,7 @@ const GetFormsData = async (value) => {
                 <p>{{ $tfhb_trans('Create your own booking page questions') }}</p>
             </div>
 
-            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
+            <div class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal tfhb-justify-between">
                 <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline">
                     <label for="tfhb_continuos_date" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                         <div class="tfhb-range-checkbox">

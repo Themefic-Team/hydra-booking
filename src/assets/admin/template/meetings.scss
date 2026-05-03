@@ -451,9 +451,8 @@
         }
 
         .tfhb-single-meeting-range {
-            // width: calc(50% - 12px);
-            width: 100%;
-            padding: 16px 24px !important; 
+            width: calc(50% - 12px);
+           
 
             @media #{$max767} {
                 width: 100% !important;
