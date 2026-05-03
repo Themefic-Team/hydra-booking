@@ -248,7 +248,7 @@ const UpdateNotification = async () => {
             update_preloader.value = false;
         }
     } catch (error) {
-        toast.error('Action successful', {
+        toast.error((tfhb_core_apps.trans['Action successful'] || 'Action successful'), {
             position: 'bottom-right', // Set the desired position
         });
     }

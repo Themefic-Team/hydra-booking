@@ -75,7 +75,7 @@ if(tfhb_setup_wizard){
 const tfhb_pro = document.querySelector('.tfhb-pro');
 if(tfhb_pro){
   tfhb_pro.addEventListener('click', () => {
-    alert('This is Pro Version');
+    alert((tfhb_core_apps.trans['This is Pro Version'] || 'This is Pro Version'));
   });
 }
  

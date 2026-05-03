@@ -127,7 +127,7 @@ const importExport = reactive({
             }
         } catch (error) {
             console.log(error);
-            alert('Error exporting data');
+            alert((tfhb_core_apps.trans['Error exporting data'] || 'Error exporting data'));
         }
     },
     async GetImportExportData() { 
@@ -206,7 +206,7 @@ const importExport = reactive({
     //  async importAllData() { 
     //     // if this.allData.select_import is empty return mesage
     //     if(Object.keys(this.allData.select_import).length === 0) {
-    //         toast.error('Please select at least one item to import', {
+    //         toast.error((tfhb_core_apps.trans['Please select at least one item to import'] || 'Please select at least one item to import'), {
     //             position: 'bottom-right', // Set the desired position
     //             "autoClose": 1500,
     //         });
@@ -266,7 +266,7 @@ const importExport = reactive({
     // Import All Data with Batching
     async importAllData() {
         if (Object.keys(this.allData.select_import).length === 0) {
-            toast.error('Please select at least one item to import', {
+            toast.error((tfhb_core_apps.trans['Please select at least one item to import'] || 'Please select at least one item to import'), {
                 position: 'bottom-right',
                 autoClose: 1500,
             });
@@ -353,7 +353,7 @@ const importExport = reactive({
         this.allData.steps = 'completed';
         window.scrollTo(0, 0);
 
-        toast.success('Data imported successfully', {
+        toast.success((tfhb_core_apps.trans['Data imported successfully'] || 'Data imported successfully'), {
             position: 'bottom-right',
             autoClose: 1500,
         });
@@ -767,7 +767,7 @@ const importExport = reactive({
         // if exportData empty return the message
         if (exportData.select_export == '') {
             
-            toast.error('Please select the data to export', {
+            toast.error((tfhb_core_apps.trans['Please select the data to export'] || 'Please select the data to export'), {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });

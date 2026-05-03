@@ -452,6 +452,7 @@
 
         .tfhb-single-meeting-range {
             width: calc(50% - 12px);
+           
 
             @media #{$max767} {
                 width: 100% !important;
@@ -507,6 +508,7 @@
             }
 
             label {
+                cursor: pointer;
                 h4 {
                     font-size: $heading-font-size-small !important;
 

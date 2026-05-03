@@ -25,7 +25,7 @@ const copyShortcodeCode = () => {
     
     // Show a toast notification or perform any other action 
     // success mess into bottom right
-    toast.success( 'Copied' , {
+    toast.success( (tfhb_core_apps.trans['Copied'] || 'Copied') , {
         position: 'bottom-right', // Set the desired position
         duration: 2000 // Set the desired duration
     });
