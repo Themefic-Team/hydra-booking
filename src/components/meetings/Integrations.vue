@@ -38,8 +38,12 @@ const changeIntegrations = (value) => {
     if(value == 'Aweber' && !props.integrations.aweber_status == true){
         return;
     }
-    
-    
+    if(value == 'Hubspot' && !props.integrations.hubspot_status == true){
+        return;
+    }
+    if(value == 'Hubspot' && props.integrations.hubspot_status == true){
+        moduleFields(props.IntegrationsValue.integrationsData.webhook);
+    } 
     props.IntegrationsValue.addNewIntegrations(value)
 }
 
@@ -143,8 +147,7 @@ const moduleFields = async (e) => {
                 placeholder="Select Audience"  
                 :option = "meeting.mailchimp.audience"
                 @tfhb-onchange="moduleFields" 
-            />
-           
+            /> 
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsData.webhook=='Aweber'"
                 v-model="props.IntegrationsValue.integrationsData.audience"
@@ -155,7 +158,7 @@ const moduleFields = async (e) => {
                 placeholder="Select Audience"  
                 :option = "meeting.aweber.lists"
                 @tfhb-onchange="moduleFields" 
-            />
+            />  
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsData.webhook=='Mailchimp'"
                 v-model="props.IntegrationsValue.integrationsData.audience"
@@ -371,6 +374,7 @@ const moduleFields = async (e) => {
                 :option = "[
                     {name: 'Mailchimp', value: 'Mailchimp', icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
                     {name: 'AWeber', value: 'Aweber', icon: $tfhb_url+'assets/images/Awever.svg',},  
+                    {name: 'HubSpot', value: 'Hubspot', icon: $tfhb_url+'/assets/images/Hubspot.svg',},
                     {name: 'FluentCRM', value: 'FluentCRM', icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
                     {name: 'ZohoCRM', value: 'ZohoCRM', icon: $tfhb_url+'/assets/images/Zoho.svg',},
                     {name: 'Pabbly', value: 'Pabbly', icon: $tfhb_url+'/assets/images/pabbly-small.svg',},
@@ -414,6 +418,13 @@ const moduleFields = async (e) => {
                     classValue="tfhb-btn flex-btn" 
                     @click="() => router.push({ name: 'SettingsIntegrations' })" 
                     :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div> 
+            <div  v-if="selecte_integrations == 'Hubspot' && !props.integrations.hubspot_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('HubSpot is not connected.') }}   
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                    :buttonText="$tfhb_trans('Please Configure')"
                 />  
             </div>
         </div> 

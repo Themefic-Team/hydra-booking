@@ -21,6 +21,7 @@ import AppleCalendarIntegrations from '@/components/integrations/AppleCalendarIn
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue'; 
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
+import HubspotIntegrations from '@/components/integrations/HubspotIntegrations.vue';     
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
 import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
 import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
@@ -557,6 +558,18 @@ window.addEventListener('click', function(e) {
                     v-if="currentHash === 'all' || currentHash === 'all'"
                 />
                 <!-- AWeber intrigation -->
+
+                <!-- Hubspot intrigation -->
+                <HubspotIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between" 
+                :hubspot_data="Integration.hubspot" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration" 
+                :ispopup="hubspotpopup"
+                @popup-open-control="ishubspotPopupOpen"
+                @popup-close-control="isHubspotPopupClose" 
+                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- Hubspot intrigation -->
 
                 <!-- Fluent CRM -->
                 <FluentCRMIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"

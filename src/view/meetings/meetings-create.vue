@@ -512,6 +512,7 @@ const fetchMeeting = async () => {
             integrations.pabbly_status = response.data.integrations.pabbly_status && response.data.integrations.pabbly_status == 1  ? true : false;
             integrations.zapier_status = response.data.integrations.zapier_status && response.data.integrations.zapier_status == 1  ? true : false;
             integrations.aweber_status = response.data.integrations.aweber_status && response.data.integrations.aweber_status == 1  ? true : false;
+            integrations.hubspot_status = response.data.integrations.hubspot_status && response.data.integrations.hubspot_status == 1  ? true : false;
 
             wcProduct.value = response.data.wc_product;  
             formsList.value = response.data.formsList;  
@@ -629,6 +630,7 @@ const fetchMeeting = async () => {
             meetingData.integrations = response.data.meeting.integrations ? JSON.parse(response.data.meeting.integrations) : '';
             meetingData.mailchimp = response.data.mailchimp ? response.data.mailchimp : '';
             meetingData.aweber = response.data.aweber ? response.data.aweber : '';
+            meetingData.hubspot = response.data.hubspot ? response.data.hubspot : '';
             meetingData.fluentcrm = response.data.fluentcrm ? response.data.fluentcrm : '';
             meetingData.zohocrm = response.data.zohocrm ? response.data.zohocrm : '';
             meetingData.permalink	= response.data.meeting.permalink ? response.data.meeting.permalink : '';

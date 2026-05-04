@@ -1015,7 +1015,7 @@ class MeetingController {
 		} else {
 			$woo_connection_status = 1;
 		}
-
+	
 		if ( ! isset( $_tfhb_integration_settings['woo_payment'] ) ) {
 			$_tfhb_integration_settings['woo_payment']['type']              = 'type';
 			$_tfhb_integration_settings['woo_payment']['status']            = 0;
@@ -1054,6 +1054,7 @@ class MeetingController {
 		$integrations['pabbly_status'] = isset( $_tfhb_integration_settings['pabbly']['status'] ) ? $_tfhb_integration_settings['pabbly']['status'] : 0;
 		$integrations['zapier_status'] = isset( $_tfhb_integration_settings['zapier']['status'] ) ? $_tfhb_integration_settings['zapier']['status'] : 0;
 		$integrations['aweber_status'] = isset( $_tfhb_integration_settings['aweber']['status'] ) ? $_tfhb_integration_settings['aweber']['status'] : 0;
+		$integrations['hubspot_status'] = isset( $_tfhb_integration_settings['hubspot']['status'] ) ? $_tfhb_integration_settings['hubspot']['status'] : 0;
 		 
 
 		// Meeting Category
@@ -1236,6 +1237,7 @@ class MeetingController {
 		$meetingData['preview_link'] = get_preview_post_link( $MeetingData->post_id );
 		// again array to object
 		$MeetingData = (object) $meetingData;
+		// tfhb_print_r($integrations);
 
 		// Return response
 		$data = array(
@@ -1255,7 +1257,7 @@ class MeetingController {
 			'message'          =>  __( 'Meeting Data','hydra-booking' ),
 		);
 		$data = apply_filters( 'tfhb_single_meeting_data_response', $data, $MeetingData );
-		 
+		// tfhb_print_r($data);
 		return rest_ensure_response( $data );
 	}
 
@@ -1694,6 +1696,17 @@ class MeetingController {
 			$fields = apply_filters( 'tfhb_aweber_fields', array(), $request_data );
 	 
 			 
+
+		}elseif ( 'Hubspot' == $hook_type ) {
+
+			$request_data = [
+				'host_id' => $host,
+				'webhook' => $hook_type,
+				'module' => $request['module'],
+			];  
+			$fields = apply_filters( 'tfhb_hubspot_fields', array(), $request_data );
+	 
+		
 
 		} else {
 			$fields = array(
