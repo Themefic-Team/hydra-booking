@@ -563,7 +563,10 @@ class SettingsController {
 			$_tfhb_integration_settings['google_calendar']['secret_key']        = '';
 			$_tfhb_integration_settings['google_calendar']['redirect_url']      = $GoogleCalendar->redirectUrl;
 
-		}
+		}elseif(isset($_tfhb_integration_settings['google_calendar'])){
+			$GoogleCalendar                                        = new GoogleCalendar();
+			$_tfhb_integration_settings['google_calendar']['redirect_url']      = $GoogleCalendar->setRedirectUrl();
+		} 
 		 
 		$_tfhb_integration_settings = apply_filters( 'tfhb_get_integration_settings', $_tfhb_integration_settings );
 		// Checked if woo
