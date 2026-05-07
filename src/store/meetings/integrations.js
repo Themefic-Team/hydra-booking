@@ -27,6 +27,13 @@ const IntegrationsValue = reactive({
 
             }
         ],
+        custom_fields: [
+            {
+                name: '',
+                value: '',
+                custom_value: '',
+            }
+        ],
         status: '',  
         
     },
@@ -141,6 +148,13 @@ const IntegrationsValue = reactive({
                 'value': ''
             }
         ];
+        this.integrationsData.custom_fields = [
+            {
+                'name': '',
+                'value': '',
+                'custom_value': ''
+            }
+        ];
     },
     
     // Filter By Meeting Title
@@ -163,6 +177,13 @@ const IntegrationsValue = reactive({
         this.integrationsData.url = data.url;
         this.integrationsData.status = data.status;
         this.integrationsData.bodys = data.bodys;
+        this.integrationsData.custom_fields = data.custom_fields ? data.custom_fields : [
+            {
+                'name': '',
+                'value': '',
+                'custom_value': ''
+            }
+        ];
         this.integrationsData.request_body = data.request_body;
     
         this.integrationsList = false;
@@ -186,6 +207,13 @@ const IntegrationsValue = reactive({
         this.integrationsData.fields = data.fields;
         this.integrationsData.status = e.target.checked ? 1 : 0;
         this.integrationsData.bodys = data.bodys;
+        this.integrationsData.custom_fields = data.custom_fields ? data.custom_fields : [
+            {
+                'name': '',
+                'value': '',
+                'custom_value': ''
+            }
+        ];
         this.integrationsData.request_body = data.request_body;
 
         this.updateIntegrations();
@@ -205,8 +233,24 @@ const IntegrationsValue = reactive({
 
     async BodyValues (key, value){
         if(value!='tfhb_ct'){
-            this.integrationsData.bodys[key] = value
+            this.integrationsData.bodys[key].value = value
         }
+    },
+
+    async addCustomField (){
+        this.integrationsData.custom_fields.push({
+            name: '',
+            value: '',
+            custom_value: '',
+        });
+    },
+
+    async deleteCustomField (key){
+        this.integrationsData.custom_fields.splice(key, 1)
+    },
+
+    async CustomFieldValues (key, value){
+        this.integrationsData.custom_fields[key].value = value
     },
     
 })

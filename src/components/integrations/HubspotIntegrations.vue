@@ -153,7 +153,7 @@ const copyRedirectionURL = () => {
          
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
-                <img :src="$tfhb_url+'/assets/images/Hubspot.svg'" alt="">
+                <img :src="$tfhb_url+'/assets/images/hubspot-icon.svg'" alt="">
             </span>  
             <div class="cartbox-text">
                 <h3>{{ $tfhb_trans('HubSpot') }}</h3>
