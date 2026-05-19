@@ -8,6 +8,7 @@ import HbText from '@/components/form-fields/HbText.vue';
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbCounter from '@/components/meetings/HbCounter.vue';
 import useValidators from '@/store/validator'
 import { Availability } from '@/store/availability';
 import AvailabilityTime from '@/store/times'
@@ -291,7 +292,7 @@ const TfhbStartDataEvent = (key, skey, startTime) => {
      const latestEndTime = getLatestEndTime(day);  
  
      if (startTime >= latestEndTime){
-         toast.error("Your start time will be over the: " + latestEndTime, {
+         toast.error((tfhb_core_apps.trans['Your start time will be over the: '] || 'Your start time will be over the: ') + latestEndTime, {
                  position: 'bottom-right', // Set the desired position
                  "autoClose": 1500,
              });
@@ -307,7 +308,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start + (tfhb_core_apps.trans[' And Less than '] || ' And Less than ') + NextdayData, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -315,7 +316,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -332,7 +333,7 @@ const CheckDateRangeStart = (date) => {
     // if end date below of the sart date then set a alert and empty the end date
     if(props.meeting.availability_range.end!= '' && date > props.meeting.availability_range.end){
          
-         toast.error("End date should be greater than or equal to Start dates", {
+         toast.error((tfhb_core_apps.trans['End date should be greater than or equal to Start dates'] || 'End date should be greater than or equal to Start dates'), {
              position: 'bottom-right', // Set the desired position
              "autoClose": 1500,
          });   
@@ -342,7 +343,7 @@ const CheckDateRangeEnd = (date) => {
     // if end date below of the sart date then set a alert and empty the end date
     if(props.meeting.availability_range.start!= '' && date < props.meeting.availability_range.start){
          
-        toast.error("End date should be greater than or equal to Start dates", {
+        toast.error((tfhb_core_apps.trans['End date should be greater than or equal to Start dates'] || 'End date should be greater than or equal to Start dates'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });   
@@ -364,8 +365,8 @@ const filteredDateSlots = computed(() => {
                 <p>{{ $tfhb_trans('How many days can the invitee schedule?') }}</p>
             </div>
 
-            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
-                <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline">
+            <div class="tfhb-flexbox tfhb-gap-16 tfhb-align-normal tfhb-justify-between">
+                <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline" style=" width: 100%;  padding: 16px 24px !important; ">
                     <label for="tfhb_continuos_date" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                         <div class="tfhb-range-checkbox">
                             <input id="tfhb_continuos_date" name="tfhb_range_date" value="indefinitely" type="radio" v-model="meeting.availability_range_type" :checked="meeting.availability_range_type == 'indefinitely' ? true : false">
@@ -377,7 +378,7 @@ const filteredDateSlots = computed(() => {
                         </div>
                     </label>
                 </div>
-                <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline"> 
+                <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline" style=" width: 100%;  padding: 16px 24px !important; ">
                     <label for="tfhb_specific_date" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                         <div class="tfhb-range-checkbox">
                             <input id="tfhb_specific_date" name="tfhb_range_date" type="radio" value="range" v-model="meeting.availability_range_type" :checked="meeting.availability_range_type == 'range' ? true : false">
@@ -413,6 +414,33 @@ const filteredDateSlots = computed(() => {
 
                     </div>
                 </div>
+                <!-- Within future days -->
+                <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline" style=" width: 100%;  padding: 16px 24px !important; ">
+                    <label for="tfhb_within_days" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
+                        <div class="tfhb-range-checkbox">
+                            <input id="tfhb_within_days" name="tfhb_range_date" type="radio" value="within_days" v-model="meeting.availability_range_type" :checked="meeting.availability_range_type == 'within_days' ? true : false">
+                            <span class="checkmark"></span>
+                        </div>
+                        <div class="tfhb-range-title">
+                            <h4 class="tfhb-m-0">{{ $tfhb_trans('Within future days') }}</h4>
+                            <p class="tfhb-m-0">{{ $tfhb_trans('Meeting is available from today up to a rolling number of days/weeks/months') }}</p>
+                        </div>
+                    </label>
+                    <div class="tfhb-availability-schedule-time tfhb-flexbox tfhb-gap-4 tfhb-justify-between " style="width: 55%;" v-if="meeting.availability_range_type == 'within_days'">
+                        <HbCounter
+                            :repater="false"
+                            :counter_value="meeting.availability_range.within_days"
+                            limit="1"
+                            :width="100"
+                            :option="[
+                                { name: $tfhb_trans('Days'),   value: 'days'   },
+                                { name: $tfhb_trans('Weeks'),  value: 'weeks'  },
+                                { name: $tfhb_trans('Months'), value: 'months' }
+                            ]"
+                        />
+                    </div>
+                </div>
+                <!-- /Within future days -->
             </div>
         </div>
         <!-- Select Host --> 

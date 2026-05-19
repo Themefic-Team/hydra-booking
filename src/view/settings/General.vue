@@ -9,12 +9,13 @@ import { toast } from "vue3-toastify";
 import useValidators from '@/store/validator'
 const { errors, isEmpty } = useValidators();
 import HbCounter from '@/components/meetings/HbCounter.vue'
-
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 // import Form Field  
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
 import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
+import HbProPopup from '@/components/widgets/HbProPopup.vue';
 const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const generalSettings = reactive({
   admin_email: '{{wp.admin_email}}',
@@ -28,6 +29,7 @@ const generalSettings = reactive({
   after_cart_expire: '60',
   booking_status: 1,
   reschedule_status: '',
+  meeting_url_generation: 1,
    allowed_reschedule_before_meeting_start:[
         {
             limit: 10,
@@ -147,6 +149,7 @@ const  countryList = reactive({});
 const  currencyList = reactive({});
 const router = useRouter(); 
 const skeleton = ref(true);
+const ProPopup = ref(false);
 
 // Fetch generalSettings
 const fetchGeneralSettings = async () => {
@@ -178,6 +181,8 @@ const fetchGeneralSettings = async () => {
                 
                 generalSettings.booking_status = response.data.general_settings.booking_status;
                 generalSettings.reschedule_status = response.data.general_settings.reschedule_status;
+                generalSettings.meeting_url_generation = response.data.general_settings.meeting_url_generation !== undefined ? response.data.general_settings.meeting_url_generation : 1;
+                generalSettings.allowed_reschedule_before_meeting_start = response.data.general_settings.allowed_reschedule_before_meeting_start != '' ? response.data.general_settings.allowed_reschedule_before_meeting_start : '10';
                 generalSettings.allowed_reschedule_before_meeting_start = normalizeAllowedRescheduleBeforeMeetingStart(
                     response.data.general_settings.allowed_reschedule_before_meeting_start
                 );
@@ -226,7 +231,7 @@ const UpdateGeneralSettings = async () => {
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         }); 
@@ -235,7 +240,7 @@ const UpdateGeneralSettings = async () => {
 
     // if  generalSettings.allowed_reschedule_before_meeting_start is not number 
     if(!Number(generalSettings.allowed_reschedule_before_meeting_start[0].limit)){ 
-            toast.error('Minimum time required before Booking/Cancel/Reschedule must be a number', {
+            toast.error((tfhb_core_apps.trans['Minimum time required before Booking/Cancel/Reschedule must be a number'] || 'Minimum time required before Booking/Cancel/Reschedule must be a number'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
@@ -264,7 +269,7 @@ const UpdateGeneralSettings = async () => {
             
         }
     } catch (error) {
-        toast.error('Action successful', {
+        toast.error((tfhb_core_apps.trans['Action successful'] || 'Action successful'), {
             position: 'bottom-right', // Set the desired position
         });
         generalSettings_pre_loader.value = false;
@@ -493,7 +498,54 @@ onBeforeMount(() => {
                     width="100"
                     :label="$tfhb_trans('Confirmed bookings by default.')"  
                 />
-                 
+
+                <!-- Meeting URL Generation - Pro feature -->
+                <div class="tfhb-full-width tfhb-gap-8">
+                    <!-- Free / no valid license: show locked state with Pro badge -->
+                    <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false"
+                        class="tfhb-pro tfhb-flexbox tfhb-align-center tfhb-gap-8"
+                        style="cursor:pointer"
+                        @click="ProPopup = true">
+                        <HbSwitch
+                            :model-value="1"
+                            width="auto"
+                            :label="$tfhb_trans('Enable meeting public URL & share link.')"
+                            :disabled="true"
+                        />
+                        <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8">
+                            <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}
+                        </span>
+                    </div>
+                    <!-- Pro + valid license: fully functional toggle -->
+                    <div v-else>
+                        <HbSwitch
+                            v-model="generalSettings.meeting_url_generation"
+                            width="100"
+                            :label="$tfhb_trans('Enable meeting public URL & share link.')"
+                        />
+                        <p v-if="!generalSettings.meeting_url_generation" class="tfhb-field-note tfhb-mt-8">
+                            <!-- Telegram -->
+                            <HbInfoBox name="first-modal" ">
+                                
+                                <template #content>
+                                    {{ $tfhb_trans('When disabled, meeting public pages will return 404 and the share link feature will be hidden.') }}
+                                    
+                                </template>
+                            </HbInfoBox>
+
+                        </p>
+                    </div>
+                </div>
+                <!-- Meeting URL Generation - Pro feature -->
+
+                <HbProPopup
+                    v-if="$tfhb_is_pro == false || $tfhb_license_status == false"
+                    :isOpen="ProPopup"
+                    @modal-close="ProPopup = false"
+                    max_width="500px"
+                    name="meeting-url-pro-modal"
+                    gap="32px"
+                />
             </div>  
 
             <HbButton 

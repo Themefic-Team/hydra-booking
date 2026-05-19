@@ -21,7 +21,7 @@ const props = defineProps({
 
 const StepOne = () => {
     if(props.setupWizard.data.business_type == ''){ 
-        toast.error('Please select your business type', {
+        toast.error((tfhb_core_apps.trans['Please select your business type'] || 'Please select your business type'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         }); 

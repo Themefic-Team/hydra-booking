@@ -60,7 +60,7 @@ const webhookData = reactive({
 
 const updateWebHook = async () => {
     if(webhookData.url == '') {
-        toast.error('WebHook url is required', {
+        toast.error((tfhb_core_apps.trans['WebHook url is required'] || 'WebHook url is required'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });

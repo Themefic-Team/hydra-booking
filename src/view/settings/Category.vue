@@ -53,7 +53,7 @@ const UpdateCategory = async (validator_field) => {
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
@@ -86,7 +86,7 @@ const UpdateCategory = async (validator_field) => {
             update_preloader.value = false;
         }
     } catch (error) {
-        toast.error('Action successful', {
+        toast.error((tfhb_core_apps.trans['Action successful'] || 'Action successful'), {
             position: 'bottom-right', // Set the desired position
         });
         update_preloader.value = false;
@@ -121,7 +121,7 @@ const removeCategory = async (key) => {
             }); 
         }
     } catch (error) {
-        toast.error('Action successful', {
+        toast.error((tfhb_core_apps.trans['Action successful'] || 'Action successful'), {
             position: 'bottom-right', // Set the desired position
         });
     }
