@@ -198,7 +198,6 @@ const Integration = reactive( {
         client_id: '',
         secret_key: '',
         redirect_url: '',
-
     },
     outlook_calendar : {
         type: 'calendar', 

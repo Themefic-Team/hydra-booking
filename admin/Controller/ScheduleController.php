@@ -7,7 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Attendees;
+use HydraBooking\DB\Host;
 use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar;
 
 class ScheduleController {
 
@@ -18,6 +20,8 @@ class ScheduleController {
 		add_action( 'tfhb_after_booking_completed_schedule', array( $this, 'tfhb_after_booking_completed_schedule_callback' ) );
 
 		add_action( 'tfhb_cart_auto_remover_schedule', array( $this, 'tfhb_cart_auto_remover_schedule_callback' ) );
+
+		add_action( 'tfhb_google_calendar_sync_schedule', array( $this, 'tfhb_google_calendar_sync_schedule_callback' ) );
 		
 	}
 	public function tfhb_create_cron_job() {
@@ -34,6 +38,11 @@ class ScheduleController {
 		if ( ! wp_next_scheduled( 'tfhb_cart_auto_remover_schedule' ) ) {
 			// Create custom interverl for 60 minutes
 			wp_schedule_event( time(), 'tfhb_cart_remover', 'tfhb_cart_auto_remover_schedule' );
+		}
+
+		add_filter( 'cron_schedules', array( $this, 'tfhb_google_calendar_cron_schedule' ) );
+		if ( ! wp_next_scheduled( 'tfhb_google_calendar_sync_schedule' ) ) {
+			wp_schedule_event( time(), 'tfhb_google_calendar_sync_status', 'tfhb_google_calendar_sync_schedule' );
 		}
 	}
 
@@ -216,5 +225,49 @@ class ScheduleController {
 		// Create custom interverl for 60 minutes
 
 		wp_schedule_event( time(), 'tfhb_cart_remover', 'tfhb_cart_auto_remover_schedule' );
+
+		add_filter( 'cron_schedules', array( $this, 'tfhb_google_calendar_cron_schedule' ) );
+		wp_clear_scheduled_hook( 'tfhb_google_calendar_sync_schedule' );
+		wp_schedule_event( time(), 'tfhb_google_calendar_sync_status', 'tfhb_google_calendar_sync_schedule' );
+	}
+
+	public function tfhb_google_calendar_cron_schedule( $schedules ) {
+		$schedules['tfhb_google_calendar_sync_status'] = array(
+			'interval' => 15 * 60, // 15 minutes check
+			'display'  => __( 'Hydra Google Calendar Sync Check', 'hydra-booking' ),
+		);
+		return $schedules;
+	}
+
+	public function tfhb_google_calendar_sync_schedule_callback() {
+		$host  = new Host();
+		$hosts = $host->getAll();
+		if ( empty( $hosts ) || ! is_array( $hosts ) ) {
+			return true;
+		}
+
+		$google_calendar_service = new GoogleCalendar();
+
+		foreach ( $hosts as $single_host ) {
+			if ( empty( $single_host->user_id ) || empty( $single_host->id ) ) {
+				continue;
+			}
+			$user_id = $single_host->user_id;
+			$_tfhb_host_integration_settings = is_array( get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) ) ? get_user_meta( $user_id, '_tfhb_host_integration_settings', true ) : array();
+			$host_gc                         = isset( $_tfhb_host_integration_settings['google_calendar'] ) ? $_tfhb_host_integration_settings['google_calendar'] : array();
+
+			if ( empty( $host_gc['status'] ) || empty( $host_gc['connection_status'] ) || empty( $host_gc['two_way_sync'] ) ) {
+				continue;
+			}
+
+			$sync_interval  = isset( $host_gc['sync_interval'] ) ? (int) $host_gc['sync_interval'] : 15;
+			$last_sync_time = isset( $host_gc['last_sync_time'] ) ? (int) $host_gc['last_sync_time'] : 0;
+
+			if ( ( time() - $last_sync_time ) >= ( $sync_interval * 60 ) ) {
+				$google_calendar_service->syncHostGoogleCalendar( $single_host->id );
+			}
+		}
+
+		return true;
 	}
 }

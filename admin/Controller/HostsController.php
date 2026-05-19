@@ -650,11 +650,15 @@ class HostsController {
 			$google_calendar['access_url']        = $GoogleCalendar->GetAccessTokenUrl( $user_id, );
 			$google_calendar['status']            = $_tfhb_integration_settings['google_calendar']['status'];
 			$google_calendar['connection_status'] = $_tfhb_integration_settings['google_calendar']['connection_status'];
+			$google_calendar['two_way_sync']      = isset( $_tfhb_host_integration_settings['google_calendar']['two_way_sync'] ) ? (int) $_tfhb_host_integration_settings['google_calendar']['two_way_sync'] : 0;
+			$google_calendar['sync_interval']     = isset( $_tfhb_host_integration_settings['google_calendar']['sync_interval'] ) ? (int) $_tfhb_host_integration_settings['google_calendar']['sync_interval'] : 15;
 
 		}else{
 			$google_calendar['type']              = 'google_calendar';
 			$google_calendar['status']            = false;
 			$google_calendar['connection_status'] = false;
+			$google_calendar['two_way_sync']      = 0;
+			$google_calendar['sync_interval']     = 15;
 		}
 
 
@@ -847,11 +851,18 @@ class HostsController {
 			$_tfhb_host_integration_settings['google_calendar']['type']                 = sanitize_text_field( $data['type'] );
 			$_tfhb_host_integration_settings['google_calendar']['status']               = sanitize_text_field( $data['status'] );
 			$_tfhb_host_integration_settings['google_calendar']['connection_status']    = isset( $data['secret_key'] ) && ! empty( $data['secret_key'] ) ? 1 : sanitize_text_field( $data['connection_status'] );
+			$_tfhb_host_integration_settings['google_calendar']['two_way_sync']         = isset( $data['two_way_sync'] ) ? (int) $data['two_way_sync'] : 0;
+			$_tfhb_host_integration_settings['google_calendar']['sync_interval']        = isset( $data['sync_interval'] ) ? (int) $data['sync_interval'] : 15;
 			$_tfhb_host_integration_settings['google_calendar']['selected_calendar_id'] = $data['selected_calendar_id'];
 			$_tfhb_host_integration_settings['google_calendar']['tfhb_google_calendar'] = $data['tfhb_google_calendar'];
 
 			// update User Meta
 			update_user_meta( $user_id, '_tfhb_host_integration_settings', $_tfhb_host_integration_settings );
+
+			if ( ! empty( $_tfhb_host_integration_settings['google_calendar']['two_way_sync'] ) ) {
+				$google_calendar_service = new GoogleCalendar();
+				$google_calendar_service->syncHostGoogleCalendar( $host_id );
+			}
  
 			$responseData['status'] = true;
 			$responseData['message'] = esc_html(__('Google Calendar Settings Updated Successfully', 'hydra-booking')); 

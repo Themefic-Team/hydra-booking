@@ -102,6 +102,31 @@ const disconnectIntegration = () => {
                         :options="storedOptionData(google_calendar.tfhb_google_calendar.items)"
                     />  
                 </div>
+                <div class="tfhb-two-way-sync tfhb-full-width tfhb-mt-16 tfhb-mb-16">
+                    <HbSwitch  
+                        v-model="google_calendar.two_way_sync"  
+                        name="host_two_way_sync"
+                        :label="$tfhb_trans('Enable Two-Way Sync')"   
+                    /> 
+                    <div v-if="google_calendar.two_way_sync == 1" class="tfhb-sync-interval tfhb-mt-16">
+                        <HbSelect
+                            v-model="google_calendar.sync_interval"
+                            name="host_sync_interval"
+                            :label="$tfhb_trans('Checking Time (Sync Interval)')"
+                            :placeholder="$tfhb_trans('Select Sync Interval')"
+                            :option="{
+                                '5': $tfhb_trans('Every 5 Minutes'),
+                                '10': $tfhb_trans('Every 10 Minutes'),
+                                '15': $tfhb_trans('Every 15 Minutes'),
+                                '30': $tfhb_trans('Every 30 Minutes'),
+                                '60': $tfhb_trans('Every 1 Hour'),
+                                '360': $tfhb_trans('Every 6 Hours'),
+                                '720': $tfhb_trans('Every 12 Hours'),
+                                '1440': $tfhb_trans('Every 24 Hours')
+                            }"
+                        />
+                    </div>
+                </div>
                 <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8 tfhb-flexbox tfhb-gap-8">
                     <HbButton  
                          @click.stop="emit('update-integrations', 'google_calendar', google_calendar)"
