@@ -303,14 +303,20 @@ class DateTimeController extends \DateTimeZone
 
 					$booked_start_with_gap = clone $value['start_object'];
 					$booked_end_with_gap = clone $value['end_object'];
+
+					// To enforce that a new slot has "buffer_time_before" minutes before it starts,
+					// we must expand the END of existing bookings by "buffer_time_before".
 					if ((int) $buffer_time_before > 0) {
-						$booked_start_with_gap->modify('-' . (int) $buffer_time_before . ' minutes');
-					}
-					if ((int) $buffer_time_after > 0) {
-						$booked_end_with_gap->modify('+' . (int) $buffer_time_after . ' minutes');
+						$booked_end_with_gap->modify('+' . (int) $buffer_time_before . ' minutes');
 					}
 
-					// Skip any slot that overlaps [booked_start - interval, booked_end + interval].
+					// To enforce that a new slot has "buffer_time_after" minutes after it ends,
+					// we must expand the START of existing bookings by "buffer_time_after".
+					if ((int) $buffer_time_after > 0) {
+						$booked_start_with_gap->modify('-' . (int) $buffer_time_after . ' minutes');
+					}
+
+					// Skip any slot that overlaps [booked_start - buffer_after, booked_end + buffer_before].
 					if ($slot_start < $booked_end_with_gap && $slot_end > $booked_start_with_gap) {
 						return false;
 					}
@@ -367,7 +373,7 @@ class DateTimeController extends \DateTimeZone
 		while ($current < $end) {
 
 			$start_time = $this->formatTime($current, $time_format, $selected_time_zone);
-			$end_time   = $this->formatTime((clone $current)->modify("+$total_diff seconds"), $time_format, $selected_time_zone);
+			$end_time   = $this->formatTime((clone $current)->modify("+$diff seconds"), $time_format, $selected_time_zone);
 
 			// if current time is passed then skip skip_before_meeting_start
 			$current_minus_skip = (clone $current)->modify("-$skip_before_meeting_start $skip_before_format");
