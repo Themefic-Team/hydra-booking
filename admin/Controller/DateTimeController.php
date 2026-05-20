@@ -216,10 +216,8 @@ class DateTimeController extends \DateTimeZone
 			);
 			// echo $meeting_date;
 
-			// tfhb_print_r($disabled_times);
 		}
 
-		// tfhb_print_r($gc_busy_slots);
 		// Fetch two-way sync busy slots from Google Calendar and merge them into disabled_times
 		if (isset($MeetingsData->host_id)) {
 			$google_calendar_service = new \HydraBooking\Services\Integrations\GoogleCalendar\GoogleCalendar();
@@ -230,8 +228,17 @@ class DateTimeController extends \DateTimeZone
 			if (! empty($gc_busy_slots) && is_array($gc_busy_slots)) {
 				$disabled_times = array_merge($disabled_times, $gc_busy_slots);
 			}
+
+			// Fetch two-way sync busy slots from Outlook Calendar
+			if (class_exists('\HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar')) {
+				$outlook_calendar_service = new \HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar();
+				$oc_busy_slots = $outlook_calendar_service->getBusyTimeSlots($MeetingsData->host_id, $selected_date, $selected_time_zone, $selected_time_format);
+
+				if (! empty($oc_busy_slots) && is_array($oc_busy_slots)) {
+					$disabled_times = array_merge($disabled_times, $oc_busy_slots);
+				}
+			}
 		}
-		// tfhb_print_r($disabled_times);
 
 		// Time Slot
 		$time_slots_data = array();

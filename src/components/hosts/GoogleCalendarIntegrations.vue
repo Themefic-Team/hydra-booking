@@ -48,6 +48,8 @@ const disconnectIntegration = () => {
 
     props.google_calendar.tfhb_google_calendar  = undefined;
     props.google_calendar.selected_calendar_id  = '';
+    props.google_calendar.two_way_sync = 0;
+    props.google_calendar.sync_interval = 15;
     gCalPopup.value = false;
     emit('update-integrations', 'google_calendar', props.google_calendar);
 }
