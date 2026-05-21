@@ -15,6 +15,7 @@ import AppleCalendarIntegrations from '@/components/integrations/AppleCalendarIn
 import StripeIntegrations from '@/components/integrations/StripeIntegrations.vue'; 
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
+import HubspotIntegrations from '@/components/integrations/HubspotIntegrations.vue'; 
 import PaypalIntegrations from '@/components/integrations/PaypalIntegrations.vue'; 
 import CF7Integrations from '@/components/integrations/CF7Integrations.vue'; 
 import FluentFormsIntegrations from '@/components/integrations/FluentFormsIntegrations.vue'; 
@@ -49,6 +50,7 @@ const tpopup = ref(false);
 const wpopup = ref(false);
 const twpopup = ref(false);
 const slpopup = ref(false);
+const hubspotpopup = ref(false);
 
 const currentHash = ref('all'); 
  
@@ -144,11 +146,14 @@ const istwPopupClose = (data) => {
     twpopup.value = false;
 }
 
-const isslPopupOpen = () => {
-    slpopup.value = true;
-}
 const isslPopupClose = (data) => {
     slpopup.value = false;
+}
+const ishubspotPopupOpen = () => {
+    hubspotpopup.value = true;
+}
+const isHubspotPopupClose = (data) => {
+    hubspotpopup.value = false;
 }
 
 const preloader = ref(false);
@@ -193,7 +198,6 @@ const Integration = reactive( {
         client_id: '',
         secret_key: '',
         redirect_url: '',
-
     },
     outlook_calendar : {
         type: 'calendar', 
@@ -227,11 +231,21 @@ const Integration = reactive( {
         type: 'aweber', 
         status: 0, 
         connection_status: 0, 
-        authorize_url: 0, 
+        authorize_url: '', 
         redirect_url: '', 
         auth_data: [],
         list: [],
         selected_subscriber_list: '',
+    },
+    hubspot : {
+        type: 'hubspot', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: '', 
+        redirect_url: '', 
+        client_id: '',
+        client_secret: '',
+        auth_data: [],
     },
     paypal : {
         type: 'paypal', 
@@ -314,8 +328,8 @@ const fetchIntegration = async () => {
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
             Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
-    //  console.log(response.data.integration_settings.aweber);
-    //         alert(1);
+            Integration.hubspot= response.data.integration_settings.hubspot ? response.data.integration_settings.hubspot : Integration.hubspot;
+ 
             skeleton.value = false;
         }
     } catch (error) {
@@ -353,6 +367,7 @@ const UpdateIntegration = async (key, value) => {
             aweberpopup.value = false;
             paypalpopup.value = false;
             slpopup.value = false;
+            hubspotpopup.value = false;
             
             Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
             Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
@@ -369,6 +384,7 @@ const UpdateIntegration = async (key, value) => {
             Integration.telegram= response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
             Integration.twilio= response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
             Integration.slack= response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
+            Integration.hubspot= response.data.integration_settings.hubspot ? response.data.integration_settings.hubspot : Integration.hubspot;
             
         }else{
             toast.error(response.data.message, {
@@ -598,6 +614,17 @@ onBeforeMount(() => {
                     v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
                 />
                 <!-- AWeber intrigation -->
+
+                <!-- Hubspot intrigation -->
+                <HubspotIntegrations 
+                    :hubspot_data="Integration.hubspot" 
+                    @update-integrations="UpdateIntegration" 
+                    :ispopup="hubspotpopup"
+                    @popup-open-control="ishubspotPopupOpen"
+                    @popup-close-control="isHubspotPopupClose" 
+                    v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                />
+                <!-- Hubspot intrigation -->
 
                 <!-- Fluent CRM -->
                 <FluentCRMIntegrations 

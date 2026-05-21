@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import Icon from '@/components/icon/LucideIcon.vue'  
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
@@ -16,36 +16,43 @@ const props = defineProps([
     'integrations'
 ])
 const router = useRouter();
-const selecte_integrations = ref('')
+const loadingFields = ref(false)
 // dropdown change 
 const changeIntegrations = (value) => { 
     
-    if(value == 'Mailchimp' && !props.meeting.mailchimp.status == true){
+    if(value == 'Mailchimp' && props.meeting.mailchimp.status == false){
         return;
     }
-    if(value == 'FluentCRM' && !props.meeting.fluentcrm.status == true){
+    if(value == 'FluentCRM' && props.meeting.fluentcrm.status == false){
         return;
     }
-    if(value == 'ZohoCRM' && !props.meeting.zohocrm.status == true){
+    if(value == 'ZohoCRM' && props.meeting.zohocrm.status == false){
         return;
     }
-    if(value == 'Pabbly' && !props.integrations.pabbly_status == true){
+    if(value == 'Pabbly' && props.integrations.pabbly_status == false){
         return;
     }
-    if(value == 'Zapier' && !props.integrations.zapier_status == true){
+    if(value == 'Zapier' && props.integrations.zapier_status == false){
         return;
     }
-    if(value == 'Aweber' && !props.integrations.aweber_status == true){
+    if(value == 'Aweber' && props.integrations.aweber_status == false){
         return;
     }
-    
-    
+    if(value == 'Hubspot' && props.integrations.hubspot_status == false){
+        return;
+    }
+
     props.IntegrationsValue.addNewIntegrations(value)
+
+    if(value == 'Hubspot' && props.integrations.hubspot_status == true){
+        moduleFields('Hubspot');
+    } 
 }
 
 // modules callback
 const moduleFields = async (e) => {
     if(e){
+        loadingFields.value = true;
         let data = {
             host_id: props.meeting.host_id,
             webhook: props.IntegrationsValue.integrationsData.webhook,
@@ -63,8 +70,18 @@ const moduleFields = async (e) => {
             }
         } catch (error) {
             console.log(error);
-        } 
+        } finally {
+            loadingFields.value = false;
+        }
     }
+}
+
+const BodyValues = (value, key) => {
+    props.IntegrationsValue.BodyValues(key, value);
+}
+
+const CustomFieldValues = (value, key) => {
+    props.IntegrationsValue.CustomFieldValues(key, value);
 }
 
 </script>
@@ -143,8 +160,7 @@ const moduleFields = async (e) => {
                 placeholder="Select Audience"  
                 :option = "meeting.mailchimp.audience"
                 @tfhb-onchange="moduleFields" 
-            />
-           
+            /> 
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsData.webhook=='Aweber'"
                 v-model="props.IntegrationsValue.integrationsData.audience"
@@ -155,7 +171,7 @@ const moduleFields = async (e) => {
                 placeholder="Select Audience"  
                 :option = "meeting.aweber.lists"
                 @tfhb-onchange="moduleFields" 
-            />
+            />  
             <HbDropdown  
                 v-if="props.IntegrationsValue.integrationsData.webhook=='Mailchimp'"
                 v-model="props.IntegrationsValue.integrationsData.audience"
@@ -228,7 +244,7 @@ const moduleFields = async (e) => {
                         {'label': 'Selected Data', 'value': 'selected'}
                     ]" 
                 />
-            </div>
+            </div> 
             <div class="tfhb-headers tfhb-full-width" v-if="'selected'==props.IntegrationsValue.integrationsData.request_body && (props.IntegrationsValue.integrationsData.webhook=='Pabbly' || props.IntegrationsValue.integrationsData.webhook=='Zapier') ">
                 <p>{{ __('Other Fields', 'hydra-booking') }}</p>
                 <div class="tfhb-flexbox" v-for="(body, key) in props.IntegrationsValue.integrationsData.bodys">
@@ -250,7 +266,7 @@ const moduleFields = async (e) => {
                             :option = "[
                                 {'name': '{{attendee.full_name}}', 'value': 'attendee_name'}, 
                                 {'name': '{{attendee.email}}', 'value': 'email'},
-                                {'name': '{{attendee.timezone}}', 'value': 'timezone'},
+                                {'name': '{{attendee.attendee_timezone}}', 'value': 'attendee_timezone'},
                                 {'name': '{{attendee.address}}', 'value': 'address'},
                                 {'name': '{{booking.meeting_date}}', 'value': 'meeting_date'},
                                 {'name': '{{booking.start_time}}', 'value': 'start_time'},
@@ -259,7 +275,7 @@ const moduleFields = async (e) => {
                                 {'name': '{{booking.hash}}', 'value': 'hash'},
                                 {'name': '{{host.name}}', 'value': 'host_name'},
                                 {'name': '{{host.email}}', 'value': 'host_email'},
-                                {'name': '{{host.timezone}}', 'value': 'host_timezone'},
+                                {'name': '{{host.host_timezone}}', 'value': 'host_timezone'},
                                 {'name': 'Custom', 'value': 'tfhb_ct'},
                             ]"
                             @tfhb_body_value_change="BodyValues"
@@ -294,9 +310,10 @@ const moduleFields = async (e) => {
                             v-model="body.name"
                             required= "true"    
                             width="50"
+                            :filter="true"
                             selected = "1"
-                            placeholder="Select Tag"  
-                            :option = "props.IntegrationsValue.integrationsData.fields"
+                            :placeholder="loadingFields ? __('Loading...', 'hydra-booking') : __('Select Tag', 'hydra-booking')"  
+                            :option = "loadingFields ? [{name: __('Loading...', 'hydra-booking'), value: ''}] : props.IntegrationsValue.integrationsData.fields"
                         />
                         <HbDropdown  
                             v-show="body.type!='tfhb_ct'"
@@ -308,7 +325,7 @@ const moduleFields = async (e) => {
                             :option = "[
                                 {'name': '{{attendee.full_name}}', 'value': 'attendee_name'}, 
                                 {'name': '{{attendee.email}}', 'value': 'email'},
-                                {'name': '{{attendee.timezone}}', 'value': 'timezone'},
+                                {'name': '{{attendee.attendee_timezone}}', 'value': 'attendee_timezone'},
                                 {'name': '{{attendee.address}}', 'value': 'address'},
                                 {'name': '{{booking.meeting_date}}', 'value': 'meeting_date'},
                                 {'name': '{{booking.start_time}}', 'value': 'start_time'},
@@ -317,7 +334,7 @@ const moduleFields = async (e) => {
                                 {'name': '{{booking.hash}}', 'value': 'hash'},
                                 {'name': '{{host.name}}', 'value': 'host_name'},
                                 {'name': '{{host.email}}', 'value': 'host_email'},
-                                {'name': '{{host.timezone}}', 'value': 'host_timezone'},
+                                {'name': '{{host.host_timezone}}', 'value': 'host_timezone'},
                                 {'name': 'Custom', 'value': 'tfhb_ct'},
                             ]"
                             @tfhb_body_value_change="BodyValues"
@@ -337,6 +354,60 @@ const moduleFields = async (e) => {
                             <Icon name="Plus" size=20 /> 
                         </button> 
                         <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.deleteBodyField(key)" v-else>
+                            <Icon name="X" size=20 /> 
+                        </button> 
+                    </div>
+                </div>
+            </div>
+            <div class="tfhb-headers tfhb-full-width" v-if="props.IntegrationsValue.integrationsData.webhook=='Hubspot' ">
+                <p>{{ __('Custom Properties Fields', 'hydra-booking') }}</p>
+                <div class="tfhb-flexbox" v-for="(field, key) in props.IntegrationsValue.integrationsData.custom_fields">
+                    <div class="tfhb-request-header-fields tfhb-flexbox">
+                        <HbText  
+                            v-model="field.name"
+                            required= "true"  
+                            selected = "1"
+                            :placeholder="__('Enter Name', 'hydra-booking')" 
+                            width="50"
+                        />
+                        <HbDropdown  
+                            v-model="field.value"
+                            required= "true"  
+                            width="50"
+                            selected = "1"
+                            :placeholder="__('Enter Value', 'hydra-booking')" 
+                            :option = "[
+                                {'name': '{{attendee.full_name}}', 'value': 'attendee_name'}, 
+                                {'name': '{{attendee.email}}', 'value': 'email'},
+                                {'name': '{{attendee.attendee_timezone}}', 'value': 'attendee_timezone'},
+                                {'name': '{{attendee.address}}', 'value': 'address'},
+                                {'name': '{{booking.meeting_date}}', 'value': 'meeting_date'},
+                                {'name': '{{booking.start_time}}', 'value': 'start_time'},
+                                {'name': '{{booking.end_time}}', 'value': 'end_time'},
+                                {'name': '{{booking.duration}}', 'value': 'duration'},
+                                {'name': '{{booking.hash}}', 'value': 'hash'},
+                                {'name': '{{host.name}}', 'value': 'host_name'},
+                                {'name': '{{host.email}}', 'value': 'host_email'},
+                                {'name': '{{host.timezone}}', 'value': 'host_timezone'},
+                                {'name': 'Custom', 'value': 'tfhb_ct'},
+                            ]"
+                            @tfhb_body_value_change="CustomFieldValues"
+                            :single_key = "key"
+                        />
+                        <HbText  
+                            v-show="field.value=='tfhb_ct'"
+                            v-model="field.custom_value"
+                            required= "true"   
+                            selected = "1"
+                            :placeholder="__('Enter Custom Value', 'hydra-booking')" 
+                            width="50"
+                        /> 
+                    </div>
+                    <div class="request-actions">
+                        <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.addCustomField" v-if="key == 0">
+                            <Icon name="Plus" size=20 /> 
+                        </button> 
+                        <button class="tfhb-availability-schedule-btn" @click="props.IntegrationsValue.deleteCustomField(key)" v-else>
                             <Icon name="X" size=20 /> 
                         </button> 
                     </div>
@@ -371,6 +442,7 @@ const moduleFields = async (e) => {
                 :option = "[
                     {name: 'Mailchimp', value: 'Mailchimp', icon: $tfhb_url+'/assets/images/Mailchimp-small.svg',},  
                     {name: 'AWeber', value: 'Aweber', icon: $tfhb_url+'assets/images/Awever.svg',},  
+                    {name: 'HubSpot', value: 'Hubspot', icon: $tfhb_url+'/assets/images/hubspot-icon.svg',},
                     {name: 'FluentCRM', value: 'FluentCRM', icon: $tfhb_url+'/assets/images/fluent-crm-small.svg',},  
                     {name: 'ZohoCRM', value: 'ZohoCRM', icon: $tfhb_url+'/assets/images/Zoho.svg',},
                     {name: 'Pabbly', value: 'Pabbly', icon: $tfhb_url+'/assets/images/pabbly-small.svg',},
@@ -414,6 +486,13 @@ const moduleFields = async (e) => {
                     classValue="tfhb-btn flex-btn" 
                     @click="() => router.push({ name: 'SettingsIntegrations' })" 
                     :buttonText="__('Please Configure', 'hydra-booking')"
+                />  
+            </div> 
+            <div  v-if="selecte_integrations == 'Hubspot' && !props.integrations.hubspot_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4 tfhb-mt-4"> {{ $tfhb_trans('HubSpot is not connected.') }}   
+                <HbButton 
+                    classValue="tfhb-btn flex-btn" 
+                    @click="() => router.push({ name: 'SettingsIntegrations' })" 
+                    :buttonText="$tfhb_trans('Please Configure')"
                 />  
             </div>
         </div> 

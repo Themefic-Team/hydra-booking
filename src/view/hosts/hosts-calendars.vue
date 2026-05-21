@@ -89,7 +89,8 @@ const Integration = reactive( {
         connection_status: 0, 
         selected_calendar_id: '', 
         tfhb_google_calendar: {},
-
+        two_way_sync: 0,
+        sync_interval: 15,
     },
     outlook_calendar : {
         type: 'meeting', 
@@ -97,6 +98,8 @@ const Integration = reactive( {
         connection_status: 0, 
         selected_calendar_id: '', 
         tfhb_outlook_calendar: {},
+        two_way_sync: 0,
+        sync_interval: 15,
 
     },
     apple_calendar : {

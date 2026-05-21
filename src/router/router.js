@@ -282,6 +282,12 @@ const routes = [
                     }, 
                 ]
             },
+             {
+                path: 'icalendar',
+                name: 'iCalendar',
+                meta: { Capabilities: 'tfhb_manage_settings' },
+                component: () => import('../view/settings/iCalendar.vue')
+            }, 
             {
                 path: 'fd-dashboard',
                 name: 'FrontendDashboard',
