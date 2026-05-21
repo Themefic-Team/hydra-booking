@@ -230,7 +230,7 @@ class DateTimeController extends \DateTimeZone
 			}
 
 			// Fetch two-way sync busy slots from Outlook Calendar
-			if (class_exists('\HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar')) {
+			if (class_exists('\HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar') && method_exists('\HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar', 'getBusyTimeSlots')) {
 				$outlook_calendar_service = new \HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar();
 				$oc_busy_slots = $outlook_calendar_service->getBusyTimeSlots($MeetingsData->host_id, $selected_date, $selected_time_zone, $selected_time_format);
 
@@ -304,19 +304,16 @@ class DateTimeController extends \DateTimeZone
 					$booked_start_with_gap = clone $value['start_object'];
 					$booked_end_with_gap = clone $value['end_object'];
 
-					// To enforce that a new slot has "buffer_time_before" minutes before it starts,
-					// we must expand the END of existing bookings by "buffer_time_before".
-					if ((int) $buffer_time_before > 0) {
-						$booked_end_with_gap->modify('+' . (int) $buffer_time_before . ' minutes');
+					// To enforce buffer times, we must expand the existing booking both ways.
+					// A new meeting needs buffer_time_before prior to its start, and the existing meeting needs buffer_time_after.
+					// So the total gap between them must be buffer_time_before + buffer_time_after.
+					$total_buffer = (int) $buffer_time_before + (int) $buffer_time_after;
+					if ($total_buffer > 0) {
+						$booked_end_with_gap->modify('+' . $total_buffer . ' minutes');
+						$booked_start_with_gap->modify('-' . $total_buffer . ' minutes');
 					}
 
-					// To enforce that a new slot has "buffer_time_after" minutes after it ends,
-					// we must expand the START of existing bookings by "buffer_time_after".
-					if ((int) $buffer_time_after > 0) {
-						$booked_start_with_gap->modify('-' . (int) $buffer_time_after . ' minutes');
-					}
-
-					// Skip any slot that overlaps [booked_start - buffer_after, booked_end + buffer_before].
+					// Skip any slot that overlaps [booked_start - total_buffer, booked_end + total_buffer].
 					if ($slot_start < $booked_end_with_gap && $slot_end > $booked_start_with_gap) {
 						return false;
 					}
@@ -372,8 +369,13 @@ class DateTimeController extends \DateTimeZone
 
 		while ($current < $end) {
 
+			$slot_end_obj = (clone $current)->modify("+$diff seconds");
+			if ($slot_end_obj > $end) {
+				break;
+			}
+
 			$start_time = $this->formatTime($current, $time_format, $selected_time_zone);
-			$end_time   = $this->formatTime((clone $current)->modify("+$diff seconds"), $time_format, $selected_time_zone);
+			$end_time   = $this->formatTime($slot_end_obj, $time_format, $selected_time_zone);
 
 			// if current time is passed then skip skip_before_meeting_start
 			$current_minus_skip = (clone $current)->modify("-$skip_before_meeting_start $skip_before_format");
