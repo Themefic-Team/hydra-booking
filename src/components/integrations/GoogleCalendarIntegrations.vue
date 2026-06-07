@@ -126,7 +126,6 @@ const copyRedirectionURL = () => {
                     /> 
                 </div>
                 
-
                 <HbButton  
                     @click.stop="emit('update-integrations', 'google_calendar', props.google_calendar, ['client_id', 'secret_key', 'redirect_url'])"
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"  

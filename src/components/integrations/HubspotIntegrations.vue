@@ -17,22 +17,22 @@ const { errors, isEmpty } = useValidators();
 const props = defineProps([
     'class', 
     'display', 
-    'aweber_data', 
+    'hubspot_data', 
     'pre_loader', 
     'ispopup',
     'from'
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
-const aweber_data = toRef( props, 'aweber_data' );
+const hubspot_data = toRef( props, 'hubspot_data' );
 const shouldRedirectAfterUpdate = ref(false);
 const pendingClientId = ref('');
 const previousAuthorizeUrl = ref('');
 
 watch(
-    () => [aweber_data.value?.client_id, aweber_data.value?.authorize_url],
+    () => [hubspot_data.value?.client_id, hubspot_data.value?.authorize_url],
     () => {
-        const newData = aweber_data.value;
+        const newData = hubspot_data.value;
         if (!shouldRedirectAfterUpdate.value || !newData) {
             return;
         }
@@ -56,11 +56,11 @@ watch(
         previousAuthorizeUrl.value = '';
 
         if (newData.authorize_url != '' && newData.authorize_url != null) {
-            RedirectToAweberAuthUrl(newData.authorize_url);
+            RedirectToHubspotAuthUrl(newData.authorize_url);
             return;
         }
 
-        toast.error((tfhb_core_apps.trans['Unable to generate AWeber authorize URL. Please try again.'] || 'Unable to generate AWeber authorize URL. Please try again.'), {
+        toast.error((tfhb_core_apps.trans['Unable to generate HubSpot authorize URL. Please try again.'] || 'Unable to generate HubSpot authorize URL. Please try again.'), {
             position: 'bottom-right',
             duration: 2000
         });
@@ -75,7 +75,7 @@ const closePopup = () => {
     emit('popup-close-control', false);
 }
 
-const RedirectToAweberAuthUrl = (url) => {
+const RedirectToHubspotAuthUrl = (url) => {
     window.open(url, '_blank');
 }
 
@@ -87,37 +87,45 @@ const RemoveIntegration = (type) => {
         status: 0,
         connection_status: 0,
         auth_data: null,
-        authorize_url: aweber_data.value.authorize_url
+        authorize_url: hubspot_data.value.authorize_url
     })
 }
-const UpdateAweberData = () => { 
-    // if client id is empty then show error toster message
-    if(aweber_data.value.client_id == '' || aweber_data.value.client_id == null){
+const UpdateHubspotData = () => { 
+    // if client id is empty then show error toaster message
+    if(hubspot_data.value.client_id == '' || hubspot_data.value.client_id == null){
         toast.error( (tfhb_core_apps.trans['Client ID is required'] || 'Client ID is required') , {
-            position: 'bottom-right', // Set the desired position
-            duration: 2000 // Set the desired duration
+            position: 'bottom-right',
+            duration: 2000
         });
         return;
     }
-
+    if(hubspot_data.value.client_secret == '' || hubspot_data.value.client_secret == null){
+        toast.error( (tfhb_core_apps.trans['Client Secret is required'] || 'Client Secret is required') , {
+            position: 'bottom-right',
+            duration: 2000
+        });
+        return;
+    }
+ 
     shouldRedirectAfterUpdate.value = true;
-    pendingClientId.value = aweber_data.value.client_id;
-    previousAuthorizeUrl.value = aweber_data.value.authorize_url ? String(aweber_data.value.authorize_url) : '';
-
-    // Clear stale URL so redirect can only happen when backend sends a refreshed one.
+    pendingClientId.value = hubspot_data.value.client_id;
+    previousAuthorizeUrl.value = hubspot_data.value.authorize_url ? String(hubspot_data.value.authorize_url) : '';
     const payload = {
-        ...aweber_data.value,
-        authorize_url: ''
+        ...hubspot_data.value,
     };
-    aweber_data.value.authorize_url = '';
 
-    emit('update-integrations', 'aweber', payload);
+    emit('update-integrations', 'hubspot', payload);
+    // after 1 sec
+    setTimeout(() => {
+        closePopup();
+        // redirect ot auth url
+        RedirectToHubspotAuthUrl(props.hubspot_data.authorize_url);
+    }, 1000);
 }
 
 const copyRedirectionURL = () => {
-    //  copy to clipboard without navigator 
     const textarea = document.createElement('textarea');
-    textarea.value = props.aweber_data.redirect_url;
+    textarea.value = props.hubspot_data.redirect_url;
     textarea.setAttribute('readonly', '');
     textarea.style.position = 'absolute';
     textarea.style.left = '-9999px';
@@ -126,32 +134,30 @@ const copyRedirectionURL = () => {
     document.execCommand('copy');
     document.body.removeChild(textarea);
     
-    // Show a toast notification or perform any other action 
-    // success mess into bottom right
-    toast.success( props.aweber_data.redirect_url + ' is Copied' , {
-        position: 'bottom-right', // Set the desired position
-        duration: 2000 // Set the desired duration
+    toast.success( props.hubspot_data.redirect_url + ' is Copied' , {
+        position: 'bottom-right',
+        duration: 2000
     });
 }
 
 </script>
 
 <template> 
-      <!-- Mailchimp Integrations  -->
+      <!-- HubSpot Integrations  -->
       <div   class="tfhb-integrations-single-block tfhb-admin-card-box "
         :class="props.class, {
             'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status,
         }"
       >  
-        <span v-if="props.from != 'host' && ($tfhb_is_pro == false  || $tfhb_license_status == false)" class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+        <span v-if="props.from != 'host' && ($tfhb_is_pro == false  || $tfhb_license_status == false)"  class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
          
          <div :class="display =='list' ? 'tfhb-flexbox' : '' " class="tfhb-admin-cartbox-cotent">
             <span class="tfhb-integrations-single-block-icon">
-                <img :src="$tfhb_url+'/assets/images/Awever.svg'" alt="">
+                <img :src="$tfhb_url+'/assets/images/hubspot-icon.svg'" alt="">
             </span>  
             <div class="cartbox-text">
-                <h3>{{ $tfhb_trans('AWeber') }}</h3>
-                <p>{{ $tfhb_trans('Integrate AWeber API to collect attendee emails and info.') }}</p>
+                <h3>{{ $tfhb_trans('HubSpot') }}</h3>
+                <p>{{ $tfhb_trans('Integrate HubSpot API to collect attendee emails and info.') }}</p>
             </div>
         </div>
         <div v-if="!$tfhb_is_pro || !$tfhb_license_status" class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
@@ -161,39 +167,38 @@ const copyRedirectionURL = () => {
             </div>
         </div>
         <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
-            <button  v-if=" props.from == 'host' && aweber_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Connected') }} </button>
-            <router-link v-else-if="props.from == 'host' && aweber_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <button  v-if=" props.from == 'host' && hubspot_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Connected') }} </button>
+            <router-link v-else-if="props.from == 'host' && hubspot_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <HbButton  
                 v-else @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="props.aweber_data.status == 1 && Number(aweber_data.connection_status) == 1 ? 'Connected' : 'Connect' " 
+                :buttonText="props.hubspot_data.status == 1 && Number(hubspot_data.connection_status) == 1 ? 'Connected' : 'Connect' " 
                 :hover_animation="false"    
             /> 
 
             <HbSwitch
-            v-if="aweber_data.authorize_url != '' &&  aweber_data.authorize_url  != null " 
-                @change="emit('update-integrations', 'aweber', aweber_data)" v-model="aweber_data.status"   
+            v-if="hubspot_data.authorize_url != '' &&  hubspot_data.authorize_url  != null " 
+                @change="emit('update-integrations', 'hubspot', hubspot_data)" v-model="hubspot_data.status"   
             />
-            <!-- Swicher --> 
         </div>
  
 
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="600px" name="first-modal">
             <template #header>
-                <h2>{{ $tfhb_trans('Connect Your AWeber API') }}</h2> 
+                <h2>{{ $tfhb_trans('Connect Your HubSpot API') }}</h2> 
             </template>
            
             <template #content>   
                 <p>
-                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from AWeber Account') }}
+                    {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from HubSpot Account') }}
 
-                    <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/aweber-integration/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
+                    <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/hubspot-integration/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                 </p>  
-                <div v-if="Number(aweber_data.connection_status) != 1 &&  props.from != 'host'"  style="width: 100%;">
+                <div v-if="Number(hubspot_data.connection_status) != 1 &&  props.from != 'host'"  style="width: 100%;">
                     <div clas="tfhb-flexbox tfhb-gap-12 tfhb-flex-direction-colum">
                         <HbText  
-                            v-model="aweber_data.client_id"  
+                            v-model="hubspot_data.client_id"  
                             required= "true"  
                             name="client_id"
                             :errors="errors.client_id"  
@@ -201,9 +206,18 @@ const copyRedirectionURL = () => {
                             selected = "1"
                             :placeholder="$tfhb_trans('Enter Client ID')"  
                         />  
+                        <HbText  
+                            v-model="hubspot_data.client_secret"  
+                            required= "true"  
+                            name="client_secret"
+                            :errors="errors.client_secret"  
+                            :label="$tfhb_trans('Client Secret')"  
+                            selected = "1"
+                            :placeholder="$tfhb_trans('Enter Client Secret')"  
+                        />  
                         <div class="tfhb-google-calender-redirection-url tfhb-full-width"  >
                             <HbText  
-                                v-model="aweber_data.redirect_url"  
+                                v-model="hubspot_data.redirect_url"  
                                 required= "true"
                                 :readonly="true"
                                 name="redirect_url"
@@ -220,26 +234,19 @@ const copyRedirectionURL = () => {
                         </div>
                     </div>
                     <div style="margin-top: 20px; display: inline-block;" class="tfhb-alert tfhb-alert-success" > 
-                          
-                        <!-- add button connect with api -->
-                        <a @click="UpdateAweberData" target="_blank" class="connect-with-aweber tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with AWeber') }}</a> 
-                
+                        <a @click.prevent="UpdateHubspotData" class="connect-with-hubspot tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with HubSpot') }}</a> 
                     </div>
                 </div>
-                <div v-else-if="props.from == 'host' && (aweber_data.auth_data == null || aweber_data.auth_data.length === 0)  " class="tfhb-alert tfhb-alert-success">
-                    <!-- add button connect with api -->
-                    <a :href="aweber_data.authorize_url" target="_blank" class="connect-with-aweber tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with AWeber') }}</a> 
-                
+                <div v-else-if="props.from == 'host' && (hubspot_data.auth_data == null || hubspot_data.auth_data.length === 0)  " class="tfhb-alert tfhb-alert-success">
+                    <a :href="hubspot_data.authorize_url" target="_blank" class="connect-with-hubspot tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Connect with HubSpot') }}</a> 
                 </div>
 
                 <div v-else class="tfhb-flexbox tfhb-gap-12 tfhb-flex-direction-column"> 
-                     
                      <HbInfoBox  name="first-modal">
-        
                         <template #content>
                             <div class="tfhb-flexbox tfhb-justify-between tfhb-align-center">
                                 <span>
-                                    {{ $tfhb_trans('AWeber Configuration is complete.') }}
+                                    {{ $tfhb_trans('HubSpot Configuration is complete.') }}
                                 </span>  
                             </div>
                         </template>
@@ -247,24 +254,18 @@ const copyRedirectionURL = () => {
 
                     <HbButton   
                         classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8"  
-                        :buttonText="'Disconnect AWeber'"
-                        @click="RemoveIntegration('aweber')"
+                        :buttonText="'Disconnect HubSpot'"
+                        @click="RemoveIntegration('hubspot')"
                         icon="ChevronRight"  
                     />   
-
                 </div>
-
             </template> 
         </HbPopup>
-
-
     </div>  
-    <!-- Single Integrations  -->
-
 </template>
 
 <style scoped>
-.connect-with-aweber:hover {
+.connect-with-hubspot:hover {
   color: #fff !important;
 }
 </style> 

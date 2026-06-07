@@ -12,6 +12,7 @@ import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
 import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
+import HubspotIntegrations from '@/components/integrations/HubspotIntegrations.vue'; 
 import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
 import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
 import SlackIntegration from '@/components/integrations/SlackIntegrations.vue'
@@ -47,6 +48,7 @@ const aweberpopup = ref(false);
 const telepopup = ref(false);
 const twpopup = ref(false);
 const skpopup = ref(false);
+const hubspotpopup = ref(false);
 const isPopupOpen = () => {
     popup.value = true;
 }
@@ -76,6 +78,12 @@ const isskPopupOpen = () => {
 }
 const isskPopupClose = (data) => {
     skpopup.value = false;
+}
+const ishubspotPopupOpen = () => {
+    hubspotpopup.value = true;
+}
+const isHubspotPopupClose = (data) => {
+    hubspotpopup.value = false;
 }
 const ismailchimpPopupOpen = () => {
     mailpopup.value = true;
@@ -114,7 +122,8 @@ const Integration = reactive( {
         connection_status: 0, 
         selected_calendar_id: '', 
         tfhb_google_calendar: {},
-
+        two_way_sync: 0,
+        sync_interval: 15,
     },
     outlook_calendar : {
         type: 'meeting', 
@@ -122,6 +131,8 @@ const Integration = reactive( {
         connection_status: 0, 
         selected_calendar_id: '', 
         tfhb_outlook_calendar: {},
+        two_way_sync: 0,
+        sync_interval: 15,
 
     },
     apple_calendar : {
@@ -179,6 +190,14 @@ const Integration = reactive( {
         connection_status: 0, 
         endpoint: '',
     },
+    hubspot : {
+        type: 'hubspot', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: '', 
+        redirect_url: '', 
+        auth_data: [],
+    },
 });
  
 
@@ -208,6 +227,7 @@ const fetchIntegration = async () => {
             Integration.telegram = response.data.telegram  ? response.data.telegram  : Integration.telegram ; 
             Integration.twilio = response.data.twilio  ? response.data.twilio  : Integration.twilio ; 
             Integration.slack = response.data.slack  ? response.data.slack  : Integration.slack ; 
+            Integration.hubspot = response.data.hubspot  ? response.data.hubspot  : Integration.hubspot ; 
             
 
             skeleton.value = false;
@@ -248,6 +268,7 @@ const UpdateIntegration = async (key, value) => {
             mailpopup.value = false;
             zohopopup.value = false;
             skpopup.value = false;
+            hubspotpopup.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
@@ -315,6 +336,17 @@ onBeforeMount(() => {
             @popup-close-control="isAWeberPopupClose" 
         />
         <!-- AWeber intrigation -->
+
+        <!-- Hubspot intrigation -->
+        <HubspotIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+            :hubspot_data="Integration.hubspot" 
+            @update-integrations="UpdateIntegration" 
+            from="host"
+            :ispopup="hubspotpopup"
+            @popup-open-control="ishubspotPopupOpen"
+            @popup-close-control="isHubspotPopupClose" 
+        />
+        <!-- Hubspot intrigation -->
 
         <!-- Zoho intrigation -->
         <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
