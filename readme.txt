@@ -2,9 +2,9 @@
 Contributors: themefic, hasanet, mdrejon, kamrul0424, jahidcse, akanda22
 Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 5.4
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.43
+Stable tag: 1.1.46
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -219,6 +219,19 @@ There are several well-known appointment booking plugins available for WordPress
 13. Slack, Twilio, Telegram settings
 
 == Changelog ==
+
+= 1.1.45 – Jun 07, 2026 =
+
+- Added: HubSpot integration for syncing contacts and meeting data.
+- Added: iCal links for individual calendars.
+- Added: Outlook Calendar two-way synchronization.
+- Added: Google Calendar two-way synchronization.
+- Fixed: Meeting interval calculation issue.
+- Fixed: Security vulnerability and stability improvements.
+
+= 1.1.44 – May 26, 2026 =
+
+- Compatibility: Fully compatible with WordPress v7.0.
 
 = 1.1.43 – May 19, 2026 =
 
