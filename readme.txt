@@ -222,9 +222,9 @@ There are several well-known appointment booking plugins available for WordPress
 
 = 1.1.45 – Jun 07, 2026 =
 
-- Added: HubSpot integration for syncing contacts and meeting data.
+- Added: HubSpot integration for sync data (Pro).
 - Added: iCal links for individual calendars.
-- Added: Outlook Calendar two-way synchronization.
+- Added: Outlook Calendar two-way synchronization (Pro).
 - Added: Google Calendar two-way synchronization.
 - Fixed: Meeting interval calculation issue.
 - Fixed: Security vulnerability and stability improvements.
