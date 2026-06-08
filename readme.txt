@@ -220,7 +220,7 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
-= 1.1.45 – Jun 07, 2026 =
+= 1.1.45 – Jun 08, 2026 =
 
 - Added: HubSpot integration for sync data (Pro).
 - Added: iCal links for individual calendars.
