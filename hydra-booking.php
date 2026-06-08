@@ -57,8 +57,7 @@ class THB_INIT
 	{
 		load_plugin_textdomain('hydra-booking', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 	}
-
-
+	
 
 	public function init()
 	{
