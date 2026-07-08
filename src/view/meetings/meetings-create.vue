@@ -193,6 +193,7 @@ const meetingData = reactive({
         }
     ],
     notification: {
+        source: 'custom',
         host: {
             booking_confirmation: {
                 status : 1,

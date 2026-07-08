@@ -1,11 +1,12 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import {ref} from 'vue'
+import {ref, computed} from 'vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import MailNotifications from '@/components/notifications/MailNotifications.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
+import HbSwitch from '@/components/form-fields/HbSwitch.vue'
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
-import { useRouter } from 'vue-router' 
+import { useRouter } from 'vue-router'
 
 const router = useRouter();
 
@@ -28,11 +29,23 @@ const props = defineProps({
 
 
 const currentTabs = ref('host');
-const ntskeleton = ref(false);  
+const ntskeleton = ref(false);
 const currentIntegrationTabs = ref('telegram');
-const smsskeleton = ref(false);  
+const smsskeleton = ref(false);
 const SmsPreview = ref(true);
 const EmailPreview = ref(true);
+
+// Single meeting-wide switch: when on, every host/attendee email always uses
+// the live Settings > Notifications templates instead of this meeting's own.
+if (!props.meeting.notification.source) {
+    props.meeting.notification.source = 'custom';
+}
+const useGlobalNotifications = computed({
+    get: () => props.meeting.notification.source === 'global' ? 1 : 0,
+    set: (val) => {
+        props.meeting.notification.source = (val == 1) ? 'global' : 'custom';
+    }
+});
 
 
 // Update Notification 
@@ -132,7 +145,21 @@ const UpdateNotification = async () => {
 <template>
     <div class="meeting-create-details tfhb-gap-24">
         <div class="tfhb-notification-wrap tfhb-admin-card-box tfhb-m-0 tfhb-gap-0 tfhb-full-width">
- 
+
+            <!-- Master switch: use global Settings > Notifications templates for every host/attendee email on this meeting -->
+            <div class="tfhb-notification-box tfhb-full-width tfhb-mb-16 tfhb-master-notification-switch">
+                <div class="tfhb-notification-header tfhb-flexbox tfhb-justify-between">
+                    <div class="tfhb-flexbox tfhb-gap-12">
+                        <Icon name="Globe" size=20 /> <span>{{ $tfhb_trans('Use Global Email Notification Settings') }}</span>
+                    </div>
+                    <HbSwitch
+                        v-model="useGlobalNotifications"
+                        :tooltip="true"
+                        :tooltipText="$tfhb_trans('When on, every host and attendee email below always uses the templates from Settings > Notifications, and cannot be edited here. Turn off to manage this meeting\'s notifications on its own.')"
+                    />
+                </div>
+            </div>
+
             <!-- Gmail -->
             <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">
                 <button @click="changeTab('host')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentTabs=='host' ? 'active' : ''" ><Icon name="UserRound" size=15 /> {{ $tfhb_trans('To Host') }}</button>
@@ -151,15 +178,19 @@ const UpdateNotification = async () => {
                     </div>
                 </div>
                 <div class="tfhb-integration-notification-box" v-show="EmailPreview">
-                    <div v-if="currentTabs=='host'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
+                    <div v-if="currentTabs=='host'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton, 'tfhb-pro': !!useGlobalNotifications }">
                         <!-- Single Notification  -->
                          
                         <MailNotifications 
                             :title="$tfhb_trans('Booking Confirmation to Host')"  
                             :label="$tfhb_trans('Booking Confirmation')" 
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.host.booking_confirmation"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.host.booking_confirmation"
+                            recipient="host"
+                            notification-type="booking_confirmation"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="hostBookingConfirmPopUp"
                             @popup-open-control="hostBookingConfirmPopUp = true"
                             @popup-close-control="hostBookingConfirmPopUp = false"
@@ -172,8 +203,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Pending to Host')" 
                             :label="$tfhb_trans('Booking Pending')" 
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.host.booking_pending"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.host.booking_pending"
+                            recipient="host"
+                            notification-type="booking_pending"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="hostBookingPendingPopUp"
                             @popup-open-control="hostBookingPendingPopUp = true"
                             @popup-close-control="hostBookingPendingPopUp = false"
@@ -186,8 +221,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Cancel to Host')" 
                             :label="$tfhb_trans('Booking Cancel')" 
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.host.booking_cancel"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.host.booking_cancel"
+                            recipient="host"
+                            notification-type="booking_cancel"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="hostBookingCencelPopUp"
                             @popup-open-control="hostBookingCencelPopUp = true"
                             @popup-close-control="hostBookingCencelPopUp = false"
@@ -200,8 +239,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Reschedule to Host')" 
                             :label="$tfhb_trans('Booking Reschedule')" 
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.host.booking_reschedule" 
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.host.booking_reschedule"
+                            recipient="host"
+                            notification-type="booking_reschedule"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="hostBookingReschedulePopUp"
                             @popup-open-control="hostBookingReschedulePopUp = true"
                             @popup-close-control="hostBookingReschedulePopUp = false"
@@ -214,8 +257,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Reminder to Host')" 
                             :label="$tfhb_trans('Booking Reminder')"
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.host.booking_reminder"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.host.booking_reminder"
+                            recipient="host"
+                            notification-type="booking_reminder"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="hostBookingReminderPopUp"
                             @popup-open-control="hostBookingReminderPopUp = true"
                             @popup-close-control="hostBookingReminderPopUp = false"
@@ -225,15 +272,19 @@ const UpdateNotification = async () => {
         
         
                     </div> 
-                    <div v-if="currentTabs=='attendee'"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton }"> 
+                    <div v-if="currentTabs=='attendee'"  class="tfhb-notification-wrap tfhb-notification-host tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{ 'tfhb-skeleton': ntskeleton, 'tfhb-pro': !!useGlobalNotifications }"> 
 
                         <!-- Single Notification  -->
                         <MailNotifications 
                             :title="$tfhb_trans('Booking Confirmation to Attendee')" 
                             :label="$tfhb_trans('Booking Confirmation')"
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.attendee.booking_confirmation"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.attendee.booking_confirmation"
+                            recipient="attendee"
+                            notification-type="booking_confirmation"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="attendeeBookingConfirmPopUp"
                             @popup-open-control="attendeeBookingConfirmPopUp = true"
                             @popup-close-control="attendeeBookingConfirmPopUp = false"
@@ -246,8 +297,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Pending to Attendee')"
                             :label="$tfhb_trans('Booking Pending')"
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.attendee.booking_pending"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.attendee.booking_pending"
+                            recipient="attendee"
+                            notification-type="booking_pending"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="attendeeBookingPendingPopUp"
                             @popup-open-control="attendeeBookingPendingPopUp = true"
                             @popup-close-control="attendeeBookingPendingPopUp = false"
@@ -260,8 +315,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Cancel to Attendee')"
                             :label="$tfhb_trans('Booking Cancel')"
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.attendee.booking_cancel"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.attendee.booking_cancel"
+                            recipient="attendee"
+                            notification-type="booking_cancel"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="attendeeBookingCancelPopUp"
                             @popup-open-control="attendeeBookingCancelPopUp = true"
                             @popup-close-control="attendeeBookingCancelPopUp = false"
@@ -275,8 +334,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Reschedule to Attendee')"
                             :label="$tfhb_trans('Booking Reschedule')"
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.attendee.booking_reschedule"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.attendee.booking_reschedule"
+                            recipient="attendee"
+                            notification-type="booking_reschedule"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="attendeeBookingReschedulePopUp"
                             @popup-open-control="attendeeBookingReschedulePopUp = true"
                             @popup-close-control="attendeeBookingReschedulePopUp = false"
@@ -289,8 +352,12 @@ const UpdateNotification = async () => {
                             :title="$tfhb_trans('Booking Reminder to Attendee')"
                             :label="$tfhb_trans('Booking Reminder')"
                             @update-notification="UpdateNotification"
-                            :data="meeting.notification.attendee.booking_reminder"  
-                            :update_preloader="props.update_preloader"  
+                            :data="meeting.notification.attendee.booking_reminder"
+                            recipient="attendee"
+                            notification-type="booking_reminder"
+                            :allow-global-sync="true"
+                            :locked="!!useGlobalNotifications"
+                            :update_preloader="props.update_preloader"
                             :ispopup="attendeeBookingReminderPopUp"
                             @popup-open-control="attendeeBookingReminderPopUp = true"
                             @popup-close-control="attendeeBookingReminderPopUp = false"
@@ -538,3 +605,10 @@ const UpdateNotification = async () => {
         <!--Bookings -->
     </div>
 </template>
+
+<style scoped>
+/* This box has no collapsible content below it (unlike Email/SMS), so round all four corners. */
+.tfhb-master-notification-switch .tfhb-notification-header {
+    border-radius: 6px;
+}
+</style>
