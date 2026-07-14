@@ -26,7 +26,22 @@ async function fetchExhibitors() {
         });
         if (response.data.success && response.data.data) {
             exhibitors.value = response.data.data;
-            filteredExhibitors.value = response.data.data;
+            
+            // Sort exhibitors alphabetically by company name (company_name)
+            exhibitors.value.sort((a, b) => {
+                const companyNameA = (a.data?.company_name || '').toLowerCase();
+                const companyNameB = (b.data?.company_name || '').toLowerCase();
+                
+                // Handle empty values by putting them at the end
+                if (!companyNameA && !companyNameB) return 0;
+                if (!companyNameA) return 1;
+                if (!companyNameB) return -1;
+                
+                // Sort alphabetically
+                return companyNameA.localeCompare(companyNameB);
+            });
+            
+            filteredExhibitors.value = [...exhibitors.value];
         }
     } catch (e) {
         // handle error
@@ -52,20 +67,20 @@ const Tfhb_Exhibitor_Filter = (event) => {
     searchQuery.value = query;
     
     if (!query) {
-        filteredExhibitors.value = exhibitors.value;
+        filteredExhibitors.value = [...exhibitors.value];
         return;
     }
     
     filteredExhibitors.value = exhibitors.value.filter(exhibitor => {
-        // Search in name
-        if (exhibitor.data.name && 
-            exhibitor.data.name.toLowerCase().includes(query)) {
+        // Search in company name
+        if (exhibitor.data.company_name && 
+            exhibitor.data.company_name.toLowerCase().includes(query)) {
             return true;
         }
         
-        // Search in job title
-        if (exhibitor.data.job_title && 
-            exhibitor.data.job_title.toLowerCase().includes(query)) {
+        // Search in contact person name
+        if (exhibitor.data.contact_person && 
+            exhibitor.data.contact_person.toLowerCase().includes(query)) {
             return true;
         }
         
@@ -76,8 +91,8 @@ const Tfhb_Exhibitor_Filter = (event) => {
         }
         
         // Search in phone number
-        if (exhibitor.data.telefono_diretto && 
-            exhibitor.data.telefono_diretto.toLowerCase().includes(query)) {
+        if (exhibitor.data.phone && 
+            exhibitor.data.phone.toLowerCase().includes(query)) {
             return true;
         }
         
@@ -94,8 +109,8 @@ const Tfhb_Exhibitor_Filter = (event) => {
         }
         
         // Search in website
-        if (exhibitor.data.sito_internet && 
-            exhibitor.data.sito_internet.toLowerCase().includes(query)) {
+        if (exhibitor.data.website && 
+            exhibitor.data.website.toLowerCase().includes(query)) {
             return true;
         }
         
@@ -170,53 +185,14 @@ const redirectToChat = (buyerId) => {
                     <input type="text" @keyup="Tfhb_Exhibitor_Filter" placeholder="Search by name, job title, email, phone, address..." /> 
                     <span><Icon name="Search" size=20 /></span>
                 </div>
-                 <!-- <HbButton 
-                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
-                    :buttonText="$tfhb_trans('Filter')"
-                    icon="SlidersHorizontal"   
-                    :hover_animation="false" 
-                    icon_position = 'left'
-                />  -->
-                <!-- <div class="thb-admin-btn right tfhb-flexbox tfhb-gap-16"> 
-                    <HbButton 
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportExhibitors()"
-                        :buttonText="$tfhb_trans('Export Badge')"
-                        icon="FileDown"   
-                        :hover_animation="false" 
-                        icon_position = 'left'
-                    />   
-                    <HbButton 
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : importExport.exportExhibitors()"
-                        :buttonText="$tfhb_trans('Export')"
-                        icon="FileDown"   
-                        :hover_animation="false" 
-                        icon_position = 'left'
-                    />   
-                    <HbButton 
-                        classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
-                        @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'ExhibitorsImport' })"
-                        :buttonText="$tfhb_trans('Import')"
-                        icon="FileUp"   
-                        :hover_animation="false" 
-                        icon_position = 'left'
-                    />   
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn" 
-                        @click="openModal"
-                        :buttonText="$tfhb_trans('Add New Host')"
-                        icon="PlusCircle"  
-                        icon_position="left"
-                    />  
-                </div>   -->
+                
             </div>
 
 
             <div class="header-content">
                 <div class="header-left">
                     <h1 class="exhibitors-title">Exhibitors</h1>
-                    <p class="exhibitors-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
+                    <p class="exhibitors-subtitle">Here below all participating Exhibitors sorted by alphabetical order (Company name) and main contact info.</p>
                 </div>
                 
                 <div class="header-right">
@@ -242,7 +218,7 @@ const redirectToChat = (buyerId) => {
                     <!-- {{ exhibitor }} -->
                         <div class="exhibitor-card-header">
                             <div class="exhibitor-avatar">
-                                <img v-if="exhibitor.data.avatar && exhibitor.data.avatar.startsWith('http')" :src="exhibitor.data.avatar" alt="Exhibitor Avatar">
+                                <img v-if="exhibitor.data.companey_logo && exhibitor.data.companey_logo.startsWith('http')" :src="exhibitor.data.companey_logo" alt="Exhibitor Avatar">
                                 <img 
                                     v-else
                                     :src="$tfhb_url+'/assets/images/avator.png'" 
@@ -251,7 +227,7 @@ const redirectToChat = (buyerId) => {
                                 /> 
                             </div> 
                             <div class="exhibitor-info">
-                                <h3 v-if="exhibitor.data.nome_e_cognome != ''" class="exhibitor-name">{{ exhibitor.data.nome_e_cognome  }}</h3>
+                                <h3 v-if="exhibitor.data.company_name != ''" class="exhibitor-name">{{ exhibitor.data.company_name  }}</h3>
                                 <!-- <h3 v-else class="exhibitor-name">{{ selectedExhibitor.data.job_title }}</h3> -->
                                 <!-- <p class="exhibitor-subtitle">{{ exhibitor.data.ambito_di_attività }}</p> -->
                             </div> 
@@ -261,7 +237,7 @@ const redirectToChat = (buyerId) => {
                             <div class="contact-info">
                                 <div class="contact-item">
                                     <Icon name="User" size=16 />
-                                    <span>{{ exhibitor.data.name }}</span>
+                                    <span>{{ exhibitor.data.contact_person }}</span>
                                 </div>
                                 <div class="contact-item">
                                     <Icon name="Mail" size=16 />
@@ -269,17 +245,17 @@ const redirectToChat = (buyerId) => {
                                 </div>
                                 <!-- <div class="contact-item">
                                     <Icon name="Phone" size=16 />
-                                    <span>{{ exhibitor.data.telefono_diretto }}</span>
+                                    <span>{{ exhibitor.data.phone }}</span>
                                 </div> -->
                                 <div  v-if="exhibitor.data.location" 
                                 class="contact-item">
                                     <Icon name="MapPin" size=16 />
                                     <span>{{ exhibitor.data.location }}</span>
                                 </div>
-                                <div v-else 
+                                <div v-else-if="exhibitor.data['sede-legale-attivita']" 
                                 class="contact-item">
                                     <Icon name="MapPin" size=16 />
-                                    <span>{{ exhibitor.data.sede_legale_dell_attivit }}</span>
+                                    <span>{{ exhibitor.data['sede-legale-attivita'] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -294,6 +270,9 @@ const redirectToChat = (buyerId) => {
                             <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
                             </button> -->
+                            <a :href="'#/exhibitors-list/profile/'+exhibitor.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -303,11 +282,20 @@ const redirectToChat = (buyerId) => {
             <div v-if="selectedExhibitor" class="exhibitor-details-sidebar">
                 <div class="exhibitor-details-header">
                     <h2 class="details-title">
-                        <Icon name="MessageCircle" size=20 />
+                        <!-- <Icon name="MessageCircle" size=20 /> -->
                         Exhibitors
                     </h2>
                     <div class="header-actions">
                         <!-- <span class="match-percentage-large">{{ selectedExhibitor.data.matchPercentage }}% Mach</span>s -->
+                        <button class="action-btn" @click="redirectToChat(selectedExhibitor.id)">
+                            <Icon name="MessageCircle" size=16 />
+                        </button>
+                        <!-- <button class="action-btn">
+                            <Icon name="MoreVertical" size=16 />
+                        </button> -->
+                        <a :href="'#/exhibitors-list/profile/'+selectedExhibitor.id " class="action-btn" style="font-size: 15px;">
+                            View
+                        </a>
                         <button class="close-btn" @click="closeExhibitorDetails">
                             <Icon name="X" size=20 />
                         </button>
@@ -317,7 +305,7 @@ const redirectToChat = (buyerId) => {
                 <div class="exhibitor-details-content">
                     <div class="exhibitor-profile">
                         <div class="exhibitor-avatar-large">
-                            <img v-if="selectedExhibitor.data.avatar && selectedExhibitor.data.avatar.startsWith('http')" :src="selectedExhibitor.data.avatar" alt="Exhibitor Avatar">
+                            <img v-if="selectedExhibitor.data.companey_logo && selectedExhibitor.data.companey_logo.startsWith('http')" :src="selectedExhibitor.data.companey_logo" alt="Exhibitor Avatar">
                             <img 
                                 v-else
                                 :src="$tfhb_url+'/assets/images/avator.png'" 
@@ -327,8 +315,8 @@ const redirectToChat = (buyerId) => {
                             <!-- <div class="online-indicator"></div> -->
                         </div>
                         <!-- {{ selectedExhibitor }} -->
-                        <h3 v-if="selectedExhibitor.data.nome_e_cognome" class="exhibitor-name-large">{{ selectedExhibitor.data.nome_e_cognome }}</h3>
-                        <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.job_title }}</h3>
+                        <h3 v-if="selectedExhibitor.data.company_name" class="exhibitor-name-large">{{ selectedExhibitor.data.company_name }}</h3>
+                        <h3 v-else class="exhibitor-name-large">{{ selectedExhibitor.data.contact_person }}</h3>
                         <p  class="exhibitor-subtitle-large">{{ selectedExhibitor.data.sede_legale_dell_attivit }}</p>
                     </div>
 
@@ -339,9 +327,9 @@ const redirectToChat = (buyerId) => {
                             <!-- <a href="#" class="read-more">read more</a> -->
                         </div>
 
-                        <div v-if="selectedExhibitor.data.sito_internet_aziendale != ''" class="detail-section">
+                        <div v-if="selectedExhibitor.data.website != ''" class="detail-section">
                             <h4>SITE</h4>
-                            <p>{{ selectedExhibitor.data.sito_internet_aziendale }}</p>
+                            <p>{{ selectedExhibitor.data.website }}</p>
                         </div>
 
                         <div class="detail-section">
@@ -349,9 +337,9 @@ const redirectToChat = (buyerId) => {
                             <p>{{ selectedExhibitor.data.email }}</p>
                         </div>
 
-                        <div v-if="selectedExhibitor.data.telefono_diretto"  class="detail-section">
+                        <div v-if="selectedExhibitor.data.phone"  class="detail-section">
                             <h4>PHONE</h4>
-                            <p>{{ selectedExhibitor.data.telefono_diretto }}</p>
+                            <p>{{ selectedExhibitor.data.phone }}</p>
                         </div>
 
                         <div v-if="selectedExhibitor.data.location" class="detail-section">

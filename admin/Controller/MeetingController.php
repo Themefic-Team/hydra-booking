@@ -283,7 +283,7 @@ class MeetingController {
 
 		// Sanitize data
 		$title       = ! empty( $request['title'] ) ? sanitize_text_field( $request['title'] ) : 'No Title';
-		$description = ! empty( $request['description'] ) ? sanitize_text_field( $request['description'] ) : '';
+		$description = ! empty( $request['description'] ) ? wp_kses_post( $request['description'] ) : '';
 
 		// Check if taxonomy is registered
 		if ( ! taxonomy_exists( 'meeting_category' ) ) {
@@ -1196,7 +1196,7 @@ class MeetingController {
 			'user_id'                  => $request['user_id'],
 			'title'                    => isset( $request['title'] ) ? sanitize_text_field( $request['title'] ) : '',
 			'host_id'                  => isset( $request['host_id'] ) ? sanitize_key( $request['host_id'] ) : '',
-			'description'              => isset( $request['description'] ) ? sanitize_text_field( $request['description'] ) : '',
+			'description'              => isset( $request['description'] ) ? wp_kses_post( $request['description'] ) : '',
 			'meeting_type'             => isset( $request['meeting_type'] ) ? sanitize_text_field( $request['meeting_type'] ) : '',
 			'duration'                 => isset( $request['duration'] ) ? sanitize_text_field( $request['duration'] ) : '',
 			'custom_duration'          => isset( $request['custom_duration'] ) ? sanitize_text_field( $request['custom_duration'] ) : '',
@@ -1271,7 +1271,7 @@ class MeetingController {
 		$meeting_post_data = array(
 			'ID'           => $MeetingData->post_id,
 			'post_title'   => isset( $request['title'] ) ? sanitize_text_field( $request['title'] ) : '',
-			'post_content' => isset( $request['description'] ) ? sanitize_text_field( $request['description'] ) : '',
+			'post_content' => isset( $request['description'] ) ? wp_kses_post( $request['description'] ) : '',
 			'post_author'  => $current_user_id,
 			'post_name'    => isset( $request['title'] ) ? sanitize_title( $request['title'] ) : '',
 		);

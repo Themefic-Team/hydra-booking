@@ -10,8 +10,7 @@ import Meetings from '../view/meetings/meetings.vue';
 import { AuthData } from '@/store/auth';
 
 // Event 
-const user = tfhb_core_apps.user || '';
-console.log(user);
+const user = tfhb_core_apps.user || ''; 
 const user_id = user.id || '';
 const host_id = user.host_id || ''; 
 const user_role = user.role[0] || '';
@@ -527,6 +526,7 @@ const routes = [
                 props: true,
                 component: () => import('../view/FrontendDashboard/common/SellersList.vue')
             }, 
+          
         ]
     },
     // Sellers Dashboard
@@ -625,12 +625,26 @@ const routes = [
         component: () => import('../view/FrontendDashboard/common/BuyersList.vue')
     },  
     {
+        path: '/buyer-list/profile/:id',
+        name: 'SellersDashboardViewBuyersProfile',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/common/BuyersProfile.vue')
+    }, 
+    {
         path: '/seller-list',
         name: 'SellersDashboardViewSellers',
         meta: { Capabilities: 'tfhb_manage_options' },
         props: true,
         component: () => import('../view/FrontendDashboard/common/SellersList.vue')
     },
+    {
+        path: '/seller-list/profile/:id',
+        name: 'BuyersDashboardViewSellersProfile',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/common/SellersProfile.vue')
+    }, 
     {
         path: '/messages',
         name: 'HydraAddonsMessages',
@@ -645,6 +659,13 @@ const routes = [
         props: true,
         component: () => import('../view/FrontendDashboard/common/ExhibitorsList.vue')
     },
+    {
+        path: '/exhibitors-list/profile/:id',
+        name: 'ExhibitorsListProfile',
+        meta: { Capabilities: 'tfhb_manage_options' },
+        props: true,
+        component: () => import('../view/FrontendDashboard/common/ExhibitorsProfile.vue')
+    }, 
 ];
 
 const router = createRouter({

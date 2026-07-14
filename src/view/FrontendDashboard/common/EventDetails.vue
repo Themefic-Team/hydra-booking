@@ -89,12 +89,14 @@ onMounted(() => {
 })
 
 const embedVideoUrl = computed(() => {
-  if (!eventDetails.value.video_url) {
+  const videoUrl = eventDetails.value?.video_url || AddonsAuth.event?.event_details?.video_url;
+  
+  if (!videoUrl) {
     return null;
   }
   
   try {
-    const url = new URL(eventDetails.value.video_url);
+    const url = new URL(videoUrl);
     
     // Handle YouTube URLs
     if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
@@ -115,25 +117,25 @@ const embedVideoUrl = computed(() => {
     }
     
     // Return original URL for non-YouTube videos
-    return eventDetails.value.video_url;
+    return videoUrl;
   } catch (error) {
     console.error('Error parsing video URL:', error);
-    return eventDetails.value.video_url;
+    return videoUrl;
   }
 });
 
 </script>
 
 <template> 
-<!-- {{ AddonsAuth.event.event_details }} -->
+<!-- {{ AddonsAuth.event?.event_details }} -->
   <div class="event-details-container">
     <!-- Main Content Area -->
     <div class="main-content">
       <!-- Event Banner -->
-      <div class="event-banner-container">
+      <div class="event-banner-container"> 
         <img 
-          v-if="AddonsAuth.event.event_details.event_banner" 
-          :src="AddonsAuth.event.event_details.event_banner" 
+          v-if="AddonsAuth.event?.event_details?.event_banner && AddonsAuth.event?.event_details?.event_banner != ''" 
+          :src="AddonsAuth.event?.event_details?.event_banner" 
           alt="Event Banner" 
           class="event-banner"
         />
@@ -148,8 +150,8 @@ const embedVideoUrl = computed(() => {
         <!-- Event Logo Overlay -->
         <div class="event-logo-overlay">
           <img 
-            v-if="AddonsAuth.event.event_details.event_logo" 
-            :src="AddonsAuth.event.event_details.event_logo" 
+            v-if="AddonsAuth.event?.event_details?.event_logo" 
+            :src="AddonsAuth.event?.event_details?.event_logo" 
             alt="Event Logo" 
             class="event-logo"
           />
@@ -163,19 +165,20 @@ const embedVideoUrl = computed(() => {
       </div>
  
       <!-- Event Title and Date -->
+       <!-- {{ AddonsAuth.event.event_details }} -->
       <div class="event-header">
-        <h1 class="event-title">{{ eventDetails.title || 'Event Title' }}</h1>
+        <h1 class="event-title">{{ AddonsAuth.event?.title  }}</h1>
         <!-- <p class="event-subtitle">{{ eventDetails.subtitle || 'Event Subtitle' }}</p> -->
         <!-- <p class="event-date">{{ eventDetails.date || 'Event Date' }}</p> -->
-        <span v-if="AddonsAuth.event.availability_range && AddonsAuth.event.availability_range.start && AddonsAuth.event.availability_range.end">
+        <span v-if="AddonsAuth.event?.availability_range && AddonsAuth.event?.availability_range?.start && AddonsAuth.event?.availability_range?.end">
             From {{
-                new Date(AddonsAuth.event.availability_range.start).getDate()
+                new Date(AddonsAuth.event?.availability_range?.start).getDate()
             }} to {{
-                new Date(AddonsAuth.event.availability_range.end).getDate()
+                new Date(AddonsAuth.event?.availability_range?.end).getDate()
             }} {{
-                new Date(AddonsAuth.event.availability_range.end).toLocaleString('default', { month: 'short' })
+                new Date(AddonsAuth.event?.availability_range?.end).toLocaleString('default', { month: 'short' })
             }}, {{
-                new Date(AddonsAuth.event.availability_range.end).getFullYear()
+                new Date(AddonsAuth.event?.availability_range?.end).getFullYear()
             }}
         </span>
       </div>
@@ -196,16 +199,16 @@ const embedVideoUrl = computed(() => {
       <div class="tab-content">
         <!-- Home Tab -->
         <div v-if="activeTab === 'Home'" class="home-content">
-          <div class="content-card">
+            <div class="content-card">
             <h2>Description</h2>
-              <p v-if="AddonsAuth.event.description != null">{{ AddonsAuth.event.description }}</p>
+              <div v-if="AddonsAuth.event?.description != null" class="wp-editor-content" v-html="AddonsAuth.event?.description "> </div>
               <p v-else>No description found</p>
             </div>
 
           <div class="content-card">
             <h2>Gallery</h2>
-            <div  v-if="AddonsAuth.event.event_details.gallery_images && AddonsAuth.event.event_details.gallery_images.length > 0" class="gallery-grid">
-              <div v-for="(img, index) in AddonsAuth.event.event_details.gallery_images " :key="index" class="gallery-item">
+            <div  v-if="AddonsAuth.event?.event_details?.gallery_images && AddonsAuth.event?.event_details?.gallery_images.length > 0" class="gallery-grid">
+              <div v-for="(img, index) in AddonsAuth.event?.event_details?.gallery_images || [] " :key="index" class="gallery-item">
                 <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
               </div>
             </div>
@@ -217,9 +220,9 @@ const embedVideoUrl = computed(() => {
           <div  class="content-card">
             <h2>Video</h2>
              
-            <div  v-if="AddonsAuth.event.event_details.video_url != null"  >
-              <p class="video-title">{{ AddonsAuth.event.event_details.video_title || 'Event Video Presentation' }}</p>
-              <p class="video-description">{{ AddonsAuth.event.event_details.video_description || 'Video presentation of our exclusive event' }}</p>
+            <div  v-if="AddonsAuth.event?.event_details?.video_url != null"  >
+              <p class="video-title">{{ AddonsAuth.event?.event_details?.video_title || 'Event Video Presentation' }}</p>
+              <p class="video-description">{{ AddonsAuth.event?.event_details?.video_description || 'Video presentation of our exclusive event' }}</p>
               <div class="video-container">
                 <iframe 
                   v-if="embedVideoUrl" 
@@ -228,12 +231,7 @@ const embedVideoUrl = computed(() => {
                   allowfullscreen
                   class="video-iframe"
                 ></iframe>
-                <div v-else class="video-placeholder">
-                  <div class="video-placeholder-content">
-                    <div class="play-button">▶</div>
-                    <p>Video presentation</p>
-                  </div>
-                </div>
+               
               </div>
             </div>
             <div v-else>
@@ -243,16 +241,20 @@ const embedVideoUrl = computed(() => {
 
           <div  class="content-card">
             <h2>Documents</h2>
-            <div v-if="AddonsAuth.event.event_details.program_items && AddonsAuth.event.event_details.program_items.length > 0" class="program-list">
-              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" class="program-item" v-if="item && item.program_file != null && item.program_file.length > 0">
-                <div class="program-icon">
-                  <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
-                  <div v-else class="program-icon-placeholder">📋</div>
-                </div>
-                <div class="program-content">
-                  <h3>{{ item.title || 'Untitled' }}</h3>
-                  <p>{{ item.subtitle || 'No description' }}</p>
-                </div>
+            <div v-if="AddonsAuth.event?.event_details?.program_items && AddonsAuth.event?.event_details?.program_items.length > 0" class="program-list">
+              
+              <div v-for="(item, index) in AddonsAuth.event?.event_details?.program_items || [] " :key="index" >
+                <a  v-if="item && item.program_file != null  && item.title !=''" :href="item.program_file" target="_blank" class="program-item" >
+                  
+                  <div class="program-icon">
+                      <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
+                      <div v-else class="program-icon-placeholder">📋</div>
+                    </div>
+                    <div class="program-content">
+                      <h3>{{ item.title || 'Untitled' }}</h3>
+                      <p>{{ item.subtitle || 'No description' }}</p>
+                    </div>
+                  </a>
               </div>
             </div>
             <div v-else class="program-list">
@@ -262,10 +264,12 @@ const embedVideoUrl = computed(() => {
 
           <div  class="content-card">
             <h2>Links</h2>
-            <div v-if="AddonsAuth.event.event_details.external_links != null && AddonsAuth.event.event_details.external_links.length > 0"  class="links-list">
-              <div v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" class="link-item" v-if="link && link.url">
-                <span class="link-icon">🌐</span>
-                <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+            <div v-if="AddonsAuth.event?.event_details?.external_links != null && AddonsAuth.event?.event_details?.external_links.length > 0"  class="links-list">
+              <div  v-for="(link, index) in AddonsAuth.event?.event_details?.external_links || [] " :key="index" >
+                <div class="link-item" v-if="link && link.url">
+                  <span class="link-icon">🌐</span>
+                  <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+                </div>
               </div>
             </div>
             <div v-else class="links-list">
@@ -277,21 +281,21 @@ const embedVideoUrl = computed(() => {
         <!-- Description Tab -->
         <div v-if="activeTab === 'Description'" class="content-card">
           <h2>Description</h2>
-          <p v-if="AddonsAuth.event.description != null">{{ AddonsAuth.event.description }}</p>
+          <div v-if="AddonsAuth.event?.description != null" class="wp-editor-content" v-html="AddonsAuth.event?.description "> </div>
           <p v-else>No description found</p>
         </div>
 
         <!-- Gallery Tab -->
         <div v-if="activeTab === 'Gallery'" class="content-card">
           <h2>Gallery</h2>
-          <div v-if="AddonsAuth.event.gallery_images != null && AddonsAuth.event.gallery_images.length > 0" class="gallery-grid">
-            <div v-for="(img, index) in eventDetails.gallery_images " :key="index" class="gallery-item">
-              <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+          <div  v-if="AddonsAuth.event?.event_details?.gallery_images && AddonsAuth.event?.event_details?.gallery_images.length > 0" class="gallery-grid">
+              <div v-for="(img, index) in AddonsAuth.event?.event_details?.gallery_images || [] " :key="index" class="gallery-item">
+                <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+              </div>
             </div>
-          </div>
-          <div v-else class="gallery-grid">
-            <p>No gallery images found</p>
-          </div>
+            <div v-else>
+              <p>No gallery images found</p>
+            </div>
         </div>
 
         <!-- Gallery Popup Modal (duplicate for Gallery tab) -->
@@ -305,9 +309,9 @@ const embedVideoUrl = computed(() => {
         <!-- Video Tab -->
         <div v-if="activeTab === 'Video'" class="content-card">
           <h2>Video</h2>
-          <div  v-if="AddonsAuth.event.event_details.video_url != null && AddonsAuth.event.event_details.video_url.length > 0"  >
-            <p class="video-title">{{ AddonsAuth.event.event_details.video_title || 'Event Video Presentation' }}</p>
-            <p class="video-description">{{ AddonsAuth.event.event_details.video_description || 'Video presentation of our exclusive event' }}</p>
+          <div  v-if="AddonsAuth.event?.event_details?.video_url != null && AddonsAuth.event?.event_details?.video_url.length > 0"  >
+            <p class="video-title">{{ AddonsAuth.event?.event_details?.video_title || 'Event Video Presentation' }}</p>
+            <p class="video-description">{{ AddonsAuth.event?.event_details?.video_description || 'Video presentation of our exclusive event' }}</p>
             <div class="video-container">
               <iframe 
                 v-if="embedVideoUrl" 
@@ -316,12 +320,6 @@ const embedVideoUrl = computed(() => {
                 allowfullscreen
                 class="video-iframe"
               ></iframe>
-              <div v-else class="video-placeholder">
-                <div class="video-placeholder-content">
-                  <div class="play-button">▶</div>
-                  <p>Video presentation</p>
-                </div>
-              </div>
             </div>
           </div>
           <div v-else>
@@ -332,16 +330,19 @@ const embedVideoUrl = computed(() => {
         <!-- Documents Tab -->
         <div v-if="activeTab === 'Documents'" class="content-card">
           <h2>Documents</h2>
-            <div v-if="AddonsAuth.event.event_details.program_items != null && AddonsAuth.event.event_details.program_items.length > 0" class="program-list">
-              <div v-for="(item, index) in AddonsAuth.event.event_details.program_items " :key="index" class="program-item" v-if="item">
-                <div class="program-icon">
-                  <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
-                  <div v-else class="program-icon-placeholder">📋</div>
-                </div>
-                <div class="program-content">
-                  <h3>{{ item.title || 'Untitled' }}</h3>
-                  <p>{{ item.subtitle || 'No description' }}</p>
-                </div>
+            <div v-if="AddonsAuth.event?.event_details?.program_items != null && AddonsAuth.event?.event_details?.program_items.length > 0" class="program-list">
+              <div v-for="(item, index) in AddonsAuth.event?.event_details?.program_items || [] " :key="index" >
+                <a  v-if="item && item.program_file != null && item.title  !='' " :href="item.program_file" target="_blank" class="program-item" >
+                  
+                  <div class="program-icon">
+                      <img v-if="item.program_icon != ''" :src="item.program_icon" alt="Program Icon" />
+                      <div v-else class="program-icon-placeholder">📋</div>
+                    </div>
+                    <div class="program-content">
+                      <h3>{{ item.title || 'Untitled' }}</h3>
+                      <p>{{ item.subtitle || 'No description' }}</p>
+                    </div>
+                  </a>
               </div>
             </div>
             <div v-else class="program-list">
@@ -352,10 +353,14 @@ const embedVideoUrl = computed(() => {
         <!-- Links Tab -->
         <div v-if="activeTab === 'Links'" class="content-card">
           <h2>Links</h2>
-          <div v-if="AddonsAuth.event.event_details.external_links != null && AddonsAuth.event.event_details.external_links.length > 0" class="links-list">
-            <div v-for="(link, index) in AddonsAuth.event.event_details.external_links " :key="index" class="link-item" v-if="link && link.url">
-              <span class="link-icon">🌐</span>
-              <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+          <div v-if="AddonsAuth.event?.event_details?.external_links != null && AddonsAuth.event?.event_details?.external_links.length > 0" class="links-list">
+            <div v-if="AddonsAuth.event?.event_details?.external_links != null && AddonsAuth.event?.event_details?.external_links.length > 0"  class="links-list">
+              <div  v-for="(link, index) in AddonsAuth.event?.event_details?.external_links || [] " :key="index" >
+                <div class="link-item" v-if="link && link.url !=''">
+                  <span class="link-icon">🌐</span>
+                  <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
+                </div>
+              </div>
             </div>
           </div>
           <div v-else class="links-list">
@@ -373,33 +378,41 @@ const embedVideoUrl = computed(() => {
         <div class="contact-section">
           <div class="contact-item">
             <span class="contact-label">SITE</span>
-            <a :href="AddonsAuth.event.event_details.contact_info?.website || 'https://www.example.com'" target="_blank">
-              {{ AddonsAuth.event.event_details.contact_info?.website || 'www.example.com' }}
+            <a :href="AddonsAuth.event?.event_details?.contact_info?.website || 'https://www.example.com'" target="_blank">
+              {{ AddonsAuth.event?.event_details?.contact_info?.website || 'www.example.com' }}
             </a>
           </div>
           
           <div class="contact-item">
             <span class="contact-label">EMAIL</span>
-            <a :href="`mailto:${AddonsAuth.event.event_details.contact_info?.email || 'info@example.com'}`">
-              {{ AddonsAuth.event.event_details.contact_info?.email || 'info@example.com' }}
+            <a :href="`mailto:${AddonsAuth.event?.event_details?.contact_info?.email || 'info@example.com'}`">
+              {{ AddonsAuth.event?.event_details?.contact_info?.email || 'info@example.com' }}
+            </a>
+            <br>
+            <a v-if="AddonsAuth.event?.event_details?.contact_info?.email2" :href="`mailto:${AddonsAuth.event?.event_details?.contact_info?.email2 || 'info@example.com'}`">
+              {{ AddonsAuth.event?.event_details?.contact_info?.email2 || 'info@example.com' }}
+            </a>
+            <br>
+            <a v-if="AddonsAuth.event?.event_details?.contact_info?.email3" :href="`mailto:${AddonsAuth.event?.event_details?.contact_info?.email3 || 'info@example.com'}`">
+              {{ AddonsAuth.event?.event_details?.contact_info?.email3 || 'info@example.com' }}
             </a>
           </div>
           
           <div class="contact-item">
             <span class="contact-label">PHONE</span>
             <div class="phone-numbers">
-              <div>{{ AddonsAuth.event.event_details.contact_info?.phone || '+01 917 055-0403' }}</div>
-              <div>{{ AddonsAuth.event.event_details.contact_info?.phone2 || '+01 920 036-1002' }}</div>
-              <div>{{ AddonsAuth.event.event_details.contact_info?.phone3 || '+01 917 070-2102' }}</div>
+              <div v-if="AddonsAuth.event?.event_details?.contact_info?.phone">{{ AddonsAuth.event?.event_details?.contact_info?.phone || '' }}</div>
+              <div v-if="AddonsAuth.event?.event_details?.contact_info?.phone2">{{ AddonsAuth.event?.event_details?.contact_info?.phone2 || '' }}</div>
+              <div v-if="AddonsAuth.event?.event_details?.contact_info?.phone3">{{ AddonsAuth.event?.event_details?.contact_info?.phone3 || '' }}</div>
             </div>
           </div>
           
           <div class="contact-item">
             <span class="contact-label">LOCATION</span>
-            <div>{{ AddonsAuth.event.event_details.contact_info?.location || 'Event Location' }}</div>
+            <div>{{ AddonsAuth.event?.event_details?.contact_info?.location || 'Event Location' }}</div>
           </div>
         </div>
-        <!-- {{ AddonsAuth.event.event_details.contact_info.social_media }} -->
+        <!-- {{ AddonsAuth.event?.event_details?.contact_info?.social_media }} -->
 
         <div class="social-section">
           <h4>SOCIAL</h4>
@@ -431,7 +444,247 @@ const embedVideoUrl = computed(() => {
 .event-details-container {
   display: flex;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; */
+}
+
+.home-content .content-card p {
+	font-size: 16px !important;
+	line-height: 1.4 !important;
+}
+.wp-editor-content p {
+	font-size: 16px !important;
+	line-height: 1.4 !important;
+}
+
+/* WordPress Editor Content Styles */
+.wp-editor-content {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 16px !important;
+  line-height: 1.6;
+  color: var(--tfhb-paragraph-color, #273F2B);
+}
+
+/* Headings */
+.wp-editor-content h1,
+.wp-editor-content h2,
+.wp-editor-content h3,
+.wp-editor-content h4,
+.wp-editor-content h5,
+.wp-editor-content h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 1.5em 0 0.5em 0;
+  color: var(--tfhb-text-title-color, #141915);
+}
+
+.wp-editor-content h1 { font-size: 2em; }
+.wp-editor-content h2 { font-size: 1.75em; }
+.wp-editor-content h3 { font-size: 1.5em; }
+.wp-editor-content h4 { font-size: 1.25em; }
+.wp-editor-content h5 { font-size: 1.125em; }
+.wp-editor-content h6 { font-size: 1em; }
+
+/* Paragraphs */
+.wp-editor-content p {
+  margin: 0 0 1em 0;
+  line-height: 1.6;
+}
+
+/* Lists */
+.wp-editor-content ul,
+.wp-editor-content ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.wp-editor-content li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.wp-editor-content ul {
+  list-style-type: disc;
+}
+
+.wp-editor-content ol {
+  list-style-type: decimal;
+}
+
+.wp-editor-content ul ul,
+.wp-editor-content ol ol,
+.wp-editor-content ul ol,
+.wp-editor-content ol ul {
+  margin: 0.5em 0;
+}
+
+/* Links */
+.wp-editor-content a {
+  color: var(--tfhb-primary-color, #2E6B38);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.wp-editor-content a:hover {
+  color: var(--tfhb-secondary-color, #273F2B);
+  text-decoration: none;
+}
+
+/* Blockquotes */
+.wp-editor-content blockquote {
+  margin: 1.5em 0;
+  padding: 1em 1.5em;
+  background: var(--tfhb-surface-background-color, #EEF6F0);
+  border-left: 4px solid var(--tfhb-primary-color, #2E6B38);
+  font-style: italic;
+  border-radius: 0 8px 8px 0;
+}
+
+.wp-editor-content blockquote p {
+  margin: 0;
+}
+
+/* Code */
+.wp-editor-content code {
+  background: var(--tfhb-surface-background-color, #EEF6F0);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  color: var(--tfhb-text-title-color, #141915);
+}
+
+.wp-editor-content pre {
+  background: var(--tfhb-surface-background-color, #EEF6F0);
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+}
+
+.wp-editor-content pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Tables */
+.wp-editor-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.wp-editor-content th,
+.wp-editor-content td {
+  padding: 0.75em 1em;
+  text-align: left;
+  border-bottom: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+}
+
+.wp-editor-content th {
+  background: var(--tfhb-surface-background-color, #EEF6F0);
+  font-weight: 600;
+  color: var(--tfhb-text-title-color, #141915);
+}
+
+.wp-editor-content tr:last-child td {
+  border-bottom: none;
+}
+
+/* Images */
+.wp-editor-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1em 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wp-editor-content .alignleft {
+  float: left;
+  margin: 0 1em 1em 0;
+}
+
+.wp-editor-content .alignright {
+  float: right;
+  margin: 0 0 1em 1em;
+}
+
+.wp-editor-content .aligncenter {
+  display: block;
+  margin: 1em auto;
+}
+
+/* Horizontal Rule */
+.wp-editor-content hr {
+  border: none;
+  border-top: 2px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  margin: 2em 0;
+  border-radius: 1px;
+}
+
+/* Strong and Emphasis */
+.wp-editor-content strong,
+.wp-editor-content b {
+  font-weight: 600;
+  color: var(--tfhb-text-title-color, #141915);
+}
+
+.wp-editor-content em,
+.wp-editor-content i {
+  font-style: italic;
+}
+
+/* WordPress specific classes */
+.wp-editor-content .wp-caption {
+  max-width: 100%;
+  margin: 1em 0;
+}
+
+.wp-editor-content .wp-caption-text {
+  font-size: 0.875em;
+  color: var(--tfhb-paragraph-color, #273F2B);
+  text-align: center;
+  margin-top: 0.5em;
+  font-style: italic;
+}
+
+.wp-editor-content .gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1em 0;
+}
+
+.wp-editor-content .gallery-item {
+  text-align: center;
+}
+
+.wp-editor-content .gallery-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Responsive adjustments for editor content */
+@media (max-width: 768px) {
+  .wp-editor-content {
+    font-size: 14px;
+  }
+  
+  .wp-editor-content h1 { font-size: 1.75em; }
+  .wp-editor-content h2 { font-size: 1.5em; }
+  .wp-editor-content h3 { font-size: 1.25em; }
+  
+  .wp-editor-content .alignleft,
+  .wp-editor-content .alignright {
+    float: none;
+    margin: 1em 0;
+  }
 }
 
 /* Main Content */
@@ -926,6 +1179,8 @@ const embedVideoUrl = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+  overflow: scroll;
 }
 .gallery-popup-content img {
   max-width: 80vw;

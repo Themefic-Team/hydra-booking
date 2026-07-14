@@ -43,6 +43,7 @@ const loadInitialData = async () => {
     });
     
     if (response.data.success) {
+     
       sellers.value = response.data.data.sellers;
       buyers.value = response.data.data.buyers;
       meetingDates.value = response.data.data.meeting_availability.dates;
@@ -64,17 +65,15 @@ const onSellerChange = async () => {
     showSellerInfo.value = true;
     
     // Reload time slots if date is already selected to check availability
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   } else {
     showSellerInfo.value = false;
     sellerDetails.value = '';
     
     // Reload time slots if date is already selected
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   }
 };
 
@@ -84,17 +83,15 @@ const onBuyerChange = async () => {
     showBuyerInfo.value = true;
     
     // Reload time slots if date is already selected to check availability
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   } else {
     showBuyerInfo.value = false;
     buyerDetails.value = '';
     
     // Reload time slots if date is already selected
-    if (formData.select_date) {
-      await loadTimeSlots();
-    }
+    formData.select_date = '';
+    formData.select_time_slot = '';
   }
 };
 
@@ -197,8 +194,12 @@ const submitForm = async () => {
         autoClose: 1500,
       });
       // Redirect to matching list vue example
-      router.push('/addons-view-matching');
-      // window.location.href = `${window.location.origin}/wp-admin/admin.php?page=hydra-addons-matching`;
+      // router.push('/addons-view-matching');
+      // reloiad page after 1 second
+      setTimeout(() => {
+        // windows reload
+        window.location.reload();
+      }, 1000);
     } else {
       toast.error(response.data.message || 'Error adding matching', {
         position: 'bottom-right',
@@ -295,9 +296,13 @@ onMounted(() => {
               :label="$tfhb_trans('Seller')"
               :filter="true"
               :placeholder="$tfhb_trans('Select Seller')"
-              :option="sellers.map(seller => ({
-                name: `${seller.data.user_email} (${seller.data.user_nicename})`,
-                value: seller.data.ID
+              :option="[...sellers].sort((a, b) => {
+                const nameA = a.tfhb_sellers_data.denominazione_operatore_azienda.toLowerCase();
+                const nameB = b.tfhb_sellers_data.denominazione_operatore_azienda.toLowerCase();
+                return nameA.localeCompare(nameB);
+              }).map(seller => ({
+                name: `(${seller.tfhb_sellers_data.denominazione_operatore_azienda}) ${seller.user_email}`,
+                value: seller.ID
               }))"
               @tfhb-onchange="onSellerChange"
               required
@@ -311,9 +316,13 @@ onMounted(() => {
               :label="$tfhb_trans('Buyer')"
               :filter="true"
               :placeholder="$tfhb_trans('Select Buyer')"
-              :option="buyers.map(buyer => ({
-                name: `${buyer.data.user_email} (${buyer.data.user_nicename})`,
-                value: buyer.data.ID
+              :option="[...buyers].sort((a, b) => {
+                const nameA = a.tfhb_buyers_data.travel_agent_name.toLowerCase();
+                const nameB = b.tfhb_buyers_data.travel_agent_name.toLowerCase();
+                return nameA.localeCompare(nameB);
+              }).map(buyer => ({
+                name: `(${buyer.tfhb_buyers_data.travel_agent_name}) ${buyer.user_email} `,
+                value: buyer.ID
               }))"
               @tfhb-onchange="onBuyerChange"
               required

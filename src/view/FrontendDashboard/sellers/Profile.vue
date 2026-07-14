@@ -8,6 +8,7 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbTextarea from '@/components/form-fields/HbTextarea.vue'
 import HbButton from '@/components/form-fields/HbButton.vue'
 import HbRadio from '@/components/form-fields/HbRadio.vue'
+import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
@@ -16,7 +17,9 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import HbPopup from '@/components/widgets/HbPopup.vue';
 
+import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
+import Settings from '@/view/settings/Settings.vue';
 const { errors, isEmpty } = useValidators();
 
 // --- API-driven user public info ---
@@ -42,7 +45,8 @@ const userPublicInformation = reactive({
         linkedin: ''
     },
     // More details fields will be populated from API
-    more_details_fields: []
+    more_details_fields: [],
+    settings : [],
 });
 const loading = ref(false);
 const skeleton = ref(true);
@@ -93,6 +97,7 @@ async function fetchUserPublicInfo() {
             }
             if (response.data.data.registration_froms_fields) {
                 userPublicInformation.more_details_fields = response.data.data.registration_froms_fields;
+                userPublicInformation.settings = response.data.data.settings;
             }
             skeleton.value = false;
         }
@@ -448,18 +453,18 @@ document.addEventListener('click', (e) => {
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox tfhb-mb-24">  
         <HbText  
-            v-model="userPublicInformation.name"  
+            v-model="userPublicInformation.denominazione_operatore_azienda"  
             required= "true"  
-            :label="$tfhb_trans('Name')"  
+            :label="$tfhb_trans('Company Name')"  
             selected = "1"
-            :placeholder="$tfhb_trans('Type your name')" 
+            :placeholder="$tfhb_trans('Type your company name')" 
             width="50"
         /> 
         <HbText  
-            v-model="userPublicInformation.job_title"  
-            :label="$tfhb_trans('Job Title')"  
+            v-model="userPublicInformation.name"  
+            :label="$tfhb_trans('Parsonal Name')"  
             selected = "1"
-            :placeholder="$tfhb_trans('Job Title')" 
+            :placeholder="$tfhb_trans('Type personal name')" 
             width="50"
         />  
         <HbText  
@@ -526,7 +531,7 @@ document.addEventListener('click', (e) => {
                 <div class="tfhb-section-title">
                     <h3>{{ $tfhb_trans('Staff') }}</h3>
                 </div>
-                <div class="tfhb-staff-section">
+                <div class="tfhb-staff-section"> 
                     <div v-for="(member, index) in userPublicInformation.staff" :key="index" class="tfhb-staff-item tfhb-flexbox tfhb-gap-16">
                         <HbText  
                             v-model="member.name"  
@@ -539,6 +544,11 @@ document.addEventListener('click', (e) => {
                             :label="$tfhb_trans('Position')"  
                             :placeholder="$tfhb_trans('Job position')" 
                             width="50"
+                        /> 
+                        <HbSwitch 
+                            v-model="member.is_present_at_event"
+                            width="100"
+                            :label="$tfhb_trans('Enable badge (Present at event)')"  
                         />
                         <HbWpFileUpload
                             :name="`staff_image_${index}`"
@@ -550,21 +560,49 @@ document.addEventListener('click', (e) => {
                             file_format="jpg,jpeg,png"
                             width="100"
                         />
+                        
                         <HbButton 
                             classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                             @click="userPublicInformation.staff.splice(index, 1)"
                             :buttonText="$tfhb_trans('Remove')"
                             icon="Trash2"
-                        />
+                        /> 
+                 
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.staff.push({name: '', position: '', image: ''})"
-                        :buttonText="$tfhb_trans('Add Staff Member')"
-                        icon="UserPlus"
-                        hover_icon="UserPlus"
-                        :hover_animation="true"
-                    />
+
+                  
+                   
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.staff.push({name: '', position: '', image: '', is_present_at_event : '0'})"
+                            :buttonText="$tfhb_trans('Add Staff Member')"
+                            icon="UserPlus"
+                            hover_icon="UserPlus"
+                            :hover_animation="true"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
+                    <br>
+                    <HbInfoBox icon="Info" name="first-modal">
+                        <template #content>
+                            <div  class="tfhb-license-heading  tfhb-flexbox tfhb-full-width tfhb-flexbox-nowrap tfhb-justify-between">
+                                <div class="tfhb-admin-title tfhb-m-0"> 
+                                    <h2 >{{ $tfhb_trans('Maximum Number Of Staff :') }}  {{ userPublicInformation.settings.maximum_number_of_staff }}</h2>  
+                                    <h2 >{{ $tfhb_trans('Maximum Number Of Staff Present At The Event :') }}  {{ userPublicInformation.settings.maximum_number_of_staff_present }}</h2>   
+                                </div>
+                            </div>  
+                        </template>
+                    </HbInfoBox> 
+                    <br> 
                 </div>
             </div>
 
@@ -598,14 +636,26 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.gallery.push({url: '', title: ''})"
-                        :buttonText="$tfhb_trans('Add Gallery Image')"
-                        icon="ImagePlus"
-                        hover_icon="ImagePlus"
-                        :hover_animation="true"
-                    />
+                   
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.gallery.push({url: '', title: ''})"
+                            :buttonText="$tfhb_trans('Add Gallery Image')"
+                            icon="ImagePlus"
+                            hover_icon="ImagePlus"
+                            :hover_animation="true"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
                 </div>
             </div>
 
@@ -632,6 +682,18 @@ document.addEventListener('click', (e) => {
                     :placeholder="$tfhb_trans('Enter video URL (YouTube, Vimeo, etc.)')" 
                     width="100"
                 />
+                <br>
+                <div class="tfhb-flexbox tfhb-gap-16">  
+                    <HbButton 
+                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                        @click="saveUserPublicInfo"
+                        :buttonText="$tfhb_trans('Save & Continue')"
+                        icon="ChevronRight" 
+                        hover_icon="ArrowRight" 
+                        :hover_animation="true"
+                        :pre_loader="loading"
+                    /> 
+                </div>
             </div>
 
             <!-- Documents Section -->
@@ -673,12 +735,12 @@ document.addEventListener('click', (e) => {
                             file_format="pdf,doc,docx,xls,xlsx"
                             width="50"
                         />
-                        <HbText  
+                        <!-- <HbText  
                             v-model="doc.size"  
                             :label="$tfhb_trans('File Size')"  
                             :placeholder="$tfhb_trans('e.g., 900 kb')" 
                             width="50"
-                        />
+                        /> -->
                         <HbButton 
                             classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8" 
                             @click="userPublicInformation.documents.splice(index, 1)"
@@ -686,14 +748,26 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.documents.push({title: '', subtitle: '', icon: '', url: '', size: ''})"
-                        :buttonText="$tfhb_trans('Add Document')"
-                        icon="FileText"
-                        hover_icon="FileText"
-                        :hover_animation="true"
-                    />
+                    
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.documents.push({title: '', subtitle: '', icon: '', url: '', size: ''})"
+                            :buttonText="$tfhb_trans('Add Document')"
+                            icon="FileText"
+                            hover_icon="FileText"
+                            :hover_animation="true"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
                 </div>
             </div>
 
@@ -723,14 +797,26 @@ document.addEventListener('click', (e) => {
                             icon="Trash2"
                         />
                     </div>
-                    <HbButton 
-                        classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
-                        @click="userPublicInformation.links.push({title: '', url: ''})"
-                        :buttonText="$tfhb_trans('Add Link')"
-                        icon="Link"
-                        hover_icon="Link"
-                        :hover_animation="true"
-                    />
+                  
+                    <div class="tfhb-flexbox tfhb-gap-16"> 
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="userPublicInformation.links.push({title: '', url: ''})"
+                            :buttonText="$tfhb_trans('Add Link')"
+                            icon="Link"
+                            hover_icon="Link"
+                            :hover_animation="true"
+                        />
+                        <HbButton 
+                            classValue="tfhb-btn boxed-btn flex-btn tfhb-icon-hover-animation" 
+                            @click="saveUserPublicInfo"
+                            :buttonText="$tfhb_trans('Save & Continue')"
+                            icon="ChevronRight" 
+                            hover_icon="ArrowRight" 
+                            :hover_animation="true"
+                            :pre_loader="loading"
+                        /> 
+                    </div>
                 </div>
             </div>
 
@@ -788,10 +874,7 @@ document.addEventListener('click', (e) => {
         />  
     </div>
     <div class="tfhb-admin-card-box tfhb-flexbox" style="flex-direction:column;">
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Company Name') }}:</strong>
-        <span>{{ userPublicInformation['denominazione_operatore_azienda'] }}</span>
-      </div>
+    
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Alternative Company Name') }}:</strong>
         <span>{{ userPublicInformation['eventuale_altra_denominazione'] }}</span>
@@ -841,11 +924,7 @@ document.addEventListener('click', (e) => {
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Position') }}:</strong>
         <span>{{ userPublicInformation.incarico }}</span>
-      </div>
-      <div class="tfhb-info-row">
-        <strong>{{ $tfhb_trans('Email') }}:</strong>
-        <span>{{ userPublicInformation.email }}</span>
-      </div>
+      </div> 
       <div class="tfhb-info-row">
         <strong>{{ $tfhb_trans('Direct Phone') }}:</strong>
         <span>{{ userPublicInformation.telefono_diretto }}</span>

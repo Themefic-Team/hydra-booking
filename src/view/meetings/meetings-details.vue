@@ -9,6 +9,8 @@ import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbPopup from '@/components/widgets/HbPopup.vue';
+import Editor from 'primevue/editor';
+
 import useValidators from '@/store/validator';
 import { toast } from "vue3-toastify"; 
 import axios from 'axios' 
@@ -134,13 +136,18 @@ onMounted(() => {
             :errors="errors.title"
              
         /> 
-        <HbTextarea  
+        <!-- <HbTextarea  
             v-model="meeting.description" 
             required= "false"  
             name="description"
             :label="$tfhb_trans('Description')"  
             :placeholder="$tfhb_trans('Describe about meeting')" 
-        /> 
+        />  -->
+        <Editor 
+            v-model="meeting.description"  
+            :placeholder="$tfhb_trans('Message Body')"
+            editorStyle="height: 250px" 
+        />
 
         <div class="tfhb-admin-card-box tfhb-flexbox tfhb-gap-16 tfhb-m-0 tfhb-full-width"> 
             <!-- Duration -->

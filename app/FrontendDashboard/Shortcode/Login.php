@@ -42,12 +42,11 @@ class Login {
 			wp_enqueue_script( 'tfhb-app-login' );
 		}
         // Get Option
-        $settings = get_option('_tfhb_frontend_dashboard_settings');
+        $settings = get_option('_tfhb_frontend_dashboard_settings'); 
         $registration_page_id = isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
         $tfhb_dashboard_page_id = get_option( 'tfhb_dashboard_page_id' );
-        $login_page_title = isset($settings['login']['login_page_title']) && !empty($settings['signup']['login_page_title']) ? $settings['signup']['login_page_title'] :  __('Welcome back', 'hydra-booking');
-        $login_page_sub_title = isset($settings['login']['login_page_sub_title']) && !empty($settings['signup']['login_page_sub_title']) ? $settings['signup']['login_page_sub_title'] :  __('Please enter your details.', 'hydra-booking');
-        
+        $login_page_title = isset($settings['login']['login_page_title']) && !empty($settings['login']['login_page_title']) ? $settings['login']['login_page_title'] :  __('Welcome back', 'hydra-booking');
+        $login_page_sub_title = isset($settings['login']['login_page_sub_title']) && !empty($settings['login']['login_page_sub_title']) ? $settings['login']['login_page_sub_title'] :  __('Please enter your details.', 'hydra-booking'); 
         $forget_url = get_site_url() . '/?hydra-booking=forgot-password';
        
         // Attributes

@@ -81,6 +81,8 @@ const event_details = reactive({
     contact_info: {
         website: '',
         email: '',
+        email2: '',
+        email3: '',
         phone: '',
         phone2: '',
         phone3: '',
@@ -284,6 +286,9 @@ onBeforeMount(() => {
         </div>
 
         <!-- Program -->
+         
+        <!-- External Links -->
+        <!-- {{event_details.program_items}} -->
         <div class="tfhb-section">
             <h3>{{ $tfhb_trans('Documents') }}</h3>
             <div v-for="(item, index) in event_details.program_items" :key="index" class="tfhb-program-item">
@@ -336,7 +341,6 @@ onBeforeMount(() => {
             />
         </div>
 
-        <!-- External Links -->
         <div class="tfhb-section">
             <h3>{{ $tfhb_trans('External Links') }}</h3>
             <div v-for="(link, index) in event_details.external_links" :key="index" class="tfhb-link-item">
@@ -381,6 +385,18 @@ onBeforeMount(() => {
                 <HbInput
                     v-model="event_details.contact_info.email"
                     :label="$tfhb_trans('EMAIL')"
+                    :placeholder="$tfhb_trans('Enter email address')"
+                    type="email"
+                />
+                <HbInput
+                    v-model="event_details.contact_info.email2"
+                    :label="$tfhb_trans('EMAIL 2')"
+                    :placeholder="$tfhb_trans('Enter email address')"
+                    type="email"
+                />
+                <HbInput
+                    v-model="event_details.contact_info.email3"
+                    :label="$tfhb_trans('EMAIL 3')"
                     :placeholder="$tfhb_trans('Enter email address')"
                     type="email"
                 />

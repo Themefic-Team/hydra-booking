@@ -1,21 +1,22 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, computed, nextTick } from 'vue';
+import { ref, reactive, onBeforeMount, computed, nextTick, onMounted, onUnmounted } from 'vue';
 import axios from 'axios'   
-import { useRouter } from 'vue-router'
-import Icon from '@/components/icon/LucideIcon.vue'
+import { useRouter } from 'vue-router';
+import Icon from '@/components/icon/LucideIcon.vue';
 import HbPopup from '@/components/widgets/HbPopup.vue'; 
-import HbDropdown from '@/components/form-fields/HbDropdown.vue'
+import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import { toast } from "vue3-toastify"; 
 import useDateFormat from '@/store/dateformat'
 const { Tfhb_Date, Tfhb_Time } = useDateFormat();
-import { Meeting } from '@/store/meetings'
+import { Meeting } from '@/store/meetings';
 import { Booking } from '@/store/booking'
-import { Host } from '@/store/hosts'
+import { Host } from '@/store/hosts';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import QRCode from 'qrcode';
+import JSZip from 'jszip';
 
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -26,10 +27,10 @@ import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
 import { AddonsSettings } from '@/store/settings/addons-settings.js';
 
 const router = useRouter()
-const bookingView = ref('calendar');
+const bookingView = ref('list');
 
 // View toggle state
-const currentView = ref('calendar'); // 'calendar' or 'list'
+const currentView = ref('list'); // 'calendar' or 'list'
 
 // List view state
 const currentPage = ref(1);
@@ -55,30 +56,34 @@ const convertApiDataToCalendarEvents = (apiData) => {
     
     return apiData.map(item => {
         // Parse date and time
-        const date = item.date; // Format: 2025-08-19
-        const startTime = item.start_time; // Format: 16:45
-        const endTime = item.end_time; // Format: 17:00
+        const date = item.date; // Format: 2025-11-19
+        const startTime = item.start_time; // Format: 10:30
+        const endTime = item.end_time; // Format: 10:45
         
         // Convert to ISO datetime format
         const startDateTime = `${date}T${startTime}:00`;
         const endDateTime = `${date}T${endTime}:00`;
         
         // Get buyer name from API data
-        const buyerName = item.buyers_data?.user_meta?.tfhb_buyers_data?.name_of_participant || 
-                         item.buyers_data?.user_meta?.tfhb_buyers_data?.family_name_of_participant ||
+        const buyerData = item.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const buyerName = buyerData.name || 
+                         buyerData.name_of_participant || 
+                         buyerData.family_name_of_participant ||
                          item.buyers_data?.display_name ||
                          'Unknown Buyer';
         
         // Get seller name from API data
-        const sellerName = item.sellers_data?.user_meta?.tfhb_sellers_data?.name ||
+        const sellerData = item.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        const sellerName = sellerData.name ||
                           item.sellers_data?.display_name ||
                           'Unknown Seller';
         
-        // Get company name
-        const companyName = sellerName;
+        // Get seller company name (this is what buyers want to see)
+        const sellerCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
+        const companyName = sellerCompany || sellerName;
         
-        // Create title with company name if available
-        const title = companyName ? `${companyName} - ${buyerName}` : buyerName;
+        // Create title with seller company/name
+        const title = companyName;
         
         // Determine colors based on status
         let backgroundColor, borderColor;
@@ -120,17 +125,20 @@ const convertApiDataToCalendarEvents = (apiData) => {
             backgroundColor: backgroundColor,
             borderColor: borderColor,
             extendedProps: {
-                booking_id: item.booking_id.toString(),
+                booking_id: item.booking_id ? item.booking_id.toString() : '',
                 status: item.status,
                 booking_date: date,
                 booking_time: bookingTime,
                 host_id: item.host_id?.toString() || '0',
                 meeting_type: item.meeting_data?.meeting_type || 'one-to-one',
+                meeting_id: item.meeting_id?.toString() || '',
+                meeting_title: item.meeting_data?.title || '',
                 attendees: [
                     {
                         attendee_name: sellerName,
-                        email: item.buyers_data?.user_email || '',
-                        status: item.status
+                        email: item.sellers_data?.user_email || '',
+                        status: item.status,
+                        company: companyName
                     }
                 ],
                 // Store full API data for details panel
@@ -142,34 +150,39 @@ const convertApiDataToCalendarEvents = (apiData) => {
 
 // Helper functions for details panel
 const getCompanyInitials = (apiData) => {
-    if (!apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.['denominazione-operatore-azienda']) return 'SE';
-    const company = apiData.sellers_data.user_meta.tfhb_sellers_data['denominazione-operatore-azienda'];
+    const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+    const company = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
+    if (!company) return 'SE';
     return company.replace(/[^a-zA-Z]/g, '').substring(0, 2).toUpperCase();
 };
 
 const getSellerName = (apiData) => {
     if (!apiData?.sellers_data?.user_meta?.tfhb_sellers_data) return 'Unknown Seller';
     const sellerData = apiData.sellers_data.user_meta.tfhb_sellers_data;
-    const firstName = sellerData.name || '';
-    const lastName = sellerData.family_name || '';
-    return `${firstName} ${lastName}`.trim() || apiData.sellers_data.display_name || 'Unknown Seller';
+    
+    // Try to get full name first
+    if (sellerData.name) return sellerData.name;
+    
+    // Otherwise use display_name
+    return apiData.sellers_data.display_name || 'Unknown Seller';
 };
 
 const getCompanyWebsite = (apiData) => {
-    return apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.['sito-internet'] || '';
+    return apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.sito_internet || '';
 };
 
 const getAddress = (apiData) => {
     if (!apiData?.sellers_data?.user_meta?.tfhb_sellers_data) return '';
     const sellerData = apiData.sellers_data.user_meta.tfhb_sellers_data;
-    const address = sellerData.sede_legale_dell_attivit || '';
+    const address = sellerData['sede-legale-attivita'] || '';
     const region = sellerData.regione || '';
     return `${address}${address && region ? ', ' : ''}${region}`.trim();
 };
 
 const getAreasOfActivity = (apiData) => {
-console.log(apiData);
-    return apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.ambito_di_attivit || [];
+    const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+    const activity = sellerData['ambito_di_attività'] || sellerData.ambito_di_attivit || '';
+    return activity ? [activity] : [];
 };
 
 const getSpecializations = (apiData) => {
@@ -177,7 +190,12 @@ const getSpecializations = (apiData) => {
 };
 
 const getBuyerInterests = (apiData) => {
-    return apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.provenienza_buyer_interesse || [];
+    return apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.provenienza_Buyer_interesse || [];
+};
+
+const getSellerCompanyName = (apiData) => {
+    const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+    return sellerData.denominazione_operatore_azienda || sellerData.company_name || apiData?.sellers_data?.display_name || 'Unknown Seller';
 };
 
 // Calendar configuration
@@ -198,9 +216,7 @@ const calendarOptions = computed(() => ({
     selectable: false,
     editable: false,
     eventClick: (info) => {
-        // Show details panel for all views
-        showDetailsPanel.value = true;
-        selectedEventData.value = info.event;
+        handleCalendarEventClick(info);
     },
     dateSet: (dateInfo) => {
         currentDate.value = dateInfo.start;
@@ -222,6 +238,14 @@ const calendarOptions = computed(() => ({
 
 // Selected event data for details panel
 const selectedEventData = ref(null);
+
+// Responsive state
+const isMobile = ref(false);
+const isTablet = ref(false);
+const isSmallScreen = computed(() => isMobile.value || isTablet.value || window.innerWidth < 1500);
+
+// Details panel popup state for mobile/tablet
+const showDetailsPopup = ref(false);
 
 // Calendar view change handler
 const changeCalendarView = (view) => {
@@ -284,6 +308,7 @@ const exportCalendar = (format) => {
     }
 };
 
+
 const exportAsICal = () => {
     if (!calendarEvents.value || calendarEvents.value.length === 0) {
         toast.error('No events to export', { position: 'bottom-right', "autoClose": 1500 });
@@ -326,116 +351,265 @@ const exportAsICal = () => {
     toast.success('Calendar exported as .iCal successfully', { position: 'bottom-right', "autoClose": 1500 });
 };
 
-const exportAsPDF = () => {
+const exportAsPDF = async () => {
     if (!calendarEvents.value || calendarEvents.value.length === 0) {
         toast.error('No events to export', { position: 'bottom-right', "autoClose": 1500 });
         return;
     }
 
-    const createPDFContainer = () => {
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.left = '-9999px';
-        container.style.top = '0';
-        container.style.width = '800px';
-        container.style.padding = '40px';
-        container.style.backgroundColor = 'white';
-        container.style.fontFamily = 'Arial, sans-serif';
-        container.style.fontSize = '12px';
-        container.style.lineHeight = '1.4';
-        
-        const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        const header = document.createElement('div');
-        header.innerHTML = `
-            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px;">
-                <h1 style="color: #333; margin: 0 0 10px 0; font-size: 24px;">Calendar Export</h1>
-                <p style="color: #666; margin: 5px 0; font-size: 14px;">Generated on ${currentDate}</p>
-                <p style="color: #666; margin: 5px 0; font-size: 14px;">Total Events: ${calendarEvents.value.length}</p>
-            </div>
-        `;
-        container.appendChild(header);
-        if (calendarEvents.value.length === 0) {
-            const noEvents = document.createElement('div');
-            noEvents.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No events to display</p>';
-            container.appendChild(noEvents);
-        } else {
-            const sortedEvents = [...calendarEvents.value].sort((a, b) => new Date(a.start) - new Date(b.start));
-            sortedEvents.forEach(event => {
-                const startDate = new Date(event.start);
-                const endDate = new Date(event.end);
-                const formattedDate = startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                const formattedTime = startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + ' - ' + endDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                const apiData = event.extendedProps.apiData;
-                const sellerName = getSellerName(apiData);
-                const companyName = getCompanyWebsite(apiData);
-                const address = getAddress(apiData);
-                const description = apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description || 'No description available';
-                let statusColor = '#666';
-                switch (event.extendedProps.status) {
-                    case 'confirmed': statusColor = '#2e7d32'; break;
-                    case 'pending': statusColor = '#f57c00'; break;
-                    case 'canceled': statusColor = '#c62828'; break;
-                }
-                const eventDiv = document.createElement('div');
-                eventDiv.style.border = '1px solid #ddd';
-                eventDiv.style.marginBottom = '20px';
-                eventDiv.style.padding = '15px';
-                eventDiv.style.borderRadius = '8px';
-                eventDiv.style.pageBreakInside = 'avoid';
-                eventDiv.innerHTML = `
-                    <div style="font-weight: bold; font-size: 16px; color: #333; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
-                        ${event.title}
-                    </div>
-                    <div style="color: #666; font-size: 14px; line-height: 1.6;">
-                        <div style="margin-bottom: 8px;"><strong>Date:</strong> ${formattedDate}</div>
-                        <div style="margin-bottom: 8px;"><strong>Time:</strong> ${formattedTime}</div>
-                        <div style="margin-bottom: 8px;">
-                            <strong>Status:</strong> 
-                            <span style="color: ${statusColor}; font-weight: bold; text-transform: uppercase;">${event.extendedProps.status}</span>
-                        </div>
-                        <div style="margin-bottom: 8px;"><strong>Contact:</strong> ${sellerName}</div>
-                        ${companyName ? `<div style="margin-bottom: 8px;"><strong>Company:</strong> ${companyName}</div>` : ''}
-                        ${address ? `<div style="margin-bottom: 8px;"><strong>Address:</strong> ${address}</div>` : ''}
-                        <div style="margin-bottom: 8px;"><strong>Description:</strong> ${description}</div>
-                    </div>
-                `;
-                container.appendChild(eventDiv);
-            });
-        }
-        return container;
+    // Get buyer company name for header
+    const getBuyerCompanyName = (apiData) => {
+        const buyerData = apiData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        return buyerData.travel_agent_name || buyerData.company_name || apiData?.buyers_data?.display_name || 'Name Brand';
+    };
+
+    // Get seller location
+    const getSellerLocation = (apiData) => {
+        const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        return sellerData.regione || '';
     };
 
     try {
-        const container = createPDFContainer();
-        document.body.appendChild(container);
-        html2canvas(container, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgWidth = 210; const pageHeight = 295; const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 15;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = margin;
+
+        // Get event information
+        const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const firstEventData = calendarEvents.value.length > 0 ? calendarEvents.value[0].extendedProps.apiData : null;
+        const buyerData = firstEventData?.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        const headerCompanyName = buyerData.travel_agent_name || buyerData.company_name || firstEventData?.buyers_data?.display_name || 'Name Brand';
+        const participantName = buyerData.name_of_participant 
+            || AddonsAuth.loggedInUser?.user_data?.name_of_participant 
+            || AddonsAuth.loggedInUser?.display_name 
+            || '';
+        
+        // Create header with two-column layout
+        const headerHeight = 20;
+        const leftColumnWidth = 50; // Width for logo column (reduced from 60)
+        const rightColumnStart = margin + leftColumnWidth + 8; // Start position for right column
+        
+        // LEFT COLUMN - Logo or placeholder
+        if (AddonsAuth.event?.event_details?.event_logo) {
+            try {
+                const logoUrl = AddonsAuth.event.event_details.event_logo;
+                const maxLogoHeight = 60; // Reduced from 80 pixels
+                
+                // Create an image element to get dimensions
+                const img = new Image();
+                img.crossOrigin = 'anonymous'; // Handle CORS
+                img.src = logoUrl;
+                
+                // Wait for image to load
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                });
+                
+                // Calculate dimensions while maintaining aspect ratio
+                let logoWidth = img.width;
+                let logoHeight = img.height;
+                
+                if (logoHeight > maxLogoHeight) {
+                    const ratio = maxLogoHeight / logoHeight;
+                    logoHeight = maxLogoHeight;
+                    logoWidth = logoWidth * ratio;
+                }
+                
+                // Create canvas to preprocess the image (removes artifacts and fixes colors)
+                const canvas = document.createElement('canvas');
+                canvas.width = logoWidth;
+                canvas.height = logoHeight;
+                const ctx = canvas.getContext('2d');
+                
+                // Fill with white background to remove transparency artifacts
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the image on top
+                ctx.drawImage(img, 0, 0, logoWidth, logoHeight);
+                
+                // Convert canvas to high-quality JPEG data URL
+                const processedLogoUrl = canvas.toDataURL('image/jpeg', 1.0);
+                
+                // Add logo to PDF
+                pdf.addImage(processedLogoUrl, 'JPEG', margin, yPosition, logoWidth * 0.2645833333, logoHeight * 0.2645833333);
+            } catch (error) {
+                console.error('Error loading logo:', error);
+                // Fallback to placeholder text if logo fails to load
+                pdf.setFontSize(10);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Logo Events', margin, yPosition + 4);
             }
-            const fileName = `calendar-export-${new Date().toISOString().split('T')[0]}.pdf`;
-            pdf.save(fileName);
-            document.body.removeChild(container);
-            toast.success('Calendar exported as PDF successfully', { position: 'bottom-right', "autoClose": 1500 });
-        }).catch(error => {
-            console.error('PDF generation error:', error);
-            document.body.removeChild(container);
-            toast.error('PDF generation failed. Using print method instead.', { position: 'bottom-right', "autoClose": 3000 });
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`<!DOCTYPE html><html><head><title>Calendar Export</title><style>body { font-family: Arial, sans-serif; margin: 20px; }.event { border: 1px solid #ddd; margin-bottom: 15px; padding: 15px; }.event-title { font-weight: bold; font-size: 16px; margin-bottom: 8px; }.event-details { color: #666; font-size: 14px; line-height: 1.4; }</style></head><body><h1>Calendar Export</h1><p>Generated on ${new Date().toLocaleDateString()}</p>${calendarEvents.value.map(event => `<div class="event"><div class="event-title">${event.title}</div><div class="event-details"><strong>Date:</strong> ${new Date(event.start).toLocaleDateString()}<br><strong>Time:</strong> ${new Date(event.start).toLocaleTimeString()} - ${new Date(event.end).toLocaleTimeString()}<br><strong>Status:</strong> ${event.extendedProps.status}</div></div>`).join('')}</body></html>`);
-            printWindow.document.close();
-            printWindow.print();
-            printWindow.close();
+        } else {
+            // Show placeholder text if no logo
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Logo Events', margin, yPosition + 4);
+        }
+        
+        // RIGHT COLUMN - Content block (left aligned)
+        // 1. User role (reduced font size)
+        pdf.setFontSize(7);
+        pdf.setFont('helvetica', 'bold');
+        const userRole = AddonsAuth.loggedInUser?.user_role || 'BUYERS';
+        pdf.text(userRole.toUpperCase(), rightColumnStart, yPosition + 3);
+
+        if (participantName) {
+            pdf.setFontSize(8);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(participantName, rightColumnStart, yPosition + 6);
+        }
+        
+        // 2. Current user brand name (reduced font size)
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(headerCompanyName, rightColumnStart, yPosition + 10);
+        
+        // 3. Calendar export info (reduced font size)
+        pdf.setFontSize(8);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(`Calendar Export: Generated on ${currentDate} / Total Events: ${calendarEvents.value.length}`, rightColumnStart, yPosition + 15);
+        
+        yPosition += headerHeight;
+
+        // Add horizontal line
+        pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+        yPosition += 4;
+
+        // Get date range from events
+        const sortedEvents = [...calendarEvents.value].sort((a, b) => new Date(a.start) - new Date(b.start));
+
+        // Group events by day
+        const eventsByDay = {};
+        sortedEvents.forEach(event => {
+            const eventDate = new Date(event.start);
+            const dayKey = eventDate.toLocaleDateString('en-US', { 
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            if (!eventsByDay[dayKey]) {
+                eventsByDay[dayKey] = [];
+            }
+            eventsByDay[dayKey].push(event);
         });
+
+        // Render events day by day
+        Object.keys(eventsByDay).forEach((dayKey, dayIndex) => {
+            const dayEvents = eventsByDay[dayKey];
+            
+            // Check if we need a new page (leave space for day header + at least 3 appointments)
+            if (yPosition > pageHeight - 60) {
+                pdf.addPage();
+                yPosition = margin;
+            }
+
+            // Day header
+            pdf.setFontSize(9);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(dayKey, margin, yPosition);
+            yPosition += 5;
+
+            // Draw separator line
+            pdf.setDrawColor(200, 200, 200);
+            pdf.setLineWidth(0.2);
+            pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+            yPosition += 3;
+
+            // Column widths for compact two-column layout
+            const timeColWidth = 30; // Width for time column
+            const timeColX = margin;
+            const detailsColX = margin + timeColWidth + 3;
+            const detailsColWidth = contentWidth - timeColWidth - 3;
+
+            // Render appointments for this day
+            dayEvents.forEach((event, index) => {
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                const apiData = event.extendedProps.apiData;
+
+                // Check if we need a new page (keep ~18mm per appointment max)
+                if (yPosition > pageHeight - 18) {
+                    pdf.addPage();
+                    yPosition = margin;
+                }
+
+                const rowStartY = yPosition;
+
+                // Format time (compact format)
+                const formatTime = (date) => {
+                    return date.toLocaleTimeString('en-US', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        hour12: false
+                    });
+                };
+                const timeText = `${formatTime(startDate)} - ${formatTime(endDate)}`;
+
+                // TIME COLUMN (LEFT)
+                pdf.setFontSize(8);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(timeText, timeColX, yPosition + 3);
+
+                // DETAILS COLUMN (RIGHT)
+                let detailsY = yPosition;
+
+                // Meeting title (seller company)
+                const sellerData = apiData?.sellers_data?.user_meta?.tfhb_sellers_data || {};
+                const sellersCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || 'Company';
+                
+                pdf.setFontSize(9);
+                pdf.setFont('helvetica', 'bold');
+                const titleLines = pdf.splitTextToSize(`Meeting with ${sellersCompany}`, detailsColWidth);
+                pdf.text(titleLines[0], detailsColX, detailsY + 3);
+                detailsY += 4;
+
+                // Contact person and location
+                const sellerName = sellerData.name || apiData.sellers_data?.display_name || 'Contact';
+                const location = getSellerLocation(apiData);
+                
+                pdf.setFontSize(7);
+                pdf.setFont('helvetica', 'normal');
+                const contactText = `${sellerName}${location ? ' at ' + location : ''}`;
+                const contactLines = pdf.splitTextToSize(contactText, detailsColWidth);
+                pdf.text(contactLines[0], detailsColX, detailsY + 2.5);
+                detailsY += 3.5;
+
+                // Calculate row height and add separator
+                const rowHeight = Math.max(10, detailsY - rowStartY + 2);
+                yPosition += rowHeight;
+
+                // Draw light separator line between appointments
+                if (index < dayEvents.length - 1) {
+                    pdf.setDrawColor(230, 230, 230);
+                    pdf.setLineWidth(0.1);
+                    pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+                    yPosition += 1;
+                }
+            });
+
+            // Add space between days
+            yPosition += 4;
+        });
+
+        const dateStr = new Date().toISOString().split('T')[0];
+        const sanitizeForFile = (str) => (str || '')
+            .toString()
+            .trim()
+            .replace(/\s+/g, '_')
+            .replace(/[^\w\-]+/g, '')
+            .toLowerCase();
+        const safeCompany = sanitizeForFile(headerCompanyName) || 'company';
+        const safePerson = sanitizeForFile(participantName) || 'participant';
+        const fileName = `agenda-${safeCompany}-${safePerson}-${dateStr}.pdf`;
+        pdf.save(fileName);
+        toast.success('Calendar exported as PDF successfully', { position: 'bottom-right', "autoClose": 1500 });
+
     } catch (error) {
         console.error('PDF generation error:', error);
         toast.error('PDF generation failed', { position: 'bottom-right', "autoClose": 1500 });
@@ -443,27 +617,27 @@ const exportAsPDF = () => {
 };
 
 // Test function to debug user data
-const testUserData = (user) => {
-    console.log('=== USER DATA DEBUG ===');
-    console.log('Full user object:', user);
-    console.log('User ID:', user?.ID);
-    console.log('User role:', user?.user_role);
-    console.log('First name:', user?.first_name);
-    console.log('Last name:', user?.last_name);
-    console.log('Display name:', user?.display_name);
-    console.log('User data object:', user?.user_data);
-    if (user?.user_data) {
-        console.log('User data name:', user.user_data.name);
-        console.log('User data email:', user.user_data.email);
-        console.log('User data job_title:', user.user_data.job_title);
-        console.log('User data company:', user.user_data.company_website);
-    }
-    console.log('=== END DEBUG ===');
-};
+// const testUserData = (user) => {
+//     console.log('=== USER DATA DEBUG ===');
+//     console.log('Full user object:', user);
+//     console.log('User ID:', user?.ID);
+//     console.log('User role:', user?.user_role);
+//     console.log('First name:', user?.first_name);
+//     console.log('Last name:', user?.last_name);
+//     console.log('Display name:', user?.display_name);
+//     console.log('User data object:', user?.user_data);
+//     if (user?.user_data) {
+//         console.log('User data name:', user.user_data.name);
+//         console.log('User data email:', user.user_data.email);
+//         console.log('User data job_title:', user.user_data.job_title);
+//         console.log('User data company:', user.user_data.company_website);
+//     }
+//     console.log('=== END DEBUG ===');
+// };
 
 const DownloadBadgePDFWithQRCode = async (user) => {
     try { 
-        console.log('Starting PDF generation for user:', user);
+        // console.log('Starting PDF generation for user:', user);
         
         // Validate user object
         if (!user) {
@@ -496,7 +670,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
         // Create QR code data with more comprehensive information
         const qr_data = `Name: ${userName}  | Role: ${userRole} | Email: ${userEmail}`;
         
-        console.log('Generating QR code for data:', qr_data);
+        // console.log('Generating QR code for data:', qr_data);
         
         // Generate QR code as data URL
         const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
@@ -508,7 +682,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             }
         });
         
-        console.log('QR code generated successfully');
+        // console.log('QR code generated successfully');
         
         // Create new PDF document (A4 size)
         const pdf = new jsPDF('portrait', 'mm', 'a4');
@@ -527,7 +701,7 @@ const DownloadBadgePDFWithQRCode = async (user) => {
             backgroundImageUrl = AddonsSettings?.Exhibitors?.badge_pdf_image || '';
         }
         
-        console.log('Background image URL:', backgroundImageUrl);
+        // console.log('Background image URL:', backgroundImageUrl);
         
         // Function to create PDF without background
         const createPDFWithoutBackground = () => {
@@ -542,28 +716,106 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 // Add QR code (centered in bottom right quadrant)
                 const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
                 const qrX = startX + (quadrantWidth - qrSize) / 2;
-                const qrY = startY + 80; // Reduced spacing from top
+                const qrY = startY + 70; // Moved up 10mm from 80 to 70
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
                  
                 
+                // Helper function to fit text within available width
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    // Try to shrink font size first
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    // If still too wide, split into multiple lines
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
+                
                 // Add job title (centered in bottom right quadrant, below QR code)
-                pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(userRole);
-                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                const jobTitleResult = fitTextToWidth(userRole.charAt(0).toUpperCase() + userRole.slice(1), quadrantWidth - 10, 10);
+                pdf.setFontSize(jobTitleResult.fontSize);
+                let currentY = startY + 110;
+                jobTitleResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                });
                 
                 // Add user name (centered in bottom right quadrant, below job title)
-                pdf.setFontSize(16); // Reduced font size
+                currentY += 8;
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'bold');
-                const nameText = userName;
-                const nameWidth = pdf.getTextWidth(nameText);
-                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
-                
-     
+                const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
+
+                // Company
+                currentY += 7;
+                const companyName = (user.user_data?.travel_agent_name || '').trim(); 
+                pdf.setFont('helvetica', 'normal');
+                const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                pdf.setFontSize(companyResult.fontSize);
+                companyResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < companyResult.lines.length - 1) currentY += 5;
+                });
+
+                // Convert nation object/array to comma-separated string
+                currentY += 7;
+                let nation = '';
+                if (Array.isArray(user.user_data?.nation)) {
+                    nation = user.user_data.nation.join(', ');
+                } else if (typeof user.user_data?.nation === 'object' && user.user_data?.nation !== null) {
+                    nation = Object.values(user.user_data.nation).join(', ');
+                } else if (typeof user.user_data?.nation === 'string') {
+                    nation = user.user_data.nation;
+                }
+                const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                pdf.setFontSize(nationResult.fontSize);
+                nationResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nationResult.lines.length - 1) currentY += 5;
+                });
+         
+
+       
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 console.log('PDF saved successfully:', fileName);
@@ -600,28 +852,103 @@ const DownloadBadgePDFWithQRCode = async (user) => {
                 // Add QR code (centered in bottom right quadrant)
                 const qrSize = 35; // Reduced to 35mm x 35mm for better proportion
                 const qrX = startX + (quadrantWidth - qrSize) / 2;
-                const qrY = startY + 80; // Reduced spacing from top
+                const qrY = startY + 70; // Moved up 10mm from 80 to 70
                 pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
-                 
                 
+                // Helper function to fit text within available width
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    // Try to shrink font size first
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    // If still too wide, split into multiple lines
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
+ 
                 // Add job title (centered in bottom right quadrant, below QR code)
-                pdf.setFontSize(11); // Reduced font size
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'normal');
-                const jobTitleWidth = pdf.getTextWidth(userRole);
-                pdf.text(userRole, startX + (quadrantWidth - jobTitleWidth) / 2, startY + 120); // Reduced spacing
+                const jobTitleResult = fitTextToWidth(userRole.charAt(0).toUpperCase() + userRole.slice(1), quadrantWidth - 10, 10);
+                pdf.setFontSize(jobTitleResult.fontSize);
+                let currentY = startY + 110;
+                jobTitleResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < jobTitleResult.lines.length - 1) currentY += 5;
+                });
                 
                 // Add user name (centered in bottom right quadrant, below job title)
-                pdf.setFontSize(16); // Reduced font size
+                currentY += 8;
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont('helvetica', 'bold');
-                const nameText = userName;
-                const nameWidth = pdf.getTextWidth(nameText);
-                pdf.text(nameText, startX + (quadrantWidth - nameWidth) / 2, startY + 128); // Reduced spacing
+                const nameResult = fitTextToWidth(userName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
                  
-                
+                // Company
+                currentY += 7;
+                const companyName = (user.user_data?.travel_agent_name || '').trim(); 
+                pdf.setFont('helvetica', 'normal');
+                const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                pdf.setFontSize(companyResult.fontSize);
+                companyResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < companyResult.lines.length - 1) currentY += 5;
+                });
+
+                // Convert nation object/array to comma-separated string
+                currentY += 7;
+                let nation = '';
+                if (Array.isArray(user.user_data?.nation)) {
+                    nation = user.user_data.nation.join(', ');
+                } else if (typeof user.user_data?.nation === 'object' && user.user_data?.nation !== null) {
+                    nation = Object.values(user.user_data.nation).join(', ');
+                } else if (typeof user.user_data?.nation === 'string') {
+                    nation = user.user_data.nation;
+                }
+                const nationResult = fitTextToWidth(nation, quadrantWidth - 10, 9);
+                pdf.setFontSize(nationResult.fontSize);
+                nationResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nationResult.lines.length - 1) currentY += 5;
+                });
+ 
                 // Save the PDF
-                const fileName = `badge_${userName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+                const fileName = `badge_${companyName.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
                 pdf.save(fileName);
                 
                 console.log('PDF saved successfully:', fileName);
@@ -712,12 +1039,12 @@ const buyersAgenda = async (id) => {
           } 
       });
       
-      if (response.data.status) {   
+      if (response.data && response.data.status && response.data.agenda) {   
           // Convert API data to calendar events
-          const convertedEvents = convertApiDataToCalendarEvents(response.data.agenda);
-          calendarEvents.value = convertedEvents;
+          const agendaData = Array.isArray(response.data.agenda) ? response.data.agenda : [];
+          const convertedEvents = convertApiDataToCalendarEvents(agendaData);
           
-          // Also populate list events
+          calendarEvents.value = convertedEvents;
           listEvents.value = [...convertedEvents];
           
           // Force calendar to refresh
@@ -738,9 +1065,15 @@ const buyersAgenda = async (id) => {
                   }
               }
           });
+      } else {
+          console.warn('Invalid response format from buyers-agenda API');
+          calendarEvents.value = [];
+          listEvents.value = [];
       }
   } catch (error) {
-      // Handle error silently
+      console.error('Error fetching buyers agenda:', error);
+      calendarEvents.value = [];
+      listEvents.value = [];
   } 
 }
 
@@ -770,29 +1103,31 @@ const filteredListEvents = computed(() => {
     
     const query = searchQuery.value.toLowerCase().trim();
     return listEvents.value.filter(event => {
+        const apiData = event.extendedProps.apiData || {};
+        const sellerData = apiData.sellers_data?.user_meta?.tfhb_sellers_data || {};
+        const buyerData = apiData.buyers_data?.user_meta?.tfhb_buyers_data || {};
+        
         // Search in title
         if (event.title.toLowerCase().includes(query)) {
             return true;
         }
         
         // Search in seller name
-        const sellerName = event.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.name ||
-                          event.extendedProps.apiData?.sellers_data?.display_name ||
+        const sellerName = sellerData.name ||
+                          apiData.sellers_data?.display_name ||
                           '';
         if (sellerName.toLowerCase().includes(query)) {
             return true;
         }
         
-        // Search in company name
-        const companyName = event.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.['denominazione-operatore-azienda'] ||
-                           event.extendedProps.apiData?.buyers_data?.user_meta?.tfhb_buyers_data?.company_website ||
-                           '';
-        if (companyName.toLowerCase().includes(query)) {
+        // Search in seller company name
+        const sellerCompany = sellerData.denominazione_operatore_azienda || sellerData.company_name || '';
+        if (sellerCompany.toLowerCase().includes(query)) {
             return true;
         }
         
         // Search in description
-        const description = event.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description || '';
+        const description = sellerData.description || '';
         if (description.toLowerCase().includes(query)) {
             return true;
         }
@@ -875,8 +1210,53 @@ const prevPage = () => {
 
 // List view event click handler
 const handleListEventClick = (event) => {
-    showDetailsPanel.value = true;
     selectedEventData.value = event;
+    if (isSmallScreen.value) {
+        showDetailsPopup.value = true;
+    } else {
+        showDetailsPanel.value = true;
+    }
+};
+
+// Calendar event click handler
+const handleCalendarEventClick = (info) => {
+    selectedEventData.value = info.event;
+    if (isSmallScreen.value) {
+        showDetailsPopup.value = true;
+    } else {
+        showDetailsPanel.value = true;
+    }
+};
+
+// Close details handlers
+const closeDetailsPanel = () => {
+    showDetailsPanel.value = false;
+    selectedEventData.value = null;
+};
+
+const closeDetailsPopup = () => {
+    showDetailsPopup.value = false;
+    selectedEventData.value = null;
+};
+
+// Responsive detection
+const checkScreenSize = () => {
+    const width = window.innerWidth;
+    isMobile.value = width <= 768;
+    isTablet.value = width > 768 && width <= 1024;
+    
+    // If we're on small screen (below 1500px) and details panel is open, close it and show popup instead
+    if (width < 1500 && showDetailsPanel.value) {
+        showDetailsPanel.value = false;
+        if (selectedEventData.value) {
+            showDetailsPopup.value = true;
+        }
+    }
+};
+
+// Window resize handler
+const handleResize = () => {
+    checkScreenSize();
 };
 
 onBeforeMount(() => { 
@@ -904,6 +1284,249 @@ onBeforeMount(() => {
         // }, 2000);
     }
 });
+
+onMounted(() => {
+    // Initialize responsive detection
+    checkScreenSize();
+    window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+const redirectToChat = (user_id) => { 
+    AddonsAuth.chat_user_id = user_id;
+    router.push({ name: 'HydraAddonsMessages' });
+}
+
+const DownloadStaffBadgePDFWithQRCode = async (user) => {
+    try { 
+        console.log('Starting staff badge generation for user:', user);
+        
+        // Validate user object
+        if (!user || !user.user_data) {
+            throw new Error('User object or user data is required');
+        }
+        
+        // Get staff array from user data
+        const staffArray = user.user_data.staff || [];
+        console.log('Staff array:', staffArray);
+        
+        if (!Array.isArray(staffArray) || staffArray.length === 0) {
+            toast.warning('No staff members found', {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+            return;
+        }
+        
+        // Filter staff members who are present at event
+        const presentStaff = staffArray.filter(member => member.is_present_at_event === '1' || member.is_present_at_event === 1);
+        console.log('Present staff:', presentStaff);
+        
+        if (presentStaff.length === 0) {
+            toast.warning('No staff members marked as present at event', {
+                position: 'bottom-right',
+                autoClose: 3000,
+            });
+            return;
+        }
+        
+        toast.info(`Generating ${presentStaff.length} staff badge(s)...`, {
+            position: 'bottom-right',
+            autoClose: 2000,
+        });
+        
+        // Create a new JSZip instance
+        const zip = new JSZip();
+        
+        // Get company name from buyer's user data
+        
+        const companyName = (user.user_data?.travel_agent_name || '').trim(); 
+        
+        // Get background image for staff badges (using buyers badge template)
+        const backgroundImageUrl = AddonsSettings?.buyers?.badge_pdf_image || ''; 
+        // Generate PDF for each present staff member
+        for (let i = 0; i < presentStaff.length; i++) {
+            const member = presentStaff[i];
+            const staffName = member.name || `Staff ${i + 1}`;
+            const staffPosition = member.position || 'Staff';
+            
+            try {
+                // Create QR code data for staff member (similar format to buyer badge)
+                const qr_data = `Name: ${staffName} | Role: Staff | Position: ${staffPosition} | Company: ${companyName}`;
+                
+                // Generate QR code as data URL
+                const qrCodeDataURL = await QRCode.toDataURL(qr_data, {
+                    width: 150,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                });
+                
+                // Create new PDF document (A4 size)
+                const pdf = new jsPDF('portrait', 'mm', 'a4');
+                
+                // A4 dimensions: 210mm x 297mm
+                const pageWidth = 210;
+                const pageHeight = 297;
+                
+                // Add background image if available and valid
+                if (backgroundImageUrl && backgroundImageUrl.trim() !== '') {
+                    try {
+                        // Try to add the background image
+                        pdf.addImage(backgroundImageUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+                    } catch (imgError) {
+                        console.warn(`Could not add background image for ${staffName}:`, imgError);
+                        // Continue without background image
+                    }
+                }
+                
+                // Calculate bottom right quadrant positions
+                const quadrantWidth = pageWidth / 2;
+                const quadrantHeight = pageHeight / 2;
+                const startX = quadrantWidth; // Start from right half
+                const startY = quadrantHeight; // Start from bottom half
+                
+                // Add QR code (centered in bottom right quadrant)
+                const qrSize = 35;
+                const qrX = startX + (quadrantWidth - qrSize) / 2;
+                const qrY = startY + 70;
+                pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+                
+                // Helper function to fit text within available width (same as buyer badge)
+                const fitTextToWidth = (text, maxWidth, initialFontSize, minFontSize = 8) => {
+                    pdf.setFontSize(initialFontSize);
+                    let currentWidth = pdf.getTextWidth(text);
+                    let fontSize = initialFontSize;
+                    
+                    // Try to shrink font size first
+                    while (currentWidth > maxWidth && fontSize > minFontSize) {
+                        fontSize -= 0.5;
+                        pdf.setFontSize(fontSize);
+                        currentWidth = pdf.getTextWidth(text);
+                    }
+                    
+                    // If still too wide, split into multiple lines
+                    if (currentWidth > maxWidth) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const testWidth = pdf.getTextWidth(testLine);
+                            
+                            if (testWidth > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) lines.push(currentLine);
+                        
+                        return { lines, fontSize };
+                    }
+                    
+                    return { lines: [text], fontSize };
+                };
+                
+                // Add role/position label (centered in bottom right quadrant, below QR code)
+                // Using "Staff" as the role label (similar to "buyers" in buyer badge)
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'normal');
+                const roleLabel = 'Buyers';
+                const roleLabelResult = fitTextToWidth(roleLabel, quadrantWidth - 10, 10);
+                pdf.setFontSize(roleLabelResult.fontSize);
+                let currentY = startY + 110;
+                roleLabelResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < roleLabelResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add staff name (centered in bottom right quadrant, below role - BOLD and larger)
+                currentY += 8;
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont('helvetica', 'bold');
+                const nameResult = fitTextToWidth(staffName, quadrantWidth - 10, 14, 9);
+                pdf.setFontSize(nameResult.fontSize);
+                nameResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < nameResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add company name (centered, below name)
+                currentY += 7;
+                pdf.setFont('helvetica', 'normal');
+                const companyResult = fitTextToWidth(companyName, quadrantWidth - 10, 9);
+                pdf.setFontSize(companyResult.fontSize);
+                companyResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < companyResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Add position (centered, below company - this is like the nation field in buyer badge)
+                currentY += 7;
+                pdf.setFont('helvetica', 'normal');
+                const positionResult = fitTextToWidth(staffPosition, quadrantWidth - 10, 9);
+                pdf.setFontSize(positionResult.fontSize);
+                positionResult.lines.forEach((line, index) => {
+                    const lineWidth = pdf.getTextWidth(line);
+                    pdf.text(line, startX + (quadrantWidth - lineWidth) / 2, currentY);
+                    if (index < positionResult.lines.length - 1) currentY += 5;
+                });
+                
+                // Get PDF as blob
+                const pdfBlob = pdf.output('blob');
+                
+                // Add to zip file with sanitized filename
+                const fileName = `staff_badge_${companyName.replace(/\s+/g, '_')}_${staffName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${Date.now()}_${i}.pdf`;
+                zip.file(fileName, pdfBlob);
+                
+                console.log(`PDF generated for staff: ${staffName}`);
+                
+            } catch (error) {
+                console.error(`Error generating PDF for staff ${staffName}:`, error);
+                toast.error(`Failed to generate badge for ${staffName}`, {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                });
+            }
+        }
+        
+        // Generate zip file
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(zipBlob);
+        link.download = `staff_badges_${companyName.replace(/\s+/g, '_')}_${Date.now()}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up object URL
+        URL.revokeObjectURL(link.href);
+        
+        toast.success(`Successfully generated ${presentStaff.length} staff badge(s) as ZIP file!`, {
+            position: 'bottom-right',
+            autoClose: 3000,
+        });
+        
+    } catch (error) {
+        console.error('Error downloading staff badge PDF:', error);
+        toast.error('Failed to generate staff badges. Please try again.', {
+            position: 'bottom-right',
+            autoClose: 3000,
+        });
+    }
+}
 </script>
 
 <template>  
@@ -915,7 +1538,7 @@ onBeforeMount(() => {
             <!-- View Toggle (Calendar/List) -->
             <div class="tfhb-view-toggle tfhb-flexbox tfhb-gap-8">
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="currentView === 'calendar' ? 'active' : ''"
                     @click="toggleView('calendar')"
                 >
@@ -923,7 +1546,7 @@ onBeforeMount(() => {
                     {{ $tfhb_trans('Calendar') }}
                 </button>
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="currentView === 'list' ? 'active' : ''"
                     @click="toggleView('list')"
                 >
@@ -939,7 +1562,7 @@ onBeforeMount(() => {
         <div  v-if="currentView === 'calendar'" class="tfhb-calendar-date-display tfhb-flexbox tfhb-gap-16 tfhb-align-center">
           <div class="tfhb-calendar-view-toggle tfhb-flexbox tfhb-gap-8">
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="calendarView === 'timeGridDay' ? 'active' : ''"
                     @click="changeCalendarView('timeGridDay')"
                 >
@@ -947,7 +1570,7 @@ onBeforeMount(() => {
                     {{ $tfhb_trans('Day') }}
                 </button>
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="calendarView === 'timeGridWeek' ? 'active' : ''"
                     @click="changeCalendarView('timeGridWeek')"
                 >
@@ -955,7 +1578,7 @@ onBeforeMount(() => {
                     {{ $tfhb_trans('Week') }}
                 </button>
                 <button 
-                    class="tfhb-btn secondary-btn" 
+                    class="tfhb-btn boxed-btn" 
                     :class="calendarView === 'dayGridMonth' ? 'active' : ''"
                     @click="changeCalendarView('dayGridMonth')"
                 >
@@ -988,6 +1611,10 @@ onBeforeMount(() => {
             <button class="tfhb-btn secondary-btn" @click="DownloadBadgePDFWithQRCode(AddonsAuth.loggedInUser)" :disabled="!AddonsAuth.loggedInUser">
                 <Icon name="FileText" size=16 />
                Export Badge PDF
+            </button>
+            <button class="tfhb-btn secondary-btn" @click="DownloadStaffBadgePDFWithQRCode(AddonsAuth.loggedInUser)" :disabled="!AddonsAuth.loggedInUser">
+                <Icon name="FileText" size=16 />
+               Export Present Staff Badge
             </button>
         </div>
 
@@ -1068,10 +1695,8 @@ onBeforeMount(() => {
                     >
                         <div class="tfhb-table-cell tfhb-cell-title">
                             <div class="tfhb-cell-content">
-                                <h4>{{ event.title }}</h4>
-                                <div v-if="event.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description" class="tfhb-cell-description">
-                                    {{ truncateString(event.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.description, 80) }}
-                                </div>
+                                <h4>{{ getSellerCompanyName(event.extendedProps?.apiData) }}</h4>
+                                
                             </div>
                         </div>
                         <div class="tfhb-table-cell tfhb-cell-date">
@@ -1146,19 +1771,27 @@ onBeforeMount(() => {
             </div>
         </div>
 
-        <!-- Details Panel (for all views) -->
-        <div v-if="showDetailsPanel && selectedEventData" class="tfhb-details-panel">
+        <!-- Details Panel (for desktop views) -->
+        <div v-if="showDetailsPanel && selectedEventData && !isSmallScreen" class="tfhb-details-panel">
             <div class="tfhb-details-header">
                 <h3>Seller Details</h3>
                 <div class="tfhb-details-actions">
-                    <Icon name="MessageCircle" size=16 />
-                    <Icon name="X" size=16 @click="showDetailsPanel = false" class="tfhb-close-btn" />
+                  <button class="action-btn" @click="redirectToChat(selectedEventData.extendedProps.apiData.sellers_data.ID)">
+                        <Icon name="MessageCircle" size=16 />
+                    </button>
+                    <!-- <button class="action-btn">
+                        <Icon name="MoreVertical" size=16 />
+                    </button> -->
+                    <a :href="'#/seller-list/profile/'+selectedEventData.extendedProps.apiData.sellers_data.ID" class="action-btn" style="font-size: 15px;">
+                        View
+                    </a>
+                    <Icon name="X" size=16 @click="closeDetailsPanel" class="tfhb-close-btn" />
                 </div>
             </div>
 
             <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
                 <div class="tfhb-company-logo">
-                  <img v-if="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Buyers Avatar"
+                  <img v-if="selectedEventData?.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Buyers Avatar"
                   :style="{
                     'width': '80px',
                     'height': '80px', 
@@ -1172,7 +1805,7 @@ onBeforeMount(() => {
                     'border-radius': '50%'
                   }">
                 </div>
-                <h4 class="tfhb-company-name">{{ selectedEventData.title }}</h4>
+                <h4 class="tfhb-company-name">{{ getSellerCompanyName(selectedEventData.extendedProps?.apiData) }}</h4>
             </div>
 
             <div class="tfhb-details-section" v-if="selectedEventData.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description">
@@ -1242,6 +1875,110 @@ onBeforeMount(() => {
             </div>
         </div>
     </div>
+
+    <!-- Details Panel Popup (for mobile/tablet views) -->
+    <HbPopup 
+        :isOpen="showDetailsPopup" 
+        @modal-close="closeDetailsPopup" 
+        max_width="500px" 
+        name="details-modal" 
+        gap="24px" 
+        class="tfhb-details-popup"
+    >
+        <template #header>
+            <div class="tfhb-popup-header">
+                <h3>Seller Details</h3>
+                <div class="tfhb-popup-actions">
+                    <button class="action-btn" @click="redirectToChat(selectedEventData?.extendedProps?.apiData?.sellers_data?.ID)">
+                        <Icon name="MessageCircle" size=16 />
+                    </button>
+                    <a :href="'#/seller-list/profile/'+selectedEventData?.extendedProps?.apiData?.sellers_data?.ID" class="action-btn" style="font-size: 15px;">
+                        View
+                    </a>
+                </div>
+            </div>
+        </template>
+
+        <template #content>
+            <div v-if="selectedEventData" class="tfhb-popup-details">
+                <div class="tfhb-company-info" v-if="selectedEventData.extendedProps.apiData">
+                    <div class="tfhb-company-logo">
+                      <img v-if="selectedEventData?.extendedProps?.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.avatar" :src="selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.avatar" alt="Seller Avatar"
+                      :style="{
+                        'width': '80px',
+                        'height': '80px', 
+                        'border-radius': '50%'
+                      }"
+                      >
+                      <img v-else :src="$tfhb_url+'/assets/images/avator.png'" alt="Seller Avatar"
+                      :style="{
+                        'width': '80px',
+                        'height': '80px', 
+                        'border-radius': '50%'
+                      }">
+                    </div>
+                    <h4 class="tfhb-company-name">{{ getSellerCompanyName(selectedEventData.extendedProps?.apiData) }}</h4>
+                </div>
+
+                <div class="tfhb-details-section" v-if="selectedEventData.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.description">
+                    <label class="tfhb-section-label">DESCRIPTION</label>
+                    <p class="tfhb-description-text">
+                        {{ selectedEventData.extendedProps.apiData.sellers_data.user_meta.tfhb_sellers_data.description || 'No description available' }}
+                    </p>
+                </div>
+
+                <div class="tfhb-details-section">
+                    <label class="tfhb-section-label">CONTACT PERSON</label>
+                    <div class="tfhb-staff-info">
+                        <div class="tfhb-staff-avatar">
+                            <Icon name="User" size=20 />
+                        </div>
+                        <div class="tfhb-staff-details">
+                            <span class="tfhb-staff-name">
+                                {{ getSellerName(selectedEventData.extendedProps.apiData) }}
+                            </span>
+                            <span class="tfhb-staff-role">
+                                {{ selectedEventData.extendedProps.apiData?.sellers_data?.user_meta?.tfhb_sellers_data?.incarico || 'Service Provider' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getCompanyWebsite(selectedEventData.extendedProps.apiData)">
+                    <label class="tfhb-section-label">WEBSITE</label>
+                    <p class="tfhb-contact-info">{{ getCompanyWebsite(selectedEventData.extendedProps.apiData) }}</p>
+                </div>
+
+                <div class="tfhb-details-section">
+                    <label class="tfhb-section-label">EMAIL</label>
+                    <p class="tfhb-contact-info">{{ selectedEventData.extendedProps.apiData?.sellers_data?.user_email || 'No email available' }}</p>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getAddress(selectedEventData.extendedProps.apiData)">
+                    <label class="tfhb-section-label">ADDRESS</label>
+                    <p class="tfhb-contact-info">{{ getAddress(selectedEventData.extendedProps.apiData) }}</p>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getSpecializations(selectedEventData.extendedProps.apiData).length">
+                    <label class="tfhb-section-label">SPECIALIZATIONS</label>
+                    <div class="tfhb-activity-tags">
+                        <span class="tfhb-tag" v-for="specialization in getSpecializations(selectedEventData.extendedProps.apiData)" :key="specialization">
+                            {{ specialization }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="tfhb-details-section" v-if="getBuyerInterests(selectedEventData.extendedProps.apiData).length">
+                    <label class="tfhb-section-label">BUYER INTERESTS</label>
+                    <div class="tfhb-activity-tags">
+                        <span class="tfhb-tag" v-for="interest in getBuyerInterests(selectedEventData.extendedProps.apiData)" :key="interest">
+                            {{ interest }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </HbPopup>
 </div>
 
 <!-- Booking Calendar Edit Popup (for Week/Month View) -->
@@ -1429,7 +2166,7 @@ onBeforeMount(() => {
 
 .tfhb-cell-title {
   flex: 2;
-  min-width: 200px;
+  min-width: 180px; /* Slightly reduced to give more space to other columns */
 }
 
 .tfhb-cell-date {
@@ -1444,12 +2181,12 @@ onBeforeMount(() => {
 
 .tfhb-cell-contact {
   flex: 1;
-  min-width: 150px;
+  min-width: 140px; /* Slightly reduced to give more space to status column */
 }
 
 .tfhb-cell-status {
   flex: 1;
-  min-width: 100px;
+  min-width: 120px; /* Increased minimum width to show full status text */
 }
 
 .tfhb-cell-actions {
@@ -1675,11 +2412,8 @@ onBeforeMount(() => {
   transform: translateY(-1px);
 }
 
-.tfhb-view-toggle .tfhb-btn.active {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  border-color: #4CAF50;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+.tfhb-view-toggle .tfhb-btn.active { 
+  color: #fff !important; 
 }
 
 /* Responsive Design for List View */
@@ -1706,6 +2440,18 @@ onBeforeMount(() => {
   
   .tfhb-pagination .tfhb-btn {
     order: 1;
+  }
+}
+
+/* Additional responsive adjustments for details panel */
+@media (min-width: 1025px) and (max-width: 1400px) {
+  .tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+  .tfhb-calendar-layout.with-details .tfhb-list-view {
+    min-width: 700px; /* Adjusted for medium screens */
+  }
+  
+  .tfhb-details-panel {
+    width: 320px; /* Slightly smaller panel for medium screens */
   }
 }
 .tfhb-btn.secondary-btn {
@@ -1746,11 +2492,8 @@ onBeforeMount(() => {
   transform: translateY(-1px);
 }
 
-.tfhb-calendar-view-toggle .tfhb-btn.active {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  border-color: #4CAF50;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+.tfhb-calendar-view-toggle .tfhb-btn.active { 
+  color: #fff !important; 
 }
 
 .tfhb-current-date {
@@ -2022,7 +2765,7 @@ onBeforeMount(() => {
 .tfhb-calendar-layout.with-details .tfhb-list-view {
   flex: 1;
   max-width: calc(100% - 374px); /* 350px panel + 24px gap */
-  min-width: 600px; /* Ensure minimum width for content */
+  min-width: 800px; /* Increased minimum width to accommodate all columns */
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
@@ -2072,8 +2815,7 @@ onBeforeMount(() => {
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e8e8e8;
-  margin-left: 24px;
-  width: 400px;
+  width: 350px;
   height: fit-content;
   position: sticky;
   top: 24px;
@@ -2081,6 +2823,7 @@ onBeforeMount(() => {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #f1f1f1;
+  flex-shrink: 0; /* Prevent panel from shrinking */
 }
 
 .tfhb-details-panel::-webkit-scrollbar {
@@ -2275,7 +3018,10 @@ onBeforeMount(() => {
   flex-wrap: wrap;
   gap: 8px;
 }
-
+.action-btn {
+	border: none !important;
+	background-color: transparent !important;
+}
 .tfhb-tag {
   background: linear-gradient(135deg, #6c5ce7, #5f3dc4);
   color: white !important;
@@ -2288,14 +3034,28 @@ onBeforeMount(() => {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .tfhb-calendar-layout.with-details .tfhb-booking-calendar {
-    max-width: calc(100% - 400px);
+@media (max-width: 1024px) and (min-width: 769px) {
+  .tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+  .tfhb-calendar-layout.with-details .tfhb-list-view {
+    max-width: calc(100% - 374px);
     min-width: 500px;
   }
   
   .tfhb-details-panel {
     width: 320px;
+  }
+}
+
+/* Tablet and Mobile - Use popup for details */
+@media (max-width: 1499px) {
+  .tfhb-details-panel {
+    display: none;
+  }
+  
+  .tfhb-calendar-layout.with-details .tfhb-booking-calendar,
+  .tfhb-calendar-layout.with-details .tfhb-list-view {
+    max-width: 100%;
+    min-width: 100%;
   }
 }
 
@@ -2348,6 +3108,11 @@ onBeforeMount(() => {
     overflow-x: auto;
   }
 
+  /* Hide details panel on mobile/tablet - use popup instead */
+  .tfhb-details-panel {
+    display: none;
+  }
+
   .tfhb-list-table {
     overflow-x: auto;
   }
@@ -2379,7 +3144,7 @@ onBeforeMount(() => {
   }
 
   .tfhb-cell-status {
-    min-width: 80px;
+    min-width: 100px; /* Increased for mobile to show full status */
   }
 
   .tfhb-cell-actions {
@@ -2398,5 +3163,227 @@ onBeforeMount(() => {
 }
 .tfhb-btn.secondary-btn.active{
   color: #fff !important;
+}
+
+/* Details Popup Styles */
+.tfhb-details-popup {
+  max-height: 100vh;
+  overflow-y: auto;
+  max-width: 100vw !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  z-index: 9999 !important;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.tfhb-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.tfhb-popup-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.tfhb-popup-actions {
+  display: flex;
+  gap: 12px;
+  color: #666;
+}
+
+.tfhb-popup-actions svg {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.tfhb-popup-actions svg:hover {
+  color: #4CAF50;
+}
+
+.tfhb-popup-details {
+  padding: 0;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.tfhb-popup-details::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tfhb-popup-details::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.tfhb-popup-details::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.tfhb-popup-details::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.tfhb-popup-details .tfhb-company-info {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tfhb-popup-details .tfhb-company-logo {
+  margin-bottom: 16px;
+}
+
+.tfhb-popup-details .tfhb-company-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.tfhb-popup-details .tfhb-details-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tfhb-popup-details .tfhb-details-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tfhb-popup-details .tfhb-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.tfhb-popup-details .tfhb-description-text {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.tfhb-popup-details .tfhb-staff-info {
+  display: flex;
+  align-items: center;
+}
+
+.tfhb-popup-details .tfhb-staff-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  color: #666;
+}
+
+.tfhb-popup-details .tfhb-staff-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.tfhb-popup-details .tfhb-staff-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.2;
+}
+
+.tfhb-popup-details .tfhb-staff-role {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+.tfhb-popup-details .tfhb-contact-info {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tfhb-popup-details .tfhb-activity-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tfhb-popup-details .tfhb-tag {
+  background: linear-gradient(135deg, #6c5ce7, #5f3dc4);
+  color: white !important;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Overlay and positioning fixes */
+.tfhb-details-popup :deep(.modal-overlay) {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(5px);
+  z-index: 9998 !important;
+}
+
+.tfhb-details-popup :deep(.modal-content) {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  max-height: 100vh !important;
+  max-width: 100vw !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  z-index: 9999 !important;
+  overflow: hidden;
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+  .tfhb-details-popup :deep(.modal-content) {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  
+  .tfhb-details-popup {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    max-height: 100vh !important;
+  }
+  
+  .tfhb-popup-details {
+    max-height: calc(100vh - 100px) !important;
+    padding: 0 20px;
+  }
 }
 </style>

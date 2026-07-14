@@ -104,7 +104,44 @@ function closeGalleryPopup() {
   isGalleryPopupOpen.value = false
   popupImageSrc.value = ''
 }
+onMounted(() => {
+  AddonsAuth.fetchLoggedInUser()
+})
 
+
+const embedVideoUrl = computed(() => {
+  if (!AddonsAuth.loggedInUser?.user_data?.video?.url) {
+    return null;
+  }
+  
+  try {
+    const url = new URL(AddonsAuth.loggedInUser?.user_data?.video?.url);
+    
+    // Handle YouTube URLs
+    if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+      let videoId = '';
+      
+      // Handle youtu.be URLs (short format)
+      if (url.hostname.includes('youtu.be')) {
+        videoId = url.pathname.substring(1); // Remove leading slash
+      } 
+      // Handle youtube.com URLs
+      else if (url.hostname.includes('youtube.com')) {
+        videoId = url.searchParams.get('v');
+      }
+      
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
+    
+    // Return original URL for non-YouTube videos
+    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+  } catch (error) {
+    console.error('Error parsing video URL:', error);
+    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+  }
+}); 
 // const fetchEventDetails = async () => {
 //   // If route.params.id is not available, show the event id from AddonsAuth.event
 //   let event_id = 0
@@ -164,7 +201,7 @@ function closeGalleryPopup() {
           <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.name || 'User' }}</h1>
           <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'User' }}</span>
         </div>
-        <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.job_title || '' }}</p>
+        <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.name || '' }}</p>
       </div>
 
       <!-- Navigation Tabs -->
@@ -174,8 +211,8 @@ function closeGalleryPopup() {
           :key="tab" 
           :class="['tab-button', { active: validActiveTab === tab }]"
           @click="activeTab = tab"
-        >
-          {{ tab }}
+        > 
+        {{tab}}
         </button>
       </div>
 
@@ -216,7 +253,8 @@ function closeGalleryPopup() {
             <p class="video-description">{{ userVideo.description }}</p>
             <div class="video-container">
               <iframe 
-                :src="userVideo.url" 
+                v-if="embedVideoUrl" 
+                :src="embedVideoUrl" 
                 frameborder="0" 
                 allowfullscreen
                 class="video-iframe"
@@ -237,7 +275,7 @@ function closeGalleryPopup() {
                   <span class="document-size">{{ doc.size }}</span>
                 </div>
                 <a v-if="doc.url" :href="doc.url" target="_blank" class="document-download">
-                  <span>📥</span>
+                  <span style="color: #fff;">Download</span>
                 </a>
               </div>
             </div>
@@ -293,7 +331,8 @@ function closeGalleryPopup() {
           <p class="video-description">{{ userVideo.description }}</p>
           <div class="video-container">
             <iframe 
-              :src="userVideo.url" 
+              v-if="embedVideoUrl"
+              :src="embedVideoUrl" 
               frameborder="0" 
               allowfullscreen
               class="video-iframe"
@@ -320,7 +359,7 @@ function closeGalleryPopup() {
                 <span class="document-size">{{ doc.size }}</span>
               </div>
               <a v-if="doc.url" :href="doc.url" target="_blank" class="document-download">
-                <span>📥</span>
+                <span style="color: #fff;">Download</span>
               </a>
             </div>
           </div>
@@ -347,10 +386,10 @@ function closeGalleryPopup() {
         <h3>Contact information</h3>
         
         <div class="contact-section">
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.company_website">
+          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.sito_internet">
             <span class="contact-label">SITE</span>
-            <a :href="`https://${AddonsAuth.loggedInUser.user_data.company_website}`" target="_blank">
-              {{ AddonsAuth.loggedInUser.user_data.company_website }}
+            <a :href="`https://${AddonsAuth.loggedInUser.user_data.sito_internet}`" target="_blank">
+              {{ AddonsAuth.loggedInUser.user_data.sito_internet }}
             </a>
           </div>
           
@@ -360,11 +399,11 @@ function closeGalleryPopup() {
               {{ AddonsAuth.loggedInUser.user_data.email }}
             </a>
           </div>
-          
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.mobile_no">
+          <!-- {{ AddonsAuth.loggedInUser.user_data }} -->
+          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.telefono_diretto">
             <span class="contact-label">PHONE</span>
             <div class="phone-numbers">
-              <div>{{ AddonsAuth.loggedInUser.user_data.mobile_no }}</div>
+              <div>{{ AddonsAuth.loggedInUser.user_data.telefono_diretto }}</div>
             </div>
           </div>
           
@@ -870,6 +909,8 @@ function closeGalleryPopup() {
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .contact-card h3,
@@ -888,6 +929,17 @@ function closeGalleryPopup() {
 
 .contact-item {
   margin-bottom: 1.5rem;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.contact-item > div:not(.phone-numbers) {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  line-height: 1.4;
 }
 
 .contact-label {
@@ -906,6 +958,12 @@ function closeGalleryPopup() {
   text-decoration: none;
   font-weight: 500;
   line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  display: block;
+  max-width: 100%;
 }
 
 .contact-item a:hover {
@@ -922,6 +980,11 @@ function closeGalleryPopup() {
   color: var(--tfhb-text-title-color, #141915);
   font-weight: 500;
   line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
 }
 
 .social-section h4 {
@@ -1130,6 +1193,19 @@ function closeGalleryPopup() {
   .company-banner {
     height: 125px;
   }
+  
+  /* Enhanced text wrapping for mobile */
+  .contact-item a,
+  .phone-numbers div,
+  .contact-item > div:not(.phone-numbers) {
+    word-break: break-all;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  
+  .contact-card {
+    padding: 1.5rem;
+  }
 }
 
 /* Gallery Popup Styles */
@@ -1159,6 +1235,8 @@ function closeGalleryPopup() {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+  overflow: scroll;
 }
 
 .gallery-popup-content img {

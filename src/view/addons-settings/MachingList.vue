@@ -47,6 +47,12 @@ const endItem = computed(() => {
 // Computed property to get sequential ID for each matching item
 const getSequentialId = (matching) => {
   const index = matchingData.value.indexOf(matching);
+  // When filters are applied, restart numbering from 1 for filtered results
+  // Otherwise use pagination-based numbering
+  const hasActiveFilters = filters.buyer_id || filters.seller_id || filters.date_search;
+  if (hasActiveFilters) {
+    return index + 1;
+  }
   return (currentPage.value - 1) * filters.per_page + index + 1;
 };
 
@@ -118,6 +124,7 @@ const loadSellersAndBuyers = async () => {
 
 const applyFilters = () => {
   filters.page = 1;
+  // alert(1);
   loadData();
 };
 
@@ -246,6 +253,135 @@ const exportMatching = async () => {
   }
 };
 
+const ExportAScsv = async () => {
+  try {
+    // First, get the total count to determine how many records we need to fetch
+    const countResponse = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/matching-list', {
+      filters: {
+        ...filters,
+        page: 1,
+        per_page: 1 // Just get one record to get the total count
+      }
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce
+      }
+    });
+    
+    const countData = countResponse.data;
+    const totalRecords = countData.success ? countData.data.total : 0;
+    
+    if (totalRecords === 0) {
+      toast.error('No data available for export', {
+        position: 'bottom-right',
+        autoClose: 1500,
+      });
+      return;
+    }
+    
+    // Now get all matching data using the total count
+    const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/matching-list', {
+      filters: {
+        ...filters,
+        page: 1,
+        per_page: totalRecords + 100 // Add some buffer to ensure we get all records
+      }
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce
+      }
+    });
+    
+    const data = response.data;
+    
+    if (data.success && data.data.matching) {
+      const allMatchingData = data.data.matching;
+      
+      // Create CSV headers
+      const headers = [
+        'SL No',
+        'Buyer Company Name',
+        'Buyer Email',
+        'Buyer Contact Person',
+        'Buyer Country',
+        'Buyer Status',
+        'Seller Company Name',
+        'Seller Email',
+        'Seller Contact Person',
+        'Seller Country',
+        'Seller Status',
+        'Date',
+        'Start Time',
+        'End Time',
+        'Status'
+      ];
+      
+      // Create CSV rows
+      const csvRows = [headers.join(',')];
+      
+      allMatchingData.forEach((matching, index) => {
+        const row = [
+          index + 1, // Sequential number
+          matching.buyers?.meta?.tfhb_buyers_data?.travel_agent_name || 'N/A',
+          matching.buyers?.user_email || 'N/A',
+          matching.buyers?.display_name || 'N/A',
+          matching.buyers?.meta?.tfhb_buyers_data?.nation?.join(' | ') || 'N/A',
+          matching.buyers?.meta?.tfhb_buyers_status || 'N/A',
+          matching.sellers?.meta?.tfhb_sellers_data?.denominazione_operatore_azienda || 'N/A',
+          matching.sellers?.user_email || 'N/A',
+          matching.sellers?.display_name || 'N/A',
+          matching.sellers?.meta?.tfhb_sellers_data?.provenienza_Buyer_interesse?.join(' | ') || 'N/A',
+          matching.sellers?.meta?.tfhb_sellers_status || 'N/A',
+          matching.date || 'N/A',
+          matching.start_time || 'N/A',
+          matching.end_time || 'N/A',
+          matching.status || 'N/A'
+        ];
+        
+        // Escape CSV values (handle commas and quotes)
+        const escapedRow = row.map(value => {
+          const stringValue = String(value || '');
+          if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+            return `"${stringValue.replace(/"/g, '""')}"`;
+          }
+          return stringValue;
+        });
+        
+        csvRows.push(escapedRow.join(','));
+      });
+      
+      // Create CSV content
+      const csvContent = csvRows.join('\n');
+      
+      // Create and download CSV file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `matching-list-export-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Export completed successfully. ${allMatchingData.length} records exported.`, {
+        position: 'bottom-right',
+        autoClose: 2000,
+      });
+    } else {
+      toast.error('No data available for export', {
+        position: 'bottom-right',
+        autoClose: 1500,
+      });
+    }
+  } catch (error) {
+    console.error('Error exporting CSV:', error);
+    toast.error('Error exporting CSV', {
+      position: 'bottom-right',
+      autoClose: 1500,
+    });
+  }
+};
 const toggleSelectAll = () => {
   if (selectAll.value) {
     selectedMatchingIds.value = matchingData.value.map(matching => matching.id);
@@ -449,7 +585,7 @@ onBeforeUnmount(() => {
                   id="cb-select-all-1"
                 >
               </th>
-              <th>{{ $tfhb_trans('ID') }}</th>
+              <th>{{ $tfhb_trans('SL No') }}</th>
               <th>{{ $tfhb_trans('Buyer') }}</th>
               <th>{{ $tfhb_trans('Seller') }}</th>
               <th>{{ $tfhb_trans('Date') }}</th>
@@ -473,12 +609,15 @@ onBeforeUnmount(() => {
               <td>
            
                 <div v-if="matching.buyers && matching.buyers.display_name" class="tfhb-user-info">
-                  <strong>{{ matching.buyers.meta.tfhb_buyers_data.travel_agent_name !='' ? matching.buyers.meta.tfhb_buyers_data.travel_agent_name : 'N/A' }}</strong>
+                  <strong>{{ matching.buyers?.meta?.tfhb_buyers_data?.travel_agent_name || 'N/A' }}</strong>
                   <small>{{ matching.buyers.user_email }}</small> 
                   <small>{{ matching.buyers.display_name }}</small>
-                  <div v-if="matching.buyers.meta && matching.buyers.meta.tfhb_buyers_status" class="tfhb-user-status">
+                  <span v-if="matching.buyers?.meta?.tfhb_buyers_data?.nation && matching.buyers.meta.tfhb_buyers_data.nation.length > 0">
+                    <small v-for="(nation, index) in matching.buyers.meta.tfhb_buyers_data.nation" :key="nation">{{ nation }}<span v-if="index < matching.buyers.meta.tfhb_buyers_data.nation.length - 1"> | </span></small>
+                  </span>
+                  <div v-if="matching.buyers?.meta?.tfhb_buyers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.buyers.meta.tfhb_buyers_status) }}
-                  </div>
+                  </div> 
                 </div>
                 <div v-else class="tfhb-user-not-found">
                   <em>{{ $tfhb_trans('Buyer not found') }}</em>
@@ -486,12 +625,15 @@ onBeforeUnmount(() => {
               </td>
               <td>
                 <div v-if="matching.sellers && matching.sellers.display_name" class="tfhb-user-info">
-                  <strong>{{ matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda !='' ? matching.sellers.meta.tfhb_sellers_data.denominazione_operatore_azienda : 'N/A' }}</strong> 
+                  <strong>{{ matching.sellers?.meta?.tfhb_sellers_data?.denominazione_operatore_azienda || 'N/A' }}</strong> 
                   <small>{{ matching.sellers.user_email }}</small>
                   <small>{{ matching.sellers.display_name }}</small>
-                  <div v-if="matching.sellers.meta && matching.sellers.meta.tfhb_sellers_status" class="tfhb-user-status">
+                  <span v-if="matching.sellers?.meta?.tfhb_sellers_data?.provenienza_Buyer_interesse && matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse.length > 0">
+                    <small v-for="(nation, index) in matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse" :key="nation">{{ nation }}<span v-if="index < matching.sellers.meta.tfhb_sellers_data.provenienza_Buyer_interesse.length - 1"> | </span></small>
+                  </span>
+                  <div v-if="matching.sellers?.meta?.tfhb_sellers_status" class="tfhb-user-status">
                     {{ capitalizeFirst(matching.sellers.meta.tfhb_sellers_status) }}
-                  </div>
+                  </div> 
                 </div>
                 <div v-else class="tfhb-user-not-found">
                   <em>{{ $tfhb_trans('Seller not found') }}</em>

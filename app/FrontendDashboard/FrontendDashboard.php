@@ -29,10 +29,10 @@ class FrontendDashboard {
         }
         
         // Check if License is valid`
-        $license = LicenseController::getInstance()->check_license();
-        if(!$license['is_valid']){
-            return false;
-        }
+        // $license = LicenseController::getInstance()->check_license();
+        // if(!$license['is_valid']){
+        //     return false;
+        // }
 
         // 
         // Define Constants
@@ -78,10 +78,10 @@ class FrontendDashboard {
         add_action( 'wp_ajax_nopriv_tfhb_reset_password', array( $this, 'tfhb_reset_password_callback' ) );
 
         // prevent admin access for roles
-        add_action('admin_init', array( $this, 'tfhb_prevent_admin_access_for_roles' ) ); 
+        // add_action('admin_init', array( $this, 'tfhb_prevent_admin_access_for_roles' ) ); 
 
         // redirect to dashboard after login
-        add_action( 'login_redirect', array( $this, 'tfhb_redirect_to_dashboard' ), 10, 3 );
+        // add_action( 'login_redirect', array( $this, 'tfhb_redirect_to_dashboard' ), 10, 3 );
        
     }
 
@@ -204,7 +204,8 @@ class FrontendDashboard {
 
                 $link = get_site_url() . '/?hydra-booking=forgot-password&tfhb_verification=' . base64_encode( json_encode( $string ) );
 
-                $subject = '<p>' . esc_html__( 'Password Reset Request', 'hydra-booking' ) . '</p>';
+              
+                $subject = esc_html__( 'Password Reset Request', 'hydra-booking' );
 
                 $message =  '<p>' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $user->first_name . ' ' . $user->last_name . '</p>';
 

@@ -112,6 +112,16 @@ const sellers = ref([]);
 const filteredSellers = ref([]);
 const searchQuery = ref('');
 
+// Filter states
+const selectedBusinessArea = ref('');
+const selectedSpecialization = ref('');
+const selectedRegion = ref('');
+
+// Filter options
+const businessAreaOptions = ref([]);
+const specializationOptions = ref([]);
+const regionOptions = ref([]);
+
 async function fetchSellers() {
     
     try {
@@ -126,13 +136,63 @@ async function fetchSellers() {
         });
         if (response.data.success && response.data.data) {
             sellers.value = response.data.data;
-            filteredSellers.value = response.data.data;
+            
+            // Sort sellers alphabetically by company name (denominazione_operatore_azienda)
+            sellers.value.sort((a, b) => {
+                const companyNameA = (a.data?.denominazione_operatore_azienda || '').toLowerCase();
+                const companyNameB = (b.data?.denominazione_operatore_azienda || '').toLowerCase();
+                
+                // Handle empty values by putting them at the end
+                if (!companyNameA && !companyNameB) return 0;
+                if (!companyNameA) return 1;
+                if (!companyNameB) return -1;
+                
+                // Sort alphabetically
+                return companyNameA.localeCompare(companyNameB);
+            });
+            
+            // Extract unique filter options
+            extractFilterOptions();
+            
+            filteredSellers.value = [...sellers.value];
         }
     } catch (e) {
         // handle error
     } finally {
         skeleton.value = false;
     }
+}
+
+// Extract unique filter options from sellers data
+function extractFilterOptions() {
+    const businessAreas = new Set();
+    const specializations = new Set();
+    const regions = new Set();
+    
+    sellers.value.forEach(seller => {
+        // Business Area (ambito_di_attività)
+        if (seller.data.ambito_di_attività && seller.data.ambito_di_attività.trim() !== '') {
+            businessAreas.add(seller.data.ambito_di_attività);
+        }
+        
+        // Specialization (specializzazione)
+        if (seller.data.specializzazione && Array.isArray(seller.data.specializzazione)) {
+            seller.data.specializzazione.forEach(spec => {
+                if (spec && spec.trim() !== '') {
+                    specializations.add(spec);
+                }
+            });
+        }
+        
+        // Region (regione)
+        if (seller.data.regione && seller.data.regione.trim() !== '') {
+            regions.add(seller.data.regione);
+        }
+    });
+    
+    businessAreaOptions.value = Array.from(businessAreas).sort();
+    specializationOptions.value = Array.from(specializations).sort();
+    regionOptions.value = Array.from(regions).sort();
 }
 
 onBeforeMount(async () => {
@@ -150,105 +210,156 @@ const closeSellerDetails = () => {
 const Tfhb_Seller_Filter = (event) => {
     const query = event.target.value.toLowerCase().trim();
     searchQuery.value = query;
+    applyFilters();
+}
+
+// Apply all filters (search + dropdown filters)
+function applyFilters() {
+    let filtered = [...sellers.value];
     
-    if (!query) {
-        filteredSellers.value = sellers.value;
-        return;
+    // Apply search filter
+    const query = (searchQuery.value || '').trim().toLowerCase();
+    if (query) {
+        filtered = filtered.filter(seller => {
+            const sellerData = seller.data || {};
+
+            // Search in name
+            if (sellerData.name && sellerData.name.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in job title
+            if (sellerData.job_title && sellerData.job_title.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in email
+            if (sellerData.email && sellerData.email.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in phone number
+            if (sellerData.telefono_diretto && sellerData.telefono_diretto.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in address/location
+            if (sellerData.location && sellerData.location.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in description
+            if (sellerData.description && sellerData.description.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in website
+            if (sellerData.sito_internet && sellerData.sito_internet.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in company name
+            if (sellerData.denominazione_operatore_azienda && 
+                sellerData.denominazione_operatore_azienda.toLowerCase().includes(query)) {
+                return true;
+            }
+            if (sellerData['denominazione-operatore-azienda'] && 
+                sellerData['denominazione-operatore-azienda'].toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in alternative company name
+            if (sellerData['eventuale-altra-denominazione'] && 
+                sellerData['eventuale-altra-denominazione'].toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in VAT number
+            if (sellerData['pi_cf'] && sellerData['pi_cf'].toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in activity area
+            if (sellerData.ambito_di_attivita && sellerData.ambito_di_attivita.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Search in specialization
+            if (sellerData.specializzazione && 
+                Array.isArray(sellerData.specializzazione)) {
+                const specializationMatch = sellerData.specializzazione.some(spec => 
+                    typeof spec === 'string' && spec.toLowerCase().includes(query)
+                );
+                if (specializationMatch) return true;
+            }
+            
+            // Search in buyer interest origin
+            if (sellerData.provenienza_buyer_interesse && 
+                Array.isArray(sellerData.provenienza_buyer_interesse)) {
+                const buyerMatch = sellerData.provenienza_buyer_interesse.some(buyer => 
+                    typeof buyer === 'string' && buyer.toLowerCase().includes(query)
+                );
+                if (buyerMatch) return true;
+            }
+            
+            // Search in region
+            if (sellerData.regione && sellerData.regione.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            return false;
+        });
     }
     
-    filteredSellers.value = sellers.value.filter(seller => {
-        // Search in name
-        if (seller.data.name && 
-            seller.data.name.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in job title
-        if (seller.data.job_title && 
-            seller.data.job_title.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in email
-        if (seller.data.email && 
-            seller.data.email.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in phone number
-        if (seller.data.telefono_diretto && 
-            seller.data.telefono_diretto.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in address/location
-        if (seller.data.location && 
-            seller.data.location.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in description
-        if (seller.data.description && 
-            seller.data.description.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in website
-        if (seller.data.sito_internet && 
-            seller.data.sito_internet.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in company name
-        if (seller.data['denominazione-operatore-azienda'] && 
-            seller.data['denominazione-operatore-azienda'].toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in alternative company name
-        if (seller.data['eventuale-altra-denominazione'] && 
-            seller.data['eventuale-altra-denominazione'].toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in VAT number
-        if (seller.data['pi_cf'] && 
-            seller.data['pi_cf'].toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in activity area
-        if (seller.data.ambito_di_attivita && 
-            seller.data.ambito_di_attivita.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        // Search in specialization
-        if (seller.data.specializzazione && 
-            Array.isArray(seller.data.specializzazione)) {
-            const specializationMatch = seller.data.specializzazione.some(spec => 
-                spec.toLowerCase().includes(query)
-            );
-            if (specializationMatch) return true;
-        }
-        
-        // Search in buyer interest origin
-        if (seller.data.provenienza_buyer_interesse && 
-            Array.isArray(seller.data.provenienza_buyer_interesse)) {
-            const buyerMatch = seller.data.provenienza_buyer_interesse.some(buyer => 
-                buyer.toLowerCase().includes(query)
-            );
-            if (buyerMatch) return true;
-        }
-        
-        // Search in region
-        if (seller.data.regione && 
-            seller.data.regione.toLowerCase().includes(query)) {
-            return true;
-        }
-        
-        return false;
-    });
+    // Apply Business Area filter
+    if (selectedBusinessArea.value) {
+        filtered = filtered.filter(seller => 
+            seller.data.ambito_di_attività === selectedBusinessArea.value
+        );
+    }
+    
+    // Apply Specialization filter
+    if (selectedSpecialization.value) {
+        filtered = filtered.filter(seller => 
+            seller.data.specializzazione && 
+            Array.isArray(seller.data.specializzazione) &&
+            seller.data.specializzazione.includes(selectedSpecialization.value)
+        );
+    }
+    
+    // Apply Region filter
+    if (selectedRegion.value) {
+        filtered = filtered.filter(seller => 
+            seller.data.regione === selectedRegion.value
+        );
+    }
+    
+    filteredSellers.value = filtered;
+}
+
+// Filter change handlers
+const onBusinessAreaChange = (event) => {
+    selectedBusinessArea.value = event.target.value;
+    applyFilters();
+}
+
+const onSpecializationChange = (event) => {
+    selectedSpecialization.value = event.target.value;
+    applyFilters();
+}
+
+const onRegionChange = (event) => {
+    selectedRegion.value = event.target.value;
+    applyFilters();
+}
+
+// Clear all filters
+const clearFilters = () => {
+    searchQuery.value = '';
+    selectedBusinessArea.value = '';
+    selectedSpecialization.value = '';
+    selectedRegion.value = '';
+    applyFilters();
 }
 const redirectToChat = (user_id) => { 
     AddonsAuth.chat_user_id = user_id;
@@ -263,19 +374,56 @@ const redirectToChat = (user_id) => {
         <div class="sellers-header">
            
 
-            <!-- Filter Section (from hosts.vue) -->
+            <!-- Filter Section -->
             <div class="tfhb-dashboard-heading tfhb-flexbox tfhb-justify-between">
                 <div class="tfhb-header-filters">
                     <input type="text" @keyup="Tfhb_Seller_Filter" placeholder="Search by name, job title, email, phone, address..." /> 
                     <span><Icon name="Search" size=20 /></span>
                 </div>
-                 <!-- <HbButton 
-                    classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8"  
-                    :buttonText="$tfhb_trans('Filter')"
-                    icon="SlidersHorizontal"   
-                    :hover_animation="false" 
-                    icon_position = 'left'
-                />  -->
+                
+                <!-- Filter Dropdowns -->
+                <div class="filter-dropdowns">
+                    <div class="filter-group">
+                        <label>Business Area:</label>
+                        <select @change="onBusinessAreaChange" :value="selectedBusinessArea">
+                            <option value="">All Business Areas</option>
+                            <option v-for="area in businessAreaOptions" :key="area" :value="area">
+                                {{ area }}
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Specialization:</label>
+                        <select @change="onSpecializationChange" :value="selectedSpecialization">
+                            <option value="">All Specializations</option>
+                            <option v-for="spec in specializationOptions" :key="spec" :value="spec">
+                                {{ spec }}
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Region:</label>
+                        <select @change="onRegionChange" :value="selectedRegion">
+                            <option value="">All Regions</option>
+                            <option v-for="region in regionOptions" :key="region" :value="region">
+                                {{ region }}
+                            </option>
+                        </select>
+                    </div>
+                    <div v-if="selectedBusinessArea || selectedSpecialization || selectedRegion || searchQuery"  class="filter-group">
+                        <label>Action:</label>
+                        <button 
+                            @click="clearFilters" 
+                            class="clear-filters-btn">
+                        <Icon name="X" size=16 />
+                        Clear Filters
+                    </button>
+                    </div>
+                    
+                    
+                </div>
                 <!-- <div class="thb-admin-btn right tfhb-flexbox tfhb-gap-16"> 
                     <HbButton 
                         classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
@@ -315,7 +463,7 @@ const redirectToChat = (user_id) => {
             <div class="header-content">
                 <div class="header-left">
                     <h1 class="sellers-title">Sellers</h1>
-                    <p class="sellers-subtitle">Lorem ipsum dolor sit amet consectetur.</p>
+                    <p class="sellers-subtitle">Here below see all participating Italian tourism professionals sorted by alphabetical order (Company name) and main contact info.</p>
                 </div>
                 
                 <div class="header-right">
@@ -351,6 +499,8 @@ const redirectToChat = (user_id) => {
                             </div>
                             <div class="seller-info">
                                 <h3 class="seller-name" v-if="seller.data.denominazione_operatore_azienda != ''">{{ seller.data.denominazione_operatore_azienda }}</h3>
+                                
+                             
                                 <h3 class="seller-name" v-if="seller.data.denominazione_operatore_azienda == ''">N/A</h3>
                                 <p class="seller-subtitle">{{ seller.data.ambito_di_attività }}</p>
                             </div> 
@@ -383,13 +533,16 @@ const redirectToChat = (user_id) => {
                             </div>
                         </div>
                         
-                        <div class="seller-card-actions">
+                        <div class="seller-card-actions tfhb-flexbox tfhb-gap-8">
                             <button class="action-btn"  @click="selectSeller(seller)">
                                 <Icon name="Eye" size=16 />
                             </button>
                             <button class="action-btn" @click="redirectToChat(seller.id)">
                                 <Icon name="MessageCircle" size=16 />
                             </button>
+                            <a :href="'#/seller-list/profile/'+seller.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                             <!-- <button class="action-btn">
                                 <Icon name="MoreVertical" size=16 />
                             </button> -->
@@ -402,11 +555,17 @@ const redirectToChat = (user_id) => {
             <div v-if="selectedSeller" class="seller-details-sidebar">
                 <div class="seller-details-header">
                     <h2 class="details-title">
-                        <Icon name="MessageCircle" size=20 />
+                        <!-- <Icon name="MessageCircle" size=20 /> -->
                         Sellers
-                    </h2>
+                    </h2> 
                     <div class="header-actions">
                         <!-- <span class="match-percentage-large">{{ selectedSeller.data.matchPercentage }}% Mach</span>s -->
+                        <button class="action-btn" @click="redirectToChat(selectedSeller.id)">
+                            <Icon name="MessageCircle" size=16 />
+                        </button>
+                            <a :href="'#/seller-list/profile/'+selectedSeller.id " class="action-btn" style="font-size: 15px;">
+                                View
+                            </a>
                         <button class="close-btn" @click="closeSellerDetails">
                             <Icon name="X" size=20 />
                         </button>
@@ -426,8 +585,8 @@ const redirectToChat = (user_id) => {
                             <!-- <div class="online-indicator"></div> -->
                         </div>
                         <!-- <h3 class="seller-name-large">{{ selectedSeller.data.name }}</h3> -->
-                          <h3 class="seller-name-large" v-if="selectedSeller.data.eventuale_altra_denominazione != ''">{{ selectedSeller.data.eventuale_altra_denominazione }}</h3>
-                        <h3 class="selectedSeller-name-large" v-if="selectedSeller.data.eventuale_altra_denominazione == ''">{{ selectedSeller.data.name }}</h3>
+                          <h3 class="seller-name-large" v-if="selectedSeller.data.denominazione_operatore_azienda != ''">{{ selectedSeller.data.denominazione_operatore_azienda }}</h3>
+                        <h3 class="selectedSeller-name-large" v-if="selectedSeller.data.denominazione_operatore_azienda == ''">{{ selectedSeller.data.name }}</h3>
                                
                         <p class="seller-subtitle-large">{{ selectedSeller.data.ambito_di_attività }}</p>
                     </div>
@@ -601,6 +760,67 @@ const redirectToChat = (user_id) => {
         display: inline-block;
         left: auto;
         top: 20px;
+    }
+}
+
+// Filter Dropdowns Styles
+.filter-dropdowns {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--tfhb-paragraph-color, #273F2B);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        select {
+            padding: 8px 12px;
+            border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+            cursor: pointer;
+            
+            &:focus {
+                outline: none;
+                border-color: var(--tfhb-primary-color, #2E6B38);
+            }
+            
+            &:hover {
+                border-color: var(--tfhb-primary-color, #2E6B38);
+            }
+        }
+    }
+    
+    .clear-filters-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        background: var(--tfhb-surface-background-color, #EEF6F0);
+        border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--tfhb-text-title-color, #141915);
+        cursor: pointer;
+        transition: all 0.2s;
+        
+        &:hover {
+            background: var(--tfhb-surface-primary-color, #C0D8C4);
+            color: var(--tfhb-primary-color, #2E6B38);
+        }
     }
 }
 
@@ -972,6 +1192,11 @@ const redirectToChat = (user_id) => {
     }
 }
 
+.action-btn {
+	border: none;
+	background-color: transparent;
+}
+
 .tags-container {
     display: flex;
     flex-wrap: wrap;
@@ -1047,6 +1272,31 @@ const redirectToChat = (user_id) => {
 
     .tfhb-header-filters input {
         width: 100%;
+    }
+    
+    .tfhb-dashboard-heading {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .filter-dropdowns {
+        width: 100%;
+        justify-content: flex-start;
+        
+        .filter-group {
+            flex: 1;
+            min-width: 120px;
+            
+            select {
+                min-width: 120px;
+                width: 100%;
+            }
+        }
+        
+        .clear-filters-btn {
+            flex-shrink: 0;
+        }
     }
 }
 </style>

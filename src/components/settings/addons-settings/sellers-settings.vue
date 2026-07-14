@@ -12,6 +12,7 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import { toast } from "vue3-toastify"; 
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
+import HbText from '@/components/form-fields/HbText.vue'
 
 import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue' 
 import HbDropdown from '@/components/form-fields/HbDropdown.vue'
@@ -174,6 +175,22 @@ const copyShortcodeCode = () => {
                     {'name': 'Active', 'value': 'active'}
                 ]" 
             />
+             <HbText  
+                v-model="AddonsSettings.Sellers.maximum_number_of_staff"  
+                required= "true"  
+                :label="$tfhb_trans('Maximum Number Of Staff')"  
+                selected = "1"
+                :placeholder="$tfhb_trans('Type your Maximum Number Of Staff')" 
+                width="50" 
+            /> 
+             <HbText  
+                v-model="AddonsSettings.Sellers.maximum_number_of_staff_present"  
+                required= "true"  
+                :label="$tfhb_trans('Maximum Number Of Staff Present At The Event')"  
+                selected = "1"
+                :placeholder="$tfhb_trans('Type your Maximum Number Of Staff Present')" 
+                width="50" 
+            /> 
             <!-- Time format -->   
             <HbWpFileUpload
                 name="badge_pdf"

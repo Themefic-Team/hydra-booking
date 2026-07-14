@@ -4,18 +4,19 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 
-import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
-import Icon from '@/components/icon/LucideIcon.vue'
 const route = useRoute()
 const eventDetails = ref({})
 const skeleton = ref(true)
 const activeTab = ref('Home')
+const userProfile = ref({})
+const loading = ref(true)
+const error = ref(null)
 
 const tabs = ['Home', 'About', 'Staff', 'Gallery', 'Video', 'Documents', 'Links']
 
 // Computed properties to check if tab content is empty
 const hasAboutContent = computed(() => {
-  const description = AddonsAuth.loggedInUser?.user_data?.description
+  const description = userProfile.value?.user_data?.description
   return description && description.trim() !== ''
 })
 
@@ -34,7 +35,7 @@ const hasLinksContent = computed(() => userLinks.value.length > 0)
 
 // Additional computed properties to check if sidebar sections have content
 const hasContactInfo = computed(() => {
-  const userData = AddonsAuth.loggedInUser?.user_data
+  const userData = userProfile.value?.user_data
   return (
     (userData?.company_website && userData.company_website.trim() !== '') ||
     (userData?.email && userData.email.trim() !== '') ||
@@ -45,7 +46,7 @@ const hasContactInfo = computed(() => {
 })
 
 const hasBuyerInfo = computed(() => {
-  const userData = AddonsAuth.loggedInUser?.user_data
+  const userData = userProfile.value?.user_data
   return (
     (userData?.areas_of_activity && userData.areas_of_activity.length > 0) ||
     (userData?.nation && userData.nation.length > 0)
@@ -53,7 +54,7 @@ const hasBuyerInfo = computed(() => {
 })
 
 const hasBuyerInterests = computed(() => {
-  const userData = AddonsAuth.loggedInUser?.user_data
+  const userData = userProfile.value?.user_data
   return userData?.preferred_workshop_meetings && userData.preferred_workshop_meetings.length > 0
 })
 
@@ -83,7 +84,7 @@ const validActiveTab = computed(() => {
 // Dummy data based on the image structure
  
 // Computed properties to get user data
-const userData = computed(() => AddonsAuth.loggedInUser?.user_data || {})
+const userData = computed(() => userProfile.value?.user_data || {})
 const userStaff = computed(() => userData.value.staff || [])
 const userGallery = computed(() => userData.value.gallery || [])
 const userVideo = computed(() => userData.value.video || { title: '', description: '', url: '' })
@@ -107,12 +108,12 @@ function closeGalleryPopup() {
 
 // Computed property to convert video URL to embeddable format
 const embedVideoUrl = computed(() => {
-  if (!AddonsAuth.loggedInUser?.user_data?.video?.url) {
+  if (!userProfile.value?.user_data?.video?.url) {
     return null;
   }
   
   try {
-    const url = new URL(AddonsAuth.loggedInUser?.user_data?.video?.url);
+    const url = new URL(userProfile.value?.user_data?.video?.url);
     
     // Handle YouTube URLs
     if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
@@ -133,56 +134,62 @@ const embedVideoUrl = computed(() => {
     }
     
     // Return original URL for non-YouTube videos
-    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+    return userProfile.value?.user_data?.video?.url;
   } catch (error) {
     console.error('Error parsing video URL:', error);
-    return AddonsAuth.loggedInUser?.user_data?.video?.url;
+    return userProfile.value?.user_data?.video?.url;
   }
 });
 
-onMounted(() => {
-  AddonsAuth.fetchLoggedInUser()
-})
-
-// const fetchEventDetails = async () => {
-//   // If route.params.id is not available, show the event id from AddonsAuth.event
-//   let event_id = 0
-//   if (!route.params.id) {
-//     event_id = AddonsAuth.event?.id || 0
-//   } else{
-//     event_id = route.params.id
-//   }
-//   try {
-//     skeleton.value = true
-//     const response = await axios.get(`/wp-json/hydra-booking/v1/addons/sellers/event-details/${event_id}`, {
-//       headers: {
-//         'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
-//       }
-//     })
+// Fetch buyer profile data
+const fetchBuyerProfile = async () => {
+  try {
+    loading.value = true
+    error.value = null
     
-//     if (response.data.status) {
-//       eventDetails.value = response.data.event_details || {}
-//     }
-//   } catch (error) {
-//     console.error('Error fetching event details:', error)
-//   } finally {
-//     skeleton.value = false
-//   }
-// }
+    const response = await axios.get(tfhb_core_apps.rest_route + `hydra-booking/v1/addons/public-buyer-profile/${route.params.id}`, {
+      headers: {
+        'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
+      }
+    })
+    
+    if (response.data.success) {
+      userProfile.value = response.data.data
+    } else {
+      error.value = response.data.message || 'Failed to load profile'
+    }
+  } catch (err) {
+    console.error('Error fetching buyer profile:', err)
+    error.value = 'Failed to load profile'
+  } finally {
+    loading.value = false
+    skeleton.value = false
+  }
+}
 
-// onMounted(() => {
-//   fetchEventDetails()
-// })
+onMounted(() => {
+  fetchBuyerProfile()
+})
 </script>
 
 <template>  
   <div class="profile-container">
+    <!-- Loading State -->
+    <div v-if="loading" class="loading-container">
+      <div class="loading-spinner">Loading...</div>
+    </div>
+    
+    <!-- Error State -->
+    <div v-else-if="error" class="error-container">
+      <div class="error-message">{{ error }}</div>
+    </div>
+    
     <!-- Main Content Area -->
-    <div class="main-content">
+    <div v-else class="main-content">
       <!-- Company Banner -->
       <div class="company-banner-container">
         <img 
-          :src="AddonsAuth.loggedInUser?.user_data?.cover_image || $tfhb_url + '/assets/app/images/meeting-cover.png'" 
+          :src="userProfile?.user_data?.cover_image || $tfhb_url + '/assets/app/images/meeting-cover.png'" 
           alt="Company Banner" 
           class="company-banner"
         />
@@ -190,7 +197,7 @@ onMounted(() => {
         <!-- Company Logo Overlay -->
         <div class="company-logo-overlay">
           <img 
-            :src="AddonsAuth.loggedInUser?.user_data?.companey_logo || $tfhb_url+'/assets/images/avator.png'"
+            :src="userProfile?.user_data?.companey_logo || $tfhb_url+'/assets/images/avator.png'"
             alt="Company Logo" 
             class="company-logo"
           />
@@ -200,10 +207,11 @@ onMounted(() => {
       <!-- Company Title and Type -->
       <div class="company-header">
         <div class="company-title-section">
-          <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</h1>
-          <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'User' }}</span>
+          <h1 class="company-title">{{ userProfile?.user_data?.travel_agent_name || 'N/A' }}</h1>
+          <span class="company-type">{{ userProfile?.user_role || 'N/A' }}</span>
+          <span class="star-icon">⭐</span>
         </div>
-        <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || '' }}</p>
+        <p class="company-subtitle">{{ userProfile?.user_data?.name_of_participant || '' }}</p>
       </div>
 
       <!-- Navigation Tabs -->
@@ -224,16 +232,16 @@ onMounted(() => {
         <div v-if="validActiveTab === 'Home'" class="home-content">
           <div class="content-card" v-if="hasAboutContent">
             <h2>About</h2>
-            <p>{{ AddonsAuth.loggedInUser?.user_data?.description }}</p>
+            <p>{{ userProfile?.user_data?.description }}</p>
           </div>
 
           <div class="content-card" v-if="hasStaffContent">
             <h2>Staff</h2>
             <div class="staff-list">
               <div v-for="(member, index) in userStaff" :key="index" class="staff-item">
-                <img :src="member.image || $tfhb_url+'/assets/images/avator.png'" :alt="member.name" class="staff-image" />
+                <img :src="member.image" :alt="member.name" class="staff-image" />
                 <div class="staff-info">
-                  <h3>{{ member.name }}</h3> 
+                  <h3>{{ member.name }}</h3>
                   <p>{{ member.position }}</p>
                 </div>
               </div>
@@ -244,7 +252,7 @@ onMounted(() => {
             <h2>Gallery</h2>
             <div class="gallery-grid">
               <div v-for="(img, index) in userGallery" :key="index" class="gallery-item">
-                <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+                <img :src="img.url" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
               </div>
             </div>
           </div>
@@ -269,7 +277,7 @@ onMounted(() => {
             <div class="documents-list">
               <div v-for="(doc, index) in userDocuments" :key="index" class="document-item">
                 <div class="document-icon">
-                  <img :src="doc.icon || $tfhb_url+'/assets/images/file-text.png'" alt="Document Icon" />
+                  <img :src="doc.icon || 'https://via.placeholder.com/40x40/2E6B38/FFFFFF?text=DOC'" alt="Document Icon" />
                 </div>
                 <div class="document-content">
                   <h3>{{ doc.title }}</h3>
@@ -297,7 +305,7 @@ onMounted(() => {
         <!-- About Tab -->
         <div v-if="validActiveTab === 'About'" class="content-card">
           <h2>About</h2>
-          <p>{{ AddonsAuth.loggedInUser.user_data.description }}</p>
+          <p>{{ userProfile?.user_data?.description }}</p>
         </div>
 
         <!-- Staff Tab -->
@@ -305,7 +313,7 @@ onMounted(() => {
           <h2>Staff</h2>
           <div class="staff-list" v-if="userStaff.length > 0">
             <div v-for="(member, index) in userStaff" :key="index" class="staff-item">
-              <img :src="member.image || $tfhb_url+'/assets/images/avator.png'" :alt="member.name" class="staff-image" />
+              <img :src="member.image" :alt="member.name" class="staff-image" />
               <div class="staff-info">
                 <h3>{{ member.name }}</h3>
                 <p>{{ member.position }}</p>
@@ -320,7 +328,7 @@ onMounted(() => {
           <h2>Gallery</h2>
           <div class="gallery-grid" v-if="userGallery.length > 0">
             <div v-for="(img, index) in userGallery" :key="index" class="gallery-item">
-              <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+              <img :src="img.url" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
             </div>
           </div>
           <p v-else class="no-data-message">No gallery images added yet.</p>
@@ -353,7 +361,7 @@ onMounted(() => {
           <div class="documents-list" v-if="userDocuments.length > 0">
             <div v-for="(doc, index) in userDocuments" :key="index" class="document-item">
               <div class="document-icon">
-                <img :src="doc.icon || $tfhb_url+'/assets/images/file-text.png'" alt="Document Icon" />
+                <img :src="doc.icon || 'https://via.placeholder.com/40x40/2E6B38/FFFFFF?text=DOC'" alt="Document Icon" />
               </div>
               <div class="document-content">
                 <h3>{{ doc.title }}</h3>
@@ -388,30 +396,30 @@ onMounted(() => {
         <h3>Contact information</h3>
         
         <div class="contact-section">
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.company_website">
+          <div class="contact-item" v-if="userProfile?.user_data?.company_website">
             <span class="contact-label">SITE</span>
-            <a :href="`https://${AddonsAuth.loggedInUser.user_data.company_website}`" target="_blank">
-              {{ AddonsAuth.loggedInUser.user_data.company_website }}
+            <a :href="`https://${userProfile.user_data.company_website}`" target="_blank">
+              {{ userProfile.user_data.company_website }}
             </a>
           </div>
           
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.email">
+          <div class="contact-item" v-if="userProfile?.user_data?.email">
             <span class="contact-label">EMAIL</span>
-            <a :href="`mailto:${AddonsAuth.loggedInUser.user_data.email}`">
-              {{ AddonsAuth.loggedInUser.user_data.email }}
+            <a :href="`mailto:${userProfile.user_data.email}`">
+              {{ userProfile.user_data.email }}
             </a>
           </div>
           
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.mobile_no">
+          <div class="contact-item" v-if="userProfile?.user_data?.mobile_no">
             <span class="contact-label">PHONE</span>
             <div class="phone-numbers">
-              <div>{{ AddonsAuth.loggedInUser.user_data.mobile_no }}</div>
+              <div>{{ userProfile.user_data.mobile_no }}</div>
             </div>
           </div>
           
-          <div class="contact-item" v-if="AddonsAuth.loggedInUser.user_data.address">
+          <div class="contact-item" v-if="userProfile?.user_data?.address">
             <span class="contact-label">LOCATION</span>
-            <div>{{ AddonsAuth.loggedInUser.user_data.address }}</div>
+            <div>{{ userProfile.user_data.address }}</div>
           </div>
         </div>
 
@@ -419,19 +427,19 @@ onMounted(() => {
           <h4>SOCIAL</h4>
           <div class="social-links">
             <a v-if="userSocialShare.instagram" :href="userSocialShare.instagram" target="_blank" class="social-link">
-              <span class="social-icon"><Icon name="Instagram" :size="16" /></span>
+              <span class="social-icon">📷</span>
               <span>Instagram</span>
             </a>
             <a v-if="userSocialShare.facebook" :href="userSocialShare.facebook" target="_blank" class="social-link">
-              <span class="social-icon"><Icon name="Facebook" :size="16" /></span>
+              <span class="social-icon">📘</span>
               <span>Facebook</span>
             </a>
             <a v-if="userSocialShare.youtube" :href="userSocialShare.youtube" target="_blank" class="social-link">
-              <span class="social-icon"><Icon name="Youtube" :size="16" /></span>
+              <span class="social-icon">📺</span>
               <span>YouTube</span>
             </a>
             <a v-if="userSocialShare.linkedin" :href="userSocialShare.linkedin" target="_blank" class="social-link">
-              <span class="social-icon"><Icon name="Linkedin" :size="16" /></span>
+              <span class="social-icon">💼</span>
               <span>LinkedIn</span>
             </a>
           </div>
@@ -441,19 +449,19 @@ onMounted(() => {
       <div class="buyer-info-card" v-if="hasBuyerInfo">
         <h3>Buyer info</h3>
         
-        <div class="info-section" v-if="AddonsAuth.loggedInUser.user_data.areas_of_activity && AddonsAuth.loggedInUser.user_data.areas_of_activity.length > 0">
+        <div class="info-section" v-if="userProfile?.user_data?.areas_of_activity && userProfile.user_data.areas_of_activity.length > 0">
           <h4>MAIN AREAS OF ACTIVITY</h4>
           <div class="tags-container">
-            <span v-for="(area, index) in AddonsAuth.loggedInUser.user_data.areas_of_activity" :key="index" class="tag">
+            <span v-for="(area, index) in userProfile.user_data.areas_of_activity" :key="index" class="tag">
               {{ area }}
             </span>
           </div>
         </div>
 
-        <div class="info-section" v-if="AddonsAuth.loggedInUser.user_data.nation && AddonsAuth.loggedInUser.user_data.nation.length > 0">
+        <div class="info-section" v-if="userProfile?.user_data?.nation && userProfile.user_data.nation.length > 0">
           <h4>NATION</h4>
           <div class="tags-container">
-            <span v-for="(area, index) in AddonsAuth.loggedInUser.user_data.nation" :key="index" class="tag">
+            <span v-for="(area, index) in userProfile.user_data.nation" :key="index" class="tag">
               {{ area }}
             </span>
           </div>
@@ -466,7 +474,7 @@ onMounted(() => {
         <div class="info-section">
           <h4>PREFERRED WORKSHOP MEETINGS WITH</h4>
           <div class="tags-container">
-            <span v-for="(preference, index) in AddonsAuth.loggedInUser.user_data.preferred_workshop_meetings" :key="index" class="tag">
+            <span v-for="(preference, index) in userProfile?.user_data?.preferred_workshop_meetings" :key="index" class="tag">
               {{ preference }}
             </span>
           </div>
@@ -504,6 +512,32 @@ onMounted(() => {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  flex: 1;
+}
+
+.loading-spinner {
+  font-size: 1.125rem;
+  color: var(--tfhb-paragraph-color, #273F2B);
+  text-align: center;
+}
+
+.error-message {
+  font-size: 1.125rem;
+  color: #dc3545;
+  text-align: center;
+  padding: 2rem;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: var(--tfhb-border-radius);
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
@@ -521,11 +555,9 @@ onMounted(() => {
 
 .company-banner {
   width: 100%;
-  height: 220px;
+  height: 300px;
   object-fit: cover;
-  object-position: top;
   display: block; /* Removes inline spacing issues */
-  border-radius: 16px 16px 0 0;
 }
 
 .company-logo-overlay {
@@ -549,7 +581,7 @@ onMounted(() => {
 /* Company Header */
 .company-header {
   padding: 0 2rem 2rem 2rem;
-  margin-top: 3rem;
+  margin-top: 4rem;
 }
 
 .company-title-section {
@@ -577,6 +609,12 @@ onMounted(() => {
   font-size: 0.875rem;
   font-weight: 500;
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.star-icon {
+  font-size: 1.25rem;
+  color: #FFD700;
   flex-shrink: 0;
 }
 
@@ -898,7 +936,7 @@ onMounted(() => {
 .buyer-info-card,
 .sellers-interests-card {
   background: var(--tfhb-surface-secondary, #FFFFFF);
-  border-radius: 12px;
+  border-radius: var(--tfhb-border-radius);
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
@@ -992,36 +1030,30 @@ onMounted(() => {
 
 .social-links {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.625rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .social-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 4px 16px;
-  background: var(--tfhb-surface-secondary, #FFFFFF);
-  border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
-  border-radius: 999px;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--tfhb-surface-background-color, #EEF6F0);
+  border-radius: var(--tfhb-border-radius);
   text-decoration: none;
   color: var(--tfhb-text-title-color, #141915);
-  font-size: 0.875rem;
-  font-weight: 500;
   transition: var(--tfhb-transition);
-  min-height: 36px; /* Touch-friendly sizing */
+  min-height: 44px; /* Touch-friendly sizing */
 }
 
 .social-link:hover {
-  background: var(--tfhb-surface-background-color, #EEF6F0);
+  background: var(--tfhb-surface-primary-color, #C0D8C4);
 }
 
 .social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 1.125rem;
   flex-shrink: 0;
-  color: inherit;
 }
 
 .no-social-links {
@@ -1175,7 +1207,6 @@ onMounted(() => {
   
   .company-logo-overlay {
     left: 1rem;
-    bottom: -27px;
   }
   
   .company-logo {
@@ -1184,7 +1215,7 @@ onMounted(() => {
   }
   
   .company-banner {
-    height: 125px;
+    height: 200px;
   }
   
   /* Enhanced text wrapping for mobile */
@@ -1228,6 +1259,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
   overflow: scroll;
 }
 

@@ -26,7 +26,8 @@ const settings = ref({
       seller_field: '',
       priority: 1,
       match_type: 'exact',
-      field_mappings: []
+      field_mappings: [],
+      enabled: 1
     }
   ]
 })
@@ -45,7 +46,8 @@ const matching_rule_data = reactive({
   seller_field: '',
   priority: 1,
   match_type: 'exact',
-  field_mappings: [] // Array of value-to-value mappings
+  field_mappings: [], // Array of value-to-value mappings
+  enabled: 1
 })
 
 // Field mapping popup state
@@ -75,8 +77,14 @@ const loadSettings = async () => {
     const response = await AddonsSettings.FetchMatchingSettings()
     
     if (response && response.status) {
+      const loadedRules = (response.settings && response.settings.matching_rules) ? response.settings.matching_rules : []
+      
+      // Ensure each rule has an enabled property
       settings.value = {
-        matching_rules: (response.settings && response.settings.matching_rules) ? response.settings.matching_rules : [],
+        matching_rules: loadedRules.map(rule => ({
+          ...rule,
+          enabled: rule.enabled !== undefined ? rule.enabled : 1
+        }))
       }
       
       // Load buyer and seller fields from API response if available
@@ -123,7 +131,8 @@ const addMatchingRule = () => {
     seller_field: '',
     priority: 1,
     match_type: 'exact',
-    field_mappings: []
+    field_mappings: [],
+    enabled: 1
   }
   
   settings.value.matching_rules.push(newRule)
@@ -134,6 +143,7 @@ const addMatchingRule = () => {
   matching_rule_data.priority = 1
   matching_rule_data.match_type = 'exact'
   matching_rule_data.field_mappings = []
+  matching_rule_data.enabled = 1
   
   matchingRulePopup.value = true
 }
@@ -148,6 +158,7 @@ const editMatchingRule = (index) => {
   matching_rule_data.priority = rule.priority
   matching_rule_data.match_type = rule.match_type || 'exact'
   matching_rule_data.field_mappings = rule.field_mappings || []
+  matching_rule_data.enabled = rule.enabled !== undefined ? rule.enabled : 1
   
   matchingRulePopup.value = true
 }
@@ -165,7 +176,8 @@ const saveMatchingRule = () => {
     seller_field: matching_rule_data.seller_field,
     priority: matching_rule_data.priority,
     match_type: matching_rule_data.match_type,
-    field_mappings: matching_rule_data.field_mappings
+    field_mappings: matching_rule_data.field_mappings,
+    enabled: matching_rule_data.enabled !== undefined ? matching_rule_data.enabled : 1
   }
   
   // Update the rule
@@ -177,6 +189,14 @@ const saveMatchingRule = () => {
 // Remove matching rule
 const removeMatchingRule = (index) => {
   settings.value.matching_rules.splice(index, 1)
+}
+
+// Handle toggle switch change
+const handleToggleRule = (index, value) => {
+  if (settings.value.matching_rules[index]) {
+    settings.value.matching_rules[index].enabled = value
+    console.log(`Rule ${index + 1} ${value ? 'enabled' : 'disabled'}`)
+  }
 }
 
 // Check if field needs mapping (checkbox, radio, select)
@@ -253,16 +273,17 @@ const removeFieldMapping = (index) => {
 const matchingRulesAsQuestions = computed(() => {
   return settings.value.matching_rules.map((rule, index) => ({
     label: `Rule ${index + 1}: ${rule.buyer_field} ↔ ${rule.seller_field}`,
-    type: 'exact', // Default to exact match for now
+    type: rule.match_type || 'exact',
     name: `rule_${index}`,
     placeholder: `Priority: ${rule.priority}`,
     options: [],
     required: 1,
-    enable: 1,
+    enable: rule.enabled !== undefined ? rule.enabled : 1,
     // Store original rule data
     buyer_field: rule.buyer_field,
     seller_field: rule.seller_field,
-    priority: rule.priority
+    priority: rule.priority,
+    index: index
   }))
 })
 
@@ -306,12 +327,14 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
 
     <div v-if="dynamic_matching" class="tfhb-admin-card-box tfhb-gap-24 tfhb-m-0"> 
       <!-- Matching Rules --> 
+   
       <div v-if="settings.matching_rules.length > 0" class="tfhb-matching-rules-wrap tfhb-mb-16">
         <HbQuestion 
           :question_value="matchingRulesAsQuestions"
           :skip_remove="-1"
           @question-edit="editMatchingRule"
           @question-remove="removeMatchingRule"
+          @question-toggle="handleToggleRule"
         />
       </div>
       
@@ -320,7 +343,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
         {{ $tfhb_trans('Add Matching Rule') }}
       </button>
  
-      <HbPopup :isOpen="matchingRulePopup" @modal-close="matchingRulePopup = false" max_width="500px" name="matching-rule-modal">
+      <HbPopup :isOpen="matchingRulePopup" @modal-close="matchingRulePopup = false" max_width="700px" name="matching-rule-modal">
         <template #header> 
           <h3>{{ $tfhb_trans('Configure Matching Rule') }}</h3>
         </template>
@@ -432,7 +455,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
       </HbPopup>
 
       <!-- Field Mapping Popup -->
-      <HbPopup :isOpen="fieldMappingPopup" @modal-close="fieldMappingPopup = false" max_width="500px" name="field-mapping-modal">
+      <HbPopup :isOpen="fieldMappingPopup" @modal-close="fieldMappingPopup = false" max_width="700px" name="field-mapping-modal">
         <template #header> 
           <h3>{{ $tfhb_trans('Configure Value Mapping') }}</h3>
           <p class="tfhb-mapping-field-info">
@@ -521,8 +544,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
 }
 
 .tfhb-popup-actions {
-  margin-top: 1.5rem;
-  justify-content: flex-end;
+  margin-top: 1.5rem; 
 }
 
 .tfhb-form-input {

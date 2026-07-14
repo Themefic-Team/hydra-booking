@@ -15,6 +15,7 @@ import HbWpFileUpload from '@/components/form-fields/HbWpFileUpload.vue'
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 
 
+import HbText from '@/components/form-fields/HbText.vue'
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 
 const informationPopup = ref(false);
@@ -173,7 +174,23 @@ const copyShortcodeCode = () => {
                     {'name': 'Active', 'value': 'active'}
                 ]" 
             />
-            <!-- Time format -->   
+            <HbText  
+                v-model="AddonsSettings.buyers.maximum_number_of_staff"  
+                required= "true"  
+                :label="$tfhb_trans('Maximum Number Of Staff')"  
+                selected = "1"
+                :placeholder="$tfhb_trans('Type your Maximum Number Of Staff')" 
+                width="50" 
+            /> 
+             <HbText  
+                v-model="AddonsSettings.buyers.maximum_number_of_staff_present"  
+                required= "true"  
+                :label="$tfhb_trans('Maximum Number Of Staff Present At The Event')"  
+                selected = "1"
+                :placeholder="$tfhb_trans('Type your Maximum Number Of Staff Present')" 
+                width="50" 
+            /> 
+            <!-- Time format --> 
             <HbWpFileUpload
                 name="badge_pdf"
                 v-model="AddonsSettings.buyers.badge_pdf_image"
