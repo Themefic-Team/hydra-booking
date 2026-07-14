@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 
 import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
+import Icon from '@/components/icon/LucideIcon.vue'
 const route = useRoute()
 const eventDetails = ref({})
 const skeleton = ref(true)
@@ -404,19 +405,19 @@ const embedVideoUrl = computed(() => {
           <h4>SOCIAL</h4>
           <div class="social-links">
             <a :href="AddonsAuth.event.event_details.contact_info.social_media.instagram" class="social-link">
-              <span class="social-icon">📷</span>
+              <span class="social-icon"><Icon name="Instagram" :size="16" /></span>
               <span>Instagram</span>
             </a>
             <a :href="AddonsAuth.event.event_details.contact_info.social_media.facebook" class="social-link">
-              <span class="social-icon">📘</span>
+              <span class="social-icon"><Icon name="Facebook" :size="16" /></span>
               <span>Facebook</span>
             </a>
             <a :href="AddonsAuth.event.event_details.contact_info.social_media.youtube" class="social-link">
-              <span class="social-icon">📺</span>
+              <span class="social-icon"><Icon name="Youtube" :size="16" /></span>
               <span>YouTube</span>
             </a>
             <a :href="AddonsAuth.event.event_details.contact_info.social_media.linkedin" class="social-link">
-              <span class="social-icon">💼</span>
+              <span class="social-icon"><Icon name="Linkedin" :size="16" /></span>
               <span>LinkedIn</span>
             </a>
           </div>
@@ -770,6 +771,7 @@ const embedVideoUrl = computed(() => {
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+   border-radius: 12px;
 }
 
 .contact-card h3 {
@@ -829,28 +831,36 @@ const embedVideoUrl = computed(() => {
 
 .social-links {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.625rem;
 }
 
 .social-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: var(--tfhb-surface-background-color, #EEF6F0);
-  border-radius: 8px;
+  gap: 0.5rem;
+  padding: 4px 16px;
+  background: var(--tfhb-surface-secondary, #FFFFFF);
+  border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  border-radius: 999px;
   text-decoration: none;
   color: var(--tfhb-text-title-color, #141915);
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: background-color 0.2s;
+  min-height: 36px;
 }
 
 .social-link:hover {
-  background: var(--tfhb-surface-primary-color, #C0D8C4);
+  background: var(--tfhb-surface-background-color, #EEF6F0);
 }
 
 .social-icon {
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
 }
 
 /* Responsive Design */

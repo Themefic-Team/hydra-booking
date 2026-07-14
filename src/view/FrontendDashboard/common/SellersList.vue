@@ -531,17 +531,22 @@ const redirectToChat = (user_id) => {
     justify-content: space-between;
     align-items: center;
     margin-top: 24px;
+    gap: 24px;
 }
 
 
 .header-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 65%;
+
     .sellers-title {
         font-size: 2rem;
         font-weight: 700;
         color: var(--tfhb-text-title-color, #141915);
         margin: 0 0 8px 0;
     }
-    
+
     .sellers-subtitle {
         color: var(--tfhb-paragraph-color, #273F2B);
         margin: 0;
@@ -549,6 +554,8 @@ const redirectToChat = (user_id) => {
 }
 
 .header-right {
+    flex-shrink: 0;
+
     .total-sellers {
         display: flex;
         align-items: center;
@@ -1033,7 +1040,11 @@ const redirectToChat = (user_id) => {
         gap: 16px;
         align-items: flex-start;
     }
-    
+
+    .header-left {
+        max-width: 100%;
+    }
+
     .tfhb-header-filters input {
         width: 100%;
     }

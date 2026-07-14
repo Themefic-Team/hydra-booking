@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 
 import { AddonsAuth } from '@/view/FrontendDashboard/common/StoreCommon';
+import Icon from '@/components/icon/LucideIcon.vue'
 const route = useRoute()
 const eventDetails = ref({})
 const skeleton = ref(true)
@@ -162,7 +163,6 @@ function closeGalleryPopup() {
         <div class="company-title-section">
           <h1 class="company-title">{{ AddonsAuth.loggedInUser?.user_data?.name_of_participant || 'User' }}</h1>
           <span class="company-type">{{ AddonsAuth.loggedInUser?.user_role || 'User' }}</span>
-          <span class="star-icon">⭐</span>
         </div>
         <p class="company-subtitle">{{ AddonsAuth.loggedInUser?.user_data?.job_title || '' }}</p>
       </div>
@@ -192,7 +192,7 @@ function closeGalleryPopup() {
             <h2>Staff</h2>
             <div class="staff-list">
               <div v-for="(member, index) in userStaff" :key="index" class="staff-item">
-                <img :src="member.image" :alt="member.name" class="staff-image" />
+                <img :src="member.image || $tfhb_url+'/assets/images/avator.png'" :alt="member.name" class="staff-image" />
                 <div class="staff-info">
                   <h3>{{ member.name }}</h3>
                   <p>{{ member.position }}</p>
@@ -205,7 +205,7 @@ function closeGalleryPopup() {
             <h2>Gallery</h2>
             <div class="gallery-grid">
               <div v-for="(img, index) in userGallery" :key="index" class="gallery-item">
-                <img :src="img.url" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+                <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@ function closeGalleryPopup() {
             <div class="documents-list">
               <div v-for="(doc, index) in userDocuments" :key="index" class="document-item">
                 <div class="document-icon">
-                  <img :src="doc.icon || 'https://via.placeholder.com/40x40/2E6B38/FFFFFF?text=DOC'" alt="Document Icon" />
+                  <img :src="doc.icon || $tfhb_url+'/assets/images/file-text.png'" alt="Document Icon" />
                 </div>
                 <div class="document-content">
                   <h3>{{ doc.title }}</h3>
@@ -265,7 +265,7 @@ function closeGalleryPopup() {
           <h2>Staff</h2>
           <div class="staff-list" v-if="userStaff.length > 0">
             <div v-for="(member, index) in userStaff" :key="index" class="staff-item">
-              <img :src="member.image" :alt="member.name" class="staff-image" />
+              <img :src="member.image || $tfhb_url+'/assets/images/avator.png'" :alt="member.name" class="staff-image" />
               <div class="staff-info">
                 <h3>{{ member.name }}</h3>
                 <p>{{ member.position }}</p>
@@ -280,7 +280,7 @@ function closeGalleryPopup() {
           <h2>Gallery</h2>
           <div class="gallery-grid" v-if="userGallery.length > 0">
             <div v-for="(img, index) in userGallery" :key="index" class="gallery-item">
-              <img :src="img.url" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+              <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
             </div>
           </div>
           <p v-else class="no-data-message">No gallery images added yet.</p>
@@ -312,7 +312,7 @@ function closeGalleryPopup() {
           <div class="documents-list" v-if="userDocuments.length > 0">
             <div v-for="(doc, index) in userDocuments" :key="index" class="document-item">
               <div class="document-icon">
-                <img :src="doc.icon || 'https://via.placeholder.com/40x40/2E6B38/FFFFFF?text=DOC'" alt="Document Icon" />
+                <img :src="doc.icon || $tfhb_url+'/assets/images/file-text.png'" alt="Document Icon" />
               </div>
               <div class="document-content">
                 <h3>{{ doc.title }}</h3>
@@ -378,19 +378,19 @@ function closeGalleryPopup() {
           <h4>SOCIAL</h4>
           <div class="social-links">
             <a v-if="userSocialShare.instagram" :href="userSocialShare.instagram" target="_blank" class="social-link">
-              <span class="social-icon">📷</span>
+              <span class="social-icon"><Icon name="Instagram" :size="16" /></span>
               <span>Instagram</span>
             </a>
             <a v-if="userSocialShare.facebook" :href="userSocialShare.facebook" target="_blank" class="social-link">
-              <span class="social-icon">📘</span>
+              <span class="social-icon"><Icon name="Facebook" :size="16" /></span>
               <span>Facebook</span>
             </a>
             <a v-if="userSocialShare.youtube" :href="userSocialShare.youtube" target="_blank" class="social-link">
-              <span class="social-icon">📺</span>
+              <span class="social-icon"><Icon name="Youtube" :size="16" /></span>
               <span>YouTube</span>
             </a>
             <a v-if="userSocialShare.linkedin" :href="userSocialShare.linkedin" target="_blank" class="social-link">
-              <span class="social-icon">💼</span>
+              <span class="social-icon"><Icon name="Linkedin" :size="16" /></span>
               <span>LinkedIn</span>
             </a>
           </div>
@@ -480,9 +480,11 @@ function closeGalleryPopup() {
 
 .company-banner {
   width: 100%;
-  height: 300px;
+  height: 220px;
   object-fit: cover;
+  object-position: top;
   display: block; /* Removes inline spacing issues */
+  border-radius: 16px 16px 0 0;
 }
 
 .company-logo-overlay {
@@ -506,7 +508,7 @@ function closeGalleryPopup() {
 /* Company Header */
 .company-header {
   padding: 0 2rem 2rem 2rem;
-  margin-top: 4rem;
+  margin-top: 3rem;
 }
 
 .company-title-section {
@@ -534,12 +536,6 @@ function closeGalleryPopup() {
   font-size: 0.875rem;
   font-weight: 500;
   white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.star-icon {
-  font-size: 1.25rem;
-  color: #FFD700;
   flex-shrink: 0;
 }
 
@@ -861,7 +857,7 @@ function closeGalleryPopup() {
 .buyer-info-card,
 .sellers-interests-card {
   background: var(--tfhb-surface-secondary, #FFFFFF);
-  border-radius: var(--tfhb-border-radius);
+  border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
@@ -931,30 +927,36 @@ function closeGalleryPopup() {
 
 .social-links {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.625rem;
 }
 
 .social-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: var(--tfhb-surface-background-color, #EEF6F0);
-  border-radius: var(--tfhb-border-radius);
+  gap: 0.5rem;
+  padding: 4px 16px;
+  background: var(--tfhb-surface-secondary, #FFFFFF);
+  border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  border-radius: 999px;
   text-decoration: none;
   color: var(--tfhb-text-title-color, #141915);
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: var(--tfhb-transition);
-  min-height: 44px; /* Touch-friendly sizing */
+  min-height: 36px; /* Touch-friendly sizing */
 }
 
 .social-link:hover {
-  background: var(--tfhb-surface-primary-color, #C0D8C4);
+  background: var(--tfhb-surface-background-color, #EEF6F0);
 }
 
 .social-icon {
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  color: inherit;
 }
 
 .no-social-links {
@@ -1108,6 +1110,7 @@ function closeGalleryPopup() {
   
   .company-logo-overlay {
     left: 1rem;
+    bottom: -27px;
   }
   
   .company-logo {
@@ -1116,7 +1119,7 @@ function closeGalleryPopup() {
   }
   
   .company-banner {
-    height: 200px;
+    height: 125px;
   }
 }
 

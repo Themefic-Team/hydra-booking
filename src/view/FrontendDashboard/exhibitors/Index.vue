@@ -22,8 +22,9 @@ const collapsedSideBar = ref(false);
 
 </template>  
 <style scoped>
- .tfhb-frontend-dashboard { 
-  height: 100vh; 
+ .tfhb-frontend-dashboard {
+  min-height: calc(100vh - 92px);
+  margin-bottom: 32px;
 }
 
 .tfhb-frontend-sidebar {

@@ -321,7 +321,7 @@ onBeforeUnmount(() => {
     <Header v-if="$front_end_dashboard == false" :title="$tfhb_trans('Matching List')" :notifications="Notification.Data" :total_unread="Notification.total_unread" @MarkAsRead="Notification.MarkAsRead()" /> 
  
     <!-- Filters Section -->
-    <div class="tfhb-admin-card-box tfhb-mt-24 tfhb-flexbox tfhb-gap-8 tfhb-justify-between" >
+    <div class="tfhb-admin-card-box tfhb-mt-24 tfhb-flexbox tfhb-gap-8 tfhb-justify-between tfhb-matching-toolbar" >
   
       <form @submit.prevent="applyFilters" id="matching-filters">
         <div class="tfhb-filter-form tfhb-flexbox tfhb-gap-16 tfhb-justify-start">
@@ -378,19 +378,33 @@ onBeforeUnmount(() => {
               :hover_animation="false"
               icon_position="left"
             />
-            <!-- <HbButton
+            <HbButton
               classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"
               @click="exportMatching"
-              :buttonText="$tfhb_trans('Export CSV')"
+              :buttonText="$tfhb_trans('Export as CSV')"
               icon="FileDown"
               :hover_animation="false"
               icon_position="left"
-            /> -->
+            />
           </div>
         </div>
       </form>
 
-      <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8">
+      <div class="tfhb-cta-export tfhb-flexbox tfhb-gap-8 tfhb-align-center">
+        <div class="tfhb-per-page tfhb-flexbox tfhb-gap-8 tfhb-align-center">
+          <label>{{ $tfhb_trans('Per Page') }}</label>
+          <HbDropdown
+            v-model="filters.per_page"
+            :label="$tfhb_trans('')"
+            :option="[
+              { name: '10', value: 10 },
+              { name: '20', value: 20 },
+              { name: '50', value: 50 },
+              { name: '100', value: 100 }
+            ]"
+            @tfhb-onchange="applyFilters"
+          />
+        </div>
         <HbButton
           classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"
           @click="goToAddMatching"
@@ -422,7 +436,7 @@ onBeforeUnmount(() => {
     </div>
     
     <!-- Matching List Table -->
-    <div class="tfhb-admin-card-box tfhb-mt-24">
+    <div class="tfhb-admin-card-box tfhb-mt-32">
       <div class="tfhb-table-container">
         <table class="tfhb-table">
           <thead>
@@ -522,7 +536,7 @@ onBeforeUnmount(() => {
     </div>
     
     <!-- Pagination -->
-    <div class="tfhb-pagination tfhb-mt-24" v-if="totalPages > 1">
+    <div class="tfhb-pagination tfhb-mt-32" v-if="totalPages > 1">
       <div class="tfhb-admin-card-box">
         <div class="tfhb-flexbox tfhb-justify-between tfhb-align-center">
           <span class="tfhb-pagination-info">
@@ -583,6 +597,40 @@ onBeforeUnmount(() => {
 
 
 <style scoped>
+.tfhb-matching-toolbar {
+  justify-content: flex-start !important;
+  row-gap: 16px;
+}
+
+.tfhb-matching-toolbar #matching-filters {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tfhb-matching-toolbar .tfhb-cta-export {
+  margin-left: auto;
+}
+
+@media (max-width: 992px) {
+  .tfhb-matching-toolbar .tfhb-cta-export {
+    margin-left: 0;
+  }
+}
+
+.tfhb-per-page {
+  flex-shrink: 0;
+}
+
+.tfhb-per-page label {
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.tfhb-per-page :deep(.tfhb-single-form-field) {
+  width: 90px !important;
+}
+
 .tfhb-filter-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -779,5 +827,8 @@ onBeforeUnmount(() => {
     flex-direction: column;
     gap: 12px;
   }
+}
+.tfhb-admin-meetings { 
+	padding: 20px !important;
 }
 </style>

@@ -395,17 +395,22 @@ const redirectToChat = (buyerId) => {
     justify-content: space-between;
     align-items: center;
     margin-top: 24px;
+    gap: 24px;
 }
 
 
 .header-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 65%;
+
     .exhibitors-title {
         font-size: 2rem;
         font-weight: 700;
         color: var(--tfhb-text-title-color, #141915);
         margin: 0 0 8px 0;
     }
-    
+
     .exhibitors-subtitle {
         color: var(--tfhb-paragraph-color, #273F2B);
         margin: 0;
@@ -413,6 +418,8 @@ const redirectToChat = (buyerId) => {
 }
 
 .header-right {
+    flex-shrink: 0;
+
     .total-exhibitors {
         display: flex;
         align-items: center;
@@ -897,7 +904,11 @@ const redirectToChat = (buyerId) => {
         gap: 16px;
         align-items: flex-start;
     }
-    
+
+    .header-left {
+        max-width: 100%;
+    }
+
     .tfhb-header-filters input {
         width: 100%;
     }
