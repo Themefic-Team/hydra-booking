@@ -643,7 +643,8 @@ onBeforeMount(() => {
             <div class="documents-list">
               <div v-for="(doc, index) in userDocuments" :key="index" class="document-item">
                 <div class="document-icon">
-                  <img :src="doc.icon || $tfhb_url+'/assets/images/file-text.png'" alt="Document Icon" />
+                  <img v-if="doc.icon" :src="doc.icon" alt="Document Icon" />
+                  <div v-else class="document-icon-placeholder"><Icon name="FileText" :size="20" /></div>
                 </div>
                 <div class="document-content">
                   <h3>{{ doc.title }}</h3>
@@ -727,7 +728,8 @@ onBeforeMount(() => {
           <div class="documents-list" v-if="userDocuments.length > 0">
             <div v-for="(doc, index) in userDocuments" :key="index" class="document-item">
               <div class="document-icon">
-                <img :src="doc.icon || $tfhb_url+'/assets/images/file-text.png'" alt="Document Icon" />
+                <img v-if="doc.icon" :src="doc.icon" alt="Document Icon" />
+                <div v-else class="document-icon-placeholder"><Icon name="FileText" :size="20" /></div>
               </div>
               <div class="document-content">
                 <h3>{{ doc.title }}</h3>
@@ -1187,8 +1189,9 @@ onBeforeMount(() => {
 }
 
 .document-icon {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
+  margin-top: 10px;
   flex-shrink: 0;
 }
 
@@ -1198,6 +1201,18 @@ onBeforeMount(() => {
   object-fit: cover;
   border-radius: var(--tfhb-border-radius);
   display: block;
+}
+
+.document-icon-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--tfhb-surface-background-color, #EEF6F0);
+  border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  border-radius: var(--tfhb-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tfhb-primary-color, #2E6B38);
 }
 
 .document-content h3 {

@@ -180,12 +180,18 @@ onBeforeMount(async () => {
                 </li> 
               
 
+                <li v-if="$addons_apps == true && $user.caps.tfhb_manage_settings == true ">
+                    <router-link to="/settings/addons-settings" :class="{ 'active': $route.path.startsWith('/settings/addons-settings') }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
+                        <Icon name="Puzzle" size="20" />
+                        <span >{{ $tfhb_trans('Addons Settings') }}</span>
+                    </router-link>
+                </li>
                 <li v-if="$addons_apps == true ">
                     <router-link to="/addons-users" :class="{ 'active': $route.path === '/addons-users' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
-                        <Icon name="Users" size="20" /> 
+                        <Icon name="Users" size="20" />
                         <span >{{ $tfhb_trans('User Management') }}</span>
                     </router-link>
-                </li> 
+                </li>
                 <li v-if="$addons_apps == true ">
                     <router-link to="/addons-add-matching" :class="{ 'active': $route.path === '/addons-add-matching' }"class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12" exact>
                         <Icon name="FilePenLine" size="20" /> 
