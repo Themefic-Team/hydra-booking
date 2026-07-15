@@ -288,6 +288,12 @@ const routes = [
                     }, 
                 ]
             },
+             {
+                path: 'icalendar',
+                name: 'iCalendar',
+                meta: { Capabilities: 'tfhb_manage_settings' },
+                component: () => import('../view/settings/iCalendar.vue')
+            }, 
             {
                 path: 'fd-dashboard',
                 name: 'FrontendDashboard',
@@ -748,7 +754,7 @@ router.beforeEach(async (to, from, next) => {
         } else {
             // User is not authenticated
             // Redirect to the home page or display an alert
-            alert('Sorry, you are not allowed to access this page.');
+            alert((tfhb_core_apps.trans['Sorry, you are not allowed to access this page.'] || 'Sorry, you are not allowed to access this page.'));
             next('/');
         } 
 
@@ -760,7 +766,7 @@ router.beforeEach(async (to, from, next) => {
         // Handle error if fetching authentication data fails
         console.error('Error fetching authentication data:', error);
         // Redirect to the home page or display an alert
-        alert('An error occurred while fetching authentication data.');
+        alert((tfhb_core_apps.trans['An error occurred while fetching authentication data.'] || 'An error occurred while fetching authentication data.'));
         next('/');
     }
 });

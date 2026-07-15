@@ -11,7 +11,7 @@
 
 		// function tfhb translate 
 		function tfhbTranslate(key) {
-            return tfhb_i18n[key] || key + 'not found';
+            return tfhb_i18n[key] || key ;
         }
 		function tfhbTranslateNumber(key) { 
 			// provided key like 2025 breack down and replace each letter with translation
@@ -28,6 +28,67 @@
 				return tfhbTranslateNumber(key.slice(0, 2)) + ':' + tfhbTranslateNumber(key.slice(3, 5));
 			}
         }
+
+		function tfhbPad(value) {
+			return value.toString().padStart(2, '0');
+		}
+
+		function tfhbDateFormatFromSettings(defaultFormat) {
+			if (typeof tfhb_app_booking === 'undefined' || !tfhb_app_booking.general_settings) {
+				return defaultFormat;
+			}
+
+			var format = tfhb_app_booking.general_settings.date_format;
+			if (typeof format !== 'string' || format.trim() === '') {
+				return defaultFormat;
+			}
+
+			if (format.trim().toLowerCase() === 'default') {
+				return defaultFormat;
+			}
+
+			return format.trim();
+		}
+
+		function tfhbFormatDateByPattern(dateObj, pattern) {
+			if (!dateObj || isNaN(dateObj.getTime())) {
+				return '';
+			}
+
+			var monthLong = [
+				'January', 'February', 'March', 'April', 'May', 'June',
+				'July', 'August', 'September', 'October', 'November', 'December'
+			];
+			var monthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+			var weekLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			var weekShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+			var map = {
+				d: tfhbTranslateNumber(tfhbPad(dateObj.getDate())),
+				j: tfhbTranslateNumber(dateObj.getDate()),
+				m: tfhbTranslateNumber(tfhbPad(dateObj.getMonth() + 1)),
+				n: tfhbTranslateNumber(dateObj.getMonth() + 1),
+				Y: tfhbTranslateNumber(dateObj.getFullYear()),
+				y: tfhbTranslateNumber(dateObj.getFullYear().toString().slice(-2)),
+				F: tfhbTranslate(monthLong[dateObj.getMonth()]),
+				M: tfhbTranslate(monthShort[dateObj.getMonth()]),
+				l: tfhbTranslate(weekLong[dateObj.getDay()]),
+				D: tfhbTranslate(weekShort[dateObj.getDay()])
+			};
+
+			var output = '';
+			for (var i = 0; i < pattern.length; i++) {
+				var ch = pattern[i];
+				if (ch === '\\') {
+					i += 1;
+					output += pattern[i] || '';
+					continue;
+				}
+				output += Object.prototype.hasOwnProperty.call(map, ch) ? map[ch] : ch;
+			}
+
+			return output;
+		}
 
         // Initialize the Date Picker
         /**
@@ -161,19 +222,10 @@
 					return;
 				}
 
-				// Extract formatted components
-				var selected_date_format_weekday = tfhbTranslate(
-					dateObj.toLocaleDateString('en-US', { weekday: 'long' })
+				var selected_date_format = tfhbFormatDateByPattern(
+					dateObj,
+					tfhbDateFormatFromSettings('l, F j')
 				);
-				var selected_date_format_month = tfhbTranslate(
-					dateObj.toLocaleDateString('en-US', { month: 'long' })
-				);
-				var selected_date_format_day = tfhbTranslateNumber(
-					dateObj.toLocaleDateString('en-US', { day: 'numeric' })
-				);
-
-				// Final formatted string: "Tuesday, March 4"
-				var selected_date_format = `${selected_date_format_weekday}, ${selected_date_format_month} ${selected_date_format_day}`;
 
 				// Set the formatted date in the element
 				$this.find('.tfhb-meeting-times .tfhb-select-date').html(selected_date_format);
@@ -297,14 +349,11 @@
 					</li>`;
 					// date time format like that  9:00pm, Saturday, April 25
 					
-				var date_time = new Date(meeting_dates);
-				// var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-				var selected_date_format_weekday = tfhbTranslate(date_time.toLocaleDateString('en-US', { weekday: 'long' }));  
-				var selected_date_format_month = tfhbTranslate(date_time.toLocaleDateString('en-US', { month: 'long' }));  
-				var selected_date_format_day = tfhbTranslateNumber(date_time.toLocaleDateString('en-US', { day: 'numeric' }));  
-				var selected_date_format_year = tfhbTranslateNumber(date_time.toLocaleDateString('en-US', { year: 'numeric' }));  
-				// Format like tat "Tuesday, March 4"
-				var selected_date_format =  selected_date_format_weekday+', '+selected_date_format_month+ ' '+selected_date_format_day +', ' + selected_date_format_year;
+				var date_time = new Date(meeting_dates + 'T00:00:00');
+				var selected_date_format = tfhbFormatDateByPattern(
+					date_time,
+					tfhbDateFormatFromSettings('l, F j, Y')
+				);
 				var date_time_html = `<li class="tfhb-flexbox tfhb_date_time_info tfhb-gap-8">
 						<input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
 						<div class="tfhb-icon">  
@@ -409,12 +458,16 @@
 			});
 			document.addEventListener( 'wpcf7mailsent', function( event ) {
 				var data = event.detail.formData; 
-				var InformationData = {};
-				data.forEach(function(value, key){
-					InformationData[key] = value;
-				}); 
+				if(calenderData.questions_type == 'existing' && calenderData.questions_form_type == 'wpcf7'){ 
+					if(event.detail.contactFormId == calenderData.questions_form){  
+						var InformationData = {};
+						data.forEach(function(value, key){
+							InformationData[key] = value;
+						});   
+						tfhb_from_submission($this, preloader, InformationData, calenderData);
+					}
+				}
 				
-				tfhb_from_submission($this, preloader, InformationData, calenderData);
 			});
  
 			// Forminator Form Submission
@@ -776,6 +829,18 @@
 			let availability_range_type = calender_data.availability_range_type;   
 			let availabilitys_range_start = calender_data.availability_range.start;   
 			let availabilitys_range_end = calender_data.availability_range.end;   
+			let availabilityRangeStartDate = null;
+			let availabilityRangeEndDate = null;
+			if (availabilitys_range_start) {
+				availabilityRangeStartDate = (availabilitys_range_start.includes('T') || availabilitys_range_start.includes(' '))
+					? new Date(availabilitys_range_start)
+					: new Date(availabilitys_range_start + 'T00:00:00');
+			}
+			if (availabilitys_range_end) {
+				availabilityRangeEndDate = (availabilitys_range_end.includes('T') || availabilitys_range_end.includes(' '))
+					? new Date(availabilitys_range_end)
+					: new Date(availabilitys_range_end + 'T23:59:59.999');
+			}
 		
 			let dayNameText = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 			let dayShortText = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -816,6 +881,7 @@
 				lit += `<li class="inactive">${tfhbTranslateNumber(monthlastdate - i + 1)}</li>`;
 			}
 		
+	
 			//  Current month dates
 			for (let i = 1; i <= lastdate; i++) { 
 				let isToday = i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? "active" : "";
@@ -830,19 +896,26 @@
 				}
 		
 				let currentDayName = dayNameText[new Date(year, month, i).getDay()]; 
+				 
+			 
 				if (DisableDays.includes(currentDayName)) {
 					availabilityClass = "inactive ";
 					dataAvailable = "unavailable";
 					isToday = '';
 				}
 		
-				if (availability_range_type !== 'indefinitely') {
+				if (availability_range_type !== 'indefinitely' && availabilityRangeStartDate && availabilityRangeEndDate) {
 					let currDate = new Date(year, month, i);
-					if (currDate < new Date(availabilitys_range_start) || currDate > new Date(availabilitys_range_end)) {
+					if (currDate < availabilityRangeStartDate || currDate > availabilityRangeEndDate) {
 						availabilityClass = "inactive ";
 						dataAvailable = "unavailable";
 						isToday = "";
 					}
+				} 
+
+				if(typeof dateSlot !== 'undefined' && dateSlot !== '' && dateSlot.available == '') {
+					availabilityClass = " ";
+					dataAvailable = "available";
 				}
 		
 				if ('active' === isToday) {

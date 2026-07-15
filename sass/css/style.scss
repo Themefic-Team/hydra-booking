@@ -541,7 +541,7 @@
                     box-sizing: border-box;
 
                     &.inactive {
-                        color: $secondary-default;
+                        color: #C0D8C4 ;
                         cursor: not-allowed !important;
                         background-color: transparent !important;
 
@@ -554,6 +554,8 @@
                     }
 
                     &.current {
+                        
+                        color: $secondary-default;
                         position: relative;
                         z-index: 0;
                         cursor: pointer;
@@ -898,6 +900,19 @@
                 flex-wrap: wrap;
                 gap: 16px;
                 margin-top: 16px;
+               
+
+                .tfhb-form-fields, .wpcf7-form, .fluentform, .forminator-ui  {
+                    max-height: 400px;
+                    overflow: auto;
+                    padding-right: 20px;
+                }
+                 .forminator-ui{
+                    .forminator-row{ 
+                        margin-left: 0 !important;
+                        margin-right: 0 !important;
+                    }
+                 }
 
                 .tfhb-meeting-form {
                     width: 100%;
@@ -930,6 +945,7 @@
                             width: 100%;
                             padding: 8px 12px;
                             box-sizing: border-box;
+                            font-size: 13px;
                             &:focus {
                                 outline: none;
                                 box-shadow: none;

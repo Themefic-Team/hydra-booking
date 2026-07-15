@@ -46,6 +46,23 @@ class HydraBookingShortcode {
 		
 	}
 
+	/**
+	 * Generate a cryptographically secure token.
+	 *
+	 * @param int $bytes
+	 *
+	 * @return string
+	 */
+	private function generate_secure_token( $bytes = 16 ) {
+		try {
+			$token = \bin2hex( \random_bytes( $bytes ) );
+		} catch ( \Exception $exception ) {
+			$token = \wp_generate_password( $bytes * 2, false, false );
+		}
+
+		return $token;
+	}
+
  
 
 	public function hydra_booking_shortcode( $atts ) {
@@ -188,7 +205,31 @@ class HydraBookingShortcode {
 		}
 		// Availability Range
 		$availability_range      = isset( $data['availability_range'] ) ? $data['availability_range'] : array();
-		$availability_range_type = isset( $data['availability_range_type'] ) ? $data['availability_range_type'] : array();
+		$availability_range_type = isset( $data['availability_range_type'] ) ? $data['availability_range_type'] : '';
+
+		// Rolling window: compute today + N days/weeks/months and expose as a regular 'range'
+		if ( 'within_days' === $availability_range_type ) {
+			$_within      = isset( $availability_range['within_days'][0] ) ? $availability_range['within_days'][0] : array();
+			$within_value = isset( $_within['limit'] ) ? (int) $_within['limit'] : 30;
+			$within_unit  = isset( $_within['times'] ) ? sanitize_text_field( $_within['times'] ) : 'days';
+
+			// Only allow safe units
+			$allowed_units = array( 'days', 'weeks', 'months' );
+			if ( ! in_array( $within_unit, $allowed_units, true ) ) {
+				$within_unit = 'days';
+			}
+
+			$today    = new \DateTime( 'today', wp_timezone() );
+			$end_date = clone $today;
+			$end_date->modify( '+' . $within_value . ' ' . $within_unit );
+
+			$availability_range_type      = 'range';
+			$availability_range['start']  = $today->format( 'Y-m-d' );
+			$availability_range['end']    = $end_date->format( 'Y-m-d' );
+		}
+		$questions_type = isset( $data['questions_type'] ) ? $data['questions_type'] : array();
+		$questions_form_type = isset( $data['questions_form_type'] ) ? $data['questions_form_type'] : array();
+		$questions_form = isset( $data['questions_form'] ) ? $data['questions_form'] : array(); 
 
 		// Duration
 		$duration = isset( $data['duration'] ) && ! empty( $data['duration'] ) ? $data['duration'] : 30;
@@ -243,6 +284,10 @@ class HydraBookingShortcode {
 			'availability'            => $availability_data,
 			'availability_range'      => $availability_range,
 			'availability_range_type' => $availability_range_type,
+			'questions_type' => $questions_type,
+			'questions_form_type' => $questions_form_type,
+			'questions_form' => $questions_form,
+
 		);
 		
 
@@ -257,7 +302,7 @@ class HydraBookingShortcode {
 
 	// Form Submit Callback
 	public function tfhb_meeting_form_submit_callback() {
-
+ 
 		// Checked Nonce validation
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
 			wp_send_json_error( array( 'message' => __('Nonce verification failed', 'hydra-booking') ) );
@@ -296,7 +341,7 @@ class HydraBookingShortcode {
 
 		} else {
 
-			$meeting_hash = md5( sanitize_text_field( $_POST['meeting_dates'] ) . sanitize_text_field( $_POST['meeting_time_start'] ) . sanitize_text_field( $_POST['meeting_time_end'] ) . sanitize_text_field( $_POST['meeting_id'] ) . wp_rand( 1000, 9999 ) );
+			$meeting_hash = $this->generate_secure_token();
 
 		}
 
@@ -336,6 +381,12 @@ class HydraBookingShortcode {
 		$start_time =  $start_time->format( 'h:i A' );
 		$end_time =  $end_time->format( 'h:i A' );
 
+		// Checking Hold Booking
+		$hold_booking = new Booking();
+		$get_hold_booking = $hold_booking->getHoldBooking( $data['meeting_id'], $data['meeting_dates'], $start_time, $end_time );
+		if(!empty($get_hold_booking)){
+			wp_send_json_error( array( 'message' => esc_html(__('This time slot is currently on hold. Please try again later or choose a different time.', 'hydra-booking')) ) );
+		}
  
 		$data['host_id']            = isset( $_POST['host_id'] ) ? sanitize_text_field( $_POST['host_id'] ) : 0;
 		$data['attendee_id']        = isset( $_POST['attendee_id'] ) ? sanitize_text_field( $_POST['attendee_id'] ) : 0;
@@ -357,7 +408,7 @@ class HydraBookingShortcode {
 		}
 
 		// Attendee Data
-		$attendee_data['hash'] =  md5( $data['meeting_id'] . $data['meeting_dates'] . $data['start_time'] . $data['end_time'] . wp_rand( 1000, 9999 ) );
+		$attendee_data['hash'] =  $this->generate_secure_token();
 		$attendee_data['meeting_id'] = isset( $data['meeting_id'] ) ? sanitize_text_field( $data['meeting_id'] ) : 0;
 		$attendee_data['host_id']            = isset( $data['host_id'] ) ? sanitize_text_field( $data['host_id'] ) : 0;
 		$attendee_data['attendee_time_zone'] = isset( $_POST['attendee_time_zone'] ) ? sanitize_text_field( $_POST['attendee_time_zone'] ) : 0;
@@ -389,15 +440,14 @@ class HydraBookingShortcode {
 					},
 					ARRAY_FILTER_USE_KEY
 				);
-
 				if ( isset( $_POST['names'] ) && is_array( $_POST['names'] ) ) {
-					$attendee_data['attendee_name'] = $_POST['names']['first_name'] . ' ' . $_POST['names']['last_name'];
+					$attendee_data['attendee_name'] = sanitize_text_field( $_POST['names']['first_name'] ) . ' ' . sanitize_text_field( $_POST['names']['last_name'] );
 				}
 			}
 
 			if ( $meta_data['questions_form_type'] == 'forminator' ) {
-
-				$attendee_data['email'] = $_POST['email-1'];
+		
+				$attendee_data['email'] = isset( $_POST['email-1'] ) ? sanitize_email( $_POST['email-1'] ) : '';
 				unset( $_POST['email-1'] );
 
 				$attendee_names = array_filter(
@@ -410,7 +460,7 @@ class HydraBookingShortcode {
 
 				$attendee_data['attendee_name'] = '';
 				foreach ( $attendee_names as $key => $name ) {
-					$attendee_data['attendee_name'] .= $name . ' ';
+					$attendee_data['attendee_name'] .= sanitize_text_field( $name ) . ' ';
 					unset( $_POST[ $key ] );
 				}
 
@@ -423,7 +473,7 @@ class HydraBookingShortcode {
 				);
 
 				foreach ( $address as $key => $name ) {
-					$attendee_data['address'] .= $name . ' ';
+					$attendee_data['address'] .= sanitize_text_field( $name ) . ' ';
 					unset( $_POST[ $key ] );
 				}
 				$questions = $_POST;
@@ -457,13 +507,14 @@ class HydraBookingShortcode {
 
 		if ( isset( $questions ) && ! empty( $questions ) ) {
 			foreach ( $questions as $key => $question ) {
+				// remove question_ from key
+				$key = str_replace( 'question_', '', $key );
 				$attendee_data['others_info'][ $key ] = sanitize_text_field( $question );
 			}
 		}
 		$attendee_data['country']    = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : '';
 		$attendee_data['ip_address'] = isset( $_POST['ip_address'] ) ? sanitize_text_field( $_POST['ip_address'] ) : '';
 		$attendee_data['device']     = isset( $_POST['device'] ) ? sanitize_text_field( $_POST['device'] ) : '';
-
 
 		// Recurring Meeting
 		if ( isset( $meta_data['recurring_status'] ) && $meta_data['recurring_status'] == true ) {
@@ -521,6 +572,9 @@ class HydraBookingShortcode {
 		if(!$attendee_data['payment_method'] == 'free' && $attendee_data['payment_status'] == 'pending'){
 			$booking_status = 'pending';
 		}
+		if(true == $meta_data['payment_status'] && 'woo_payment'==$meta_data['payment_method'] && !empty($meta_data['payment_meta']['product_id'])){
+			$booking_status = 'hold';
+		}
 
 		$data['status'] = $booking_status;
 		$attendee_data['status'] = $booking_status;
@@ -575,7 +629,7 @@ class HydraBookingShortcode {
 			// if general_settings['allowed_reschedule_before_meeting_start'] is available exp 100 then check the time before reschedule
 			$this->tfhb_reschedule_booking( $data, $attendee_data,$meeting_hash, $meta_data,  $general_settings, $check_booking ); 
 		}
-		$this->tfhb_create_new_booking($data, $attendee_data, $meta_data, $MeetingData, $host_meta);
+		$this->tfhb_create_new_booking($data, $attendee_data, $meta_data, $MeetingData, $host_meta, $general_settings );
 
 
 
@@ -587,7 +641,7 @@ class HydraBookingShortcode {
 	 * @param $data
 	 * @return void
 	 */
-	public function tfhb_create_new_booking( $data, $attendee_data, $meta_data, $MeetingData, $host_meta  ) {
+	public function tfhb_create_new_booking( $data, $attendee_data, $meta_data, $MeetingData, $host_meta, $general_settings  ) {
 		// Get Booking Data
 		$booking = new Booking();
 
@@ -629,7 +683,7 @@ class HydraBookingShortcode {
 			// Add to cart
 			$product_id = $meta_data['payment_meta']['product_id'];
 			$data['booking_id'] = $attendee_data['booking_id'];
-
+			$data['added_time'] = time();
 			$woo_booking = new WooBooking();
 			$woo_booking->add_to_cart( $product_id, $data, $attendee_data );
 			$response['redirect'] = wc_get_checkout_url();
@@ -713,9 +767,7 @@ class HydraBookingShortcode {
 							return strtotime( $last_created_date ) >= strtotime( $created_date ) || strtotime( $created_date ) <= strtotime( $booking_frequency_date );
 						}
 					)
-				);
-				
-				// tfhb_print_r($booking_frequency_date);
+				); 
 				// if currentdate is greater than booking_frequency_date then you can book the meeting
 				if ( strtotime( $current_date ) > strtotime( $booking_frequency_date ) ) {
 					continue;
@@ -801,21 +853,44 @@ class HydraBookingShortcode {
 		if ( isset( $general_settings['allowed_reschedule_before_meeting_start'] ) && ! empty( $general_settings['allowed_reschedule_before_meeting_start'] ) ) {
 			$allowed_reschedule_before_meeting_start = $general_settings['allowed_reschedule_before_meeting_start']; // 100 minutes
 			if ( isset( $general_settings['allowed_reschedule_before_meeting_start'] ) && ! empty( $general_settings['allowed_reschedule_before_meeting_start'] ) ) {
-				$allowed_reschedule_before_meeting_start = $general_settings['allowed_reschedule_before_meeting_start']; // 100 minutes
-				$DateTime                                = new DateTimeController( $attendeeBooking->attendee_time_zone );
-				// Time format if has AM and PM into start time
-				$time_format  = strpos( $attendeeBooking->start_time, 'AM' ) || strpos( $attendeeBooking->start_time, 'PM' ) ? '12' : '24';
-				
-	
-				$current_time = strtotime( $DateTime->convert_time_based_on_timezone( '', gmdate( 'Y-m-d H:i:s' ), 'UTC', $attendeeBooking->attendee_time_zone, $time_format ) );
-				
-				$meeting_time = strtotime( $attendeeBooking->meeting_dates . ' ' . $attendeeBooking->start_time );
-				$time_diff    = $meeting_time - $current_time;
-				$time_diff    = $time_diff / 60; // convert to minutes
+				$allowed_reschedule_before_meeting_start = isset($general_settings['allowed_reschedule_before_meeting_start']) && !empty($general_settings['allowed_reschedule_before_meeting_start']) 
+				? $general_settings['allowed_reschedule_before_meeting_start'] 
+				: 10;
 
-				if ( $time_diff < $allowed_reschedule_before_meeting_start ) {
-					wp_send_json_error( array( 'message' => esc_html(__('You can not reschedule the meeting before ', 'hydra-booking')) . $allowed_reschedule_before_meeting_start . esc_html(__(' minutes', 'hydra-booking')) ) );
+				if (is_array($allowed_reschedule_before_meeting_start)) {
+					$skip_before_meeting_start = $allowed_reschedule_before_meeting_start[0]['limit'];
+					$skip_before_format = $allowed_reschedule_before_meeting_start[0]['times']; // minutes or hours
+				} else {
+					$skip_before_meeting_start = $allowed_reschedule_before_meeting_start;
+					$skip_before_format = 'minutes';
 				}
+
+
+				if ($skip_before_meeting_start > 0) {
+
+					$meeting_date = $attendeeBooking->meeting_dates;  // Example: '2025-07-05'
+					$meeting_time = $attendeeBooking->start_time;     // Example: '14:00' (24-hour format)
+
+					$meeting_datetime = $meeting_date . ' ' . $meeting_time; // Combine to '2025-07-05 14:00'
+
+					$current_time = current_time('Y-m-d H:i:s'); // Current datetime with WordPress timezone
+
+					$meeting_timestamp = strtotime($meeting_datetime);
+					$current_timestamp = strtotime($current_time);
+
+					$time_difference = $meeting_timestamp - $current_timestamp; // Seconds left until meeting starts
+
+					// Convert allowed limit to seconds
+					$allowed_gap_in_seconds = ($skip_before_format === 'hours') ? ($skip_before_meeting_start * 3600) : ($skip_before_meeting_start * 60);
+
+					if ($time_difference < $allowed_gap_in_seconds) {
+						// Not enough time left, deny cancel
+						wp_send_json_error( array( 'message' => esc_html(__('You can not reschedule the meeting before ', 'hydra-booking')) . $skip_before_meeting_start .' '. esc_html($skip_before_format)  ) );
+					}
+					
+				// Else, allow cancel
+				}
+
 			}
 		}
 		
@@ -979,11 +1054,6 @@ class HydraBookingShortcode {
 
 	// Booking Cancel Callback
 	public function tfhb_meeting_form_cencel_callback() {
-		// Checked Nonce validation.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
-			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed', 'hydra-booking')) ) );
-		}
-
 		// Check if the request is POST.
 		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid request method' , 'hydra-booking'))) );
@@ -997,9 +1067,19 @@ class HydraBookingShortcode {
 		$data     = array();
 		$response = array();
 
-		$attendee_hash = isset( $_POST['attendee_hash'] ) ? sanitize_text_field( $_POST['attendee_hash'] ) : '';
+		$hash = isset( $_POST['hash'] ) ? sanitize_text_field( $_POST['hash'] ) : '';
+ 
+		// Checked Nonce validation.
+		$nonce_valid = false;
+		if ( isset( $_POST['nonce'] ) && ! empty( $hash ) ) {
+			$nonce_valid = wp_verify_nonce( $_POST['nonce'], 'tfhb_cancel_' . $hash );
+		}
+
+		if ( ! $nonce_valid ) {
+			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed', 'hydra-booking')) ) );
+		}
+
 		$reason       = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
-		$hash       = isset( $_POST['hash'] ) ? sanitize_text_field( $_POST['hash'] ) : '';
 		
 		$Attendee = new Attendees();
 		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
@@ -1009,10 +1089,53 @@ class HydraBookingShortcode {
 			1,
 			'DESC'
 		);   
+
+		
+		$_tfhb_general_settings = get_option('_tfhb_general_settings');
+
+		$allowed_reschedule_before_meeting_start = isset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) && !empty($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) 
+			? $_tfhb_general_settings['allowed_reschedule_before_meeting_start'] 
+			: 10;
+
+		if (is_array($allowed_reschedule_before_meeting_start)) {
+			$skip_before_meeting_start = $allowed_reschedule_before_meeting_start[0]['limit'];
+			$skip_before_format = $allowed_reschedule_before_meeting_start[0]['times']; // minutes or hours
+		} else {
+			$skip_before_meeting_start = $allowed_reschedule_before_meeting_start;
+			$skip_before_format = 'minutes';
+		}
+
+		if ($skip_before_meeting_start > 0) {
+
+			$meeting_date = $attendeeBooking->meeting_dates;  // Example: '2025-07-05'
+			$meeting_time = $attendeeBooking->start_time;     // Example: '14:00' (24-hour format)
+
+			$meeting_datetime = $meeting_date . ' ' . $meeting_time; // Combine to '2025-07-05 14:00'
+
+			$current_time = current_time('Y-m-d H:i:s'); // Current datetime with WordPress timezone
+
+			$meeting_timestamp = strtotime($meeting_datetime);
+			$current_timestamp = strtotime($current_time);
+
+			$time_difference = $meeting_timestamp - $current_timestamp; // Seconds left until meeting starts
+
+			// Convert allowed limit to seconds
+			$allowed_gap_in_seconds = ($skip_before_format === 'hours') ? ($skip_before_meeting_start * 3600) : ($skip_before_meeting_start * 60);
+
+			if ($time_difference < $allowed_gap_in_seconds) {
+				// Not enough time left, deny cancel
+				wp_send_json_error( array( 'message' => esc_html(__('You can not cencel the meeting before ', 'hydra-booking')) . $skip_before_meeting_start .' '. esc_html($skip_before_format)  ) );
+			}
+			
+			// Else, allow cancel
+		}
+
  
-		if ( ! $attendeeBooking ) {
+		if ( ! $attendeeBooking || ! hash_equals( $attendeeBooking->hash, $hash ) ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid Booking ID', 'hydra-booking')) ) );
 		}
+
+		
 
 
 		$attendee_data = array(
@@ -1024,7 +1147,24 @@ class HydraBookingShortcode {
 
 		
 		$Attendee->update( $attendee_data );
+		
 
+
+		// Update Transaction status to Cancelled
+		$transactions = new Transactions();
+		$where = array(
+			array('attendee_id', '=', $attendeeBooking->id),
+		);
+		$transaction = $transactions->get( $where, 1 );
+		if($transaction != null || !empty($transaction)){
+			$transactions->update( 
+				array(
+					'id' => $transaction->id,
+					'status' => 'canceled', 
+				)
+			);
+		}
+		
 
 		// if booking type is one-to-one then Cancel booking status
 		if('one-to-one' == $attendeeBooking->booking_type){
@@ -1052,75 +1192,259 @@ class HydraBookingShortcode {
 	 * @param $booking_id
 	 * @return $booking
 	 */
-	public function tfhb_meeting_paypal_payment_confirmation_callback(){
+	public function tfhb_meeting_paypal_payment_confirmation_callback() {
 		// Checked Nonce validation.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
-			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed', 'hydra-booking')) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Nonce verification failed', 'hydra-booking' ) ) );
 		}
 
 		// Check if the request is POST.
 		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
-			wp_send_json_error( array( 'message' => esc_html(__('Invalid request method', 'hydra-booking')) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request method', 'hydra-booking' ) ) );
 		}
 
 		// Check if the request is not empty.
 		if ( empty( $_POST ) ) {
-			wp_send_json_error( array( 'message' => esc_html(__('Invalid request', 'hydra-booking')) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request', 'hydra-booking' ) ) );
 		}
-		$payment_details = isset( $_POST['payment_details'] ) ? $_POST['payment_details'] : array();
-		$responseData = isset( $_POST['responseData'] ) ? $_POST['responseData'] : array();
 
-		
+		$payment_details = isset( $_POST['payment_details'] ) ? wp_unslash( $_POST['payment_details'] ) : array();
+		$response_data   = isset( $_POST['responseData'] ) ? wp_unslash( $_POST['responseData'] ) : array();
+
 		$payment_id = isset( $payment_details['id'] ) ? sanitize_text_field( $payment_details['id'] ) : '';
-		$payer_id = isset( $payment_details['payer']['payer_id'] ) ? sanitize_text_field( $payment_details['payer']['payer_id'] ) : '';
-		$hash = isset( $responseData['data']['hash'] ) ? sanitize_text_field( $responseData['data']['hash'] ) : '';
-		$booking_id = isset( $responseData['data']['booking_id'] ) ? sanitize_text_field( $responseData['data']['booking_id'] ) : '';
-		$attendee_id = isset( $responseData['data']['attendee_id'] ) ? sanitize_text_field( $responseData['data']['attendee_id'] ) : '';
-		$meeting_id = isset( $responseData['data']['booking']['meeting_id'] ) ? sanitize_text_field( $responseData['data']['booking']['meeting_id'] ) : '';	
-		$host_id = isset( $responseData['data']['booking']['host_id'] ) ? sanitize_text_field( $responseData['data']['booking']['host_id'] ) : '';	
-		$customer_id = isset( $responseData['data']['booking']['attendee_id'] ) ? sanitize_text_field( $responseData['data']['booking']['attendee_id'] ) : '';	
-		$payment_method = isset( $responseData['data']['booking']['payment_method'] ) ? sanitize_text_field( $responseData['data']['booking']['payment_method'] ) : '';	
-		$total =  isset($payment_details['purchase_units'][0]['amount']['value']) ? sanitize_text_field( $payment_details['purchase_units'][0]['amount']['value'] ) : '';
-		
-		$attendee     = new  Attendees();
+		$payer_id   = isset( $payment_details['payer']['payer_id'] ) ? sanitize_text_field( $payment_details['payer']['payer_id'] ) : '';
 
-		$attendeedata = array(
+		$hash        = isset( $response_data['data']['hash'] ) ? sanitize_text_field( $response_data['data']['hash'] ) : '';
+		$attendee_hash        = isset( $response_data['data']['attendee_data']['hash'] ) ? sanitize_text_field( $response_data['data']['attendee_data']['hash'] ) : '';
+		$booking_id  = isset( $response_data['data']['booking_id'] ) ? absint( $response_data['data']['booking_id'] ) : 0;
+		$attendee_id = isset( $response_data['data']['attendee_id'] ) ? absint( $response_data['data']['attendee_id'] ) : 0;
+		$meeting_id  = isset( $response_data['data']['booking']['meeting_id'] ) ? absint( $response_data['data']['booking']['meeting_id'] ) : 0;
+		$host_id     = isset( $response_data['data']['booking']['host_id'] ) ? absint( $response_data['data']['booking']['host_id'] ) : 0;
+
+		$total    = isset( $payment_details['purchase_units'][0]['amount']['value'] ) ? sanitize_text_field( $payment_details['purchase_units'][0]['amount']['value'] ) : '';
+		$currency = isset( $payment_details['purchase_units'][0]['amount']['currency_code'] ) ? sanitize_text_field( $payment_details['purchase_units'][0]['amount']['currency_code'] ) : '';
+
+		if ( empty( $payment_id ) || empty( $payer_id ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Missing payment identifiers.', 'hydra-booking' ) ) );
+		}
+
+		if ( empty( $booking_id ) || empty( $attendee_id ) || empty( $attendee_hash ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Missing booking information.', 'hydra-booking' ) ) );
+		}
+
+		$attendee_model = new Attendees();
+		$attendee       = $attendee_model->getAttendeeWithBooking(
+			array(
+				array( 'id', '=', $attendee_id ),
+			),
+			1,
+			'DESC'
+		); 
+
+		if ( empty( $attendee ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Booking not found for the provided attendee.', 'hydra-booking' ) ) );
+		}
+
+		if ( (int) $attendee->booking_id !== $booking_id ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Booking mismatch detected.', 'hydra-booking' ) ) );
+		}
+
+		if ( empty( $attendee->hash ) || ! hash_equals( $attendee->hash, $attendee_hash ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid booking reference.', 'hydra-booking' ) ) );
+		}
+
+		if ( empty( $attendee->payment_method ) || 'paypal_payment' !== $attendee->payment_method ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'PayPal is not the configured payment method for this booking.', 'hydra-booking' ) ) );
+		}
+
+		$current_payment_status = strtolower( $attendee->payment_status );
+		if ( 'completed' === $current_payment_status ) {
+			$response['message'] = esc_html__( 'Payment has already been confirmed.', 'hydra-booking' );
+			wp_send_json_success( $response );
+		}
+
+		// Prefer data retrieved from the database over client input.
+		$meeting_id = absint( $attendee->meeting_id );
+		$host_id    = absint( $attendee->host_id );
+
+		$meeting_model = new Meeting();
+		$meeting       = $meeting_model->get( $meeting_id );
+
+		$expected_total    = isset( $meeting->meeting_price ) ? (float) $meeting->meeting_price : (float) $total;
+		$expected_currency = isset( $meeting->payment_currency ) ? strtoupper( $meeting->payment_currency ) : strtoupper( $currency );
+
+		$_tfhb_integration_settings = get_option( '_tfhb_integration_settings', array() );
+		$paypal_settings            = isset( $_tfhb_integration_settings['paypal'] ) ? $_tfhb_integration_settings['paypal'] : array();
+
+		$paypal_enabled = ! empty( $paypal_settings ) && ! empty( $paypal_settings['status'] ) && (int) $paypal_settings['status'] === 1;
+		$client_id      = isset( $paypal_settings['client_id'] ) ? trim( $paypal_settings['client_id'] ) : '';
+		$secret_key     = isset( $paypal_settings['secret_key'] ) ? trim( $paypal_settings['secret_key'] ) : '';
+		
+		if ( ! $paypal_enabled || empty( $client_id ) || empty( $secret_key ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'PayPal integration is not configured.', 'hydra-booking' ) ) );
+		}
+
+		$environment = isset( $paypal_settings['environment'] ) && 'live' === strtolower( $paypal_settings['environment'] ) ? 'live' : 'sandbox';
+		$api_base    = 'live' === $environment ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com';
+
+		// Step 1: Retrieve OAuth access token.
+		$token_response = wp_remote_post(
+			$api_base . '/v1/oauth2/token',
+			array(
+				'headers' => array(
+					'Authorization' => 'Basic ' . base64_encode( $client_id . ':' . $secret_key ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+				),
+				'body'      => array(
+					'grant_type' => 'client_credentials',
+				),
+				'timeout'   => 20,
+			)
+		);
+	
+		if ( is_wp_error( $token_response ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Unable to communicate with PayPal. Please try again later.', 'hydra-booking' ) ) );
+		}
+
+		$token_code = (int) wp_remote_retrieve_response_code( $token_response );
+		$token_body = json_decode( wp_remote_retrieve_body( $token_response ), true ); 
+		if ( 200 !== $token_code || empty( $token_body['access_token'] ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Failed to authenticate with PayPal.', 'hydra-booking' ) ) );
+		}
+
+		$access_token = $token_body['access_token'];
+
+		// Step 2: Retrieve order details.
+		$order_response = wp_remote_get(
+			$api_base . '/v2/checkout/orders/' . rawurlencode( $payment_id ),
+			array(
+				'headers' => array(
+					'Authorization' => 'Bearer ' . $access_token,
+				),
+				'timeout' => 20,
+			)
+		); 
+		if ( is_wp_error( $order_response ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Unable to verify the PayPal payment.', 'hydra-booking' ) ) );
+		}
+
+		$order_code = (int) wp_remote_retrieve_response_code( $order_response );
+		$order_body = json_decode( wp_remote_retrieve_body( $order_response ), true ); 
+		if ( 200 !== $order_code || empty( $order_body ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Unexpected response received from PayPal.', 'hydra-booking' ) ) );
+		}
+
+		if ( empty( $order_body['status'] ) || 'COMPLETED' !== strtoupper( $order_body['status'] ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'PayPal has not marked this payment as completed.', 'hydra-booking' ) ) );
+		}
+
+		$order_payer_id = isset( $order_body['payer']['payer_id'] ) ? $order_body['payer']['payer_id'] : '';
+		if ( empty( $order_payer_id ) || $order_payer_id !== $payer_id ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'PayPal payer verification failed.', 'hydra-booking' ) ) );
+		}
+
+		$order_reference = isset( $order_body['purchase_units'][0]['reference_id'] ) ? $order_body['purchase_units'][0]['reference_id'] : '';
+		if ( ! empty( $order_reference ) && (int) $order_reference !== $attendee_id ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'PayPal order reference does not match the attendee.', 'hydra-booking' ) ) );
+		}
+
+		$capture_data      = isset( $order_body['purchase_units'][0]['payments']['captures'][0] ) ? $order_body['purchase_units'][0]['payments']['captures'][0] : array();
+		$order_amount_raw  = isset( $capture_data['amount']['value'] ) ? $capture_data['amount']['value'] : ( isset( $order_body['purchase_units'][0]['amount']['value'] ) ? $order_body['purchase_units'][0]['amount']['value'] : '' );
+		$order_currency    = isset( $capture_data['amount']['currency_code'] ) ? $capture_data['amount']['currency_code'] : ( isset( $order_body['purchase_units'][0]['amount']['currency_code'] ) ? $order_body['purchase_units'][0]['amount']['currency_code'] : '' );
+		$capture_status    = isset( $capture_data['status'] ) ? strtoupper( $capture_data['status'] ) : '';
+
+		if ( ! empty( $capture_status ) && 'COMPLETED' !== $capture_status ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'PayPal capture has not been completed.', 'hydra-booking' ) ) );
+		}
+
+		$order_amount    = (float) $order_amount_raw;
+		$expected_amount = (float) $expected_total;
+
+		if ( $expected_amount > 0 && abs( $order_amount - $expected_amount ) > 0.01 ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Paid amount does not match the booking total.', 'hydra-booking' ) ) );
+		}
+
+		if ( ! empty( $expected_currency ) && ! empty( $order_currency ) && strtoupper( $expected_currency ) !== strtoupper( $order_currency ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Currency mismatch detected for the payment.', 'hydra-booking' ) ) );
+		}
+
+		// Update attendee payment status.
+		$attendee_update = array(
 			'id'             => $attendee_id,
 			'payment_status' => 'Completed',
+			'status'         => 'confirmed',
 		);
-		
-		// attendee Update
-		$attendeeUpdate = $attendee->update( $attendeedata );
 
-		$charge = array(
-			'payment_id'    => ! empty( $payment_id ) ? $payment_id : '', 
-			'payer_id'      => ! empty( $payer_id  ) ? $payer_id  : '',
-			'booking_id'      => ! empty( $booking_id  ) ? $booking_id  : '', 
-			'attendee_id'      => ! empty( $attendee_id  ) ? $attendee_id  : '', 
+		$attendee_result = $attendee_model->update( $attendee_update );
+		if ( false === $attendee_result ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Unable to update attendee payment status.', 'hydra-booking' ) ) );
+		}
+
+		// Update booking status to confirmed.
+		$booking_model = new Booking();
+		$booking_model->update(
+			array(
+				'id'     => $booking_id,
+				'status' => 'confirmed',
+			)
 		);
-		// Data for Transactions Table
-		$tdata        = array(
+
+		$transactions_model  = new Transactions();
+		$existing_transaction = $transactions_model->get(
+			array(
+				array( 'booking_id', '=', $booking_id ),
+				array( 'attendee_id', '=', $attendee_id ),
+			),
+			1
+		);
+
+		$transaction_payload = array(
 			'booking_id'         => $booking_id,
-			'attendee_id'         => $attendee_id,
+			'attendee_id'        => $attendee_id,
 			'meeting_id'         => $meeting_id,
-			'host_id'         => $host_id,
-			'customer_id'         => $booking_id,
-			'payment_method'         => $payment_method, 
-			'total'         => $total,
-			'transation_history' => wp_json_encode( $charge ),
-			'status' => 'completed',
+			'host_id'            => $host_id,
+			'customer_id'        => $attendee_id,
+			'payment_method'     => 'paypal_payment',
+			'total'              => $order_amount_raw ? sanitize_text_field( $order_amount_raw ) : sanitize_text_field( $total ),
+			'transation_history' => array(
+				'payment_id' => $payment_id,
+				'payer_id'   => $payer_id,
+				'order'      => $order_body,
+			),
+			'status'            => 'completed',
 		);
- 
-		$Transactions = new Transactions();
-		$Transactions = $Transactions->add( $tdata );
 
-		// After Booking Hooks
-		do_action( 'hydra_booking/after_booking_payment_complete', $attendeedata );
+		if ( $existing_transaction ) {
+			$transaction_payload['id'] = $existing_transaction->id;
+			$transactions_model->update( $transaction_payload );
+		} else {
+			$transactions_model->add( $transaction_payload );
+		}
 
-		// return success message
-		$response['message'] = esc_html(__('Payment Completed Successfully', 'hydra-booking'));
+		// Retrieve the refreshed attendee record to pass along hooks.
+		$updated_attendee = $attendee_model->getAttendeeWithBooking(
+			array(
+				array( 'id', '=', $attendee_id ),
+			),
+			1,
+			'DESC'
+		);
+
+		// Trigger hooks.
+		$attendee_hook_payload = array(
+			'id'             => $attendee_id,
+			'payment_status' => 'Completed',
+			'status'         => 'confirmed',
+		);
+
+		do_action( 'hydra_booking/after_booking_payment_complete', $attendee_hook_payload );
+
+		if ( $updated_attendee ) {
+			do_action( 'hydra_booking/after_booking_confirmed', $updated_attendee );
+		}
+
+		// Return success message.
+		$response['message'] = esc_html__( 'Payment Completed Successfully', 'hydra-booking' );
 		wp_send_json_success( $response );
-		
 	}
 }
 

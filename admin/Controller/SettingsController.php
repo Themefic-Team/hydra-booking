@@ -209,6 +209,23 @@ class SettingsController {
 		$country_list           = $country->country_list();
 		$currency_list           = $country->currency_list();
 		$_tfhb_general_settings = get_option( '_tfhb_general_settings' );
+		if ( ! is_array( $_tfhb_general_settings ) ) {
+			$_tfhb_general_settings = array();
+		}
+
+		if ( empty( $_tfhb_general_settings['date_format'] ) ) {
+			$_tfhb_general_settings['date_format'] = 'default';
+		}
+
+		if( isset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']) && !is_array($_tfhb_general_settings['allowed_reschedule_before_meeting_start'])){
+			$old_value = $_tfhb_general_settings['allowed_reschedule_before_meeting_start'];
+			unset($_tfhb_general_settings['allowed_reschedule_before_meeting_start']); 
+			$old_value = empty( $old_value ) ? 10 : $old_value;
+			$_tfhb_general_settings['allowed_reschedule_before_meeting_start'][] = [
+				'limit' => $old_value,
+				'times' => 'minutes',
+			]; 
+		}
 		$data                   = array(
 			'status'           => true,
 			'time_zone'        => $time_zone,
@@ -223,19 +240,33 @@ class SettingsController {
 	public function UpdateGeneralSettings() {
 		$request                = json_decode( file_get_contents( 'php://input' ), true );
 		$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
-		
+		$date_format            = isset( $request['date_format'] ) ? sanitize_text_field( $request['date_format'] ) : '';
+		$date_format            = ! empty( $date_format ) ? trim( $date_format ) : 'default';
+
+		if ( 'default' !== strtolower( $date_format ) && ! $this->is_valid_date_format( $date_format ) ) {
+			$data = array(
+				'status'  => false,
+				'message' => __( 'Invalid date format selected', 'hydra-booking' ),
+			);
+			return rest_ensure_response( $data );
+		}
+
 
 		// senitaized
+		$_tfhb_general_settings['admin_email']                               = sanitize_email( $request['admin_email'] );
 		$_tfhb_general_settings['time_zone']                               = sanitize_text_field( $request['time_zone'] );
 		$_tfhb_general_settings['time_format']                             = sanitize_text_field( $request['time_format'] );
 		$_tfhb_general_settings['week_start_from']                         = sanitize_text_field( $request['week_start_from'] );
-		$_tfhb_general_settings['date_format']                             = sanitize_text_field( $request['date_format'] );
+		$_tfhb_general_settings['date_format']                             = $date_format;
 		$_tfhb_general_settings['country']                                 = sanitize_text_field( $request['country'] );
 		$_tfhb_general_settings['currency']                                 = sanitize_text_field( $request['currency'] );
 		$_tfhb_general_settings['after_booking_completed']                 = sanitize_text_field( $request['after_booking_completed'] );
+		$_tfhb_general_settings['after_cart_expire']                 = sanitize_text_field( $request['after_cart_expire'] );
 		$_tfhb_general_settings['booking_status']                          = sanitize_text_field( $request['booking_status'] );
 		$_tfhb_general_settings['reschedule_status']                       = sanitize_text_field( $request['reschedule_status'] );
-		$_tfhb_general_settings['allowed_reschedule_before_meeting_start'] = sanitize_text_field( $request['allowed_reschedule_before_meeting_start'] );
+		$_tfhb_general_settings['allowed_reschedule_before_meeting_start'] =  $request['allowed_reschedule_before_meeting_start'];
+
+		$_tfhb_general_settings['meeting_url_generation'] = isset( $request['meeting_url_generation'] ) ? (int) $request['meeting_url_generation'] : 1;
 
 		// update option
 		update_option( '_tfhb_general_settings', $_tfhb_general_settings );
@@ -247,6 +278,41 @@ class SettingsController {
 			'message' =>  __('General Settings Updated Successfully', 'hydra-booking')
 		);
 		return rest_ensure_response( $data );
+	}
+
+	private function is_valid_date_format( $date_format ) {
+		if ( empty( $date_format ) || ! is_string( $date_format ) ) {
+			return false;
+		}
+
+		$allowed_tokens = array(
+			'd', 'D', 'j', 'l', 'N', 'S', 'w', 'z',
+			'W', 'F', 'm', 'M', 'n', 't', 'L', 'o',
+			'Y', 'y', 'a', 'A', 'g', 'G', 'h', 'H',
+			'i', 's', 'u', 'e', 'I', 'O', 'P', 'T',
+			'Z', 'c', 'r', 'U',
+		);
+
+		$length = strlen( $date_format );
+		$has_token = false;
+
+		for ( $i = 0; $i < $length; $i++ ) {
+			$current_char = $date_format[ $i ];
+
+			if ( '\\' === $current_char ) {
+				$i++;
+				continue;
+			}
+
+			if ( ctype_alpha( $current_char ) ) {
+				if ( ! in_array( $current_char, $allowed_tokens, true ) ) {
+					return false;
+				}
+				$has_token = true;
+			}
+		}
+
+		return $has_token;
 	}
 
 	// Get Availability Settings
@@ -497,7 +563,11 @@ class SettingsController {
 			$_tfhb_integration_settings['google_calendar']['secret_key']        = '';
 			$_tfhb_integration_settings['google_calendar']['redirect_url']      = $GoogleCalendar->redirectUrl;
 
-		}
+		}elseif(isset($_tfhb_integration_settings['google_calendar'])){
+			$GoogleCalendar                                        = new GoogleCalendar();
+			$_tfhb_integration_settings['google_calendar']['redirect_url']      = $GoogleCalendar->setRedirectUrl();
+		} 
+		 
 		$_tfhb_integration_settings = apply_filters( 'tfhb_get_integration_settings', $_tfhb_integration_settings );
 		// Checked if woo
 		$data = array(
@@ -535,11 +605,12 @@ class SettingsController {
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'google_calendar' ) {
+			$GoogleCalendar                                        = new GoogleCalendar();
 			$_tfhb_integration_settings['google_calendar']['type']              = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['google_calendar']['status']            = sanitize_text_field( $data['status'] );
 			$_tfhb_integration_settings['google_calendar']['client_id']         = sanitize_text_field( $data['client_id'] );
 			$_tfhb_integration_settings['google_calendar']['secret_key']        = sanitize_text_field( $data['secret_key'] );
-			$_tfhb_integration_settings['google_calendar']['redirect_url']      = sanitize_text_field( $data['redirect_url'] );
+			$_tfhb_integration_settings['google_calendar']['redirect_url']      = $GoogleCalendar->setRedirectUrl();
 			$_tfhb_integration_settings['google_calendar']['connection_status'] = isset( $data['secret_key'] ) && ! empty( $data['secret_key'] ) ? 1 : 0;
 
 			// update option
@@ -554,17 +625,39 @@ class SettingsController {
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'apple_calendar' ) {
-			$_tfhb_integration_settings['apple_calendar']['type']              = sanitize_text_field( $data['type'] );
-			$_tfhb_integration_settings['apple_calendar']['connection_status'] = sanitize_text_field( $data['connection_status'] );
+			$_tfhb_integration_settings['apple_calendar']['type']    = sanitize_text_field( $data['type'] );
+			$_tfhb_integration_settings['apple_calendar']['status']  = sanitize_text_field( $data['status'] );
+			$_tfhb_integration_settings['apple_calendar']['apple_id'] = sanitize_email( $data['apple_id'] );
+
+			// Clear all credentials when apple_id is empty (disconnect)
+			if ( empty( $data['apple_id'] ) ) {
+				$_tfhb_integration_settings['apple_calendar']['app_password']     = '';
+				$_tfhb_integration_settings['apple_calendar']['connection_status'] = 0;
+			} else {
+				// Only update password if a new one was provided
+				if ( ! empty( $data['app_password'] ) ) {
+					$_tfhb_integration_settings['apple_calendar']['app_password'] = self::encrypt_value( sanitize_text_field( $data['app_password'] ) );
+				}
+				// connection_status = 1 when both apple_id and app_password are stored
+				$has_credentials = ! empty( $_tfhb_integration_settings['apple_calendar']['apple_id'] )
+				                   && ! empty( $_tfhb_integration_settings['apple_calendar']['app_password'] );
+				$_tfhb_integration_settings['apple_calendar']['connection_status'] = $has_credentials ? 1 : 0;
+			}
+
 			// update option
 			update_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
 			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
 
-			// woocommerce payment
+			// Mask password in response – never expose the encrypted value
+			if ( isset( $option['apple_calendar'] ) ) {
+				$option['apple_calendar']['app_password_set'] = ! empty( $option['apple_calendar']['app_password'] ) ? 1 : 0;
+				$option['apple_calendar']['app_password']     = '';
+			}
+
 			$data = array(
-				'status'  => true,
-				'integration_settings'  => $option,
-				'message' => __('Apple Calendar Settings Updated Successfully', 'hydra-booking')
+				'status'               => true,
+				'integration_settings' => $option,
+				'message'              => __( 'Apple Calendar Settings Updated Successfully', 'hydra-booking' ),
 			);
 			return rest_ensure_response( $data );
 		} elseif ( $key == 'mailchimp' ) {
@@ -582,7 +675,7 @@ class SettingsController {
 				'message' => __('Mailchimp Settings Updated Successfully', 'hydra-booking')
 			);
 			return rest_ensure_response( $data );
-		} elseif ( $key == 'paypal' ) {
+		}elseif ( $key == 'paypal' ) {
 			$_tfhb_integration_settings['paypal']['type']        = sanitize_text_field( $data['type'] );
 			$_tfhb_integration_settings['paypal']['status']      = sanitize_text_field( $data['status'] );
 			$_tfhb_integration_settings['paypal']['client_id']   = sanitize_text_field( $data['client_id'] );
@@ -764,6 +857,7 @@ class SettingsController {
 			); 
 			
 			$option = get_option( '_tfhb_integration_settings', $_tfhb_integration_settings );
+			// tfhb_print_r($option);
 
 			$data['integration_settings'] = $option;
 			return rest_ensure_response( $data );
@@ -814,14 +908,93 @@ class SettingsController {
         }
     }
 
+	private function mergeMissingBuilderSections(&$notifications, $default_notifications) {
+		$has_changes = false;
+
+		foreach ($default_notifications as $role => $role_defaults) {
+			if (!isset($notifications[$role]) || !is_array($notifications[$role]) || !is_array($role_defaults)) {
+				continue;
+			}
+
+			foreach ($role_defaults as $template_key => $template_default) {
+				if (!isset($notifications[$role][$template_key]) || !is_array($notifications[$role][$template_key])) {
+					continue;
+				}
+
+				if (!isset($template_default['builder']) || !is_array($template_default['builder'])) {
+					continue;
+				}
+
+				if (!isset($notifications[$role][$template_key]['builder']) || $notifications[$role][$template_key]['builder'] === '') {
+					$notifications[$role][$template_key]['builder'] = $template_default['builder'];
+					$has_changes = true;
+					continue;
+				}
+
+				if (!is_array($notifications[$role][$template_key]['builder'])) {
+					continue;
+				}
+
+				$current_builder = $notifications[$role][$template_key]['builder'];
+				$existing_ids = array();
+
+				foreach ($current_builder as $section) {
+					if (is_array($section) && !empty($section['id'])) {
+						$existing_ids[$section['id']] = true;
+					}
+				}
+
+				$missing_sections = array();
+				foreach ($template_default['builder'] as $default_section) {
+					if (!is_array($default_section) || empty($default_section['id'])) {
+						continue;
+					}
+
+					if (!isset($existing_ids[$default_section['id']])) {
+						$missing_sections[] = $default_section;
+					}
+				}
+
+				if (empty($missing_sections)) {
+					continue;
+				}
+
+				$footer_index = null;
+				foreach ($current_builder as $index => $section) {
+					if (is_array($section) && isset($section['id']) && $section['id'] === 'footer') {
+						$footer_index = $index;
+						break;
+					}
+				}
+
+				$insert_index = ($footer_index !== null) ? $footer_index : count($current_builder);
+				array_splice($current_builder, $insert_index, 0, $missing_sections);
+
+				foreach ($current_builder as $index => $section) {
+					if (is_array($section)) {
+						$current_builder[$index]['order'] = $index;
+					}
+				}
+
+				$notifications[$role][$template_key]['builder'] = $current_builder;
+				$has_changes = true;
+			}
+		}
+
+		return $has_changes;
+	}
+
 	// Get Notification Settings
 	public function GetNotificationSettings() {
 		// $_tfhb_notification_settings = get_option( '_tfhb_notification_settings' );
 		$_tfhb_notification_settings = !empty(get_option( '_tfhb_notification_settings' )) && get_option( '_tfhb_notification_settings' ) != false ? get_option( '_tfhb_notification_settings' ) : array();
-		
+		$_tfhb_default_notification_settings = array();
+	 	
 		if(empty($_tfhb_notification_settings)){
 			$default_notification =  new Helper();
-			$_tfhb_notification_settings = $default_notification->get_default_notification_template(); 
+			$_tfhb_notification_settings = $default_notification->get_default_notification_template();
+			$_tfhb_default_notification_settings = $_tfhb_notification_settings;
+	 
 		}else{
 			$default_notification =  new Helper();
 			$_tfhb_default_notification_settings = $default_notification->get_default_notification_template(); 
@@ -835,8 +1008,11 @@ class SettingsController {
 				$_tfhb_notification_settings['slack'] = !empty($_tfhb_default_notification_settings['slack']) ? $_tfhb_default_notification_settings['slack'] : '';
 			}
 		}
-
 		$this->ensureBuilderKeyExists($_tfhb_notification_settings);
+		$has_notification_updates = $this->mergeMissingBuilderSections($_tfhb_notification_settings, $_tfhb_default_notification_settings);
+		if($has_notification_updates){
+			update_option( '_tfhb_notification_settings', $_tfhb_notification_settings );
+		}
 
 		$_tfhb_integration_settings = !empty(get_option( '_tfhb_integration_settings' )) && get_option( '_tfhb_integration_settings' ) != false ? get_option( '_tfhb_integration_settings' ) : array();
 
@@ -875,6 +1051,7 @@ class SettingsController {
 			$twilio_Data['status'] = false;
 		}
 
+		
 		$data                        = array(
 			'status'                => true,
 			'notification_settings' => $_tfhb_notification_settings,
@@ -962,7 +1139,7 @@ class SettingsController {
 
 		$data = array(
 			'status'         => true,
-			'message'        => 'Hosts Settings',
+			'message'        => __( 'Hosts Settings', 'hydra-booking' ),
 			'hosts_settings' => $_tfhb_hosts_settings,
 		);
 		return rest_ensure_response( $data );
@@ -975,6 +1152,17 @@ class SettingsController {
 		$request              = json_decode( file_get_contents( 'php://input' ), true );
 		$_tfhb_hosts_settings = ! empty( get_option( '_tfhb_hosts_settings' ) ) ? get_option( '_tfhb_hosts_settings' ) : array();
 
+		// Checked current user can manage option
+		if (  ! current_user_can( 'manage_options' ) ) {
+			// woocommerce payment
+			$data = array(
+				'status'  => false,
+				'message' => __( 'You do not have permission to access this page', 'hydra-booking' ),
+				'data'    => $_tfhb_hosts_settings,
+			);
+			return rest_ensure_response( $data );
+		}
+		
 
 
 		if ( isset( $request['hosts_settings']['others_information']['enable_others_information'] ) ) {
@@ -1040,7 +1228,7 @@ class SettingsController {
 		$_tfhb_appearance_settings = get_option( '_tfhb_appearance_settings' );
 		$data                      = array(
 			'status'              => true,
-			'message'             => 'Appearance Settings',
+			'message'             => __( 'Appearance Settings', 'hydra-booking' ),
 			'appearance_settings' => $_tfhb_appearance_settings,
 		);
 		return rest_ensure_response( $data );
@@ -1048,18 +1236,92 @@ class SettingsController {
 
 	/**
 	 * Update Appearance Settings.
+	 * Sanitizes and validates all appearance settings to prevent XSS attacks.
 	 */
 	public function UpdateAppearanceSettings() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
+		
+		if ( ! is_array( $request ) ) {
+			return rest_ensure_response( array(
+				'status'  => false,
+				'message' => __( 'Invalid request data', 'hydra-booking' ),
+			) );
+		}
+		
+		// Sanitize appearance settings
+		$sanitized_settings = $this->sanitize_appearance_settings( $request );
+		
 		// update option
-		update_option( '_tfhb_appearance_settings', $request );
+		update_option( '_tfhb_appearance_settings', $sanitized_settings );
 
 		$data = array(
 			'status'  => true,
 			'message' => __( 'Appearance Settings Updated Successfully', 'hydra-booking' ),
-			'data'    => $request,
+			'data'    => $sanitized_settings,
 		);
 		return rest_ensure_response( $data );
+	}
+
+	/**
+	 * Sanitize appearance settings - validates color values and other settings.
+	 *
+	 * @param array $settings The settings to sanitize.
+	 * @return array Sanitized settings.
+	 */
+	private function sanitize_appearance_settings( $settings ) {
+		$sanitized = array();
+		
+		// List of valid color field keys
+		$color_fields = array(
+			'primary_color',
+			'primary_hover',
+			'secondary_color',
+			'secondary_hover',
+			'text_title_color',
+			'paragraph_color',
+			'surface_primary',
+			'surface_background',
+			'surface_border',
+			'surface_border_hover',
+			'surface_input_field',
+		);
+		
+		// Sanitize each setting
+		foreach ( $settings as $key => $value ) {
+			if ( in_array( $key, $color_fields, true ) ) {
+				// Validate and sanitize color values - only allow valid hex colors
+				$sanitized[ $key ] = $this->sanitize_hex_color( $value );
+			} else {
+				// For other fields, use text sanitization
+				$sanitized[ $key ] = sanitize_text_field( $value );
+			}
+		}
+		
+		return $sanitized;
+	}
+
+	/**
+	 * Sanitize and validate hex color values.
+	 * Only allows valid hex color format (#RRGGBB or #RGB).
+	 *
+	 * @param mixed $color The color value to validate.
+	 * @return string Valid hex color or empty string.
+	 */
+	private function sanitize_hex_color( $color ) {
+		if ( empty( $color ) ) {
+			return '';
+		}
+		
+		// Remove any whitespace
+		$color = trim( $color );
+		
+		// Validate hex color format (#RGB or #RRGGBB)
+		if ( preg_match( '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $color ) ) {
+			return $color;
+		}
+		
+		// Return empty string if invalid
+		return '';
 	}
 
 
@@ -1101,7 +1363,7 @@ class SettingsController {
 		// 
 		$data = array(
 			'status'  => true,
-            'message' => 'Shortcode Settings',
+	            'message' => __( 'Shortcode Settings', 'hydra-booking' ),
             'hostsList' => $hostsList,
             'categoryList' => $categoryList, 
 		);
@@ -1125,17 +1387,51 @@ class SettingsController {
 			$shortcodeHTML = ob_get_clean();
 			$data = array(
                 'status'  => true,
-                'message' => 'Shortcode Preview',
+	                'message' => __( 'Shortcode Preview', 'hydra-booking' ),
                 'output' => $shortcodeHTML, 
             );
 
 		}  else {
 			$data = array(
                 'status'  => false,
-                'message' => 'No Shortcode provided',
+	                'message' => __( 'No Shortcode provided', 'hydra-booking' ),
             );
         }
 		return rest_ensure_response( $data );
 		 
+	}
+
+	/**
+	 * Encrypt a value for secure storage.
+	 */
+	private static function encrypt_value( $value ) {
+		if ( empty( $value ) || ! function_exists( 'openssl_encrypt' ) ) {
+			return $value;
+		}
+		$key = substr( hash( 'sha256', AUTH_SALT . SECURE_AUTH_SALT, true ), 0, 32 );
+		$iv  = openssl_random_pseudo_bytes( 16 );
+		$encrypted = openssl_encrypt( $value, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv );
+		if ( $encrypted === false ) {
+			return $value;
+		}
+		return base64_encode( $iv . $encrypted );
+	}
+
+	/**
+	 * Decrypt a value previously encrypted with encrypt_value().
+	 */
+	public static function decrypt_value( $stored ) {
+		if ( empty( $stored ) || ! function_exists( 'openssl_decrypt' ) ) {
+			return '';
+		}
+		$decoded = base64_decode( $stored, true );
+		if ( $decoded === false || strlen( $decoded ) <= 16 ) {
+			return '';
+		}
+		$key       = substr( hash( 'sha256', AUTH_SALT . SECURE_AUTH_SALT, true ), 0, 32 );
+		$iv        = substr( $decoded, 0, 16 );
+		$encrypted = substr( $decoded, 16 );
+		$decrypted = openssl_decrypt( $encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv );
+		return $decrypted !== false ? $decrypted : '';
 	}
 }

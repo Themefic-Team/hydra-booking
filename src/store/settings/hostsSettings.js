@@ -65,9 +65,16 @@ const hostsSettings = reactive({
                     position: "bottom-right",
                 });
                 this.update_preloader = false;
+            }else{
+                toast.error(response.data.message, {
+                    position: "bottom-right",
+                }); 
+                this.update_preloader = false;
             }
         } catch (error) {
-            console.log(error);
+            toast.error(response.data.message, {
+                position: "bottom-right",
+            }); 
             this.update_preloader = false;
 
         }  

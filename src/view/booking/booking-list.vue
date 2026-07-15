@@ -510,13 +510,13 @@ const getMinDate = (value) => {
 const changeToDate = (value) => {  
     if( Booking.filter_data.date_range.from == ''){
  
-        toast.error('Please select from date first', {
+        toast.error((tfhb_core_apps.trans['Please select from date first'] || 'Please select from date first'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
     } 
     if( Booking.filter_data.date_range.from > value){
-        toast.error('To date should be greater than from date', {
+        toast.error((tfhb_core_apps.trans['To date should be greater than from date'] || 'To date should be greater than from date'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
@@ -1023,7 +1023,7 @@ const getAvailabilityTimeSlot = (value) => {
                     </div>  
                     <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="CalendarDays" size=20 /> 
-                        {{singleBookingData.meeting_dates }}
+                        {{ Tfhb_Date(singleBookingData.meeting_dates) }}
                     </div>   
                 </div>
             </div>
@@ -1100,7 +1100,7 @@ const getAvailabilityTimeSlot = (value) => {
                 <label>{{$tfhb_trans('Date')}}</label>
                 <div class="tfhb-time-date-view tfhb-flexbox">
                     <Icon name="CalendarDays" size=20 />
-                    <input type="text" readonly :value="singleCalendarBookingData.booking_date">
+                    <input type="text" readonly :value="Tfhb_Date(singleCalendarBookingData.booking_date)">
                 </div>
             </div>
         </div>
@@ -1228,10 +1228,12 @@ const getAvailabilityTimeSlot = (value) => {
                     </td>
                     <td>
                         <div class="tfhb-details-action tfhb-flexbox tfhb-justify-normal tfhb-gap-16">
-                            <span @click.stop="Tfhb_Booking_View(book.id)">
+                            <span @click.stop="Tfhb_Booking_View(book.id)" class="tfhb-tooltip">
+                                <span class="tfhb-tooltiptext">{{ $tfhb_trans('View Booking') }}</span>
                                 <Icon name="Eye" width="20" />
                             </span>
-                            <span @click.stop="bookingReminder(book)">
+                            <span @click.stop="bookingReminder(book)" class="tfhb-tooltip">
+                                <span class="tfhb-tooltiptext">{{ $tfhb_trans('Send Reminder') }}</span>
                                 <Icon name="AlarmClock" width="20" />
                             </span>
                             <!-- <router-link :to="{ name: 'bookingUpdate', params: { id: book.id } }" class="tfhb-dropdown-single">

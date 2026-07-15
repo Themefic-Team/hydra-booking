@@ -196,6 +196,7 @@ namespace HydraBooking\Admin\Controller;
             'Describe about meeting' =>  __('Describe about meeting', 'hydra-booking'),  
             'Select Meetings Duration' =>  __('Select Meetings Duration', 'hydra-booking'), 
             'Type Custom Duration' =>  __('Type Custom Duration', 'hydra-booking'), 
+            'Custom Duration (minutes)' =>  __('Custom Duration (minutes)', 'hydra-booking'), 
             'Location' =>  __('Location', 'hydra-booking'), 
             'Address' =>  __('Address', 'hydra-booking'), 
             'Enter Address' =>  __('Enter Address', 'hydra-booking'), 
@@ -693,6 +694,10 @@ namespace HydraBooking\Admin\Controller;
             'Booking Has Been Pending' =>  __('Booking Has Been Pending', 'hydra-booking'), 
             'Booking Has Been Canceled' =>  __('Booking Has Been Canceled', 'hydra-booking'), 
             'Booking Has Been Rescheduled' =>  __('Booking Has Been Rescheduled', 'hydra-booking'),  
+            'Google Calendar Event Created' =>  __('Google Calendar Event Created', 'hydra-booking'),  
+            'Updated Google Calendar Event' =>  __('Updated Google Calendar Event', 'hydra-booking'),  
+            'Attendee added to the google calendar' =>  __('Attendee added to the google calendar', 'hydra-booking'),  
+            'Attendee removed from the google calendar' =>  __('Attendee removed from the google calendar', 'hydra-booking'),  
 
             //
             'Import bookings from a CSV file' =>  __('Import bookings from a CSV file', 'hydra-booking'), 
@@ -767,6 +772,11 @@ namespace HydraBooking\Admin\Controller;
             'Select Data to Import' =>  __('Select Data to Import', 'hydra-booking'),  
             'No upcoming booking found' =>  __('No upcoming booking found', 'hydra-booking'),    
             'Choose which data you would like to to import your website' =>  __('Choose which data you would like to to import your website', 'hydra-booking'),  
+            'Your start time will be over the: ' =>  __('Your start time will be over the: ', 'hydra-booking'),
+            'Your End time will be over the: ' =>  __('Your End time will be over the: ', 'hydra-booking'),
+            ' And Less than ' =>  __(' And Less than ', 'hydra-booking'),
+            'End date should be greater than or equal to Start dates' =>  __('End date should be greater than or equal to Start dates', 'hydra-booking'),
+            'When disabled, meeting public pages will return 404 and the share link feature will be hidden.' =>  __('When disabled, meeting public pages will return 404 and the share link feature will be hidden.', 'hydra-booking'),
             'hello' =>  __('hello', 'hydra-booking'),
 
             // Addons Frontend Dashboard: Buyers/Sellers/Exhibitors, Matching, Messages
@@ -1213,6 +1223,8 @@ namespace HydraBooking\Admin\Controller;
             '8' => _x('8', 'Calendar number', 'hydra-booking'),
             '9' => _x('9', 'Calendar number', 'hydra-booking'),
             
+            'Use Global Email Notification Settings' =>  __('Use Global Email Notification Settings', 'hydra-booking'),  
+            'Sync with Global Settings' =>  __('Sync with Global Settings', 'hydra-booking'),  
             'Payment Method Required.' =>  __('Payment Method Required.', 'hydra-booking'),  
 
        );

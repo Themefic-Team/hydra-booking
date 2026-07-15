@@ -134,7 +134,7 @@ const GetFormsData = async (value) => {
                 <p>{{ $tfhb_trans('Create your own booking page questions') }}</p>
             </div>
 
-            <div class="tfhb-flexbox tfhb-gap-0 tfhb-align-normal tfhb-justify-between">
+            <div class="tfhb-flexbox tfhb-gap-8 tfhb-align-normal tfhb-justify-between">
                 <div class="tfhb-single-meeting-range tfhb-admin-card-box tfhb-border-box tfhb-m-0 tfhb-align-baseline">
                     <label for="tfhb_continuos_date" class="tfhb-m-0 tfhb-flexbox tfhb-gap-16 tfhb-align-normal">
                         <div class="tfhb-range-checkbox">
@@ -212,17 +212,17 @@ const GetFormsData = async (value) => {
                     :option = "[
                         {'name': 'Contact Form 7', 'value': 'wpcf7' },  
                         {'name': 'Fluent Forms', 'value': 'fluent-forms', disable:  integrations.fluent_status},  
-                        // {'name': 'Forminator Forms', 'value': 'forminator', disable:  integrations.forminator_status},  
-                        {'name': 'Gravity Forms', 'value': 'gravityforms', disable:  integrations.gravity_status},  
+                        {'name': 'Forminator Forms', 'value': 'forminator', disable:  integrations.forminator_status},  
+                        // {'name': 'Gravity Forms', 'value': 'gravityforms', disable:  integrations.gravity_status},  
                     ]"
                     @tfhb-onchange="GetFormsData" 
                     
                 />
               
 
-                <!-- Time format -->
+                <!-- Time format --> 
                <HbDropdown 
-                    v-if = "meeting.questions_form_type != ''"
+                    v-if = "meeting.questions_form_type != '' && ( integrations.forminator_status == false || integrations.cf7_status == false || integrations.fluent_status == false )"
                     v-model="meeting.questions_form"  
                     required= "true" 
                     :label="$tfhb_trans('Select Form')"  
@@ -247,7 +247,7 @@ const GetFormsData = async (value) => {
                         :buttonText="$tfhb_trans('Please Configure')"
                     />  
                 </div>
-                <div  v-if="meeting.questions_form_type == 'gravityforms' && integrations.gravity_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Gravity Forms is not connected.') }} 
+                <div  v-if="meeting.questions_form_type == 'forminator' && integrations.forminator_status == true" class="tfhb-warning-message tfhb-flexbox tfhb-gap-4">  {{ $tfhb_trans('Forminator Forms is not connected.') }} 
                     <HbButton 
                         v-if="$user.role != 'tfhb_host'"
                         classValue="tfhb-btn flex-btn" 

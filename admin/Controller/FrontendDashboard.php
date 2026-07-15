@@ -185,7 +185,7 @@ class FrontendDashboard {
         $data = array(
             'status' => true,
             'settings' => $settings,
-            'message' => 'Settings Updated Successfully'
+            'message' => __( 'Settings Updated Successfully', 'hydra-booking' )
         );
 
         return rest_ensure_response($data);
@@ -211,7 +211,7 @@ class FrontendDashboard {
             // return response
             $data = array(
                 'status' => false,
-                'message' => 'You are not authorized to access this endpoint.'
+                'message' => __( 'You are not authorized to access this endpoint.', 'hydra-booking' )
             );
     
             // log out 
@@ -296,7 +296,7 @@ class FrontendDashboard {
             // return response
             $data = array(
                 'status' => false,
-                'message' => 'You are not authorized to access this endpoint.'
+                'message' => __( 'You are not authorized to access this endpoint.', 'hydra-booking' )
             );
             return rest_ensure_response($data);
         }
@@ -311,7 +311,7 @@ class FrontendDashboard {
         $data = array(
             'status' => true,
             'redirect' => $get_login_page_url,
-            'message' => 'You are logged out successfully.'
+            'message' => __( 'You are logged out successfully.', 'hydra-booking' )
         );
         return rest_ensure_response($data);
      }
@@ -336,7 +336,7 @@ class FrontendDashboard {
             // return response
             $data = array(
                 'status' => false,
-                'message' => 'You are not authorized to access this endpoint.'
+                'message' => __( 'You are not authorized to access this endpoint.', 'hydra-booking' )
             );
             return rest_ensure_response($data);
         }
@@ -348,7 +348,7 @@ class FrontendDashboard {
                 // return response
                 $data = array(
                     'status' => false,
-                    'message' => 'User email already exist.'
+                    'message' => __( 'User email already exist.', 'hydra-booking' )
                 );
                 return rest_ensure_response($data);
             }
@@ -372,13 +372,13 @@ class FrontendDashboard {
         if($hostUpdate['status'] == true){
             $data = array(
                 'status' => true,
-                'message' => 'User profile updated successfully.'
+                'message' => __( 'User profile updated successfully.', 'hydra-booking' )
             );
         }else{
             $data = array(
                 'status' => false,
 
-                'message' => 'User profile updated failed.'
+                'message' => __( 'User profile updated failed.', 'hydra-booking' )
             );
         } 
         return rest_ensure_response($data);

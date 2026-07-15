@@ -22,6 +22,7 @@ import { toast } from "vue3-toastify";
 import { BookTemplateIcon } from 'lucide-vue-next';
 
 const sharePopup = ref(false)
+const meeting_url_generation = typeof tfhb_core_apps !== 'undefined' ? (tfhb_core_apps.meeting_url_generation ?? 1) : 1;
 
 const props = defineProps({
     setupWizard : {
@@ -48,7 +49,7 @@ const ShareTabs = (tab) => {
 
 const sharePopupData = (data) => {
 
-    shareData.share_type = 'link'
+    shareData.share_type = meeting_url_generation == 0 ? 'short' : 'link'
     shareData.title = data.title
     shareData.time = data.duration
     shareData.meeting_type = data.meeting_type
@@ -233,7 +234,7 @@ window.addEventListener('click', function(e) {
                         </div>
                     </div>
                     <div class="single-meeting-action-btn tfhb-flexbox tfhb-justify-between">
-                        <a :href="setupWizard.data.meeting.permalink" class="tfhb-flexbox" target="_blank">
+                        <a :href="meeting_url_generation != 0 ? setupWizard.data.meeting.permalink : setupWizard.data.meeting.preview_link" class="tfhb-flexbox" target="_blank">
                             <Icon name="Eye" size=20 /> 
                             {{ $tfhb_trans('Preview') }}
                         </a>
@@ -290,7 +291,11 @@ window.addEventListener('click', function(e) {
 
                             <div class="tfhb-share-type tfhb-full-width">
                                 <ul class="tfhb-flexbox tfhb-gap-8">
-                                    <li :class="'link'==shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
+                                    <li
+                                        :class="['link'==shareData.share_type ? 'active' : '', meeting_url_generation == 0 ? 'tfhb-disabled' : '']"
+                                        :style="meeting_url_generation == 0 ? 'opacity:0.4; cursor:not-allowed; pointer-events:none;' : ''"
+                                        @click="meeting_url_generation != 0 && ShareTabs('link')"
+                                    >{{ $tfhb_trans('Share link') }}</li>
                                     <li :class="'short'==shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Shortcode') }}</li>
                                     <li :class="'embed'==shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">Embed code</li>
                                 </ul>

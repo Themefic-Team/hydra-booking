@@ -74,7 +74,7 @@ const UpdateHostsInformation = async (validator_field) => {
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
                     position: 'bottom-right', // Set the desired position
                     "autoClose": 1500,
                 });

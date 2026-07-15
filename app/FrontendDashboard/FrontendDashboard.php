@@ -10,6 +10,9 @@ use HydraBooking\Admin\Controller\Enqueue;
 use HydraBooking\FdDashboard\Shortcode\Signup;
 use HydraBooking\FdDashboard\Shortcode\Login;
 use HydraBooking\Admin\Controller\licenseController;
+
+use HydraBooking\Hooks\Mailer;
+
 /**
  * Frontend Dashboard Class
  * 
@@ -198,33 +201,32 @@ class FrontendDashboard {
                 // if user found then send email with reset password link
                 $user_id = $user->ID;
                 $user_email = $user->user_email;
+                // current user 
 
                 $reset_password_key = get_password_reset_key( $user );
                 $string = array( 'email' =>  $user_email, 'code' => $reset_password_key );
 
                 $link = get_site_url() . '/?hydra-booking=forgot-password&tfhb_verification=' . base64_encode( json_encode( $string ) );
 
-              
-                $subject = esc_html__( 'Password Reset Request', 'hydra-booking' );
+                $subject = '' . esc_html__( 'Password Reset Request', 'hydra-booking' ) . '';
 
-                $message =  '<p>' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $user->first_name . ' ' . $user->last_name . '</p>';
+                $_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+                $admin_email = isset($_tfhb_general_settings['admin_email']) && !empty($_tfhb_general_settings['admin_email']) && $_tfhb_general_settings['admin_email'] != '{{wp.admin_email}}' ? sanitize_email($_tfhb_general_settings['admin_email']) : get_bloginfo( 'admin_email' );
+    
 
-                $message .= '<p>' . esc_html__( 'You have requested to reset your password.', 'hydra-booking' ) . '</p>';
-
-                $message .='<p>' . esc_html__( 'Please click the link below to reset your password:', 'hydra-booking' ) . '</p>';
-
-                $message .= '<p><a href="' . $link . '">' . $link . '</a></p>';
-
-                $message .= '<p>' . esc_html__( 'If you did not request this, please ignore this email.', 'hydra-booking' ) . '</p>';
-
-                $message .= '<p>' . esc_html__( 'Thank you', 'hydra-booking' ) . '</p>';
-
-                $message .= '<p>' . esc_html__( 'Hydra Booking', 'hydra-booking' ) . '</p>';
-
-                $headers = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>' . "\r\n";
+                $headers = 'From: ' . get_bloginfo( 'name' ) . ' <' . $admin_email . '>' . "\r\n";
                 $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
-                if ( wp_mail( $user_email, $subject, $message, $headers ) ) {
+                $body = Mailer::mail_body_template([
+                    'recipient_name' => '' . esc_html__( 'Hi', 'hydra-booking' ) . ' ' . $user->first_name . ' ' . $user->last_name . '',
+                    'title'          => esc_html__( 'You have requested to reset your password.', 'hydra-booking' ),
+                    'body_content'   => '<p><a target="_blank" href="' . $link . '" style="display:inline-block;padding:10px 20px;background-color:#273F2B;color:#fff;text-decoration:none;border-radius:5px;">' . esc_html__( 'Reset Password', 'hydra-booking' ) . '</a></p> ',
+                    'brand_name'     => get_bloginfo( 'name' ),
+                    'footer_text'    => esc_html__( 'This is an automated email from ' . get_bloginfo( 'name' ) . ', please do not reply.', 'hydra-booking' ),
+                ]);
+                 
+
+                if ( wp_mail( $user_email, $subject, $body, $headers ) ) {
                     $response['success'] = true;
                     $response['message'] = esc_html__( 'Password reset link sent to your email.', 'hydra-booking' );
                 }
@@ -249,72 +251,87 @@ class FrontendDashboard {
      */
 
      public function tfhb_reset_password_callback(){
-         
-        $response = [
+         $response = [
             'success' => false,
         ]; 
         $required_fields = array( 'tfhb_password', 'tfhb_confirm_password' );
         $field = [];
         foreach ( $_POST as $key => $value ) {
             $field[ $key ] = sanitize_text_field( $value );
-        } 
-        
-        $data = base64_decode($field['code']);
-        $data = json_decode($data, true); 
+        }
 
         $frontend_dashboard_settings = get_option('_tfhb_frontend_dashboard_settings');
         $settings = !empty($frontend_dashboard_settings) ? $frontend_dashboard_settings : array();
         $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['login']['login_page']) ? $settings['login']['login_page'] :  get_option( 'tfhb_login_page_id' );
- 
 
+        // Nonce check
         if ( ! isset( $field['tfhb_reset_password_nonce'] ) || ! wp_verify_nonce( $field['tfhb_reset_password_nonce'], 'tfhb_check_reset_password_nonce' ) ) {
             $response['message'] = esc_html__( 'Sorry, your nonce did not verify.', 'hydra-booking' );
-        } else {
-            foreach ( $required_fields as $required_field ) {
-                if ( $required_field === 'tfhb_password' ) {
-                    if ( empty( $field[ $required_field ] ) ) {
-                        $response['fieldErrors'][ $required_field] = esc_html__( 'Please enter your password', 'hydra-booking' );
-                    } elseif ( ! preg_match( '@[A-Z]@', $field['tfhb_password'] ) ) {
-                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one uppercase letter', 'hydra-booking' );
-                    } elseif ( ! preg_match( '@[0-9]@', $field['tfhb_password'] ) ) {
-                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one number', 'hydra-booking' );
-                    } elseif ( ! preg_match( '@[^\w]@', $field['tfhb_password'] ) ) {
-                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one special character', 'hydra-booking' );
-                    } elseif ( strlen( $field['tfhb_password'] ) < 8 ) {
-                        $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be at least 8 characters', 'hydra-booking' );
-                    }
-                } elseif ( $required_field === 'tfhb_confirm_password' ) {
-                    if ( empty( $field[ $required_field ] ) ) {
-                        $response['fieldErrors'][ $required_field] = esc_html__( 'Please re-enter your password', 'hydra-booking' );
-                    } elseif ( $field['tfhb_password'] !== $field['tfhb_confirm_password'] ) {
-                        $response['fieldErrors'][ $required_field] = esc_html__( 'Passwords doesn\'t match', 'hydra-booking' );
-                    }
-                } elseif ( empty( $field[ $required_field ] ) ) {
-                    $response['fieldErrors'][ $required_field] = esc_html__( 'The field is required', 'hydra-booking' );
-                }
-            }
+            wp_send_json( $response );
+            die();
         }
 
+        // Validate reset key and user
+        if ( empty( $field['code'] ) ) {
+            $response['message'] = esc_html__( 'Invalid reset code.', 'hydra-booking' );
+            wp_send_json( $response );
+            die();
+        } 
+        // decode base 64 and json
+        $data = base64_decode($field['code']);
+        $data = json_decode($data, true);  
+         
+        $check = check_password_reset_key( $data['code'] , $data['email'] );
+        if ( is_wp_error( $check ) ) {
+            $response['message'] = $check->get_error_message();
+            wp_send_json( $response );
+            die();
+        }
+        $user = $check; // $check is a WP_User object
+
+        // Authorization: Only allow the user themselves to reset their password if logged in
+        if ( is_user_logged_in() && get_current_user_id() !== $user->ID ) { 
+            $response['message'] = esc_html__( 'Unauthorized', 'hydra-booking' );
+            wp_send_json( $response );
+            die();
+        }
+
+        // Validate password fields
+        foreach ( $required_fields as $required_field ) {
+            if ( $required_field === 'tfhb_password' ) {
+                if ( empty( $field[ $required_field ] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Please enter your password', 'hydra-booking' );
+                } elseif ( ! preg_match( '@[A-Z]@', $field['tfhb_password'] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one uppercase letter', 'hydra-booking' );
+                } elseif ( ! preg_match( '@[0-9]@', $field['tfhb_password'] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one number', 'hydra-booking' );
+                } elseif ( ! preg_match( '@[^\\w]@', $field['tfhb_password'] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be include at least one special character', 'hydra-booking' );
+                } elseif ( strlen( $field['tfhb_password'] ) < 8 ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Password must be at least 8 characters', 'hydra-booking' );
+                }
+            } elseif ( $required_field === 'tfhb_confirm_password' ) {
+                if ( empty( $field[ $required_field ] ) ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Please re-enter your password', 'hydra-booking' );
+                } elseif ( $field['tfhb_password'] !== $field['tfhb_confirm_password'] ) {
+                    $response['fieldErrors'][ $required_field] = esc_html__( 'Passwords doesn\'t match', 'hydra-booking' );
+                }
+            } elseif ( empty( $field[ $required_field ] ) ) {
+                $response['fieldErrors'][ $required_field] = esc_html__( 'The field is required', 'hydra-booking' );
+            }
+        }
 
         // Change password
         if ( empty( $response['fieldErrors'] ) ) {
-            $user = get_user_by( 'email', $data['email'] );
-            if ( $user ) {
-                
-                reset_password( $user, $field['tfhb_password'] );
-                $response['success'] = true;
-               $response['message'] = sprintf(
-                    __( 'Password changed successfully. You can <a href="%s">login here</a>.', 'hydra-booking' ),
-                    get_permalink( $login_page_id )
-               );
-            } else {
-                $response['message'] = esc_html__( 'User not found', 'hydra-booking' );
-            }
+            reset_password( $user, $field['tfhb_password'] );
+            $response['success'] = true;
+            $response['message'] = sprintf(
+                __( 'Password changed successfully. You can <a href="%s">login here</a>.', 'hydra-booking' ),
+                get_permalink( $login_page_id )
+            );
         }
 
-
         wp_send_json( $response );
-
         die();
      }
 
@@ -503,7 +520,7 @@ class FrontendDashboard {
 
         
 
-        if(in_array($current_user->roles[0], $admin_roles)){ 
+        if(!empty($current_user->roles) && in_array($current_user->roles[0], $admin_roles)){ 
             // Allow AJAX requests
             if (defined('DOING_AJAX') && DOING_AJAX) {
                 return; 

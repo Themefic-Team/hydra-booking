@@ -7,7 +7,9 @@ import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify";
 import { LicenseBase } from '@/store/license'; 
 import useValidators from '@/store/validator'
+import useDateFormat from '@/store/dateformat'
 const { errors, isEmpty } = useValidators();
+const { Tfhb_Date } = useDateFormat();
 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 // import Form Field   
@@ -52,7 +54,7 @@ const updateLicense = async (validator_field) => {
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         }); 
@@ -61,7 +63,7 @@ const updateLicense = async (validator_field) => {
 
     // if LicenseBase.license_email is not email address then return
     if(LicenseBase.license_email && !LicenseBase.license_email.includes('@')){
-        toast.error(' Please enter a valid email address', {
+        toast.error((tfhb_core_apps.trans['Please enter a valid email address'] || 'Please enter a valid email address'), {
             position: 'bottom-right', // Set the desired position
             "autoClose": 1500,
         });
@@ -182,7 +184,7 @@ const upgradeToPro = async (key) => {
                 <li>
                     <div>
                         <span class="el-license-info-title">{{ $tfhb_trans('License Expired on') }}</span>
-                        {{ LicenseBase.LicenseData.expire_date }} 
+                        {{ Tfhb_Date(LicenseBase.LicenseData.expire_date) }} 
                     
                         
                     </div>
@@ -191,7 +193,7 @@ const upgradeToPro = async (key) => {
                 <li>
                     <div>
                         <span class="el-license-info-title">{{ $tfhb_trans('Support Expired on') }}</span>
-                        {{ LicenseBase.LicenseData.support_end }}
+                        {{ Tfhb_Date(LicenseBase.LicenseData.support_end) }}
                     </div>
                 </li>
                     <li>

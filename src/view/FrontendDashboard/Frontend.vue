@@ -57,6 +57,7 @@ onBeforeMount(() => {
 <style scoped>
 .tfhb-frontend-dashboard { 
   height: 100vh; 
+  flex-wrap: nowrap;
 }
 
 .tfhb-frontend-sidebar {

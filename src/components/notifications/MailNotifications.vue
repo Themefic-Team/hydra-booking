@@ -2,9 +2,10 @@
 import { __ } from '@wordpress/i18n'; 
 // Use children routes for the tabs 
 import { ref, reactive, watch, computed, nextTick } from 'vue';
-import { useRoute} from 'vue-router' 
+import { useRoute} from 'vue-router'
+import axios from 'axios'
 import Icon from '@/components/icon/LucideIcon.vue'
-import { toast } from "vue3-toastify"; 
+import { toast } from "vue3-toastify";
 import { useDragAndDrop } from "vue-fluid-dnd";
 
 
@@ -22,17 +23,70 @@ const skeleton = ref(false);
 const route = useRoute();
 
 const props = defineProps([
-    'title', 
-    'label', 
+    'title',
+    'label',
     'data',
     'ispopup',
     'update_preloader',
     'isSingle',
     'categoryKey',
     'emailKey',
-    'mediaurl'
+    'mediaurl',
+    'locked',
+    'recipient',
+    'notificationType',
+    'allowGlobalSync'
 ])
 const emit = defineEmits(['update-notification', 'popup-open-control', 'popup-close-control']);
+
+const syncConfirmPopup = ref(false);
+const syncing = ref(false);
+
+const MIN_SYNC_LOADER_MS = 1000;
+
+const syncWithGlobalSettings = async () => {
+    syncing.value = true;
+    const startedAt = Date.now();
+    let synced = false;
+
+    try {
+        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/notification', {
+            headers: {
+                'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+            }
+        });
+
+        const globalEntry = response?.data?.notification_settings?.[props.recipient]?.[props.notificationType];
+
+        if (response.data.status && globalEntry) {
+            Object.assign(props.data, JSON.parse(JSON.stringify(globalEntry)));
+            emit('update-notification');
+            synced = true;
+        }
+    } catch (error) {
+        synced = false;
+    }
+
+    // Keep the loader visible for at least MIN_SYNC_LOADER_MS, even if the request was faster.
+    const remaining = MIN_SYNC_LOADER_MS - (Date.now() - startedAt);
+    if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+    }
+
+    if (synced) {
+        toast.success((tfhb_core_apps.trans['Synced with Global Settings'] || 'Synced with Global Settings'), {
+            position: 'bottom-right',
+            autoClose: 1500,
+        });
+    } else {
+        toast.error((tfhb_core_apps.trans['Action successful'] || 'Action successful'), {
+            position: 'bottom-right',
+        });
+    }
+
+    syncing.value = false;
+    syncConfirmPopup.value = false;
+};
 
 const meetingShortcode = ref([
     '{{meeting.title}}',
@@ -82,6 +136,7 @@ const contentVisibility = reactive({
         cancel: false,
         reschedule: false
     },
+    add_to_calendar: false,
     footer: {
         main: false,
         description: false,
@@ -190,6 +245,25 @@ const defaultEmailBuilder = ref([
                 status: 1,
                 content: '{{booking.rescheduled_link}}'
             },
+        }
+    },
+    {
+        id: 'add_to_calendar',
+        order: 5,
+        status: 1,
+        title: 'Add to Calendar',
+        border_color: '#C0D8C4',
+        content: {
+            description: {
+                status: 1,
+                content: 'Add to calendar'
+
+            },
+            list: {
+                status: 1,
+                content: '<div><a style="margin-right: 8px;" href="{{booking.add_to_calendar.google}}" target="_blank"><img  style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/g-calendar.png" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.outlook}}" target="_blank"><img style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/outlook-icon.png" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.yahoo}}" target="_blank"><img style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/yahoo-icon.png" alt="icon" /></a><a style="margin-right: 8px;" href="{{booking.add_to_calendar.other}}" target="_blank"><img style="height: 20px; width: 20px;" src="${props.mediaurl}/assets/app/images/other-calendar.png" alt="icon" /></a></div>'
+                
+            }, 
         }
     },
     {
@@ -463,6 +537,16 @@ const emailTemplate = computed(() => {
                 }
             emailContent += `</table></td></tr></table>`;
         }
+        if (section.status && section.id === 'add_to_calendar') { 
+           emailContent += `<table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="padding-bottom: 16px;width: 100%; max-width: 600px; margin: 0 auto;" ><tr><td><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-bottom: 1px dashed ${emailBuilder.value[key].border_color}; padding: 0 32px; width: 100%; max-width: 600px; margin: 0 auto;">`;
+            emailContent += ` <tr>
+                <td style="font-size: 15px;padding: 8px 0 12px 0; text-align: center;">${emailBuilder.value[key].content.description.content}</td>  
+            </tr>`;
+            emailContent += ` <tr>
+                <td style="font-size: 15px;padding: 8px 0 8px 0; text-align: center;">${emailBuilder.value[key].content.list.content}</td>  
+            </tr>`;
+            emailContent += `</table></td></tr></table>`;
+        }
 
         if (section.status && section.id === 'footer') {
             emailContent += `<tr>
@@ -569,7 +653,7 @@ const addSocial = () => {
   }
 };
 
-const closePopup = () => { 
+const closePopup = () => {
     emit('popup-close-control', false)
 }
 </script>
@@ -578,22 +662,33 @@ const closePopup = () => {
     <!-- {{ data }} -->
     <!-- Single Notification  -->
     <div class="tfhb-notification-single tfhb-flexbox tfhb-justify-between">
-        <div class="tfhb-swicher-wrap  tfhb-flexbox"> 
+        <div class="tfhb-swicher-wrap  tfhb-flexbox">
 
             <!-- Checkbox swicher -->
-            <HbSwitch v-model="props.data.status"  @change="emit('update-notification')"  :label="props.label "  /> 
+            <HbSwitch v-model="props.data.status"  @change="emit('update-notification')"  :label="props.label " :disabled="!!locked"  />
 
         </div>
+
         <router-link v-if="isSingle" class="tfhb-btn tfhb-edit flex-btn" :to="{ name: 'EmailTemplateSingle', params: { id: emailKey, type: categoryKey } }">
             <Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }}
         </router-link>
-        <button v-else class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }} </button>
+        <button v-else-if="!locked" class="tfhb-btn tfhb-edit flex-btn" @click="emit('popup-open-control')" ><Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }} </button>
+        <span v-else class="tfhb-btn tfhb-edit flex-btn" style="opacity: 0.5; pointer-events: none;"><Icon name="PencilLine" size=15 /> {{ $tfhb_trans('Edit') }} </span>
 
-        
+
         <HbPopup :isOpen="ispopup" @modal-close="closePopup" max_width="700px" name="first-modal">
-            <template #header> 
-                <h3>{{ title }}</h3>
-                
+            <template #header>
+                <div class="tfhb-flexbox tfhb-justify-between tfhb-align-center tfhb-full-width">
+                    <h3 class="tfhb-m-0">{{ title }}</h3>
+                    <button
+                        v-if="allowGlobalSync"
+                        type="button"
+                        class="tfhb-btn tfhb-edit flex-btn"
+                        @click="syncConfirmPopup = true"
+                    >
+                        <Icon name="RefreshCw" size=15 /> {{ $tfhb_trans('Sync with Global Settings') }}
+                    </button>
+                </div>
             </template>
 
             <template #content>
@@ -906,8 +1001,24 @@ const closePopup = () => {
 
              </template> 
         </HbPopup>
+
+        <HbPopup :isOpen="syncConfirmPopup" @modal-close="syncConfirmPopup = false" max_width="460px" name="sync-confirm-modal">
+            <template #header></template>
+            <template #content>
+                <div class="tfhb-closing-confirmation-pupup tfhb-flexbox tfhb-gap-24">
+                    <div class="tfhb-close-content">
+                        <h3>{{ $tfhb_trans('Sync this template with Global Settings?') }}</h3>
+                        <p>{{ $tfhb_trans('This replaces the From, Subject, and Body below with the template currently saved in Settings > Notifications. Save afterwards to keep it.') }}</p>
+                    </div>
+                    <div class="tfhb-close-btn tfhb-flexbox tfhb-gap-16">
+                        <HbButton classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" @click="syncConfirmPopup = false" :buttonText="$tfhb_trans('No')" :disabled="syncing" />
+                        <HbButton classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" @click="syncWithGlobalSettings" :buttonText="$tfhb_trans('Yes, Sync')" icon="RefreshCw" :pre_loader="syncing" />
+                    </div>
+                </div>
+            </template>
+        </HbPopup>
     </div>
     <!-- Single Integrations  -->
 
- 
+
 </template>

@@ -205,7 +205,7 @@ class SetupWizard {
 			update_user_meta( $user_id, '_tfhb_host', $data );
 
 			// Hosts Lists
-			$host_data = $host->get( $user_id );
+			$host_data = $host->getHostByUserId( $user_id );
 
 		}
 
@@ -297,8 +297,9 @@ class SetupWizard {
 		// meetings Lists
 		$meeting = $meeting->get( $meetings_id );
 
-		// Get Meeting Permalink 
-		$meeting->permalink = get_permalink( $meeting_post_id );
+		// Get Meeting Permalink and Preview Link
+		$meeting->permalink    = get_permalink( $meeting_post_id );
+		$meeting->preview_link = get_preview_post_link( $meeting_post_id );
 		
 		return $meeting;
 	}

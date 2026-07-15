@@ -49,11 +49,11 @@ const questions_data =  reactive({});
                 :label="$tfhb_trans('Allow host to manage custom availability settings.')"
                 name="tfhb_manage_custom_availability"
             /> 
-            <HbCheckbox 
+            <!-- <HbCheckbox 
                 v-model="hostsSettings.permission.tfhb_manage_integrations"
                 :label="$tfhb_trans('Allow host to manage integrations and external services.')"
                 name="tfhb_manage_integrations"
-            /> 
+            />  -->
         </div>
         
 </template>

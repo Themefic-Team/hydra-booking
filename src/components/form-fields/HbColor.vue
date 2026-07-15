@@ -40,7 +40,7 @@ const localColor = ref(props.modelValue)
 </script>
 
 <template>
-  <div class="tfhb-single-form-field" :class="name" 
+  <div class="tfhb-single-form-field" :class="name"  :id="key"
       :style="{ 'width':  width ? 'calc('+(width || 100)+'% - 12px)' : '100%' }" 
     >
     <div class="tfhb-single-form-field-wrap ">
@@ -70,10 +70,11 @@ const localColor = ref(props.modelValue)
                 <LvColorpicker 
                   :value="localColor" 
                   @input="emit('update:modelValue', $event)"  
-                  :key="props.key"    
+                  :key="key"    
                   :withoutInput="true"
                   
                 />
+
                 <span v-if="placeholder">{{ placeholder }}</span>
                 <span v-else>{{ $tfhb_trans('Select Color') }}</span>
             </div>

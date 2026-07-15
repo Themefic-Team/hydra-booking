@@ -31,8 +31,7 @@ const GettingStart = () => {
             <p>{{ $tfhb_trans('Thank you for choosing HydraBooking, the premier solution for effortless appointment and booking scheduling') }}</p>
         </div>
         <div class="tfhb-s-w-getting-email">
-
-             <!-- Custom Duration -->
+ 
              <HbText  
                 v-model="props.setupWizard.data.email"  
                 :label="$tfhb_trans('Email')"  
@@ -40,8 +39,7 @@ const GettingStart = () => {
                 type="email"
                 selected = "1"
                 :placeholder="$tfhb_trans('Enter your email')"  
-            /> 
-             <!-- Custom Duration -->
+            />  
             <div class="tfhb-recevie-updates">
                     <HbCheckbox 
                     v-model="props.setupWizard.data.enable_recevie_updates"  

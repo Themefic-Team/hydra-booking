@@ -11,6 +11,8 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
 import ZohoIntegrations from '@/components/hosts/ZohoIntegrations.vue';
 import MailchimpIntegrations from '@/components/integrations/MailchimpIntegrations.vue'; 
+import AWeberIntegrations from '@/components/integrations/AWeberIntegrations.vue'; 
+import HubspotIntegrations from '@/components/integrations/HubspotIntegrations.vue'; 
 import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
 import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
 import SlackIntegration from '@/components/integrations/SlackIntegrations.vue'
@@ -42,9 +44,11 @@ const paypalpopup = ref(false);
 const spopup = ref(false);
 const zohopopup = ref(false);
 const mailpopup = ref(false);
+const aweberpopup = ref(false);
 const telepopup = ref(false);
 const twpopup = ref(false);
 const skpopup = ref(false);
+const hubspotpopup = ref(false);
 const isPopupOpen = () => {
     popup.value = true;
 }
@@ -75,12 +79,26 @@ const isskPopupOpen = () => {
 const isskPopupClose = (data) => {
     skpopup.value = false;
 }
+const ishubspotPopupOpen = () => {
+    hubspotpopup.value = true;
+}
+const isHubspotPopupClose = (data) => {
+    hubspotpopup.value = false;
+}
 const ismailchimpPopupOpen = () => {
     mailpopup.value = true;
 }
+
 const ismailchimpPopupClose = (data) => {
     mailpopup.value = false;
+} 
+const isAWeberPopupOpen = () => {
+    aweberpopup.value = true;
 }
+const isAWeberPopupClose = (data) => {
+    aweberpopup.value = false;
+}
+
 
 
 const Integration = reactive( {
@@ -104,7 +122,8 @@ const Integration = reactive( {
         connection_status: 0, 
         selected_calendar_id: '', 
         tfhb_google_calendar: {},
-
+        two_way_sync: 0,
+        sync_interval: 15,
     },
     outlook_calendar : {
         type: 'meeting', 
@@ -112,6 +131,8 @@ const Integration = reactive( {
         connection_status: 0, 
         selected_calendar_id: '', 
         tfhb_outlook_calendar: {},
+        two_way_sync: 0,
+        sync_interval: 15,
 
     },
     apple_calendar : {
@@ -127,6 +148,14 @@ const Integration = reactive( {
         status: 0, 
         connection_status: 0, 
         key: ''
+    },
+    aweber : {
+        type: 'aweber', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: 0, 
+        redirect_url: '', 
+        auth_data: [], 
     },
     zoho : {
         type: 'zoho', 
@@ -161,6 +190,14 @@ const Integration = reactive( {
         connection_status: 0, 
         endpoint: '',
     },
+    hubspot : {
+        type: 'hubspot', 
+        status: 0, 
+        connection_status: 0, 
+        authorize_url: '', 
+        redirect_url: '', 
+        auth_data: [],
+    },
 });
  
 
@@ -179,16 +216,18 @@ const fetchIntegration = async () => {
             } 
         } );
 
-        if (response.data.status) {   
+        if (response.data.status) {    
             Integration.zoom_meeting= response.data.zoom_meeting ? response.data.zoom_meeting : Integration.zoom_meeting;
             Integration.google_calendar= response.data.google_calendar ? response.data.google_calendar : Integration.google_calendar;  
             Integration.outlook_calendar = response.data.outlook_calendar  ? response.data.outlook_calendar  : Integration.outlook_calendar ;  
             Integration.apple_calendar = response.data.apple_calendar  ? response.data.apple_calendar  : Integration.apple_calendar ;  
             Integration.mailchimp = response.data.mailchimp  ? response.data.mailchimp  : Integration.mailchimp ;  
+            Integration.aweber = response.data.aweber  ? response.data.aweber  : Integration.aweber ;   
             Integration.zoho = response.data.zoho  ? response.data.zoho  : Integration.zoho ; 
             Integration.telegram = response.data.telegram  ? response.data.telegram  : Integration.telegram ; 
             Integration.twilio = response.data.twilio  ? response.data.twilio  : Integration.twilio ; 
             Integration.slack = response.data.slack  ? response.data.slack  : Integration.slack ; 
+            Integration.hubspot = response.data.hubspot  ? response.data.hubspot  : Integration.hubspot ; 
             
 
             skeleton.value = false;
@@ -229,6 +268,7 @@ const UpdateIntegration = async (key, value) => {
             mailpopup.value = false;
             zohopopup.value = false;
             skpopup.value = false;
+            hubspotpopup.value = false;
         }else{
             toast.error(response.data.message, {
                 position: 'bottom-right', // Set the desired position
@@ -277,14 +317,36 @@ onBeforeMount(() => {
 
         <!-- Mailchimp intrigation -->
         <MailchimpIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
-        :mail_data="Integration.mailchimp" 
-        @update-integrations="UpdateIntegration" 
-        from="host"
-        :ispopup="mailpopup"
-        @popup-open-control="ismailchimpPopupOpen"
-        @popup-close-control="ismailchimpPopupClose" 
+            :mail_data="Integration.mailchimp" 
+            @update-integrations="UpdateIntegration" 
+            from="host"
+            :ispopup="mailpopup"
+            @popup-open-control="ismailchimpPopupOpen"
+            @popup-close-control="ismailchimpPopupClose" 
         />
         <!-- Mailchimp intrigation -->
+
+        <!-- AWeber intrigation -->
+        <AWeberIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+            :aweber_data="Integration.aweber" 
+            @update-integrations="UpdateIntegration" 
+            from="host"
+            :ispopup="aweberpopup"
+            @popup-open-control="isAWeberPopupOpen"
+            @popup-close-control="isAWeberPopupClose" 
+        />
+        <!-- AWeber intrigation -->
+
+        <!-- Hubspot intrigation -->
+        <HubspotIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+            :hubspot_data="Integration.hubspot" 
+            @update-integrations="UpdateIntegration" 
+            from="host"
+            :ispopup="hubspotpopup"
+            @popup-open-control="ishubspotPopupOpen"
+            @popup-close-control="isHubspotPopupClose" 
+        />
+        <!-- Hubspot intrigation -->
 
         <!-- Zoho intrigation -->
         <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  

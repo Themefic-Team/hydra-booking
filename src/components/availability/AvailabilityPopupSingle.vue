@@ -14,7 +14,9 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import AvailabilityTime from '@/store/times'
 import { toast } from "vue3-toastify"; 
 import useValidators from '@/store/validator'
+import useDateFormat from '@/store/dateformat'
 const { errors, isEmpty } = useValidators();
+const { Tfhb_Date } = useDateFormat();
  
 
 const props = defineProps({
@@ -57,7 +59,7 @@ const UpdateAvailabilitySettings = async (validator_field) => {
     // Errors Checked
     const isEmpty = Object.keys(errors).length === 0;
     if(!isEmpty){ 
-        toast.error('Fill Up The Required Fields', {
+        toast.error((tfhb_core_apps.trans['Fill Up The Required Fields'] || 'Fill Up The Required Fields'), {
             position: 'bottom-right', // Set the desired position
         }); 
         return
@@ -239,7 +241,7 @@ const TfhbStartDataEvent = (key, skey, startTime) => {
     const latestEndTime = getLatestEndTime(day); 
 
     if (startTime >= latestEndTime) {
-        toast.error("Your start time will be over the: " + latestEndTime, {
+        toast.error((tfhb_core_apps.trans['Your start time will be over the: '] || 'Your start time will be over the: ') + latestEndTime, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -254,7 +256,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
 
     if(NextdayData){
         if ( day.times[skey].start >= endTime || NextdayData <= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start +" And Less than " + NextdayData, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start + (tfhb_core_apps.trans[' And Less than '] || ' And Less than ') + NextdayData, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -262,7 +264,7 @@ const TfhbEndDataEvent = (key, skey, endTime) => {
         }
     }else{
         if (day.times[skey].start >= endTime) {
-            toast.error("Your End time will be over the: " + day.times[[skey]].start, {
+            toast.error((tfhb_core_apps.trans['Your End time will be over the: '] || 'Your End time will be over the: ') + day.times[[skey]].start, {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -416,7 +418,7 @@ const filteredDateSlots = computed(() => {
                         <div class="tfhb-admin-card-box tfhb-m-0 tfhb-full-width" v-for="(date_slot, key) in filteredDateSlots" :key="key">
                             <div class="tfhb-flexbox">
                                 <div class="tfhb-overrides-date">
-                                    <h4>{{ date_slot.date }}</h4>
+                                    <h4>{{ Tfhb_Date(date_slot.date) }}</h4>
                                     <p class="tfhb-m-0">{{ date_slot.available!=1 ? formatTimeSlots(date_slot.times) : 'Unavailable' }}</p>
                                 </div>
                                 <div class="tfhb-overrides-action tfhb-flexbox tfhb-gap-16 tfhb-justify-normal">

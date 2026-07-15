@@ -5,8 +5,10 @@ import { useRouter, RouterView,} from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
 
 // import Form Field  
+import HbSelect from '@/components/form-fields/HbSelect.vue' 
 import HbPopup from '@/components/widgets/HbPopup.vue';  
 import HbRadio from '@/components/form-fields/HbRadio.vue';
+import HbSwitch from '@/components/form-fields/HbSwitch.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 const outlookCalPopup = ref(false);
 
@@ -20,9 +22,17 @@ const props = defineProps([
 const emit = defineEmits([ "update-integrations", ]);  
 
 const storedOptionData = (data) => {
+    // if data is undefined
+    if(data == undefined){
+        return [];
+    }
     let options = [];
     // data suild be array single array
     data.forEach((item, index) => {  
+        // fist item id auto selected
+        if(index == 0 && props.outlook_calendar.selected_calendar_id == ''){
+            props.outlook_calendar.selected_calendar_id =  props.outlook_calendar.tfhb_outlook_calendar.email || item.id;
+        }
         options.push({
             value: item.id,
             label: item.title,
@@ -36,8 +46,14 @@ const disconnectIntegration = () => {
 
     props.outlook_calendar.tfhb_outlook_calendar  = undefined;
     props.outlook_calendar.selected_calendar_id  = '';
+    props.outlook_calendar.two_way_sync = 0;
+    props.outlook_calendar.sync_interval = 15;
     outlookCalPopup.value = false;
     emit('update-integrations', 'outlook_calendar', props.outlook_calendar);
+}
+const updateOutlookCalendarSettings = () => {
+    emit('update-integrations', 'outlook_calendar', props.outlook_calendar);
+    outlookCalPopup.value = false;
 }
 </script>
  
@@ -86,7 +102,7 @@ const disconnectIntegration = () => {
             <template #content>  
                 <p>
                     {{ $tfhb_trans('Enable the calendars you want to check for conflicts to prevent double bookings.') }}
-                </p> 
+                </p>  
                 <div class="tfhb-admin-card-box tfhb-flexbox  tfhb-gap-16  tfhb-m-0"  >   
                   
                     <HbRadio 
@@ -97,9 +113,35 @@ const disconnectIntegration = () => {
                         :options="storedOptionData(outlook_calendar.tfhb_outlook_calendar.items)"
                     />  
                 </div> 
+                <div class="tfhb-two-way-sync tfhb-full-width tfhb-mt-16 tfhb-mb-16">
+                    <HbSwitch  
+                        v-model="outlook_calendar.two_way_sync"  
+                        name="host_two_way_sync"
+                        :label="$tfhb_trans('Enable Two-Way Sync')"   
+                    /> 
+                    <div v-if="outlook_calendar.two_way_sync == 1" class="tfhb-sync-interval tfhb-mt-16">
+                        <HbSelect
+                            v-model="outlook_calendar.sync_interval"
+                            name="host_sync_interval"
+                            :label="$tfhb_trans('Checking Time (Sync Interval)')"
+                            :placeholder="$tfhb_trans('Select Sync Interval')"
+                            :option="{
+                                '5': $tfhb_trans('Every 5 Minutes'),
+                                '10': $tfhb_trans('Every 10 Minutes'),
+                                '15': $tfhb_trans('Every 15 Minutes'),
+                                '30': $tfhb_trans('Every 30 Minutes'),
+                                '60': $tfhb_trans('Every 1 Hour'),
+                                '360': $tfhb_trans('Every 6 Hours'),
+                                '720': $tfhb_trans('Every 12 Hours'),
+                                '1440': $tfhb_trans('Every 24 Hours')
+                            }"
+                        
+                        />
+                    </div>
+                </div> 
                 <div class="tfhb-submission-btn tfhb-mt-8 tfhb-mb-8 tfhb-flexbox tfhb-gap-8">
                     <HbButton  
-                         @click.stop="emit('update-integrations', 'outlook_calendar', outlook_calendar)"
+                         @click.stop="updateOutlookCalendarSettings()"
                         classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"  
                         :buttonText="'Update Host Settings' "
                         icon="ChevronRight" 
@@ -107,7 +149,7 @@ const disconnectIntegration = () => {
                         :hover_animation="true"  
                     />   
                     <HbButton  
-                        v-if="outlook_calendar.tfhb_outlook_calendar.email !== undefined && outlook_calendar.tfhb_outlook_calendar.email.length != 0"
+                        v-if="outlook_calendar.tfhb_outlook_calendar.items !== undefined && outlook_calendar.tfhb_outlook_calendar.items.length != 0"
                          @click.stop="disconnectIntegration()"
                         classValue="tfhb-btn boxed-btn-danger tfhb-flexbox tfhb-gap-8"  
                         :buttonText="'Disconnect' "

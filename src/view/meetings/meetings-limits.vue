@@ -119,7 +119,7 @@ const removeExtraFrequency = (key) => {
                     selected = "1"
                     :placeholder="$tfhb_trans('Default interval')"
                     :option = "[
-                        {name: 'No interval', value: '0'}, 
+                        {name: 'Use meeting length (default)', value: '0'}, 
                         {name: '5 Minutes', value: '5'},  
                         {name: '10 Minutes', value: '10'},  
                         {name: '15 Minutes', value: '15'},  

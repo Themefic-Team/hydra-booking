@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, } from 'vue'; 
+import { reactive, watch } from 'vue'; 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { RouterView } from 'vue-router' 
 // import Form Field 
@@ -21,6 +21,22 @@ const props = defineProps([
     'from'
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
+
+const getDefaultMailData = () => ({
+    status: 0,
+    key: '',
+    connection_status: 0,
+});
+
+const mailData = reactive(getDefaultMailData());
+
+watch(
+    () => props.mail_data,
+    (value) => {
+        Object.assign(mailData, getDefaultMailData(), value || {});
+    },
+    { immediate: true, deep: true }
+);
 
 const closePopup = () => { 
     emit('popup-close-control', false)
@@ -43,19 +59,19 @@ const closePopup = () => {
         </div>
         <div class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
             <!-- <span v-if="props.from == 'host' && mail_data.connection_status != 1" class="tfhb-badge tfhb-badge-not-connected">{{ $tfhb_trans('Not Configured') }}  </span> -->
-            <button  v-if=" props.from == 'host' && mail_data.connection_status != '1' && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Connected') }} </button>
-            <router-link v-else-if="props.from == 'host' && mail_data.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
+            <button  v-if=" props.from == 'host' && mailData.connection_status != '1' && mailData.connection_status != 1 && $user.role == 'tfhb_host'"   class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Not Connected') }} </button>
+            <router-link v-else-if="props.from == 'host' && mailData.connection_status != '1' && mailData.connection_status != 1"  to="/settings/integrations#all" class="tfhb-btn  tfhb-flexbox tfhb-gap-8"> {{ $tfhb_trans('Go To Settings') }}  <Icon name="ArrowUpRight" size="20" /> </router-link>
 
             <HbButton  
                 v-else @click="emit('popup-open-control')"
                 classValue="tfhb-btn tfhb-flexbox tfhb-gap-8"  
-                :buttonText="props.mail_data.status == 1 && mail_data.key != '' &&  mail_data.key  != null ? 'Connected' : 'Connect' " 
+                :buttonText="mailData.status == 1 && mailData.key != '' &&  mailData.key  != null ? 'Connected' : 'Connect' " 
                 :hover_animation="false"    
             /> 
 
                 <HbSwitch
-                v-if="mail_data.key != '' &&  mail_data.key  != null " 
-                 @change="emit('update-integrations', 'mailchimp', mail_data)" v-model="mail_data.status"   
+                v-if="mailData.key != '' &&  mailData.key  != null " 
+                 @change="emit('update-integrations', 'mailchimp', mailData)" v-model="mailData.status"   
                 />
             <!-- Swicher --> 
         </div>
@@ -73,7 +89,7 @@ const closePopup = () => {
                     <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/mailchimp/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                 </p>
                 <HbText  
-                    v-model="mail_data.key"  
+                    v-model="mailData.key"  
                     required= "true"  
                     name="key"
                     :errors="errors.key"
@@ -82,7 +98,7 @@ const closePopup = () => {
                     :placeholder="$tfhb_trans('Enter Your API Key')"  
                 /> 
                 <HbButton  
-                    @click.stop="emit('update-integrations', 'mailchimp', mail_data, ['key'])"
+                    @click.stop="emit('update-integrations', 'mailchimp', mailData, ['key'])"
                     classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8 tfhb-icon-hover-animation"  
                     :buttonText="'Save & Validate' "
                     icon="ChevronRight" 

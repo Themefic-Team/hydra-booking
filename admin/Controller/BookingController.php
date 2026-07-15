@@ -23,6 +23,31 @@ class BookingController {
 	public function __construct() {
 	}
 
+	private function get_activity_datetime() {
+		$helper = new Helper();
+		return wp_date( $helper->get_date_time_format_from_settings( 'M d, Y', 'h:i A' ) );
+	}
+
+	private function tfhb_verify_booking_ownership( $booking_id ) {
+		$current_user      = wp_get_current_user();
+		$current_user_role = ! empty( $current_user->roles[0] ) ? $current_user->roles[0] : '';
+
+		if ( 'administrator' === $current_user_role && current_user_can( 'tfhb_manage_settings' ) ) {
+			return true;
+		}
+		$host      = new Host();
+		$host_data = $host->getHostByUserId( get_current_user_id() );
+		if ( empty( $host_data ) || empty( $host_data->id ) ) {
+			return false;
+		}
+		$booking        = new Booking();
+		$booking_record = $booking->getBookingWithAttendees( array( array( 'id', '=', absint( $booking_id ) ) ), 1 );
+		if ( empty( $booking_record ) ) {
+			return false;
+		}
+		return (int) $booking_record->host_id === (int) $host_data->id;
+	}
+
 	public function init() {
 	}
 
@@ -301,9 +326,6 @@ class BookingController {
 			// Get all order by desc 
 		}
 		
-
-
-		
 		if ( 'administrator' != $current_user_role && 'tfhb_host' != $current_user_role ) {
 			return rest_ensure_response(
 				array(
@@ -424,7 +446,7 @@ class BookingController {
 			'bookings'         	=> $booking_list,
 			'booking_calendar' 	=> $booking_array,
 			'time_zone' 		=> $time_zone,
-			'message'          	=> 'Booking Data Successfully Retrieve!',
+			'message'          	=> __( 'Booking Data Successfully Retrieve!', 'hydra-booking' ),
 		);
 		return rest_ensure_response( $data );
 	}
@@ -569,7 +591,7 @@ class BookingController {
 			) );
 
 		}
-		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$request = json_decode( file_get_contents( 'php://input' ), true );
 		$select_date = isset( $request['select_date'] ) ? $request['select_date'] : '';
 		$booking_id = isset( $request['booking_id'] ) ? $request['booking_id'] : '';
 		$meeting_id = isset( $request['meeting_id'] ) ? $request['meeting_id'] : '';
@@ -577,11 +599,15 @@ class BookingController {
 		$select_date = isset( $request['select_date'] ) ? $request['select_date'] : '';
 		$select_time_slot = isset( $request['select_time_slot'] ) ? $request['select_time_slot'] : '';
 		$select_status = isset( $request['select_status'] ) ? $request['select_status'] : '';
-		$select_time_slot = json_decode( $select_time_slot, true ); 
+		$select_time_slot = json_decode( $select_time_slot, true );
 		$start_time = $select_time_slot['start'];
 		$end_time = $select_time_slot['end'];
 
-		// get booking data with attendees 
+		if ( ! empty( $booking_id ) && ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
+		// get booking data with attendees
 		$booking = new Booking();
 		$where = array(
 			array('id', '=', $booking_id),
@@ -596,7 +622,7 @@ class BookingController {
 			// return error message
 			$data = array(
 				'status'    => false,
-				'message' => 'Booking is not exist', 
+				'message' => __( 'Booking is not exist', 'hydra-booking' ), 
 			);
 			return rest_ensure_response( $data );
 		}  
@@ -610,18 +636,43 @@ class BookingController {
 				'status' => $select_status, 
 			)
 		);
+		//  need to update all attendees status and transactions status to rebooked
+		$attendees = new Attendees();
+		$transactions = new Transactions();
+		foreach ( $single_booking->attendees as $attendee ) {
+			$attendees->update(
+				array(
+					'id' => $attendee->id,
+					'status' => $select_status, 
+				)
+			);
+			$where = array(
+				array('attendee_id', '=', $attendee->id),
+			);
+			$transaction = $transactions->get( $where, 1 );
+			if($transaction != null || !empty($transaction)){
+				$transactions->update( 
+					array(
+						'id' => $transaction->id,
+						'status' => $select_status, 
+					)
+				);
+			}
+		}
 
 		// 
 		// return witn success message
 		$data = array(
 			'status'    => true,
-			'message' => 'Booking is updated successfully', 
+			'message' => __( 'Booking is updated successfully', 'hydra-booking' ), 
 		);
 		return rest_ensure_response( $data );
 
  
 
 	}
+
+
 
 	// Pre Booking Data
 	public function getPreBookingsData() {
@@ -713,10 +764,7 @@ class BookingController {
 
 		// Buffer Time After
 		$buffer_time_after = isset( $data['buffer_time_after'] ) && ! empty( $data['buffer_time_after'] ) ? $data['buffer_time_after'] : 0;
-
-		// Meeting Interval
-		$meeting_interval = isset( $data['meeting_interval'] ) && ! empty( $data['meeting_interval'] ) ? $data['meeting_interval'] : 0;
-
+ 
 		// Disable Dates
 		$disabled_dates = array();
 		if ( $availability_data['date_slots'] != '' ) {
@@ -852,6 +900,9 @@ class BookingController {
 		$booking = new Booking();
 
 		if ( ! empty( $request['id'] ) ) {
+			if ( ! $this->tfhb_verify_booking_ownership( $request['id'] ) ) {
+				return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+			}
 			$data = array(
 				'id'                 => isset( $request['id'] ) ? $request['id'] : '',
 				'meeting_id'         => isset( $request['meeting'] ) ? $request['meeting'] : '',
@@ -907,7 +958,19 @@ class BookingController {
 		}
 
 		if ( 'schedule' == $request['status'] ) {
-			do_action( 'hydra_booking/after_booking_schedule', $single_booking_meta );
+			$attendee = null;
+			if ( ! empty( $request['id'] ) ) {
+				$Attendee = new Attendees();
+				$attendee = $Attendee->getAttendeeWithBooking(
+					array(
+						array( 'booking_id', '=', absint( $request['id'] ) ),
+					),
+					1,
+					'DESC'
+				);
+			}
+
+			do_action( 'hydra_booking/after_booking_schedule', absint( $request['id'] ), $attendee );
 		}
 
 
@@ -929,7 +992,7 @@ class BookingController {
 		$request       = json_decode( file_get_contents( 'php://input' ), true );
 		$booking_id    = $request['id'];
 		$booking_owner = $request['host'];
-
+	
 		if ( empty( $booking_id ) || $booking_id == 0 ) {
 			return rest_ensure_response(
 				array(
@@ -938,8 +1001,17 @@ class BookingController {
 				)
 			);
 		}
+
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
 		// Delete Booking
 		$booking       = new Booking();
+		$single_booking_meta = $booking->get( absint( $booking_id ) );
+		if ( ! empty( $single_booking_meta ) ) {
+			do_action( 'hydra_booking/after_booking_deleted', $single_booking_meta );
+		}
 		$bookingDelete = $booking->delete( $booking_id );
 		$current_user  = get_userdata( $booking_owner );
 		// get user role
@@ -955,7 +1027,7 @@ class BookingController {
 			$bookingsList = $booking->get( null, true, false, false, false, false, $HostData->host_id );
 
 		}
-
+		
 		$extractedBookings = array_map(
 			function ( $booking ) {
 				return array(
@@ -1006,7 +1078,7 @@ class BookingController {
 
 	// Send Reminder Email
 	public function sendReminderEmail(){
-		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$request = json_decode( file_get_contents( 'php://input' ), true );
 
 		$booking_id =  isset( $request['booking_id'] ) ? $request['booking_id'] : 0;
 		if( empty( $booking_id ) && $booking_id == 0 ){
@@ -1016,6 +1088,10 @@ class BookingController {
 					'message' => __('Invalid Booking', 'hydra-booking'),
 				)
 			);
+		}
+
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
 		}
 
 		// Get Booking Data
@@ -1092,6 +1168,10 @@ class BookingController {
 			);
 		}
 
+		if ( ! $this->tfhb_verify_booking_ownership( $attendeeBooking->booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
 		if( 'confirmed' != $attendeeBooking->status ){
 			return rest_ensure_response(
 				array(
@@ -1112,9 +1192,12 @@ class BookingController {
 	}
 
 	// Send Attendee Status
-	public function changeAttendeeStatus(){
-		$request = json_decode( file_get_contents( 'php://input' ), true ); 
-
+	public function changeAttendeeStatus($data = []){
+		if( ! empty( $data ) ){
+			$request = $data;
+		}else{
+			$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		} 
 		$attendee_id =  isset( $request['attendee_id'] ) ? $request['attendee_id'] : 0;
 		$status =  isset( $request['status'] ) ? $request['status'] : '';
 		
@@ -1146,6 +1229,11 @@ class BookingController {
 				)
 			);
 		}
+
+		if ( ! $this->tfhb_verify_booking_ownership( $attendeeBooking->booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
 		if($attendeeBooking->status == $status){
 			return rest_ensure_response(
 				array(
@@ -1198,7 +1286,7 @@ class BookingController {
 
 	 public function updateInternalNotes(){
 		$bookingMeta = new BookingMeta();
-		$request = json_decode( file_get_contents( 'php://input' ), true ); 
+		$request = json_decode( file_get_contents( 'php://input' ), true );
 		$booking_id =  isset( $request['booking_id'] ) ? $request['booking_id'] : 0;
 		$internal_note =  isset( $request['internal_note'] ) ? $request['internal_note'] : '';
 
@@ -1209,6 +1297,10 @@ class BookingController {
 					'message' =>  __('Invalid Booking', 'hydra-booking'),
 				)
 			);
+		}
+
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
 		}
 		$get_internal_note = $bookingMeta->getWithIdKey( $booking_id, 'internal_note', 1 );
 		if($get_internal_note){
@@ -1249,7 +1341,12 @@ class BookingController {
 
 	// Get Single Booking
 	public function getBookingData( $request ) {
-		$booking_id = $request['id']; 
+		$booking_id = $request['id'];
+
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
 		// Check if user is already a booking
 		$booking = new Booking();
 		// Insert booking
@@ -1296,9 +1393,7 @@ class BookingController {
 		// Buffer Time After
 		$buffer_time_after = isset( $data['buffer_time_after'] ) && ! empty( $data['buffer_time_after'] ) ? $data['buffer_time_after'] : 0;
 
-		// Meeting Interval
-		$meeting_interval = isset( $data['meeting_interval'] ) && ! empty( $data['meeting_interval'] ) ? $data['meeting_interval'] : 0;
-
+	 
 		// Disable Dates
 
 		// Get All Booking Data.
@@ -1327,7 +1422,12 @@ class BookingController {
 
 	public function getBookingDetailsData($booking_id){
 		$booking = new Booking();
+ 
 		
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
 		$where = array(
 			array('id', '=', $booking_id),
 		);
@@ -1375,7 +1475,7 @@ class BookingController {
 	 * 
 	 */
 	public function getBookingDetails( $request ) {
-		$booking_id = $request['id']; 
+		$booking_id = $request['id'];
 
 		if(empty($booking_id)){
 			return rest_ensure_response(
@@ -1385,7 +1485,11 @@ class BookingController {
 				)
 			);
 		}
-		
+
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
 		$bookingsList = $this->getBookingDetailsData($booking_id);
 		$bookingMeta = new BookingMeta();
 		$booking_activity = $bookingMeta->getWithIdKey ( $booking_id, 'booking_activity', null); 
@@ -1436,7 +1540,10 @@ class BookingController {
 				)
 			);
 		}
-		 
+
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
 
 		// Check if user is already a booking
 		$booking = new Booking();  
@@ -1452,8 +1559,7 @@ class BookingController {
 					'booking_id' => $booking_id,
 					'meta_key' => 'booking_activity',
 					'value' => array(
-							
-							'datetime' => date('M d, Y, h:i A'),
+							'datetime' => $this->get_activity_datetime(),
 							'title' =>  'Booking has been completed',
 							'description' => '',
 						)
@@ -1489,7 +1595,7 @@ class BookingController {
 		$attendee_id = $request['id'];
 		$booking_id = $request['booking_id'];
 		$status     =  $request['status'];
-		$cancel_reason =  $request['cancel_reason']; 
+		$cancel_reason =  $request['cancel_reason'];
 		if ( empty( $attendee_id ) || $attendee_id == 0 ) {
 			return rest_ensure_response(
 				array(
@@ -1497,6 +1603,10 @@ class BookingController {
 					'message' => __('Invalid Attendee', 'hydra-booking'),
 				)
 			);
+		}
+
+		if ( ! empty( $booking_id ) && ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
 		}
 
 		$Attendee = new Attendees();
@@ -1534,7 +1644,7 @@ class BookingController {
 				'meta_key' => 'booking_activity',
 				'value' => array(
 						 
-						'datetime' => date('M d, Y, h:i A'),
+						'datetime' => $this->get_activity_datetime(),
 						'title' => esc_html(__(  'A attendee has been canceled by host', 'hydra-booking')),
 						'description' => $cancel_reason,
 					)
@@ -1574,19 +1684,21 @@ class BookingController {
 			);
 		}
 
+		if ( ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
+		}
+
 		$data = array(
 			'id'     => $request['id'],
 			'status' => isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '',
 		);
  
+ 
 		$booking = new Booking();
 		// Booking Update
 		 $booking->update( $data );
  
- 
-		$booking = new Booking();
- 
-		// Single Booking
+  
 		 
 		$where = array(
 			array('id', '=', $request['id']),
@@ -1597,21 +1709,61 @@ class BookingController {
 			'DESC',
 		); 
 
+		// tfhb_print_r($request['status']);
+		// exit;
+		if($request['status'] == 'canceled'){
+			$transactions = new Transactions();
+			// update transaction status to canceled
+			$attendees = $single_booking_meta->attendees;
+			foreach( $attendees as $attendee ){
+				$where = array(
+					array('attendee_id', '=', $attendee->id),
+				);
+				$transaction = $transactions->get( $where, 1 );
+				if($transaction != null || !empty($transaction)){
+					$transactions->update( 
+						array(
+							'id' => $transaction->id,
+							'status' => 'canceled', 
+						)
+					);
+				}
+			}
+		}
+		// Update Attendee Status based on booking status
+
+		if( $single_booking_meta->booking_type  == 'one-to-one'){
+			$attendees = $single_booking_meta->attendees;
+			$AttendeeDB = new Attendees();
+			foreach( $attendees as $attendee ){ 
+				// Need to apply $this->changeAttendeeStatus() function 
+				$this->changeAttendeeStatus( 
+					array(
+						'attendee_id' => $attendee->id,
+						'status' => $request['status'],
+					)
+				);
+
+			}
+		}else{
+					
+			if ( 'confirmed' == $request['status'] ) {
+				do_action( 'hydra_booking/send_booking_with_all_attendees_confirmed', $single_booking_meta );
+			}
+
+			if ( 'pending' == $request['status'] ) {
+				do_action( 'hydra_booking/send_booking_with_all_attendees_pending', $single_booking_meta );
+			}
+			if ( 'canceled' == $request['status'] ) { 
+				do_action( 'hydra_booking/send_booking_with_all_attendees_canceled', $single_booking_meta );
+			}
+
+			if ( 'schedule' == $request['status'] ) {
+				do_action( 'hydra_booking/send_booking_with_all_attendees_schedule', $single_booking_meta );
+			}
+		}
+	
 		
-		if ( 'confirmed' == $request['status'] ) {
-			do_action( 'hydra_booking/send_booking_with_all_attendees_confirmed', $single_booking_meta );
-		}
-
-		if ( 'pending' == $request['status'] ) {
-			do_action( 'hydra_booking/send_booking_with_all_attendees_pending', $single_booking_meta );
-		}
-		if ( 'canceled' == $request['status'] ) { 
-			do_action( 'hydra_booking/send_booking_with_all_attendees_canceled', $single_booking_meta );
-		}
-
-		if ( 'schedule' == $request['status'] ) {
-			do_action( 'hydra_booking/send_booking_with_all_attendees_schedule', $single_booking_meta );
-		}
 	
 
 		// Return response
@@ -1631,6 +1783,8 @@ class BookingController {
 		$items    = $request['items'];
 		$booking_owner = !empty($request['host']) ? $request['host'] : '';
 
+		// Only keep booking ids the current user is actually allowed to touch.
+		$items = ! empty( $items ) ? array_values( array_filter( $items, array( $this, 'tfhb_verify_booking_ownership' ) ) ) : $items;
 
 		$booking = new Booking();
 		if($status == 'delete'){

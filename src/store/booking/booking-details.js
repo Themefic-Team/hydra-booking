@@ -96,7 +96,7 @@ const BookingDetails = reactive({
         
         if(this.cancelAttendee.cancel_reason == ''){
 
-            toast.error( 'Please enter cancellation reason', {
+            toast.error( (tfhb_core_apps.trans['Please enter cancellation reason'] || 'Please enter cancellation reason'), {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });

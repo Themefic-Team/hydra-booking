@@ -3,6 +3,9 @@ namespace HydraBooking\Services\Integrations\BookingBookmarks;
 // exit
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+
+use HydraBooking\DB\Attendees;
+use HydraBooking\Services\Integrations\BookingBookmarks\BookingBookmarks; 
 /**
  * 
  * BookingBookmarks
@@ -56,9 +59,13 @@ class BookingBookmarks {
          
         $availability_time_zone = $data->availability_time_zone; // Example: "America/New_York"
 
+        // meeting_dates can be a comma separated list; use the first date for the bookmark links.
+        $meeting_dates = explode( ',', $data->meeting_dates );
+        $meeting_date  = trim( $meeting_dates[0] );
+
         // Convert to required format with the correct timezone
-        $dtStart = new \DateTime($data->start_time, new \DateTimeZone($availability_time_zone));
-        $dtEnd = new \DateTime($data->end_time, new \DateTimeZone($availability_time_zone));
+        $dtStart = new \DateTime("{$meeting_date} {$data->start_time}", new \DateTimeZone($availability_time_zone));
+        $dtEnd = new \DateTime("{$meeting_date} {$data->end_time}", new \DateTimeZone($availability_time_zone));
         $details = '<p>'.esc_html($data->meeting_title).'</p>'; 
 
         // Format for Google Calendar (Including Timezone)
@@ -71,11 +78,11 @@ class BookingBookmarks {
                 'dates'    => $start_time_google . '/' . $end_time_google,
                 'text'     => $bookingTitle,
                 'details'  => $details,
-                'location' => ''.$location.'',
-                'ctz'      => $availability_time_zone // Time Zone Parameter for Google
+                'location' => $location,
+                'ctz'      => $availability_time_zone
             ], 'https://calendar.google.com/calendar/r/eventedit'),
-           
-            'icon' => esc_url(TFHB_URL . 'assets/app/images/google-calendar.svg'), 
+
+            'icon' => esc_url(TFHB_URL . 'assets/app/images/google-calendar.svg'),
         ];
 
         // Format for Outlook (ISO 8601 format with time zone)
@@ -112,8 +119,8 @@ class BookingBookmarks {
         // ];
 
 
-        // Format start time for Yahoo (UTC format with 'Z')
-        $start_time_yahoo = $dtStart->format("Ymd\THis\Z");
+        // Format start time for Yahoo (UTC format with 'Z') - convert a clone so $dtStart stays in the local timezone for the calculations below
+        $start_time_yahoo = ( clone $dtStart )->setTimezone( new \DateTimeZone( 'UTC' ) )->format("Ymd\THis\Z");
 
         // Calculate duration in minutes
         $duration = $dtStart->diff($dtEnd);
@@ -150,9 +157,13 @@ class BookingBookmarks {
 
     public  function generateBookingICS($data)
     {
+        // meeting_dates can be a comma separated list; use the first date for the ICS event.
+        $meeting_dates = explode( ',', $data->meeting_dates );
+        $meeting_date  = trim( $meeting_dates[0] );
+
         // Convert time to UTC format for ICS
-        $start = new \DateTime("{$data->meeting_date} {$data->start_time}", new \DateTimeZone($data->availability_time_zone));
-        $end = new \DateTime("{$data->meeting_date} {$data->end_time}", new \DateTimeZone($data->availability_time_zone));
+        $start = new \DateTime("{$meeting_date} {$data->start_time}", new \DateTimeZone($data->availability_time_zone));
+        $end = new \DateTime("{$meeting_date} {$data->end_time}", new \DateTimeZone($data->availability_time_zone));
         $start->setTimezone(new \DateTimeZone('UTC'));
         $end->setTimezone(new \DateTimeZone('UTC'));
 
@@ -319,6 +330,48 @@ class BookingBookmarks {
         $datetime->setTimezone(new \DateTimeZone("UTC"));
 
         return $datetime->format("Ymd\THis\Z");
+    }
+
+    // sent bookmark add to calender link in email notification
+    public function sendBookmarkFormEmail($hash){ 
+        // allowed types: download_ics, confirmation, cancel
+   
+        // decode hash to get booking data
+        // encoded format: $hash = base64_encode( wp_json_encode( $hash ) );
+        $decoded_hash = base64_decode($hash, true); 
+        if ($decoded_hash === false) {
+            return false; // Invalid base64 string
+        }
+        $booking_data = json_decode($decoded_hash, true);
+        $type = $booking_data['type'] ?? '';
+        $allowed_types = ['google', 'outlook', 'yahoo', 'other'];
+        if ( !in_array($type, $allowed_types) ) {
+            return false;
+        }
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return false; // Invalid JSON
+        }
+        $Attendee = new Attendees();
+		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
+			array(
+				array('id', '=',$booking_data['attendee_id']),
+			),
+			1,
+			'DESC'
+		); 
+        if(!$attendeeBooking){
+            return false;
+        }
+        // Get bookmarks
+        $bookmarks = $this->getMeetingBookmarks($attendeeBooking);
+
+        if (empty($bookmarks[$type]['url'])) {
+            return false;
+        }
+
+        wp_redirect($bookmarks[$type]['url']);
+        exit;
     }
 
  

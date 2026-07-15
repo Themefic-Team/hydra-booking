@@ -78,34 +78,48 @@ class Enqueue {
 		// enqueue styles
 		// wp_enqueue_style( 'tfhb-admin-style', TFHB_URL . 'assets/admin/css/tfhb-admin-style.css', array(), null );
  
-		
-		wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true ); 
+		if(defined('TFHB_DEV_MODE') && TFHB_DEV_MODE === true){
+			wp_enqueue_script( 'tfhb-admin-core', apply_filters('tfhb_admin_core_script', 'http://localhost:5173/src/main.js'), array(), time(), true ); 
 
-		//  Build the core script
-		// wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
-		// wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
- 
-		// Localize the script.
+		} else {
+			
+			//  Build the core script
+			wp_enqueue_script('tfhb-admin-core',  apply_filters('tfhb_admin_core_script', TFHB_URL .'build/assets/tfhb-admin-app-script.js'), [], time(), true); 
+			wp_enqueue_style('tfhb-admin-style-core',  apply_filters('tfhb_admin_core_style', TFHB_URL .'build/assets/tfhb-admin-app.css'), [], time(), 'all');
+	
+		}
+		
+	
+
+		// Localize the script
+		 
 		$embed_script_link = esc_html('<script src="' .TFHB_URL . 'assets/app/js/widget.js"></script>');
 		$trans_string = array_merge(TransStrings::getTransStrings(), TransStrings::calendarTransString());
-
-		// $license = LicenseController::getInstance()->check_license();
-		// tfhb_print_r($license);
-		// exit;
+		$license = LicenseController::getInstance()->check_license();
+		$_tfhb_general_settings = !empty(get_option( '_tfhb_general_settings' )) && get_option( '_tfhb_general_settings' ) != false ? get_option( '_tfhb_general_settings' ) : array();
+		$date_format            = isset( $_tfhb_general_settings['date_format'] ) ? sanitize_text_field( $_tfhb_general_settings['date_format'] ) : '';
+ 
+		$meeting_url_generation = isset( $_tfhb_general_settings['meeting_url_generation'] ) ? (int) $_tfhb_general_settings['meeting_url_generation'] : 1;
+		// When pro is not active the 'tfhb_is_url_generation_enabled' filter defaults to true,
+		// so meeting pages are publicly accessible → always expose 1 to the frontend.
+		if ( $license['license_type'] !== 'pro' || empty( $license['is_valid'] ) ) {
+			$meeting_url_generation = 1;
+		}
+	
 		wp_localize_script(
 			'tfhb-admin-core',
 			'tfhb_core_apps',
 			array(
 				// 'url' => TFHB_URL,
-				'rest_nonce'           => wp_create_nonce( 'wp_rest' ),
-				// 'tfhb_license_type' =>  $license['license_type'],
-                // 'tfhb_is_valid'  =>  $license['is_valid'],
-				'tfhb_license_type' 	=>  'pro',
-                'tfhb_is_valid'  		=>  true,
+				'rest_nonce'               => wp_create_nonce( 'wp_rest' ),
+				'tfhb_license_type'        => $license['license_type'],
+                'tfhb_is_valid'            => $license['is_valid'],
+				'meeting_url_generation'   => $meeting_url_generation,
 				'admin_url'            => site_url(),
 				'rest_route'           => get_rest_url(),
 				'embed_script_link'    => esc_html( $embed_script_link ),
 				'ajax_url'             => admin_url( 'admin-ajax.php' ),
+				'date_format'            => $date_format,
 				'front_end_dashboard'  => $front_end_dashboard,
 				'tfhb_url'             => TFHB_URL,
 				'tfhb_hydra_admin_url' => admin_url( 'admin.php?page=hydra-booking#/' ),
@@ -118,17 +132,18 @@ class Enqueue {
 		if($front_end_dashboard == true){
 			 
 			$settings = !empty(get_option('_tfhb_frontend_dashboard_settings')) ? get_option('_tfhb_frontend_dashboard_settings') : array();
-			$primery_default  = isset($settings['general']['primery_default']) ? $settings['general']['primery_default'] : '#2E6B38'; 
-			$primery_hover  = isset($settings['general']['primery_hover']) ? $settings['general']['primery_hover'] : '#4C9959'; 
-			$secondary_default  = isset($settings['general']['secondary_default']) ? $settings['general']['secondary_default'] : '#273F2B'; 
-			$secondary_hover  = isset($settings['general']['secondary_hover']) ? $settings['general']['secondary_hover'] : '#E1F2E4'; 
-			$text_title  = isset($settings['general']['text_title']) ? $settings['general']['text_title'] : '#141915'; 
-			$text_paragraph  = isset($settings['general']['text_paragraph']) ? $settings['general']['text_paragraph'] : '#273F2B';  
-			$surface_primary  = isset($settings['general']['surface_primary']) ? $settings['general']['surface_primary'] : '#F9FBF9';  
-			$surface_background  = isset($settings['general']['surface_background']) ? $settings['general']['surface_background'] : '#C0D8C4';  
-			$surface_border  = isset($settings['general']['surface_border']) ? $settings['general']['surface_border'] : '#C0D8C4';  
-			$surface_border_hover  = isset($settings['general']['surface_border_hover']) ? $settings['general']['surface_border_hover'] : '#211319';  
-			$surface_input_field  = isset($settings['general']['surface_input_field']) ? $settings['general']['surface_input_field'] : '#56765B';  
+			// Validate color values - only allow valid hex colors (#RGB or #RRGGBB format)
+			$primery_default  = $this->validate_hex_color( $settings['general']['primery_default'] ?? '#2E6B38', '#2E6B38' );
+			$primery_hover  = $this->validate_hex_color( $settings['general']['primery_hover'] ?? '#4C9959', '#4C9959' );
+			$secondary_default  = $this->validate_hex_color( $settings['general']['secondary_default'] ?? '#273F2B', '#273F2B' );
+			$secondary_hover  = $this->validate_hex_color( $settings['general']['secondary_hover'] ?? '#E1F2E4', '#E1F2E4' );
+			$text_title  = $this->validate_hex_color( $settings['general']['text_title'] ?? '#141915', '#141915' );
+			$text_paragraph  = $this->validate_hex_color( $settings['general']['text_paragraph'] ?? '#273F2B', '#273F2B' );
+			$surface_primary  = $this->validate_hex_color( $settings['general']['surface_primary'] ?? '#F9FBF9', '#F9FBF9' );
+			$surface_background  = $this->validate_hex_color( $settings['general']['surface_background'] ?? '#C0D8C4', '#C0D8C4' );
+			$surface_border  = $this->validate_hex_color( $settings['general']['surface_border'] ?? '#C0D8C4', '#C0D8C4' );
+			$surface_border_hover  = $this->validate_hex_color( $settings['general']['surface_border_hover'] ?? '#211319', '#211319' );
+			$surface_input_field  = $this->validate_hex_color( $settings['general']['surface_input_field'] ?? '#56765B', '#56765B' );
 			$custom_css = "
 				:root {
 					--tfhb-admin-primary-default: $primery_default; 
@@ -151,5 +166,30 @@ class Enqueue {
 		if ( function_exists( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();
 		}
+	}
+
+	/**
+	 * Validate and sanitize hex color values.
+	 * Only allows valid hex color format (#RRGGBB or #RGB).
+	 *
+	 * @param mixed  $color        The color value to validate.
+	 * @param string $default_color The default color to use if validation fails.
+	 * @return string Valid hex color or default color.
+	 */
+	private function validate_hex_color( $color, $default_color = '#000000' ) {
+		if ( empty( $color ) ) {
+			return $default_color;
+		}
+		
+		// Remove any whitespace
+		$color = trim( $color );
+		
+		// Validate hex color format (#RGB or #RRGGBB)
+		if ( preg_match( '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $color ) ) {
+			return $color;
+		}
+		
+		// Return default color if invalid
+		return $default_color;
 	}
 }

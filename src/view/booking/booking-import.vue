@@ -34,14 +34,14 @@ const readImportDataChange = (file) => {
 const clickToNextMapping = () => {
     // file is empty 
     if(importExport.booking.import_file == '' || importExport.booking.import_file == null){
-        toast.error('Please choose file to import!', {
+        toast.error((tfhb_core_apps.trans['Please choose file to import!'] || 'Please choose file to import!'), {
             position: 'bottom-right', // Set the desired position
             autoClose: 1500,
         });
         return false;
     }
     if(importExport.booking.import_column.length === 1 && importExport.booking.import_column[0] === ""){
-        toast.error(tfhb_core_apps.trans['Selected  File column is empty!'], {
+        toast.error(tfhb_core_apps.trans[(tfhb_core_apps.trans['Selected  File column is empty!'] || 'Selected  File column is empty!')], {
             position: 'bottom-right', // Set the desired position
             autoClose: 1500,
         });

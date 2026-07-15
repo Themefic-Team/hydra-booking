@@ -51,7 +51,7 @@ const closePopup = () => {
         </div>
 
         <div v-if="$tfhb_is_pro == false ||  $tfhb_license_status == false" class="tfhb-integrations-single-block-btn tfhb-flexbox">
-            <a href="#" v-if="props.from != 'host'" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></a>
+            <router-link to="/settings/license" v-if="props.from != 'host'" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Upgrade to Pro') }}  <Icon name="ChevronRight" size=18 /></router-link>
             <div v-else class="tfhb-integrations-single-block-btn tfhb-flexbox tfhb-justify-between">
                 <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
             </div>

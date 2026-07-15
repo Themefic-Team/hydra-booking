@@ -40,6 +40,27 @@ const props = defineProps({
     }
 
 }); 
+
+if (!props.host.others_information || typeof props.host.others_information !== 'object') {
+    props.host.others_information = {};
+}
+
+const normalizeFieldOptions = (options) => {
+    if (!Array.isArray(options)) {
+        return [];
+    }
+
+    return options.map((option) => {
+        if (option && typeof option === 'object' && 'label' in option && 'value' in option) {
+            return option;
+        }
+
+        return {
+            label: option,
+            value: option,
+        };
+    });
+}
  
 
 const imageChange = (attachment) => {   
@@ -204,11 +225,11 @@ document.addEventListener('click', (e) => {
                 
                 <HbCheckbox 
                     v-model="props.host.others_information[field.name]" 
-                    :names="props.others_information[field.name]"
+                    :names="props.host.others_information[field.name]"
                     :label="field.label"  
                     :placeholder="field.placeholder"  
                     :groups="true"
-                    :options="field.options" 
+                    :options="normalizeFieldOptions(field.options)" 
                 />
             </div>
             <div v-else-if="field.type == 'textarea' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
@@ -222,15 +243,14 @@ document.addEventListener('click', (e) => {
                 />
             </div>
             <div v-else-if="field.type == 'radio' && field.enable == 1" class="tfhb-hosts-single-information-wrap">
-                 
                 <HbRadio 
                     v-model="props.host.others_information[field.name]" 
                     :names="props.host.others_information[field.name]"
                     :label="field.label"  
                     :placeholder="field.placeholder"  
                     :groups="true"
-                    :options="field.options"   
-                    :name="host.others_information[field.name]"
+                    :options="normalizeFieldOptions(field.options)"   
+                    :name="field.name"
                 />
             </div>
             <div v-else-if="field.type == 'select' && field.enable == 1" class="tfhb-hosts-single-information-wrap">

@@ -37,7 +37,7 @@ const readImportDataChange = (file) => {
 const clickToNextMapping = () => {
     // file is empty 
     if(importExport.allData.import_file == '' || importExport.allData.import_file == null){
-        toast.error('Please choose file to import!', {
+        toast.error((tfhb_core_apps.trans['Please choose file to import!'] || 'Please choose file to import!'), {
             position: 'bottom-right', // Set the desired position
             autoClose: 1500,
         });

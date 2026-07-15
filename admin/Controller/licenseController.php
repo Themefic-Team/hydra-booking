@@ -61,6 +61,16 @@ class licenseController {
 
     public function GetLicenseData(){
 
+        // Checked current user can manage option
+		if (  ! current_user_can( 'manage_options' ) ) {
+			// woocommerce payment
+			wp_send_json_error( array( 
+                'status' => false,
+                'message' => __( 'You do not have permission to access this data.', 'hydra-booking' )
+            ) );
+		}
+		
+
         $main_lic_key="HydraBooking_lic_Key";
 	    $lic_key_name =HydraBookingBase::get_lic_key_param($main_lic_key);
         $license_key=get_option($lic_key_name,"");
@@ -73,13 +83,13 @@ class licenseController {
         if(false == $response){
             wp_send_json_error( array( 
                 'status' => false,
-                'message' => 'Invalid License Key'
+                'message' => __( 'Invalid License Key', 'hydra-booking' )
             ) );
         }
 
         wp_send_json_success( array( 
             'status' => true,
-            'message' => 'License Data',
+            'message' => __( 'License Data', 'hydra-booking' ),
             'data' => $response,
             'license_key' => $this->decryptKey($license_key, $license_email),
             'license_email' => $license_email,
@@ -119,13 +129,13 @@ class licenseController {
             
             wp_send_json_error( array( 
                 'status' => false,
-                'message' => 'Invalid License Key'
+                'message' => __( 'Invalid License Key', 'hydra-booking' )
             ) );
         }
 	 
         wp_send_json_success( array( 
             'status' => true,
-            'message' => 'License Updated Successfully',
+            'message' => __( 'License Updated Successfully', 'hydra-booking' ),
             'data' => $response,
             'license_key' => $license_key,
             'license_email' => $license_email,
@@ -153,7 +163,7 @@ class licenseController {
 
         wp_send_json_success( array( 
             'status' => true,
-            'message' => 'License Deactivated Successfully',
+            'message' => __( 'License Deactivated Successfully', 'hydra-booking' ),
             'data' => array(
                 'is_valid' => false,
             ),

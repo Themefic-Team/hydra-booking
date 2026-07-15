@@ -102,7 +102,7 @@ const UpdateCategory = async () => {
             }); 
         }
     } catch (error) {
-        toast.error('Action successful', {
+        toast.error((tfhb_core_apps.trans['Action successful'] || 'Action successful'), {
             position: 'bottom-right', // Set the desired position
         });
     }
@@ -171,7 +171,7 @@ onMounted(() => {
             <!-- Custom Duration -->
             <HbText  
                 v-model="meeting.custom_duration"  
-                :label="$tfhb_trans('Custom Duration')"  
+                :label="$tfhb_trans('Custom Duration (minutes)')"  
                 name="title"
                 type="number"
                 selected = "1"

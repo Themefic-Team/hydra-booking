@@ -13,7 +13,8 @@ const webhookData = reactive({
         title: '',  
         events: '',  
         audience: '',  
-        modules: '',  
+        modules: '',
+        lists: '',
         tags: '',  
         fields: '',  
         bodys: [
@@ -31,7 +32,7 @@ const webhookData = reactive({
 
     // Meeting List
     async updateIntegrations() {
-
+        
         // Api Submission
         try { 
             const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/integration/update', this.integrationsData, {
@@ -84,7 +85,7 @@ const webhookData = reactive({
     // Delete Meeting
     async deleteMeeting ($id, $post_id){ 
         if($id == '' || $post_id == ''){
-            toast.error('Something went wrong. Please try again', {
+            toast.error((tfhb_core_apps.trans['Something went wrong. Please try again'] || 'Something went wrong. Please try again'), {
                 position: 'bottom-right', // Set the desired position
                 "autoClose": 1500,
             });
@@ -166,6 +167,7 @@ const webhookData = reactive({
     // Meeting Category
 
     async updateHookStatus (e, data, key){
+        console.log(data);
         this.integrationsData.key = key;
         this.integrationsData.meeting_id = this.meeting.meetingId;
         this.integrationsData.webhook = data.webhook;

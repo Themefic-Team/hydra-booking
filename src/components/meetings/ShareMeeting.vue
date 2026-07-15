@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import {ref} from 'vue'
+import { ref, computed } from 'vue'
 import { toast } from "vue3-toastify"; 
 import Icon from '@/components/icon/LucideIcon.vue' 
 import HbPopup from '@/components/widgets/HbPopup.vue'
@@ -12,6 +12,13 @@ const props = defineProps([
     'sharePopup', 
     'shareData'
 ])
+const meeting_url_generation = typeof tfhb_core_apps !== 'undefined' ? (tfhb_core_apps.meeting_url_generation ?? 1) : 1;
+const effectiveTab = computed(() => {
+    if (meeting_url_generation == 0 && props.shareData.share_type == 'link') {
+        return 'short';
+    }
+    return props.shareData.share_type;
+});
 const copyMeeting = (link) => {
     //  copy to clipboard without navigator 
     const textarea = document.createElement('textarea');
@@ -26,7 +33,7 @@ const copyMeeting = (link) => {
     
     // Show a toast notification or perform any other action 
     // success mess into bottom right
-    toast.success( 'Copied' , {
+    toast.success( (tfhb_core_apps.trans['Copied'] || 'Copied') , {
         position: 'bottom-right', // Set the desired position
         duration: 2000 // Set the desired duration
     });
@@ -45,7 +52,7 @@ const ShareTabs = (tab) => {
            <div class="tfhb-share-title-wraps tfhb-flexbox tfhb-gap-8">
             
             <h3>{{ props.shareData.title }}</h3>
-            <a :href="props.shareData.link" class="tfhb-flexbox tfhb-gap-8 tfhb-btn" target="_blank">
+            <a v-if="meeting_url_generation != 0" :href="props.shareData.link" class="tfhb-flexbox tfhb-gap-8 tfhb-btn" target="_blank">
                 <Icon name="ExternalLink" size=20 />  
             </a>
            
@@ -92,14 +99,18 @@ const ShareTabs = (tab) => {
 
                 <div class="tfhb-share-type tfhb-full-width">
                     <ul class="tfhb-flexbox tfhb-gap-8">
-                        <li :class="'link'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('link')">{{ $tfhb_trans('Share link') }}</li>
-                        <li :class="'short'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Shortcode') }}</li>
-                        <li :class="'embed'==props.shareData.share_type ? 'active' : ''" @click="ShareTabs('embed')">{{ $tfhb_trans('Embed code') }}</li>
+                        <li
+                            :class="['link'==effectiveTab ? 'active' : '', meeting_url_generation == 0 ? 'tfhb-disabled' : '']"
+                            :style="meeting_url_generation == 0 ? 'opacity:0.4; cursor:not-allowed; pointer-events:none;' : ''"
+                            @click="meeting_url_generation != 0 && ShareTabs('link')"
+                        >{{ $tfhb_trans('Share link') }}</li>
+                        <li :class="'short'==effectiveTab ? 'active' : ''" @click="ShareTabs('short')">{{ $tfhb_trans('Shortcode') }}</li>
+                        <li :class="'embed'==effectiveTab ? 'active' : ''" @click="ShareTabs('embed')">{{ $tfhb_trans('Embed code') }}</li>
                     </ul>
                 </div>
 
                 <div class="tfhb-shareing-data tfhb-full-width">
-                    <div class="share-link" v-if="'link'==props.shareData.share_type"> 
+                    <div class="share-link" v-if="'link'==effectiveTab"> 
                         <HbText 
                             v-model="props.shareData.link"  
                             :readonly="true"
@@ -113,7 +124,7 @@ const ShareTabs = (tab) => {
                             />  
                         </div>
                     </div>
-                    <div class="share-link" v-if="'short'==props.shareData.share_type"> 
+                    <div class="share-link" v-if="'short'==effectiveTab"> 
                         <HbText 
                             v-model="props.shareData.shortcode"  
                             :readonly="true"
@@ -127,7 +138,7 @@ const ShareTabs = (tab) => {
                             /> 
                         </div>
                     </div>
-                    <div class="share-link tfhb-flexbox tfhb-gap-24 tfhb-justify-end" v-if="'embed'==props.shareData.share_type">
+                    <div class="share-link tfhb-flexbox tfhb-gap-24 tfhb-justify-end" v-if="'embed'==effectiveTab">
                        
  
                         <HbTextarea 

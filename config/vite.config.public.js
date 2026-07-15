@@ -1,7 +1,7 @@
-import { ViteMinifyPlugin } from 'vite-plugin-minify'
-import { defineConfig } from 'vite'
+const { ViteMinifyPlugin } = require('vite-plugin-minify');
+const { defineConfig } = require('vite');
 
-export default defineConfig({
+module.exports = defineConfig({
 	build: {
 		rollupOptions: {
 			input: {
@@ -23,4 +23,4 @@ export default defineConfig({
 	plugins: [
 		ViteMinifyPlugin({}),
 	],
-})
+});
