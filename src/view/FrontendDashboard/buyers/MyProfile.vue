@@ -287,7 +287,7 @@ onMounted(() => {
             <h2>Links</h2>
             <div class="links-list">
               <div v-for="(link, index) in userLinks" :key="index" class="link-item">
-                <span class="link-icon">🌐</span>
+                <span class="link-icon"><Icon name="Globe" :size="16" /></span>
                 <a :href="link.url" target="_blank">{{ link.title }}</a>
               </div>
             </div>
@@ -373,7 +373,7 @@ onMounted(() => {
           <h2>Links</h2>
           <div class="links-list" v-if="userLinks.length > 0">
             <div v-for="(link, index) in userLinks" :key="index" class="link-item">
-              <span class="link-icon">🌐</span>
+              <span class="link-icon"><Icon name="Globe" :size="16" /></span>
               <a :href="link.url" target="_blank">{{ link.title }}</a>
             </div>
           </div>
@@ -869,8 +869,10 @@ onMounted(() => {
 }
 
 .link-icon {
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+  color: var(--tfhb-primary-color, #2E6B38);
 }
 
 .link-item a {

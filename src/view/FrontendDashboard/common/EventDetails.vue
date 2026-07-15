@@ -248,7 +248,7 @@ const embedVideoUrl = computed(() => {
                   
                   <div class="program-icon">
                       <img v-if="item.program_icon" :src="item.program_icon" alt="Program Icon" />
-                      <div v-else class="program-icon-placeholder">📋</div>
+                      <div v-else class="program-icon-placeholder"><Icon name="FileText" :size="18" /></div>
                     </div>
                     <div class="program-content">
                       <h3>{{ item.title || 'Untitled' }}</h3>
@@ -267,7 +267,7 @@ const embedVideoUrl = computed(() => {
             <div v-if="AddonsAuth.event?.event_details?.external_links != null && AddonsAuth.event?.event_details?.external_links.length > 0"  class="links-list">
               <div  v-for="(link, index) in AddonsAuth.event?.event_details?.external_links || [] " :key="index" >
                 <div class="link-item" v-if="link && link.url">
-                  <span class="link-icon">🌐</span>
+                  <span class="link-icon"><Icon name="Globe" :size="16" /></span>
                   <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
                 </div>
               </div>
@@ -336,7 +336,7 @@ const embedVideoUrl = computed(() => {
                   
                   <div class="program-icon">
                       <img v-if="item.program_icon != ''" :src="item.program_icon" alt="Program Icon" />
-                      <div v-else class="program-icon-placeholder">📋</div>
+                      <div v-else class="program-icon-placeholder"><Icon name="FileText" :size="18" /></div>
                     </div>
                     <div class="program-content">
                       <h3>{{ item.title || 'Untitled' }}</h3>
@@ -357,7 +357,7 @@ const embedVideoUrl = computed(() => {
             <div v-if="AddonsAuth.event?.event_details?.external_links != null && AddonsAuth.event?.event_details?.external_links.length > 0"  class="links-list">
               <div  v-for="(link, index) in AddonsAuth.event?.event_details?.external_links || [] " :key="index" >
                 <div class="link-item" v-if="link && link.url !=''">
-                  <span class="link-icon">🌐</span>
+                  <span class="link-icon"><Icon name="Globe" :size="16" /></span>
                   <a :href="link.url" target="_blank">{{ link.title || 'Untitled Link' }}</a>
                 </div>
               </div>
@@ -998,7 +998,10 @@ const embedVideoUrl = computed(() => {
 }
 
 .link-icon {
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--tfhb-primary-color, #2E6B38);
 }
 
 .link-item a {

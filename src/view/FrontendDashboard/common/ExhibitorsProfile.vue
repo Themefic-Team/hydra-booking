@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
+import Icon from '@/components/icon/LucideIcon.vue'
 
 const route = useRoute()
 const eventDetails = ref({})
@@ -208,7 +209,6 @@ const embedVideoUrl = computed(() => {
         <div class="company-title-section">
           <h1 class="company-title">{{ userProfile?.user_data?.company_name || 'N/A' }}</h1>
           <span class="company-type">{{ userProfile?.user_role || 'N/A' }}</span>
-          <span class="star-icon">⭐</span>
         </div>
         <p class="company-subtitle">{{ userProfile?.user_data?.contact_person || '' }}</p>
       </div>
@@ -294,7 +294,7 @@ const embedVideoUrl = computed(() => {
             <h2>Links</h2>
             <div class="links-list">
               <div v-for="(link, index) in userLinks" :key="index" class="link-item">
-                <span class="link-icon">🌐</span>
+                <span class="link-icon"><Icon name="Globe" :size="16" /></span>
                 <a :href="link.url" target="_blank">{{ link.title }}</a>
               </div>
             </div>
@@ -380,7 +380,7 @@ const embedVideoUrl = computed(() => {
           <h2>Links</h2>
           <div class="links-list" v-if="userLinks.length > 0">
             <div v-for="(link, index) in userLinks" :key="index" class="link-item">
-              <span class="link-icon">🌐</span>
+              <span class="link-icon"><Icon name="Globe" :size="16" /></span>
               <a :href="link.url" target="_blank">{{ link.title }}</a>
             </div>
           </div>
@@ -426,19 +426,19 @@ const embedVideoUrl = computed(() => {
           <h4>SOCIAL</h4>
           <div class="social-links">
             <a v-if="userSocialShare.instagram" :href="userSocialShare.instagram" target="_blank" class="social-link">
-              <span class="social-icon">📷</span>
+              <span class="social-icon"><Icon name="Instagram" :size="16" /></span>
               <span>Instagram</span>
             </a>
             <a v-if="userSocialShare.facebook" :href="userSocialShare.facebook" target="_blank" class="social-link">
-              <span class="social-icon">📘</span>
+              <span class="social-icon"><Icon name="Facebook" :size="16" /></span>
               <span>Facebook</span>
             </a>
             <a v-if="userSocialShare.youtube" :href="userSocialShare.youtube" target="_blank" class="social-link">
-              <span class="social-icon">📺</span>
+              <span class="social-icon"><Icon name="Youtube" :size="16" /></span>
               <span>YouTube</span>
             </a>
             <a v-if="userSocialShare.linkedin" :href="userSocialShare.linkedin" target="_blank" class="social-link">
-              <span class="social-icon">💼</span>
+              <span class="social-icon"><Icon name="Linkedin" :size="16" /></span>
               <span>LinkedIn</span>
             </a>
           </div>
@@ -608,12 +608,6 @@ const embedVideoUrl = computed(() => {
   font-size: 0.875rem;
   font-weight: 500;
   white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.star-icon {
-  font-size: 1.25rem;
-  color: #FFD700;
   flex-shrink: 0;
 }
 
@@ -906,8 +900,10 @@ const embedVideoUrl = computed(() => {
 }
 
 .link-icon {
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+  color: var(--tfhb-primary-color, #2E6B38);
 }
 
 .link-item a {
@@ -1029,30 +1025,36 @@ const embedVideoUrl = computed(() => {
 
 .social-links {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.625rem;
 }
 
 .social-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: var(--tfhb-surface-background-color, #EEF6F0);
-  border-radius: var(--tfhb-border-radius);
+  gap: 0.5rem;
+  padding: 4px 16px;
+  background: var(--tfhb-surface-secondary, #FFFFFF);
+  border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);
+  border-radius: 999px;
   text-decoration: none;
   color: var(--tfhb-text-title-color, #141915);
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: var(--tfhb-transition);
-  min-height: 44px; /* Touch-friendly sizing */
+  min-height: 36px;
 }
 
 .social-link:hover {
-  background: var(--tfhb-surface-primary-color, #C0D8C4);
+  background: var(--tfhb-surface-background-color, #EEF6F0);
 }
 
 .social-icon {
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  color: inherit;
 }
 
 .no-social-links {

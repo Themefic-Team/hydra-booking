@@ -39,6 +39,13 @@ const skeleton = ref(true)
 const buyerFields = ref([])
 const sellerFields = ref([])
 
+// Only checkbox/radio/select fields support value-mapping today, so those are
+// the only fields that can actually be used in a matching rule - anything else
+// would silently get dropped by the backend (no way to add field_mappings for it).
+const MATCHABLE_FIELD_TYPES = ['checkbox', 'radio', 'select']
+const matchableBuyerFields = computed(() => buyerFields.value.filter(f => MATCHABLE_FIELD_TYPES.includes(f.type)))
+const matchableSellerFields = computed(() => sellerFields.value.filter(f => MATCHABLE_FIELD_TYPES.includes(f.type)))
+
 // Matching rule data for popup
 const matching_rule_data = reactive({
   key: 0,
@@ -124,27 +131,34 @@ const saveSettings = async () => {
   }
 }
 
+// Next unused priority number, so new rules don't silently collide with an existing one
+const nextAvailablePriority = () => {
+  const usedPriorities = settings.value.matching_rules.map(rule => Number(rule.priority) || 0)
+  return usedPriorities.length > 0 ? Math.max(...usedPriorities) + 1 : 1
+}
+
 // Add new matching rule
 const addMatchingRule = () => {
+  const priority = nextAvailablePriority()
   const newRule = {
     buyer_field: '',
     seller_field: '',
-    priority: 1,
+    priority,
     match_type: 'exact',
     field_mappings: [],
     enabled: 1
   }
-  
+
   settings.value.matching_rules.push(newRule)
   const lastIndex = settings.value.matching_rules.length - 1
   matching_rule_data.key = lastIndex
   matching_rule_data.buyer_field = ''
   matching_rule_data.seller_field = ''
-  matching_rule_data.priority = 1
+  matching_rule_data.priority = priority
   matching_rule_data.match_type = 'exact'
   matching_rule_data.field_mappings = []
   matching_rule_data.enabled = 1
-  
+
   matchingRulePopup.value = true
 }
 
@@ -170,7 +184,24 @@ const saveMatchingRule = () => {
     toast.error('Please select both buyer and seller fields')
     return
   }
-  
+
+  // A rule with no enabled value-mappings never produces a match - the engine
+  // silently drops it, so block the save instead of letting it look "saved" but dead.
+  const hasEnabledMapping = matching_rule_data.field_mappings.some(mapping => mapping.enabled)
+  if (!hasEnabledMapping) {
+    toast.error('Add at least one enabled value mapping before saving this rule')
+    return
+  }
+
+  // Two rules sharing a priority number silently overwrite each other in the engine
+  const priorityConflict = settings.value.matching_rules.some((rule, index) =>
+    index !== matching_rule_data.key && Number(rule.priority) === Number(matching_rule_data.priority)
+  )
+  if (priorityConflict) {
+    toast.error(`Priority ${matching_rule_data.priority} is already used by another rule. Choose a different priority.`)
+    return
+  }
+
   const ruleData = {
     buyer_field: matching_rule_data.buyer_field,
     seller_field: matching_rule_data.seller_field,
@@ -357,8 +388,9 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
               width="100"
               :selected="1"
               :placeholder="$tfhb_trans('Select Buyer Field')"
-              :option="buyerFields.map(field => ({name: field.label, value: field.name}))"
+              :option="matchableBuyerFields.map(field => ({name: field.label, value: field.name}))"
             />
+            <p class="tfhb-text-sm tfhb-text-muted">{{ $tfhb_trans('Only checkbox, radio, and select fields can be used for matching.') }}</p>
  
             <HbDropdown 
               v-model="matching_rule_data.seller_field"
@@ -367,7 +399,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
               width="100"
               :selected="1"
               :placeholder="$tfhb_trans('Select Seller Field')"
-              :option="sellerFields.map(field => ({name: field.label, value: field.name}))"
+              :option="matchableSellerFields.map(field => ({name: field.label, value: field.name}))"
             />
 
             <HbDropdown 
