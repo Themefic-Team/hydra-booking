@@ -244,7 +244,7 @@ onMounted(() => {
             <h2>Gallery</h2>
             <div class="gallery-grid">
               <div v-for="(img, index) in userGallery" :key="index" class="gallery-item">
-                <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+                <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" @error="$event.target.onerror=null; $event.target.src=$tfhb_url+'/assets/images/images-icon.png'" style="cursor:pointer;" />
               </div>
             </div>
           </div>
@@ -321,7 +321,7 @@ onMounted(() => {
           <h2>Gallery</h2>
           <div class="gallery-grid" v-if="userGallery.length > 0">
             <div v-for="(img, index) in userGallery" :key="index" class="gallery-item">
-              <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+              <img :src="img.url || $tfhb_url+'/assets/images/images-icon.png'" :alt="img.title" @click="openGalleryPopup(img)" @error="$event.target.onerror=null; $event.target.src=$tfhb_url+'/assets/images/images-icon.png'" style="cursor:pointer;" />
             </div>
           </div>
           <p v-else class="no-data-message">No gallery images added yet.</p>
@@ -725,8 +725,8 @@ onMounted(() => {
 }
 
 .gallery-item img {
-  width: 100%;
-  height: 120px;
+  /* /* width: 100%; */
+  height: 120px; 
   object-fit: cover;
   border-radius: var(--tfhb-border-radius);
   border: 1px solid var(--tfhb-surface-primary-color, #C0D8C4);

@@ -209,7 +209,7 @@ const embedVideoUrl = computed(() => {
             <h2>Gallery</h2>
             <div  v-if="AddonsAuth.event?.event_details?.gallery_images && AddonsAuth.event?.event_details?.gallery_images.length > 0" class="gallery-grid">
               <div v-for="(img, index) in AddonsAuth.event?.event_details?.gallery_images || [] " :key="index" class="gallery-item">
-                <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+                <img :src="img || $tfhb_url+'/assets/images/images-icon.png'" alt="Gallery Image" @click="openGalleryPopup(img)" @error="$event.target.onerror=null; $event.target.src=$tfhb_url+'/assets/images/images-icon.png'" style="cursor:pointer;" />
               </div>
             </div>
             <div v-else>
@@ -290,7 +290,7 @@ const embedVideoUrl = computed(() => {
           <h2>Gallery</h2>
           <div  v-if="AddonsAuth.event?.event_details?.gallery_images && AddonsAuth.event?.event_details?.gallery_images.length > 0" class="gallery-grid">
               <div v-for="(img, index) in AddonsAuth.event?.event_details?.gallery_images || [] " :key="index" class="gallery-item">
-                <img :src="img" alt="Gallery Image" @click="openGalleryPopup(img)" style="cursor:pointer;" />
+                <img :src="img || $tfhb_url+'/assets/images/images-icon.png'" alt="Gallery Image" @click="openGalleryPopup(img)" @error="$event.target.onerror=null; $event.target.src=$tfhb_url+'/assets/images/images-icon.png'" style="cursor:pointer;" />
               </div>
             </div>
             <div v-else>
@@ -862,7 +862,7 @@ const embedVideoUrl = computed(() => {
 }
 
 .gallery-item img {
-  width: 100%;
+  /* width: 100%; */
   height: 120px;
   object-fit: cover;
   border-radius: 8px;
