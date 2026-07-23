@@ -189,12 +189,12 @@ const copyPlaceholder = async (value) => {
         } else if (!copyWithFallback(value)) {
             throw new Error('execCommand copy failed');
         }
-        toast.success(`${value} copied - paste it into any field below`, {
+        toast.success(`${value} ${tfhb_core_apps.trans['copied - paste it into any field below'] || 'copied - paste it into any field below'}`, {
             position: 'bottom-right',
             autoClose: 1500,
         });
     } catch (error) {
-        toast.error('Could not copy to clipboard', {
+        toast.error((tfhb_core_apps.trans['Could not copy to clipboard'] || 'Could not copy to clipboard'), {
             position: 'bottom-right',
         });
     }

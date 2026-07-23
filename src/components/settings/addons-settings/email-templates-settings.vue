@@ -32,7 +32,7 @@ onBeforeMount(() => {
 <template>
     <div class="tfhb-admin-title">
         <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">{{ $tfhb_trans('Event Email Templates') }}</h2>
-        <p>{{ $tfhb_trans('Customize the emails sent to Buyers, Sellers and Exhibitors during registration. This is separate from Hydra Booking\'s core Notifications settings, which only cover Host/Attendee meeting booking emails.') }}</p>
+        <p>{{ $tfhb_trans("Customize the emails sent to Buyers, Sellers and Exhibitors during registration. This is separate from Hydra Booking's core Notifications settings, which only cover Host/Attendee meeting booking emails.") }}</p>
     </div>
 
     <div class="tfhb-notification-button-tabs tfhb-flexbox tfhb-mb-16">

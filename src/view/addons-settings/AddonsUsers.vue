@@ -2363,7 +2363,7 @@ onBeforeRouteLeave(() => {
                     classValue="tfhb-btn boxed-btn"
                     @click="AddonsUsers.openSendPasswordPopup()"
                     :buttonText="$tfhb_trans('Send Password Setup Email')"
-                    icon="Mail"
+              
                     icon_position="left"
                     :hover_animation="false"
                 />

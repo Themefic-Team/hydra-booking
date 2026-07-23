@@ -1164,6 +1164,31 @@ namespace HydraBooking\Admin\Controller;
             'https://example.com' => __('https://example.com', 'hydra-booking'),
             'matching' => __('matching', 'hydra-booking'),
             'of' => __('of', 'hydra-booking'),
+
+            // Event Email Templates & Matching Rule updates (audited against every $tfhb_trans() call - previously unregistered)
+            'Event Email Templates' => __('Event Email Templates', 'hydra-booking'),
+            'Email Templates' => __('Email Templates', 'hydra-booking'),
+            'Registration Confirmation' => __('Registration Confirmation', 'hydra-booking'),
+            'Password Setup Email' => __('Password Setup Email', 'hydra-booking'),
+            'Header' => __('Header', 'hydra-booking'),
+            'Greeting' => __('Greeting', 'hydra-booking'),
+            'Button' => __('Button', 'hydra-booking'),
+            'Footer' => __('Footer', 'hydra-booking'),
+            'Button Label' => __('Button Label', 'hydra-booking'),
+            'Description:' => __('Description:', 'hydra-booking'),
+            'Button URL:' => __('Button URL:', 'hydra-booking'),
+            'For checkbox/radio/select fields you can map specific buyer/seller values below. For other field types (text, email, number, date, etc.) the buyer\'s and seller\'s values are compared directly using the Match Type.' => __('For checkbox/radio/select fields you can map specific buyer/seller values below. For other field types (text, email, number, date, etc.) the buyer\'s and seller\'s values are compared directly using the Match Type.', 'hydra-booking'),
+            'Choose which user role should receive the password setup email. This sends the email to every user of that role, regardless of their active/inactive status.' => __('Choose which user role should receive the password setup email. This sends the email to every user of that role, regardless of their active/inactive status.', 'hydra-booking'),
+            'Send Password Setup Email' => __('Send Password Setup Email', 'hydra-booking'),
+            'Send Password Reset Link' => __('Send Password Reset Link', 'hydra-booking'),
+            'User Role' => __('User Role', 'hydra-booking'),
+            'Send' => __('Send', 'hydra-booking'),
+            'Send password setup email immediately after registration' => __('Send password setup email immediately after registration', 'hydra-booking'),
+            'When off, buyers only get a plain registration confirmation email. You can send the password setup email later from the Users list.' => __('When off, buyers only get a plain registration confirmation email. You can send the password setup email later from the Users list.', 'hydra-booking'),
+            'When off, sellers only get a plain registration confirmation email. You can send the password setup email later from the Users list.' => __('When off, sellers only get a plain registration confirmation email. You can send the password setup email later from the Users list.', 'hydra-booking'),
+            'When off, exhibitors only get a plain registration confirmation email. You can send the password setup email later from the Users list.' => __('When off, exhibitors only get a plain registration confirmation email. You can send the password setup email later from the Users list.', 'hydra-booking'),
+            'copied - paste it into any field below' => __('copied - paste it into any field below', 'hydra-booking'),
+            'Could not copy to clipboard' => __('Could not copy to clipboard', 'hydra-booking'),
         );
      }
 
