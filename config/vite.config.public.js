@@ -2,6 +2,13 @@ const { ViteMinifyPlugin } = require('vite-plugin-minify');
 const { defineConfig } = require('vite');
 
 module.exports = defineConfig({
+	css: {
+		preprocessorOptions: {
+			scss: {
+				api: 'modern',
+			},
+		},
+	},
 	build: {
 		rollupOptions: {
 			input: {

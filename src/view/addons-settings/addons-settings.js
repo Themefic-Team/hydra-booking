@@ -37,7 +37,15 @@ const AddonsUsers = reactive({
         user_data: null,
         user_type: ''
     },
-    
+
+    // Bulk "Send Password Setup Email" popup state
+    send_password_popup: {
+        show: false,
+        role: 'buyers',
+        sending: false
+    },
+
+
     // Edit user popup state
     edit_user_popup: {
         show: false,
@@ -176,6 +184,83 @@ const AddonsUsers = reactive({
                 position: 'bottom-right',
                 autoClose: 1500,
             });
+        }
+    },
+
+    // Send the password setup email to a single user (independent of activate/deactivate)
+    async sendPasswordResetLink(userId, userType) {
+        try {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/send-password-setup-email', {
+                user_id: userId,
+                role: userType
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                },
+                withCredentials: true
+            });
+
+            if (response.data.success) {
+                toast.success(response.data.message || 'Password setup email sent', {
+                    position: 'bottom-right',
+                    autoClose: 1500,
+                });
+            } else {
+                toast.error(response.data.message || 'Failed to send password setup email', {
+                    position: 'bottom-right',
+                    autoClose: 1500,
+                });
+            }
+        } catch (error) {
+            toast.error('Failed to send password setup email', {
+                position: 'bottom-right',
+                autoClose: 1500,
+            });
+        }
+    },
+
+    // Open/close the bulk "Send Password Setup Email" popup
+    openSendPasswordPopup() {
+        this.send_password_popup.role = this.current_tab;
+        this.send_password_popup.show = true;
+    },
+    closeSendPasswordPopup() {
+        this.send_password_popup.show = false;
+    },
+
+    // Send the password setup email to every user of the chosen role
+    async sendPasswordSetupEmailByRole() {
+        const role = this.send_password_popup.role;
+        this.send_password_popup.sending = true;
+        try {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/send-password-setup-email-by-role', {
+                role: role
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                },
+                withCredentials: true
+            });
+
+            if (response.data.success) {
+                toast.success(response.data.message || 'Password setup emails sent', {
+                    position: 'bottom-right',
+                    autoClose: 2000,
+                });
+                this.send_password_popup.show = false;
+            } else {
+                toast.error(response.data.message || 'Failed to send password setup emails', {
+                    position: 'bottom-right',
+                    autoClose: 1500,
+                });
+            }
+        } catch (error) {
+            toast.error('Failed to send password setup emails', {
+                position: 'bottom-right',
+                autoClose: 1500,
+            });
+        } finally {
+            this.send_password_popup.sending = false;
         }
     },
 

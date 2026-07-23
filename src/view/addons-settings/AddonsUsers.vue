@@ -2317,7 +2317,7 @@ onBeforeRouteLeave(() => {
                         width="50"
                         @tfhb-onchange="[]"
                     />
-                    <HbButton 
+                    <HbButton
                         v-if="AddonsUsers.bulk_action && selectedCount > 0"
                         classValue="tfhb-btn boxed-btn"
                         @click="handleBulkAction"
@@ -2329,33 +2329,43 @@ onBeforeRouteLeave(() => {
             </div>
 
             <!-- Tab Buttons -->
-            <div class="tfhb-tab-buttons tfhb-flexbox tfhb-gap-8 tfhb-mt-24">
-                <HbButton 
-                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                    :class="AddonsUsers.current_tab === 'sellers' ? 'active' : ''"
-                    @click="handleTabChange('sellers')"
-                    :buttonText="$tfhb_trans('Sellers')"
-                    icon="Users"
-                    :hover_animation="false"
+            <div class="tfhb-tab-buttons tfhb-flexbox tfhb-justify-between tfhb-align-center tfhb-mt-24">
+                <div class="tfhb-flexbox tfhb-gap-8">
+                    <HbButton
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"
+                        :class="AddonsUsers.current_tab === 'sellers' ? 'active' : ''"
+                        @click="handleTabChange('sellers')"
+                        :buttonText="$tfhb_trans('Sellers')"
+                        icon="Users"
+                        :hover_animation="false"
+                        icon_position="left"
+                    />
+                    <HbButton
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"
+                        :class="AddonsUsers.current_tab === 'buyers' ? 'active' : ''"
+                        @click="handleTabChange('buyers')"
+                        :buttonText="$tfhb_trans('Buyers')"
+                        icon="UserCheck"
+                        :hover_animation="false"
+                        icon_position="left"
+                    />
+                    <HbButton
+                        classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8"
+                        :class="AddonsUsers.current_tab === 'exhibitors' ? 'active' : ''"
+                        @click="handleTabChange('exhibitors')"
+                        :buttonText="$tfhb_trans('Exhibitors')"
+                        icon="Building2"
+                        :hover_animation="false"
+                        icon_position="left"
+                    />
+                </div>
+                <HbButton
+                    classValue="tfhb-btn boxed-btn"
+                    @click="AddonsUsers.openSendPasswordPopup()"
+                    :buttonText="$tfhb_trans('Send Password Setup Email')"
+                    icon="Mail"
                     icon_position="left"
-                />
-                <HbButton 
-                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                    :class="AddonsUsers.current_tab === 'buyers' ? 'active' : ''"
-                    @click="handleTabChange('buyers')"
-                    :buttonText="$tfhb_trans('Buyers')"
-                    icon="UserCheck"
                     :hover_animation="false"
-                    icon_position="left"
-                />
-                <HbButton 
-                    classValue="tfhb-btn boxed-btn tfhb-flexbox tfhb-gap-8" 
-                    :class="AddonsUsers.current_tab === 'exhibitors' ? 'active' : ''"
-                    @click="handleTabChange('exhibitors')"
-                    :buttonText="$tfhb_trans('Exhibitors')"
-                    icon="Building2"
-                    :hover_animation="false"
-                    icon_position="left"
                 />
             </div>
 
@@ -2437,10 +2447,14 @@ onBeforeRouteLeave(() => {
                                     <span v-if="isUserInactive(user.status)" @click.stop="handleStatusUpdate(user.id, 'activate')" class="tfhb-activate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
                                         <Icon name="Check" width="16" />
                                         {{ $tfhb_trans('Active') }}
-                                    </span> 
+                                    </span>
                                     <span v-else @click.stop="handleStatusUpdate(user.id, 'deactivate')" class="tfhb-deactivate-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
                                         <Icon name="X" width="16" />
                                         {{ $tfhb_trans('Deactive') }}
+                                    </span>
+                                    <span @click.stop="AddonsUsers.sendPasswordResetLink(user.id, AddonsUsers.current_tab)" class="tfhb-edit-btn tfhb-flexbox tfhb-justify-center tfhb-align-center tfhb-gap-4">
+                                        <Icon name="Mail" width="16" />
+                                        {{ $tfhb_trans('Send Password Reset Link') }}
                                     </span>
                                 </div>
                             </td>
@@ -2755,6 +2769,49 @@ onBeforeRouteLeave(() => {
                 </template>
             </HbPopup>
 
+            <!-- Bulk "Send Password Setup Email" popup -->
+            <HbPopup
+                :isOpen="AddonsUsers.send_password_popup.show"
+                @modal-close="AddonsUsers.closeSendPasswordPopup()"
+                max_width="500px"
+                name="send-password-setup-email-modal"
+            >
+                <template #header>
+                    <h3>{{ $tfhb_trans('Send Password Setup Email') }}</h3>
+                </template>
+
+                <template #content>
+                    <div class="tfhb-full-width">
+                        <p>{{ $tfhb_trans('Choose which user role should receive the password setup email. This sends the email to every user of that role, regardless of their active/inactive status.') }}</p>
+                        <HbDropdown
+                            v-model="AddonsUsers.send_password_popup.role"
+                            :label="$tfhb_trans('User Role')"
+                            :option="[
+                                {'name': 'Buyers', 'value': 'buyers'},
+                                {'name': 'Sellers', 'value': 'sellers'},
+                                {'name': 'Exhibitors', 'value': 'exhibitors'}
+                            ]"
+                            width="100"
+                        />
+                        <div class="tfhb-flexbox tfhb-gap-8 tfhb-mt-16">
+                            <HbButton
+                                classValue="tfhb-btn boxed-btn"
+                                @click="AddonsUsers.closeSendPasswordPopup()"
+                                :buttonText="$tfhb_trans('Cancel')"
+                                :hover_animation="false"
+                            />
+                            <HbButton
+                                classValue="tfhb-btn boxed-btn tfhb-btn-primary"
+                                @click="AddonsUsers.sendPasswordSetupEmailByRole()"
+                                :buttonText="$tfhb_trans('Send')"
+                                :pre_loader="AddonsUsers.send_password_popup.sending"
+                                :disabled="AddonsUsers.send_password_popup.sending"
+                                :hover_animation="false"
+                            />
+                        </div>
+                    </div>
+                </template>
+            </HbPopup>
 
         </div>
     </div>

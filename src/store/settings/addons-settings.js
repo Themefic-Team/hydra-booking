@@ -17,6 +17,7 @@ const AddonsSettings = reactive({
         registration_end_date : '',
         enable_registration : 0,
         default_account_status : 'active',
+        send_password_immediately : 1,
         badge_pdf_image : '',
         maximum_number_of_staff : '',
         maximum_number_of_staff_present : '',
@@ -27,6 +28,7 @@ const AddonsSettings = reactive({
         registration_end_date : '',
         enable_registration : 0,
         default_account_status : 'active',
+        send_password_immediately : 1,
         badge_pdf_image : '',
         maximum_number_of_staff : '',
         maximum_number_of_staff_present : '',
@@ -37,9 +39,28 @@ const AddonsSettings = reactive({
         registration_end_date : '',
         enable_registration : 0,
         default_account_status : 'active',
+        send_password_immediately : 1,
         badge_pdf_image : '',
         maximum_number_of_staff : '',
         maximum_number_of_staff_present : '',
+    },
+    // Event Email Templates - fully separate from Hydra Booking's core Notifications settings
+    email_templates: {
+        buyers: {
+            registration_confirmation: { enabled: true, subject: '', body: '', builder: '' },
+            password_setup: { enabled: true, subject: '', body: '', builder: '' },
+            import_welcome: { enabled: true, subject: '', body: '', builder: '' },
+        },
+        sellers: {
+            registration_confirmation: { enabled: true, subject: '', body: '', builder: '' },
+            password_setup: { enabled: true, subject: '', body: '', builder: '' },
+            import_welcome: { enabled: true, subject: '', body: '', builder: '' },
+        },
+        exhibitors: {
+            registration_confirmation: { enabled: true, subject: '', body: '', builder: '' },
+            password_setup: { enabled: true, subject: '', body: '', builder: '' },
+            import_welcome: { enabled: true, subject: '', body: '', builder: '' },
+        },
     },
     // Matching Settings
     matching_settings: {
@@ -167,6 +188,51 @@ const AddonsSettings = reactive({
 
         }  
     },
+    // Event Email Templates API Methods
+    async FetchEmailTemplates() {
+        try {
+            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/email-templates', {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                }
+            });
+            if (response.data.status) {
+                this.email_templates = response.data.templates ? response.data.templates : this.email_templates;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    // Saves only the given role's templates - never the other roles, even though
+    // they all live in this same reactive object. The whole object stays
+    // populated in memory (for the settings UI to read from) but only the role
+    // actually being edited is ever sent to the server, so switching roles or
+    // just previewing one doesn't freeze stale/test content into roles nobody
+    // meant to touch.
+    async UpdateEmailTemplates(role) {
+        this.update_preloader = true;
+        try {
+            const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/addons/email-templates/update', {
+                role: role,
+                templates: this.email_templates[role]
+            }, {
+                headers: {
+                    'X-WP-Nonce': tfhb_core_apps.rest_nonce,
+                }
+            });
+
+            if (response.data.status) {
+                toast.success(response.data.message, {
+                    position: "bottom-right",
+                });
+            }
+            this.update_preloader = false;
+        } catch (error) {
+            console.log(error);
+            this.update_preloader = false;
+        }
+    },
+
     // Matching Settings API Methods
     async FetchMatchingSettings() {
         try {

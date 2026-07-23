@@ -13,6 +13,13 @@ module.exports = defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+      },
+    },
+  },
   build: {
     outDir: './build',
     assetsDir: 'assets',

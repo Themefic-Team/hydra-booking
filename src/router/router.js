@@ -359,7 +359,19 @@ const routes = [
                         name: 'AddonsSettingsMatching',
                         meta: { Capabilities: 'tfhb_manage_settings' },
                         component: () => import('@/components/settings/addons-settings/matching-settings.vue')
-                    }, 
+                    },
+                    {
+                        path: 'mail-templates',
+                        name: 'AddonsSettingsEmailTemplates',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/addons-settings/email-templates-settings.vue')
+                    },
+                    {
+                        path: 'mail-templates/:role/:type',
+                        name: 'AddonsSettingsEmailTemplateEdit',
+                        meta: { Capabilities: 'tfhb_manage_settings' },
+                        component: () => import('@/components/settings/addons-settings/email-template-single.vue')
+                    },
                 ]
             },
             {

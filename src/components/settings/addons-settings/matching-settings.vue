@@ -39,12 +39,13 @@ const skeleton = ref(true)
 const buyerFields = ref([])
 const sellerFields = ref([])
 
-// Only checkbox/radio/select fields support value-mapping today, so those are
-// the only fields that can actually be used in a matching rule - anything else
-// would silently get dropped by the backend (no way to add field_mappings for it).
-const MATCHABLE_FIELD_TYPES = ['checkbox', 'radio', 'select']
-const matchableBuyerFields = computed(() => buyerFields.value.filter(f => MATCHABLE_FIELD_TYPES.includes(f.type)))
-const matchableSellerFields = computed(() => sellerFields.value.filter(f => MATCHABLE_FIELD_TYPES.includes(f.type)))
+// Every registration field can be used in a matching rule. Checkbox/radio/select
+// fields get a discrete value-mapping list (see needsFieldMapping below); every
+// other field type (text/email/phone/textarea/number/date) is compared directly
+// against the seller's/buyer's raw value using the selected match type - no
+// mapping list needed for those.
+const matchableBuyerFields = computed(() => buyerFields.value)
+const matchableSellerFields = computed(() => sellerFields.value)
 
 // Matching rule data for popup
 const matching_rule_data = reactive({
@@ -185,12 +186,20 @@ const saveMatchingRule = () => {
     return
   }
 
-  // A rule with no enabled value-mappings never produces a match - the engine
-  // silently drops it, so block the save instead of letting it look "saved" but dead.
-  const hasEnabledMapping = matching_rule_data.field_mappings.some(mapping => mapping.enabled)
-  if (!hasEnabledMapping) {
-    toast.error('Add at least one enabled value mapping before saving this rule')
-    return
+  // Choice-type fields (checkbox/radio/select) match via a discrete value-mapping
+  // list, and a rule with no enabled mappings would never produce a match - the
+  // engine silently drops it - so block the save instead of letting it look
+  // "saved" but dead. Other field types (text/email/number/date/etc.) compare
+  // buyer/seller values directly and never need a mapping list, so this check
+  // only applies when the mapping section is actually shown for both fields.
+  const bothFieldsNeedMapping = needsFieldMapping(matching_rule_data.buyer_field, true)
+    && needsFieldMapping(matching_rule_data.seller_field, false)
+  if (bothFieldsNeedMapping) {
+    const hasEnabledMapping = matching_rule_data.field_mappings.some(mapping => mapping.enabled)
+    if (!hasEnabledMapping) {
+      toast.error('Add at least one enabled value mapping before saving this rule')
+      return
+    }
   }
 
   // Two rules sharing a priority number silently overwrite each other in the engine
@@ -390,7 +399,7 @@ watch(() => AddonsSettings.Sellers.registration_froms_fields, () => {
               :placeholder="$tfhb_trans('Select Buyer Field')"
               :option="matchableBuyerFields.map(field => ({name: field.label, value: field.name}))"
             />
-            <p class="tfhb-text-sm tfhb-text-muted">{{ $tfhb_trans('Only checkbox, radio, and select fields can be used for matching.') }}</p>
+            <p class="tfhb-text-sm tfhb-text-muted">{{ $tfhb_trans('For checkbox/radio/select fields you can map specific buyer/seller values below. For other field types (text, email, number, date, etc.) the buyer\'s and seller\'s values are compared directly using the Match Type.') }}</p>
  
             <HbDropdown 
               v-model="matching_rule_data.seller_field"

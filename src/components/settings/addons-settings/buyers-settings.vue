@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, } from 'vue'; 
+import { ref, reactive, onBeforeMount, } from 'vue';
 import { useRouter, RouterView,} from 'vue-router' 
 import HbQuestion from '@/components/widgets/HbQuestion.vue';
 import Icon from '@/components/icon/LucideIcon.vue';
@@ -21,7 +21,6 @@ import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 const informationPopup = ref(false);
 import { AddonsSettings } from '@/store/settings/addons-settings';
 
- 
 // Popup Open.
 const QuestionPopupOpen = () => {
     AddonsSettings.buyers.registration_froms_fields.push({
@@ -161,18 +160,26 @@ const copyShortcodeCode = () => {
                 :placeholder="$tfhb_trans('End')"
             /> 
              <!-- Time format -->
-            <HbDropdown 
-                
-                v-model="AddonsSettings.buyers.default_account_status"  
-                required= "true" 
+            <HbDropdown
+
+                v-model="AddonsSettings.buyers.default_account_status"
+                required= "true"
                 :label="$tfhb_trans(' Default Account Status')"
                 width="50"
                 :selected = "1"
                 :placeholder="$tfhb_trans('Select')"
                 :option = "[
-                    {'name': 'Inactive', 'value': 'inactive'}, 
+                    {'name': 'Inactive', 'value': 'inactive'},
                     {'name': 'Active', 'value': 'active'}
-                ]" 
+                ]"
+            />
+            <!-- Send password setup email immediately after registration -->
+            <HbSwitch
+                v-model="AddonsSettings.buyers.send_password_immediately"
+                :label="$tfhb_trans('Send password setup email immediately after registration')"
+                tooltip="true"
+                :tooltipText="$tfhb_trans('When off, buyers only get a plain registration confirmation email. You can send the password setup email later from the Users list.')"
+                width="100"
             />
             <HbText  
                 v-model="AddonsSettings.buyers.maximum_number_of_staff"  
