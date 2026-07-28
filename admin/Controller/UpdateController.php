@@ -21,9 +21,8 @@ class UpdateController {
 
         // Remove it after few releases
         $this->tfhb_check_and_add_upload_cap();
- 
-		 
-	} 
+
+	}
 
     /**
      * Update Database table structure

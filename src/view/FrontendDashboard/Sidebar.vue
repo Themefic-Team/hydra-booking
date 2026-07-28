@@ -140,7 +140,7 @@ const toggleSidebarResponsive= () => {
                                 </router-link>
                             </li>  
 
-                            <li>
+                            <li v-if="$user.role[0] != 'tfhb_host' ">
                                 <router-link to="/settings/shortcodes" exact :class="{ 'active': $route.path.startsWith('/settings/shortcodes') }" class="tfhb-sidebar-menu-item tfhb-flexbox tfhb-gap-12">
                                     <Icon name="Braces" size="20" /> 
                                     <span >{{ $tfhb_trans('Shortcodes') }}</span>

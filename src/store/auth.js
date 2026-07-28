@@ -35,12 +35,17 @@ const AuthData = reactive({
         //     console.error('Error fetching Hosts:', error);
         // }
     },
-    Capabilities(cap) {  
+    Capabilities(cap) {
         if( cap == ''){
             return true;
         }
         if( this.Auth.caps === undefined ){
             return false;
+        }
+        // Real WordPress administrators always pass, regardless of the tfhb_host role's
+        // own capability value - mirrors the manage_options bypass used server-side.
+        if( true === this.Auth.caps['manage_options'] ){
+            return true;
         }
         if(this.Auth.caps[cap] !== undefined && true === this.Auth.caps[cap] ){
             return true;

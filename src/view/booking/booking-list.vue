@@ -424,15 +424,21 @@ const activeSingleAttendeeAction = (id) => {
 
 }
 // 
+const escapeHtml = (value) => {
+    const div = document.createElement('div');
+    div.textContent = value ?? '';
+    return div.innerHTML;
+};
+
 const displayTotalAttendeesWithCount = (attendees) => {
     let totalAttendees = attendees.length;
-    let displayAttendees = ''; 
+    let displayAttendees = '';
 
     if (totalAttendees > 0) {
         // Limit to first two attendees
         displayAttendees = attendees
             .slice(0, 2) // Only take the first two attendees
-            .map(attendee => attendee.attendee_name) // Map to names
+            .map(attendee => escapeHtml(attendee.attendee_name)) // Map to escaped names
             .join(', '); // Join with a comma and space
 
         // Add "+X More" if there are more than 2 attendees
