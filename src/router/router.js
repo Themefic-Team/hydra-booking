@@ -419,6 +419,13 @@ const routes = [
             }, 
         ]
     },
+    // Catch-all: unmatched or malformed paths (e.g. a manually typed/bookmarked URL
+    // the current user has no business landing on) fall back to the dashboard instead
+    // of rendering a blank router-view.
+    {
+        path: '/:pathMatch(.*)*',
+        redirect: { name: 'dashboard' },
+    },
 ];
 
 const router = createRouter({
@@ -473,11 +480,11 @@ router.beforeEach(async (to, from, next) => {
             // User has the required capabilities, continue to the next route
             next();
         } else {
-            // User is not authenticated
-            // Redirect to the home page or display an alert
+            // User lacks the required capability for this route
+            // Redirect to the dashboard and let them know why
             alert((tfhb_core_apps.trans['Sorry, you are not allowed to access this page.'] || 'Sorry, you are not allowed to access this page.'));
-            next('/');
-        } 
+            next({ name: 'dashboard' });
+        }
 
         
        
@@ -488,7 +495,7 @@ router.beforeEach(async (to, from, next) => {
         console.error('Error fetching authentication data:', error);
         // Redirect to the home page or display an alert
         alert((tfhb_core_apps.trans['An error occurred while fetching authentication data.'] || 'An error occurred while fetching authentication data.'));
-        next('/');
+        next({ name: 'dashboard' });
     }
 });
 
