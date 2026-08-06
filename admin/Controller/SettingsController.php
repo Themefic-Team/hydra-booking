@@ -36,7 +36,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetGeneralSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		register_rest_route(
@@ -45,7 +45,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateGeneralSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		// Availability Routes
@@ -55,7 +55,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAvailabilitySettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		register_rest_route(
@@ -64,7 +64,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateAvailabilitySettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -74,7 +74,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteAvailabilitySettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -95,7 +95,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'MarkAsDefault' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		// Intrigation
@@ -106,7 +106,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetIntegrationSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -116,7 +116,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateIntegrationSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -127,7 +127,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetNotificationSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		register_rest_route(
@@ -136,7 +136,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateNotificationSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -147,7 +147,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetHostsSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		register_rest_route(
@@ -156,7 +156,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateGetHostsSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -167,7 +167,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetAppearanceSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		register_rest_route(
@@ -176,7 +176,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateAppearanceSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -187,7 +187,7 @@ class SettingsController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getShortcodeSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 		register_rest_route(
@@ -196,7 +196,7 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'generateShortPreview' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 

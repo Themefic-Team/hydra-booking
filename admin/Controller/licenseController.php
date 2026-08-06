@@ -34,7 +34,7 @@ class licenseController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'GetLicenseData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		); 
         register_rest_route(
@@ -43,7 +43,7 @@ class licenseController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateLicenseData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		); 
 
@@ -53,7 +53,7 @@ class licenseController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeactiveLicense' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		); 
 	}

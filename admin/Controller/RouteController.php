@@ -53,7 +53,10 @@ class RouteController
 
 	public function tfhb_manage_options_permission()
 	{
-		return current_user_can('tfhb_manage_options');
+		if (current_user_can('manage_options')) {
+			return true;
+		}
+		return current_user_can('tfhb_manage_settings');
 	}
 	public function tfhb_manage_integrations_permission()
 	{

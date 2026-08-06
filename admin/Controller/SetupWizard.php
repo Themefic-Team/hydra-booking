@@ -32,7 +32,7 @@ class SetupWizard {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'fetchSetupWizard' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 
@@ -42,7 +42,7 @@ class SetupWizard {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ImportMeetingDemo' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
 			)
 		);
 	}
