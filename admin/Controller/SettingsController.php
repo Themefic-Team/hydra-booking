@@ -116,7 +116,8 @@ class SettingsController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'UpdateIntegrationSettings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_settings_permission'),
+				// SECURITY FIX v1.2.4: Payment credentials must only be writable by administrators.
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_admin_only_permission'),
 			)
 		);
 
@@ -253,7 +254,10 @@ class SettingsController {
 
 
 		// senitaized
-		$_tfhb_general_settings['admin_email']                               = sanitize_email( $request['admin_email'] );
+		// Only real administrators may change the admin email address.
+		if ( current_user_can( 'manage_options' ) ) {
+			$_tfhb_general_settings['admin_email'] = sanitize_email( $request['admin_email'] );
+		}
 		$_tfhb_general_settings['time_zone']                               = sanitize_text_field( $request['time_zone'] );
 		$_tfhb_general_settings['time_format']                             = sanitize_text_field( $request['time_format'] );
 		$_tfhb_general_settings['week_start_from']                         = sanitize_text_field( $request['week_start_from'] );

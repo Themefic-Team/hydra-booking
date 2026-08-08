@@ -25,6 +25,8 @@ class UpdateController {
         // Remove it after few releases
         $this->tfhb_check_and_remove_host_settings_cap();
 
+        $this->tfhb_security_patch_remove_manage_options_cap(); // Security fix v1.2.4
+        $this->tfhb_security_patch_strip_cap_from_host_users(); // Security fix v1.2.4
 	}
 
     /**
@@ -171,7 +173,7 @@ class UpdateController {
     // administrator who was also auto-added as a host), which was hiding
     // the Settings/Integrations/Notifications menu in the Frontend
     // Dashboard for such users even though they're admins.
-     public function tfhb_check_and_remove_host_settings_cap() {
+    public function tfhb_check_and_remove_host_settings_cap() {
         $role = get_role('tfhb_host');
 
         if ($role && isset($role->capabilities['tfhb_manage_settings']) && false === $role->capabilities['tfhb_manage_settings']) {
@@ -179,4 +181,35 @@ class UpdateController {
         }
     }
 
+	/**
+	 * Security patch v1.2.4: Remove tfhb_manage_options from tfhb_host role in DB.
+	 * @since 1.2.4
+	 */
+	public function tfhb_security_patch_remove_manage_options_cap() {
+	    if ( get_option( 'tfhb_security_patch_role_1_2_4' ) ) {
+	        return;
+	    }
+	    $role = get_role( 'tfhb_host' );
+	    if ( $role && $role->has_cap( 'tfhb_manage_options' ) ) {
+	        $role->remove_cap( 'tfhb_manage_options' );
+	    }
+	    update_option( 'tfhb_security_patch_role_1_2_4', true );
+	}
+
+	/**
+	 * Security patch v1.2.4: Strip tfhb_manage_options from individual user caps.
+	 * @since 1.2.4
+	 */
+	public function tfhb_security_patch_strip_cap_from_host_users() {
+	    if ( get_option( 'tfhb_security_patch_users_1_2_4' ) ) {
+	        return;
+	    }
+	    $host_users = get_users( array( 'role' => 'tfhb_host' ) );
+	    foreach ( $host_users as $user ) {
+	        if ( $user->has_cap( 'tfhb_manage_options' ) ) {
+	            $user->remove_cap( 'tfhb_manage_options' );
+	        }
+	    }
+	    update_option( 'tfhb_security_patch_users_1_2_4', true );
+	}
 }

@@ -211,7 +211,10 @@ class licenseController {
             if (!empty($response->license_title) && stripos($response->license_title, 'free') !== false) {
                 self::$cached_result['license_type'] = 'free';
             } else {
-                if ( is_plugin_active( 'hydra-booking-pro/hydra-booking-pro.php'  ) ) {
+                if ( ! function_exists( 'is_plugin_active' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                }
+                if ( is_plugin_active( 'hydra-booking-pro/hydra-booking-pro.php' ) ) {
                     self::$cached_result['license_type'] = 'pro';
                 }else{
                     self::$cached_result['license_type'] = false; 
