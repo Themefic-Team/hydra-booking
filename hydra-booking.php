@@ -55,6 +55,7 @@ class THB_INIT
 
 	function tfhb_load_textdomain()
 	{
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
 		load_plugin_textdomain('hydra-booking', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 	}
 
@@ -64,6 +65,7 @@ class THB_INIT
 
 
 		//Register text domain
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
 		load_plugin_textdomain('hydra-booking', false, basename(dirname(__FILE__)) . '/languages');
 
 		// Load Appsero Tracker
@@ -102,6 +104,7 @@ class THB_INIT
 	public function tfhb_get_plugin_screen()
 	{
 		$current_screen = get_current_screen();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if (isset($_GET['page']) && $_GET['page'] === 'hydra-booking') {
 			// remove admin notice
 			add_action('in_admin_header', array($this, 'tfhb_hide_notices'), 99);

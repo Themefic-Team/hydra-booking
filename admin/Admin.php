@@ -79,7 +79,8 @@ class Admin
 			'title'          => esc_html__('Your account has been activated', 'hydra-booking'),
 			'subtitle'       => esc_html__('Your account has been successfully activated.', 'hydra-booking'),
 			'brand_name'     => get_bloginfo('name'),
-			'footer_text'    => esc_html__('This is an automated email from ' . get_bloginfo('name') . ', please do not reply.', 'hydra-booking'),
+			/* translators: %s: Site name */
+			'footer_text'    => sprintf(esc_html__('This is an automated email from %s, please do not reply.', 'hydra-booking'), get_bloginfo('name')),
 		]);
 		$headers = array('Content-Type: text/html; charset=UTF-8');
 
@@ -98,7 +99,7 @@ class Admin
 			return;
 		}
 
-		echo $this->tfhb_sidebar();
+		$this->tfhb_sidebar();
 	}
 
 
@@ -110,9 +111,9 @@ class Admin
 			wp_send_json_error(__('You do not have permission to perform this action.', 'hydra-booking'));
 		}
 
-		$plugin_slug = isset($_POST['plugin_slug']) ? sanitize_text_field($_POST['plugin_slug']) : '';
-		$plugin_filename = isset($_POST['plugin_filename']) ? sanitize_text_field($_POST['plugin_filename']) : '';
-		$plugin_action = isset($_POST['plugin_action']) ? sanitize_text_field($_POST['plugin_action']) : '';
+		$plugin_slug = isset($_POST['plugin_slug']) ? sanitize_text_field(wp_unslash($_POST['plugin_slug'])) : '';
+		$plugin_filename = isset($_POST['plugin_filename']) ? sanitize_text_field(wp_unslash($_POST['plugin_filename'])) : '';
+		$plugin_action = isset($_POST['plugin_action']) ? sanitize_text_field(wp_unslash($_POST['plugin_action'])) : '';
 
 		if (!$plugin_slug || !$plugin_action) {
 			wp_send_json_error(__('Invalid request.', 'hydra-booking'));
@@ -174,9 +175,8 @@ class Admin
 		if (! get_option('tfhb_hydra_quick_setup')) {
 
 			update_option('tfhb_hydra_quick_setup', 1);
-			wp_redirect(admin_url('admin.php?page=hydra-booking#/setup-wizard'));
-
-			// exit;
+			wp_safe_redirect(admin_url('admin.php?page=hydra-booking#/setup-wizard'));
+			exit;
 		}
 	}
 
@@ -212,14 +212,13 @@ class Admin
 		<div class="tfhb-dashboard-sidebar-content" style="display: none;">
 			<div class="tfhb-sidebar-wrap">
 				<!-- promo banner  -->
-				<?php echo do_action('tfhb_sidebar_promo_banner', ''); ?>
+				<?php do_action('tfhb_sidebar_promo_banner', ''); ?>
 
 				<div class="tfhb-sidebar-content">
 
 					<div class="tfhb-plugin-lists">
 						<h3>Power up your website</h3>
-						<?php echo $this->tfhb_get_sidebar_plugin_list(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized 
-						?>
+						<?php $this->tfhb_get_sidebar_plugin_list(); ?>
 					</div>
 
 					<div class="tfhb-customization-quote">

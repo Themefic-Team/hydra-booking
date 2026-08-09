@@ -1,8 +1,12 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! function_exists( 'tfhb_print_r' ) ) {
 	function tfhb_print_r( $data ) {
 		echo '<pre>';
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		print_r( $data );
 		echo '</pre>';
 		// exit;

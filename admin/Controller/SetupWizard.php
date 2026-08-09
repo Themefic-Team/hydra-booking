@@ -76,9 +76,9 @@ class SetupWizard {
 		$email_subscribe['subscribe_status']     = $request['enable_recevie_updates'];
 		$email_subscribe['subscribe_date']       = gmdate( 'Y-m-d' );
 		$email_subscribe['subscribe_time']       = gmdate( 'H:i:s' );
-		$email_subscribe['subscribe_ip']         = $_SERVER['REMOTE_ADDR'];
-		$email_subscribe['subscribe_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-		$email_subscribe['subscribe_referer']    = $_SERVER['HTTP_REFERER'];
+		$email_subscribe['subscribe_ip']         = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+		$email_subscribe['subscribe_user_agent'] = isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
+		$email_subscribe['subscribe_referer']    = isset($_SERVER['HTTP_REFERER']) ? esc_url_raw(wp_unslash($_SERVER['HTTP_REFERER'])) : '';
 		// get subscriber device  from user agent
 
 		// Update Email Subscribe Option

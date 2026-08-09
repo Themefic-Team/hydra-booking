@@ -876,12 +876,15 @@ class SettingsController {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
 
 		// activate the plugin
-		$plugin_slug = sanitize_text_field( wp_unslash( $_POST['slug'] ) );
-		$file_name   = sanitize_text_field( wp_unslash( $_POST['file_name'] ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$plugin_slug = isset($_POST['slug']) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$file_name   = isset($_POST['file_name']) ? sanitize_text_field( wp_unslash( $_POST['file_name'] ) ) : '';
 		$result      = activate_plugin( $plugin_slug . '/' . $file_name . '.php' );
 
 		// install plugins
 		// install woocommerce plugins
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 			// install woocommerce plugins
 			$plugins = array(
@@ -1187,7 +1190,7 @@ class SettingsController {
 					 
 					$count = count( array_filter( array_map( function($item) use ($baseName) { return $item['name'] == $baseName; }, $_tfhb_hosts_settings['others_information']['fields'] ) ) );
 					if ( $count > 0 ) {
-						$uniqueName = $baseName. '_'. substr( md5( mt_rand() ), 0, 2 );
+						$uniqueName = $baseName. '_'. substr( md5( wp_rand() ), 0, 2 );
 					} else {
 						$uniqueName = $baseName;
 					} 

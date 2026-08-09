@@ -303,12 +303,13 @@ class HydraBookingShortcode {
 	public function tfhb_meeting_form_submit_callback() {
  
 		// Checked Nonce validation
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
+		$nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+		if ( empty($nonce) || ! wp_verify_nonce( $nonce, 'tfhb_nonce' ) ) {
 			wp_send_json_error( array( 'message' => __('Nonce verification failed', 'hydra-booking') ) );
 		}
 
 		// Check if the request is POST
-		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( !isset($_SERVER['REQUEST_METHOD']) || 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 			wp_send_json_error( array( 'message' => __('Invalid request method', 'hydra-booking') ) );
 		}
 
@@ -317,12 +318,12 @@ class HydraBookingShortcode {
 			wp_send_json_error( array( 'message' => __('Invalid request', 'hydra-booking') ) );
 		}
 
-		if ( $_POST['meeting_id'] == 0 ) {
+		if ( !isset($_POST['meeting_id']) || $_POST['meeting_id'] == 0 ) {
 			wp_send_json_error( array( 'message' => __('Invalid Meeting ID', 'hydra-booking') ) );
 		}
 
 		// Lightweight per-IP rate limit to reduce unauthenticated slot-exhaustion / booking-spam abuse.
-		if ( $this->tfhb_is_booking_rate_limited( absint( $_POST['meeting_id'] ) ) ) {
+		if ( $this->tfhb_is_booking_rate_limited( absint( wp_unslash($_POST['meeting_id']) ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Too many requests. Please try again in a few minutes.', 'hydra-booking' ) ) );
 		}
 
@@ -341,7 +342,7 @@ class HydraBookingShortcode {
 		// Generate Meeting Hash Based on start time and end time and Date And Meeting id + random number
 		if ( isset( $_POST['booking_hash'] ) ) {
 
-			$meeting_hash = sanitize_text_field( $_POST['booking_hash'] );
+			$meeting_hash = sanitize_text_field( wp_unslash($_POST['booking_hash']) );
 
 		} else {
 
@@ -350,9 +351,9 @@ class HydraBookingShortcode {
 		}
 
 		// sanitize the data
-		$data['meeting_id'] = isset( $_POST['meeting_id'] ) ? sanitize_text_field( $_POST['meeting_id'] ) : 0;
+		$data['meeting_id'] = isset( $_POST['meeting_id'] ) ? sanitize_text_field( wp_unslash($_POST['meeting_id']) ) : 0;
 
-		$data['meeting_dates']      = isset( $_POST['meeting_dates'] ) ? sanitize_text_field( $_POST['meeting_dates'] ) : '';
+		$data['meeting_dates']      = isset( $_POST['meeting_dates'] ) ? sanitize_text_field( wp_unslash($_POST['meeting_dates']) ) : '';
 		$meeting     = new Meeting();
 		$MeetingData = $meeting->get( $data['meeting_id'] );
  
@@ -373,12 +374,13 @@ class HydraBookingShortcode {
 		
 
 		
-		$start_time = isset( $_POST['meeting_time_start'] ) ? sanitize_text_field( $_POST['meeting_time_start'] ) : '';
-		$end_time = isset( $_POST['meeting_time_end'] ) ? sanitize_text_field( $_POST['meeting_time_end'] ) : '';
+		$start_time = isset( $_POST['meeting_time_start'] ) ? sanitize_text_field( wp_unslash($_POST['meeting_time_start']) ) : '';
+		$end_time = isset( $_POST['meeting_time_end'] ) ? sanitize_text_field( wp_unslash($_POST['meeting_time_end']) ) : '';
+		$attendee_time_zone = isset($_POST['attendee_time_zone']) ? sanitize_text_field( wp_unslash($_POST['attendee_time_zone']) ) : '';
 	
-		$start_time = $date_time->convert_time_based_on_timezone( $meeting_date, $start_time, $_POST['attendee_time_zone'], $availability_time_zone , '' );
+		$start_time = $date_time->convert_time_based_on_timezone( $meeting_date, $start_time, $attendee_time_zone, $availability_time_zone , '' );
 		
-		$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $_POST['attendee_time_zone'], $availability_time_zone , '' );
+		$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $attendee_time_zone, $availability_time_zone , '' );
 	 
 		$data['meeting_dates'] = $start_time->format('Y-m-d');
 		 
@@ -392,34 +394,34 @@ class HydraBookingShortcode {
 			wp_send_json_error( array( 'message' => esc_html(__('This time slot is currently on hold. Please try again later or choose a different time.', 'hydra-booking')) ) );
 		}
  
-		$data['host_id']            = isset( $_POST['host_id'] ) ? sanitize_text_field( $_POST['host_id'] ) : 0;
-		$data['attendee_id']        = isset( $_POST['attendee_id'] ) ? sanitize_text_field( $_POST['attendee_id'] ) : 0;
+		$data['host_id']            = isset( $_POST['host_id'] ) ? sanitize_text_field( wp_unslash($_POST['host_id']) ) : 0;
+		$data['attendee_id']        = isset( $_POST['attendee_id'] ) ? sanitize_text_field( wp_unslash($_POST['attendee_id']) ) : 0;
 		$data['hash']               = $meeting_hash; 
 	
 		$data['availability_time_zone']      = isset( $availability_time_zone ) ? sanitize_text_field( $availability_time_zone ) : '';
 		$data['start_time']         = isset( $start_time ) ? sanitize_text_field( $start_time ) : '';
 		$data['end_time']           = isset( $end_time ) ? sanitize_text_field( $end_time ) : '';
-		$data['slot_minutes']       = isset( $_POST['slot_minutes'] ) ? sanitize_text_field( $_POST['slot_minutes'] ) : '';
-		$data['duration']           = isset( $_POST['duration'] ) ? sanitize_text_field( $_POST['duration'] ) : 0;
+		$data['slot_minutes']       = isset( $_POST['slot_minutes'] ) ? sanitize_text_field( wp_unslash($_POST['slot_minutes']) ) : '';
+		$data['duration']           = isset( $_POST['duration'] ) ? sanitize_text_field( wp_unslash($_POST['duration']) ) : 0;
 		
 
 		// Attendee Data
 		$attendee_data['hash'] =  $this->generate_secure_token();
 		$attendee_data['meeting_id'] = isset( $data['meeting_id'] ) ? sanitize_text_field( $data['meeting_id'] ) : 0;
 		$attendee_data['host_id']            = isset( $data['host_id'] ) ? sanitize_text_field( $data['host_id'] ) : 0;
-		$attendee_data['attendee_time_zone'] = isset( $_POST['attendee_time_zone'] ) ? sanitize_text_field( $_POST['attendee_time_zone'] ) : 0;
-		$attendee_data['attendee_name']      = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
-		$attendee_data['email']              = isset( $_POST['email'] ) ? sanitize_text_field( $_POST['email'] ) : '';
-		$attendee_data['address']            = isset( $_POST['address'] ) ? sanitize_text_field( $_POST['address'] ) : '';
+		$attendee_data['attendee_time_zone'] = isset( $_POST['attendee_time_zone'] ) ? sanitize_text_field( wp_unslash($_POST['attendee_time_zone']) ) : 0;
+		$attendee_data['attendee_name']      = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash($_POST['name']) ) : '';
+		$attendee_data['email']              = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash($_POST['email']) ) : '';
+		$attendee_data['address']            = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash($_POST['address']) ) : '';
 		$attendee_data['others_info']        = array();
-		$questions                  = isset( $_POST['question'] ) ? $_POST['question'] : array();
+		$questions                  = isset( $_POST['question'] ) ? wp_unslash($_POST['question']) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		// Contact form fields
 		if ( $meta_data['questions_type'] == 'existing' ) {
 
 			if ( $meta_data['questions_form_type'] == 'wpcf7' ) {
 				$questions = array_filter(
-					$_POST,
+					wp_unslash($_POST),
 					function ( $key ) {
 						return strpos( $key, 'question_' ) === 0;
 					},
@@ -430,24 +432,26 @@ class HydraBookingShortcode {
 			if ( $meta_data['questions_form_type'] == 'fluent-forms' ) {
 
 				$questions = array_filter(
-					$_POST,
+					wp_unslash($_POST),
 					function ( $key ) {
 						return strpos( $key, 'question_' ) === 0;
 					},
 					ARRAY_FILTER_USE_KEY
 				);
 				if ( isset( $_POST['names'] ) && is_array( $_POST['names'] ) ) {
-					$attendee_data['attendee_name'] = sanitize_text_field( $_POST['names']['first_name'] ) . ' ' . sanitize_text_field( $_POST['names']['last_name'] );
+					$first_name = isset( $_POST['names']['first_name'] ) ? sanitize_text_field( wp_unslash($_POST['names']['first_name']) ) : '';
+					$last_name  = isset( $_POST['names']['last_name'] ) ? sanitize_text_field( wp_unslash($_POST['names']['last_name']) ) : '';
+					$attendee_data['attendee_name'] = trim( $first_name . ' ' . $last_name );
 				}
 			}
 
 			if ( $meta_data['questions_form_type'] == 'forminator' ) {
 		
-				$attendee_data['email'] = isset( $_POST['email-1'] ) ? sanitize_email( $_POST['email-1'] ) : '';
+				$attendee_data['email'] = isset( $_POST['email-1'] ) ? sanitize_email( wp_unslash($_POST['email-1']) ) : '';
 				unset( $_POST['email-1'] );
 
 				$attendee_names = array_filter(
-					$_POST,
+					wp_unslash($_POST),
 					function ( $key ) {
 						return strpos( $key, 'name-1' ) === 0;
 					},
@@ -461,7 +465,7 @@ class HydraBookingShortcode {
 				}
 
 				$address = array_filter(
-					$_POST,
+					wp_unslash($_POST),
 					function ( $key ) {
 						return strpos( $key, 'address-1' ) === 0;
 					},
@@ -472,7 +476,7 @@ class HydraBookingShortcode {
 					$attendee_data['address'] .= sanitize_text_field( $name ) . ' ';
 					unset( $_POST[ $key ] );
 				}
-				$questions = $_POST;
+				$questions = wp_unslash($_POST);
 				unset( $questions['_wp_http_referer'] );
 				unset( $questions['action'] );
 				unset( $questions['current_url'] );
@@ -508,13 +512,13 @@ class HydraBookingShortcode {
 				$attendee_data['others_info'][ $key ] = sanitize_text_field( $question );
 			}
 		}
-		$attendee_data['country']    = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : '';
-		$attendee_data['ip_address'] = isset( $_POST['ip_address'] ) ? sanitize_text_field( $_POST['ip_address'] ) : '';
-		$attendee_data['device']     = isset( $_POST['device'] ) ? sanitize_text_field( $_POST['device'] ) : '';
+		$attendee_data['country']    = isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash($_POST['country']) ) : '';
+		$attendee_data['ip_address'] = isset( $_POST['ip_address'] ) ? sanitize_text_field( wp_unslash($_POST['ip_address']) ) : '';
+		$attendee_data['device']     = isset( $_POST['device'] ) ? sanitize_text_field( wp_unslash($_POST['device']) ) : '';
 
 		// Recurring Meeting
 		if ( isset( $meta_data['recurring_status'] ) && $meta_data['recurring_status'] == true ) {
-			$meeting_dates          = isset( $_POST['meeting_dates'] ) ? sanitize_text_field( $_POST['meeting_dates'] ) : '';
+			$meeting_dates          = isset( $_POST['meeting_dates'] ) ? sanitize_text_field( wp_unslash($_POST['meeting_dates']) ) : '';
 
 			$data['meeting_dates'] = apply_filters( 'hydra_booking/calculate_recurring_meeting_dates', $meeting_dates, $meta_data );
  
@@ -541,7 +545,7 @@ class HydraBookingShortcode {
 		}
 		
 		$data['cancelled_by'] = '';
-		$data['reason']       = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
+		$data['reason']       = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash($_POST['reason']) ) : '';
 		$data['booking_type'] = $meta_data['meeting_type'];
 
 		// Payment Method
@@ -624,8 +628,9 @@ class HydraBookingShortcode {
 
 			// Require a nonce bound to this specific booking hash, mirroring the cancel flow,
 			// so possessing the site-wide public nonce alone is not enough to reschedule a booking.
-			$reschedule_nonce_valid = isset( $_POST['reschedule_nonce'] ) && ! empty( $meeting_hash )
-				&& wp_verify_nonce( $_POST['reschedule_nonce'], 'tfhb_reschedule_' . $meeting_hash );
+			$reschedule_nonce = isset($_POST['reschedule_nonce']) ? sanitize_text_field(wp_unslash($_POST['reschedule_nonce'])) : '';
+			$reschedule_nonce_valid = ! empty($reschedule_nonce) && ! empty( $meeting_hash )
+				&& wp_verify_nonce( $reschedule_nonce, 'tfhb_reschedule_' . $meeting_hash );
 
 			if ( ! $reschedule_nonce_valid ) {
 				wp_send_json_error( array( 'message' => esc_html( __( 'Nonce verification failed', 'hydra-booking' ) ) ) );
@@ -992,12 +997,13 @@ class HydraBookingShortcode {
 	// Already Booked Times Callback
 	public function tfhb_already_booked_times_callback() {
 		// Checked Nonce validation.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
+		$nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+		if ( empty($nonce) || ! wp_verify_nonce( $nonce, 'tfhb_nonce' ) ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed' , 'hydra-booking'))) );
 		}
 
 		// Check if the request is POST.
-		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( !isset($_SERVER['REQUEST_METHOD']) || 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid request method', 'hydra-booking')) ) );
 		}
 
@@ -1006,8 +1012,9 @@ class HydraBookingShortcode {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid request', 'hydra-booking')) ) );
 		} 
 
+		$meeting_id           = isset( $_POST['meeting_id'] ) ? sanitize_text_field( wp_unslash($_POST['meeting_id']) ) : 0;
 		$meeting = new Meeting();
-		$meetingData = $meeting->get( $_POST['meeting_id'] );
+		$meetingData = $meeting->get( $meeting_id );
 		$meeting_type =  $meetingData->meeting_type;
 		if($meeting_type == 'one-to-group' && tfhb_is_pro_active() == false ){
 			 
@@ -1015,10 +1022,9 @@ class HydraBookingShortcode {
 			wp_die();
 		}
 
-		$selected_date        = isset( $_POST['selected_date'] ) ? sanitize_text_field( $_POST['selected_date'] ) : '';
-		$meeting_id           = isset( $_POST['meeting_id'] ) ? sanitize_text_field( $_POST['meeting_id'] ) : 0;
-		$selected_time_format = isset( $_POST['time_format'] ) ? sanitize_text_field( $_POST['time_format'] ) : '12';
-		$selected_time_zone   = isset( $_POST['time_zone'] ) ? sanitize_text_field( $_POST['time_zone'] ) : 'UTC';
+		$selected_date        = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash($_POST['selected_date']) ) : '';
+		$selected_time_format = isset( $_POST['time_format'] ) ? sanitize_text_field( wp_unslash($_POST['time_format']) ) : '12';
+		$selected_time_zone   = isset( $_POST['time_zone'] ) ? sanitize_text_field( wp_unslash($_POST['time_zone']) ) : 'UTC';
 
 		$booking = new Booking();
 		$current_user_booking = $booking->get( array( 'meeting_id' => $meeting_id, 'meeting_dates' => $selected_date ) );
@@ -1031,7 +1037,7 @@ class HydraBookingShortcode {
 		$this_month_all_dates = array();
 		$current_date = $selected_date;
 		
-		$end_date = date('Y-m-t', strtotime($selected_date)); 
+		$end_date = gmdate('Y-m-t', strtotime($selected_date)); 
 		// now get all dates between current date and this month end
 		$begin = new \DateTime($current_date);
 		$end = new \DateTime($end_date);
@@ -1059,7 +1065,7 @@ class HydraBookingShortcode {
 	// Booking Cancel Callback
 	public function tfhb_meeting_form_cencel_callback() {
 		// Check if the request is POST.
-		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( !isset($_SERVER['REQUEST_METHOD']) || 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Invalid request method' , 'hydra-booking'))) );
 		}
 
@@ -1071,19 +1077,20 @@ class HydraBookingShortcode {
 		$data     = array();
 		$response = array();
 
-		$hash = isset( $_POST['hash'] ) ? sanitize_text_field( $_POST['hash'] ) : '';
+		$hash = isset( $_POST['hash'] ) ? sanitize_text_field( wp_unslash($_POST['hash']) ) : '';
  
 		// Checked Nonce validation.
+		$nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
 		$nonce_valid = false;
-		if ( isset( $_POST['nonce'] ) && ! empty( $hash ) ) {
-			$nonce_valid = wp_verify_nonce( $_POST['nonce'], 'tfhb_cancel_' . $hash );
+		if ( ! empty($nonce) && ! empty( $hash ) ) {
+			$nonce_valid = wp_verify_nonce( $nonce, 'tfhb_cancel_' . $hash );
 		}
 
 		if ( ! $nonce_valid ) {
 			wp_send_json_error( array( 'message' => esc_html(__('Nonce verification failed', 'hydra-booking')) ) );
 		}
 
-		$reason       = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
+		$reason       = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash($_POST['reason']) ) : '';
 		
 		$Attendee = new Attendees();
 		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
@@ -1198,12 +1205,13 @@ class HydraBookingShortcode {
 	 */
 	public function tfhb_meeting_paypal_payment_confirmation_callback() {
 		// Checked Nonce validation.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'tfhb_nonce' ) ) {
+		$nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+		if ( empty($nonce) || ! wp_verify_nonce( $nonce, 'tfhb_nonce' ) ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Nonce verification failed', 'hydra-booking' ) ) );
 		}
 
 		// Check if the request is POST.
-		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( !isset($_SERVER['REQUEST_METHOD']) || 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request method', 'hydra-booking' ) ) );
 		}
 
@@ -1212,7 +1220,9 @@ class HydraBookingShortcode {
 			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request', 'hydra-booking' ) ) );
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$payment_details = isset( $_POST['payment_details'] ) ? wp_unslash( $_POST['payment_details'] ) : array();
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$response_data   = isset( $_POST['responseData'] ) ? wp_unslash( $_POST['responseData'] ) : array();
 
 		$payment_id = isset( $payment_details['id'] ) ? sanitize_text_field( $payment_details['id'] ) : '';

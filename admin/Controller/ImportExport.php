@@ -666,7 +666,8 @@ class ImportExport {
 			fputcsv( $file, $booking );
 		}
 
-		fclose( $file );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+		fclose($file);
 		$data = ob_get_clean();
 		// Return response
 		$data = array(

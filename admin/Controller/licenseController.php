@@ -116,7 +116,7 @@ class licenseController {
         update_option($lic_key_name,$license_key) || add_option($lic_key_name,$license_key);
         update_option($main_lic_key,$license_key) || add_option($main_lic_key,$license_key);
         update_option("HydraBooking_lic_email",$license_email) || add_option("HydraBooking_lic_email",$license_email);
-        update_option('_site_transient_update_plugins',''); 
+
         $HydraBooking = new HydraBooking();
      
         $HydraBooking->response_obj;  
@@ -158,7 +158,7 @@ class licenseController {
         if(HydraBookingBase::remove_license_key(TFHB_BASE_FILE,$message)){
             update_option($lic_key_name,"") || add_option($lic_key_name,"");
             update_option($main_lic_key,"") || add_option($main_lic_key,"");
-            update_option('_site_transient_update_plugins','');
+
         }
 
         wp_send_json_success( array( 

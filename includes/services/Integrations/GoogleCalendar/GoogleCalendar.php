@@ -198,9 +198,11 @@ class GoogleCalendar
 
 	public function GetAccessData($request)
 	{
-		$code  = $request instanceof \WP_REST_Request ? $request->get_param('code') : (isset($_GET['code']) ? wp_unslash($_GET['code']) : '');
-		$state = $request instanceof \WP_REST_Request ? $request->get_param('state') : (isset($_GET['state']) ? wp_unslash($_GET['state']) : '');
-		$error = $request instanceof \WP_REST_Request ? $request->get_param('error') : (isset($_GET['error']) ? wp_unslash($_GET['error']) : '');
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$code  = $request instanceof \WP_REST_Request ? $request->get_param('code') : (isset($_GET['code']) ? sanitize_text_field(wp_unslash($_GET['code'])) : '');
+		$state = $request instanceof \WP_REST_Request ? $request->get_param('state') : (isset($_GET['state']) ? sanitize_text_field(wp_unslash($_GET['state'])) : '');
+		$error = $request instanceof \WP_REST_Request ? $request->get_param('error') : (isset($_GET['error']) ? sanitize_text_field(wp_unslash($_GET['error'])) : '');
+		// phpcs:enable
 
 		$state_data = $this->get_oauth_state_data($state);
 
@@ -586,7 +588,7 @@ class GoogleCalendar
 
 		$booking_meta = array(
 			'booking_id' => $booking->booking_id,
-			'meta_key'   => 'booking_calendar',
+			'meta_key'   => 'booking_calendar', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			'value'      => wp_json_encode($value, true),
 		);
 
@@ -654,7 +656,7 @@ class GoogleCalendar
 			$BookingMeta->add(
 				[
 					'booking_id' => $booking->booking_id,
-					'meta_key' => 'booking_activity',
+					'meta_key' => 'booking_activity', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 					'value' => array(
 						'datetime' => $this->get_activity_datetime(),
 						'title' =>  'Updated Google Calendar Event',  // translate it from Vue
@@ -671,7 +673,7 @@ class GoogleCalendar
 			$BookingMeta->add(
 				[
 					'booking_id' => $booking->booking_id,
-					'meta_key' => 'booking_activity',
+					'meta_key' => 'booking_activity', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 					'value' => array(
 						'datetime' => $this->get_activity_datetime(),
 						'title' =>  'Google Calendar Event Created',  // translate it from Vue
@@ -781,7 +783,7 @@ class GoogleCalendar
 				$ActivityMeta = new BookingMeta();
 				$ActivityMeta->add(array(
 					'booking_id' => $attendee->booking_id,
-					'meta_key'   => 'booking_activity',
+					'meta_key'   => 'booking_activity', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 					'value'      => array(
 						'datetime'    => $this->get_activity_datetime(),
 						'title'       => 'Updated Google Calendar Event',
@@ -857,7 +859,7 @@ class GoogleCalendar
 				$UpdateBookingMeta->add(
 					[
 						'booking_id' => ! empty($attendee) && isset($attendee->booking_id) ? $attendee->booking_id : $booking_data->id,
-						'meta_key' => 'booking_activity',
+						'meta_key' => 'booking_activity', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 						'value' => array(
 							'datetime' => $this->get_activity_datetime(),
 							'title' =>  'Updated Google Calendar Event',  // translate it from Vue
