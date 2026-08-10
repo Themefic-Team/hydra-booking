@@ -3,6 +3,10 @@ import { __ } from '@wordpress/i18n';
 import {ref, onBeforeMount} from 'vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'
 import { useRouter} from 'vue-router' 
+import { applyFilters } from '@/utils/hooks.js';
+
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
+
 // component
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
@@ -72,7 +76,7 @@ onBeforeMount(() => {
                         :option = "[
                             {name: 'Woocommerce', value: 'woo_payment', icon: $tfhb_url+'/assets/images/Woo.png',  },  
                             {name: 'Paypal', value: 'paypal_payment', icon: $tfhb_url+'/assets/images/paypal.svg',}, 
-                            {name: 'Stripe Pay', value: 'stripe_payment', icon: $tfhb_url+'/assets/images/stripe-small.svg',}, 
+                            ...(registeredIntegrations.includes('stripe') ? [{name: 'Stripe Pay', value: 'stripe_payment', icon: $tfhb_url+'/assets/images/stripe-small.svg'}] : []),
                         ]"   
                     /> 
 

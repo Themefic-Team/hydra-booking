@@ -55,28 +55,7 @@ onBeforeMount(() => {
     <div class="tfhb-meeting-webhook-wrap  tfhb-full-width tfhb-flexbox tfhb-gap-16" v-if="$tfhb_is_pro == true  && $tfhb_license_status == true">
         <Webhook :meetingId="props.meetingId" :meeting="meeting" :integrations="integrations" />
     </div>
-    <div class="tfhb-meeting-webhook-wrap  tfhb-full-width  tfhb-pro tfhb-flexbox tfhb-gap-16" v-else>
-        <div class="tfhb-webhook-title tfhb-flexbox">
-            <div class="tfhb-admin-title tfhb-m-0">
-                <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{ $tfhb_trans('Webhook Integration') }}
-                    <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
-                </h2> 
-                <h2></h2> 
-                <p>{{ $tfhb_trans('Webhook integration enables automated data transfer between apps, allowing real-time communication and custom API interactions.') }}</p>
-            </div>
-        </div>
-        <div class="tfhb-admin-card-box tfhb-flexbox tfhb-align-baseline tfhb-m-0 tfhb-full-width tfhb-pro">
-            <div class="tfhb-integration-box">
-                <button class="tfhb-btn  tfhb-flexbox tfhb-gap-8">
-                    <Icon name="PlusCircle" :width="20"/>
-                    {{ $tfhb_trans('Add New Integrations') }}
-                </button>  
-            </div> 
-        </div>
-    </div>
-    
-     <!-- WebHook -->
+    <!-- WebHook -->
 
      <div class="tfhb-submission-btn"> 
         <HbButton  

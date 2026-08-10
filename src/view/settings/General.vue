@@ -16,6 +16,16 @@ import HbText from '@/components/form-fields/HbText.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'; 
 import HbButton from '@/components/form-fields/HbButton.vue';
 import HbProPopup from '@/components/widgets/HbProPopup.vue';
+import { applyFilters } from '@/utils/hooks.js';
+
+const componentMap = {
+    HbSwitch,
+    HbInfoBox
+};
+
+const defaultProSettings = [];
+const proSettings = ref(applyFilters('tfhb_general_settings_fields', defaultProSettings));
+
 const local_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const generalSettings = reactive({
   admin_email: '{{wp.admin_email}}',
@@ -499,44 +509,43 @@ onBeforeMount(() => {
                     :label="$tfhb_trans('Confirmed bookings by default.')"  
                 />
 
-                <!-- Meeting URL Generation - Pro feature -->
-                <div class="tfhb-full-width tfhb-gap-8">
-                    <!-- Free / no valid license: show locked state with Pro badge -->
-                    <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false"
+                <!-- Pro Settings Injected via JS Hooks -->
+                <div class="tfhb-full-width tfhb-gap-8" v-for="setting in proSettings" :key="setting.id">
+                    <div v-if="setting.isPro && (!$tfhb_is_pro || !$tfhb_license_status)"
                         class="tfhb-pro tfhb-flexbox tfhb-align-center tfhb-gap-8"
                         style="cursor:pointer"
                         @click="ProPopup = true">
-                        <HbSwitch
+                        <component 
+                            v-if="setting.mainField"
+                            :is="componentMap[setting.mainField.type]"
+                            v-bind="setting.mainField.props"
                             :model-value="1"
-                            width="auto"
-                            :label="$tfhb_trans('Enable meeting public URL & share link.')"
                             :disabled="true"
                         />
                         <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8">
-                            <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}
+                            <Icon name="Crown" size="20" /> {{ $tfhb_trans('Pro') }}
                         </span>
                     </div>
-                    <!-- Pro + valid license: fully functional toggle -->
                     <div v-else>
-                        <HbSwitch
-                            v-model="generalSettings.meeting_url_generation"
-                            width="100"
-                            :label="$tfhb_trans('Enable meeting public URL & share link.')"
+                        <component 
+                            v-if="setting.mainField"
+                            :is="componentMap[setting.mainField.type]"
+                            v-bind="setting.mainField.props"
+                            v-model="generalSettings[setting.mainField.model]"
                         />
-                        <p v-if="!generalSettings.meeting_url_generation" class="tfhb-field-note tfhb-mt-8">
-                            <!-- Telegram -->
-                            <HbInfoBox name="first-modal" ">
-                                
-                                <template #content>
-                                    {{ $tfhb_trans('When disabled, meeting public pages will return 404 and the share link feature will be hidden.') }}
-                                    
+                        <p v-if="setting.noteField && !generalSettings[setting.mainField.model]" class="tfhb-field-note tfhb-mt-8">
+                            <component 
+                                :is="componentMap[setting.noteField.type]"
+                                v-bind="setting.noteField.props"
+                            >
+                                <template #content v-if="setting.noteField.slots && setting.noteField.slots.content">
+                                    {{ $tfhb_trans(setting.noteField.slots.content) }}
                                 </template>
-                            </HbInfoBox>
-
+                            </component>
                         </p>
                     </div>
                 </div>
-                <!-- Meeting URL Generation - Pro feature -->
+                <!-- Pro Settings Injected via JS Hooks -->
 
                 <HbProPopup
                     v-if="$tfhb_is_pro == false || $tfhb_license_status == false"

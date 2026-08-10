@@ -5,6 +5,9 @@ import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios' 
 import { toast } from "vue3-toastify"; 
 import { useRouter, useRoute, RouterView } from 'vue-router' 
+import { applyFilters } from '@/utils/hooks.js';
+
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 
 // component
 import ZoomIntregration from '@/components/integrations/ZoomIntegrations.vue';
@@ -481,7 +484,7 @@ onBeforeMount(() => {
                 :ispopup="twpopup"
                 @popup-open-control="istwPopupOpen"
                 @popup-close-control="istwPopupClose"
-                v-if="currentHash === 'all' || currentHash === 'conference'"
+                v-if="registeredIntegrations.includes('twilio') && (currentHash === 'all' || currentHash === 'conference')"
                 />
                 <!-- TwilioIntegration intrigation -->
 
@@ -492,7 +495,7 @@ onBeforeMount(() => {
                 :ispopup="slpopup"
                 @popup-open-control="isslPopupOpen"
                 @popup-close-control="isslPopupClose"
-                v-if="currentHash === 'all' || currentHash === 'conference'"
+                v-if="registeredIntegrations.includes('slack') && (currentHash === 'all' || currentHash === 'conference')"
                 />
                 <!-- SlackIntegration intrigation -->
 
@@ -514,7 +517,7 @@ onBeforeMount(() => {
                 :ispopup="outlookpopup"
                 @popup-open-control="isOutlookPopupOpen"
                 @popup-close-control="isOutlookPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'calendars'"
+                v-if="registeredIntegrations.includes('outlook') && (currentHash === 'all' || currentHash === 'calendars')"
                 />
                 <!-- Outlook intrigation -->
 
@@ -525,7 +528,7 @@ onBeforeMount(() => {
                 :ispopup="applepopup"
                 @popup-open-control="isApplePopupOpen"
                 @popup-close-control="isApplePopupClose"
-                v-if="currentHash === 'all' || currentHash === 'calendars'"
+                v-if="registeredIntegrations.includes('apple') && (currentHash === 'all' || currentHash === 'calendars')"
                 />
                 <!-- Apple intrigation -->
 
@@ -536,7 +539,7 @@ onBeforeMount(() => {
                 :ispopup="spopup"
                 @popup-open-control="isstripePopupOpen"
                 @popup-close-control="isstripePopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'payments'"
+                v-if="registeredIntegrations.includes('stripe') && (currentHash === 'all' || currentHash === 'payments')"
                 />
                 <!-- stripe intrigation -->
 
@@ -590,7 +593,7 @@ onBeforeMount(() => {
                 <WebhookIntegrations 
                 :webhook_data="Integration.webhook" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                v-if="registeredIntegrations.includes('webhook') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- webhook -->
           
@@ -611,7 +614,7 @@ onBeforeMount(() => {
                     :ispopup="aweberpopup"
                     @popup-open-control="isAWeberPopupOpen"
                     @popup-close-control="isAWeberPopupClose" 
-                    v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                    v-if="registeredIntegrations.includes('aweber') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- AWeber intrigation -->
 
@@ -622,7 +625,7 @@ onBeforeMount(() => {
                     :ispopup="hubspotpopup"
                     @popup-open-control="ishubspotPopupOpen"
                     @popup-close-control="isHubspotPopupClose" 
-                    v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                    v-if="registeredIntegrations.includes('hubspot') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- Hubspot intrigation -->
 
@@ -630,7 +633,7 @@ onBeforeMount(() => {
                 <FluentCRMIntegrations 
                 :fluent_crm_data="Integration.fluent_crm" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                v-if="registeredIntegrations.includes('fluent_crm') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- Fluent CRM -->
                 
@@ -638,7 +641,7 @@ onBeforeMount(() => {
                 <ZohoCRMIntegrations 
                 :zoho_crm_data="Integration.zoho_crm" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                v-if="registeredIntegrations.includes('zoho_crm') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- Zoho CRM -->
 
@@ -646,7 +649,7 @@ onBeforeMount(() => {
                 <PabblyIntegrations 
                 :pabbly_data="Integration.pabbly" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                v-if="registeredIntegrations.includes('pabbly') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- Pabbly -->
 
@@ -654,7 +657,7 @@ onBeforeMount(() => {
                 <ZapierIntegrations 
                 :zapier_data="Integration.zapier" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                v-if="registeredIntegrations.includes('zapier') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- Zapier -->
           

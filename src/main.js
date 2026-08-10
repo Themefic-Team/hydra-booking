@@ -1,4 +1,6 @@
 import './assets/main.scss' 
+import { addFilter, applyFilters, addAction, doAction } from './utils/hooks.js';
+window.HydraBookingHooks = { addFilter, applyFilters, addAction, doAction };
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/router.js'   

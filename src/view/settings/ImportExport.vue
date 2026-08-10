@@ -16,8 +16,11 @@ import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 import HbProPopup from '@/components/widgets/HbProPopup.vue'; 
 // Store  
 import { importExport } from '@/store/settings/importExport';
+import { applyFilters } from '@/utils/hooks.js';
 
- 
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
+const router = useRouter();
+
 const ExportAsCSV = ref(false);
 const ProPopup = ref(false);
 const exportData = reactive({
@@ -53,6 +56,11 @@ onBeforeMount(() => {
     importExport.GetImportExportData();
     importExport.allData.steps = 'init';
     importExport.allData.import_file = null; 
+    
+    // Route protection
+    if (!registeredIntegrations.value.includes('import_export')) {
+        router.push('/settings/general');
+    }
 });
 
 const exportAsJson = () => {

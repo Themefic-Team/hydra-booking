@@ -7,6 +7,9 @@ import HbButton from '@/components/form-fields/HbButton.vue'
 import HbSwitch from '@/components/form-fields/HbSwitch.vue'
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
 import { useRouter } from 'vue-router'
+import { applyFilters } from '@/utils/hooks.js';
+
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 
 const router = useRouter();
 
@@ -386,8 +389,8 @@ const UpdateNotification = async () => {
                 <div class="tfhb-integration-notification-box" v-show="SmsPreview">
                     <div class="tfhb-notification-button-tabs tfhb-flexbox">
                         <button @click="changeIntegrationTab('telegram')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='telegram' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</button>
-                        <button @click="changeIntegrationTab('slack')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='slack' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</button>
-                        <button @click="changeIntegrationTab('twilio')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='twilio' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</button>
+                        <button v-if="registeredIntegrations.includes('slack')" @click="changeIntegrationTab('slack')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='slack' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</button>
+                        <button v-if="registeredIntegrations.includes('twilio')" @click="changeIntegrationTab('twilio')" class="tfhb-btn tfhb-notification-tabs tab-btn flex-btn" :class="currentIntegrationTabs=='twilio' ? 'active' : ''" ><img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</button>
                     </div>
 
                     <!-- Telegram -->
@@ -457,7 +460,7 @@ const UpdateNotification = async () => {
                     </div> 
 
                     <!-- Slack -->
-                    <HbInfoBox name="first-modal" v-if="currentIntegrationTabs=='slack' && meeting.slack==''">
+                    <HbInfoBox name="first-modal" v-if="registeredIntegrations.includes('slack') && currentIntegrationTabs=='slack' && meeting.slack==''">
                         <template #content>
                             <span>{{$tfhb_trans('Your aren’t connected with Slack. Please go to ')}}  
                                 <HbButton 
@@ -469,9 +472,10 @@ const UpdateNotification = async () => {
                             </span>
                         </template>
                     </HbInfoBox>
-                    <div v-if="currentIntegrationTabs=='slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{
+                    <div v-if="registeredIntegrations.includes('slack') && currentIntegrationTabs=='slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{
                         'tfhb-skeleton': smsskeleton,
-                        'tfhb-pro': !meeting.slack
+                        'tfhb-pro': !meeting.slack,
+                        'tfhb-not-installed' :  meeting.slack==''
                     }"> 
                         <!-- Single Notification  -->
                         <MailNotifications 
@@ -522,7 +526,7 @@ const UpdateNotification = async () => {
                     </div> 
 
                     <!-- Twilio -->
-                    <HbInfoBox name="first-modal" v-if="currentIntegrationTabs=='twilio' && meeting.twilio==''">
+                    <HbInfoBox name="first-modal" v-if="registeredIntegrations.includes('twilio') && currentIntegrationTabs=='twilio' && meeting.twilio==''">
                         <template #content>
                             <span>{{$tfhb_trans('Your aren’t connected with Twilio. Please go to ')}}  
                                 <HbButton 
@@ -534,9 +538,10 @@ const UpdateNotification = async () => {
                             </span>
                         </template>
                     </HbInfoBox>
-                    <div v-if="currentIntegrationTabs=='twilio'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{
+                    <div v-if="registeredIntegrations.includes('twilio') && currentIntegrationTabs=='twilio'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box tfhb-m-0 tfhb-full-width" :class="{
                         'tfhb-skeleton': smsskeleton,
-                        'tfhb-pro': !meeting.twilio
+                        'tfhb-pro': !meeting.twilio,
+                        'tfhb-not-installed' :  meeting.twilio==''
                     }"> 
                         <!-- Single Notification  -->
                         <MailNotifications 

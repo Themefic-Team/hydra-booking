@@ -7,6 +7,19 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbText from '@/components/form-fields/HbText.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
+import { applyFilters } from '@/utils/hooks.js';
+import { ref } from 'vue';
+
+const componentMap = {
+    HbSwitch,
+    HbCounter,
+    HbText
+};
+
+const defaultLimitSections = [];
+
+const limitSections = ref(applyFilters('tfhb_meeting_limit_sections', defaultLimitSections));
+
 const emit = defineEmits(["update-meeting", "limits-frequency-add"]); 
 
 const props = defineProps({
@@ -135,56 +148,42 @@ const removeExtraFrequency = (key) => {
             </div>  
        </div>
 
-       <div class="tfhb-meeting-limit tfhb-flexbox tfhb-gap-16">
-            <div v-if="$tfhb_is_pro == false || $tfhb_license_status == false" class="tfhb-admin-title tfhb-full-width tfhb-m-0" >
+        <div v-for="section in limitSections" :key="section.id" class="tfhb-meeting-limit tfhb-flexbox tfhb-gap-16">
+            <div v-if="section.isPro && (!$tfhb_is_pro || !$tfhb_license_status)" class="tfhb-admin-title tfhb-full-width tfhb-m-0" >
                 <div class=" tfhb-pro">
                     <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{$tfhb_trans('Recurring Event')}}
-                        <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size=20 /> {{ $tfhb_trans('Pro') }}</span>
+                    {{$tfhb_trans(section.title)}}
+                        <span class="tfhb-badge tfhb-badge-pro not-absolute tfhb-flexbox tfhb-gap-8"> <Icon name="Crown" size="20" /> {{ $tfhb_trans('Pro') }}</span>
                     </h2> 
-                    <p> {{$tfhb_trans('Set up a repeating schedule')}}</p>
+                    <p> {{$tfhb_trans(section.description)}}</p>
                 </div> 
-            
             </div>
             <div v-else class="tfhb-admin-title tfhb-full-width tfhb-m-0">
                 <h2 class="tfhb-flexbox tfhb-gap-8 tfhb-justify-normal">
-                    {{$tfhb_trans('Recurring Event')}}
+                    {{$tfhb_trans(section.title)}}
                     <HbSwitch 
-                        v-model="meeting.recurring_status"
+                        v-if="section.switchModel"
+                        v-model="meeting[section.switchModel]"
                     />
                 </h2> 
-                <p> {{$tfhb_trans('Set up a repeating schedule')}}</p>
+                <p> {{$tfhb_trans(section.description)}}</p>
             </div> 
+            
             <div
-            :class="{'tfhb-pro': $tfhb_is_pro == false || $tfhb_license_status == false}"
-            class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" v-if="($tfhb_is_pro == false || $tfhb_license_status == false) || meeting.recurring_status == true">  
-
-                <!-- Meeting interval -->
-
-                <HbCounter
-                    :label="$tfhb_trans('Repeats every')"
-                    width="60" 
-                    :repater="false"
-                    :counter_value="meeting.recurring_repeat"
-                    limit="1"
-                />
-                
-                <!-- For a maximum of --> 
-                <HbText  
-                        v-model="meeting.recurring_maximum"   
-                        type="number"
-                        :label="$tfhb_trans('Maximum number of bookings')"   
-                        selected = "1"
-                        :placeholder="$tfhb_trans('Use meeting length (default)')" 
-                        width="40"  
-                        limit="1"
-                    /> 
-
-
+                :class="{'tfhb-pro': section.isPro && (!$tfhb_is_pro || !$tfhb_license_status)}"
+                class="tfhb-admin-card-box tfhb-meeting-limits tfhb-flexbox tfhb-m-0 tfhb-full-width" 
+                v-if="(section.isPro && (!$tfhb_is_pro || !$tfhb_license_status)) || (section.switchModel && meeting[section.switchModel] == true) || !section.switchModel"
+            >  
+                <template v-for="(field, fIndex) in section.fields" :key="fIndex">
+                    <component 
+                        :is="componentMap[field.type]"
+                        v-bind="field.props"
+                        v-model="meeting[field.model]"
+                        :counter_value="field.counterModel ? meeting[field.counterModel] : undefined"
+                    />
+                </template>
             </div>  
-       </div>
-        
-     
+        </div>
 
         <div class="tfhb-meeting-schedule tfhb-full-width tfhb-flexbox tfhb-gap-16">
             <HbCheckbox 

@@ -1,12 +1,15 @@
 <script setup> 
 import { __ } from '@wordpress/i18n';
 // Use children routes for the tabs 
-import { ref, reactive, onBeforeMount } from 'vue';
+import { ref, reactive, onBeforeMount, watch } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios' 
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';
+import { applyFilters } from '@/utils/hooks.js';
+
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 const router = useRouter();
 
 // import Form Field 
@@ -270,6 +273,21 @@ const UploadChangeMobileDashboardLogo = () => {
 
 onBeforeMount(() => {  
     fetchNotification();
+    
+    // Protect routes on direct visit
+    const currentHash = router.currentRoute.value.hash;
+    if ((currentHash === '#twilio' && !registeredIntegrations.value.includes('twilio')) || 
+        (currentHash === '#slack' && !registeredIntegrations.value.includes('slack'))) {
+        router.push('/settings/notifications#email');
+    }
+});
+
+// Protect routes on hash change
+watch(() => router.currentRoute.value.hash, (newHash) => {
+    if ((newHash === '#twilio' && !registeredIntegrations.value.includes('twilio')) || 
+        (newHash === '#slack' && !registeredIntegrations.value.includes('slack'))) {
+        router.push('/settings/notifications#email');
+    }
 });
 
 </script>
@@ -311,9 +329,9 @@ onBeforeMount(() => {
                     
                     <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.fullPath.includes('telegram') }" class="notification-submenu" data-filter="telegram"> <img :src="$tfhb_url+'/assets/images/Telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</router-link></li>
 
-                    <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.fullPath.includes('twilio') }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
+                    <li v-if="registeredIntegrations.includes('twilio')"><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.fullPath.includes('twilio') }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
 
-                    <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.fullPath.includes('slack') }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
+                    <li v-if="registeredIntegrations.includes('slack')"><router-link to="/settings/notifications#slack" :class="{ 'active': $route.fullPath.includes('slack') }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
 
             </ul>  
         </nav>
@@ -511,7 +529,7 @@ onBeforeMount(() => {
             </div> 
 
             <!-- Twilio Notification -->
-            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#twilio' && Integration.twilio==''">
+            <HbInfoBox name="first-modal" v-if="registeredIntegrations.includes('twilio') && !$route.params.id && $route.hash === '#twilio' && Integration.twilio==''">
                 <template #content>
                     <span>{{$tfhb_trans('Your aren’t connected with Twilio. Please go to ')}}  
                         <HbButton 
@@ -523,7 +541,7 @@ onBeforeMount(() => {
                     </span>
                 </template>
             </HbInfoBox>
-            <div v-if="!$route.params.id && $route.hash === '#twilio'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.twilio ? 'tfhb-pro' : ''"> 
+            <div v-if="registeredIntegrations.includes('twilio') && !$route.params.id && $route.hash === '#twilio'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.twilio ? 'tfhb-pro' : ''"> 
  
                 <!-- Single Notification  -->
                 <MailNotifications 
@@ -565,7 +583,7 @@ onBeforeMount(() => {
             </div> 
 
             <!-- Slack Notification -->
-            <HbInfoBox name="first-modal" v-if="!$route.params.id && $route.hash === '#slack' && Integration.slack==''">
+            <HbInfoBox name="first-modal" v-if="registeredIntegrations.includes('slack') && !$route.params.id && $route.hash === '#slack' && Integration.slack==''">
                 <template #content>
                     <span>{{$tfhb_trans('Your aren’t connected with Slack. Please go to ')}}  
                         <HbButton 
@@ -577,7 +595,7 @@ onBeforeMount(() => {
                     </span>
                 </template>
             </HbInfoBox>
-            <div v-if="!$route.params.id && $route.hash === '#slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.slack ? 'tfhb-pro' : ''"> 
+            <div v-if="registeredIntegrations.includes('slack') && !$route.params.id && $route.hash === '#slack'" class="tfhb-notification-wrap tfhb-notification-attendee tfhb-admin-card-box" :class="!Integration.slack ? 'tfhb-pro' : ''"> 
  
             <!-- Single Notification  -->
             <MailNotifications 

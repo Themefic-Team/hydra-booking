@@ -5,6 +5,9 @@ import { RouterView } from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue';
 import { Notification } from '@/store/notification';
 import Header from '@/components/Header.vue';
+import { applyFilters } from '@/utils/hooks.js';
+
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 
 onMounted(() => { 
     Notification.fetchNotifications();
@@ -30,9 +33,9 @@ onMounted(() => {
                             
                             <li><router-link to="/settings/notifications#telegram" :class="{ 'active': $route.fullPath.includes('telegram') }" class="notification-submenu" data-filter="telegram"> <img :src="$tfhb_url+'/assets/images/Telegram.svg'" alt=""> {{ $tfhb_trans('Telegram') }}</router-link></li>
 
-                            <li><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.fullPath.includes('twilio') }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
+                            <li v-if="registeredIntegrations.includes('twilio')"><router-link to="/settings/notifications#twilio" :class="{ 'active': $route.fullPath.includes('twilio') }" class="notification-submenu" data-filter="twilio"> <img :src="$tfhb_url+'/assets/images/Twilio.svg'" alt=""> {{ $tfhb_trans('Twilio') }}</router-link></li>
 
-                            <li><router-link to="/settings/notifications#slack" :class="{ 'active': $route.fullPath.includes('slack') }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
+                            <li v-if="registeredIntegrations.includes('slack')"><router-link to="/settings/notifications#slack" :class="{ 'active': $route.fullPath.includes('slack') }" class="notification-submenu" data-filter="slack"> <img :src="$tfhb_url+'/assets/images/Slack.svg'" alt=""> {{ $tfhb_trans('Slack') }}</router-link></li>
 
                         </ul>
                     </li>
@@ -57,7 +60,7 @@ onMounted(() => {
                     <li><router-link to="/settings/appearance" :class="{ 'active': $route.path === '/settings/appearance' }"> <Icon name="SwatchBook" /> {{ $tfhb_trans('Appearance') }}</router-link></li>
 
                     <li><router-link to="/settings/category" :class="{ 'active': $route.path === '/settings/category' }"> <Icon name="ClipboardList" /> {{ $tfhb_trans('Meeting Category') }}</router-link></li>
-                    <li><router-link to="/settings/import-export" :class="{ 'active': $route.path === '/settings/import-export' }"> <Icon name="Import" /> {{ $tfhb_trans('Import/Export') }}</router-link></li>
+                    <li v-if="registeredIntegrations.includes('import_export')"><router-link to="/settings/import-export" :class="{ 'active': $route.path === '/settings/import-export' }"> <Icon name="Import" /> {{ $tfhb_trans('Import/Export') }}</router-link></li>
 
                     <li><router-link to="/settings/hosts-settings" exact :class="{ 'active': $route.path.startsWith('/settings/hosts-settings') }"> <Icon name="UserCog" /> {{ $tfhb_trans('Host Settings') }}</router-link></li>  
 
