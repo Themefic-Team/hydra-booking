@@ -56,11 +56,11 @@ class GoogleCalendar
 			return;
 		}
 
-		$start_time = strtotime($booking_data->start_time);
-		$end_time   = strtotime($booking_data->end_time);
+		$start_time = strtotime($booking_data->start_time . ' UTC');
+		$end_time   = strtotime($booking_data->end_time . ' UTC');
 
-		$start_date = gmdate('Y-m-d', strtotime($meeting_date)) . 'T' . gmdate('H:i:s', $start_time);
-		$end_date   = gmdate('Y-m-d', strtotime($meeting_date)) . 'T' . gmdate('H:i:s', $end_time);
+		$start_date = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $start_time);
+		$end_date   = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $end_time);
 
 		$event->start = array(
 			'dateTime' => $start_date,
@@ -491,12 +491,13 @@ class GoogleCalendar
 			$booking_locations_data .= '' . $value->location . ', ';
 		}
 
-		$start_time    = strtotime($booking->start_time); // 03:45 AM
-		$end_time      = strtotime($booking->end_time); // 04:30 AM
+		$start_time    = strtotime($booking->start_time . ' UTC'); // 03:45 AM
+		$end_time      = strtotime($booking->end_time . ' UTC'); // 04:30 AM
+		$meeting_dates = explode(',', $booking->meeting_date);
+
 		foreach ($meeting_dates as $meeting_date) {
-			// Co
-			$start_date = gmdate('Y-m-d', strtotime($meeting_date)) . 'T' . gmdate('H:i:s', $start_time);
-			$end_date   = gmdate('Y-m-d', strtotime($meeting_date)) . 'T' . gmdate('H:i:s', $end_time);
+			$start_date = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $start_time);
+			$end_date   = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $end_time);
 
 
 			// Meeting location google meeting
@@ -1288,12 +1289,12 @@ class GoogleCalendar
 			$event_id = $event->id;
 
 			// update event time date and time zone everyting based on reshedule details
-			$start_time    = strtotime($data->start_time); // 03:45 AM
-			$end_time      = strtotime($data->end_time); // 04:30 AM
+			$start_time    = strtotime($data->start_time . ' UTC'); // 03:45 AM
+			$end_time      = strtotime($data->end_time . ' UTC'); // 04:30 AM
 			$meeting_dates = $bookingDates[$key]; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
 
-			$start_date = gmdate('Y-m-d', strtotime($meeting_dates)) . 'T' . gmdate('H:i:s', $start_time);
-			$end_date   = gmdate('Y-m-d', strtotime($meeting_dates)) . 'T' . gmdate('H:i:s', $end_time);
+			$start_date = gmdate('Y-m-d', strtotime($meeting_dates . ' UTC')) . 'T' . gmdate('H:i:s', $start_time);
+			$end_date   = gmdate('Y-m-d', strtotime($meeting_dates . ' UTC')) . 'T' . gmdate('H:i:s', $end_time);
 
 			$event->start = array(
 				'dateTime' => $start_date,

@@ -512,7 +512,7 @@ onBeforeMount(() => {
                 <!-- Pro Settings Injected via JS Hooks -->
                 <div class="tfhb-full-width tfhb-gap-8" v-for="setting in proSettings" :key="setting.id">
                     <div v-if="setting.isPro && (!$tfhb_is_pro || !$tfhb_license_status)"
-                        class="tfhb-pro tfhb-flexbox tfhb-align-center tfhb-gap-8"
+                        class="tfhb-pro tfhb-flexbox tfhb-align-center tfhb-gap-8 "
                         style="cursor:pointer"
                         @click="ProPopup = true">
                         <component 

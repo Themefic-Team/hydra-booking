@@ -31,8 +31,22 @@ export default function useDateFormat() {
 
     const dayNamesShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+    const parseLocalTime = (dateString) => {
+        let str = String(dateString || '').trim();
+        // Extract just the YYYY-MM-DD part if it contains it, to construct a local date directly.
+        // This avoids timezone shifting issues caused by browsers parsing ISO formats as UTC.
+        const match = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (match) {
+            const year = parseInt(match[1], 10);
+            const month = parseInt(match[2], 10) - 1; // Months are 0-indexed in JS
+            const day = parseInt(match[3], 10);
+            return new Date(year, month, day);
+        }
+        return new Date(str);
+    }
+
     const formatDateByPattern = (dateValue, pattern) => {
-        const date = new Date(dateValue);
+        const date = dateValue instanceof Date ? dateValue : parseLocalTime(dateValue);
         if (Number.isNaN(date.getTime())) {
             return dateValue || '';
         }
@@ -86,7 +100,7 @@ export default function useDateFormat() {
 
             if (!dateFormat) {
                 const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                const dateObject = new Date(trimmedDate);
+                const dateObject = parseLocalTime(trimmedDate);
                 return Number.isNaN(dateObject.getTime()) ? trimmedDate : dateObject.toLocaleDateString('en-US', options);
             }
 
@@ -105,7 +119,7 @@ export default function useDateFormat() {
     const Tfhb_DateTime = (dateString) => {
         if (!dateString) return '';
 
-        const date = new Date(dateString);
+        const date = parseLocalTime(dateString);
         if (Number.isNaN(date.getTime())) {
             return dateString;
         }

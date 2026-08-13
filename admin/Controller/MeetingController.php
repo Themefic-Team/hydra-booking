@@ -242,7 +242,7 @@ class MeetingController
 		// get user role
 		$current_user_role = ! empty($current_user->roles[0]) ? $current_user->roles[0] : '';
 		$current_user_id   = $current_user->ID;
-	
+
 		// Meeting Lists
 		$meeting      = new Meeting();
 		$MeetingsList = array();
@@ -253,7 +253,7 @@ class MeetingController
 			$MeetingsList = $meeting->get(null, null, $current_user_id);
 		}
 
-		if ( empty( $MeetingsList ) || ! is_array( $MeetingsList ) ) {
+		if (empty($MeetingsList) || ! is_array($MeetingsList)) {
 			return array();
 		}
 
@@ -271,7 +271,7 @@ class MeetingController
 	// Meeting List
 	public function getMeetingsData()
 	{
-		
+
 		$MeetingsList = $this->getMeetingList();
 
 		// Return response
@@ -749,22 +749,22 @@ class MeetingController
 
 		// if host is not found, return error 
 		if (empty($host_data)) {
-			
+
 			// Create default host if not found, and current user role is administrator
 			if (current_user_can('administrator')) {
-				$availability_settings =  !empty( get_option( '_tfhb_availability_settings' ) ) && get_option( '_tfhb_availability_settings' ) != 'false' ? get_option( '_tfhb_availability_settings' ) : array();
+				$availability_settings =  !empty(get_option('_tfhb_availability_settings')) && get_option('_tfhb_availability_settings') != 'false' ? get_option('_tfhb_availability_settings') : array();
 				//  find avaibilty id which default_status is true
 				$default_availability = array_filter($availability_settings, function ($availability) {
 					return isset($availability['default_status']) && $availability['default_status'] === true;
 				});
 
-				if ( ! empty( $default_availability )) {
-					$default_availability_entry = reset( $default_availability );
+				if (! empty($default_availability)) {
+					$default_availability_entry = reset($default_availability);
 					$availability_id            = $default_availability_entry['id'];
 				} else {
-					if ( count( $availability_settings ) > 0 ) {
+					if (count($availability_settings) > 0) {
 						// get first availability id
-						$first_availability_entry = reset( $availability_settings );
+						$first_availability_entry = reset($availability_settings);
 						$availability_id           = $first_availability_entry['id'];
 					} else {
 						// No default availability exists yet, import a system default based on the current user's timezone
@@ -773,14 +773,13 @@ class MeetingController
 				}
 
 				$SetupWizard = new SetupWizard();
-				$host_data   = $SetupWizard->CreateHost( $current_user, $availability_id );
+				$host_data   = $SetupWizard->CreateHost($current_user, $availability_id);
 
 				// Dynamically add the host role to the current user, keeping their existing role(s) intact
-				if ( ! in_array( 'tfhb_host', (array) $current_user->roles, true ) ) {
-					$current_user->add_role( 'tfhb_host' );
+				if (! in_array('tfhb_host', (array) $current_user->roles, true)) {
+					$current_user->add_role('tfhb_host');
 				}
-			}
-			else {
+			} else {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
@@ -788,10 +787,9 @@ class MeetingController
 					)
 				);
 			}
-
 		}
 
-		if (tfhb_is_pro_active() == false && $request_data['meeting_type'] == 'one-to-group') {
+		if (tfhb_is_hydra_booking_pro_active() == false && $request_data['meeting_type'] == 'one-to-group') {
 			return rest_ensure_response(
 				array(
 					'status'  => false,
@@ -1803,13 +1801,13 @@ class MeetingController
 			'sslverify' => false,
 		);
 
-		$response = wp_remote_get( $url, $args );
+		$response = wp_remote_get($url, $args);
 
-		if ( is_wp_error( $response ) ) {
+		if (is_wp_error($response)) {
 			return false;
 		}
 
-		return wp_remote_retrieve_body( $response );
+		return wp_remote_retrieve_body($response);
 	}
 
 	/* Modules Fileds */
@@ -2005,10 +2003,10 @@ class MeetingController
 
 		if (is_wp_error($api_response)) {
 			echo 'Error:' . esc_attr($api_response->get_error_message());
-            $response = '';
+			$response = '';
 		} else {
-            $response = wp_remote_retrieve_body($api_response);
-        }
+			$response = wp_remote_retrieve_body($api_response);
+		}
 
 		$response_data = json_decode($response, true);
 

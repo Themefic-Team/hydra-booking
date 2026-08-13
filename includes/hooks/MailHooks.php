@@ -474,8 +474,9 @@ class MailHooks {
 				continue;
 			}
 
-			$timestamp = strtotime( $part );
-			$output[]  = false !== $timestamp ? wp_date( $date_format, $timestamp ) : $part;
+			// $part is the localized date string. Parse and format in UTC so wp_date() does not shift it.
+			$timestamp = strtotime( $part . ' UTC' );
+			$output[]  = false !== $timestamp ? wp_date( $date_format, $timestamp, new \DateTimeZone( 'UTC' ) ) : $part;
 		}
 
 		if ( empty( $output ) ) {
