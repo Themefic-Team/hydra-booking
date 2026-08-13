@@ -1474,8 +1474,12 @@ class GoogleCalendar
 			}
 
 			try {
-				$start_obj = new \DateTime($busy['start']);
-				$end_obj   = new \DateTime($busy['end']);
+				// Strip fractional seconds to prevent DateTime exception on PHP < 8.0
+				$start_str = preg_replace('/\.\d+([Z+-])/i', '$1', $busy['start']);
+				$end_str   = preg_replace('/\.\d+([Z+-])/i', '$1', $busy['end']);
+
+				$start_obj = new \DateTime($start_str);
+				$end_obj   = new \DateTime($end_str);
 
 				$start_obj->setTimezone(new \DateTimeZone($selected_time_zone));
 				$end_obj->setTimezone(new \DateTimeZone($selected_time_zone));

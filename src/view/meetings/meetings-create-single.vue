@@ -140,21 +140,31 @@ const removeAvailabilityTime = (key, tkey = null) => {
     Meeting.singleMeeting.MeetingData.availability_custom.time_slots[key].times.splice(tkey, 1);
 }
 
-// Add new date slot
+// Store to the reactive
 const addAvailabilityDate = (key) => {
-    Meeting.singleMeeting.MeetingData.availability_custom.date_slots.push({
-        date: '',
-        available: '',
-        times: [
-            {
-                start: '09:00',
-                end: '17:00',
-            }
-        ]
-    });
+    // Ensure the date is stored strictly as YYYY-MM-DD strings without time/timezone to prevent UTC shifting
+    let cleanDate = OverridesDates.date;
+    if (typeof cleanDate === 'string') {
+        cleanDate = cleanDate.split(',').map(d => {
+            const trimmed = d.trim();
+            const isoMatch = trimmed.match(/^(\d{4}-\d{2}-\d{2})T/);
+            return isoMatch ? isoMatch[1] : trimmed;
+        }).join(', ');
+    } else if (cleanDate instanceof Date) {
+        const year = cleanDate.getFullYear();
+        const month = String(cleanDate.getMonth() + 1).padStart(2, '0');
+        const day = String(cleanDate.getDate()).padStart(2, '0');
+        cleanDate = `${year}-${month}-${day}`;
+    }
+
+    Meeting.singleMeeting.MeetingData.availability_custom.date_slots[OverridesDates.key].date = cleanDate;
+    Meeting.singleMeeting.MeetingData.availability_custom.date_slots[OverridesDates.key].available = OverridesDates.available;
+    Meeting.singleMeeting.MeetingData.availability_custom.date_slots[OverridesDates.key].times = OverridesDates.times;
+
+    OverridesOpen.value = false;
 }
 const editAvailabilityDate = (key) => {
-    props.meeting.availability_custom.date_slots.forEach((available, qkey) => {
+    Meeting.singleMeeting.MeetingData.availability_custom.date_slots.forEach((available, qkey) => {
         if (qkey === key) {
             OverridesDates.key = key;
             OverridesDates.date = available.date;
