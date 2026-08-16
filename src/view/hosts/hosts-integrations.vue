@@ -1,8 +1,10 @@
 <script setup>
 import { ref, reactive, onBeforeMount } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
-import axios from 'axios'  
+import axios from 'axios'
 import { toast } from "vue3-toastify"; 
+import { applyFilters } from '@/utils/hooks.js';
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 
 // Get Current Route url
 const currentRoute = useRouter().currentRoute.value.path;
@@ -327,7 +329,7 @@ onBeforeMount(() => {
         <!-- Mailchimp intrigation -->
 
         <!-- AWeber intrigation -->
-        <AWeberIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        <AWeberIntegrations v-if="registeredIntegrations.includes('aweber')" display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
             :aweber_data="Integration.aweber" 
             @update-integrations="UpdateIntegration" 
             from="host"
@@ -338,7 +340,7 @@ onBeforeMount(() => {
         <!-- AWeber intrigation -->
 
         <!-- Hubspot intrigation -->
-        <HubspotIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        <HubspotIntegrations v-if="registeredIntegrations.includes('hubspot')" display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
             :hubspot_data="Integration.hubspot" 
             @update-integrations="UpdateIntegration" 
             from="host"
@@ -349,7 +351,7 @@ onBeforeMount(() => {
         <!-- Hubspot intrigation -->
 
         <!-- Zoho intrigation -->
-        <ZohoIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        <ZohoIntegrations v-if="registeredIntegrations.includes('zoho_crm')" display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :zoho_data="Integration.zoho"  
         :zoho_crm_status="settings_zoho.zoho_crm_status"  
         @update-integrations="UpdateIntegration" 
@@ -373,7 +375,7 @@ onBeforeMount(() => {
         <!-- telegram intrigation -->
 
         <!-- twilio intrigation -->
-        <TwilioIntegration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        <TwilioIntegration v-if="registeredIntegrations.includes('twilio')" display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :twilio_data="Integration.twilio" 
         @update-integrations="UpdateIntegration" 
         from="host"
@@ -384,7 +386,7 @@ onBeforeMount(() => {
         <!-- twilio intrigation -->
 
         <!-- slack intrigation -->
-        <SlackIntegration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
+        <SlackIntegration v-if="registeredIntegrations.includes('slack')" display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"  
         :slack_data="Integration.slack" 
         @update-integrations="UpdateIntegration" 
         from="host"
