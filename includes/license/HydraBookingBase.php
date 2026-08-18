@@ -45,9 +45,8 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 		if($this->has_check_update) {
 			if(function_exists("add_action")){
 				add_action( 'admin_post_hydra-booking_fupc', function(){
-					update_option('_site_transient_update_plugins','');
-					update_option('_site_transient_update_themes','');
-					set_site_transient('update_themes', null);
+					delete_site_transient( 'update_plugins' );
+					delete_site_transient( 'update_themes' );
 					delete_transient($this->product_base."_up");
 					wp_safe_redirect(  admin_url( 'plugins.php' ) );
 					exit;
@@ -149,8 +148,8 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 		return 0;
 	}
 	public function clean_update_info(){
-		update_option('_site_transient_update_plugins','');
-		update_option('_site_transient_update_themes','');
+		delete_site_transient( 'update_plugins' );
+		delete_site_transient( 'update_themes' );
 		delete_transient($this->product_base."_up");
 	}
 	public function update_message_cb($data, $response){
