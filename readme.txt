@@ -150,8 +150,6 @@ Join our [Facebook group](https://www.facebook.com/groups/hydra-booking) to stay
 
 We provide full support on the WordPress.org forums & [Our Website](https://portal.themefic.com/support/). Check our [Support Policy](https://themefic.com/support-policy/).
 
-### Privacy Policy
-Hydra Booking uses [Appsero](https://appsero.com/) SDK to collect some telemetry data. Appsero SDK does not gather any data by default. The SDK only starts gathering basic telemetry data when a user allows it via the admin notice. Appsero SDK DOES NOT IMMEDIATELY start gathering data, without confirmation from users in any case. We use this data to troubleshoot problems faster, make product improvements & ensure a great user experience for all our users.
 
 ###  Our Plugins
 * [Travel and Hotel Booking Solution - Tourfic](https://wordpress.org/plugins/tourfic)

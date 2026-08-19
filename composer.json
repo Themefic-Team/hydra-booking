@@ -4,8 +4,7 @@
     "type": "project",
     "require": {
         "sabre/dav": "^4.6",
-        "php": ">=7.2",
-        "appsero/client": "^2.0"
+        "php": ">=7.2"
     },
     "autoload": {
         "psr-4": {
