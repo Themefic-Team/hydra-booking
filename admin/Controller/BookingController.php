@@ -958,9 +958,18 @@ class BookingController {
 			}
 		}
 
-		$single_booking_meta = $booking->get(
-			array( 'id' => $request['id'] ),
-			false,
+		// Fetch the full attendee+booking+host record so that action hooks
+		// (email notifications, webhooks, etc.) receive a complete object with
+		// fields like `email`, `host_id`, `cancelled_by`, and up-to-date `status`.
+		// Using Booking::get() here would return only the bookings-table row and
+		// silently break every hook that expects an attendee object.
+		$Attendee            = new Attendees();
+		$single_booking_meta = $Attendee->getAttendeeWithBooking(
+			array(
+				array( 'booking_id', '=', absint( $request['id'] ) ),
+			),
+			1,
+			'DESC'
 		);
 
 		if ( 'approved' == $request['status'] ) {

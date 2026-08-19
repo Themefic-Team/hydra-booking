@@ -139,12 +139,6 @@ class Transactions {
 			} 
 		} 
 
-		if($limit != null) {
-			$sql .= " LIMIT %d";
-			$data[] = $limit;
-		}
-
-
 		if($orderBy != null) {
 			// Whitelist allowed order by fields (assuming id, created_at, updated_at, total)
 			$allowed_orders = ['id', 'created_at', 'updated_at', 'total'];

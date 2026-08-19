@@ -116,16 +116,29 @@ const UpdateMeetingStatus = async (id, host, status) => {
             }  
         } );
 
-        if (response.data.status) {  
-            Booking.fetchBookings();
+        if (response.data.status) {
+            // Immediately update the local booking status so Re-book option
+            // appears instantly (without needing a page reload)
+            Booking.bookings.forEach(dateGroup => {
+                if (dateGroup.bookings) {
+                    dateGroup.bookings.forEach(book => {
+                        if (book.id == id) {
+                            book.status = status;
+                        }
+                    });
+                }
+            });
 
+            // Show success toast first, then refresh in background
             toast.success(response.data.message, {
-                position: 'bottom-right', // Set the desired position
+                position: 'bottom-right',
                 "autoClose": 1500,
-            });   
+            });
+
+            Booking.fetchBookings();
         }else{
             toast.error(response.data.message, {
-                position: 'bottom-right', // Set the desired position
+                position: 'bottom-right',
                 "autoClose": 1500,
             });
         }

@@ -4,7 +4,7 @@ Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 5.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.2.4
+Stable tag: 1.2.6
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -220,12 +220,22 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
+
+= 1.2.6 =
+* Fixed: Admin-dashboard cancel/approve action no longer silently drops notification emails — the action hook now receives a fully-populated attendee+booking+host object.
+* Fixed: Webhook payload for "Booking Canceled" event now correctly reflects the up-to-date status and cancelled_by fields at the time of dispatch.
+
+= 1.2.5 =
+* Fixed: Outlook Calendar 2-way sync now correctly blocks the right time slot — replaced date() with gmdate() when building ISO datetimes pushed to Outlook, matching the approach used for Google Calendar.
+* Fixed: Custom availability entries no longer shift to the wrong day for hosts in non-UTC timezones — date strings are now stored as plain YYYY-MM-DD values without passing through the browser's Date constructor.
+
 = 1.2.4 =
 * Security fix: Restricted integration/update endpoint to administrators only.
 * Security fix: Guarded admin_email write with manage_options capability check.
 * Security fix: Removed tfhb_manage_options from the tfhb_host role.
 * Security fix: Added DB migration to strip capability from existing role and users.
 * Improvement: Moved core plugin.php include to conditional guard.
+
 
 = 1.2.3 – Aug 03, 2026 =
  

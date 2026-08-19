@@ -189,7 +189,21 @@ const removeAvailabilityTDate = (key) => {
 // Store to the reactive
 const addAvailabilityDate = (key) => {
 
-    props.availabilityDataSingle.date_slots[OverridesDates.key].date = OverridesDates.date
+    // Ensure the date is stored strictly as YYYY-MM-DD strings without time/timezone to prevent UTC shifting
+    let cleanDate = OverridesDates.date;
+    if (typeof cleanDate === 'string') {
+        cleanDate = cleanDate.split(',').map(d => {
+            const trimmed = d.trim();
+            const isoMatch = trimmed.match(/^(\d{4}-\d{2}-\d{2})T/);
+            return isoMatch ? isoMatch[1] : trimmed;
+        }).join(', ');
+    } else if (cleanDate instanceof Date) {
+        cleanDate = cleanDate.getFullYear() + '-' +
+                    String(cleanDate.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(cleanDate.getDate()).padStart(2, '0');
+    }
+
+    props.availabilityDataSingle.date_slots[OverridesDates.key].date = cleanDate
     props.availabilityDataSingle.date_slots[OverridesDates.key].available = OverridesDates.available
     props.availabilityDataSingle.date_slots[OverridesDates.key].times = OverridesDates.times
 
