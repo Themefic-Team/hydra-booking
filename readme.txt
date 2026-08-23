@@ -1,10 +1,10 @@
 === Hydra Booking — Appointment Scheduling & Booking Calendar ===
 Contributors: themefic, hasanet, mdrejon, kamrul0424, jahidcse, akanda22
 Tags: appointments, booking, calendar, scheduling, appointment booking
-Requires at least: 5.4
+Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.2.6
+Stable tag: 1.2.4
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -120,7 +120,7 @@ Create and customize appointment booking forms to simplify the booking process.
 * Use form insights to enhance customer service.
 
 = 🎉 ADVANCED AVAILABILITY & SCHEDULING OPTION =
-Effortlessly set and manage your availability for appointments & schedule booking so you can focus on delivering quality service.
+Effortlessly set and manage your availability for appointments & schedule bookings so you can focus on delivering quality service.
 
 * Define weekly availability hours and days for appointments.
 * Set availability for specific date ranges or open-ended future dates.
@@ -165,7 +165,7 @@ We provide full support on the WordPress.org forums & [Our Website](https://port
 == Installation ==
 
 1. Download and unzip the plugin. Upload the unzipped folder to the wp-content/plugins folder of your WordPress installation. Activate the plugin from the WordPress Plugins administration page
-2. OR, Go to WP admin panel, click 'Plugins' -> 'Add new'. In the search input box, type 'Hydra Booking'.
+2. OR, go to the WP admin panel, click 'Plugins' -> 'Add New'. In the search input box, type 'Hydra Booking'.
 3. Install and activate the plugin.
 4. Go through the Quick Setup wizard for the basic setup.
 5. Check our Documentation & YouTube videos for further instructions.
@@ -195,9 +195,9 @@ You can configure bookings as free or paid and accept payments through WooCommer
 Yes, Hydra Booking allows host assignments with specific roles and permissions for a flexible booking management experience.
 
 =  Can I migrate from other Appointment Booking plugins? =
-Currently, No. But we are working on this to offer seamless migration from Amelia plugin, BookingPress, Fluent Booking, LatePoint, WP Timetics etc.
+Currently, No. But we are working on this to offer seamless migration from the Amelia plugin, BookingPress, Fluent Booking, LatePoint, WP Timetics etc.
 
-=  Suggest some of the appointment booking plugins for WordPress & Calendar plugin WordPress? =
+=  Suggest some of the appointment booking plugins for WordPress & calendar plugins for WordPress? =
 There are several well-known appointment booking plugins available for WordPress, such as "Amelia Booking", "Simply Schedule" Appointments, and others. Hydra Booking is another powerful option that offers a flexible setup, user-friendly interface, and extensive integration capabilities with tools like WooCommerce, Zoom, and Google Calendar.
 
 == Screenshots ==
@@ -218,22 +218,12 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
+= 1.2.4 – Aug 19, 2026 =
 
-= 1.2.6 =
-* Fixed: Admin-dashboard cancel/approve action no longer silently drops notification emails — the action hook now receives a fully-populated attendee+booking+host object.
-* Fixed: Webhook payload for "Booking Canceled" event now correctly reflects the up-to-date status and cancelled_by fields at the time of dispatch.
-
-= 1.2.5 =
-* Fixed: Outlook Calendar 2-way sync now correctly blocks the right time slot — replaced date() with gmdate() when building ISO datetimes pushed to Outlook, matching the approach used for Google Calendar.
-* Fixed: Custom availability entries no longer shift to the wrong day for hosts in non-UTC timezones — date strings are now stored as plain YYYY-MM-DD values without passing through the browser's Date constructor.
-
-= 1.2.4 =
-* Security fix: Restricted integration/update endpoint to administrators only.
-* Security fix: Guarded admin_email write with manage_options capability check.
-* Security fix: Removed tfhb_manage_options from the tfhb_host role.
-* Security fix: Added DB migration to strip capability from existing role and users.
-* Improvement: Moved core plugin.php include to conditional guard.
-
+- Security: Fixed reported authorization issues.
+- Security: Restricted sensitive settings to `manage_options`.
+- Security: Strengthened REST API permissions.
+- Updated: Addressed WordPress.org reported issues.
 
 = 1.2.3 – Aug 03, 2026 =
  
