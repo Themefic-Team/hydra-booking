@@ -140,11 +140,23 @@ const removeAvailabilityTime = (key, tkey = null) => {
     Meeting.singleMeeting.MeetingData.availability_custom.time_slots[key].times.splice(tkey, 1);
 }
 
+const filteredEndTimes = (startTime) => {
+    if (!startTime) return AvailabilityTime.AvailabilityTime.timeSchedule;
+    return AvailabilityTime.AvailabilityTime.timeSchedule.filter(t => t.value > startTime);
+}
+
 // Store to the reactive
 const addAvailabilityDate = (key) => {
     // Ensure the date is stored strictly as YYYY-MM-DD strings without time/timezone to prevent UTC shifting
     let cleanDate = OverridesDates.date;
-    if (typeof cleanDate === 'string') {
+    if (Array.isArray(cleanDate)) {
+        cleanDate = cleanDate.map(d => {
+            if (d instanceof Date) {
+                return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            }
+            return d;
+        }).join(', ');
+    } else if (typeof cleanDate === 'string') {
         cleanDate = cleanDate.split(',').map(d => {
             const trimmed = d.trim();
             const isoMatch = trimmed.match(/^(\d{4}-\d{2}-\d{2})T/);
@@ -797,7 +809,7 @@ const getLatestEndTime = (day) => {
                                             :selected = "1"
                                             icon="Clock"
                                             placeholder="End"   
-                                            :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
+                                            :option = "filteredEndTimes(time.start)"
                                             @tfhb_start_change="TfhbEndDataEvent"
                                             :parent_key = "key"
                                             :single_key = "tkey"
@@ -884,7 +896,7 @@ const getLatestEndTime = (day) => {
                                                 width="45"
                                                 :selected = "1"
                                                 placeholder="End"   
-                                                :option = "AvailabilityTime.AvailabilityTime.timeSchedule"
+                                                :option = "filteredEndTimes(time.start)"
                                             /> 
 
                                         </div>
