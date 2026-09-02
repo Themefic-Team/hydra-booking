@@ -122,6 +122,13 @@ const addAvailabilityTime = (key) => {
     });
 }
 
+// Helper to ensure array for date_slots
+const ensureArray = (obj) => {
+    if (!obj) return [];
+    if (Array.isArray(obj)) return obj;
+    return Object.values(obj);
+};
+
 // Overrides Calander Open
 const OverridesOpen = ref(false);
 const OverridesDates = reactive({
@@ -147,29 +154,17 @@ const removeOverridesTime = (key, tkey = null) => {
 }
 
 const openOverridesCalendarDate = () => { 
-    if(props.availabilityDataSingle.date_slots){
-        props.availabilityDataSingle.date_slots.push({
-            date: '',
-            available: '',
-            times: [
-                {
-                    start: '09:00',
-                    end: '17:00',
-                }
-            ]
-        });
-    }else{
-        props.availabilityDataSingle.date_slots = [{
-            date: '',
-            available: '',
-            times: [
-                {
-                    start: '09:00',
-                    end: '17:00',
-                }
-            ]
-        }];
-    }
+    props.availabilityDataSingle.date_slots = ensureArray(props.availabilityDataSingle.date_slots);
+    props.availabilityDataSingle.date_slots.push({
+        date: '',
+        available: '',
+        times: [
+            {
+                start: '09:00',
+                end: '17:00',
+            }
+        ]
+    });
 
     const lastIndexOfQuestion = props.availabilityDataSingle.date_slots.length - 1;
     OverridesDates.key = lastIndexOfQuestion;
@@ -187,6 +182,7 @@ const openOverridesCalendarDate = () => {
 
 // Remove date slot 
 const removeAvailabilityTDate = (key) => {
+    props.availabilityDataSingle.date_slots = ensureArray(props.availabilityDataSingle.date_slots);
     props.availabilityDataSingle.date_slots.splice(key, 1);
     OverridesOpen.value = false;
 }
@@ -215,6 +211,7 @@ const addAvailabilityDate = (key) => {
                     String(cleanDate.getDate()).padStart(2, '0');
     }
 
+    props.availabilityDataSingle.date_slots = ensureArray(props.availabilityDataSingle.date_slots);
     props.availabilityDataSingle.date_slots[OverridesDates.key].date = cleanDate
     props.availabilityDataSingle.date_slots[OverridesDates.key].available = OverridesDates.available
     props.availabilityDataSingle.date_slots[OverridesDates.key].times = OverridesDates.times
@@ -223,6 +220,7 @@ const addAvailabilityDate = (key) => {
 }
 
 const editAvailabilityDate = (key) => {
+    props.availabilityDataSingle.date_slots = ensureArray(props.availabilityDataSingle.date_slots);
     props.availabilityDataSingle.date_slots.forEach((available, qkey) => {
         if (qkey === key) {
             OverridesDates.key = key;
