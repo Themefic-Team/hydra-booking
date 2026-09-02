@@ -97,6 +97,16 @@ class AdminMenu {
 
 		// remove Sub Menu
 		remove_submenu_page( 'hydra-booking', 'hydra-booking' );
+
+		// Add Upgrade to Pro link if Pro version is not active
+		if ( ! function_exists( 'tfhb_is_hydra_booking_pro_active' ) || ! tfhb_is_hydra_booking_pro_active() ) {
+			global $submenu;
+			$submenu['hydra-booking'][] = array(
+				'<span class="tfhb-pro-upgrade-btn"><span class="dashicons dashicons-star-filled"></span> Upgrade to Pro</span>',
+				'tfhb_manage_options',
+				'https://hydrabooking.com/'
+			);
+		}
 	}
 
 	public function hydra_booking_page() {
