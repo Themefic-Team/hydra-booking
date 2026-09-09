@@ -187,27 +187,4 @@
 	fill: #2271b1;
 	height: 20px;
 }
-
-/* Upgrade to Pro Button in Admin Menu */
-.tfhb-pro-upgrade-btn {
-    color: #fff !important;
-    background: var(--tfhb-admin-primary-default, #2E6B38) !important;
-    padding: 6px 12px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-weight: 700;
-    font-size: 11px;
-    transition: 0.3s;
-}
-.tfhb-pro-upgrade-btn:hover {
-    background: var(--tfhb-admin-primary-hover, #4C9959) !important;
-    color: #fff !important;
-}
-.tfhb-pro-upgrade-btn .dashicons {
-    font-size: 12px;
-    width: 12px;
-    height: 12px;
-    line-height: 12px;
-}
+
