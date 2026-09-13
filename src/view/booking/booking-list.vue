@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, onMounted, computed } from 'vue';
+import { ref, reactive, onBeforeMount, onMounted, computed, onUnmounted } from 'vue';
 import axios from 'axios'   
 import { useRouter } from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -505,7 +505,7 @@ function hideDropdownOutsideClick(e) {
     const filterContentWrap = document.querySelector('.tfhb-filter-content-wrap');
     const multiSelectPanel = document.querySelector('.p-multiselect-panel'); // Dynamically check for p-multiselect-panel
 
-    if (!filterContentWrap.contains(e.target) &&
+    if (filterContentWrap && !filterContentWrap.contains(e.target) &&
         (!multiSelectPanel || !multiSelectPanel.contains(e.target)) ) { 
         Booking.FilterPreview = false;
         
@@ -519,6 +519,9 @@ onBeforeMount(() => {
     Meeting.fetchMeetings();
     Host.fetchHosts();
     window.addEventListener('click', hideDropdownOutsideClick);
+});
+onUnmounted(() => {
+    window.removeEventListener('click', hideDropdownOutsideClick);
 });
 const ToDateMin = ref(null);
 const getMinDate = (value) => {      

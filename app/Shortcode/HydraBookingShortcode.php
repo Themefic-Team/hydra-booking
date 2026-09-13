@@ -1152,13 +1152,15 @@ class HydraBookingShortcode
 
 
 
+		$user_id = get_current_user_id();
+		$cancelled_by = $user_id ? $user_id : '';
+
 		$attendee_data = array(
 			'id'           => $attendeeBooking->id,
 			'reason'       => $reason,
 			'status'       => 'canceled',
-			'cancelled_by' => 'attendee',
+			'cancelled_by' => $cancelled_by,
 		);
-
 
 		$Attendee->update($attendee_data);
 
@@ -1186,7 +1188,8 @@ class HydraBookingShortcode
 			$booking->update(
 				array(
 					'id' => $attendeeBooking->booking_id,
-					'status' => 'canceled'
+					'status' => 'canceled',
+					'cancelled_by' => $cancelled_by
 				)
 			);
 		}
