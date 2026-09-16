@@ -714,7 +714,7 @@ class HostsController
 			$outlook_calendar['type']              = 'outlook_calendar';
 			if (class_exists('\HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar')) {
 				$OutlookCalendar                       = new \HydraBookingPro\Services\Integrations\OutlookCalendar\OutlookCalendar();
-				$outlook_calendar['access_url']        = $OutlookCalendar->GetAccessTokenUrl($user_id,);
+				$outlook_calendar['access_url']        = $OutlookCalendar->GetAccessTokenUrl($host_id . '_' . $user_id);
 			}
 			$outlook_calendar['status']            = $_tfhb_integration_settings['outlook_calendar']['status'];
 			$outlook_calendar['connection_status'] = $_tfhb_integration_settings['outlook_calendar']['connection_status'];
@@ -1278,6 +1278,8 @@ class HostsController
 
 		if (empty($request['date_slots'])) {
 			$availability['date_slots'] = array();
+		} elseif(isset($availability['date_slots']) && is_array($availability['date_slots'])) {
+			$availability['date_slots'] = array_values($availability['date_slots']);
 		}
 
 		if ($availability['id'] == '') {

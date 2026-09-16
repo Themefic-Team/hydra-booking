@@ -15,14 +15,14 @@ const editAvailability = () => {
     emit('edit-availability');
 }
 const markAsDefault = () => {
-    emit('mark-as-default');
+    // emit('mark-as-default');
 }
 
-const activeItemDropdown = ref(0);
+const activeItemDropdown = ref(null);
 // on click add class active
 const activeSingleMeetingDropdown = (id) => { 
     if(activeItemDropdown.value == id) {
-        activeItemDropdown.value = 0;
+        activeItemDropdown.value = null;
         return;
     }
     activeItemDropdown.value = id;  
@@ -33,14 +33,14 @@ const activeSingleMeetingDropdown = (id) => {
  
 function hideDropdownOutsideClick(e) {
     if (!document.querySelector('.tfhb-content-wrap').contains(e.target)) {
-        activeItemDropdown.value = 0;
+        activeItemDropdown.value = null;
     }
 }
 onBeforeMount(() => {  
     window.addEventListener('click', hideDropdownOutsideClick); 
 }); 
 onBeforeRouteLeave((to, from, next) => {
-    activeItemDropdown.value = 0;
+    activeItemDropdown.value = null;
     window.removeEventListener('click', hideDropdownOutsideClick);
     next();
 })
@@ -55,7 +55,6 @@ onBeforeRouteLeave((to, from, next) => {
             <div class="tfhb-admin-title tfhb-flexbox tfhb-gap-16"> 
                 <h3 >{{availability.title}}  </h3>   
                 <!-- {{ availability }} -->
-                <span  v-if="availability.default_status == true"  class="tfhb-availability-default tfhb-flexbox tfhb-gap-4"><Icon name="Heart" size=15 /> {{ $tfhb_trans('Default') }}</span>
             </div>
             <div class="thb-admin-btn right"> 
                 <div @click="activeSingleMeetingDropdown(availability.id)"  class="tfhb-availability-action tfhb-dropdown">
@@ -66,9 +65,8 @@ onBeforeRouteLeave((to, from, next) => {
                     </svg>
                     <div v-show="availability.id == activeItemDropdown"  class="tfhb-dropdown-wrap">
                         <span class="tfhb-dropdown-single" @click="editAvailability">{{ $tfhb_trans('Edit') }}</span>
-                        <span  v-if="availability.default_status != true && availability.host"  class="tfhb-dropdown-single" @click="markAsDefault">{{ $tfhb_trans('Default') }}</span>
                         <!-- <span class="tfhb-dropdown-single">Duplicate</span> -->
-                        <span v-if="availability.default_status != true"  class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ $tfhb_trans('Delete') }}</span>
+                        <span class="tfhb-dropdown-single tfhb-dropdown-error" @click="deleteAvailability">{{ $tfhb_trans('Delete') }}</span>
                     </div>
                 </div>
             </div> 

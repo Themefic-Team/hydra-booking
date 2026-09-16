@@ -16,7 +16,23 @@ import { Host } from '@/store/hosts'
 import { Meeting } from '@/store/meetings'
 
 import { importExport } from '@/store/settings/importExport';
- 
+import { applyFilters } from '@/utils/hooks.js';
+
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
+
+const defaultMeetingTypes = [
+    {
+        id: 'one-to-one',
+        title: 'One to One',
+        description: 'One host with one invitee. Good for: 1:1 interview, coffee chats',
+        icon1: 'UserRound',
+        icon2: 'UserRound',
+        isPro: false,
+        preloader: 'pre_loader'
+    }
+];
+const meetingTypes = ref(applyFilters('tfhb_meeting_types', defaultMeetingTypes));
+
 const FilterPreview = ref(false);
 const FilterHostPreview = ref(true);
 const FilterCatgoryPreview = ref(true); 
@@ -109,24 +125,19 @@ const sharePopupData = (data) => {
 
 const meeting = reactive({});
 const TfhbMeetingType = (type, router) => {  
-    // return false;
-    if(type == 'one-to-group' && typeof tfhb_core_apps_pro === 'undefined' ) { 
-       
+    // We get the type object from the loop now
+    const typeId = typeof type === 'string' ? type : type.id;
+    const isPro = typeof type === 'object' && type.isPro;
+
+    if (isPro) {
         toast.error((tfhb_core_apps.trans['This feature is only available in pro version'] || 'This feature is only available in pro version'), {
-            position: 'bottom-right', // Set the desired position
-            "autoClose": 1500,
-        });
-        return;
-    }
-    if((type == 'one-to-group' && tfhb_core_apps_pro.tfhb_is_pro !=true)) {  
-        toast.error((tfhb_core_apps.trans['This feature is only available in pro version'] || 'This feature is only available in pro version'), {
-            position: 'bottom-right', // Set the desired position
+            position: 'bottom-right', 
             "autoClose": 1500,
         });
         return;
     }
 
-    meeting.meeting_type = type; 
+    meeting.meeting_type = typeId; 
     Meeting.CreatePopupMeeting(meeting, router);
 }
 
@@ -239,7 +250,7 @@ const exportData = reactive({
         </div>
         <div class="thb-admin-btn tfhb-flexbox tfhb-gap-16">
             <HbButton 
-                v-if="$user.role != 'tfhb_host'"
+                v-if="$user.role != 'tfhb_host' && registeredIntegrations.includes('import_export')"
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="$tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : ExportAsCSV = true"
                 :buttonText="$tfhb_trans('Export')"
@@ -248,7 +259,7 @@ const exportData = reactive({
                 icon_position = 'left'
             />    
             <HbButton 
-                v-if="$user.role != 'tfhb_host'"
+                v-if="$user.role != 'tfhb_host' && registeredIntegrations.includes('import_export')"
                 classValue="tfhb-btn secondary-btn tfhb-flexbox tfhb-gap-8" 
                 @click="tfhb_is_pro == false || $tfhb_license_status == false ? ProPopup = true : router.push({ name: 'MeetingsImport' })"
                 :buttonText="$tfhb_trans('Import')"
@@ -341,54 +352,41 @@ const exportData = reactive({
         </template>
 
         <template #content>  
-            <div class="tfhb-meeting-person-type">
-                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-one', router)">
+            <div 
+                v-for="(type, index) in meetingTypes" 
+                :key="index"
+                class="tfhb-meeting-person-type"
+                :class="{ 'tfhb-pro': type.isPro }"
+            >
+                <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="type.isPro">
+                    <Icon name="Crown" size="20" />  {{ $tfhb_trans('Pro') }}
+                </span>
+                
+                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType(type, router)">
                     <div class="tfhb-meeting-type-content">
                         <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
                             <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
-                                <Icon name="UserRound" size=20 /> 
-                                <Icon name="ArrowRight" size=20 /> 
-                                <Icon name="UserRound" size=20 /> 
+                                <Icon :name="type.icon1" size="20" /> 
+                                <Icon name="ArrowRight" size="20" /> 
+                                <Icon :name="type.icon2" size="20" /> 
                             </div>
-                            <h3>{{ $tfhb_trans('One to One') }}</h3>
+                            <h3>{{ $tfhb_trans(type.title) }}</h3>
                         </div>
-                        <p>{{ $tfhb_trans('One host with one invitee. Good for: 1:1 interview, coffee chats') }}</p>
+                        <p>{{ $tfhb_trans(type.description) }}</p>
                     </div>
+                    
                     <div class="tfhb-meeting-type-icon">
-                        <Icon v-if="Meeting.pre_loader == false" name="ArrowRight" width="20"/>
-                        <HbPreloader v-else color="#2E6B38" />
-                        
+                        <template v-if="!type.isPro">
+                            <Icon v-if="Meeting[type.preloader] == false" name="ArrowRight" width="20"/>
+                            <HbPreloader v-else color="#2E6B38" />
+                        </template>
+                        <template v-else>
+                            <Icon name="ArrowRight" width="20"/>
+                        </template>
                     </div>
                 </div>
             </div> 
-            <div class="tfhb-meeting-person-type" 
-                :class=" {
-                    'tfhb-pro': !$tfhb_is_pro || !$tfhb_license_status, 
-                }"
-            > 
-                <span class="tfhb-badge tfhb-badge-pro tfhb-flexbox tfhb-gap-8" v-if="$tfhb_is_pro == false || $tfhb_license_status == false"><Icon name="Crown" size=20 />  {{ $tfhb_trans('Pro') }}</span>
-                <div class="tfhb-meeting-type-card tfhb-flexbox tfhb-gap-32 tfhb-p-24" @click="TfhbMeetingType('one-to-group', router)">
-                    <div class="tfhb-meeting-type-content">
-                        <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-8">
-                            <div class="tfhb-flexbox tfhb-justify-normal tfhb-gap-4">
-                                <Icon name="UserRound" size=20 /> 
-                                <Icon name="ArrowRight" size=20 /> 
-                                <Icon name="UsersRound" size=20 /> 
-                            </div>
-                            <h3>{{ $tfhb_trans('One to Group') }}</h3>
-                        </div>
-                        <p>{{ $tfhb_trans('One host with group of invitee. Good for: webinars, online clasess') }}</p>
-                    </div>
-                    <div class="tfhb-meeting-type-icon">
-                        <div v-if="$tfhb_is_pro == true && $tfhb_license_status == true" class="tfhb-meeting-type-icon">
-                            <Icon v-if="Meeting.pre_loader_group == false" name="ArrowRight" width="20"/>
-                            <HbPreloader v-else color="#2E6B38" />
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template> 
+        </template>
     </HbPopup>
 
     <HbPopup :isOpen="deletePopup" @modal-close="deletePopup = !deletePopup" max_width="542px" name="first-modal">

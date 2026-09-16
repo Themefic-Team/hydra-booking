@@ -13,13 +13,19 @@ import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
 import HbDropdown from '@/components/form-fields/HbDropdown.vue';
 
 import { importExport } from '@/store/settings/importExport';
- 
+import { applyFilters } from '@/utils/hooks.js';
+
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 const router = useRouter();
 onBeforeMount(() => {   
     importExport.GetImportExportData();
     importExport.booking.steps = 'start';
     importExport.booking.import_file = null;
     importExport.booking.import_column = {};
+    
+    if (!registeredIntegrations.value.includes('import_export')) {
+        router.push('/bookings');
+    }
 });
 
 const changeImportFileData = (event) => {    

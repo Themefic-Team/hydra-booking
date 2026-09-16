@@ -3,6 +3,8 @@ import { ref, reactive, onBeforeMount } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
 import { toast } from "vue3-toastify"; 
+import { applyFilters } from '@/utils/hooks.js';
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 
 // Get Current Route url
 const currentRoute = useRouter().currentRoute.value.path;
@@ -230,8 +232,9 @@ onBeforeMount(() => {
         
         <!-- Host Integration -->
         <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :google_calendar="Integration.google_calendar" @update-integrations="UpdateIntegration" />
-        <OutlookCalendarIntegrations  display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
-        <AppleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" />
+        <OutlookCalendarIntegrations v-if="registeredIntegrations.includes('outlook')" display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :outlook_calendar="Integration.outlook_calendar" @update-integrations="UpdateIntegration" />
+        <AppleCalendarIntegrations v-if="registeredIntegrations.includes('apple')" display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between" :apple_calendar="Integration.apple_calendar" @update-integrations="UpdateIntegration" />
+
  
 
     </div> 

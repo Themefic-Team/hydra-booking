@@ -292,12 +292,12 @@ class BookingController {
 		$where = array();
 
 		if( ! empty( $filter_type ) && $filter_type == 'upcoming' && empty( $date_range['from']) ){ 
-			$where[] = array('meeting_dates', '>=', date('Y-m-d'));
+			$where[] = array('meeting_dates', '>=', gmdate('Y-m-d'));
 		}elseif( ! empty( $filter_type ) && $filter_type == 'completed' &&  empty($status) ){   
 			$where[] = array('status', '=', 'completed');
 		}elseif( ! empty( $filter_type ) && $filter_type == 'latest' ){  
 			// based on created date 
-			$where[] = array('created_at', '>=', date('Y-m-d', strtotime('-7 days')));
+			$where[] = array('created_at', '>=', gmdate('Y-m-d', strtotime('-7 days')));
 		}elseif( ! empty( $filter_type ) && $filter_type == 'filter' ){  
 			// filter by host
 			if( ! empty( $host_ids ) ){ 
@@ -317,8 +317,8 @@ class BookingController {
 			// filter by date range
 			if( ! empty( $date_range['from'] ) ){   
 
-				$where[] = array('meeting_dates', '>=', date('Y-m-d', strtotime($date_range['from'])));
-				$where[] = array('meeting_dates', '<=', date('Y-m-d', strtotime($date_range['to'])));
+				$where[] = array('meeting_dates', '>=', gmdate('Y-m-d', strtotime($date_range['from'])));
+				$where[] = array('meeting_dates', '<=', gmdate('Y-m-d', strtotime($date_range['to'])));
 			}
 		}elseif( ! empty( $filter_type ) && $filter_type == 'search' && ! empty( $filter_search ) ){  
 			// based on created date  
@@ -399,7 +399,7 @@ class BookingController {
 		}, [])); 
 		if( ! empty( $filter_type )  ){
 			// Current date
-			$currentDateTime = new \DateTime( date( 'Y-m-d' ) );
+			$currentDateTime = new \DateTime( gmdate( 'Y-m-d' ) );
 			
 			if($filter_type == 'upcoming'){
 				// Filter out dates that are before the current date
@@ -427,11 +427,11 @@ class BookingController {
 
 				if( ! empty( $filter_type ) && $filter_type == 'upcoming' ){ 
 					// current date is today make it today
-					if($dateData['date'] == date('Y-m-d')){
+					if($dateData['date'] == gmdate('Y-m-d')){
 						$dateData['date'] = 'Today';
 					}
 					// current date is tomorrow make it tomorrow
-					if($dateData['date'] == date('Y-m-d', strtotime('+1 day'))){
+					if($dateData['date'] == gmdate('Y-m-d', strtotime('+1 day'))){
 						$dateData['date'] = 'Tomorrow';
 					}
 				}
@@ -662,7 +662,30 @@ class BookingController {
 			}
 		}
 
-		// 
+		// Trigger notifications based on the new status
+		$AttendeeModel = new Attendees();
+		foreach ( $single_booking->attendees as $attendee ) {
+			$attendeeBooking = $AttendeeModel->getAttendeeWithBooking(
+				array(
+					array('id', '=', $attendee->id),
+				),
+				1,
+				'DESC'
+			);
+
+			if ( ! empty( $attendeeBooking ) ) {
+				if ( 'confirmed' === $select_status || 'approved' === $select_status ) {
+					do_action( 'hydra_booking/after_booking_confirmed', $attendeeBooking );
+				} elseif ( 'pending' === $select_status ) {
+					do_action( 'hydra_booking/after_booking_pending', $attendeeBooking );
+				} elseif ( 'canceled' === $select_status ) {
+					do_action( 'hydra_booking/after_booking_canceled', $attendeeBooking );
+				} elseif ( 'schedule' === $select_status || 'reschedule' === $select_status || 'rebook' === $select_status ) {
+					do_action( 'hydra_booking/after_booking_schedule', $booking_id, $attendeeBooking );
+				}
+			}
+		}
+
 		// return witn success message
 		$data = array(
 			'status'    => true,
@@ -958,9 +981,18 @@ class BookingController {
 			}
 		}
 
-		$single_booking_meta = $booking->get(
-			array( 'id' => $request['id'] ),
-			false,
+		// Fetch the full attendee+booking+host record so that action hooks
+		// (email notifications, webhooks, etc.) receive a complete object with
+		// fields like `email`, `host_id`, `cancelled_by`, and up-to-date `status`.
+		// Using Booking::get() here would return only the bookings-table row and
+		// silently break every hook that expects an attendee object.
+		$Attendee            = new Attendees();
+		$single_booking_meta = $Attendee->getAttendeeWithBooking(
+			array(
+				array( 'booking_id', '=', absint( $request['id'] ) ),
+			),
+			1,
+			'DESC'
 		);
 
 		if ( 'approved' == $request['status'] ) {
@@ -1336,7 +1368,7 @@ class BookingController {
 			$bookingMeta->add( 
 				array(
 					'booking_id' => $booking_id,
-					'meta_key' => 'internal_note',
+					'meta_key' => 'internal_note', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 					'value' => $internal_note,
 				)
 			 );
@@ -1571,7 +1603,7 @@ class BookingController {
 				$bookingMeta = new BookingMeta();
 				$bookingMeta->add([
 					'booking_id' => $booking_id,
-					'meta_key' => 'booking_activity',
+					'meta_key' => 'booking_activity', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 					'value' => array(
 							'datetime' => $this->get_activity_datetime(),
 							'title' =>  'Booking has been completed',
@@ -1643,12 +1675,15 @@ class BookingController {
 			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
 		}
 
+		$user_id = get_current_user_id();
+		$cancelled_by = $user_id ? $user_id : '';
+
 		 $update_data = array(
 
 			'id' => $attendee_id,
 			'status' => $status,
 			'reason' => $cancel_reason,
-			'cancelled_by' => 'host',
+			'cancelled_by' => $cancelled_by,
 		);
 
 		$attendeeUpdate = $Attendee->update( $update_data );
@@ -1673,7 +1708,7 @@ class BookingController {
 			$bookingMeta = new BookingMeta();
 			$bookingMeta->add([
 				'booking_id' => $attendeeBooking->booking_id,
-				'meta_key' => 'booking_activity',
+				'meta_key' => 'booking_activity', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 				'value' => array(
 						 
 						'datetime' => $this->get_activity_datetime(),
@@ -1729,8 +1764,16 @@ class BookingController {
 		$booking = new Booking();
 		// Booking Update
 		 $booking->update( $data );
- 
-  
+		 
+		if ( 'canceled' === $data['status'] ) {
+			$user_id = get_current_user_id();
+			$cancelled_by = $user_id ? $user_id : '';
+			$booking->update( array(
+				'id' => $data['id'],
+				'status' => 'canceled',
+				'cancelled_by' => $cancelled_by
+			) );
+		}
 		 
 		$where = array(
 			array('id', '=', $request['id']),
@@ -2003,6 +2046,7 @@ class BookingController {
 				fputcsv( $file, $booking );
 			}
 
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 			fclose( $file );
 			$data = ob_get_clean();
 			// Return response

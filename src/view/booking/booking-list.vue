@@ -1,6 +1,6 @@
 <script setup>
 import { __ } from '@wordpress/i18n';
-import { ref, reactive, onBeforeMount, onMounted, computed } from 'vue';
+import { ref, reactive, onBeforeMount, onMounted, computed, onUnmounted } from 'vue';
 import axios from 'axios'   
 import { useRouter } from 'vue-router'
 import Icon from '@/components/icon/LucideIcon.vue'
@@ -116,16 +116,29 @@ const UpdateMeetingStatus = async (id, host, status) => {
             }  
         } );
 
-        if (response.data.status) {  
-            Booking.fetchBookings();
+        if (response.data.status) {
+            // Immediately update the local booking status so Re-book option
+            // appears instantly (without needing a page reload)
+            Booking.bookings.forEach(dateGroup => {
+                if (dateGroup.bookings) {
+                    dateGroup.bookings.forEach(book => {
+                        if (book.id == id) {
+                            book.status = status;
+                        }
+                    });
+                }
+            });
 
+            // Show success toast first, then refresh in background
             toast.success(response.data.message, {
-                position: 'bottom-right', // Set the desired position
+                position: 'bottom-right',
                 "autoClose": 1500,
-            });   
+            });
+
+            Booking.fetchBookings();
         }else{
             toast.error(response.data.message, {
-                position: 'bottom-right', // Set the desired position
+                position: 'bottom-right',
                 "autoClose": 1500,
             });
         }
@@ -492,7 +505,7 @@ function hideDropdownOutsideClick(e) {
     const filterContentWrap = document.querySelector('.tfhb-filter-content-wrap');
     const multiSelectPanel = document.querySelector('.p-multiselect-panel'); // Dynamically check for p-multiselect-panel
 
-    if (!filterContentWrap.contains(e.target) &&
+    if (filterContentWrap && !filterContentWrap.contains(e.target) &&
         (!multiSelectPanel || !multiSelectPanel.contains(e.target)) ) { 
         Booking.FilterPreview = false;
         
@@ -506,6 +519,9 @@ onBeforeMount(() => {
     Meeting.fetchMeetings();
     Host.fetchHosts();
     window.addEventListener('click', hideDropdownOutsideClick);
+});
+onUnmounted(() => {
+    window.removeEventListener('click', hideDropdownOutsideClick);
 });
 const ToDateMin = ref(null);
 const getMinDate = (value) => {      

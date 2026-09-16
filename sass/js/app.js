@@ -699,6 +699,7 @@
 		   var meeting_time_end = $this.find("#meeting_time_end").val(); 
 		   var booking_hash = $this.find("#booking_hash").val(); 
 		   var action_type = $this.find("#action_type").val(); 
+		   var reschedule_nonce = $this.find("#reschedule_nonce").val();
 		   var meeting_price = $this.find("#meeting_price").val(); 
 		   var recurring_maximum = $this.find("#recurring_maximum").val(); 
 		   var attendee_time_zone = $this.find("#attendee_time_zone_"+calenderData.meeting_id).val(); 
@@ -729,6 +730,7 @@
 			meeting_time_end: meeting_time_end,
 			booking_hash: booking_hash,
 			action_type: action_type,
+			reschedule_nonce: reschedule_nonce,
 			recurring_maximum: recurring_maximum,
 			attendee_time_zone: attendee_time_zone,
 			tfhb_time_format: tfhb_time_format,

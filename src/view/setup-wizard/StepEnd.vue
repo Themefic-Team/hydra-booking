@@ -5,6 +5,8 @@ import axios from 'axios'
 import { useRouter, useRoute, RouterView } from 'vue-router'  
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbCheckbox from '@/components/form-fields/HbCheckbox.vue';
+import { applyFilters } from '@/utils/hooks.js';
+const registeredIntegrations = ref(applyFilters('tfhb_registered_integrations', []));
 import { setupWizard } from '@/store/setupWizard';
 import useValidators from '@/store/validator'; 
 import { LicenseBase } from '@/store/license'; 
@@ -30,6 +32,11 @@ import GravityFormsIntegrations from '@/components/integrations/GravityFormsInte
 import WebhookIntegrations from '@/components/integrations/WebhookIntegrations.vue'; 
 import FluentCRMIntegrations from '@/components/integrations/FluentCRMIntegrations.vue'; 
 import ZohoCRMIntegrations from '@/components/integrations/ZohoCRMIntegrations.vue'; 
+import PabblyIntegrations from '@/components/integrations/PabblyIntegrations.vue'; 
+import ZapierIntegrations from '@/components/integrations/ZapierIntegrations.vue';
+import TelegramIntregration from '@/components/integrations/TelegramIntregrations.vue';
+import TwilioIntegration from '@/components/integrations/TwilioIntegrations.vue';
+import SlackIntegration from '@/components/integrations/SlackIntegrations.vue';
 import HbButton from '@/components/form-fields/HbButton.vue';
 import HbInfoBox from '@/components/widgets/HbInfoBox.vue';  
 
@@ -106,6 +113,10 @@ const isOutlookPopupOpen = () => {
 const isOutlookPopupClose = (data) => {
     outlookpopup.value = false;
 }
+const tpopup = ref(false);
+const twpopup = ref(false);
+const slpopup = ref(false);
+
 const isstripePopupOpen = () => {
     spopup.value = true;
 }
@@ -133,6 +144,27 @@ const isAWeberPopupOpen = () => {
 }
 const isAWeberPopupClose = (data) => {
     aweberpopup.value = false;
+}
+
+const istPopupOpen = () => {
+    tpopup.value = true;
+}
+const istPopupClose = (data) => {
+    tpopup.value = false;
+}
+
+const istwPopupOpen = () => {
+    twpopup.value = true;
+}
+const istwPopupClose = (data) => {
+    twpopup.value = false;
+}
+
+const isslPopupOpen = () => {
+    slpopup.value = true;
+}
+const isslPopupClose = (data) => {
+    slpopup.value = false;
 }
 
 const submit_preloader = ref(false);
@@ -227,6 +259,34 @@ const Integration = reactive( {
     zoho_crm : {
         type: 'others', 
         status: 0, 
+    },
+    telegram : {
+        type: 'meeting', 
+        status: 1, 
+        bot_token: '',
+        chat_id: '',
+    },
+    twilio : {
+        type: 'meeting', 
+        status: 1, 
+        otp_type: 'whatsapp',
+        receive_number: '',
+        from_number: '',
+        sid: '',
+        token: '',
+    },
+    slack : {
+        type: 'meeting', 
+        status: 1, 
+        endpoint: ''
+    },
+    pabbly : {
+        type: 'others',
+        status: 0,
+    },
+    zapier : {
+        type: 'others',
+        status: 0,
     }
 });
 
@@ -245,11 +305,22 @@ const fetchIntegration = async () => {
         if (response.data.status) { 
             
             // console.log(response.data.integration_settings);
-            Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
             Integration.woo_payment= response.data.integration_settings.woo_payment ? response.data.integration_settings.woo_payment : Integration.woo_payment;
+            Integration.zoom_meeting= response.data.integration_settings.zoom_meeting ? response.data.integration_settings.zoom_meeting : Integration.zoom_meeting;
             Integration.google_calendar= response.data.integration_settings.google_calendar ? response.data.integration_settings.google_calendar : Integration.google_calendar;
             Integration.outlook_calendar= response.data.integration_settings.outlook_calendar ? response.data.integration_settings.outlook_calendar : Integration.outlook_calendar;
             Integration.apple_calendar= response.data.integration_settings.apple_calendar ? response.data.integration_settings.apple_calendar : Integration.apple_calendar;
+            Integration.forminator = response.data.integration_settings.forminator ? response.data.integration_settings.forminator : Integration.forminator;
+            Integration.gravity = response.data.integration_settings.gravity ? response.data.integration_settings.gravity : Integration.gravity;
+            Integration.webhook = response.data.integration_settings.webhook ? response.data.integration_settings.webhook : Integration.webhook;
+            Integration.fluent_crm = response.data.integration_settings.fluent_crm ? response.data.integration_settings.fluent_crm : Integration.fluent_crm;
+            Integration.zoho_crm = response.data.integration_settings.zoho_crm ? response.data.integration_settings.zoho_crm : Integration.zoho_crm;
+            Integration.telegram = response.data.integration_settings.telegram ? response.data.integration_settings.telegram : Integration.telegram;
+            Integration.twilio = response.data.integration_settings.twilio ? response.data.integration_settings.twilio : Integration.twilio;
+            Integration.slack = response.data.integration_settings.slack ? response.data.integration_settings.slack : Integration.slack;
+            Integration.pabbly = response.data.integration_settings.pabbly ? response.data.integration_settings.pabbly : Integration.pabbly;
+            Integration.zapier = response.data.integration_settings.zapier ? response.data.integration_settings.zapier : Integration.zapier;
+            Integration.hubspot = response.data.integration_settings.hubspot ? response.data.integration_settings.hubspot : Integration.hubspot;
 
             Integration.stripe= response.data.integration_settings.stripe ? response.data.integration_settings.stripe : Integration.stripe;
             Integration.mailchimp= response.data.integration_settings.mailchimp ? response.data.integration_settings.mailchimp : Integration.mailchimp;
@@ -428,13 +499,49 @@ window.addEventListener('click', function(e) {
                 <ZoomIntregration display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
                 :zoom_meeting="Integration.zoom_meeting" 
                 :pre_loader="submit_preloader" 
-                @update-integrations="UpdateIntegration" 
+                @update-integrations="UpdateIntegration"
                 :ispopup="popup"
                 @popup-open-control="isPopupOpen"
                 @popup-close-control="isPopupClose"
                 v-if="currentHash === 'all' || currentHash === 'conference'"
                 />
                 <!-- zoom intrigation -->
+
+                <!-- Telegram intrigation -->
+                <TelegramIntregration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"
+                :telegram_data="Integration.telegram" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration" 
+                :ispopup="tpopup"
+                @popup-open-control="istPopupOpen"
+                @popup-close-control="istPopupClose" 
+                v-if="currentHash === 'all' || currentHash === 'conference'"
+                />
+                <!-- Telegram intrigation -->
+
+                <!-- Twilio intrigation -->
+                <TwilioIntegration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"
+                :twilio_data="Integration.twilio" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration" 
+                :ispopup="twpopup"
+                @popup-open-control="istwPopupOpen"
+                @popup-close-control="istwPopupClose" 
+                v-if="registeredIntegrations.includes('twilio') && (currentHash === 'all' || currentHash === 'conference')"
+                />
+                <!-- Twilio intrigation -->
+
+                <!-- Slack intrigation -->
+                <SlackIntegration display="list" class="tfhb-flexbox tfhb-host-integrations tfhb-justify-between"
+                :slack_data="Integration.slack" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration" 
+                :ispopup="slpopup"
+                @popup-open-control="isslPopupOpen"
+                @popup-close-control="isslPopupClose" 
+                v-if="registeredIntegrations.includes('slack') && (currentHash === 'all' || currentHash === 'conference')"
+                />
+                <!-- Slack intrigation -->
 
                 <!-- zoom intrigation -->
                 <GoogleCalendarIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
@@ -456,7 +563,7 @@ window.addEventListener('click', function(e) {
                 :ispopup="outlookpopup"
                 @popup-open-control="isOutlookPopupOpen"
                 @popup-close-control="isOutlookPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'calendars'"
+                v-if="registeredIntegrations.includes('outlook') && (currentHash === 'all' || currentHash === 'calendars')"
                 />
                 <!-- Outlook intrigation -->
 
@@ -471,7 +578,7 @@ window.addEventListener('click', function(e) {
                 :ispopup="spopup"
                 @popup-open-control="isstripePopupOpen"
                 @popup-close-control="isstripePopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'payments'"
+                v-if="registeredIntegrations.includes('stripe') && (currentHash === 'all' || currentHash === 'payments')"
                 />
                 <!-- stripe intrigation -->
  
@@ -531,7 +638,7 @@ window.addEventListener('click', function(e) {
                 :webhook_data="Integration.webhook" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="registeredIntegrations.includes('webhook') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- webhook -->
           
@@ -555,7 +662,7 @@ window.addEventListener('click', function(e) {
                     :ispopup="aweberpopup"
                     @popup-open-control="isAWeberPopupOpen"
                     @popup-close-control="isAWeberPopupClose" 
-                    v-if="currentHash === 'all' || currentHash === 'all'"
+                    v-if="registeredIntegrations.includes('aweber') && (currentHash === 'all' || currentHash === 'all')"
                 />
                 <!-- AWeber intrigation -->
 
@@ -567,7 +674,7 @@ window.addEventListener('click', function(e) {
                 :ispopup="hubspotpopup"
                 @popup-open-control="ishubspotPopupOpen"
                 @popup-close-control="isHubspotPopupClose" 
-                v-if="currentHash === 'all' || currentHash === 'marketing-tools'"
+                v-if="registeredIntegrations.includes('hubspot') && (currentHash === 'all' || currentHash === 'marketing-tools')"
                 />
                 <!-- Hubspot intrigation -->
 
@@ -576,7 +683,7 @@ window.addEventListener('click', function(e) {
                 :fluent_crm_data="Integration.fluent_crm" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="registeredIntegrations.includes('fluent_crm') && (currentHash === 'all' || currentHash === 'others')"
                 />
                 <!-- Fluent CRM -->
                 
@@ -585,9 +692,27 @@ window.addEventListener('click', function(e) {
                 :zoho_crm_data="Integration.zoho_crm" 
                 :pre_loader="submit_preloader" 
                 @update-integrations="UpdateIntegration"   
-                v-if="currentHash === 'all' || currentHash === 'others'"
+                v-if="registeredIntegrations.includes('zoho_crm') && (currentHash === 'all' || currentHash === 'others')"
                 />
                 <!-- Zoho CRM -->
+                
+                <!-- Pabbly -->
+                <PabblyIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
+                :pabbly_data="Integration.pabbly" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration"   
+                v-if="registeredIntegrations.includes('pabbly') && (currentHash === 'all' || currentHash === 'others')"
+                />
+                <!-- Pabbly -->
+
+                <!-- Zapier -->
+                <ZapierIntegrations display="list" class="tfhb-flexbox tfhb-host-integrations  tfhb-justify-between"
+                :zapier_data="Integration.zapier" 
+                :pre_loader="submit_preloader" 
+                @update-integrations="UpdateIntegration"   
+                v-if="registeredIntegrations.includes('zapier') && (currentHash === 'all' || currentHash === 'others')"
+                />
+                <!-- Zapier -->
                 
                 
 

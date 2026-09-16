@@ -28,7 +28,10 @@ const props = defineProps([
 const emit = defineEmits(['update:modelValue'])
 
 // Read more at https://flatpickr.js.org/options/
-const config = ref(props.config || {});
+const config = ref({
+    dateFormat: 'Y-m-d',
+    ...(props.config || {})
+});
 
 const flatPickrChange = (e) => { 
     let date = e.target.value;
@@ -58,7 +61,7 @@ const flatPickrChange = (e) => {
         </label>
         <h4 v-if="subtitle">{{ subtitle }}</h4>
         <p v-if="description">{{ description }}</p> 
-        <flatPickr  @input="emit('update:modelValue', $event.target.value)"  :placeholder="props.placeholder" :value="props.modelValue" :config="props.config" @change="flatPickrChange"  />
+        <flatPickr  @input="emit('update:modelValue', $event.target.value)"  :placeholder="props.placeholder" :value="props.modelValue" :config="config" @change="flatPickrChange"  />
     
         <span class="tfhb-flat-icon"><Icon v-if="icon" :name="icon" size=20 /> </span>
              
