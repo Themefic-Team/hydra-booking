@@ -218,7 +218,7 @@ There are several well-known appointment booking plugins available for WordPress
 
 == Changelog ==
 
-= 1.2.6 – Sep 09, 2026 =
+= 1.2.6 – Sep 16, 2026 =
 - Fixed: Availability and Outlook sync issues.
 - Fixed: Availability time and timezone issues.
 - Fixed: Outlook event blocking precision issue.
