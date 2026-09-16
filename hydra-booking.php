@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Hydra Booking — Appointment Scheduling & Booking Calendar
  * Plugin URI: https://hydrabooking.com/
@@ -61,8 +60,6 @@ class THB_INIT
 
 	public function init()
 	{
-
-
 		//Register text domain
 		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
 		load_plugin_textdomain('hydra-booking', false, basename(dirname(__FILE__)) . '/languages');
@@ -95,9 +92,6 @@ class THB_INIT
 		new HydraBooking\App\App();
 	}
 
-
-
-
 	public function tfhb_get_plugin_screen()
 	{
 		$current_screen = get_current_screen();
@@ -114,7 +108,5 @@ class THB_INIT
 		remove_all_actions('admin_notices');
 	}
 }
-
-
 
 new THB_INIT();
