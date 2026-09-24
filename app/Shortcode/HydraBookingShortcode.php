@@ -262,11 +262,11 @@ class HydraBookingShortcode
 
 
 		if (isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1 &&  ! wp_script_is('tfhb-paypal-script', 'enqueued')) {
-			wp_enqueue_script('tfhb-paypal-sdk',);
+			wp_enqueue_script('tfhb-paypal-sdk');
 		}
 
 		if (isset($tfhb_stripe['status']) && $tfhb_stripe['status'] == 1) {
-			wp_enqueue_script('tfhb-stripe-script',);
+			wp_enqueue_script('tfhb-stripe-script');
 		}
 
 
