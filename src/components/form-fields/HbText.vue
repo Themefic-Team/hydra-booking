@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import Icon from '@/components/icon/LucideIcon.vue';
 const props = defineProps([
     'name',
@@ -19,6 +20,7 @@ const props = defineProps([
 
 ])
 const emit = defineEmits(['update:modelValue', 'tfhb-onclick'])
+const showPassword = ref(false);
 </script>
 
 <template>
@@ -40,7 +42,34 @@ const emit = defineEmits(['update:modelValue', 'tfhb-onclick'])
         <h4 v-if="subtitle">{{ subtitle }}</h4>
         <p v-if="description">{{ description }}</p>
         
+        <div v-if="type === 'password'" class="tfhb-password-input-wrapper" style="position: relative; width: 100%; display: flex; align-items: center;">
+          <input 
+            :value="props.modelValue" 
+            :required= "required"
+            :name= "name"
+            :id="name" 
+            @input="emit('update:modelValue', $event.target.value)" 
+            :type="showPassword ? 'text' : 'password'"
+            :placeholder="placeholder"
+            :disabled="disabled"
+            :readonly="readonly"
+            :class="errors ? 'tfhb-required' : ''"
+            :min="limit"
+            style="width: 100%; padding-right: 40px !important;"
+            @click="emit('tfhb-onclick', $event)"
+          /> 
+          <span 
+            class="tfhb-password-toggle-btn"
+            @click.stop="showPassword = !showPassword"
+            style="position: absolute; right: 12px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; z-index: 2; height: 20px; width: 20px;"
+            :title="showPassword ? 'Hide Secret Key' : 'Show Secret Key'"
+          >
+            <Icon :name="showPassword ? 'EyeOff' : 'Eye'" :size="18" />
+          </span>
+        </div>
+
         <input 
+          v-else
           :value="props.modelValue" 
           :required= "required"
           :name= "name"
@@ -52,6 +81,7 @@ const emit = defineEmits(['update:modelValue', 'tfhb-onclick'])
           :readonly="readonly"
           :class="errors ? 'tfhb-required' : ''"
           :min="limit"
+          style="width: 100%;"
           @click="emit('tfhb-onclick', $event)"
         /> 
              
