@@ -222,8 +222,14 @@ const Integration = reactive( {
     stripe : {
         type: 'stripe', 
         status: 0, 
+        test_mode: 1,
+        test_public_key: '',
+        test_secret_key: '',
+        live_public_key: '',
+        live_secret_key: '',
         public_key: '',
         secret_key: '',
+        connection_status: 0,
     },
     mailchimp : {
         type: 'mailchimp', 

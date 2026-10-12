@@ -47,6 +47,18 @@ const MakeMeetingLink = (link) => {
    return linkHtml; 
 
 }
+
+const getPaymentId = (txn) => {
+   if (!txn || !txn.transation_history) return '';
+   return txn.transation_history.payment_id || txn.transation_history.id || '';
+};
+
+const getStripeDashboardUrl = (txn) => {
+   if (!txn || !txn.transation_history) return '#';
+   if (txn.transation_history.stripe_url) return txn.transation_history.stripe_url;
+   const pid = getPaymentId(txn);
+   return pid ? `https://dashboard.stripe.com/payments/${pid}` : '#';
+};
  
 
 
@@ -608,7 +620,21 @@ const TfhbPrevNavigator = () => {
                                 <div class="tfhb-b-d-icon-content">
                                     <h5>{{ $tfhb_trans('Payment ID') }}</h5> 
                                     <p> 
-                                        {{BookingDetails.attendees[0].transaction.transation_history.payment_id}}  
+                                        <template v-if="getPaymentId(BookingDetails.attendees[0].transaction)">
+                                            <a v-if="BookingDetails.attendees[0].payment_method === 'stripe_payment'" 
+                                               :href="getStripeDashboardUrl(BookingDetails.attendees[0].transaction)" 
+                                               target="_blank" 
+                                               class="tfhb-stripe-payment-link"
+                                               style="color: #2E6B38; font-weight: 600; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;"
+                                               title="View in Stripe Dashboard">
+                                                <span>{{ getPaymentId(BookingDetails.attendees[0].transaction) }}</span>
+                                                <Icon name="ExternalLink" :size="13" />
+                                            </a>
+                                            <span v-else>
+                                                {{ getPaymentId(BookingDetails.attendees[0].transaction) }}
+                                            </span>
+                                        </template>
+                                        <span v-else style="color: #9ca3af;">—</span>
                                     </p>
                                 </div>
                             </div>     
@@ -796,7 +822,21 @@ const TfhbPrevNavigator = () => {
                                         <div class="tfhb-b-d-icon-content">
                                             <h5>{{ $tfhb_trans('Payment ID') }}</h5> 
                                             <p> 
-                                                {{attendees.transaction.transation_history.payment_id}}  
+                                                <template v-if="getPaymentId(attendees.transaction)">
+                                                    <a v-if="attendees.payment_method === 'stripe_payment'" 
+                                                       :href="getStripeDashboardUrl(attendees.transaction)" 
+                                                       target="_blank" 
+                                                       class="tfhb-stripe-payment-link"
+                                                       style="color: #2E6B38; font-weight: 600; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;"
+                                                       title="View in Stripe Dashboard">
+                                                        <span>{{ getPaymentId(attendees.transaction) }}</span>
+                                                        <Icon name="ExternalLink" :size="13" />
+                                                    </a>
+                                                    <span v-else>
+                                                        {{ getPaymentId(attendees.transaction) }}
+                                                    </span>
+                                                </template>
+                                                <span v-else style="color: #9ca3af;">—</span>
                                             </p>
                                         </div>
                                     </div>     
