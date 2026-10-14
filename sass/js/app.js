@@ -607,9 +607,6 @@
 		function tfhb_render_stripe_payment($this, responseData, stripe_public_key, meeting_title) {
 			$this.find('.tfhb-confirmation-button').hide();
 			let currency = typeof tfhb_app_booking.general_settings.currency !== 'undefined' && tfhb_app_booking.general_settings.currency != '' ? tfhb_app_booking.general_settings.currency : 'USD';
-			if (responseData && responseData.data && responseData.data.meeting && responseData.data.meeting.payment_currency) {
-				currency = responseData.data.meeting.payment_currency.toUpperCase();
-			}
 
 			// If server returned a stripe error (e.g. amount below minimum), display notice
 			if (responseData && responseData.stripe_error) {
@@ -631,7 +628,7 @@
 			const activePublicKey = (stripeMeta && stripeMeta.publishable_key) ? stripeMeta.publishable_key : stripe_public_key;
 			const isTestMode = stripeMeta ? stripeMeta.test_mode : (activePublicKey && activePublicKey.indexOf('pk_test_') === 0);
 
-			const rawCurrency = (meetingData.payment_currency || (stripeMeta && stripeMeta.currency) || 'USD').toUpperCase();
+			const rawCurrency = ((stripeMeta && stripeMeta.currency) || currency).toUpperCase();
 			const currencySymbols = {
 				USD: '$',
 				EUR: '€',
