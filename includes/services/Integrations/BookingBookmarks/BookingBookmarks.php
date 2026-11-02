@@ -339,41 +339,59 @@ class BookingBookmarks
     // sent bookmark add to calender link in email notification
     public function sendBookmarkFormEmail($hash)
     {
-        // allowed types: download_ics, confirmation, cancel
-
         // decode hash to get booking data
-        // encoded format: $hash = base64_encode( wp_json_encode( $hash ) );
+        // encoded format: $hash = base64_encode( wp_json_encode( ['hash' => $booking_hash, 'type' => $type] ) );
         $decoded_hash = base64_decode($hash, true);
         if ($decoded_hash === false) {
             return false; // Invalid base64 string
         }
         $booking_data = json_decode($decoded_hash, true);
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($booking_data)) {
+            return false; // Invalid JSON
+        }
+
         $type = $booking_data['type'] ?? '';
         $allowed_types = ['google', 'outlook', 'yahoo', 'other'];
-        if (!in_array($type, $allowed_types)) {
+        if (!in_array($type, $allowed_types, true)) {
             return false;
         }
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return false; // Invalid JSON
+        // Strictly require secret booking hash; reject guessable sequential attendee_id
+        $booking_hash = isset($booking_data['hash']) ? sanitize_text_field(wp_unslash($booking_data['hash'])) : '';
+        if (empty($booking_hash) || !ctype_xdigit($booking_hash)) {
+            return false;
         }
+
         $Attendee = new Attendees();
-        $attendeeBooking =  $Attendee->getAttendeeWithBooking(
+        $attendeeBooking = $Attendee->getAttendeeWithBooking(
             array(
-                array('id', '=', $booking_data['attendee_id']),
+                array('hash', '=', $booking_hash),
             ),
             1,
             'DESC'
         );
-        if (!$attendeeBooking) {
+        if (!$attendeeBooking || !hash_equals($attendeeBooking->hash, $booking_hash)) {
             return false;
         }
-        // Get bookmarks
+
+        // For "other", directly stream the ICS file without a 302 redirect to prevent hash disclosure in headers
+        if ($type === 'other') {
+            $this->generateBookingICS($attendeeBooking);
+            exit;
+        }
+
+        // Get bookmarks for external calendar providers
         $bookmarks = $this->getMeetingBookmarks($attendeeBooking);
 
         if (empty($bookmarks[$type]['url'])) {
             return false;
         }
+
+        // Allow redirection to trusted calendar providers
+        add_filter('allowed_redirect_hosts', function ($hosts) {
+            $calendar_hosts = ['calendar.google.com', 'outlook.live.com', 'calendar.yahoo.com'];
+            return array_merge((array) $hosts, $calendar_hosts);
+        });
 
         wp_safe_redirect($bookmarks[$type]['url']);
         exit;

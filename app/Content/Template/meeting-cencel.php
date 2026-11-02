@@ -24,6 +24,20 @@ $data    = isset( $args['attendeeBooking'] ) ? $args['attendeeBooking'] : array(
 $helper = new \HydraBooking\Admin\Controller\Helper();
 $display_date_format = $helper->get_date_format_from_settings( 'l, F j' );
 
+$attendee_can_cancel = ! empty( $data->attendee_can_cancel );
+$auth = new \HydraBooking\Admin\Controller\AuthController();
+$userRole = $auth->userRole();
+$user_id = $auth->userID();
+$is_privileged = in_array( 'administrator', $userRole, true ) || ( in_array( 'tfhb_host', $userRole, true ) && $user_id == $data->user_id );
+
+if ( ! $attendee_can_cancel && ! $is_privileged ) {
+	echo '<div class="tfhb-single-meeting-section tfhb-p-16">';
+	echo '<h2>' . esc_html__( 'You are not allowed to cancel this booking.', 'hydra-booking' ) . '</h2>';
+	echo '</div>';
+	get_footer();
+	return;
+}
+
 ?>
 <div class=" tfhb-booking-cencel tfhb-meeting-<?php echo esc_attr( $data->meeting_id ); ?>" data-calendar="<?php echo esc_attr( $data->meeting_id ); ?>">
 	<form method="post" action="" class="tfhb-meeting-cencel-form ajax-submit"  enctype="multipart/form-data">

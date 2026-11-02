@@ -635,35 +635,36 @@ class MailHooks {
 		$yahoo_calendar_link   = '#';
 		$other_calendar_link   = '#';
 
-		// Query-arg based add-to-calendar links
+		// Query-arg based add-to-calendar links bound securely to booking hash
 		if ( ! empty( $attendeeBooking->hash ) && ! empty( $attendeeBooking->meeting_id ) ) {
+			$booking_hash = sanitize_text_field( $attendeeBooking->hash );
 			$google_base_hash = [
-				'attendee_id' => $attendeeBooking->id,
-				'type' => 'google', // This can be used to identify the calendar type in the add-to-calendar handler
+				'hash' => $booking_hash,
+				'type' => 'google',
 			];  
 			$google_base_hash = base64_encode( wp_json_encode( $google_base_hash ) );  
-			$google_calendar_link  =home_url( '?hydra-add-to-calendar=' . $google_base_hash );
+			$google_calendar_link = home_url( '?hydra-add-to-calendar=' . $google_base_hash );
 
 			// outlook base hash
 			$outlook_base_hash = [
-				'attendee_id' => $attendeeBooking->id,
-				'type' => 'outlook', // This can be used to identify the calendar type in the add-to-calendar handler
+				'hash' => $booking_hash,
+				'type' => 'outlook',
 			];
 			$outlook_base_hash = base64_encode( wp_json_encode( $outlook_base_hash ) );
 			$outlook_calendar_link = home_url( '?hydra-add-to-calendar=' . $outlook_base_hash );
 
 			// yahoo base hash
 			$yahoo_base_hash = [
-				'attendee_id' => $attendeeBooking->id,
-				'type' => 'yahoo', // This can be used to identify the calendar type in the add-to-calendar handler
+				'hash' => $booking_hash,
+				'type' => 'yahoo',
 			];
 			$yahoo_base_hash = base64_encode( wp_json_encode( $yahoo_base_hash ) );
 			$yahoo_calendar_link = home_url( '?hydra-add-to-calendar=' . $yahoo_base_hash );
 			 
 			// other calendar base hash
 			$other_base_hash = [
-				'attendee_id' => $attendeeBooking->id,
-				'type' => 'other', // This can be used to identify the calendar type in the add-to-calendar handler
+				'hash' => $booking_hash,
+				'type' => 'other',
 			];
 			$other_base_hash = base64_encode( wp_json_encode( $other_base_hash ) );
 			$other_calendar_link = home_url( '?hydra-add-to-calendar=' . $other_base_hash );
