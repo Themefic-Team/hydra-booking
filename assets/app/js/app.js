@@ -33,7 +33,218 @@
 						<div>
 							`+m+`
 						</div>
-					</li>`;$this.find(".tfhb-meeting-details ul").append(o),$this.find(".tfhb-meeting-details ul").append(l),$this.find(".tfhb-timezone").hide(),$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")}),$this.find(".tfhb-calander-times").animate({left:"-5%",opacity:0},400,function(){$(this).css("display","none"),$this.find(".tfhb-meeting-booking-form").css("display","block").animate({left:"0",opacity:1,width:536},300)})}),$this.on("click","span.tfhb-see-description",function(){$this.find(".tfhb-short-description").slideUp(),$this.find(".tfhb-full-description").slideDown()}),$this.on("click","span.tfhb-see-less-description",function(){$this.find(".tfhb-full-description").slideUp(),$this.find(".tfhb-short-description").slideDown()}),$($this).on("click",".tfhb-meeting-booking-form .tfhb-back-btn",function(t){$this.find(".tfhb-meeting-booking-form").animate({left:"-5%",opacity:0},300,function(){$(this).css("display","none"),$this.find(".tfhb-timezone").show(),$this.find(".tfhb-calander-times").css("display","flex").animate({left:"0",opacity:1},200,function(){}),$this.find(".tfhb-meeting-times").css("display","block").animate({left:"0",width:224},400,function(){$(this).css("opacity","1"),$this.find(".tfhb-meeting-details ul .tfhb_time_zone_info").remove(),$this.find(".tfhb-meeting-details ul .tfhb_date_time_info").remove()})})}),$this.find(".tfhb-meeting-form.ajax-submit").on("submit",function(t){t.preventDefault();var e=new FormData(this),a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),document.addEventListener("wpcf7mailsent",function(t){var e=t.detail.formData;if(calenderData.questions_type=="existing"&&calenderData.questions_form_type=="wpcf7"&&t.detail.contactFormId==calenderData.questions_form){var a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}}),$(document).on("forminator:form:submit:success",function(t,e){var a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),$(document).on("fluentform_submission_success",function(t,e){var a=new FormData(e.form[0]),i={};a.forEach(function(o,d){i[d]=o}),tfhb_from_submission($this,preloader,i,calenderData)})});function tfhb_render_paypal_payment(t,e){t.find(".tfhb-paypal-button-container");var a=e.confirmation_template;t.find(".tfhb-confirmation-button").hide(),t.find(".wpcf7").hide();let i=typeof tfhb_app_booking.general_settings.currency<"u"&&tfhb_app_booking.general_settings.currency!=""?tfhb_app_booking.general_settings.currency:"USD";paypal.Buttons({createOrder:function(o,d){return d.order.create({purchase_units:[{reference_id:e.data&&e.data.draft_token?e.data.draft_token:e.data.attendee_data.id,description:e.data.meeting.title+" - "+e.data.meeting.duration+" Minutes | "+e.data.booking.start_time+" - "+e.data.booking.end_time+" | "+e.data.booking.meeting_dates,custom_id:e.data&&e.data.draft_token?e.data.draft_token:e.data.attendee_data.id,amount:{currency_code:i,value:e.data.meeting.meeting_price}}]})},onApprove:function(o,d){return d.order.capture().then(function(m){$.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{nonce:tfhb_app_booking.nonce,action:"tfhb_meeting_paypal_payment_confirmation",payment_details:m,responseData:e},success:function(l){if(l.success){t.find(".tfhb-meeting-card").html("");const h=l.data&&l.data.confirmation_template?l.data.confirmation_template:a;t.find(".tfhb-meeting-card").append(h)}else t.find(".tfhb-notice").html(l.data.message),t.find(".tfhb-notice").show()},error:function(l){console.log(l)}})})},onCancel:function(o){},onError:function(o){console.error("An error occurred during the transaction",o),alert("Payment could not be completed due to an error")}}).render(".tfhb-paypal-button-container")}function tfhb_render_stripe_payment(t,e,a,i){t.find(".tfhb-confirmation-button").hide();let o=typeof tfhb_app_booking.general_settings.currency<"u"&&tfhb_app_booking.general_settings.currency!=""?tfhb_app_booking.general_settings.currency:"USD";if(e&&e.stripe_error){t.find(".tfhb-notice").html(e.stripe_error).show(),t.find(".tfhb-booking-submit").removeAttr("disabled"),t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove();return}t.find(".wpcf7").hide();const d=t.find(".tfhb-stripe-button-container"),m=e.confirmation_template,l=e.data&&e.data.meeting?e.data.meeting:{},h=l.meeting_price?l.meeting_price:"0",n=e.data&&e.data.stripe?e.data.stripe:null,T=n&&n.publishable_key?n.publishable_key:a,L=n?n.test_mode:T&&T.indexOf("pk_test_")===0,w=(n&&n.currency||o).toUpperCase(),S={USD:"$",EUR:"€",GBP:"£",CAD:"CA$",AUD:"A$",JPY:"¥",BDT:"৳",INR:"₹",CNY:"¥"}[w]||w+" ",D=parseFloat(h).toFixed(2);if(!T){t.find(".tfhb-notice").html("Stripe Publishable Key is not configured. Please contact the administrator.").show();return}let A=`
+					</li>`;$this.find(".tfhb-meeting-details ul").append(o),$this.find(".tfhb-meeting-details ul").append(l),$this.find(".tfhb-timezone").hide(),$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")}),$this.find(".tfhb-calander-times").animate({left:"-5%",opacity:0},400,function(){$(this).css("display","none"),$this.find(".tfhb-meeting-booking-form").css("display","block").animate({left:"0",opacity:1,width:536},300)})}),$this.on("click","span.tfhb-see-description",function(){$this.find(".tfhb-short-description").slideUp(),$this.find(".tfhb-full-description").slideDown()}),$this.on("click","span.tfhb-see-less-description",function(){$this.find(".tfhb-full-description").slideUp(),$this.find(".tfhb-short-description").slideDown()}),$($this).on("click",".tfhb-meeting-booking-form .tfhb-back-btn",function(t){$this.find(".tfhb-meeting-booking-form").animate({left:"-5%",opacity:0},300,function(){$(this).css("display","none"),$this.find(".tfhb-timezone").show(),$this.find(".tfhb-calander-times").css("display","flex").animate({left:"0",opacity:1},200,function(){}),$this.find(".tfhb-meeting-times").css("display","block").animate({left:"0",width:224},400,function(){$(this).css("opacity","1"),$this.find(".tfhb-meeting-details ul .tfhb_time_zone_info").remove(),$this.find(".tfhb-meeting-details ul .tfhb_date_time_info").remove()})})}),$this.find(".tfhb-meeting-form.ajax-submit").on("submit",function(t){t.preventDefault();var e=new FormData(this),a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),document.addEventListener("wpcf7mailsent",function(t){var e=t.detail.formData;if(calenderData.questions_type=="existing"&&calenderData.questions_form_type=="wpcf7"&&t.detail.contactFormId==calenderData.questions_form){var a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}}),$(document).on("forminator:form:submit:success",function(t,e){var a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),$(document).on("fluentform_submission_success",function(t,e){var a=new FormData(e.form[0]),i={};a.forEach(function(o,d){i[d]=o}),tfhb_from_submission($this,preloader,i,calenderData)})});function tfhb_extract_paypal_error(err, currency) {
+	if (!err) {
+		return "Payment could not be completed. Please try again or choose another payment method.";
+	}
+	let parsed = null;
+	if (typeof err === "string") {
+		try {
+			parsed = JSON.parse(err);
+		} catch (ex) {
+			if (err.indexOf("CURRENCY_NOT_SUPPORTED") !== -1) {
+				return 'Currency "' + (currency || '') + '" is not supported by PayPal. Please select a supported currency in settings (e.g. USD, EUR, GBP) or contact the administrator.';
+			}
+			return err;
+		}
+	} else if (typeof err === "object") {
+		if (err.message && typeof err.message === "string") {
+			try {
+				parsed = JSON.parse(err.message);
+			} catch (ex) {}
+		}
+		if (!parsed) {
+			parsed = err;
+		}
+	}
+	if (parsed) {
+		if (Array.isArray(parsed.details) && parsed.details.length > 0) {
+			const d = parsed.details[0];
+			if (d.issue === "CURRENCY_NOT_SUPPORTED") {
+				return 'Currency "' + (currency || '') + '" is not supported by PayPal. ' + (d.description || 'Please use a supported currency.');
+			}
+			if (d.description) {
+				return d.description;
+			}
+			if (d.issue) {
+				return "PayPal Error: " + d.issue.replace(/_/g, " ");
+			}
+		}
+		if (parsed.details && typeof parsed.details === "object") {
+			if (parsed.details.issue === "CURRENCY_NOT_SUPPORTED") {
+				return 'Currency "' + (currency || '') + '" is not supported by PayPal. ' + (parsed.details.description || '');
+			}
+			if (parsed.details.description) {
+				return parsed.details.description;
+			}
+			if (parsed.details.issue) {
+				return "PayPal Error: " + parsed.details.issue.replace(/_/g, " ");
+			}
+		}
+		if (parsed.issue === "CURRENCY_NOT_SUPPORTED") {
+			return 'Currency "' + (currency || '') + '" is not supported by PayPal.';
+		}
+		if (parsed.description) {
+			return parsed.description;
+		}
+		if (parsed.message) {
+			if (parsed.message.indexOf("CURRENCY_NOT_SUPPORTED") !== -1) {
+				return 'Currency "' + (currency || '') + '" is not supported by PayPal.';
+			}
+			return parsed.message;
+		}
+		if (parsed.name) {
+			return "PayPal Error (" + parsed.name.replace(/_/g, " ") + "). Please check your payment details or contact the administrator.";
+		}
+	}
+	if (err.message) {
+		if (err.message.indexOf("CURRENCY_NOT_SUPPORTED") !== -1) {
+			return 'Currency "' + (currency || '') + '" is not supported by PayPal.';
+		}
+		return err.message;
+	}
+	return "Payment could not be completed. Please try again or choose another payment method.";
+}
+
+function tfhb_render_paypal_payment(t, e) {
+	const a = e.confirmation_template;
+	t.find(".tfhb-confirmation-button").hide();
+	t.find(".wpcf7").hide();
+	let i = typeof tfhb_app_booking.general_settings.currency !== "undefined" && tfhb_app_booking.general_settings.currency !== "" ? tfhb_app_booking.general_settings.currency : "USD";
+
+	function tfhb_show_paypal_error(msg) {
+		t.find(".tfhb-notice").html(msg).show();
+		let errBox = t.find(".tfhb-paypal-error-box");
+		if (errBox.length === 0) {
+			t.find(".tfhb-paypal-button-container").before('<div class="tfhb-paypal-error-box tfhb-notice notice-error" style="display:block; padding:10px 14px; color:#d93025; background:#fdf2f2; border-left:3px solid #d93025; border-radius:4px; margin-bottom:14px; font-size:13px; line-height:1.4;" role="alert"></div>');
+			errBox = t.find(".tfhb-paypal-error-box");
+		}
+		errBox.html(msg).show();
+		t.find(".tfhb-booking-submit").removeAttr("disabled");
+		t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove();
+	}
+
+	const paypalSupportedCurrencies = [
+		"AUD", "BRL", "CAD", "CNY", "CZK", "DKK", "EUR", "HKD", "HUF",
+		"ILS", "JPY", "MYR", "MXN", "TWD", "NZD", "NOK", "PHP", "PLN",
+		"GBP", "SGD", "SEK", "CHF", "THB", "USD"
+	];
+
+	if (!paypalSupportedCurrencies.includes(i.toUpperCase())) {
+		const currErrMsg = 'Currency "' + i + '" is not supported by PayPal. PayPal only supports: ' + paypalSupportedCurrencies.join(', ') + '. Please update the currency in Booking Settings > General or choose another payment method.';
+		tfhb_show_paypal_error(currErrMsg);
+		t.find(".tfhb-paypal-button-container").empty();
+		return;
+	}
+
+	if (typeof paypal === "undefined" || !paypal.Buttons) {
+		tfhb_show_paypal_error("Unable to load PayPal SDK. Please verify your PayPal Client ID in Settings > Integrations.");
+		return;
+	}
+
+	t.find(".tfhb-paypal-error-box").remove();
+
+	paypal.Buttons({
+		createOrder: function(o, d) {
+			t.find(".tfhb-paypal-error-box").hide().empty();
+			t.find(".tfhb-notice").hide().empty();
+			return d.order.create({
+				purchase_units: [{
+					reference_id: e.data && e.data.draft_token ? e.data.draft_token : (e.data.attendee_data ? e.data.attendee_data.id : ""),
+					description: (e.data && e.data.meeting ? e.data.meeting.title : "Booking") + " | " + (e.data && e.data.booking ? e.data.booking.meeting_dates : ""),
+					custom_id: e.data && e.data.draft_token ? e.data.draft_token : (e.data.attendee_data ? e.data.attendee_data.id : ""),
+					amount: {
+						currency_code: i.toUpperCase(),
+						value: e.data && e.data.meeting ? e.data.meeting.meeting_price : "0"
+					}
+				}]
+			}).catch(function(err) {
+				console.error("PayPal order creation error:", err);
+				const errMsg = tfhb_extract_paypal_error(err, i);
+				tfhb_show_paypal_error(errMsg);
+				throw err;
+			});
+		},
+		onApprove: function(o, d) {
+			return d.order.capture().then(function(m) {
+				$.ajax({
+					url: tfhb_app_booking.ajax_url,
+					type: "POST",
+					data: {
+						nonce: tfhb_app_booking.nonce,
+						action: "tfhb_meeting_paypal_payment_confirmation",
+						payment_details: m,
+						responseData: e
+					},
+					success: function(l) {
+						if (l.success) {
+							t.find(".tfhb-meeting-card").html("");
+							const h = l.data && l.data.confirmation_template ? l.data.confirmation_template : a;
+							t.find(".tfhb-meeting-card").append(h);
+						} else {
+							const errMsg = (l.data && l.data.message) ? l.data.message : "Payment confirmation failed.";
+							tfhb_show_paypal_error(errMsg);
+						}
+					},
+					error: function(l) {
+						console.error("PayPal confirmation error:", l);
+						let errMsg = "Server verification failed. Please try again or contact support.";
+						if (l && l.responseJSON && l.responseJSON.data && l.responseJSON.data.message) {
+							errMsg = l.responseJSON.data.message;
+						}
+						tfhb_show_paypal_error(errMsg);
+					}
+				});
+			}).catch(function(err) {
+				console.error("PayPal capture error:", err);
+				const errMsg = tfhb_extract_paypal_error(err, i);
+				tfhb_show_paypal_error(errMsg);
+			});
+		},
+		onCancel: function(o) {},
+		onError: function(o) {
+			console.error("PayPal transaction error:", o);
+			const errMsg = tfhb_extract_paypal_error(o, i);
+			tfhb_show_paypal_error(errMsg);
+		}
+	}).render(".tfhb-paypal-button-container");
+}
+
+function tfhb_render_stripe_payment(t, e, a, i) {
+	t.find(".tfhb-confirmation-button").hide();
+	let o = typeof tfhb_app_booking.general_settings.currency !== "undefined" && tfhb_app_booking.general_settings.currency !== "" ? tfhb_app_booking.general_settings.currency : "USD";
+
+	function tfhb_show_stripe_top_error(msg) {
+		t.find(".tfhb-notice").html(msg).show();
+		t.find(".tfhb-booking-submit").removeAttr("disabled");
+		t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove();
+	}
+
+	if (e && e.stripe_error) {
+		tfhb_show_stripe_top_error(e.stripe_error);
+		return;
+	}
+
+	t.find(".wpcf7").hide();
+	const d = t.find(".tfhb-stripe-button-container");
+	const m = e.confirmation_template;
+	const l = e.data && e.data.meeting ? e.data.meeting : {};
+	const h = l.meeting_price ? l.meeting_price : "0";
+	const n = e.data && e.data.stripe ? e.data.stripe : null;
+	const T = n && n.publishable_key ? n.publishable_key : a;
+	const L = n ? n.test_mode : (T && T.indexOf("pk_test_") === 0);
+	const w = (n && n.currency || o).toUpperCase();
+	const S = { USD: "$", EUR: "€", GBP: "£", CAD: "CA$", AUD: "A$", JPY: "¥", BDT: "৳", INR: "₹", CNY: "¥" }[w] || (w + " ");
+	const D = parseFloat(h).toFixed(2);
+
+	if (!T) {
+		const keyMsg = "Stripe Publishable Key is not configured. Please contact the administrator in Settings > Integrations.";
+		tfhb_show_stripe_top_error(keyMsg);
+		d.html('<div class="tfhb-notice notice-error" style="display:block; padding:10px 14px; color:#d93025; background:#fdf2f2; border-left:3px solid #d93025; border-radius:4px; margin-top:12px;">' + keyMsg + '</div>');
+		return;
+	}
+
+	let A = `
 				<div class="tfhb-stripe-card-box tfhb-mt-16">
 					<div class="tfhb-stripe-card-header tfhb-flexbox tfhb-align-center tfhb-gap-8 tfhb-mb-16">
 						<svg class="tfhb-card-header-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -41,14 +252,14 @@
 							<line x1="1" y1="10" x2="23" y2="10"></line>
 						</svg>
 						<span class="tfhb-stripe-header-title">Card</span>
-						${L?'<span class="tfhb-badge tfhb-badge-test" style="margin-left: auto; background: #fff3cd; color: #856404; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Test Mode</span>':""}
+						${L ? '<span class="tfhb-badge tfhb-badge-test" style="margin-left: auto; background: #fff3cd; color: #856404; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Test Mode</span>' : ""}
 					</div>
 
-					${L?`
+					${L ? `
 						<div class="tfhb-stripe-test-helper" style="background: #fdf8e2; border: 1px dashed #e0c870; padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #705814; margin-bottom: 14px;">
 							<strong>Test Card:</strong> Use <code>4242 4242 4242 4242</code> with any future expiration and 3-digit CVC.
 						</div>
-					`:""}
+					` : ""}
 
 					<!-- Card Number Field -->
 					<div class="tfhb-stripe-field-group" id="tfhb-field-wrap-card-number">
@@ -84,7 +295,7 @@
 					<!-- Error Notice -->
 					<div id="tfhb-stripe-card-errors" class="tfhb-notice tfhb-error tfhb-mt-8" style="display: none; padding: 10px 14px; font-size: 13px; color: #d93025; background: #fdf2f2; border-left: 3px solid #d93025; border-radius: 4px;" role="alert"></div>
 
-					<!-- Action Button (Screenshot 4 fix: prominent white text on green background) -->
+					<!-- Action Button -->
 					<div class="tfhb-stripe-action-btn tfhb-mt-16">
 						<button type="button" class="tfhb-stripe-payment-btn" id="tfhb-stripe-submit-button">
 							<svg class="tfhb-btn-lock-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -95,14 +306,211 @@
 						</button>
 					</div>
 				</div>
-			`;d.html(A),d.show();function M(){if(typeof Stripe!="function"){console.error("Stripe.js v3 is not available.");return}const u=Stripe(T),N=u.elements();getComputedStyle(document.documentElement).getPropertyValue("--tfhb-primary-color");const B={base:{color:"#1a1f36",fontFamily:'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',fontSmoothing:"antialiased",fontSize:"15px",lineHeight:"22px","::placeholder":{color:"#a0aec0"}},invalid:{color:"#d93025",iconColor:"#d93025"}},k=N.create("cardNumber",{style:B,showIcon:!1}),v=N.create("cardExpiry",{style:B}),p=N.create("cardCvc",{style:B});k.mount("#tfhb-stripe-card-number"),v.mount("#tfhb-stripe-card-expiry"),p.mount("#tfhb-stripe-card-cvc"),k.on("focus",function(){$("#tfhb-field-wrap-card-number").addClass("tfhb-stripe-focused")}),k.on("blur",function(){$("#tfhb-field-wrap-card-number").removeClass("tfhb-stripe-focused")}),v.on("focus",function(){$("#tfhb-field-wrap-card-expiry").addClass("tfhb-stripe-focused")}),v.on("blur",function(){$("#tfhb-field-wrap-card-expiry").removeClass("tfhb-stripe-focused")}),p.on("focus",function(){$("#tfhb-field-wrap-card-cvc").addClass("tfhb-stripe-focused")}),p.on("blur",function(){$("#tfhb-field-wrap-card-cvc").removeClass("tfhb-stripe-focused")});function P(c){const s=$("#tfhb-stripe-card-errors");if(c.error?s.text(c.error.message).show():s.text("").hide(),c.elementType==="cardNumber"&&c.brand){const _=c.brand;$(".tfhb-card-brand-svg").removeClass("tfhb-brand-active tfhb-brand-dimmed"),_&&_!=="unknown"&&($(".tfhb-card-brand-svg").addClass("tfhb-brand-dimmed"),$(".tfhb-card-brand-"+_).removeClass("tfhb-brand-dimmed").addClass("tfhb-brand-active"))}}k.on("change",P),v.on("change",P),p.on("change",P),d.off("click",".tfhb-stripe-payment-btn").on("click",".tfhb-stripe-payment-btn",function(c){c.preventDefault();const s=$(this),_=$("#tfhb-stripe-card-errors");_.hide().text("");const E=`
-						<span class="tfhb-submit-preloader" style="margin-left: 8px;">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: inline-block; background: transparent;" width="18" height="18">
-								<circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="6" stroke="#ffffff" fill="none" cy="50" cx="50">
-									<animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="0.6s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform>
-								</circle>
-							</svg>
-						</span>`;s.attr("disabled","disabled").addClass("disabled"),s.append(E);const I=e.data&&e.data.attendee_data?e.data.attendee_data:{},j=I.name||I.attendee_name||"",r=I.email||I.attendee_email||"";function F(g){const x={payment_method:{card:k,billing_details:{name:j,email:r}}};function C(b){jQuery.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{nonce:tfhb_app_booking.nonce,action:"tfhb_meeting_stripe_payment_confirmation",payment_intent_id:b,responseData:e},success:function(f){if(f.success){t.find(".tfhb-meeting-card").html("");const y=f.data&&f.data.confirmation_template?f.data.confirmation_template:m;t.find(".tfhb-meeting-card").append(y)}else{const y=f.data&&f.data.message?f.data.message:"Payment verification failed.";_.text(y).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}},error:function(f){let y="Server verification failed. Please try again or contact support.";f.responseJSON&&f.responseJSON.data&&f.responseJSON.data.message&&(y=f.responseJSON.data.message),_.text(y).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}})}u.confirmCardPayment(g,x).then(function(b){b.error?u.retrievePaymentIntent(g).then(function(f){f.paymentIntent&&(f.paymentIntent.status==="succeeded"||f.paymentIntent.status==="processing")?C(f.paymentIntent.id):(_.text(b.error.message).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove())}).catch(function(){_.text(b.error.message).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}):b.paymentIntent&&(b.paymentIntent.status==="succeeded"||b.paymentIntent.status==="processing")&&C(b.paymentIntent.id)}).catch(function(b){u.retrievePaymentIntent(g).then(function(f){f.paymentIntent&&(f.paymentIntent.status==="succeeded"||f.paymentIntent.status==="processing")?C(f.paymentIntent.id):(_.text(b.message||"Payment processing error.").show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove())}).catch(function(){_.text(b.message||"Payment processing error.").show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()})})}n&&n.client_secret?F(n.client_secret):jQuery.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{nonce:tfhb_app_booking.nonce,action:"tfhb_stripe_create_payment_intent",amount:h,currency:w.toLowerCase(),booking_id:e.data.booking_id,attendee_id:e.data.attendee_id,draft_token:e.data&&e.data.draft_token?e.data.draft_token:"",description:i},success:function(g){if(g.success&&g.data.client_secret)F(g.data.client_secret);else{const x=g.data&&g.data.message?g.data.message:"Could not initialize payment session.";_.text(x).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}},error:function(){_.text("Could not initialize payment intent.").show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}})})}typeof Stripe!="function"?$.getScript("https://js.stripe.com/v3/",function(){M()}):M()}function tfhb_from_submission(t,e,a,i){t.find(".tfhb-booking-submit").append(`<span class="tfhb-submit-preloader"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="4" stroke="#ffffff" fill="none" cy="50" cx="50">
+			`;
+	d.html(A);
+	d.show();
+
+	function M() {
+		if (typeof Stripe !== "function") {
+			const noStripe = "Stripe library could not be loaded. Please check your internet connection or contact the administrator.";
+			tfhb_show_stripe_top_error(noStripe);
+			$("#tfhb-stripe-card-errors").text(noStripe).show();
+			return;
+		}
+
+		let u, N;
+		try {
+			u = Stripe(T);
+			N = u.elements();
+		} catch (initErr) {
+			console.error("Stripe init error:", initErr);
+			const initMsg = initErr.message || "Failed to initialize Stripe. Please verify your Stripe Publishable Key.";
+			tfhb_show_stripe_top_error(initMsg);
+			$("#tfhb-stripe-card-errors").text(initMsg).show();
+			return;
+		}
+
+		const B = {
+			base: {
+				color: "#1a1f36",
+				fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+				fontSmoothing: "antialiased",
+				fontSize: "15px",
+				lineHeight: "22px",
+				"::placeholder": { color: "#a0aec0" }
+			},
+			invalid: { color: "#d93025", iconColor: "#d93025" }
+		};
+		const k = N.create("cardNumber", { style: B, showIcon: false });
+		const v = N.create("cardExpiry", { style: B });
+		const p = N.create("cardCvc", { style: B });
+
+		k.mount("#tfhb-stripe-card-number");
+		v.mount("#tfhb-stripe-card-expiry");
+		p.mount("#tfhb-stripe-card-cvc");
+
+		k.on("focus", function() { $("#tfhb-field-wrap-card-number").addClass("tfhb-stripe-focused"); });
+		k.on("blur", function() { $("#tfhb-field-wrap-card-number").removeClass("tfhb-stripe-focused"); });
+		v.on("focus", function() { $("#tfhb-field-wrap-card-expiry").addClass("tfhb-stripe-focused"); });
+		v.on("blur", function() { $("#tfhb-field-wrap-card-expiry").removeClass("tfhb-stripe-focused"); });
+		p.on("focus", function() { $("#tfhb-field-wrap-card-cvc").addClass("tfhb-stripe-focused"); });
+		p.on("blur", function() { $("#tfhb-field-wrap-card-cvc").removeClass("tfhb-stripe-focused"); });
+
+		function P(c) {
+			const s = $("#tfhb-stripe-card-errors");
+			if (c.error) {
+				s.text(c.error.message).show();
+			} else {
+				s.text("").hide();
+			}
+			if (c.elementType === "cardNumber" && c.brand) {
+				const brand = c.brand;
+				$(".tfhb-card-brand-svg").removeClass("tfhb-brand-active tfhb-brand-dimmed");
+				if (brand && brand !== "unknown") {
+					$(".tfhb-card-brand-svg").addClass("tfhb-brand-dimmed");
+					$(".tfhb-card-brand-" + brand).removeClass("tfhb-brand-dimmed").addClass("tfhb-brand-active");
+				}
+			}
+		}
+
+		k.on("change", P);
+		v.on("change", P);
+		p.on("change", P);
+
+		d.off("click", ".tfhb-stripe-payment-btn").on("click", ".tfhb-stripe-payment-btn", function(c) {
+			c.preventDefault();
+			const s = $(this);
+			const _ = $("#tfhb-stripe-card-errors");
+			_.hide().text("");
+			t.find(".tfhb-notice").hide().text("");
+
+			const E = `<span class="tfhb-submit-preloader" style="margin-left: 8px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: inline-block; background: transparent;" width="18" height="18"><circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="6" stroke="#ffffff" fill="none" cy="50" cx="50"><animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="0.6s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform></circle></svg></span>`;
+			s.attr("disabled", "disabled").addClass("disabled");
+			s.append(E);
+
+			const I = e.data && e.data.attendee_data ? e.data.attendee_data : {};
+			const j = I.name || I.attendee_name || "";
+			const r = I.email || I.attendee_email || "";
+
+			function tfhb_show_stripe_submit_error(errMsg) {
+				_.text(errMsg).show();
+				t.find(".tfhb-notice").html(errMsg).show();
+				s.removeAttr("disabled").removeClass("disabled");
+				s.find(".tfhb-submit-preloader").remove();
+			}
+
+			function F(g) {
+				const x = {
+					payment_method: {
+						card: k,
+						billing_details: { name: j, email: r }
+					}
+				};
+
+				function C(b) {
+					jQuery.ajax({
+						url: tfhb_app_booking.ajax_url,
+						type: "POST",
+						data: {
+							nonce: tfhb_app_booking.nonce,
+							action: "tfhb_meeting_stripe_payment_confirmation",
+							payment_intent_id: b,
+							responseData: e
+						},
+						success: function(f) {
+							if (f.success) {
+								t.find(".tfhb-meeting-card").html("");
+								const y = f.data && f.data.confirmation_template ? f.data.confirmation_template : m;
+								t.find(".tfhb-meeting-card").append(y);
+							} else {
+								const y = f.data && f.data.message ? f.data.message : "Payment verification failed.";
+								tfhb_show_stripe_submit_error(y);
+							}
+						},
+						error: function(f) {
+							let y = "Server verification failed. Please try again or contact support.";
+							if (f && f.responseJSON && f.responseJSON.data && f.responseJSON.data.message) {
+								y = f.responseJSON.data.message;
+							}
+							tfhb_show_stripe_submit_error(y);
+						}
+					});
+				}
+
+				u.confirmCardPayment(g, x).then(function(b) {
+					if (b.error) {
+						u.retrievePaymentIntent(g).then(function(f) {
+							if (f.paymentIntent && (f.paymentIntent.status === "succeeded" || f.paymentIntent.status === "processing")) {
+								C(f.paymentIntent.id);
+							} else {
+								tfhb_show_stripe_submit_error(b.error.message || "Payment could not be completed.");
+							}
+						}).catch(function() {
+							tfhb_show_stripe_submit_error(b.error.message || "Payment could not be completed.");
+						});
+					} else if (b.paymentIntent && (b.paymentIntent.status === "succeeded" || b.paymentIntent.status === "processing")) {
+						C(b.paymentIntent.id);
+					}
+				}).catch(function(b) {
+					u.retrievePaymentIntent(g).then(function(f) {
+						if (f.paymentIntent && (f.paymentIntent.status === "succeeded" || f.paymentIntent.status === "processing")) {
+							C(f.paymentIntent.id);
+						} else {
+							tfhb_show_stripe_submit_error(b.message || "Payment processing error.");
+						}
+					}).catch(function() {
+						tfhb_show_stripe_submit_error(b.message || "Payment processing error.");
+					});
+				});
+			}
+
+			if (n && n.client_secret) {
+				F(n.client_secret);
+			} else {
+				jQuery.ajax({
+					url: tfhb_app_booking.ajax_url,
+					type: "POST",
+					data: {
+						nonce: tfhb_app_booking.nonce,
+						action: "tfhb_stripe_create_payment_intent",
+						amount: h,
+						currency: w.toLowerCase(),
+						booking_id: e.data ? e.data.booking_id : "",
+						attendee_id: e.data ? e.data.attendee_id : "",
+						draft_token: e.data && e.data.draft_token ? e.data.draft_token : "",
+						description: i
+					},
+					success: function(g) {
+						if (g.success && g.data.client_secret) {
+							F(g.data.client_secret);
+						} else {
+							const x = g.data && g.data.message ? g.data.message : "Could not initialize payment session.";
+							tfhb_show_stripe_submit_error(x);
+						}
+					},
+					error: function(f) {
+						let x = "Could not initialize payment intent.";
+						if (f && f.responseJSON && f.responseJSON.data && f.responseJSON.data.message) {
+							x = f.responseJSON.data.message;
+						}
+						tfhb_show_stripe_submit_error(x);
+					}
+				});
+			}
+		});
+	}
+
+	if (typeof Stripe !== "function") {
+		$.getScript("https://js.stripe.com/v3/", function() {
+			M();
+		}).fail(function() {
+			tfhb_show_stripe_top_error("Failed to load Stripe payment script. Please check your internet connection.");
+		});
+	} else {
+		M();
+	}
+}
+function tfhb_from_submission(t,e,a,i){t.find(".tfhb-booking-submit").append(`<span class="tfhb-submit-preloader"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="4" stroke="#ffffff" fill="none" cy="50" cx="50">
 			<animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="0.49751243781094534s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform>
 		  </circle><g></g></g><!-- [ldio] generated by https://loading.io --></svg><span>`),t.find(".tfhb-booking-submit").attr("disabled","disabled"),t.find(".tfhb-notice").hide(),t.find(".tfhb-notice").html("");var d=t.find(".tfhb-meeting-details h2").text(),m=t.find("#meeting_id").val(),l=t.find("#host_id").val(),h=t.find("#meeting_duration").val(),n=t.find("#meeting_dates").val(),T=t.find("#meeting_time_start").val(),L=t.find("#meeting_time_end").val(),w=t.find("#booking_hash").val(),z=t.find("#action_type").val(),S=t.find("#reschedule_nonce").val(),N=t.find("#meeting_price").val(),D=t.find("#recurring_maximum").val(),A=t.find("#attendee_time_zone_"+i.meeting_id).val(),M=t.find("#tfhb_time_format").val();t.find("#name").val(),t.find("#email").val(),t.find("#address").val();var u=t.find("#payment_method").val(),N=t.find("#meeting_price").val(),B=t.find("#payment_amount").val(),k=t.find("#stpublic_key").val();t.find("#paypal_public_key").val();var v=t.find("#payment_currency").val(),p=i.payment_status,P={action:"tfhb_meeting_form_submit",nonce:tfhb_app_booking.nonce,meeting_id:m,host_id:l,meeting_dates:n,meeting_duration:h,meeting_time_start:T,meeting_time_end:L,booking_hash:w,action_type:z,reschedule_nonce:S,recurring_maximum:D,attendee_time_zone:A,tfhb_time_format:M,payment_type:u,meeting_price:N,payment_amount:B,stripe_public_key:k,payment_currency:v};P=Object.assign(a,P),p==1&&u==""&&setTimeout(function(){t.find(".tfhb-notice").append(tfhbTranslate("Payment Method Required.")),t.find(".tfhb-notice").show(),t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove(),t.find(".tfhb-booking-submit").remove(".tfhb-submit-preloader"),t.find(".tfhb-booking-submit").removeAttr("disabled")},1e3),(p!=1||p==1&&u=="woo_payment"||p==1&&u=="paypal_payment"||p==1&&u=="stripe_payment")&&$.ajax({url:tfhb_app_booking.ajax_url,type:"POST",action:"tfhb_meeting_form_submit",data:P,success:function(c){if(t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove(),t.find(".tfhb-booking-submit").removeAttr("disabled"),c.success){if(t.find(".tfhb-booking-submit").remove(".tfhb-submit-preloader"),t.find(".tfhb-booking-submit").removeAttr("disabled"),p==1&&u=="paypal_payment"&&c.data.data){tfhb_render_paypal_payment(t,c.data);return}if(p==1&&u=="stripe_payment"&&c.data.data){tfhb_render_stripe_payment(t,c.data,k,d);return}if(c.data.redirect){window.location.href=c.data.redirect;return}else t.find(".tfhb-meeting-card").html(""),t.find(".tfhb-meeting-card").append(c.data.confirmation_template),c.data.action=="rescheduled"&&t.find(".tfhb-meeting-hostinfo").append(`
 										   <div class="tfhb-notice " > 

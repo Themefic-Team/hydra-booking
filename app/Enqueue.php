@@ -54,10 +54,16 @@ class Enqueue {
 		// register script
 		wp_register_script( 'tfhb-stripe-script', 'https://js.stripe.com/v3/', array(), null, true );
 		if(isset($tfhb_paypal['status']) && $tfhb_paypal['status'] == 1){
+			$paypal_supported_currencies = array(
+				'AUD', 'BRL', 'CAD', 'CNY', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF',
+				'ILS', 'JPY', 'MYR', 'MXN', 'TWD', 'NZD', 'NOK', 'PHP', 'PLN',
+				'GBP', 'SGD', 'SEK', 'CHF', 'THB', 'USD'
+			);
+			$sdk_currency = in_array( strtoupper( trim( $currency ) ), $paypal_supported_currencies, true ) ? strtoupper( trim( $currency ) ) : 'USD';
 			if($tfhb_paypal['environment'] == 'live'){
-				$sdk_url = 'https://www.paypal.com/sdk/js?client-id='.esc_attr($tfhb_paypal['client_id']).'&currency='.esc_attr($currency);
+				$sdk_url = 'https://www.paypal.com/sdk/js?client-id='.esc_attr($tfhb_paypal['client_id']).'&currency='.esc_attr($sdk_currency);
 			}else{ 
-				$sdk_url = 'https://www.sandbox.paypal.com/sdk/js?client-id='.esc_attr($tfhb_paypal['client_id']).'&currency='.esc_attr($currency);
+				$sdk_url = 'https://www.sandbox.paypal.com/sdk/js?client-id='.esc_attr($tfhb_paypal['client_id']).'&currency='.esc_attr($sdk_currency);
 			}
 			// if
 			wp_register_script( 'tfhb-paypal-sdk', $sdk_url, array(), null, true );

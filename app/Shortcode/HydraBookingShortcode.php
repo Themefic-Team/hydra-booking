@@ -645,6 +645,26 @@ class HydraBookingShortcode
 
 		// Real-time Pay-First Architecture: Do not create database records prior to payment for Stripe or PayPal.
 		if ( ! empty( $meta_data['payment_status'] ) && ( 'stripe_payment' === $meta_data['payment_method'] || 'paypal_payment' === $meta_data['payment_method'] ) ) {
+			if ( 'paypal_payment' === $meta_data['payment_method'] ) {
+				$booking_currency = ! empty( $general_settings['currency'] ) ? strtoupper( trim( $general_settings['currency'] ) ) : 'USD';
+				$paypal_supported_currencies = array(
+					'AUD', 'BRL', 'CAD', 'CNY', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF',
+					'ILS', 'JPY', 'MYR', 'MXN', 'TWD', 'NZD', 'NOK', 'PHP', 'PLN',
+					'GBP', 'SGD', 'SEK', 'CHF', 'THB', 'USD'
+				);
+
+				if ( ! in_array( $booking_currency, $paypal_supported_currencies, true ) ) {
+					wp_send_json_error( array(
+						'message' => sprintf(
+							/* translators: 1: Currency code, 2: Supported currencies */
+							esc_html__( 'Currency "%1$s" is not supported by PayPal. PayPal only supports: %2$s. Please update your currency in Booking Settings > General or use another payment method.', 'hydra-booking' ),
+							esc_html( $booking_currency ),
+							implode( ', ', array( 'USD', 'EUR', 'GBP', 'CAD', 'AUD' ) ) . '...'
+						),
+					) );
+					wp_die();
+				}
+			}
 			$draft_token   = 'tfhb_draft_' . wp_generate_uuid4();
 			$draft_payload = array(
 				'draft_token'      => $draft_token,
@@ -1351,8 +1371,15 @@ class HydraBookingShortcode
 			wp_send_json_error(array('message' => esc_html(__('Invalid Booking ID', 'hydra-booking'))));
 		}
 
+		$attendee_can_cancel = ! empty($attendeeBooking->attendee_can_cancel);
+		$auth = new \HydraBooking\Admin\Controller\AuthController();
+		$userRole = $auth->userRole();
+		$user_id = $auth->userID();
+		$is_privileged = in_array('administrator', $userRole, true) || (in_array('tfhb_host', $userRole, true) && $user_id == $attendeeBooking->user_id);
 
-
+		if (! $attendee_can_cancel && ! $is_privileged) {
+			wp_send_json_error(array('message' => esc_html(__('Cancellation is not allowed for this booking.', 'hydra-booking'))));
+		}
 
 		$user_id = get_current_user_id();
 		$cancelled_by = $user_id ? $user_id : '';
@@ -1514,7 +1541,13 @@ class HydraBookingShortcode
 			}
 			$order_body = json_decode(wp_remote_retrieve_body($order_response), true);
 			if (empty($order_body['status']) || 'COMPLETED' !== strtoupper($order_body['status'])) {
-				wp_send_json_error(array('message' => esc_html__('PayPal has not marked this payment as completed.', 'hydra-booking')));
+				$paypal_error_msg = esc_html__('PayPal has not marked this payment as completed.', 'hydra-booking');
+				if (!empty($order_body['details'][0]['description'])) {
+					$paypal_error_msg = esc_html($order_body['details'][0]['description']);
+				} elseif (!empty($order_body['message'])) {
+					$paypal_error_msg = esc_html($order_body['message']);
+				}
+				wp_send_json_error(array('message' => $paypal_error_msg));
 			}
 
 			// Atomic Concurrency Check (First-Pay-First-Serve)
