@@ -26,7 +26,7 @@ $date_time = new DateTimeController( 'UTC' );
 $helper = new Helper();
 $display_date_format = $helper->get_date_format_from_settings( 'l, F j' );
 $availability_data = $date_time->GetAvailabilityData($data);    
-$availability_time_zone = $availability_data['time_zone'];  
+$availability_time_zone = isset( $availability_data['time_zone'] ) ? $availability_data['time_zone'] : 'UTC';  
 $Bookmark = new BookingBookmarks();
 $getBookmark = $Bookmark->getMeetingBookmarks($data );
 // tfhb_print_r($getBookmark);
@@ -51,7 +51,8 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 					'completed' => __( 'Completed', 'hydra-booking' ),
 					'schedule'  => __( 'Scheduled', 'hydra-booking' ),
 				);
-				$status_label = isset( $status_labels[ $data->status ] ) ? $status_labels[ $data->status ] : ucfirst( $data->status );
+				$status_value = isset($data->status) ? $data->status : '';
+				$status_label = isset( $status_labels[ $status_value ] ) ? $status_labels[ $status_value ] : ucfirst( $status_value );
 			?>
 			<div class="tfhb-confirmation-seccess">
 				<img src="<?php echo esc_url(TFHB_URL . 'assets/app/images/sucess.gif'); ?>" alt="Success">
@@ -75,7 +76,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 						</div>
 						<!--date stored in this format  2024-05-24  9:00pm-9:45pm, Saturday, April 25 -->
 						<?php
-							$meeting_dates = explode( ',', $data->meeting_dates );
+							$meeting_dates = ! empty( $data->meeting_dates ) ? explode( ',', (string) $data->meeting_dates ) : array();
 
 							$general_settings = get_option( '_tfhb_general_settings' );
 							$time_format = isset( $general_settings['time_format'] ) && '24' === $general_settings['time_format'] ? '24' : '12';

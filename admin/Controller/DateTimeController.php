@@ -48,24 +48,40 @@ class DateTimeController extends \DateTimeZone
 
 	public function convert_time_based_on_timezone($meeting_date,  $time, $time_zone, $selected_time_zone, $time_format = '')
 	{
+		$time_zone          = ! empty( $time_zone ) ? $time_zone : 'UTC';
+		$selected_time_zone = ! empty( $selected_time_zone ) ? $selected_time_zone : 'UTC';
 
-		if ($meeting_date != '') {
-			$time = new \DateTime($meeting_date . ' ' . $time, new \DateTimeZone($time_zone));
-		} else {
-			$time = new \DateTime($time, new \DateTimeZone($time_zone));
+		try {
+			$tz_from = new \DateTimeZone($time_zone);
+		} catch (\Exception $e) {
+			$tz_from = new \DateTimeZone('UTC');
 		}
 
-		$time->setTimezone(new \DateTimeZone($selected_time_zone));
+		try {
+			$tz_to = new \DateTimeZone($selected_time_zone);
+		} catch (\Exception $e) {
+			$tz_to = new \DateTimeZone('UTC');
+		}
+
+		try {
+			if (! empty($meeting_date)) {
+				$dt = new \DateTime($meeting_date . ' ' . $time, $tz_from);
+			} else {
+				$dt = new \DateTime($time, $tz_from);
+			}
+			$dt->setTimezone($tz_to);
+		} catch (\Exception $e) {
+			$dt = new \DateTime('now', $tz_to);
+		}
 
 		if ($time_format == '12') {
-			return $time->format('h:i A');
+			return $dt->format('h:i A');
 		}
 		if ($time_format == '24') {
-			return $time->format('H:i');
+			return $dt->format('H:i');
 		}
 
-
-		return $time;
+		return $dt;
 	}
 
 
@@ -83,12 +99,30 @@ class DateTimeController extends \DateTimeZone
 		$helper = new Helper();
 		$date_format = $helper->get_date_format_from_settings('M d, Y');
 
-		$start_time = new \DateTime($selected_date . ' ' . $start_time, new \DateTimeZone($time_zone));
-		$end_time   = new \DateTime($selected_date . ' ' . $end_time, new \DateTimeZone($time_zone));
+		$time_zone          = ! empty( $time_zone ) ? $time_zone : 'UTC';
+		$selected_time_zone = ! empty( $selected_time_zone ) ? $selected_time_zone : 'UTC';
 
-		$start_time->setTimezone(new \DateTimeZone($selected_time_zone));
+		try {
+			$tz_from = new \DateTimeZone($time_zone);
+		} catch (\Exception $e) {
+			$tz_from = new \DateTimeZone('UTC');
+		}
 
-		$end_time->setTimezone(new \DateTimeZone($selected_time_zone));
+		try {
+			$tz_to = new \DateTimeZone($selected_time_zone);
+		} catch (\Exception $e) {
+			$tz_to = new \DateTimeZone('UTC');
+		}
+
+		try {
+			$start_time = new \DateTime($selected_date . ' ' . $start_time, $tz_from);
+			$end_time   = new \DateTime($selected_date . ' ' . $end_time, $tz_from);
+			$start_time->setTimezone($tz_to);
+			$end_time->setTimezone($tz_to);
+		} catch (\Exception $e) {
+			$start_time = new \DateTime('now', $tz_to);
+			$end_time   = new \DateTime('now', $tz_to);
+		}
 
 		// Prepare formatted output
 		if ($time_format == '12') {
@@ -124,6 +158,9 @@ class DateTimeController extends \DateTimeZone
 		$meeting      = new Meeting();
 
 		$MeetingsData = $meeting->get($meeting_id);
+		if ( empty( $MeetingsData ) || ! is_object( $MeetingsData ) ) {
+			return array();
+		}
 
 		// Meeting Information
 		$data = get_post_meta($MeetingsData->post_id, '__tfhb_meeting_opt', true);
@@ -139,10 +176,10 @@ class DateTimeController extends \DateTimeZone
 		$time_zone = isset($availability_data['time_zone']) && !empty($availability_data['time_zone']) ? $availability_data['time_zone'] : 'UTC';
 
 		// Disable Unavailable days
-		$time_slots = isset($availability_data['time_slots']) ? $availability_data['time_slots'] : array();
+		$time_slots = isset($availability_data['time_slots']) && is_array($availability_data['time_slots']) ? $availability_data['time_slots'] : array();
 
 		// Disable Unavailable days
-		$date_slots = isset($availability_data['date_slots']) ? $availability_data['date_slots'] : array();
+		$date_slots = isset($availability_data['date_slots']) && is_array($availability_data['date_slots']) ? $availability_data['date_slots'] : array();
 
 		// Duration
 		$duration = isset($data['duration']) && ! empty($data['duration']) ? $data['duration'] : 30;
@@ -192,12 +229,13 @@ class DateTimeController extends \DateTimeZone
 			// $time_zone     = $booking->attendee_time_zone;
 
 			if ('one-to-group' == $meeting_type) {
-				$attendees = $booking->attendees;
+				$attendees = ! empty( $booking->attendees ) && ( is_array( $booking->attendees ) || $booking->attendees instanceof \Countable ) ? $booking->attendees : array();
 
 				if (count($attendees) != $max_book_per_slot) {
 					continue;
 				}
 			}
+			$meeting_dates = ! empty( $meeting_dates ) ? (string) $meeting_dates : '';
 			$meeting_dates_array = explode(',', $meeting_dates);
 			// get the first date
 			$meeting_date = $meeting_dates_array[0];
@@ -447,10 +485,11 @@ class DateTimeController extends \DateTimeZone
 		if (isset($meeting_data['availability_type']) && 'settings' === $meeting_data['availability_type']) {
 
 			$host = new Host();
-			$host = $host->getHostById($meeting_data['host_id']);
+			$host_id = isset($meeting_data['host_id']) ? $meeting_data['host_id'] : 0;
+			$host = $host_id ? $host->getHostById($host_id) : null;
+			$host_user_id = ! empty($host) && isset($host->user_id) ? $host->user_id : 0;
 
-
-			$_tfhb_availability_settings = get_user_meta($host->user_id, '_tfhb_host', true);
+			$_tfhb_availability_settings = $host_user_id ? get_user_meta($host_user_id, '_tfhb_host', true) : array();
 			if (isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] == 'settings') {
 				$host_settings_availability_id = $_tfhb_availability_settings['availability_id'];
 				$_tfhb_availability_settings =  get_option('_tfhb_availability_settings');

@@ -18,19 +18,27 @@ if (isset($wp_query->query_vars['hydra-booking'])) {
 
 	$meeting = new Meeting();
 	$meeting = $meeting->get($meeting_id);
+	if ( empty( $meeting ) || ! is_object( $meeting ) ) {
+		echo '<div class="tfhb-single-meeting-section">';
+		echo '<h2>' . esc_html__('Invalid meeting ID.', 'hydra-booking') . '</h2>';
+		echo '</div>';
+		tfhb_get_footer();
+		return;
+	}
 	$attendee_can_reschedule = isset($meeting->attendee_can_reschedule) ? $meeting->attendee_can_reschedule : false;
 
 	// Get Current User 
 	$auth = new AuthController();
 	$userRole =  $auth->userRole();
 	$user_id =  $auth->userID();
-
+	$meeting_user_id = isset( $meeting->user_id ) ? $meeting->user_id : 0;
 
 	if ($attendee_can_reschedule == false) {
-		if (!in_array('administrator',  $userRole) || (!in_array('tfhb_host', $userRole) && $user_id != $meeting->user_id)) {
+		if (!in_array('administrator',  $userRole) || (!in_array('tfhb_host', $userRole) && $user_id != $meeting_user_id)) {
 			echo '<div class="tfhb-single-meeting-section">';
 			echo '<h2>' . esc_html__('You are not allowed to reschedule this meeting', 'hydra-booking') . '</h2>';
 			echo '</div>';
+			tfhb_get_footer();
 			return;
 		}
 	}

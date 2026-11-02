@@ -471,8 +471,8 @@ class BookingController {
 		$date_time = new DateTimeController( $selected_time_zone );
 		$meeting = new Meeting();
 		$meeting_data = $meeting->get( $meeting_id );  
-		$meeting_data = (array) $meeting_data;
-		$user_id = $meeting_data['user_id'];
+		$meeting_data = ! empty($meeting_data) ? (array) $meeting_data : array();
+		$user_id = isset( $meeting_data['user_id'] ) ? $meeting_data['user_id'] : 0;
 		
 		// $AvailabilityData = $date_time->GetAvailabilityData( $meeting_data ); 
 		if ( isset( $meeting_data['availability_type'] ) && 'settings' === $meeting_data['availability_type'] ) {

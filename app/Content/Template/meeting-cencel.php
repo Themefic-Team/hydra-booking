@@ -28,7 +28,7 @@ $attendee_can_cancel = ! empty( $data->attendee_can_cancel );
 $auth = new \HydraBooking\Admin\Controller\AuthController();
 $userRole = $auth->userRole();
 $user_id = $auth->userID();
-$is_privileged = in_array( 'administrator', $userRole, true ) || ( in_array( 'tfhb_host', $userRole, true ) && $user_id == $data->user_id );
+$is_privileged = in_array( 'administrator', $userRole, true ) || ( in_array( 'tfhb_host', $userRole, true ) && isset($data->user_id) && $user_id == $data->user_id );
 
 if ( ! $attendee_can_cancel && ! $is_privileged ) {
 	echo '<div class="tfhb-single-meeting-section tfhb-p-16">';
@@ -65,7 +65,7 @@ if ( ! $attendee_can_cancel && ! $is_privileged ) {
 							<!--date stored in this format  2024-05-24  9:00pm-9:45pm, Saturday, April 25 -->
 							<?php
 
-							$meeting_dates = explode( ',', $data->meeting_dates );
+							$meeting_dates = ! empty( $data->meeting_dates ) ? explode( ',', (string) $data->meeting_dates ) : array();
 
 							$date_strings = '';
 							foreach ( $meeting_dates as $key => $date ) {

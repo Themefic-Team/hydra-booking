@@ -127,7 +127,8 @@ class HydraBookingShortcode
 
 
 		$hostData =  new Host();
-		$host_meta = (array) $hostData->getHostById($host_id);
+		$raw_host  = $hostData->getHostById($host_id);
+		$host_meta = ! empty($raw_host) ? (array) $raw_host : array();
 
 		// Time Zone
 		$DateTimeZone = new DateTimeController('UTC');
@@ -197,7 +198,7 @@ class HydraBookingShortcode
 				} else {
 					$availability_data = isset($data['availability_custom']) ? $data['availability_custom'] : array();
 				}
-			} elseif (isset($_tfhb_availability_settings['availability']) && is_array($_tfhb_availability_settings['availability']) && in_array($data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
+			} elseif (isset($_tfhb_availability_settings['availability']) && is_array($_tfhb_availability_settings['availability']) && isset($data['availability_id']) && in_array($data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
 
 				$availability_data = $_tfhb_availability_settings['availability'][$data['availability_id']];
 			} else {

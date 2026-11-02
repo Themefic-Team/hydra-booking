@@ -27,9 +27,10 @@ $time_format      = isset( $general_settings['time_format'] ) && ! empty( $gener
 $selected_date        = gmdate( 'Y-m-d' );
 $meeting_id           = isset($meeting['id']) ? $meeting['id'] : 0;
 
-$selected_timezone =  isset($meeting['availability_custom']['time_zone']) && !empty($meeting['availability_custom']['time_zone']) ? $meeting['availability_custom']['time_zone'] : 'UTC';
-if ( 'settings' === $meeting['availability_type'] ) {
-	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
+$selected_timezone = ( isset($meeting['availability_custom']) && is_array($meeting['availability_custom']) && ! empty($meeting['availability_custom']['time_zone']) ) ? $meeting['availability_custom']['time_zone'] : 'UTC';
+if ( isset($meeting['availability_type']) && 'settings' === $meeting['availability_type'] ) {
+	$meeting_user_id = isset( $meeting['user_id'] ) ? $meeting['user_id'] : 0;
+	$_tfhb_availability_settings = $meeting_user_id ? get_user_meta( $meeting_user_id, '_tfhb_host', true ) : array();
 	if ( isset( $_tfhb_availability_settings['availability_type'] ) && $_tfhb_availability_settings['availability_type'] === 'settings' ) {
 		// Get Global Settings
 		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 

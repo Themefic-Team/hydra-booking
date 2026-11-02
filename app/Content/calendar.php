@@ -47,10 +47,10 @@ $availability_time_zone = isset($availability_data['time_zone']) ? $availability
     ?>
         <div class="tfhb-meeting-box tfhb-meeting-<?php echo esc_attr( $calendar_id ); ?>" data-calendar="<?php echo esc_attr( $calendar_id ); ?>"> 
             <?php 
-            if ( ! empty( $booking_data ) && 'reschedule' == $atts['type'] ) {
+            if ( ! empty( $booking_data ) && isset($atts['type']) && 'reschedule' == $atts['type'] ) {
             
                 
-                $meeting_dates = explode( ',', $booking_data->meeting_dates );
+                $meeting_dates = ! empty( $booking_data->meeting_dates ) ? explode( ',', (string) $booking_data->meeting_dates ) : array();
                 $start_time = $booking_data->start_time;
                 $end_time = $booking_data->end_time;
                 $date = $meeting_dates[0]; 
