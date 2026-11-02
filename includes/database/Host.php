@@ -286,7 +286,7 @@ class Host {
 
 		// Sanitize order_by - whitelist allowed values
 		$allowed_order = array( 'ASC', 'DESC' );
-		$order_by = strtoupper( $order_by );
+		$order_by = ! empty( $order_by ) ? strtoupper( (string) $order_by ) : 'DESC';
 		if ( ! in_array( $order_by, $allowed_order, true ) ) {
 			$order_by = 'DESC';
 		}

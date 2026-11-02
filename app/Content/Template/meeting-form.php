@@ -86,15 +86,16 @@ $tfhb_stripe = isset( $_tfhb_integration_settings['stripe'] ) ? $_tfhb_integrati
 					}
 
 					// this is a temporay fix it will be removed in version 2.0.0 or higher version 
+					$q_label = isset( $question['label'] ) ? (string) $question['label'] : '';
 					if(!isset($question['name']) || empty($question['name'])){
-						$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $question['label']));
+						$baseName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $q_label));
 						$question['name']  = $baseName; 
 					}
 					// ******** end of fix
 
 					$name = 1 >= $key ? $question['name'] : 'question[' . $question['name'] . ']'; 
 					$placehoder = isset( $question['placeholder'] )? $question['placeholder'] : ''; 
-					$label = ucfirst($question['label']);  
+					$label = ucfirst($q_label);  
 
 					if( $question['name'] == 'Address'){
 						$name = 'address';

@@ -234,7 +234,8 @@ class BookingBookmarks
                 $ical .= "DTSTART:$dtStart\r\n";
                 $ical .= "DTEND:$dtEnd\r\n";
                 $ical .= "SUMMARY:" . $meeting->title . "\r\n";
-                $ical .= "STATUS:" . strtoupper($meeting->status) . "\r\n";
+                $status = ! empty( $meeting->status ) ? strtoupper( (string) $meeting->status ) : 'CONFIRMED';
+                $ical .= "STATUS:" . $status . "\r\n";
 
                 // Decode meeting locations
                 $locations = json_decode($meeting->meeting_locations, true);
@@ -285,7 +286,8 @@ class BookingBookmarks
             $ical .= "DTSTART:$dtStart\r\n";
             $ical .= "DTEND:$dtEnd\r\n";
             $ical .= "SUMMARY:" . $meeting->title . "\r\n";
-            $ical .= "STATUS:" . strtoupper($meeting->status) . "\r\n";
+            $status = ! empty( $meeting->status ) ? strtoupper( (string) $meeting->status ) : 'CONFIRMED';
+                $ical .= "STATUS:" . $status . "\r\n";
 
             // Decode meeting locations
             $locations = json_decode($meeting->meeting_locations, true);

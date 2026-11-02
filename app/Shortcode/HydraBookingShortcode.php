@@ -197,7 +197,7 @@ class HydraBookingShortcode
 				} else {
 					$availability_data = isset($data['availability_custom']) ? $data['availability_custom'] : array();
 				}
-			} elseif (isset($_tfhb_availability_settings['availability']) &&  in_array($data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
+			} elseif (isset($_tfhb_availability_settings['availability']) && is_array($_tfhb_availability_settings['availability']) && in_array($data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
 
 				$availability_data = $_tfhb_availability_settings['availability'][$data['availability_id']];
 			} else {
@@ -1606,7 +1606,7 @@ class HydraBookingShortcode
 			wp_send_json_error(array('message' => esc_html__('PayPal is not the configured payment method for this booking.', 'hydra-booking')));
 		}
 
-		$current_payment_status = strtolower($attendee->payment_status);
+		$current_payment_status = ! empty( $attendee->payment_status ) ? strtolower( (string) $attendee->payment_status ) : '';
 		if ('completed' === $current_payment_status) {
 			$response['message'] = esc_html__('Payment has already been confirmed.', 'hydra-booking');
 			wp_send_json_success($response);

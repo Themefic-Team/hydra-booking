@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * @package    HydraBooking
  * @subpackage HydraBooking/app
  */
-get_header();
+tfhb_get_header();
 
 global $wp_query;
 
@@ -34,7 +34,7 @@ if ( ! $attendee_can_cancel && ! $is_privileged ) {
 	echo '<div class="tfhb-single-meeting-section tfhb-p-16">';
 	echo '<h2>' . esc_html__( 'You are not allowed to cancel this booking.', 'hydra-booking' ) . '</h2>';
 	echo '</div>';
-	get_footer();
+	tfhb_get_footer();
 	return;
 }
 
@@ -161,5 +161,5 @@ if ( ! $attendee_can_cancel && ! $is_privileged ) {
 
 
 
-get_footer();
+tfhb_get_footer();
 

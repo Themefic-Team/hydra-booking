@@ -57,8 +57,9 @@ class ShortcodeBuilder {
         $allowed_sort_by = ['id', 'title', 'created_at']; // customize as needed
         $allowed_order_by = ['ASC', 'DESC'];
         
-        $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
-        $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
+        $sort_by = ( isset( $atts['sort_by'] ) && in_array( $atts['sort_by'], $allowed_sort_by, true ) ) ? $atts['sort_by'] : 'id';
+        $order_by_val = ! empty( $atts['order_by'] ) ? strtoupper( (string) $atts['order_by'] ) : 'DESC';
+        $order_by = in_array( $order_by_val, $allowed_order_by, true ) ? $order_by_val : 'DESC';
         
          // Validate sort_by
         if (!in_array($sort_by, $allowed_sort_by, true)) {
@@ -203,7 +204,7 @@ class ShortcodeBuilder {
         $allowed_order_directions = ['ASC', 'DESC'];
 
         $sort_by = isset($atts['sort_by']) ? $atts['sort_by'] : 'id';
-        $order_by = isset($atts['order_by']) ? strtoupper($atts['order_by']) : 'DESC';
+        $order_by = ! empty( $atts['order_by'] ) ? strtoupper( (string) $atts['order_by'] ) : 'DESC';
 
         // Validate sort_by
         if (!in_array($sort_by, $allowed_sort_columns, true)) {
@@ -318,8 +319,9 @@ class ShortcodeBuilder {
         $allowed_order_by = ['ASC', 'DESC'];
         
         
-        $sort_by = in_array($atts['sort_by'], $allowed_sort_by, true) ? $atts['sort_by'] : 'id';
-        $order_by = in_array(strtoupper($atts['order_by']), $allowed_order_by, true) ? strtoupper($atts['order_by']) : 'DESC';
+        $sort_by = ( isset( $atts['sort_by'] ) && in_array( $atts['sort_by'], $allowed_sort_by, true ) ) ? $atts['sort_by'] : 'id';
+        $order_by_val = ! empty( $atts['order_by'] ) ? strtoupper( (string) $atts['order_by'] ) : 'DESC';
+        $order_by = in_array( $order_by_val, $allowed_order_by, true ) ? $order_by_val : 'DESC';
 
                  // Validate sort_by
         if (!in_array($sort_by, $allowed_sort_by, true)) {

@@ -2,7 +2,7 @@
 defined('ABSPATH') || exit;
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 
-get_header();
+tfhb_get_header();
 
 use HydraBooking\DB\Meeting;
 use HydraBooking\Admin\Controller\AuthController;
@@ -45,4 +45,4 @@ if (isset($wp_query->query_vars['hydra-booking'])) {
 	}
 }
 
-get_footer();
+tfhb_get_footer();

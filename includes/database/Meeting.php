@@ -324,7 +324,7 @@ class Meeting {
 			
 			// Sanitize orderBy - whitelist allowed values
 			$allowed_order = array( 'ASC', 'DESC' );
-			$orderBy = $orderBy ? strtoupper( (string) $orderBy ) : 'DESC';
+			$orderBy = ! empty( $orderBy ) ? strtoupper( (string) $orderBy ) : 'DESC';
 			if ( ! in_array( $orderBy, $allowed_order, true ) ) {
 				$orderBy = 'DESC';
 			}
@@ -419,6 +419,19 @@ class Meeting {
 			} 
 
 		
+		// Sanitize sort_by - whitelist allowed columns
+		$allowed_sort_fields = array( 'id', 'title', 'user_id', 'host_id', 'status', 'created_at', 'updated_at' );
+		if ( ! in_array( $sort_by, $allowed_sort_fields, true ) ) {
+			$sort_by = 'id';
+		}
+
+		// Sanitize order_by - whitelist allowed values
+		$allowed_order = array( 'ASC', 'DESC' );
+		$order_by = ! empty( $order_by ) ? strtoupper( (string) $order_by ) : 'DESC';
+		if ( ! in_array( $order_by, $allowed_order, true ) ) {
+			$order_by = 'DESC';
+		}
+
 		// Sort and order
 		$sql .= " ORDER BY tfhb_meetings.{$sort_by} {$order_by}";
 

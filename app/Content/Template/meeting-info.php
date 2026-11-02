@@ -36,18 +36,19 @@ $selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $me
 if ( 'settings' === $meeting['availability_type'] ) {
 	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
 	// tfhb_print_r( $host );
-	if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] === 'settings' ){
+	if ( isset( $_tfhb_availability_settings['availability_type'] ) && $_tfhb_availability_settings['availability_type'] === 'settings' ) {
 		// Get Global Settings
 		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
 		
-		$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
+		if ( is_array( $_tfhb_availability_settings_global ) ) {
+			$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
 
-		if ( in_array( $key, array_keys( $_tfhb_availability_settings_global ) ) ) {
-			$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+			if ( false !== $key && isset( $_tfhb_availability_settings_global[ $key ]['time_zone'] ) ) {
+				$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+			}
 		}
 
-
-	}elseif ( isset($_tfhb_availability_settings['availability']) && in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+	} elseif ( isset( $_tfhb_availability_settings['availability'] ) && is_array( $_tfhb_availability_settings['availability'] ) && isset( $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'] ) ) {
 		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
 	}
 		

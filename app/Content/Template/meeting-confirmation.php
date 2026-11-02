@@ -32,7 +32,7 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 // tfhb_print_r($getBookmark);
 ?> 
 <?php if($confirmation_page == true):  
-	get_header();	
+	tfhb_get_header();	
 ?>
 <div class=" tfhb-meeting-box tfhb-meeting-<?php echo esc_attr( $data->meeting_id ); ?>" data-calendar="<?php echo esc_attr( $data->meeting_id ); ?>">
 	<div class="tfhb-meeting-card">
@@ -208,5 +208,5 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 	</div>
 </div>
 <?php 
-get_footer(); 
+tfhb_get_footer(); 
 endif ?> 

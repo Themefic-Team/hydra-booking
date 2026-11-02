@@ -463,7 +463,7 @@ class DateTimeController extends \DateTimeZone
 						$availability_data = $_tfhb_availability_settings[$key];
 					}
 				}
-			} elseif (isset($_tfhb_availability_settings['availability']) && in_array($meeting_data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
+			} elseif (isset($_tfhb_availability_settings['availability']) && is_array($_tfhb_availability_settings['availability']) && in_array($meeting_data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
 
 				$availability_data = $_tfhb_availability_settings['availability'][$meeting_data['availability_id']];
 			}

@@ -494,7 +494,7 @@ class BookingController {
 				} else {
 					$AvailabilityData = isset( $meeting_data['availability_custom'] ) ? $meeting_data['availability_custom'] : array();
 				} 
-			}elseif (isset($_tfhb_availability_settings['availability']) &&  in_array( $meeting_data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+			}elseif (isset($_tfhb_availability_settings['availability']) && is_array($_tfhb_availability_settings['availability']) && in_array( $meeting_data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
 				
 				$AvailabilityData = $_tfhb_availability_settings['availability'][ $meeting_data['availability_id'] ];
 				
@@ -1290,7 +1290,7 @@ class BookingController {
 		}
 
 		$attendee_update = array();
-		$status = strtolower( $status );
+		$status = ! empty( $status ) ? strtolower( (string) $status ) : '';
 		$attendee_update['status'] = $status; 
 		$attendee_update['id'] = $attendee_id;
 

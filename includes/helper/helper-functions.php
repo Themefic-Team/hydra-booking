@@ -57,3 +57,62 @@ function tfhb_is_hydra_booking_pro_active()
  * @param array $data
  * @return string
  */
+
+
+/**
+ * Safely load header template without triggering deprecated notices on block themes (FSE).
+ *
+ * @param string|null $name The name of the specialized header.
+ */
+if ( ! function_exists( 'tfhb_get_header' ) ) {
+	function tfhb_get_header( $name = null ) {
+		$templates = array();
+		$name      = (string) $name;
+		if ( '' !== $name ) {
+			$templates[] = "header-{$name}.php";
+		}
+		$templates[] = 'header.php';
+
+		if ( locate_template( $templates ) ) {
+			get_header( $name );
+		} else {
+			?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+<?php wp_body_open(); ?>
+			<?php
+		}
+	}
+}
+
+/**
+ * Safely load footer template without triggering deprecated notices on block themes (FSE).
+ *
+ * @param string|null $name The name of the specialized footer.
+ */
+if ( ! function_exists( 'tfhb_get_footer' ) ) {
+	function tfhb_get_footer( $name = null ) {
+		$templates = array();
+		$name      = (string) $name;
+		if ( '' !== $name ) {
+			$templates[] = "footer-{$name}.php";
+		}
+		$templates[] = 'footer.php';
+
+		if ( locate_template( $templates ) ) {
+			get_footer( $name );
+		} else {
+			wp_footer();
+			?>
+</body>
+</html>
+			<?php
+		}
+	}
+}
