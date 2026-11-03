@@ -153,7 +153,8 @@ class Attendees {
 			host.first_name as host_first_name,
 			host.last_name as host_last_name,
 			host.email as host_email,
-			host.phone_number as host_phone
+			host.phone_number as host_phone,
+			host.time_zone as host_time_zone
 			FROM $table_name as attendees
 			LEFT JOIN $booking_table as booking ON attendees.booking_id = booking.id
 			LEFT JOIN $meeting_table as meeting ON booking.meeting_id = meeting.id

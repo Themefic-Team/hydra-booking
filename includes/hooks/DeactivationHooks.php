@@ -44,10 +44,20 @@ class DeactivationHooks {
 	}
 
 	public function remove_cron_job_schedule() {
-		if ( wp_next_scheduled( 'tfhb_after_booking_completed_schedule' ) ) {
-
-			wp_clear_scheduled_hook( 'tfhb_after_booking_completed_schedule' );
+		// Every cron event the plugin schedules
+		$hooks = array(
+			'tfhb_after_booking_completed_schedule',
+			'tfhb_cart_auto_remover_schedule',
+			'tfhb_calendar_sync_schedule',
+		);
+		foreach ( $hooks as $hook ) {
+			if ( wp_next_scheduled( $hook ) ) {
+				wp_clear_scheduled_hook( $hook );
+			}
 		}
+
+		// Promo notice cron and its stored options
+		\HydraBooking\Admin\Controller\PromoNotice::tfhb_promo_notice_deactivation_hook();
 	}
 
 	// Deactivate Options

@@ -441,7 +441,17 @@ class Booking {
 							$in = implode(',', array_fill(0, count($value), '%s')); 
 							$sql .= " AND $field $operator ($in)";
 							$data = array_merge($data, $value);
-						}elseif($operator == 'LIKE'){   
+						}elseif($operator == 'IN_DATES'){
+							// Matches any of the dates inside a comma separated meeting_dates value (recurring bookings)
+							$value = array_values( array_filter( (array) $value, 'strlen' ) );
+							if ( empty( $value ) ) {
+								$sql .= ' AND 1=0';
+							} else {
+								$in_dates = implode( ' OR ', array_fill( 0, count( $value ), "FIND_IN_SET(%s, REPLACE($field, ' ', '')) > 0" ) );
+								$sql     .= " AND ($in_dates)";
+								$data     = array_merge( $data, $value );
+							}
+						}elseif($operator == 'LIKE'){
 							// if operator is like 
 							$like_conditions[] = "$field $operator %s";
 							$data[] = $value; 
@@ -532,9 +542,10 @@ class Booking {
                 b.meeting_id,   
                 b.address,
                 b.meeting_dates,
+                b.availability_time_zone,
                 b.start_time,
                 b.end_time,
-                b.status AS booking_status, 
+                b.status AS booking_status,
                 b.created_at AS booking_created_at,
                 m.host_id AS meeting_host_id,
                 m.title,

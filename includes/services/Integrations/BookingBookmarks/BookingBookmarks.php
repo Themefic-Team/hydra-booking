@@ -62,7 +62,8 @@ class BookingBookmarks
             }
         }
 
-        $availability_time_zone = $data->availability_time_zone; // Example: "America/New_York"
+        // Falls back to the host profile and site timezone for bookings saved without one
+        $availability_time_zone = \HydraBooking\Admin\Controller\BookingTime::booking_tz($data)->getName(); // Example: "America/New_York"
 
         // meeting_dates can be a comma separated list; use the first date for the bookmark links.
         $meeting_dates = explode(',', $data->meeting_dates);
@@ -91,8 +92,9 @@ class BookingBookmarks
         ];
 
         // Format for Outlook (ISO 8601 format with time zone)
-        $start_time_outlook = $dtStart->format("Y-m-d\TH:i:s");
-        $end_time_outlook = $dtEnd->format("Y-m-d\TH:i:s");
+        // Outlook reads times without an offset in the viewer's own timezone, so send UTC
+        $start_time_outlook = \HydraBooking\Admin\Controller\BookingTime::iso_utc($dtStart);
+        $end_time_outlook = \HydraBooking\Admin\Controller\BookingTime::iso_utc($dtEnd);
         // Outlook Calendar Link
         $bookmarks['outlook'] = [
             'title' => __('Outlook', 'hydra-booking'),
@@ -166,8 +168,9 @@ class BookingBookmarks
         $meeting_date  = trim($meeting_dates[0]);
 
         // Convert time to UTC format for ICS
-        $start = new \DateTime("{$meeting_date} {$data->start_time}", new \DateTimeZone($data->availability_time_zone));
-        $end = new \DateTime("{$meeting_date} {$data->end_time}", new \DateTimeZone($data->availability_time_zone));
+        $booking_time_zone = \HydraBooking\Admin\Controller\BookingTime::booking_tz($data);
+        $start = new \DateTime("{$meeting_date} {$data->start_time}", $booking_time_zone);
+        $end = new \DateTime("{$meeting_date} {$data->end_time}", $booking_time_zone);
         $start->setTimezone(new \DateTimeZone('UTC'));
         $end->setTimezone(new \DateTimeZone('UTC'));
 
@@ -318,24 +321,14 @@ class BookingBookmarks
     // Convert date and time to UTC format
     public function formatToUTC($date, $time, $timezone)
     {
-        if (empty($timezone)) {
-            $timezone = 'UTC';
-        }
+        // An empty or invalid timezone falls back to the site timezone, same as every other export
+        $datetime = \HydraBooking\Admin\Controller\BookingTime::instant(trim($date), $time, $timezone);
 
-        // Determine the format based on the presence of AM/PM
-        $format = (stripos($time, 'AM') !== false || stripos($time, 'PM') !== false) ? 'Y-m-d h:i A' : 'Y-m-d H:i';
-
-        // Create DateTime object with detected format
-        $datetime = \DateTime::createFromFormat($format, "$date $time", new \DateTimeZone($timezone));
-
-        if ($datetime === false) {
+        if (! $datetime) {
             return false; // Return false if date parsing fails
         }
 
-        // Convert to UTC
-        $datetime->setTimezone(new \DateTimeZone("UTC"));
-
-        return $datetime->format("Ymd\THis\Z");
+        return \HydraBooking\Admin\Controller\BookingTime::format($datetime, 'UTC', "Ymd\THis\Z");
     }
 
     // sent bookmark add to calender link in email notification

@@ -108,11 +108,35 @@ class WooBooking {
 		$order_meta['tfhb_order_meta']['booking_id']  = $data['booking_id'];
 		$order_meta['tfhb_order_meta']['attendee_id']  = $attendee_data['id'];
 		$order_meta['tfhb_order_meta']['added_time']  = time();
-		$order_meta['tfhb_order_meta']['Appointment'] = $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_data['attendee_time_zone'] . ' )';
+		$order_meta['tfhb_order_meta']['Appointment'] = $this->appointment_label( $data, $attendee_data );
 		$cart = WC()->cart;
 		$cart->add_to_cart( $product_id, 1, 0, array(), $order_meta );
 
 		return true;
+	}
+
+	/**
+	 * "2026-11-02 06:30 PM - 07:30 PM ( America/Los_Angeles )": the booking's host-timezone
+	 * values shown in the attendee's timezone, one date per occurrence.
+	 */
+	public function appointment_label( $data, $attendee_data ) {
+		$attendee_time_zone = isset( $attendee_data['attendee_time_zone'] ) ? $attendee_data['attendee_time_zone'] : '';
+		$viewer_time_zone   = \HydraBooking\Admin\Controller\BookingTime::tz( $attendee_time_zone, isset( $data['availability_time_zone'] ) ? $data['availability_time_zone'] : '' );
+		$occurrences        = \HydraBooking\Admin\Controller\BookingTime::booking_instants( $data );
+
+		if ( empty( $occurrences ) ) {
+			return $data['meeting_dates'] . ' ' . $data['start_time'] . ' - ' . $data['end_time'] . ' ( ' . $attendee_time_zone . ' )';
+		}
+
+		$dates = array();
+		foreach ( $occurrences as $occurrence ) {
+			$dates[] = \HydraBooking\Admin\Controller\BookingTime::format( $occurrence['start'], $viewer_time_zone, 'Y-m-d' );
+		}
+
+		return implode( ',', $dates ) . ' '
+			. \HydraBooking\Admin\Controller\BookingTime::format( $occurrences[0]['start'], $viewer_time_zone, 'h:i A' ) . ' - '
+			. \HydraBooking\Admin\Controller\BookingTime::format( $occurrences[0]['end'], $viewer_time_zone, 'h:i A' )
+			. ' ( ' . $viewer_time_zone->getName() . ' )';
 	}
 
 	// display booking_id  into checkout page

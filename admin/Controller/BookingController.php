@@ -269,6 +269,33 @@ class BookingController {
 	}
 
 
+	/**
+	 * Calendar events for the admin booking calendar: one per occurrence, with the UTC
+	 * offset of the booking's timezone so the calendar shows the real moment in the
+	 * viewer's local time, and the stored host time labelled with its timezone.
+	 */
+	private function calendar_events( $bookings ) {
+		$events = array();
+		foreach ( is_array( $bookings ) ? $bookings : array() as $booking ) {
+			$time_zone = BookingTime::booking_tz( $booking );
+			$status    = isset( $booking->booking_status ) ? $booking->booking_status : ( isset( $booking->status ) ? $booking->status : '' );
+
+			foreach ( BookingTime::booking_instants( $booking ) as $occurrence ) {
+				$events[] = array(
+					'booking_id'   => $booking->id,
+					'title'        => isset( $booking->title ) ? $booking->title : '',
+					'start'        => BookingTime::format( $occurrence['start'], $time_zone, 'Y-m-d\TH:i:sP' ),
+					'end'          => BookingTime::format( $occurrence['end'], $time_zone, 'Y-m-d\TH:i:sP' ),
+					'status'       => $status,
+					'booking_date' => BookingTime::format( $occurrence['start'], $time_zone, 'Y-m-d' ),
+					'booking_time' => $booking->start_time . ' - ' . $booking->end_time . ' (' . $time_zone->getName() . ')',
+					'host_id'      => $booking->host_id,
+				);
+			}
+		}
+		return $events;
+	}
+
 	// Booking List
 	public function getBookingsData() {
 	
@@ -291,13 +318,18 @@ class BookingController {
 		$booking = new Booking();
 		$where = array();
 
-		if( ! empty( $filter_type ) && $filter_type == 'upcoming' && empty( $date_range['from']) ){ 
-			$where[] = array('meeting_dates', '>=', gmdate('Y-m-d'));
+		if( ! empty( $filter_type ) && $filter_type == 'upcoming' && empty( $date_range['from']) ){
+			// meeting_dates are host-local, so keep yesterday (UTC) too, and recurring series whose
+			// first date passed. Occurrences that already ended are dropped below.
+			$where['OR'] = array(
+				array('meeting_dates', '>=', BookingTime::now()->modify('-1 day')->format('Y-m-d')),
+				array('meeting_dates', 'LIKE', '%,%'),
+			);
 		}elseif( ! empty( $filter_type ) && $filter_type == 'completed' &&  empty($status) ){   
 			$where[] = array('status', '=', 'completed');
 		}elseif( ! empty( $filter_type ) && $filter_type == 'latest' ){  
 			// based on created date 
-			$where[] = array('created_at', '>=', gmdate('Y-m-d', strtotime('-7 days')));
+			$where[] = array('created_at', '>=', BookingTime::to_mysql_session( BookingTime::site_day( '-7 days' ) ));
 		}elseif( ! empty( $filter_type ) && $filter_type == 'filter' ){  
 			// filter by host
 			if( ! empty( $host_ids ) ){ 
@@ -350,63 +382,34 @@ class BookingController {
 		); 
 		  
 
-		$extractedBookings = array_map(
-			function ( $booking ) {
-				return array(
-					'id'            => $booking->id,
-					'title'         => $booking->title,
-					'meeting_dates' => $booking->meeting_dates,
-					'start_time'    => $booking->start_time,
-					'end_time'      => $booking->end_time,
-					'status'        => $booking->status,
-					'host_id'       => $booking->host_id,
-				);
-			},
-			$bookingsList
-		);
-
-		$booking_array = array();
-		foreach ( $extractedBookings as $book ) {
-
-			// Convert start and end times to 24-hour format
-			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
-			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
-
-			$dates = explode( ',', $book['meeting_dates'] );
-			$first_date = $dates[0];
-
-			$booking_array[] = array(
-				'booking_id'   => $book['id'],
-				'title'        => $book['title'],
-				'start'        => $first_date . 'T' . $start_time_24hr,
-				'end'          => $first_date . 'T' . $end_time_24hr,
-				'status'       => $book['status'],
-				'booking_date' => $first_date,
-				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
-				'host_id'      => $book['host_id'],
-			);
-		}
+		// One calendar event per occurrence, with the UTC offset of the booking's timezone
+		$booking_array = $this->calendar_events( $bookingsList );
 		// make list based on date
-		$booking_list = array_values(array_reduce($bookingsList , function($carry, $item) {
-			$dates = explode(',', $item->meeting_dates);
-			
+		$now = BookingTime::now();
+		$booking_list = array_values(array_reduce($bookingsList , function($carry, $item) use ($filter_type, $now) {
+			$dates = BookingTime::dates($item->meeting_dates);
+
 			foreach ($dates as $kye => $date) {
-				
+
+				// Upcoming: only occurrences that haven't ended yet, as absolute moments
+				if ( 'upcoming' === $filter_type ) {
+					$occurrence = (array) $item;
+					$occurrence['meeting_dates'] = $date;
+					$instants = BookingTime::booking_instants( (object) $occurrence );
+					if ( empty( $instants ) || $instants[0]['end'] <= $now ) {
+						continue;
+					}
+				}
+
 				$carry[$date]['date'] = $date;
 				$carry[$date]['bookings'][] = $item;
 			}
 			return $carry;
 		}, [])); 
 		if( ! empty( $filter_type )  ){
-			// Current date
-			$currentDateTime = new \DateTime( gmdate( 'Y-m-d' ) );
-			
 			if($filter_type == 'upcoming'){
-				// Filter out dates that are before the current date
-				$filteredData = array_filter($booking_list, function ($item) use ($currentDateTime) {
-					$date = new \DateTime($item['date']);
-					return $date >= $currentDateTime;
-				});
+				// Past occurrences were already left out while grouping
+				$filteredData = $booking_list;
 				// Sort the data by date in ascending order
 				usort($filteredData, function ($a, $b) {
 					return strcmp($a['date'], $b['date']);
@@ -425,13 +428,15 @@ class BookingController {
 					return $timeA <=> $timeB;
 				});
 
-				if( ! empty( $filter_type ) && $filter_type == 'upcoming' ){ 
+				if( ! empty( $filter_type ) && $filter_type == 'upcoming' && ! empty( $dateData['bookings'] ) ){
+					// The group date is a host-local date: compare it with today in that host's timezone
+					$group_today = BookingTime::to_tz( $now, BookingTime::booking_tz( $dateData['bookings'][0] ) );
 					// current date is today make it today
-					if($dateData['date'] == gmdate('Y-m-d')){
+					if($dateData['date'] == $group_today->format('Y-m-d')){
 						$dateData['date'] = 'Today';
 					}
 					// current date is tomorrow make it tomorrow
-					if($dateData['date'] == gmdate('Y-m-d', strtotime('+1 day'))){
+					elseif($dateData['date'] == $group_today->modify('+1 day')->format('Y-m-d')){
 						$dateData['date'] = 'Tomorrow';
 					}
 				}
@@ -541,7 +546,16 @@ class BookingController {
 				}
 			}
 		}
-	 
+
+		// Weekdays and override dates are host-calendar days. In another timezone a host day
+		// spills into the neighbouring dates, so only disable them when the picker shows host dates;
+		// otherwise a day without slots just lists none.
+		$host_time_zone = BookingTime::tz( isset( $AvailabilityData['time_zone'] ) ? $AvailabilityData['time_zone'] : '', 'UTC' )->getName();
+		if ( BookingTime::tz( $selected_time_zone, $host_time_zone )->getName() !== $host_time_zone ) {
+			$disabled_days  = [];
+			$disabled_dates = [];
+		}
+
 
 		$data = array(
 			'status'    => true,
@@ -564,9 +578,12 @@ class BookingController {
 		$select_date = isset( $request['select_date'] ) ? $request['select_date'] : '';
 		$meeting_id = isset( $request['meeting_id'] ) ? $request['meeting_id'] : '';
 		$selected_time_zone = isset( $request['selected_time_zone'] ) ? $request['selected_time_zone'] : '';
-		$date_time = new DateTimeController( $selected_time_zone );
-		$all_month_data = $date_time->getAvailableTimeData( $meeting_id, $select_date, $selected_time_zone, '12' );
-	 
+		$booking_id = isset( $request['booking_id'] ) ? absint( $request['booking_id'] ) : 0;
+		$date_time = new DateTimeController( 'UTC' );
+		// Slots whose date in the selected timezone is select_date, leaving out the booking being moved
+		$by_date = $date_time->getAvailableSlotsByDate( $meeting_id, array( $select_date ), $selected_time_zone, '12', $booking_id );
+		$all_month_data = isset( $by_date[ $select_date ] ) ? $by_date[ $select_date ] : array();
+
 		$time_slot = [];
 		foreach ( $all_month_data as $key => $value ) {
 			$time_slot[] = array(
@@ -602,12 +619,34 @@ class BookingController {
 		$select_time_slot = isset( $request['select_time_slot'] ) ? $request['select_time_slot'] : '';
 		$select_status = isset( $request['select_status'] ) ? $request['select_status'] : '';
 		$select_time_slot = json_decode( $select_time_slot, true );
-		$start_time = $select_time_slot['start'];
-		$end_time = $select_time_slot['end'];
+		$start_time = isset( $select_time_slot['start'] ) ? $select_time_slot['start'] : '';
+		$end_time = isset( $select_time_slot['end'] ) ? $select_time_slot['end'] : '';
 
 		if ( ! empty( $booking_id ) && ! $this->tfhb_verify_booking_ownership( $booking_id ) ) {
 			return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
 		}
+
+		// Bookings are stored in the meeting's availability timezone, whatever timezone the
+		// slot was picked in. Slots carry their host values; older payloads are converted.
+		$date_time         = new DateTimeController( 'UTC' );
+		$rebook_meeting    = ( new Meeting() )->get( $meeting_id );
+		$availability_data = $rebook_meeting ? $date_time->GetAvailabilityData( $rebook_meeting ) : array();
+		$host_time_zone    = BookingTime::tz( isset( $availability_data['time_zone'] ) ? $availability_data['time_zone'] : '', 'UTC' )->getName();
+
+		if ( ! empty( $select_time_slot['host_date'] ) && ! empty( $select_time_slot['host_start'] ) && ! empty( $select_time_slot['host_end'] ) ) {
+			$select_date = $select_time_slot['host_date'];
+			$start_time  = $select_time_slot['host_start'];
+			$end_time    = $select_time_slot['host_end'];
+		} else {
+			$picked_start = BookingTime::instant( $select_date, $start_time, $availability_time_zone );
+			$picked_end   = BookingTime::instant( $select_date, $end_time, $availability_time_zone );
+			if ( $picked_start && $picked_end ) {
+				$select_date = BookingTime::format( $picked_start, $host_time_zone, 'Y-m-d' );
+				$start_time  = BookingTime::format( $picked_start, $host_time_zone, 'h:i A' );
+				$end_time    = BookingTime::format( $picked_end, $host_time_zone, 'h:i A' );
+			}
+		}
+		$availability_time_zone = $host_time_zone;
 
 		// get booking data with attendees
 		$booking = new Booking();
@@ -765,9 +804,11 @@ class BookingController {
 		$data = get_post_meta( $MeetingsData->post_id, '__tfhb_meeting_opt', true );
 
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
-			$_tfhb_availability_settings = get_user_meta( $MeetingsData->host_id, '_tfhb_host', true );
-			if ( in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
-				$availability_data = $_tfhb_availability_settings['availability'][ $data['availability_id'] ];
+			$host_id = isset( $MeetingsData->host_id ) ? $MeetingsData->host_id : 0;
+			$_tfhb_availability_settings = $host_id ? get_user_meta( $host_id, '_tfhb_host', true ) : array();
+			$avail_id = isset( $data['availability_id'] ) ? $data['availability_id'] : null;
+			if ( null !== $avail_id && isset( $_tfhb_availability_settings['availability'] ) && is_array( $_tfhb_availability_settings['availability'] ) && isset( $_tfhb_availability_settings['availability'][ $avail_id ] ) ) {
+				$availability_data = $_tfhb_availability_settings['availability'][ $avail_id ];
 			} else {
 				$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
 			}
@@ -847,12 +888,16 @@ class BookingController {
 
 		$selected_date = isset( $request['date'] ) ? sanitize_text_field( $request['date'] ) : '';
 
-		$selected_time_zone = isset( $request['time_zone'] ) ? sanitize_text_field( $request['time_zone'] ) : 'UTC';
+		// The booking forms send selected_time_zone; older callers send time_zone
+		$selected_time_zone = isset( $request['selected_time_zone'] ) ? $request['selected_time_zone'] : ( isset( $request['time_zone'] ) ? $request['time_zone'] : 'UTC' );
+		$selected_time_zone = sanitize_text_field( $selected_time_zone );
 
 		$selected_time_format = '12';
 
-		$date_time = new DateTimeController( $selected_time_zone );
-		$data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format );
+		// Slots whose date in the selected timezone is the selected date
+		$date_time = new DateTimeController( 'UTC' );
+		$by_date   = $date_time->getAvailableSlotsByDate( $meeting_id, array( $selected_date ), $selected_time_zone, $selected_time_format, isset( $request['booking_id'] ) ? absint( $request['booking_id'] ) : 0 );
+		$data      = isset( $by_date[ $selected_date ] ) ? $by_date[ $selected_date ] : array();
 
 		return rest_ensure_response(
 			array(
@@ -882,42 +927,8 @@ class BookingController {
 		$booking      = new Booking();
 		$bookingsList = $booking->getFilter( $filterData );
 		
-		$extractedBookings = array_map(
-			function ( $booking ) {
-				return array(
-					'id'            => $booking->id,
-					'title'         => $booking->title,
-					'meeting_dates' => $booking->meeting_dates,
-					'start_time'    => $booking->start_time,
-					'end_time'      => $booking->end_time,
-					'status'        => $booking->booking_status,
-					'host_id'       => $booking->host_id,
-				);
-			},
-			$bookingsList
-		);
-
-		$booking_array = array();
-		foreach ( $extractedBookings as $book ) {
-
-			// Convert start and end times to 24-hour format
-			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
-			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
-
-			$dates = explode( ',', $book['meeting_dates'] );
-			$first_date = $dates[0];
-
-			$booking_array[] = array(
-				'booking_id'   => $book['id'],
-				'title'        => $book['title'],
-				'start'        => $first_date . 'T' . $start_time_24hr,
-				'end'          => $first_date . 'T' . $end_time_24hr,
-				'status'       => $book['status'],
-				'booking_date' => $first_date,
-				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
-				'host_id'      => $book['host_id'],
-			);
-		}
+		// One calendar event per occurrence, with the UTC offset of the booking's timezone
+		$booking_array = $this->calendar_events( $bookingsList );
 
 		// Return response
 		$data = array(
@@ -936,42 +947,74 @@ class BookingController {
 		// Check if user is already a booking
 		$booking = new Booking();
 
+		// Bookings hold host-local date and time in the meeting's availability timezone; the slot
+		// may have been picked in another timezone. Attendee details live in the attendees table.
+		$meeting_id         = isset( $request['meeting'] ) ? $request['meeting'] : '';
+		$selected_time_zone = isset( $request['time_zone'] ) ? sanitize_text_field( $request['time_zone'] ) : '';
+		$slot               = isset( $request['time'] ) && is_array( $request['time'] ) ? $request['time'] : array();
+		$date_time          = new DateTimeController( 'UTC' );
+		$meeting_row        = ( new Meeting() )->get( $meeting_id );
+		$availability_data  = $meeting_row ? $date_time->GetAvailabilityData( $meeting_row ) : array();
+		$host_time_zone     = BookingTime::tz( isset( $availability_data['time_zone'] ) ? $availability_data['time_zone'] : '', 'UTC' )->getName();
+
+		if ( ! empty( $slot['host_date'] ) && ! empty( $slot['host_start'] ) && ! empty( $slot['host_end'] ) ) {
+			$host_date  = $slot['host_date'];
+			$host_start = $slot['host_start'];
+			$host_end   = $slot['host_end'];
+		} else {
+			$picked_date  = isset( $request['date'] ) ? $request['date'] : '';
+			$picked_start = BookingTime::instant( $picked_date, isset( $slot['start'] ) ? $slot['start'] : '', $selected_time_zone );
+			$picked_end   = BookingTime::instant( $picked_date, isset( $slot['end'] ) ? $slot['end'] : '', $selected_time_zone );
+			$host_date    = $picked_start ? BookingTime::format( $picked_start, $host_time_zone, 'Y-m-d' ) : $picked_date;
+			$host_start   = $picked_start ? BookingTime::format( $picked_start, $host_time_zone, 'h:i A' ) : ( isset( $slot['start'] ) ? $slot['start'] : '' );
+			$host_end     = $picked_end ? BookingTime::format( $picked_end, $host_time_zone, 'h:i A' ) : ( isset( $slot['end'] ) ? $slot['end'] : '' );
+		}
+
+		$attendee_fields = array(
+			'attendee_name'      => isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : '',
+			'email'              => isset( $request['email'] ) ? sanitize_email( $request['email'] ) : '',
+			'attendee_time_zone' => BookingTime::tz( $selected_time_zone, $host_time_zone )->getName(),
+		);
+
+		$Attendees = new Attendees();
+
 		if ( ! empty( $request['id'] ) ) {
 			if ( ! $this->tfhb_verify_booking_ownership( $request['id'] ) ) {
 				return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this booking.', 'hydra-booking' ), array( 'status' => 403 ) );
 			}
 			$data = array(
-				'id'                 => isset( $request['id'] ) ? $request['id'] : '',
-				'meeting_id'         => isset( $request['meeting'] ) ? $request['meeting'] : '',
-				'attendee_name'      => isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : '',
-				'email'              => isset( $request['email'] ) ? sanitize_email( $request['email'] ) : '',
-				'attendee_time_zone' => isset( $request['time_zone'] ) ? sanitize_text_field( $request['time_zone'] ) : '',
-				'start_time'         => isset( $request['time']['start'] ) ? $request['time']['start'] : '',
-				'end_time'           => isset( $request['time']['end'] ) ? $request['time']['end'] : '',
-				'meeting_dates'      => isset( $request['date'] ) ? $request['date'] : '',
-				'status'             => isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '',
+				'id'                     => isset( $request['id'] ) ? $request['id'] : '',
+				'meeting_id'             => $meeting_id,
+				'start_time'             => $host_start,
+				'end_time'               => $host_end,
+				'meeting_dates'          => $host_date,
+				'availability_time_zone' => $host_time_zone,
+				'status'                 => isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '',
 			);
 
 			// Booking Update
 			$bookingUpdate = $booking->update( $data );
+
+			$existing_attendee = $Attendees->getAttendeeWithBooking( array( array( 'booking_id', '=', absint( $request['id'] ) ) ), 1, 'DESC' );
+			if ( ! empty( $existing_attendee ) ) {
+				$Attendees->update( array_merge( array( 'id' => $existing_attendee->id ), $attendee_fields ) );
+			}
 		} else {
 			$data = array(
-				'meeting_id'         => isset( $request['meeting'] ) ? $request['meeting'] : '',
-				'attendee_name'      => isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : '',
-				'email'              => isset( $request['email'] ) ? sanitize_email( $request['email'] ) : '',
-				'attendee_time_zone' => isset( $request['time_zone'] ) ? sanitize_text_field( $request['time_zone'] ) : '',
-				'host_id'            => isset( $request['host'] ) ? $request['host'] : '',
-				'meeting_dates'      => isset( $request['date'] ) ? $request['date'] : '',
-				'start_time'         => isset( $request['time']['start'] ) ? $request['time']['start'] : '',
-				'end_time'           => isset( $request['time']['end'] ) ? $request['time']['end'] : '',
-				'status'             => isset( $request['status'] ) ? $request['status'] : '',
-				'payment_method'     => 'backend',
-				'payment_status'     => 'pending',
+				'meeting_id'             => $meeting_id,
+				'host_id'                => isset( $request['host'] ) ? $request['host'] : '',
+				'hash'                   => wp_generate_password( 32, false ),
+				'meeting_dates'          => $host_date,
+				'availability_time_zone' => $host_time_zone,
+				'start_time'             => $host_start,
+				'end_time'               => $host_end,
+				'meeting_locations'      => '',
+				'status'                 => isset( $request['status'] ) ? $request['status'] : '',
 			);
 
 			// Insert booking
 			$bookingInsert = $booking->add( $data );
-			if ( ! $bookingInsert['status'] ) {
+			if ( empty( $bookingInsert['status'] ) ) {
 				return rest_ensure_response(
 					array(
 						'status'  => false,
@@ -979,6 +1022,22 @@ class BookingController {
 					)
 				);
 			}
+			$request['id'] = $bookingInsert['insert_id'];
+
+			$Attendees->add(
+				array_merge(
+					$attendee_fields,
+					array(
+						'booking_id'     => $bookingInsert['insert_id'],
+						'meeting_id'     => $meeting_id,
+						'host_id'        => $data['host_id'],
+						'hash'           => wp_generate_password( 32, false ),
+						'status'         => $data['status'],
+						'payment_method' => 'backend',
+						'payment_status' => 'pending',
+					)
+				)
+			);
 		}
 
 		// Fetch the full attendee+booking+host record so that action hooks
@@ -1074,43 +1133,8 @@ class BookingController {
 
 		}
 		
-		$extractedBookings = array_map(
-			function ( $booking ) {
-				return array(
-					'id'            => $booking->id,
-					'title'         => $booking->title,
-					'meeting_dates' => $booking->meeting_dates,
-					'start_time'    => $booking->start_time,
-					'end_time'      => $booking->end_time,
-					'status'        => $booking->booking_status,
-					'host_id'       => $booking->host_id,
-				);
-			},
-			$bookingsList
-		);
-
-		$booking_array = array();
-		foreach ( $extractedBookings as $book ) {
-			// Convert start and end times to 24-hour format
-			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
-			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
-		 
-
-
-			$dates = explode( ',', $book['meeting_dates'] );
-			$first_date = $dates[0];
-			
-			$booking_array[] = array(
-				'booking_id'   => $book['id'],
-				'title'        => $book['title'],
-				'start'        => $first_date . 'T' . $start_time_24hr,
-				'end'          => $first_date . 'T' . $end_time_24hr,
-				'status'       => $book['status'],
-				'booking_date' => $first_date,
-				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
-				'host_id'      => $book['host_id'],
-			);
-		}
+		// One calendar event per occurrence, with the UTC offset of the booking's timezone
+		$booking_array = $this->calendar_events( $bookingsList );
 
 		// Return response
 		$data = array(
@@ -1408,16 +1432,19 @@ class BookingController {
 
 		$selected_date = $singlebooking->meeting_dates;
 
-		$selected_time_zone = $singlebooking->attendee_time_zone;
+		// Edited in the booking's own (host) timezone, so the stored times match the listed slots
+		$selected_time_zone = BookingTime::booking_tz( $singlebooking )->getName();
 
 		$selected_time_format = '12';
 		// Meeting Information
 		$data = get_post_meta( $MeetingsData->post_id, '__tfhb_meeting_opt', true );
 
 		if ( isset( $data['availability_type'] ) && 'settings' === $data['availability_type'] ) {
-			$_tfhb_availability_settings = get_user_meta( $MeetingsData->host_id, '_tfhb_host', true );
-			if ( isset($_tfhb_availability_settings['availability']) && in_array( $data['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
-				$availability_data = $_tfhb_availability_settings['availability'][ $data['availability_id'] ];
+			$host_id = isset( $MeetingsData->host_id ) ? $MeetingsData->host_id : 0;
+			$_tfhb_availability_settings = $host_id ? get_user_meta( $host_id, '_tfhb_host', true ) : array();
+			$avail_id = isset( $data['availability_id'] ) ? $data['availability_id'] : null;
+			if ( null !== $avail_id && isset( $_tfhb_availability_settings['availability'] ) && is_array( $_tfhb_availability_settings['availability'] ) && isset( $_tfhb_availability_settings['availability'][ $avail_id ] ) ) {
+				$availability_data = $_tfhb_availability_settings['availability'][ $avail_id ];
 			} else {
 				$availability_data = isset( $data['availability_custom'] ) ? $data['availability_custom'] : array();
 			}
@@ -1443,13 +1470,12 @@ class BookingController {
 		// Disable Dates
 
 		// Get All Booking Data.
-		$bookings = $booking->get( array( 'meeting_dates' => $selected_date ) );
-		// $date_time = new DateTimeController( $selected_time_zone );
-		$date_time = new DateTimeController( $selected_time_zone );
-		$data_time = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_time_zone, $selected_time_format );
+		$date_time = new DateTimeController( 'UTC' );
+		$first_date = BookingTime::dates( $selected_date );
+		$first_date = ! empty( $first_date ) ? $first_date[0] : '';
+		$data_time = $date_time->getAvailableTimeData( $meeting_id, $first_date, $selected_time_zone, $selected_time_format, 0, $singlebooking->id );
 
-	 
-
+		$singlebooking->time_zone = $selected_time_zone;
 		$singlebooking->times = array(
 			'start' => $singlebooking->start_time,
 			'end'   => $singlebooking->end_time,
@@ -1909,40 +1935,8 @@ class BookingController {
 			$bookingsList = $booking->get( null, true );
 		}
 
-		$extractedBookings = array_map(
-			function ( $booking ) {
-				return array(
-					'id'            => $booking->id,
-					'title'         => $booking->title,
-					'meeting_dates' => $booking->meeting_dates,
-					'start_time'    => $booking->start_time,
-					'end_time'      => $booking->end_time,
-					'status'        => $booking->booking_status,
-					'host_id'       => $booking->host_id,
-				);
-			},
-			$bookingsList
-		);
-
-		$booking_array = array();
-		foreach ( $extractedBookings as $book ) {
-			// Convert start and end times to 24-hour format
-			$start_time_24hr = gmdate( 'H:i', strtotime( $book['start_time'] ) );
-			$end_time_24hr   = gmdate( 'H:i', strtotime( $book['end_time'] ) );
-
-			$dates = explode( ',', $book['meeting_dates'] );
-			$first_date = $dates[0];
-			$booking_array[] = array(
-				'booking_id'   => $book['id'],
-				'title'        => $book['title'],
-				'start'        => $first_date . 'T' . $start_time_24hr,
-				'end'          => $first_date . 'T' . $end_time_24hr,
-				'status'       => $book['status'],
-				'booking_date' => $first_date,
-				'booking_time' => $book['start_time'] . ' - ' . $book['end_time'],
-				'host_id'      => $book['host_id'],
-			);
-		}
+		// One calendar event per occurrence, with the UTC offset of the booking's timezone
+		$booking_array = $this->calendar_events( $bookingsList );
 
 		// Return response
 		$data = array(
@@ -1961,39 +1955,36 @@ class BookingController {
 	// Export Booking Data as CSV.
 	public function exportBookingDataAs() {
 		$request = json_decode( file_get_contents( 'php://input' ), true );
-		// 2024-07-03 23:48:25
-		$time         = '00:00:00';
-		$current_time = '23:59:59';
-		// Get Current Date baded on time
-		$current_date  = gmdate( 'Y-m-d H:i:s', strtotime( $current_time ) );
-		$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( '-1 day', strtotime( $current_date ) ) );
+		// Ranges are whole site-timezone days, inclusive of both ends
+		$date_range = isset( $request['date_range'] ) ? $request['date_range'] : 'today';
+		$site_today = BookingTime::site_day();
+		$range_from = $site_today;
+		$range_to   = BookingTime::site_day( '', true );
 
 		$booking = new Booking();
-		if ( ! empty( $request['date_range'] == 'custom' ) ) {
-			// in this format 2024-07-03 23:48:25 form 2024-07-03 request['start_date'] variable
-			$current_date  = gmdate( 'Y-m-d H:i:s', strtotime( $request['end_date'] ) );
-			$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( $request['start_date'] ) );
-
-		} elseif ( $request['date_range'] == 'today' ) {
-			$current_date  = gmdate( 'Y-m-d H:i:s', strtotime( $current_time ) );
-			$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( '-1 day', strtotime( $current_date ) ) );
-		} elseif ( $request['date_range'] == 'weeks' ) {
-			$current_date  = gmdate( 'Y-m-d H:i:s', strtotime( $current_time ) );
-			$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( '-7 day', strtotime( $current_date ) ) );
-		} elseif ( $request['date_range'] == 'months' ) {  // current month
-			// This month end date
-			$current_date  = gmdate( 'Y-m-d H:i:s', strtotime( 'last day of this month', strtotime( $current_time ) ) );
-			$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( 'first day of last month', strtotime( $current_time ) ) );
-		} elseif ( $request['date_range'] == 'years' ) {  // current year
-			// This year end date
-			$current_date  = gmdate( 'Y-m-d H:i:s', strtotime( 'last day of this year', strtotime( $current_time ) ) );
-			$previous_date = gmdate( 'Y-m-d H:i:s', strtotime( 'first day of last year', strtotime( $current_time ) ) );
+		if ( 'custom' === $date_range ) {
+			// request dates are in this format 2024-07-03
+			$range_from = BookingTime::site_day( isset( $request['start_date'] ) ? $request['start_date'] : '' );
+			$range_to   = BookingTime::site_day( isset( $request['end_date'] ) ? $request['end_date'] : '', true );
+		} elseif ( 'weeks' === $date_range ) { // last 7 days, today included
+			$range_from = BookingTime::site_day( '-6 days' );
+		} elseif ( 'months' === $date_range ) {  // current month
+			$range_from = BookingTime::site_day( $site_today->modify( 'first day of this month' )->format( 'Y-m-d' ) );
+			$range_to   = BookingTime::site_day( $site_today->modify( 'last day of this month' )->format( 'Y-m-d' ), true );
+		} elseif ( 'years' === $date_range ) {  // current year
+			$range_from = BookingTime::site_day( $site_today->format( 'Y' ) . '-01-01' );
+			$range_to   = BookingTime::site_day( $site_today->format( 'Y' ) . '-12-31', true );
 		}
+
+		// created_at is compared in this database session's clock
+		$current_date  = BookingTime::to_mysql_session( $range_to );
+		$previous_date = BookingTime::to_mysql_session( $range_from );
+
 		if ( $request['date_range'] == 'all' ) {
 			$file_name = 'booking-data';
 
 		} else {
-			$file_name = 'booking-data-' . gmdate( 'Y-m-d', strtotime( $previous_date ) ) . '-' . gmdate( 'Y-m-d', strtotime( $current_date ) ) . '';
+			$file_name = 'booking-data-' . $range_from->format( 'Y-m-d' ) . '-' . $range_to->format( 'Y-m-d' ) . '';
 
 		}
 

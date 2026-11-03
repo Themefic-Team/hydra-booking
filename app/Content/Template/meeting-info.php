@@ -69,6 +69,7 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
 		<input type="hidden" id="meeting_dates" name="meeting_dates" value="">
 		<input type="hidden" id="meeting_time_start" name="meeting_time_start" value="">
 		<input type="hidden" id="meeting_time_end" name="meeting_time_end" value="">
+		<input type="hidden" id="meeting_start_utc" name="meeting_start_utc" value="">
 		<input type="hidden" id="payment_method" name="payment_method" value="<?php echo esc_attr($meeting['payment_method']); ?>">
 		<input type="hidden" id="payment_amount" name="payment_amount" value="<?php echo ! empty( $meeting['meeting_price'] ) ? esc_attr($meeting['meeting_price']) : ''; ?>">
 		<input type="hidden" id="payment_currency" name="payment_currency" value="<?php echo ! empty( $currency ) ? esc_attr($currency) : esc_attr('USD'); ?>">

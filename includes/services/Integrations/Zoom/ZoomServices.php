@@ -5,6 +5,7 @@ use HydraBooking\DB\Booking;
 use HydraBooking\DB\BookingMeta;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\Meeting;
+use HydraBooking\Admin\Controller\BookingTime;
 
 class ZoomServices {
 
@@ -126,17 +127,26 @@ class ZoomServices {
 		$BookingMeta = new BookingMeta();
 		$events = json_decode( $get_booking_meta->value, true );
 
+		// The booking may have been rescheduled since the meeting was created: send its current time too
+		$current_bodies = $this->zoomMeetingBody( $booking );
+
 		$new_events_data = array();
-		foreach ($events as $key => $event) { 
+		foreach ($events as $key => $event) {
 			$attendees = json_decode( $booking->attendees, true );
-			$attendees_data = $event['settings']['meeting_invitees']; 
-			
+			$attendees_data = $event['settings']['meeting_invitees'];
+
 			$attendees_data[] = array(
 				'email' => $booking->email,
 				'name'  => $booking->attendee_name,
 			);
-			
+
 			$event['settings']['meeting_invitees'] = $attendees_data;
+
+			if ( isset( $current_bodies[ $key ] ) ) {
+				$event['start_time'] = $current_bodies[ $key ]['start_time'];
+				$event['timezone']   = $current_bodies[ $key ]['timezone'];
+				$event['duration']   = $current_bodies[ $key ]['duration'];
+			}
 			
 			$response = wp_remote_request(
 				'https://api.zoom.us/v2/meetings/' . $event['id'],
@@ -300,14 +310,13 @@ class ZoomServices {
 		$zoom_calendar = json_decode( $booking_meta->value );
 
 		$zoom_event_body = array();
-		$meeting_dates = explode( ',', $single_booking_meta->meeting_dates );
+		// Stored times are in the booking's availability timezone, not the attendee's
+		$occurrences = BookingTime::booking_instants( $single_booking_meta );
+		$time_zone   = BookingTime::booking_tz( $single_booking_meta )->getName();
 		foreach ( $zoom_calendar as $key => $value ) {
-			$meeting_date = $meeting_dates[ $key ];
-			$start_time_combined = $meeting_date . ' ' . $single_booking_meta->start_time;
-		
-			$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $single_booking_meta->attendee_time_zone ) ? $single_booking_meta->attendee_time_zone : '') );
-			$date->setTimezone( new \DateTimeZone('UTC') );
-			$time_in_24_hour_format = $date->format('H:i:s');
+			if ( ! isset( $occurrences[ $key ] ) ) {
+				continue;
+			}
 
 			$attendee_data = array(
 				array(
@@ -319,8 +328,8 @@ class ZoomServices {
 			$data = array(
 				'topic'      => ! empty( $meeting_data->title ) ? $meeting_data->title : '',
 				'type'       => 2, // Scheduled Meeting
-				'start_time' => $meeting_date . 'T' . $time_in_24_hour_format . 'Z',
-				'timezone'   => ! empty( $single_booking_meta->attendee_time_zone ) ? $single_booking_meta->attendee_time_zone : '',
+				'start_time' => BookingTime::iso_utc( $occurrences[ $key ]['start'] ),
+				'timezone'   => $time_zone,
 				'duration'   => $meeting_data->duration,
 				'password'   => '123456',
 				'settings'   => array(
@@ -608,9 +617,7 @@ class ZoomServices {
 
  
 
-	public function zoomMeetingBody( $booking) { 
-		$meeting_dates = explode( ',', $booking->meeting_dates );
- 
+	public function zoomMeetingBody( $booking) {
 		$event_data = array();
 
 		$attendees_data = array();
@@ -623,28 +630,18 @@ class ZoomServices {
 			'name'  => $booking->attendee_name,
 		);
 		
-		$buffer_time_before = !empty( $booking->buffer_time_before ) ? $booking->buffer_time_before : 0;
-		$buffer_time_after = !empty( $booking->buffer_time_after ) ? $booking->buffer_time_after : 0;
-		$meeting_interval = !empty( $booking->meeting_interval ) ? $booking->meeting_interval : 0;
+		// The Zoom meeting lasts as long as the meeting itself; buffers and intervals are only gaps between bookings
+		$duration = (int) $booking->duration;
 
-		// Calculate duration
-		$duration = $booking->duration + $buffer_time_before + $buffer_time_after + $meeting_interval;
-		 
+		$time_zone = BookingTime::booking_tz( $booking );
 
-
-		foreach($meeting_dates as $meeting_date){ 
-			$start_time_combined = $meeting_date . ' ' . $booking->start_time;
-		
-			$date = new \DateTime( $start_time_combined, new \DateTimeZone(! empty( $booking->availability_time_zone ) ? $booking->availability_time_zone : '') );
-			$date->setTimezone( new \DateTimeZone('UTC') );
-			$time_in_24_hour_format = $date->format('H:i:s');
-		
-			
+		foreach ( BookingTime::booking_instants( $booking ) as $occurrence ) {
 			$data = array(
 				'topic'      => ! empty( $booking->title ) ? $booking->title : '',
 				'type'       => 2, // Scheduled Meeting
-				'start_time' => $meeting_date . 'T' . $time_in_24_hour_format . 'Z',
-				'timezone'   => ! empty( $booking->host_time_zone ) ? $booking->host_time_zone : '',
+				// Absolute UTC start, so the date is right even when UTC is on another day than the host
+				'start_time' => BookingTime::iso_utc( $occurrence['start'] ),
+				'timezone'   => $time_zone->getName(),
 				'duration'   => $duration,
 				'password'   => '123456',
 				'settings'   => array(

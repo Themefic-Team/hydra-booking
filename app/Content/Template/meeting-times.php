@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 
  use HydraBooking\Admin\Controller\DateTimeController;
+ use HydraBooking\Admin\Controller\BookingTime;
 
 $meeting          = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host 		   = isset( $args['host'] ) ? $args['host'] : array();
@@ -23,9 +24,7 @@ $time_format      = isset( $general_settings['time_format'] ) && ! empty( $gener
 
 
 
-// Selecte suld be current date 
-$selected_date        = gmdate( 'Y-m-d' );
-$meeting_id           = isset($meeting['id']) ? $meeting['id'] : 0;
+$meeting_id          = isset($meeting['id']) ? $meeting['id'] : 0;
 
 $selected_timezone = ( isset($meeting['availability_custom']) && is_array($meeting['availability_custom']) && ! empty($meeting['availability_custom']['time_zone']) ) ? $meeting['availability_custom']['time_zone'] : 'UTC';
 if ( isset($meeting['availability_type']) && 'settings' === $meeting['availability_type'] ) {
@@ -50,6 +49,9 @@ if ( isset($meeting['availability_type']) && 'settings' === $meeting['availabili
 }
 
 // $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
+
+// Today in the meeting's availability timezone
+$selected_date = BookingTime::format( BookingTime::now(), $selected_timezone, 'Y-m-d' );
 
 $date_time = new DateTimeController( $selected_timezone );
 $data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_timezone, $time_format );

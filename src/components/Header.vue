@@ -15,7 +15,8 @@ const displayNotification = ref(false);
 
 // make a vue time 2024-08-20 16:15:39 to 6m example
 const timeAgo = (date) => {
-    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    // created_at arrives as ISO UTC; a small clock difference must not show negative times
+    const seconds = Math.max(0, Math.floor((new Date() - new Date(date)) / 1000));
     let interval = seconds / 31536000;
     if (interval > 1) {
         return Math.floor(interval) + " years";

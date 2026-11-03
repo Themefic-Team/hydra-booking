@@ -65,16 +65,21 @@ if ( ! $attendee_can_cancel && ! $is_privileged ) {
 							<!--date stored in this format  2024-05-24  9:00pm-9:45pm, Saturday, April 25 -->
 							<?php
 
-							$meeting_dates = ! empty( $data->meeting_dates ) ? explode( ',', (string) $data->meeting_dates ) : array();
+							// Stored in the host's timezone, shown in the attendee's
+							$general_settings = get_option( '_tfhb_general_settings' );
+							$time_display     = isset( $general_settings['time_format'] ) && '24' === $general_settings['time_format'] ? 'H:i' : 'h:i A';
+							$viewer_time_zone = \HydraBooking\Admin\Controller\BookingTime::tz( $data->attendee_time_zone, $data->availability_time_zone );
+							$occurrences      = \HydraBooking\Admin\Controller\BookingTime::booking_instants( $data );
 
-							$date_strings = '';
-							foreach ( $meeting_dates as $key => $date ) {
-
-								$date_strings .= gmdate( $display_date_format, strtotime( $date ) );
-								$date_strings .= ', ';
+							$date_strings = array();
+							foreach ( $occurrences as $occurrence ) {
+								$date_strings[] = wp_date( $display_date_format, $occurrence['start']->getTimestamp(), $viewer_time_zone );
 							}
 
-								echo ! empty( $data->start_time ) ? '' . esc_html( $data->start_time ) . ' - ' . esc_html( $data->end_time ) . ' ' . esc_html( $date_strings ) . '' : ''
+							if ( ! empty( $occurrences ) ) {
+								$first_occurrence = $occurrences[0];
+								echo esc_html( \HydraBooking\Admin\Controller\BookingTime::format( $first_occurrence['start'], $viewer_time_zone, $time_display ) ) . ' - ' . esc_html( \HydraBooking\Admin\Controller\BookingTime::format( $first_occurrence['end'], $viewer_time_zone, $time_display ) ) . ' ' . esc_html( implode( ', ', $date_strings ) );
+							}
 							?>
 						</li>
 						<li class="tfhb-flexbox tfhb-gap-8">

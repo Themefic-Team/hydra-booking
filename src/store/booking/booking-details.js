@@ -213,42 +213,88 @@ const BookingDetails = reactive({
         ical += "CALSCALE:GREGORIAN\r\n";
         ical += "METHOD:PUBLISH\r\n";
         
-        let uid = Date.now().toString();
-        let dtStart = this.formatToUTC(this.booking.meeting_dates, this.booking.start_time, this.booking.availability_time_zone); 
-        let dtEnd = this.formatToUTC(this.booking.meeting_dates, this.booking.end_time, this.booking.availability_time_zone);
-        
-        ical += "BEGIN:VEVENT\r\n";
-        ical += "UID:" + uid + "\r\n";
-        ical += "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").split('.')[0] + "Z\r\n";
-        ical += "DTSTART:" + dtStart + "\r\n";
-        ical += "DTEND:" + dtEnd + "\r\n";
-        ical += "SUMMARY:" + this.booking.title + "\r\n";
-        ical += "STATUS:" + this.booking.status.toUpperCase() + "\r\n";
-        
-        // Decode and add meeting locations
+        // Decode meeting locations
         let locations = JSON.parse(this.booking.meeting_locations || '{}');
         let locationString = Object.values(locations).map(loc => `${loc.location} - ${loc.address}`).join(', ');
-        if (locationString) {
-            ical += "LOCATION:" + locationString + "\r\n";
-        }
-        
-        // Add attendees
-        if (this.booking.attendees && this.booking.attendees.length > 0) {
-            this.booking.attendees.forEach(attendee => {
-                ical += `ATTENDEE;CN=${attendee.attendee_name}:mailto:${attendee.email}\r\n`;
-            });
-        }
-        
-        ical += "END:VEVENT\r\n";
+
+        // One event per occurrence; stored times are in the booking's availability timezone
+        let meetingDates = String(this.booking.meeting_dates || '').split(',').map(date => date.trim()).filter(Boolean);
+        meetingDates.forEach((meetingDate, index) => {
+            let start = this.wallClockToDate(meetingDate, this.booking.start_time, this.booking.availability_time_zone);
+            let end = this.wallClockToDate(meetingDate, this.booking.end_time, this.booking.availability_time_zone);
+            if (!start || !end) {
+                return;
+            }
+            // A meeting that ends at or after midnight ends on the next day
+            if (end < start) {
+                end = new Date(end.getTime() + 86400000);
+            }
+
+            ical += "BEGIN:VEVENT\r\n";
+            ical += "UID:" + Date.now().toString() + '-' + index + "\r\n";
+            ical += "DTSTAMP:" + this.toIcsUtc(new Date()) + "\r\n";
+            ical += "DTSTART:" + this.toIcsUtc(start) + "\r\n";
+            ical += "DTEND:" + this.toIcsUtc(end) + "\r\n";
+            ical += "SUMMARY:" + this.booking.title + "\r\n";
+            ical += "STATUS:" + this.booking.status.toUpperCase() + "\r\n";
+
+            if (locationString) {
+                ical += "LOCATION:" + locationString + "\r\n";
+            }
+
+            // Add attendees
+            if (this.booking.attendees && this.booking.attendees.length > 0) {
+                this.booking.attendees.forEach(attendee => {
+                    ical += `ATTENDEE;CN=${attendee.attendee_name}:mailto:${attendee.email}\r\n`;
+                });
+            }
+
+            ical += "END:VEVENT\r\n";
+        });
         ical += "END:VCALENDAR\r\n";
         // make booking event file name as title and date time 
      
         this.downloadICS(ical, 'booking_event_'+this.booking.id+'.ics');
     }, 
     formatToUTC(date, time, timezone) {
-        let dateTimeString = `${date} ${time}`;
-        let dateTime = new Date(dateTimeString);
+        let dateTime = this.wallClockToDate(date, time, timezone);
+        return dateTime ? this.toIcsUtc(dateTime) : '';
+    },
+    toIcsUtc(dateTime) {
         return dateTime.toISOString().replace(/[-:]/g, "").split('.')[0] + "Z";
+    },
+    // A Y-m-d date and 'h:i A' (or 'H:i') time on the wall clock of an IANA timezone, as an
+    // absolute Date. Parsing "date time" with new Date() would use the browser's timezone.
+    wallClockToDate(date, time, timeZone) {
+        let dateParts = String(date || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+        let timeParts = String(time || '').trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AaPp][Mm])?$/);
+        if (!dateParts || !timeParts) {
+            return null;
+        }
+        let hour = parseInt(timeParts[1], 10);
+        if (timeParts[4]) {
+            hour = hour % 12 + (timeParts[4].toUpperCase() === 'PM' ? 12 : 0);
+        }
+        let wallClock = Date.UTC(+dateParts[1], +dateParts[2] - 1, +dateParts[3], hour, +timeParts[2], +(timeParts[3] || 0));
+
+        // Offset of the timezone at a moment, from what its wall clock shows then
+        let offsetAt = (timestamp) => {
+            try {
+                let values = {};
+                new Intl.DateTimeFormat('en-US', {
+                    timeZone: timeZone || 'UTC', hourCycle: 'h23',
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                }).formatToParts(new Date(timestamp)).forEach(part => { values[part.type] = part.value; });
+                return Date.UTC(+values.year, +values.month - 1, +values.day, +values.hour % 24, +values.minute, +values.second) - timestamp;
+            } catch (e) {
+                return 0; // unknown timezone: treat as UTC
+            }
+        };
+        // Applied twice so a daylight saving change between the guess and the answer settles
+        let timestamp = wallClock - offsetAt(wallClock);
+        timestamp = wallClock - offsetAt(timestamp);
+        return new Date(timestamp);
     },
     downloadICS(content, filename) {
         let blob = new Blob([content], { type: 'text/calendar' });

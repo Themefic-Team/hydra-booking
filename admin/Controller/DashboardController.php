@@ -57,13 +57,13 @@ class DashboardController {
 		// calculate Days based on form day and to day
 		$days = $from_date != null && $to_date != null ? ( strtotime( $to_date ) - strtotime( $from_date ) ) / ( 60 * 60 * 24 ) : $days; // exp 1
 
-		// how to get current date start time 12:00:00 and end time 23:59:59
-		$current_date = $to_date != null ? gmdate( 'Y-m-d 23:59:59', strtotime( $to_date ) ) : gmdate( 'Y-m-d 23:59:59' ); // exp 2021-09-01
+		// Day boundaries are site-timezone days, written as the values created_at holds in this
+		// database session (it is a TIMESTAMP filled by MySQL's CURRENT_TIMESTAMP).
+		$current_date = BookingTime::to_mysql_session( BookingTime::site_day( $to_date != null ? $to_date : '', true ) ); // exp 2021-09-01 23:59:59
 
-		// $current_date  = gmdate('Y-m-d H:i:s'); // exp 2021-09-01
-		$previous_date        = $days != 1 ? gmdate( 'Y-m-d 00:00:00', strtotime( '-' . $days . ' days' ) ) : gmdate( 'Y-m-d 00:00:00' ); // exp 2021-09-01
-		$previous_date        = $from_date != null ? gmdate( 'Y-m-d 00:00:00', strtotime( $from_date ) ) : $previous_date; // exp 2021-09-01
-		$previous_date_before = $days != 1 ? gmdate( 'Y-m-d 00:00:00', strtotime( '-' . ( $days * 2 ) . ' days' ) ) : gmdate( 'Y-m-d 00:00:00', strtotime( '-1 days' ) ); // exp 2021-09-01
+		$previous_date        = BookingTime::to_mysql_session( BookingTime::site_day( $days != 1 ? '-' . (int) $days . ' days' : '' ) ); // exp 2021-09-01 00:00:00
+		$previous_date        = $from_date != null ? BookingTime::to_mysql_session( BookingTime::site_day( $from_date ) ) : $previous_date;
+		$previous_date_before = BookingTime::to_mysql_session( BookingTime::site_day( $days != 1 ? '-' . (int) ( $days * 2 ) . ' days' : '-1 days' ) );
 
 		// Get booking
 		$booking = new Booking();
@@ -103,18 +103,47 @@ class DashboardController {
 		); 
  
 
-		// Upcoming Booking
+		// Upcoming Booking: the next five meetings from now, whatever date range is selected.
+		// meeting_dates are host-local, so the SQL keeps yesterday (UTC) and recurring series,
+		// and the exact check uses each occurrence's absolute end.
 		$upcoming_booking_where = array(
-			array('meeting_dates', '>=', $current_date), 
+			'OR' => array(
+				array('meeting_dates', '>=', BookingTime::now()->modify('-1 day')->format('Y-m-d')),
+				array('meeting_dates', 'LIKE', '%,%'),
+			),
+			array('status', '!=', 'canceled'),
 		);
 		if(!empty($current_user_role) && 'tfhb_host' == $current_user_role){
 			$upcoming_booking_where[] = array('host_id', '=', $HostData->id);
 		}
-		$upcoming_booking = $booking->getBookingWithAttendees( 
+		$upcoming_candidates = $booking->getBookingWithAttendees(
 			$upcoming_booking_where,
-			5,
-			'DESC' 
-		); 
+			null,
+			'DESC'
+		);
+
+		$now               = BookingTime::now();
+		$upcoming_by_start = array();
+		foreach ( is_array( $upcoming_candidates ) ? $upcoming_candidates : array() as $candidate ) {
+			foreach ( BookingTime::booking_instants( $candidate ) as $occurrence ) {
+				if ( $occurrence['end'] > $now ) {
+					$upcoming_by_start[] = array( 'start' => $occurrence['start']->getTimestamp(), 'booking' => $candidate );
+					break;
+				}
+			}
+		}
+		usort(
+			$upcoming_by_start,
+			function ( $a, $b ) {
+				return $a['start'] - $b['start'];
+			}
+		);
+		$upcoming_booking = array_map(
+			function ( $item ) {
+				return $item['booking'];
+			},
+			array_slice( $upcoming_by_start, 0, 5 )
+		);
 
 
 		 
@@ -226,8 +255,6 @@ class DashboardController {
 		$days          = $request['statistics_days']; // exp 2021-09-01
 		$helper        = new Helper();
 		$label_format  = $helper->get_date_format_from_settings( 'd M, y' );
-		$current_date  = gmdate( 'Y-m-d 23:59:59' ); // exp 2021-09-01
-		$previous_date = gmdate( 'Y-m-d 00:00:00', strtotime( '-' . $days . ' days' ) ); // exp 2021-09-01
 
 		$current_user = wp_get_current_user();
 		// get user role
@@ -241,59 +268,46 @@ class DashboardController {
 		$statistics['cancelled_bookings'] = array();
 		$statistics['completed_bookings'] = array();
 
-		$statistics = array();
+		// Each bucket is a range of site-timezone days: array( label, first day, last day )
+		$site_today  = BookingTime::site_day();
+		$month_start = $site_today->modify( 'first day of this month' );
+		$buckets     = array();
 		if ( $days == 7 ) {
-			// store label as date
-			for ( $i = 0; $i < 7; $i++ ) {
-				$statistics['label'][] = gmdate( $label_format, strtotime( '-' . $i . ' days' ) );
+			for ( $i = 6; $i >= 0; $i-- ) {
+				$day       = $site_today->modify( '-' . $i . ' days' );
+				$buckets[] = array( $day->format( $label_format ), $day, $day );
 			}
-			$statistics['label'] = array_reverse( $statistics['label'] );
 		}
 		if ( $days == 30 ) { // This Month every Days
-			// store label as date
-			// Count First how many days in this month
-			$days_in_month = cal_days_in_month( CAL_GREGORIAN, gmdate( 'm' ), gmdate( 'Y' ) );
-			$currentMonth  = gmdate( 'm' );
-			$currentYear   = gmdate( 'Y' );
-			// Get Current month
-
-			for ( $day = 1; $day <= $days_in_month; $day++ ) {
-				$statistics['label'][] = gmdate( $label_format, strtotime( "$currentYear-$currentMonth-$day" ) );
+			$days_in_month = (int) $month_start->format( 't' );
+			for ( $day = 0; $day < $days_in_month; $day++ ) {
+				$date      = $month_start->modify( '+' . $day . ' days' );
+				$buckets[] = array( $date->format( $label_format ), $date, $date );
 			}
 		}
 		if ( $days == 3 ) {  // last 3 Months
-			// store label as Month Name
-			for ( $i = 0; $i <= 2; $i++ ) {
-				$statistics['label'][] = gmdate( 'F', strtotime( '-' . $i . ' months' ) );
+			for ( $i = 2; $i >= 0; $i-- ) {
+				$first     = $month_start->modify( '-' . $i . ' months' );
+				$buckets[] = array( $first->format( 'F' ), $first, $first->modify( 'last day of this month' ) );
 			}
-			$statistics['label'] = array_reverse( $statistics['label'] );
-
 		}
 		if ( $days == 12 ) {  // This year as month
-			// store label as Month Name
-			$statistics['label'] = array( 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' );
-		} else {
-			// $statistics['label'] = array_reverse($statistics['label']);
+			$january = $month_start->setDate( (int) $month_start->format( 'Y' ), 1, 1 );
+			for ( $i = 0; $i < 12; $i++ ) {
+				$first     = $january->modify( '+' . $i . ' months' );
+				$buckets[] = array( $first->format( 'F' ), $first, $first->modify( 'last day of this month' ) );
+			}
 		}
 
-		$dateTime = new DateTimeController('UTC');
-		foreach ( $statistics['label'] as $key => $value ) { 
-	 
-			// $date = $value;
-			// $next_date = $key != 0 ? $statistics['label'][$key - 1] : $current_date;
-			if ( $days == 12 || $days == 3 ) {
-				$date      = gmdate( 'Y-m-d', strtotime( 'first day of ' . $value ) );
-				$next_date = gmdate( 'Y-m-d', strtotime( 'last day of ' . $value ) );
-			}
-			if ( $days == 30 || $days == 7 ) { // value is a date exp 2021-09-01
+		$statistics['label'] = array();
+		foreach ( $buckets as $bucket ) {
+			$statistics['label'][] = $bucket[0];
+		}
 
-				$value = $dateTime->convertDateTimeFormat( $value, $label_format, 'Y-m-d' ); 
-				$date      =  $value;
-				$next_date =  $value;
-			} 
-			// Get booking
+		foreach ( $buckets as $bucket ) {
+			// Get booking, created_at is compared in this database session's clock
 			$bookings_where = array(
-				array('created_at', 'BETWEEN',  array($date . ' 00:00:00', $next_date . ' 23:59:59')), 
+				array('created_at', 'BETWEEN',  array( BookingTime::to_mysql_session( BookingTime::site_day( $bucket[1]->format( 'Y-m-d' ) ) ), BookingTime::to_mysql_session( BookingTime::site_day( $bucket[2]->format( 'Y-m-d' ), true ) ) )),
 			);
 			if(!empty($current_user_role) && 'tfhb_host' == $current_user_role){
 				$bookings_where[] = array('host_id', '=', $HostData->id);

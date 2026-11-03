@@ -7,6 +7,7 @@ use HydraBooking\DB\Attendees;
 use HydraBooking\DB\Host;
 use HydraBooking\DB\BookingMeta;
 use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Admin\Controller\BookingTime;
 use HydraBooking\Admin\Controller\Helper;
 
 
@@ -109,7 +110,7 @@ class MailHooks {
 	 * (via resolveNotificationConfig). No-op when the config is disabled or
 	 * the recipient has no email address.
 	 */
-	private function sendConfiguredMail( $config, $mailto, $attendee_id, $default_subject ) {
+	private function sendConfiguredMail( $config, $mailto, $attendee_id, $default_subject, $recipient = 'attendee' ) {
 		if ( empty( $config['status'] ) || empty( $mailto ) ) {
 			return;
 		}
@@ -119,11 +120,11 @@ class MailHooks {
 
 		// Email Subject
 		$subject = ! empty( $config['subject'] ) ? $config['subject'] : $default_subject;
-		$subject = $this->replace_mail_tags( $subject, $attendee_id );
+		$subject = $this->replace_mail_tags( $subject, $attendee_id, $recipient );
 
 		// Setting Body
 		$mailbody  = ! empty( $config['body'] ) ? $config['body'] : '';
-		$finalbody = $this->replace_mail_tags( $mailbody, $attendee_id );
+		$finalbody = $this->replace_mail_tags( $mailbody, $attendee_id, $recipient );
 		$body      = wp_kses_post( $this->email_body_open() . $finalbody . $this->email_body_close() );
 
 		$headers = array(
@@ -152,12 +153,12 @@ class MailHooks {
 	 * (via resolveNotificationConfig) and log the booking activity. No-op
 	 * when the config is disabled or the recipient has no email address.
 	 */
-	private function sendResolvedNotification( $config, $mailto, $attendee_id, $default_subject, $booking_id, $activity_title, $activity_description ) {
+	private function sendResolvedNotification( $config, $mailto, $attendee_id, $default_subject, $booking_id, $activity_title, $activity_description, $recipient = 'attendee' ) {
 		if ( empty( $config['status'] ) || empty( $mailto ) ) {
 			return;
 		}
 
-		$this->sendConfiguredMail( $config, $mailto, $attendee_id, $default_subject );
+		$this->sendConfiguredMail( $config, $mailto, $attendee_id, $default_subject, $recipient );
 		$this->logBookingActivity( $booking_id, $activity_title, $activity_description );
 	}
 
@@ -176,7 +177,8 @@ class MailHooks {
 			'Booking Confirmation',
 			$attendees->booking_id,
 			'Confirmation Email Sent', // translate it from Vue
-			'Confirmation Email Sent to Host' // translate it from Vue
+			'Confirmation Email Sent to Host', // translate it from Vue
+			'host'
 		);
 
 		// Attendee Confirmation Email, using the meeting's override if set, otherwise the live global setting
@@ -208,7 +210,8 @@ class MailHooks {
 			'Booking Pending',
 			$attendees->booking_id,
 			'Pending Email Sent', // translate it from Vue
-			'Pending Email Sent to Host' // translate it from Vue
+			'Pending Email Sent to Host', // translate it from Vue
+			'host'
 		);
 
 		// Attendee Pending Email, using the meeting's override if set, otherwise the live global setting
@@ -239,7 +242,8 @@ class MailHooks {
 			'Booking Canceled',
 			$attendees->booking_id,
 			'Canceled Email Sent', // translate it from Vue
-			'Canceled Email Sent to Host' // translate it from Vue
+			'Canceled Email Sent to Host', // translate it from Vue
+			'host'
 		);
 
 		// Attendee Canceled Email, using the meeting's override if set, otherwise the live global setting
@@ -265,12 +269,13 @@ class MailHooks {
 		$host_config = $this->resolveNotificationConfig( $meeting_notification_settings, 'host', 'booking_reschedule' );
 		$this->sendResolvedNotification(
 			$host_config,
-			! empty( $hostData->host_email ) ? $hostData->host_email : '',
+			! empty( $hostData->email ) ? $hostData->email : '',
 			$attendees->id,
 			'Booking ReSchedule',
 			$attendees->booking_id,
 			'ReSchedule Email Sent', // translate it from Vue
-			'ReSchedule Email Sent to Host' // translate it from Vue
+			'ReSchedule Email Sent to Host', // translate it from Vue
+			'host'
 		);
 
 		// Attendee ReSchedule Email, using the meeting's override if set, otherwise the live global setting
@@ -497,14 +502,14 @@ class MailHooks {
 		}
 
 		$time_format = get_option( 'time_format', 'g:i a' );
-		$timestamp   = strtotime( '1970-01-01 ' . $time_value );
+		$time        = BookingTime::instant( '1970-01-01', $time_value, 'UTC' );
 
-		if ( false === $timestamp ) {
+		if ( ! $time ) {
 			return $time_value;
 		}
 
-		// Pass UTC explicitly so wp_date() does not shift the attendee's wall-clock time by the site timezone offset.
-		return wp_date( $time_format, $timestamp, new \DateTimeZone( 'UTC' ) );
+		// Parsed and formatted in UTC so wp_date() keeps the wall-clock time as it is.
+		return wp_date( $time_format, $time->getTimestamp(), new \DateTimeZone( 'UTC' ) );
 	}
 
 	/**
@@ -598,7 +603,7 @@ class MailHooks {
 	/**
 	 * Replace all available mail tags
 	 */
-	public function replace_mail_tags( $template, $attendee_id ) { 
+	public function replace_mail_tags( $template, $attendee_id, $recipient = 'attendee' ) {
 		
 		$Attendee = new Attendees();
 		$attendeeBooking =  $Attendee->getAttendeeWithBooking( 
@@ -618,17 +623,34 @@ class MailHooks {
 
 		$meeting_title          = ! empty( $attendeeBooking->meeting_title ) ? $attendeeBooking->meeting_title : '';
 		$meeting_content        = ! empty( $attendeeBooking->meeting_content ) ? $attendeeBooking->meeting_content : '';
-		$meeting_dates          = ! empty( $attendeeBooking->meeting_dates ) ? $this->localize_meeting_dates( $attendeeBooking->meeting_dates ) : '';
 		$localized_duration     = $this->localize_duration_value( $attendeeBooking->duration );
-		$localized_start_time   = $this->localize_time_value( $attendeeBooking->start_time );
-		$localized_end_time     = $this->localize_time_value( $attendeeBooking->end_time );
-		$localized_timezone     = $this->localize_timezone_label( $attendeeBooking->attendee_time_zone, $attendeeBooking );
 		$localized_host_name    = trim( $attendeeBooking->host_first_name . ' ' . $attendeeBooking->host_last_name );
 		$localized_attendee_name = ! empty( $attendeeBooking->attendee_name ) ? $attendeeBooking->attendee_name : '';
 
 		// Initialize Helper to use settings-based date format
 		$helper = new Helper();
 		$date_format = $helper->get_date_format_from_settings( 'M d, Y' );
+
+		// Stored times are in the booking's availability timezone. Tags without a timezone in
+		// their name show the recipient's own time: the attendee's for attendees, the host's for hosts.
+		$host_time_zone      = BookingTime::booking_tz( $attendeeBooking )->getName();
+		$attendee_time_zone  = BookingTime::tz( $attendeeBooking->attendee_time_zone, $host_time_zone )->getName();
+		$recipient_time_zone = 'host' === $recipient ? $host_time_zone : $attendee_time_zone;
+		$wp_time_format      = get_option( 'time_format', 'g:i a' );
+
+		$recipient_times = BookingTime::display( $attendeeBooking, $recipient_time_zone, $date_format, $wp_time_format );
+		$attendee_times  = BookingTime::display( $attendeeBooking, $attendee_time_zone, $date_format, $wp_time_format );
+
+		if ( empty( $recipient_times['dates'] ) ) {
+			// Unparsable stored values: show them as they are
+			$recipient_times['dates'] = array( (string) $attendeeBooking->meeting_dates );
+			$recipient_times['start'] = $attendee_times['start'] = $this->localize_time_value( $attendeeBooking->start_time );
+			$recipient_times['end']   = $attendee_times['end']   = $this->localize_time_value( $attendeeBooking->end_time );
+		}
+
+		$localized_start_time   = $recipient_times['start'];
+		$localized_end_time     = $recipient_times['end'];
+		$localized_timezone     = $this->localize_timezone_label( $attendee_time_zone, $attendeeBooking );
 
 		$google_calendar_link  = '#';
 		$outlook_calendar_link = '#';
@@ -687,21 +709,12 @@ class MailHooks {
 			}
 		}
 		
-		// Format meeting date using settings-based date format
-		$formatted_meeting_date = '';
-		if ( ! empty( $attendeeBooking->meeting_dates ) ) {
-			$date_obj = \DateTime::createFromFormat( 'Y-m-d', trim( $attendeeBooking->meeting_dates ) );
-			if ( $date_obj !== false ) {
-				$formatted_meeting_date = $date_obj->format( $date_format );
-			} else {
-				$formatted_meeting_date = $attendeeBooking->meeting_dates;
-			}
-		}
+		// Meeting date(s) in the recipient's timezone, using the settings-based date format
+		$formatted_meeting_date = implode( ', ', $recipient_times['dates'] );
 
 		$replacements = array(
 			'{{meeting.title}}'    => $meeting_title,
 			'{{meeting.content}}'  => $meeting_content,
-			'{{meeting.date}}'     => $meeting_dates,
 			'{{meeting.title}}'    => ! empty( $attendeeBooking->meeting_title ) ? $attendeeBooking->meeting_title : '',
 			'{{meeting.content}}'  => ! empty( $attendeeBooking->meeting_content ) ? $attendeeBooking->meeting_content : '',
 			'{{meeting.date}}'     => $formatted_meeting_date,
@@ -749,27 +762,24 @@ class MailHooks {
 			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
 		}
 		
-		// Full start end time with timezone for attendee 
-		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $localized_start_time.' - '.$localized_end_time.' ('.$localized_timezone.')';
-		$replacements['{{booking.start_date_time_for_attendee}}'] = $localized_start_time. ' ('.$localized_timezone.')';
-		
-	
-		// Full start end time with timezone for host
+		// Full start end time with timezone for attendee, converted from the host's timezone
+		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $attendee_times['start'].' - '.$attendee_times['end'].' ('.$localized_timezone.')';
+		$replacements['{{booking.start_date_time_for_attendee}}'] = $attendee_times['start']. ' ('.$localized_timezone.')';
+
+
+		// Full start end time with timezone for host. The stored values already are host time,
+		// so they are formatted in the same timezone they were stored in.
 		$dateTime = new DateTimeController( 'UTC' );
-		$metting_dates = explode(',', $attendeeBooking->meeting_dates);
-		if($attendeeBooking->availability_time_zone != ''){
-			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'full' );  
-			$full_start_end_host_timezone = str_replace( 'Host time:', __( 'Host time:', 'hydra-booking' ), $full_start_end_host_timezone );
-			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
+		$metting_dates = BookingTime::dates( $attendeeBooking->meeting_dates );
+		$first_meeting_date = ! empty( $metting_dates ) ? $metting_dates[0] : '';
 
-			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'start' );
-			$start_date_time_for_host = str_replace( 'Host time:', __( 'Host time:', 'hydra-booking' ), $start_date_time_for_host );
-			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
-		}else{
-			$replacements['{{booking.full_start_end_host_timezone}}'] = $localized_start_time.' - '.$localized_end_time.' ('.$localized_timezone.')';
+		$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $host_time_zone, $host_time_zone, $first_meeting_date, 'full' );
+		$full_start_end_host_timezone = str_replace( 'Host time:', __( 'Host time:', 'hydra-booking' ), $full_start_end_host_timezone );
+		$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
 
-			$replacements['{{booking.start_date_time_for_host}}'] = $localized_start_time. ' ('.$localized_timezone.')';
-		}
+		$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $host_time_zone, $host_time_zone, $first_meeting_date, 'start' );
+		$start_date_time_for_host = str_replace( 'Host time:', __( 'Host time:', 'hydra-booking' ), $start_date_time_for_host );
+		$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
 
 		foreach ( $replacements as $tag => $value ) {
 			$replacements[ $tag ] = $this->localize_mail_tag_value( $tag, $value, $attendeeBooking, $locale );

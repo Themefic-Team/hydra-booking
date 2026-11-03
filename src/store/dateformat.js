@@ -115,12 +115,23 @@ export default function useDateFormat() {
         return time.toLocaleTimeString('en-US', options);
     }
 
+    // 'YYYY-MM-DD HH:MM[:SS]' as that wall-clock date and time (no timezone shift); null otherwise
+    const parseLocalDateTime = (dateString) => {
+        const match = String(dateString || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?/);
+        if (!match) {
+            return null;
+        }
+        return new Date(+match[1], +match[2] - 1, +match[3], +(match[4] || 0), +(match[5] || 0), +(match[6] || 0));
+    }
+
     // full date and time format
     const Tfhb_DateTime = (dateString) => {
         if (!dateString) return '';
 
-        const date = parseLocalTime(dateString);
-        if (Number.isNaN(date.getTime())) {
+        // Keep the stored time; text that is already formatted (activity log) is shown as it is,
+        // since re-parsing it could swap day and month
+        const date = parseLocalDateTime(dateString);
+        if (!date || Number.isNaN(date.getTime())) {
             return dateString;
         }
 

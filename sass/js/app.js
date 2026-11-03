@@ -183,7 +183,7 @@
 				
 					// first date of the month exp: 
 					// 2021-04-01
-					var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
+					var current_date = tfhbMonthStartKey(year, month);  
 					setTimeout(function(){
 						// Your code here 
 						tfhb_times_manipulate( $this, current_date, calenderData);  
@@ -230,7 +230,7 @@
 				// Set the formatted date in the element
 				$this.find('.tfhb-meeting-times .tfhb-select-date').html(selected_date_format);
 				// get selected date calenderData.calander_available_time_slot
-				var selected_date_time_slot = calenderData.calander_available_time_slot[selected_date]; 
+				var selected_date_time_slot = (calenderData.calander_available_time_slot || {})[selected_date] || [];
 				// if selected_date_time_slot is not empty
 				// then append the time slot
 				// else show the message
@@ -243,7 +243,7 @@
 						}
 						// Remove 
 						// Add with animation when data available
-						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'">' + tfhbTranslateTimeSlot(selected_date_time_slot[i].start) + remaining + ' </div> </li>');
+						$this.find('.tfhb-available-times ul').append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+ selected_date_time_slot[i].start +'" data-time-end="'+ selected_date_time_slot[i].end +'" data-start-utc="'+ (selected_date_time_slot[i].start_utc || '') +'">' + tfhbTranslateTimeSlot(selected_date_time_slot[i].start) + remaining + ' </div> </li>');
 
 					}
 				}else{
@@ -266,7 +266,7 @@
 					
 				});
 
-				var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
+				var current_date = tfhbMonthStartKey(year, month);  
 			 
 				// Get the first day of the month 
 				tfhb_times_manipulate( $this, current_date, calenderData);    
@@ -274,7 +274,7 @@
 			});
             $this.find('input[name="tfhb_time_format"]').on('change', function (e) { 
 				
-				var current_date = new Date(year, month, 2).toISOString().split('T')[0];  
+				var current_date = tfhbMonthStartKey(year, month);  
 			  
 				tfhb_times_manipulate($this, current_date, calenderData, function() { 
 					$this.find('.tfhb-calendar-dates li.active').trigger('click');    
@@ -293,8 +293,13 @@
 					dropdownCssClass: 'tfhb-select2-dropdown',
 				});
 		
-				// Set the value and trigger the change event
-				$timezoneSelect.val(tfhb_local_timeZone).trigger('change'); 
+				// Set the value and trigger the change event. Fall back to the meeting's timezone
+				// when the browser reports one that isn't in the list, so it is never posted empty.
+				let initialTimeZone = tfhb_local_timeZone;
+				if (!$timezoneSelect.find('option').filter(function () { return this.value === initialTimeZone; }).length) {
+					initialTimeZone = (calenderData.availability && calenderData.availability.time_zone) || 'UTC';
+				}
+				$timezoneSelect.val(initialTimeZone).trigger('change');
 			}
 
 			/**
@@ -313,7 +318,9 @@
 				var selected_time_end = $this_time.attr('data-time-end');
 				$this.find("input[name='meeting_time_start']").val(selected_time_start);
 				$this.find("input[name='meeting_time_end']").val(selected_time_end);
-			
+				// Absolute start of the slot, so the server never has to re-derive the date
+				$this.find("input[name='meeting_start_utc']").val($this_time.attr('data-start-utc') || '');
+
 				$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> '+tfhbTranslate('Next')+'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
 				$this_time.addClass('active');
 				
@@ -1007,6 +1014,7 @@
 			meeting_duration: meeting_duration,
 			meeting_time_start: meeting_time_start,
 			meeting_time_end: meeting_time_end,
+			meeting_start_utc: $this.find("#meeting_start_utc").val() || '',
 			booking_hash: booking_hash,
 			action_type: action_type,
 			reschedule_nonce: reschedule_nonce,
@@ -1215,6 +1223,31 @@
 			day.html(lit);
 		}
 		// Function to generate the tfhb-calendar
+		// First day of the shown month as Y-m-d, built from local date parts (toISOString() would shift it to UTC)
+		function tfhbMonthStartKey(year, month) {
+			let first = new Date(year, month, 1);
+			return `${first.getFullYear()}-${(first.getMonth() + 1).toString().padStart(2, '0')}-01`;
+		}
+
+		// The server returns slots keyed by date in the visitor's timezone, with the host's
+		// weekly hours, date overrides, booking range and limits already applied, so a day
+		// is bookable exactly when it has slots.
+		function tfhb_apply_slot_availability($this, calenderData) {
+			let slots = calenderData.calander_available_time_slot || {};
+			$this.find('.tfhb-calendar-dates li[data-date]').each(function () {
+				let $li = $(this);
+				let daySlots = slots[$li.attr('data-date')];
+				if (typeof daySlots === 'undefined') {
+					return;
+				}
+				if (daySlots.length > 0) {
+					$li.removeClass('inactive').attr('data-available', 'available');
+				} else {
+					$li.addClass('inactive').removeClass('active').attr('data-available', 'unavailable');
+				}
+			});
+		}
+
 		function tfhb_times_manipulate($this, current_date, calenderData, callback = null) {
 			  
 
@@ -1247,9 +1280,10 @@
 					if(response.success == true){  
  
 						$this.find('.tfhb-calendar-body').removeClass('inactive');  
-						let data = response.data; 
+						let data = response.data;
 						calenderData.calander_available_time_slot = response.data;
-						 
+						tfhb_apply_slot_availability($this, calenderData);
+
 						if (typeof callback === "function") {
 							callback(); // Execute the callback function
 						}

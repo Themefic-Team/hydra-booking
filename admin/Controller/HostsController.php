@@ -1167,22 +1167,43 @@ class HostsController
 				$availability_id = $HostData->availability_id;
 				$availability    = get_option('_tfhb_availability_settings');
 
-				$filteredAvailability = array_filter(
-					$availability,
-					function ($item) use ($availability_id) {
-						return $item['id'] == $availability_id;
-					}
-				);
+				if ( is_array( $availability ) ) {
+					$filteredAvailability = array_filter(
+						$availability,
+						function ($item) use ($availability_id) {
+							return isset($item['id']) && $item['id'] == $availability_id;
+						}
+					);
 
-				// If you expect only one result, you can extract the first item from the filtered array
-				$defult_availability = reset($filteredAvailability);
+					// If you expect only one result, you can extract the first item from the filtered array
+					$defult_availability = ! empty( $filteredAvailability ) ? reset($filteredAvailability) : array();
+				} else {
+					$defult_availability = array();
+				}
 			} else {
 				$defult_availability = array();
 			}
 		} else {
 			// Get Single Host Data
-			$_tfhb_host_availability_settings = get_user_meta($request['host_id'], '_tfhb_host', true);
-			$defult_availability              = ! empty($_tfhb_host_availability_settings['availability']) ? $_tfhb_host_availability_settings['availability'][$request['availability_id']] : array();
+			$host_user_id = ! empty($HostData->user_id) ? (int) $HostData->user_id : (int) $request['host_id'];
+			$_tfhb_host_availability_settings = get_user_meta($host_user_id, '_tfhb_host', true);
+			$avail_list = ( ! empty($_tfhb_host_availability_settings['availability']) && is_array($_tfhb_host_availability_settings['availability']) )
+				? $_tfhb_host_availability_settings['availability']
+				: array();
+
+			$avail_id = isset($request['availability_id']) ? $request['availability_id'] : null;
+
+			if ( null !== $avail_id && isset($avail_list[$avail_id]) ) {
+				$defult_availability = $avail_list[$avail_id];
+			} elseif ( null !== $avail_id ) {
+				// Search by 'id' or 'available_id' in case availability_id is the item ID rather than array index
+				$matched = array_filter($avail_list, function($item) use ($avail_id) {
+					return (isset($item['id']) && $item['id'] == $avail_id) || (isset($item['available_id']) && $item['available_id'] == $avail_id);
+				});
+				$defult_availability = ! empty($matched) ? reset($matched) : array();
+			} else {
+				$defult_availability = ! empty($avail_list) ? reset($avail_list) : array();
+			}
 		}
 
 		$data = array(

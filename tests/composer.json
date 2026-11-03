@@ -1,0 +1,8 @@
+{
+    "name": "hydra-booking/tests",
+    "description": "Dev-only test tooling, kept out of the shipped vendor/ directory.",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "^8.5 || ^9.6"
+    }
+}

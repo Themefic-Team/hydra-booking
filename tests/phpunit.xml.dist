@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Run from the plugin root:
+	  composer install -d tests
+	  php tests/vendor/bin/phpunit -c tests/phpunit.xml.dist
+-->
+<phpunit
+	bootstrap="bootstrap.php"
+	colors="true"
+	beStrictAboutOutputDuringTests="true"
+	cacheResult="false"
+>
+	<testsuites>
+		<testsuite name="unit">
+			<directory>Unit</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

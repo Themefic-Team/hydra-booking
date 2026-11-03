@@ -72,18 +72,19 @@ class PromoNotice {
             $dashboard_banner = isset($this->tfhb_promo_option['dashboard_banner']) ? $this->tfhb_promo_option['dashboard_banner'] : '';
 
             // Admin Notice  
-            if( ! in_array($tf_existes, $this->plugins_existes) && is_array($dashboard_banner) && strtotime($dashboard_banner['end_date']) > time() && strtotime($dashboard_banner['start_date']) < time() && $dashboard_banner['enable_status'] == true){
-            exit;
+            if( ! in_array($tf_existes, $this->plugins_existes) && is_array($dashboard_banner) && ! empty($dashboard_banner['end_date']) && ! empty($dashboard_banner['start_date']) && strtotime($dashboard_banner['end_date']) > time() && strtotime($dashboard_banner['start_date']) < time() && ! empty($dashboard_banner['enable_status'])){
                 add_action( 'admin_notices', array( $this, 'tf_promo_dashboard_admin_notice' ) );
                 add_action( 'wp_ajax_tf_black_friday_notice_dismiss_callback', array($this, 'tf_black_friday_notice_dismiss_callback') );
             }
             
             // side Notice 
-            $service_banner = isset($this->tfhb_promo_option['service_banner']) ? $this->tfhb_promo_option['service_banner'] : array();
-            $promo_banner = isset($this->tfhb_promo_option['promo_banner']) ? $this->tfhb_promo_option['promo_banner'] : array();
+            $service_banner = isset($this->tfhb_promo_option['service_banner']) && is_array($this->tfhb_promo_option['service_banner']) ? $this->tfhb_promo_option['service_banner'] : array();
+            $promo_banner = isset($this->tfhb_promo_option['promo_banner']) && is_array($this->tfhb_promo_option['promo_banner']) ? $this->tfhb_promo_option['promo_banner'] : array();
 
-            $current_day = gmdate('l'); 
-            if(isset($service_banner['enable_status']) && $service_banner['enable_status'] == true && in_array($current_day, $service_banner['display_days'])){ 
+            $current_day = gmdate('l');
+            // display_days may be missing from the API response; in_array() on a non-array is a fatal error on PHP 8
+            $display_days = isset($service_banner['display_days']) && is_array($service_banner['display_days']) ? $service_banner['display_days'] : array();
+            if(isset($service_banner['enable_status']) && $service_banner['enable_status'] == true && in_array($current_day, $display_days)){
              
                 $start_date = isset($service_banner['start_date']) ? $service_banner['start_date'] : '';
                 $end_date = isset($service_banner['end_date']) ? $service_banner['end_date'] : '';
@@ -93,7 +94,7 @@ class PromoNotice {
                 $end_date = isset($promo_banner['end_date']) ? $promo_banner['end_date'] : '';
                 $enable_side = isset($promo_banner['enable_status']) ? $promo_banner['enable_status'] : false;
             }
-            if(is_array($this->tfhb_promo_option) && strtotime($end_date) > time() && strtotime($start_date) < time()  && $enable_side == true){ 
+            if(is_array($this->tfhb_promo_option) && ! empty($start_date) && ! empty($end_date) && strtotime($end_date) > time() && strtotime($start_date) < time()  && $enable_side == true){
                 
                 add_action( 'tfhb_sidebar_promo_banner', array( $this, 'tfhb_promo_side_notice_callback' ) );
                 add_action( 'wp_ajax_tfhb_promo_side_notice_dismiss_callback', array($this, 'tfhb_promo_side_notice_dismiss_callback') ); 
@@ -114,7 +115,8 @@ class PromoNotice {
                 add_action('wp_ajax_tfhb_dashboard_widget_dismiss', [$this, 'ajax_dashboard_widget_dismiss']);
             }
 
-            register_deactivation_hook( TFHB_PATH . 'hydra-booking.php', array($this, 'tfhb_promo_notice_deactivation_hook') );
+            // The promo cleanup runs from the plugin's deactivation hook (HydraBooking\Hooks\DeactivationHooks),
+            // which is registered when the plugin loads. Registering it here, on init, never fired.
         }
 
         
@@ -361,15 +363,20 @@ class PromoNotice {
             // Handle API request error
             $this->responsed = false;
             $this->error_message = esc_html($response->get_error_message());
- 
+
+        } elseif ( 200 !== (int) wp_remote_retrieve_response_code( $response ) || ! is_array( json_decode( wp_remote_retrieve_body( $response ), true ) ) ) {
+            // Error page or invalid JSON: keep the stored promo instead of overwriting it with garbage
+            $this->responsed = false;
+
         } else {
             // API request successful, handle the response content
             $data = wp_remote_retrieve_body($response);
-           
-            $this->responsed = json_decode($data, true); 
 
-            $tfhb_promo__schedule_option = get_option( 'tfhb_promo__schedule_option' ); 
-            if(isset($tfhb_promo__schedule_option['notice_name']) && $tfhb_promo__schedule_option['notice_name'] != $this->responsed['notice_name']){ 
+            $this->responsed = json_decode($data, true);
+            $notice_name = isset( $this->responsed['notice_name'] ) ? $this->responsed['notice_name'] : '';
+
+            $tfhb_promo__schedule_option = get_option( 'tfhb_promo__schedule_option' );
+            if(isset($tfhb_promo__schedule_option['notice_name']) && $tfhb_promo__schedule_option['notice_name'] != $notice_name){
                 // Unset the cookie variable in the current script
                 update_option( 'tf_dismiss_admin_notice', 1);
                 update_option( 'tfhb_dismiss_post_notice', 1); 
@@ -548,8 +555,8 @@ class PromoNotice {
         wp_die();
     }
 
-     // Deactivation Hook
-     public function tfhb_promo_notice_deactivation_hook() {
+     // Deactivation Hook: static so it can run without the constructor, which schedules the promo cron
+     public static function tfhb_promo_notice_deactivation_hook() {
         wp_clear_scheduled_hook('tfhb_promo__schedule'); 
 
         delete_option('tfhb_promo__schedule_option');
