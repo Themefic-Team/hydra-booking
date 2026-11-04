@@ -386,7 +386,7 @@ const upCommingBookingTitle = (data) => {
                                         
                                         <p>{{truncateString(data.title, 70)}}    </p>
                                         <div class="tfhb-dashboard-notice-meta tfhb-flexbox tfhb-gap-8 tfhb-justify-between"> 
-                                            <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} </span>
+                                            <span class="tfhb-flexbox tfhb-gap-8"><Icon name="Clock" size=15 />{{ data.start_time}} <template v-if="data.availability_time_zone">({{ data.availability_time_zone }})</template></span>
                                             <span  class="tfhb-flexbox tfhb-gap-8">
                                                 <Icon name="UserRound" size=15 /> 
                                                 <Icon name="ArrowRight" size=15 /> 

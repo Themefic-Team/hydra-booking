@@ -335,7 +335,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 		}
 		$is_show_button=false;
 		if('s' == $type) {
-			$support_str=strtolower( trim( $response_obj->support_end ) );
+			$support_str = ! empty( $response_obj->support_end ) ? strtolower( trim( (string) $response_obj->support_end ) ) : '';
 			if ( strtolower( trim( $response_obj->support_end ) ) == "no support" ) {
 				$is_show_button = true;
 			} elseif ( !in_array($support_str, ["unlimited"] ) ) {
@@ -349,7 +349,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 			return '';
 		}else{
 			$is_show_button=false;
-			$expire_str=strtolower( trim( $response_obj->expire_date ) );
+			$expire_str = ! empty( $response_obj->expire_date ) ? strtolower( trim( (string) $response_obj->expire_date ) ) : '';
 			if ( !in_array($expire_str, ["unlimited","no expiry"] )) {
 				if ( strtotime( 'ADD 30 DAYS', strtotime( $response_obj->expire_date ) ) < time() ) {
 					$is_show_button = true;

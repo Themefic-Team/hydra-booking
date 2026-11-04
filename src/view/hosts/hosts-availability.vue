@@ -139,7 +139,8 @@ const openModal = () => {
     availability_id: ''
   };
 
-  availabilityDataSingle.value.time_zone = Availability.GeneralSettings.time_zone ? Availability.GeneralSettings.time_zone : local_time_zone;
+  // A host's availability starts in the host's own timezone, then the site's, then the browser's
+  availabilityDataSingle.value.time_zone = props.host && props.host.time_zone ? props.host.time_zone : (Availability.GeneralSettings.time_zone ? Availability.GeneralSettings.time_zone : local_time_zone);
   
   availabilityDataSingle.value.time_slots = Availability.GeneralSettings.week_start_from ?  Availability.RearraingeWeekStart(Availability.GeneralSettings.week_start_from, availabilityDataSingle.value.time_slots) : availabilityDataSingle.value.time_slots;
 

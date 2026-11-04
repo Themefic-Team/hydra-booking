@@ -525,7 +525,8 @@ onUnmounted(() => {
 });
 const ToDateMin = ref(null);
 const getMinDate = (value) => {      
-    ToDateMin.value = new Date(value);  
+    // A Y-m-d value: parse as a local date (new Date('YYYY-MM-DD') would be UTC midnight)
+    ToDateMin.value = value ? new Date(value + 'T00:00:00') : null;  
     Booking.filter_data.date_range.to ='';
     
 } 
@@ -583,9 +584,25 @@ const reBookPopupOpen = (booking) => {
     });
     
 }
-const getAvailabilityTimeSlot = (value) => { 
+const getAvailabilityTimeSlot = (value) => {
     Booking.getAvailabilityTimeSlot(value);
-    
+
+}
+// Dates and slots are listed in the selected timezone, so reload both when it changes
+const reBookTimeZoneChanged = () => {
+    Booking.reBook.select_time_slot = '';
+    Booking.time_slot = {};
+    Booking.getAvailabilityDates().then(() => {
+        flatpickrConfig.value.disable = [
+            ...Booking.disabled_dates,
+            function(date) {
+            return Booking.disabled_days.includes(date.getDay());
+            }
+        ];
+        if (Booking.reBook.select_date) {
+            Booking.getAvailabilityTimeSlot(Booking.reBook.select_date);
+        }
+    });
 }
  
 </script>
@@ -610,10 +627,10 @@ const getAvailabilityTimeSlot = (value) => {
                 :label="$tfhb_trans('Select Time Zone')" 
                 :filter="true"
                 selected = "1"
-                :placeholder="$tfhb_trans('Select Availability Time Zone')"  
-                :option = "Booking.time_zone" 
-                @tfhb-onchange="[]"
-            />  
+                :placeholder="$tfhb_trans('Select Availability Time Zone')"
+                :option = "Booking.time_zone"
+                @tfhb-onchange="reBookTimeZoneChanged"
+            />
  
             <HbDateTime 
                 v-model="Booking.reBook.select_date"
@@ -968,9 +985,10 @@ const getAvailabilityTimeSlot = (value) => {
                         <Icon name="Mail" size=20 /> 
                         {{ singleBookingData.host_email }}
                     </div>  
-                    <div v-if="singleBookingData.host_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
-                        <Icon name="Globe" size=20 /> 
-                        {{singleBookingData.host_time_zone}}
+                    <div v-if="singleBookingData.availability_time_zone || singleBookingData.host_time_zone"  class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
+                        <Icon name="Globe" size=20 />
+                        <!-- The booking's times are in its availability timezone, not the host profile one -->
+                        {{singleBookingData.availability_time_zone || singleBookingData.host_time_zone}}
                     </div>  
                 </div>
             </div>
@@ -1041,7 +1059,7 @@ const getAvailabilityTimeSlot = (value) => {
                 <div class="tfhb-booking-info-inner tfhb-flexbox tfhb-gap-12">
                     <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="Clock" size=20 /> 
-                        {{singleBookingData.start_time }} - {{singleBookingData.end_time }}
+                        {{singleBookingData.start_time }} - {{singleBookingData.end_time }} <span v-if="singleBookingData.availability_time_zone">({{ singleBookingData.availability_time_zone }})</span>
                     </div>  
                     <div class="tfhb-single-booking-info tfhb-flexbox tfhb-gap-8">
                         <Icon name="CalendarDays" size=20 /> 
@@ -1193,7 +1211,7 @@ const getAvailabilityTimeSlot = (value) => {
                      
                     <td> 
                         <span 
-                        :style="book.status == 'canceled' ? 'text-decoration: line-through': ''" >{{ book.start_time }} - {{ book.end_time }}</span>
+                        :style="book.status == 'canceled' ? 'text-decoration: line-through': ''" >{{ book.start_time }} - {{ book.end_time }}</span> <small v-if="book.availability_time_zone">({{ book.availability_time_zone }})</small>
                     </td>
                     <td>
                         <span class="tfhb-list-data-event-title">{{ book.title }}</span>

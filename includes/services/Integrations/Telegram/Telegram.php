@@ -203,25 +203,8 @@ class Telegram {
 			$rescheduled_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id . '&type=reschedule' );
 			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
 		}
-		// Full start end time with timezone for attendee 
-		$replacements['{{booking.full_start_end_attendee_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
-		$replacements['{{booking.start_date_time_for_attendee}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
-		
-	
-		// Full start end time with timezone for host
-		$dateTime = new DateTimeController( 'UTC' );
-		$metting_dates = explode(',', $attendeeBooking->meeting_dates);
-		if($attendeeBooking->availability_time_zone != ''){
-			$full_start_end_host_timezone = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'full' );  
-			$replacements['{{booking.full_start_end_host_timezone}}'] = $full_start_end_host_timezone;
-
-			$start_date_time_for_host = $dateTime->convert_full_start_end_host_timezone_with_date( $attendeeBooking->start_time, $attendeeBooking->end_time, $attendeeBooking->attendee_time_zone, $attendeeBooking->availability_time_zone,  $metting_dates[0], 'start' );
-			$replacements['{{booking.start_date_time_for_host}}'] =  $start_date_time_for_host;
-		}else{
-			$replacements['{{booking.full_start_end_host_timezone}}'] = $attendeeBooking->start_time.' - '.$attendeeBooking->end_time.' ('.$attendeeBooking->attendee_time_zone.')';
-
-			$replacements['{{booking.start_date_time_for_host}}'] = $attendeeBooking->start_time. ' ('.$attendeeBooking->attendee_time_zone.')';
-		}
+		// Date/time tags from the stored host-timezone values; this notification goes to the host
+		$replacements = array_merge( $replacements, \HydraBooking\Admin\Controller\BookingTime::time_tags( $attendeeBooking, 'host' ) );
  
 		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
 			$booking_locations = json_decode($attendeeBooking->meeting_locations); 

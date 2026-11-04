@@ -27,6 +27,54 @@ class UpdateController {
 
         $this->tfhb_security_patch_remove_manage_options_cap(); // Security fix v1.2.4
         $this->tfhb_security_patch_strip_cap_from_host_users(); // Security fix v1.2.4
+
+        $this->tfhb_backfill_booking_time_zones();
+	}
+
+	/**
+	 * Fill in availability_time_zone for bookings stored without one (made before 1.0.14 or by
+	 * the old admin create form), so every booking says which timezone its times are in.
+	 * Runs in batches until none are left, then never again.
+	 */
+	public function tfhb_backfill_booking_time_zones() {
+	    if ( get_option( 'tfhb_booking_time_zone_backfill_done' ) ) {
+	        return;
+	    }
+
+	    global $wpdb;
+	    $booking_table = $wpdb->prefix . 'tfhb_bookings';
+	    $host_table    = $wpdb->prefix . 'tfhb_hosts';
+
+	    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	    $rows = $wpdb->get_results(
+	        "SELECT b.id, b.meeting_id, h.time_zone AS host_time_zone
+	         FROM $booking_table AS b
+	         LEFT JOIN $host_table AS h ON h.id = b.host_id
+	         WHERE b.availability_time_zone IS NULL OR b.availability_time_zone = ''
+	         LIMIT 200"
+	    );
+
+	    if ( empty( $rows ) ) {
+	        update_option( 'tfhb_booking_time_zone_backfill_done', true );
+	        return;
+	    }
+
+	    $meeting       = new \HydraBooking\DB\Meeting();
+	    $date_time     = new DateTimeController( 'UTC' );
+	    $meeting_zones = array();
+
+	    foreach ( $rows as $row ) {
+	        if ( ! array_key_exists( $row->meeting_id, $meeting_zones ) ) {
+	            $meeting_data      = $meeting->get( $row->meeting_id );
+	            $availability_data = $meeting_data ? $date_time->GetAvailabilityData( $meeting_data ) : array();
+	            $meeting_zones[ $row->meeting_id ] = isset( $availability_data['time_zone'] ) ? $availability_data['time_zone'] : '';
+	        }
+
+	        // The meeting's availability timezone, then the host's profile one, then the site's
+	        $time_zone = BookingTime::tz( $meeting_zones[ $row->meeting_id ], $row->host_time_zone )->getName();
+	        $wpdb->update( $booking_table, array( 'availability_time_zone' => $time_zone ), array( 'id' => $row->id ) );
+	    }
+	    // phpcs:enable
 	}
 
     /**

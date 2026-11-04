@@ -10,7 +10,7 @@ $query = array( );
 $meetings = $meeting->getAll( $query, 'id', 'DESC');
 
 
-get_header();
+tfhb_get_header();
 ?>
 <!-- Loade theme class -->
 
@@ -86,4 +86,4 @@ get_header();
 </div>
 
 
-<?php get_footer(); ?>
+<?php tfhb_get_footer(); ?>

@@ -92,10 +92,12 @@ const Booking = reactive({
         }
     },
     async getAvailabilityTimeSlot(value) {   
-        let data = { 
-            select_date: value, 
-            meeting_id: this.reBook.meeting_id, 
-            selected_time_zone: this.reBook.availability_time_zone, 
+        let data = {
+            select_date: value,
+            meeting_id: this.reBook.meeting_id,
+            // Leave the booking being moved out of the busy times
+            booking_id: this.reBook.booking_id,
+            selected_time_zone: this.reBook.availability_time_zone,
         }
         const response = await axios.post(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/get-availability-time-slot', data, {
             headers: {

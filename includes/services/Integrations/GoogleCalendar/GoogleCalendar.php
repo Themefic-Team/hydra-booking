@@ -8,6 +8,7 @@ if (! defined('ABSPATH')) {
 
 use HydraBooking\Admin\Controller\RouteController;
 use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Admin\Controller\BookingTime;
 use HydraBooking\Admin\Controller\Helper;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\BookingMeta;
@@ -56,20 +57,44 @@ class GoogleCalendar
 			return;
 		}
 
-		$start_time = strtotime($booking_data->start_time . ' UTC');
-		$end_time   = strtotime($booking_data->end_time . ' UTC');
-
-		$start_date = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $start_time);
-		$end_date   = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $end_time);
+		$times = $this->event_times($booking_data, $meeting_date);
+		if (! $times) {
+			return;
+		}
 
 		$event->start = array(
-			'dateTime' => $start_date,
-			'timeZone' => $booking_data->availability_time_zone,
+			'dateTime' => $times['start'],
+			'timeZone' => $times['time_zone'],
 		);
 
 		$event->end = array(
-			'dateTime' => $end_date,
-			'timeZone' => $booking_data->availability_time_zone,
+			'dateTime' => $times['end'],
+			'timeZone' => $times['time_zone'],
+		);
+	}
+
+	/**
+	 * One occurrence of a booking as Google "dateTime" values in the booking's own timezone.
+	 * The end moves to the next day when the meeting ends at or after midnight.
+	 *
+	 * @return array|null array( 'start' => 'Y-m-d\TH:i:s', 'end' => ..., 'time_zone' => IANA name )
+	 */
+	private function event_times($booking_data, $meeting_date)
+	{
+		$occurrence             = (array) $booking_data;
+		$occurrence['meeting_dates'] = trim((string) $meeting_date);
+
+		$instants = BookingTime::booking_instants((object) $occurrence);
+		if (empty($instants)) {
+			return null;
+		}
+
+		$time_zone = BookingTime::booking_tz((object) $occurrence);
+
+		return array(
+			'start'     => BookingTime::format($instants[0]['start'], $time_zone, 'Y-m-d\TH:i:s'),
+			'end'       => BookingTime::format($instants[0]['end'], $time_zone, 'Y-m-d\TH:i:s'),
+			'time_zone' => $time_zone->getName(),
 		);
 	}
 
@@ -491,13 +516,16 @@ class GoogleCalendar
 			$booking_locations_data .= '' . $value->location . ', ';
 		}
 
-		$start_time    = strtotime($booking->start_time . ' UTC'); // 03:45 AM
-		$end_time      = strtotime($booking->end_time . ' UTC'); // 04:30 AM
 		$meeting_dates = ! empty($booking->meeting_dates) ? explode(',', $booking->meeting_dates) : array();
 
 		foreach ($meeting_dates as $meeting_date) {
-			$start_date = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $start_time);
-			$end_date   = gmdate('Y-m-d', strtotime($meeting_date . ' UTC')) . 'T' . gmdate('H:i:s', $end_time);
+			$times = $this->event_times($booking, $meeting_date);
+			if (! $times) {
+				continue;
+			}
+			$start_date             = $times['start'];
+			$end_date               = $times['end'];
+			$availability_time_zone = $times['time_zone'];
 
 
 			// Meeting location google meeting
@@ -530,7 +558,7 @@ class GoogleCalendar
 				),
 				'conferenceData' => array(
 					'createRequest' => array(
-						'requestId'             => 'sample123', // Provide a unique ID for the request
+						'requestId'             => wp_generate_uuid4(), // Unique per request, as Google requires
 						'conferenceSolutionKey' => array(
 							'type' => 'hangoutsMeet',
 						),
@@ -540,7 +568,7 @@ class GoogleCalendar
 			if ($enable_meeting_location == true) {
 				$setData['conferenceData'] = array(
 					'createRequest' => array(
-						'requestId'             => 'sample123', // Provide a unique ID for the request
+						'requestId'             => wp_generate_uuid4(), // Unique per request, as Google requires
 						'conferenceSolutionKey' => array(
 							'type' => 'hangoutsMeet',
 						),
@@ -992,11 +1020,12 @@ class GoogleCalendar
 
 
 
-			// unset if check_booking has current booking data->id without loop and array maps or filter
+			// getCheckBooking() returns one row (or null); leave out the booking being updated
+			$check_booking = ! empty($check_booking) ? array($check_booking) : array();
 			$check_booking = array_filter(
 				$check_booking,
-				function ($data) use ($sdata) {
-					return $data->id !== $sdata->id;
+				function ($item) use ($data) {
+					return $item->id !== $data->id;
 				}
 			);
 
@@ -1099,6 +1128,9 @@ class GoogleCalendar
 		// Set the Access Token
 		$this->refreshToken($data->host_id);
 		$events = $booking_calendar_value->google_calendar;
+
+		$host     = new Host();
+		$hostData = $host->get($data->host_id);
 
 		$google_calendar_body = array();
 		foreach ($events as $event) {
@@ -1219,11 +1251,12 @@ class GoogleCalendar
 
 
 
-			// unset if check_booking has current booking data->id without loop and array maps or filter
+			// getCheckBooking() returns one row (or null); leave out the booking being updated
+			$check_booking = ! empty($check_booking) ? array($check_booking) : array();
 			$check_booking = array_filter(
 				$check_booking,
-				function ($data) use ($sdata) {
-					return $data->id !== $sdata->id;
+				function ($item) use ($data) {
+					return $item->id !== $data->id;
 				}
 			);
 
@@ -1278,6 +1311,9 @@ class GoogleCalendar
 
 		$events = $value->google_calendar;
 
+		$host     = new Host();
+		$hostData = $host->get($data->host_id);
+
 		$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
 		$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 		$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : $google_calendar['tfhb_google_calendar']['email'];
@@ -1288,21 +1324,23 @@ class GoogleCalendar
 		foreach ($events as $key => $event) {
 			$event_id = $event->id;
 
-			// update event time date and time zone everyting based on reshedule details
-			$start_time    = strtotime($data->start_time . ' UTC'); // 03:45 AM
-			$end_time      = strtotime($data->end_time . ' UTC'); // 04:30 AM
-			$meeting_dates = $bookingDates[$key]; // 2024-07-10,2024-07-17,2024-07-24,2024-07-31
-
-			$start_date = gmdate('Y-m-d', strtotime($meeting_dates . ' UTC')) . 'T' . gmdate('H:i:s', $start_time);
-			$end_date   = gmdate('Y-m-d', strtotime($meeting_dates . ' UTC')) . 'T' . gmdate('H:i:s', $end_time);
+			// update event time date and time zone everyting based on reshedule details.
+			// Stored times are in the booking's availability timezone, not the attendee's.
+			if (! isset($bookingDates[$key])) {
+				continue;
+			}
+			$times = $this->event_times($data, $bookingDates[$key]);
+			if (! $times) {
+				continue;
+			}
 
 			$event->start = array(
-				'dateTime' => $start_date,
-				'timeZone' => $data->attendee_time_zone,
+				'dateTime' => $times['start'],
+				'timeZone' => $times['time_zone'],
 			);
 			$event->end = array(
-				'dateTime' => $end_date,
-				'timeZone' => $data->attendee_time_zone,
+				'dateTime' => $times['end'],
+				'timeZone' => $times['time_zone'],
 			);
 
 			// change attendee email
@@ -1465,8 +1503,16 @@ class GoogleCalendar
 		}
 
 		$busy_list                = array();
+		$selected_time_zone       = \HydraBooking\Admin\Controller\BookingTime::tz($selected_time_zone, 'UTC')->getName();
 		$datetime_controller      = new DateTimeController($selected_time_zone);
 		$normalized_selected_date = str_replace('/', '-', $selected_date);
+
+		// The selected day as an absolute range, so multi-day events that cover it are kept too
+		$day_start = \HydraBooking\Admin\Controller\BookingTime::instant($normalized_selected_date, '', $selected_time_zone);
+		if (! $day_start) {
+			return array();
+		}
+		$day_end = $day_start->modify('+1 day');
 
 		foreach ($busy_slots as $busy) {
 			if (empty($busy['start']) || empty($busy['end'])) {
@@ -1484,10 +1530,8 @@ class GoogleCalendar
 				$start_obj->setTimezone(new \DateTimeZone($selected_time_zone));
 				$end_obj->setTimezone(new \DateTimeZone($selected_time_zone));
 
-				// Check if the busy slot touches the selected date
-				$slot_date_start = $start_obj->format('Y-m-d');
-				$slot_date_end   = $end_obj->format('Y-m-d');
-				if ($slot_date_start !== $normalized_selected_date && $slot_date_end !== $normalized_selected_date) {
+				// Keep the busy slot only if it overlaps the selected date
+				if (! \HydraBooking\Admin\Controller\BookingTime::overlaps($start_obj, $end_obj, $day_start, $day_end)) {
 					continue;
 				}
 

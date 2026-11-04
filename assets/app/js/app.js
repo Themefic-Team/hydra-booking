@@ -1,6 +1,6 @@
-(function($){$(document).ready(function(){let tfhb_local_timeZone=Intl.DateTimeFormat().resolvedOptions().timeZone;const tfhb_i18n=tfhb_app_booking.i18n;tfhb_local_timeZone=="Asia/Calcutta"&&(tfhb_local_timeZone="Asia/Kolkata");function tfhbTranslate(t){return tfhb_i18n[t]||t}function tfhbTranslateNumber(t){return t.toString().split("").map(function(e){return tfhbTranslate(e)}).join("")}function tfhbTranslateTimeSlot(t){return t.slice(6,8)!=""?tfhbTranslateNumber(t.slice(0,2))+":"+tfhbTranslateNumber(t.slice(3,5))+" "+tfhbTranslate(t.slice(6,8)):tfhbTranslateNumber(t.slice(0,2))+":"+tfhbTranslateNumber(t.slice(3,5))}function tfhbPad(t){return t.toString().padStart(2,"0")}function tfhbDateFormatFromSettings(t){if(typeof tfhb_app_booking>"u"||!tfhb_app_booking.general_settings)return t;var e=tfhb_app_booking.general_settings.date_format;return typeof e!="string"||e.trim()===""||e.trim().toLowerCase()==="default"?t:e.trim()}function tfhbFormatDateByPattern(t,e){if(!t||isNaN(t.getTime()))return"";for(var a=["January","February","March","April","May","June","July","August","September","October","November","December"],i=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],o=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],d=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],m={d:tfhbTranslateNumber(tfhbPad(t.getDate())),j:tfhbTranslateNumber(t.getDate()),m:tfhbTranslateNumber(tfhbPad(t.getMonth()+1)),n:tfhbTranslateNumber(t.getMonth()+1),Y:tfhbTranslateNumber(t.getFullYear()),y:tfhbTranslateNumber(t.getFullYear().toString().slice(-2)),F:tfhbTranslate(a[t.getMonth()]),M:tfhbTranslate(i[t.getMonth()]),l:tfhbTranslate(o[t.getDay()]),D:tfhbTranslate(d[t.getDay()])},l="",h=0;h<e.length;h++){var n=e[h];if(n==="\\"){h+=1,l+=e[h]||"";continue}l+=Object.prototype.hasOwnProperty.call(m,n)?m[n]:n}return l}$(document).on("click",".tfhb-timezone-tabs ul li",function(t){$(".tfhb-timezone-tabs ul li").removeClass("active");var e=$(this);e.addClass("active")}),$(".tfhb-meeting-box").each(function(){let $this=$(this),calenderId=$this.attr("data-calendar"),calenderData=eval("tfhb_app_booking_"+calenderId),preloader=`<div class="tfhb-preloader"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-linecap="round" fill="none" stroke-dasharray="51.83627878423159 51.83627878423159" stroke="#2e6b38" stroke-width="4" r="33" cy="50" cx="50">
+(function($){$(document).ready(function(){let tfhb_local_timeZone=Intl.DateTimeFormat().resolvedOptions().timeZone;const tfhb_i18n=tfhb_app_booking.i18n;tfhb_local_timeZone=="Asia/Calcutta"&&(tfhb_local_timeZone="Asia/Kolkata");function tfhbTranslate(t){return tfhb_i18n[t]||t}function tfhbTranslateNumber(t){return t.toString().split("").map(function(e){return tfhbTranslate(e)}).join("")}function tfhbTranslateTimeSlot(t){return t.slice(6,8)!=""?tfhbTranslateNumber(t.slice(0,2))+":"+tfhbTranslateNumber(t.slice(3,5))+" "+tfhbTranslate(t.slice(6,8)):tfhbTranslateNumber(t.slice(0,2))+":"+tfhbTranslateNumber(t.slice(3,5))}function tfhbPad(t){return t.toString().padStart(2,"0")}function tfhbDateFormatFromSettings(t){if(typeof tfhb_app_booking>"u"||!tfhb_app_booking.general_settings)return t;var e=tfhb_app_booking.general_settings.date_format;return typeof e!="string"||e.trim()===""||e.trim().toLowerCase()==="default"?t:e.trim()}function tfhbFormatDateByPattern(t,e){if(!t||isNaN(t.getTime()))return"";for(var a=["January","February","March","April","May","June","July","August","September","October","November","December"],i=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],r=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],o=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],c={d:tfhbTranslateNumber(tfhbPad(t.getDate())),j:tfhbTranslateNumber(t.getDate()),m:tfhbTranslateNumber(tfhbPad(t.getMonth()+1)),n:tfhbTranslateNumber(t.getMonth()+1),Y:tfhbTranslateNumber(t.getFullYear()),y:tfhbTranslateNumber(t.getFullYear().toString().slice(-2)),F:tfhbTranslate(a[t.getMonth()]),M:tfhbTranslate(i[t.getMonth()]),l:tfhbTranslate(r[t.getDay()]),D:tfhbTranslate(o[t.getDay()])},l="",h=0;h<e.length;h++){var n=e[h];if(n==="\\"){h+=1,l+=e[h]||"";continue}l+=Object.prototype.hasOwnProperty.call(c,n)?c[n]:n}return l}$(document).on("click",".tfhb-timezone-tabs ul li",function(t){$(".tfhb-timezone-tabs ul li").removeClass("active");var e=$(this);e.addClass("active")}),$(".tfhb-meeting-box").each(function(){let $this=$(this),calenderId=$this.attr("data-calendar"),calenderData=eval("tfhb_app_booking_"+calenderId),preloader=`<div class="tfhb-preloader"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-linecap="round" fill="none" stroke-dasharray="51.83627878423159 51.83627878423159" stroke="#2e6b38" stroke-width="4" r="33" cy="50" cx="50">
 				<animateTransform values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform>
-			  </circle><g></g></g><!-- [ldio] generated by https://loading.io --></svg></span></div>`,date=new Date,year=date.getFullYear(),month=date.getMonth();const tfhb_calendar_navs=$this.find(".tfhb-calendar-navigation span"),months=["January","February","March","April","May","June","July","August","September","October","November","December"];tfhb_date_manipulate($this,calenderData,year,month,date,months),tfhb_calendar_navs.each(function(){$(this).on("click",function(){month=$(this).attr("id")==="tfhb-calendar-prev"?month-1:month+1,month<0||month>11?(date=new Date(year,month,new Date().getDate()),year=date.getFullYear(),month=date.getMonth()):date=new Date,$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")}),tfhb_date_manipulate($this,calenderData,year,month,date,months);var t=new Date(year,month,2).toISOString().split("T")[0];setTimeout(function(){tfhb_times_manipulate($this,t,calenderData)},1e3)})}),$($this).on("click",".tfhb-calendar-dates li",function(t){var e=$(this);if(e.hasClass("inactive"))return!1;$this.find(".tfhb-meeting-times").css("display","block").animate({left:"0%",opacity:1,width:224},400),$this.find(".tfhb-available-times").removeClass("inactive"),$this.find(".tfhb-available-times").html(""),$this.find(".tfhb-available-times").append("<ul></ul>");var a=e.attr("data-date");$this.find("#meeting_dates").val(a);var i=new Date(a+"T00:00:00");if(isNaN(i.getTime())){console.error("Invalid date:",a);return}var o=tfhbFormatDateByPattern(i,tfhbDateFormatFromSettings("l, F j"));$this.find(".tfhb-meeting-times .tfhb-select-date").html(o);var d=calenderData.calander_available_time_slot[a];if(d.length>0)for(var m=0;m<d.length;m++){var l="";d[m].remaining!=null&&(l='<span class="tfhb-time-slot-remaining tfhb-flexbox"><span></span>'+tfhbTranslateNumber(d[m].remaining)+" "+tfhbTranslate("seats left")+"</span>"),$this.find(".tfhb-available-times ul").append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+d[m].start+'" data-time-end="'+d[m].end+'">'+tfhbTranslateTimeSlot(d[m].start)+l+" </div> </li>")}else $this.find(".tfhb-available-times ul").append('<li class="tfhb-flexbox"> <div>No time slot available in this date ! Try another date.</span> </div>');$this.find(".tfhb-calendar-dates li").removeClass("active"),e.addClass("active")}),$this.find("#attendee_time_zone_"+calenderId).on("change",function(t){$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")});var e=new Date(year,month,2).toISOString().split("T")[0];tfhb_times_manipulate($this,e,calenderData)}),$this.find('input[name="tfhb_time_format"]').on("change",function(t){var e=new Date(year,month,2).toISOString().split("T")[0];tfhb_times_manipulate($this,e,calenderData,function(){$this.find(".tfhb-calendar-dates li.active").trigger("click")})});const $timezoneSelect=$this.find("#attendee_time_zone_"+calenderId);$timezoneSelect.length&&($timezoneSelect.select2({dropdownCssClass:"tfhb-select2-dropdown"}),$timezoneSelect.val(tfhb_local_timeZone).trigger("change")),$($this).on("click",".tfhb-available-times li .time",function(t){$this_time=$(this),$(".tfhb-available-times li .time").removeClass("active"),$(".tfhb-available-times li .next").remove();var e=$this_time.attr("data-time-start"),a=$this_time.attr("data-time-end");$this.find("input[name='meeting_time_start']").val(e),$this.find("input[name='meeting_time_end']").val(a),$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> '+tfhbTranslate("Next")+'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'),$this_time.addClass("active")}),$($this).on("click",".tfhb-available-times li .next",function(t){var e=$this.find("#attendee_time_zone_"+calenderId).val(),a=$this.find("#meeting_dates").val(),i=$this.find("#meeting_time_start").val();$this.find("#meeting_time_end").val();var o=`<li class="tfhb-flexbox tfhb_time_zone_info tfhb-gap-8">
+			  </circle><g></g></g><!-- [ldio] generated by https://loading.io --></svg></span></div>`,date=new Date,year=date.getFullYear(),month=date.getMonth();const tfhb_calendar_navs=$this.find(".tfhb-calendar-navigation span"),months=["January","February","March","April","May","June","July","August","September","October","November","December"];tfhb_date_manipulate($this,calenderData,year,month,date,months),tfhb_calendar_navs.each(function(){$(this).on("click",function(){month=$(this).attr("id")==="tfhb-calendar-prev"?month-1:month+1,month<0||month>11?(date=new Date(year,month,new Date().getDate()),year=date.getFullYear(),month=date.getMonth()):date=new Date,$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")}),tfhb_date_manipulate($this,calenderData,year,month,date,months);var t=tfhbMonthStartKey(year,month);setTimeout(function(){tfhb_times_manipulate($this,t,calenderData)},1e3)})}),$($this).on("click",".tfhb-calendar-dates li",function(t){var e=$(this);if(e.hasClass("inactive"))return!1;$this.find(".tfhb-meeting-times").css("display","block").animate({left:"0%",opacity:1,width:224},400),$this.find(".tfhb-available-times").removeClass("inactive"),$this.find(".tfhb-available-times").html(""),$this.find(".tfhb-available-times").append("<ul></ul>");var a=e.attr("data-date");$this.find("#meeting_dates").val(a);var i=new Date(a+"T00:00:00");if(isNaN(i.getTime())){console.error("Invalid date:",a);return}var r=tfhbFormatDateByPattern(i,tfhbDateFormatFromSettings("l, F j"));$this.find(".tfhb-meeting-times .tfhb-select-date").html(r);var o=(calenderData.calander_available_time_slot||{})[a]||[];if(o.length>0)for(var c=0;c<o.length;c++){var l="";o[c].remaining!=null&&(l='<span class="tfhb-time-slot-remaining tfhb-flexbox"><span></span>'+tfhbTranslateNumber(o[c].remaining)+" "+tfhbTranslate("seats left")+"</span>"),$this.find(".tfhb-available-times ul").append('<li class="tfhb-flexbox"> <div class="time" data-time-start="'+o[c].start+'" data-time-end="'+o[c].end+'" data-start-utc="'+(o[c].start_utc||"")+'">'+tfhbTranslateTimeSlot(o[c].start)+l+" </div> </li>")}else $this.find(".tfhb-available-times ul").append('<li class="tfhb-flexbox"> <div>No time slot available in this date ! Try another date.</span> </div>');$this.find(".tfhb-calendar-dates li").removeClass("active"),e.addClass("active")}),$this.find("#attendee_time_zone_"+calenderId).on("change",function(t){$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")});var e=tfhbMonthStartKey(year,month);tfhb_times_manipulate($this,e,calenderData)}),$this.find('input[name="tfhb_time_format"]').on("change",function(t){var e=tfhbMonthStartKey(year,month);tfhb_times_manipulate($this,e,calenderData,function(){$this.find(".tfhb-calendar-dates li.active").trigger("click")})});const $timezoneSelect=$this.find("#attendee_time_zone_"+calenderId);if($timezoneSelect.length){$timezoneSelect.select2({dropdownCssClass:"tfhb-select2-dropdown"});let t=tfhb_local_timeZone;$timezoneSelect.find("option").filter(function(){return this.value===t}).length||(t=calenderData.availability&&calenderData.availability.time_zone||"UTC"),$timezoneSelect.val(t).trigger("change")}$($this).on("click",".tfhb-available-times li .time",function(t){$this_time=$(this),$(".tfhb-available-times li .time").removeClass("active"),$(".tfhb-available-times li .next").remove();var e=$this_time.attr("data-time-start"),a=$this_time.attr("data-time-end");$this.find("input[name='meeting_time_start']").val(e),$this.find("input[name='meeting_time_end']").val(a),$this.find("input[name='meeting_start_utc']").val($this_time.attr("data-start-utc")||""),$this_time.parent().append('<span class="next tfhb-flexbox tfhb-gap-8"> '+tfhbTranslate("Next")+'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 10L14 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.16666L14.8333 9.99999L9 15.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'),$this_time.addClass("active")}),$($this).on("click",".tfhb-available-times li .next",function(t){var e=$this.find("#attendee_time_zone_"+calenderId).val(),a=$this.find("#meeting_dates").val(),i=$this.find("#meeting_time_start").val();$this.find("#meeting_time_end").val();var r=`<li class="tfhb-flexbox tfhb_time_zone_info tfhb-gap-8">
 						<input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
 						<div class="tfhb-icon">  
 							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +19,7 @@
 						<div>
 							`+e+"("+tfhbTranslateTimeSlot(i)+`)
 						</div>
-					</li>`,d=new Date(a+"T00:00:00"),m=tfhbFormatDateByPattern(d,tfhbDateFormatFromSettings("l, F j, Y")),l=`<li class="tfhb-flexbox tfhb_date_time_info tfhb-gap-8">
+					</li>`,o=new Date(a+"T00:00:00"),c=tfhbFormatDateByPattern(o,tfhbDateFormatFromSettings("l, F j, Y")),l=`<li class="tfhb-flexbox tfhb_date_time_info tfhb-gap-8">
 						<input type="hidden" id="recurring_maximum" name="recurring_maximum" value="' . esc_attr( $meeting['recurring_maximum'] ) . '">
 						<div class="tfhb-icon">  
 							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,220 +31,9 @@
 							</svg>
 						</div> 
 						<div>
-							`+m+`
+							`+c+`
 						</div>
-					</li>`;$this.find(".tfhb-meeting-details ul").append(o),$this.find(".tfhb-meeting-details ul").append(l),$this.find(".tfhb-timezone").hide(),$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")}),$this.find(".tfhb-calander-times").animate({left:"-5%",opacity:0},400,function(){$(this).css("display","none"),$this.find(".tfhb-meeting-booking-form").css("display","block").animate({left:"0",opacity:1,width:536},300)})}),$this.on("click","span.tfhb-see-description",function(){$this.find(".tfhb-short-description").slideUp(),$this.find(".tfhb-full-description").slideDown()}),$this.on("click","span.tfhb-see-less-description",function(){$this.find(".tfhb-full-description").slideUp(),$this.find(".tfhb-short-description").slideDown()}),$($this).on("click",".tfhb-meeting-booking-form .tfhb-back-btn",function(t){$this.find(".tfhb-meeting-booking-form").animate({left:"-5%",opacity:0},300,function(){$(this).css("display","none"),$this.find(".tfhb-timezone").show(),$this.find(".tfhb-calander-times").css("display","flex").animate({left:"0",opacity:1},200,function(){}),$this.find(".tfhb-meeting-times").css("display","block").animate({left:"0",width:224},400,function(){$(this).css("opacity","1"),$this.find(".tfhb-meeting-details ul .tfhb_time_zone_info").remove(),$this.find(".tfhb-meeting-details ul .tfhb_date_time_info").remove()})})}),$this.find(".tfhb-meeting-form.ajax-submit").on("submit",function(t){t.preventDefault();var e=new FormData(this),a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),document.addEventListener("wpcf7mailsent",function(t){var e=t.detail.formData;if(calenderData.questions_type=="existing"&&calenderData.questions_form_type=="wpcf7"&&t.detail.contactFormId==calenderData.questions_form){var a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}}),$(document).on("forminator:form:submit:success",function(t,e){var a={};e.forEach(function(i,o){a[o]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),$(document).on("fluentform_submission_success",function(t,e){var a=new FormData(e.form[0]),i={};a.forEach(function(o,d){i[d]=o}),tfhb_from_submission($this,preloader,i,calenderData)})});function tfhb_extract_paypal_error(err, currency) {
-	if (!err) {
-		return "Payment could not be completed. Please try again or choose another payment method.";
-	}
-	let parsed = null;
-	if (typeof err === "string") {
-		try {
-			parsed = JSON.parse(err);
-		} catch (ex) {
-			if (err.indexOf("CURRENCY_NOT_SUPPORTED") !== -1) {
-				return 'Currency "' + (currency || '') + '" is not supported by PayPal. Please select a supported currency in settings (e.g. USD, EUR, GBP) or contact the administrator.';
-			}
-			return err;
-		}
-	} else if (typeof err === "object") {
-		if (err.message && typeof err.message === "string") {
-			try {
-				parsed = JSON.parse(err.message);
-			} catch (ex) {}
-		}
-		if (!parsed) {
-			parsed = err;
-		}
-	}
-	if (parsed) {
-		if (Array.isArray(parsed.details) && parsed.details.length > 0) {
-			const d = parsed.details[0];
-			if (d.issue === "CURRENCY_NOT_SUPPORTED") {
-				return 'Currency "' + (currency || '') + '" is not supported by PayPal. ' + (d.description || 'Please use a supported currency.');
-			}
-			if (d.description) {
-				return d.description;
-			}
-			if (d.issue) {
-				return "PayPal Error: " + d.issue.replace(/_/g, " ");
-			}
-		}
-		if (parsed.details && typeof parsed.details === "object") {
-			if (parsed.details.issue === "CURRENCY_NOT_SUPPORTED") {
-				return 'Currency "' + (currency || '') + '" is not supported by PayPal. ' + (parsed.details.description || '');
-			}
-			if (parsed.details.description) {
-				return parsed.details.description;
-			}
-			if (parsed.details.issue) {
-				return "PayPal Error: " + parsed.details.issue.replace(/_/g, " ");
-			}
-		}
-		if (parsed.issue === "CURRENCY_NOT_SUPPORTED") {
-			return 'Currency "' + (currency || '') + '" is not supported by PayPal.';
-		}
-		if (parsed.description) {
-			return parsed.description;
-		}
-		if (parsed.message) {
-			if (parsed.message.indexOf("CURRENCY_NOT_SUPPORTED") !== -1) {
-				return 'Currency "' + (currency || '') + '" is not supported by PayPal.';
-			}
-			return parsed.message;
-		}
-		if (parsed.name) {
-			return "PayPal Error (" + parsed.name.replace(/_/g, " ") + "). Please check your payment details or contact the administrator.";
-		}
-	}
-	if (err.message) {
-		if (err.message.indexOf("CURRENCY_NOT_SUPPORTED") !== -1) {
-			return 'Currency "' + (currency || '') + '" is not supported by PayPal.';
-		}
-		return err.message;
-	}
-	return "Payment could not be completed. Please try again or choose another payment method.";
-}
-
-function tfhb_render_paypal_payment(t, e) {
-	const a = e.confirmation_template;
-	t.find(".tfhb-confirmation-button").hide();
-	t.find(".wpcf7").hide();
-	let i = typeof tfhb_app_booking.general_settings.currency !== "undefined" && tfhb_app_booking.general_settings.currency !== "" ? tfhb_app_booking.general_settings.currency : "USD";
-
-	function tfhb_show_paypal_error(msg) {
-		t.find(".tfhb-notice").html(msg).show();
-		let errBox = t.find(".tfhb-paypal-error-box");
-		if (errBox.length === 0) {
-			t.find(".tfhb-paypal-button-container").before('<div class="tfhb-paypal-error-box tfhb-notice notice-error" style="display:block; padding:10px 14px; color:#d93025; background:#fdf2f2; border-left:3px solid #d93025; border-radius:4px; margin-bottom:14px; font-size:13px; line-height:1.4;" role="alert"></div>');
-			errBox = t.find(".tfhb-paypal-error-box");
-		}
-		errBox.html(msg).show();
-		t.find(".tfhb-booking-submit").removeAttr("disabled");
-		t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove();
-	}
-
-	const paypalSupportedCurrencies = [
-		"AUD", "BRL", "CAD", "CNY", "CZK", "DKK", "EUR", "HKD", "HUF",
-		"ILS", "JPY", "MYR", "MXN", "TWD", "NZD", "NOK", "PHP", "PLN",
-		"GBP", "SGD", "SEK", "CHF", "THB", "USD"
-	];
-
-	if (!paypalSupportedCurrencies.includes(i.toUpperCase())) {
-		const currErrMsg = 'Currency "' + i + '" is not supported by PayPal. PayPal only supports: ' + paypalSupportedCurrencies.join(', ') + '. Please update the currency in Booking Settings > General or choose another payment method.';
-		tfhb_show_paypal_error(currErrMsg);
-		t.find(".tfhb-paypal-button-container").empty();
-		return;
-	}
-
-	if (typeof paypal === "undefined" || !paypal.Buttons) {
-		tfhb_show_paypal_error("Unable to load PayPal SDK. Please verify your PayPal Client ID in Settings > Integrations.");
-		return;
-	}
-
-	t.find(".tfhb-paypal-error-box").remove();
-
-	paypal.Buttons({
-		createOrder: function(o, d) {
-			t.find(".tfhb-paypal-error-box").hide().empty();
-			t.find(".tfhb-notice").hide().empty();
-			return d.order.create({
-				purchase_units: [{
-					reference_id: e.data && e.data.draft_token ? e.data.draft_token : (e.data.attendee_data ? e.data.attendee_data.id : ""),
-					description: (e.data && e.data.meeting ? e.data.meeting.title : "Booking") + " | " + (e.data && e.data.booking ? e.data.booking.meeting_dates : ""),
-					custom_id: e.data && e.data.draft_token ? e.data.draft_token : (e.data.attendee_data ? e.data.attendee_data.id : ""),
-					amount: {
-						currency_code: i.toUpperCase(),
-						value: e.data && e.data.meeting ? e.data.meeting.meeting_price : "0"
-					}
-				}]
-			}).catch(function(err) {
-				console.error("PayPal order creation error:", err);
-				const errMsg = tfhb_extract_paypal_error(err, i);
-				tfhb_show_paypal_error(errMsg);
-				throw err;
-			});
-		},
-		onApprove: function(o, d) {
-			return d.order.capture().then(function(m) {
-				$.ajax({
-					url: tfhb_app_booking.ajax_url,
-					type: "POST",
-					data: {
-						nonce: tfhb_app_booking.nonce,
-						action: "tfhb_meeting_paypal_payment_confirmation",
-						payment_details: m,
-						responseData: e
-					},
-					success: function(l) {
-						if (l.success) {
-							t.find(".tfhb-meeting-card").html("");
-							const h = l.data && l.data.confirmation_template ? l.data.confirmation_template : a;
-							t.find(".tfhb-meeting-card").append(h);
-						} else {
-							const errMsg = (l.data && l.data.message) ? l.data.message : "Payment confirmation failed.";
-							tfhb_show_paypal_error(errMsg);
-						}
-					},
-					error: function(l) {
-						console.error("PayPal confirmation error:", l);
-						let errMsg = "Server verification failed. Please try again or contact support.";
-						if (l && l.responseJSON && l.responseJSON.data && l.responseJSON.data.message) {
-							errMsg = l.responseJSON.data.message;
-						}
-						tfhb_show_paypal_error(errMsg);
-					}
-				});
-			}).catch(function(err) {
-				console.error("PayPal capture error:", err);
-				const errMsg = tfhb_extract_paypal_error(err, i);
-				tfhb_show_paypal_error(errMsg);
-			});
-		},
-		onCancel: function(o) {},
-		onError: function(o) {
-			console.error("PayPal transaction error:", o);
-			const errMsg = tfhb_extract_paypal_error(o, i);
-			tfhb_show_paypal_error(errMsg);
-		}
-	}).render(".tfhb-paypal-button-container");
-}
-
-function tfhb_render_stripe_payment(t, e, a, i) {
-	t.find(".tfhb-confirmation-button").hide();
-	let o = typeof tfhb_app_booking.general_settings.currency !== "undefined" && tfhb_app_booking.general_settings.currency !== "" ? tfhb_app_booking.general_settings.currency : "USD";
-
-	function tfhb_show_stripe_top_error(msg) {
-		t.find(".tfhb-notice").html(msg).show();
-		t.find(".tfhb-booking-submit").removeAttr("disabled");
-		t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove();
-	}
-
-	if (e && e.stripe_error) {
-		tfhb_show_stripe_top_error(e.stripe_error);
-		return;
-	}
-
-	t.find(".wpcf7").hide();
-	const d = t.find(".tfhb-stripe-button-container");
-	const m = e.confirmation_template;
-	const l = e.data && e.data.meeting ? e.data.meeting : {};
-	const h = l.meeting_price ? l.meeting_price : "0";
-	const n = e.data && e.data.stripe ? e.data.stripe : null;
-	const T = n && n.publishable_key ? n.publishable_key : a;
-	const L = n ? n.test_mode : (T && T.indexOf("pk_test_") === 0);
-	const w = (n && n.currency || o).toUpperCase();
-	const S = { USD: "$", EUR: "€", GBP: "£", CAD: "CA$", AUD: "A$", JPY: "¥", BDT: "৳", INR: "₹", CNY: "¥" }[w] || (w + " ");
-	const D = parseFloat(h).toFixed(2);
-
-	if (!T) {
-		const keyMsg = "Stripe Publishable Key is not configured. Please contact the administrator in Settings > Integrations.";
-		tfhb_show_stripe_top_error(keyMsg);
-		d.html('<div class="tfhb-notice notice-error" style="display:block; padding:10px 14px; color:#d93025; background:#fdf2f2; border-left:3px solid #d93025; border-radius:4px; margin-top:12px;">' + keyMsg + '</div>');
-		return;
-	}
-
-	let A = `
+					</li>`;$this.find(".tfhb-meeting-details ul").append(r),$this.find(".tfhb-meeting-details ul").append(l),$this.find(".tfhb-timezone").hide(),$this.find(".tfhb-meeting-times").animate({left:"-50%",width:0,opacity:0},300,function(){$(this).css("display","none")}),$this.find(".tfhb-calander-times").animate({left:"-5%",opacity:0},400,function(){$(this).css("display","none"),$this.find(".tfhb-meeting-booking-form").css("display","block").animate({left:"0",opacity:1,width:536},300)})}),$this.on("click","span.tfhb-see-description",function(){$this.find(".tfhb-short-description").slideUp(),$this.find(".tfhb-full-description").slideDown()}),$this.on("click","span.tfhb-see-less-description",function(){$this.find(".tfhb-full-description").slideUp(),$this.find(".tfhb-short-description").slideDown()}),$($this).on("click",".tfhb-meeting-booking-form .tfhb-back-btn",function(t){$this.find(".tfhb-meeting-booking-form").animate({left:"-5%",opacity:0},300,function(){$(this).css("display","none"),$this.find(".tfhb-timezone").show(),$this.find(".tfhb-calander-times").css("display","flex").animate({left:"0",opacity:1},200,function(){}),$this.find(".tfhb-meeting-times").css("display","block").animate({left:"0",width:224},400,function(){$(this).css("opacity","1"),$this.find(".tfhb-meeting-details ul .tfhb_time_zone_info").remove(),$this.find(".tfhb-meeting-details ul .tfhb_date_time_info").remove()})})}),$this.find(".tfhb-meeting-form.ajax-submit").on("submit",function(t){t.preventDefault();var e=new FormData(this),a={};e.forEach(function(i,r){a[r]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),document.addEventListener("wpcf7mailsent",function(t){var e=t.detail.formData;if(calenderData.questions_type=="existing"&&calenderData.questions_form_type=="wpcf7"&&t.detail.contactFormId==calenderData.questions_form){var a={};e.forEach(function(i,r){a[r]=i}),tfhb_from_submission($this,preloader,a,calenderData)}}),$(document).on("forminator:form:submit:success",function(t,e){var a={};e.forEach(function(i,r){a[r]=i}),tfhb_from_submission($this,preloader,a,calenderData)}),$(document).on("fluentform_submission_success",function(t,e){var a=new FormData(e.form[0]),i={};a.forEach(function(r,o){i[o]=r}),tfhb_from_submission($this,preloader,i,calenderData)})});function tfhb_render_paypal_payment(t,e){t.find(".tfhb-paypal-button-container");var a=e.confirmation_template;t.find(".tfhb-confirmation-button").hide(),t.find(".wpcf7").hide();let i=typeof tfhb_app_booking.general_settings.currency<"u"&&tfhb_app_booking.general_settings.currency!=""?tfhb_app_booking.general_settings.currency:"USD";paypal.Buttons({createOrder:function(r,o){return o.order.create({purchase_units:[{reference_id:e.data&&e.data.draft_token?e.data.draft_token:e.data.attendee_data.id,description:e.data.meeting.title+" - "+e.data.meeting.duration+" Minutes | "+e.data.booking.start_time+" - "+e.data.booking.end_time+" | "+e.data.booking.meeting_dates,custom_id:e.data&&e.data.draft_token?e.data.draft_token:e.data.attendee_data.id,amount:{currency_code:i,value:e.data.meeting.meeting_price}}]})},onApprove:function(r,o){return o.order.capture().then(function(c){$.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{nonce:tfhb_app_booking.nonce,action:"tfhb_meeting_paypal_payment_confirmation",payment_details:c,responseData:e},success:function(l){if(l.success){t.find(".tfhb-meeting-card").html("");const h=l.data&&l.data.confirmation_template?l.data.confirmation_template:a;t.find(".tfhb-meeting-card").append(h)}else t.find(".tfhb-notice").html(l.data.message),t.find(".tfhb-notice").show()},error:function(l){console.log(l)}})})},onCancel:function(r){},onError:function(r){console.error("An error occurred during the transaction",r),alert("Payment could not be completed due to an error")}}).render(".tfhb-paypal-button-container")}function tfhb_render_stripe_payment(t,e,a,i){t.find(".tfhb-confirmation-button").hide();let r=typeof tfhb_app_booking.general_settings.currency<"u"&&tfhb_app_booking.general_settings.currency!=""?tfhb_app_booking.general_settings.currency:"USD";if(e&&e.stripe_error){t.find(".tfhb-notice").html(e.stripe_error).show(),t.find(".tfhb-booking-submit").removeAttr("disabled"),t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove();return}t.find(".wpcf7").hide();const o=t.find(".tfhb-stripe-button-container"),c=e.confirmation_template,l=e.data&&e.data.meeting?e.data.meeting:{},h=l.meeting_price?l.meeting_price:"0",n=e.data&&e.data.stripe?e.data.stripe:null,T=n&&n.publishable_key?n.publishable_key:a,L=n?n.test_mode:T&&T.indexOf("pk_test_")===0,w=(n&&n.currency||r).toUpperCase(),S={USD:"$",EUR:"€",GBP:"£",CAD:"CA$",AUD:"A$",JPY:"¥",BDT:"৳",INR:"₹",CNY:"¥"}[w]||w+" ",M=parseFloat(h).toFixed(2);if(!T){t.find(".tfhb-notice").html("Stripe Publishable Key is not configured. Please contact the administrator.").show();return}let A=`
 				<div class="tfhb-stripe-card-box tfhb-mt-16">
 					<div class="tfhb-stripe-card-header tfhb-flexbox tfhb-align-center tfhb-gap-8 tfhb-mb-16">
 						<svg class="tfhb-card-header-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -252,14 +41,14 @@ function tfhb_render_stripe_payment(t, e, a, i) {
 							<line x1="1" y1="10" x2="23" y2="10"></line>
 						</svg>
 						<span class="tfhb-stripe-header-title">Card</span>
-						${L ? '<span class="tfhb-badge tfhb-badge-test" style="margin-left: auto; background: #fff3cd; color: #856404; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Test Mode</span>' : ""}
+						${L?'<span class="tfhb-badge tfhb-badge-test" style="margin-left: auto; background: #fff3cd; color: #856404; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Test Mode</span>':""}
 					</div>
 
-					${L ? `
+					${L?`
 						<div class="tfhb-stripe-test-helper" style="background: #fdf8e2; border: 1px dashed #e0c870; padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #705814; margin-bottom: 14px;">
 							<strong>Test Card:</strong> Use <code>4242 4242 4242 4242</code> with any future expiration and 3-digit CVC.
 						</div>
-					` : ""}
+					`:""}
 
 					<!-- Card Number Field -->
 					<div class="tfhb-stripe-field-group" id="tfhb-field-wrap-card-number">
@@ -295,224 +84,27 @@ function tfhb_render_stripe_payment(t, e, a, i) {
 					<!-- Error Notice -->
 					<div id="tfhb-stripe-card-errors" class="tfhb-notice tfhb-error tfhb-mt-8" style="display: none; padding: 10px 14px; font-size: 13px; color: #d93025; background: #fdf2f2; border-left: 3px solid #d93025; border-radius: 4px;" role="alert"></div>
 
-					<!-- Action Button -->
+					<!-- Action Button (Screenshot 4 fix: prominent white text on green background) -->
 					<div class="tfhb-stripe-action-btn tfhb-mt-16">
 						<button type="button" class="tfhb-stripe-payment-btn" id="tfhb-stripe-submit-button">
 							<svg class="tfhb-btn-lock-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
 								<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
 								<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
 							</svg>
-							<span class="tfhb-stripe-btn-text">Pay ${S}${D}</span>
+							<span class="tfhb-stripe-btn-text">Pay ${S}${M}</span>
 						</button>
 					</div>
 				</div>
-			`;
-	d.html(A);
-	d.show();
-
-	function M() {
-		if (typeof Stripe !== "function") {
-			const noStripe = "Stripe library could not be loaded. Please check your internet connection or contact the administrator.";
-			tfhb_show_stripe_top_error(noStripe);
-			$("#tfhb-stripe-card-errors").text(noStripe).show();
-			return;
-		}
-
-		let u, N;
-		try {
-			u = Stripe(T);
-			N = u.elements();
-		} catch (initErr) {
-			console.error("Stripe init error:", initErr);
-			const initMsg = initErr.message || "Failed to initialize Stripe. Please verify your Stripe Publishable Key.";
-			tfhb_show_stripe_top_error(initMsg);
-			$("#tfhb-stripe-card-errors").text(initMsg).show();
-			return;
-		}
-
-		const B = {
-			base: {
-				color: "#1a1f36",
-				fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-				fontSmoothing: "antialiased",
-				fontSize: "15px",
-				lineHeight: "22px",
-				"::placeholder": { color: "#a0aec0" }
-			},
-			invalid: { color: "#d93025", iconColor: "#d93025" }
-		};
-		const k = N.create("cardNumber", { style: B, showIcon: false });
-		const v = N.create("cardExpiry", { style: B });
-		const p = N.create("cardCvc", { style: B });
-
-		k.mount("#tfhb-stripe-card-number");
-		v.mount("#tfhb-stripe-card-expiry");
-		p.mount("#tfhb-stripe-card-cvc");
-
-		k.on("focus", function() { $("#tfhb-field-wrap-card-number").addClass("tfhb-stripe-focused"); });
-		k.on("blur", function() { $("#tfhb-field-wrap-card-number").removeClass("tfhb-stripe-focused"); });
-		v.on("focus", function() { $("#tfhb-field-wrap-card-expiry").addClass("tfhb-stripe-focused"); });
-		v.on("blur", function() { $("#tfhb-field-wrap-card-expiry").removeClass("tfhb-stripe-focused"); });
-		p.on("focus", function() { $("#tfhb-field-wrap-card-cvc").addClass("tfhb-stripe-focused"); });
-		p.on("blur", function() { $("#tfhb-field-wrap-card-cvc").removeClass("tfhb-stripe-focused"); });
-
-		function P(c) {
-			const s = $("#tfhb-stripe-card-errors");
-			if (c.error) {
-				s.text(c.error.message).show();
-			} else {
-				s.text("").hide();
-			}
-			if (c.elementType === "cardNumber" && c.brand) {
-				const brand = c.brand;
-				$(".tfhb-card-brand-svg").removeClass("tfhb-brand-active tfhb-brand-dimmed");
-				if (brand && brand !== "unknown") {
-					$(".tfhb-card-brand-svg").addClass("tfhb-brand-dimmed");
-					$(".tfhb-card-brand-" + brand).removeClass("tfhb-brand-dimmed").addClass("tfhb-brand-active");
-				}
-			}
-		}
-
-		k.on("change", P);
-		v.on("change", P);
-		p.on("change", P);
-
-		d.off("click", ".tfhb-stripe-payment-btn").on("click", ".tfhb-stripe-payment-btn", function(c) {
-			c.preventDefault();
-			const s = $(this);
-			const _ = $("#tfhb-stripe-card-errors");
-			_.hide().text("");
-			t.find(".tfhb-notice").hide().text("");
-
-			const E = `<span class="tfhb-submit-preloader" style="margin-left: 8px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: inline-block; background: transparent;" width="18" height="18"><circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="6" stroke="#ffffff" fill="none" cy="50" cx="50"><animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="0.6s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform></circle></svg></span>`;
-			s.attr("disabled", "disabled").addClass("disabled");
-			s.append(E);
-
-			const I = e.data && e.data.attendee_data ? e.data.attendee_data : {};
-			const j = I.name || I.attendee_name || "";
-			const r = I.email || I.attendee_email || "";
-
-			function tfhb_show_stripe_submit_error(errMsg) {
-				_.text(errMsg).show();
-				t.find(".tfhb-notice").html(errMsg).show();
-				s.removeAttr("disabled").removeClass("disabled");
-				s.find(".tfhb-submit-preloader").remove();
-			}
-
-			function F(g) {
-				const x = {
-					payment_method: {
-						card: k,
-						billing_details: { name: j, email: r }
-					}
-				};
-
-				function C(b) {
-					jQuery.ajax({
-						url: tfhb_app_booking.ajax_url,
-						type: "POST",
-						data: {
-							nonce: tfhb_app_booking.nonce,
-							action: "tfhb_meeting_stripe_payment_confirmation",
-							payment_intent_id: b,
-							responseData: e
-						},
-						success: function(f) {
-							if (f.success) {
-								t.find(".tfhb-meeting-card").html("");
-								const y = f.data && f.data.confirmation_template ? f.data.confirmation_template : m;
-								t.find(".tfhb-meeting-card").append(y);
-							} else {
-								const y = f.data && f.data.message ? f.data.message : "Payment verification failed.";
-								tfhb_show_stripe_submit_error(y);
-							}
-						},
-						error: function(f) {
-							let y = "Server verification failed. Please try again or contact support.";
-							if (f && f.responseJSON && f.responseJSON.data && f.responseJSON.data.message) {
-								y = f.responseJSON.data.message;
-							}
-							tfhb_show_stripe_submit_error(y);
-						}
-					});
-				}
-
-				u.confirmCardPayment(g, x).then(function(b) {
-					if (b.error) {
-						u.retrievePaymentIntent(g).then(function(f) {
-							if (f.paymentIntent && (f.paymentIntent.status === "succeeded" || f.paymentIntent.status === "processing")) {
-								C(f.paymentIntent.id);
-							} else {
-								tfhb_show_stripe_submit_error(b.error.message || "Payment could not be completed.");
-							}
-						}).catch(function() {
-							tfhb_show_stripe_submit_error(b.error.message || "Payment could not be completed.");
-						});
-					} else if (b.paymentIntent && (b.paymentIntent.status === "succeeded" || b.paymentIntent.status === "processing")) {
-						C(b.paymentIntent.id);
-					}
-				}).catch(function(b) {
-					u.retrievePaymentIntent(g).then(function(f) {
-						if (f.paymentIntent && (f.paymentIntent.status === "succeeded" || f.paymentIntent.status === "processing")) {
-							C(f.paymentIntent.id);
-						} else {
-							tfhb_show_stripe_submit_error(b.message || "Payment processing error.");
-						}
-					}).catch(function() {
-						tfhb_show_stripe_submit_error(b.message || "Payment processing error.");
-					});
-				});
-			}
-
-			if (n && n.client_secret) {
-				F(n.client_secret);
-			} else {
-				jQuery.ajax({
-					url: tfhb_app_booking.ajax_url,
-					type: "POST",
-					data: {
-						nonce: tfhb_app_booking.nonce,
-						action: "tfhb_stripe_create_payment_intent",
-						amount: h,
-						currency: w.toLowerCase(),
-						booking_id: e.data ? e.data.booking_id : "",
-						attendee_id: e.data ? e.data.attendee_id : "",
-						draft_token: e.data && e.data.draft_token ? e.data.draft_token : "",
-						description: i
-					},
-					success: function(g) {
-						if (g.success && g.data.client_secret) {
-							F(g.data.client_secret);
-						} else {
-							const x = g.data && g.data.message ? g.data.message : "Could not initialize payment session.";
-							tfhb_show_stripe_submit_error(x);
-						}
-					},
-					error: function(f) {
-						let x = "Could not initialize payment intent.";
-						if (f && f.responseJSON && f.responseJSON.data && f.responseJSON.data.message) {
-							x = f.responseJSON.data.message;
-						}
-						tfhb_show_stripe_submit_error(x);
-					}
-				});
-			}
-		});
-	}
-
-	if (typeof Stripe !== "function") {
-		$.getScript("https://js.stripe.com/v3/", function() {
-			M();
-		}).fail(function() {
-			tfhb_show_stripe_top_error("Failed to load Stripe payment script. Please check your internet connection.");
-		});
-	} else {
-		M();
-	}
-}
-function tfhb_from_submission(t,e,a,i){t.find(".tfhb-booking-submit").append(`<span class="tfhb-submit-preloader"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="4" stroke="#ffffff" fill="none" cy="50" cx="50">
+			`;o.html(A),o.show();function F(){if(typeof Stripe!="function"){console.error("Stripe.js v3 is not available.");return}const u=Stripe(T),N=u.elements();getComputedStyle(document.documentElement).getPropertyValue("--tfhb-primary-color");const B={base:{color:"#1a1f36",fontFamily:'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',fontSmoothing:"antialiased",fontSize:"15px",lineHeight:"22px","::placeholder":{color:"#a0aec0"}},invalid:{color:"#d93025",iconColor:"#d93025"}},k=N.create("cardNumber",{style:B,showIcon:!1}),v=N.create("cardExpiry",{style:B}),p=N.create("cardCvc",{style:B});k.mount("#tfhb-stripe-card-number"),v.mount("#tfhb-stripe-card-expiry"),p.mount("#tfhb-stripe-card-cvc"),k.on("focus",function(){$("#tfhb-field-wrap-card-number").addClass("tfhb-stripe-focused")}),k.on("blur",function(){$("#tfhb-field-wrap-card-number").removeClass("tfhb-stripe-focused")}),v.on("focus",function(){$("#tfhb-field-wrap-card-expiry").addClass("tfhb-stripe-focused")}),v.on("blur",function(){$("#tfhb-field-wrap-card-expiry").removeClass("tfhb-stripe-focused")}),p.on("focus",function(){$("#tfhb-field-wrap-card-cvc").addClass("tfhb-stripe-focused")}),p.on("blur",function(){$("#tfhb-field-wrap-card-cvc").removeClass("tfhb-stripe-focused")});function P(m){const s=$("#tfhb-stripe-card-errors");if(m.error?s.text(m.error.message).show():s.text("").hide(),m.elementType==="cardNumber"&&m.brand){const _=m.brand;$(".tfhb-card-brand-svg").removeClass("tfhb-brand-active tfhb-brand-dimmed"),_&&_!=="unknown"&&($(".tfhb-card-brand-svg").addClass("tfhb-brand-dimmed"),$(".tfhb-card-brand-"+_).removeClass("tfhb-brand-dimmed").addClass("tfhb-brand-active"))}}k.on("change",P),v.on("change",P),p.on("change",P),o.off("click",".tfhb-stripe-payment-btn").on("click",".tfhb-stripe-payment-btn",function(m){m.preventDefault();const s=$(this),_=$("#tfhb-stripe-card-errors");_.hide().text("");const E=`
+						<span class="tfhb-submit-preloader" style="margin-left: 8px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: inline-block; background: transparent;" width="18" height="18">
+								<circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="6" stroke="#ffffff" fill="none" cy="50" cx="50">
+									<animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="0.6s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform>
+								</circle>
+							</svg>
+						</span>`;s.attr("disabled","disabled").addClass("disabled"),s.append(E);const z=e.data&&e.data.attendee_data?e.data.attendee_data:{},j=z.name||z.attendee_name||"",d=z.email||z.attendee_email||"";function D(g){const x={payment_method:{card:k,billing_details:{name:j,email:d}}};function C(b){jQuery.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{nonce:tfhb_app_booking.nonce,action:"tfhb_meeting_stripe_payment_confirmation",payment_intent_id:b,responseData:e},success:function(f){if(f.success){t.find(".tfhb-meeting-card").html("");const y=f.data&&f.data.confirmation_template?f.data.confirmation_template:c;t.find(".tfhb-meeting-card").append(y)}else{const y=f.data&&f.data.message?f.data.message:"Payment verification failed.";_.text(y).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}},error:function(f){let y="Server verification failed. Please try again or contact support.";f.responseJSON&&f.responseJSON.data&&f.responseJSON.data.message&&(y=f.responseJSON.data.message),_.text(y).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}})}u.confirmCardPayment(g,x).then(function(b){b.error?u.retrievePaymentIntent(g).then(function(f){f.paymentIntent&&(f.paymentIntent.status==="succeeded"||f.paymentIntent.status==="processing")?C(f.paymentIntent.id):(_.text(b.error.message).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove())}).catch(function(){_.text(b.error.message).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}):b.paymentIntent&&(b.paymentIntent.status==="succeeded"||b.paymentIntent.status==="processing")&&C(b.paymentIntent.id)}).catch(function(b){u.retrievePaymentIntent(g).then(function(f){f.paymentIntent&&(f.paymentIntent.status==="succeeded"||f.paymentIntent.status==="processing")?C(f.paymentIntent.id):(_.text(b.message||"Payment processing error.").show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove())}).catch(function(){_.text(b.message||"Payment processing error.").show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()})})}n&&n.client_secret?D(n.client_secret):jQuery.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{nonce:tfhb_app_booking.nonce,action:"tfhb_stripe_create_payment_intent",amount:h,currency:w.toLowerCase(),booking_id:e.data.booking_id,attendee_id:e.data.attendee_id,draft_token:e.data&&e.data.draft_token?e.data.draft_token:"",description:i},success:function(g){if(g.success&&g.data.client_secret)D(g.data.client_secret);else{const x=g.data&&g.data.message?g.data.message:"Could not initialize payment session.";_.text(x).show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}},error:function(){_.text("Could not initialize payment intent.").show(),s.removeAttr("disabled").removeClass("disabled"),s.find(".tfhb-submit-preloader").remove()}})})}typeof Stripe!="function"?$.getScript("https://js.stripe.com/v3/",function(){F()}):F()}function tfhb_from_submission(t,e,a,i){t.find(".tfhb-booking-submit").append(`<span class="tfhb-submit-preloader"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle stroke-dasharray="188.49555921538757 64.83185307179586" r="40" stroke-width="4" stroke="#ffffff" fill="none" cy="50" cx="50">
 			<animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="0.49751243781094534s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform>
-		  </circle><g></g></g><!-- [ldio] generated by https://loading.io --></svg><span>`),t.find(".tfhb-booking-submit").attr("disabled","disabled"),t.find(".tfhb-notice").hide(),t.find(".tfhb-notice").html("");var d=t.find(".tfhb-meeting-details h2").text(),m=t.find("#meeting_id").val(),l=t.find("#host_id").val(),h=t.find("#meeting_duration").val(),n=t.find("#meeting_dates").val(),T=t.find("#meeting_time_start").val(),L=t.find("#meeting_time_end").val(),w=t.find("#booking_hash").val(),z=t.find("#action_type").val(),S=t.find("#reschedule_nonce").val(),N=t.find("#meeting_price").val(),D=t.find("#recurring_maximum").val(),A=t.find("#attendee_time_zone_"+i.meeting_id).val(),M=t.find("#tfhb_time_format").val();t.find("#name").val(),t.find("#email").val(),t.find("#address").val();var u=t.find("#payment_method").val(),N=t.find("#meeting_price").val(),B=t.find("#payment_amount").val(),k=t.find("#stpublic_key").val();t.find("#paypal_public_key").val();var v=t.find("#payment_currency").val(),p=i.payment_status,P={action:"tfhb_meeting_form_submit",nonce:tfhb_app_booking.nonce,meeting_id:m,host_id:l,meeting_dates:n,meeting_duration:h,meeting_time_start:T,meeting_time_end:L,booking_hash:w,action_type:z,reschedule_nonce:S,recurring_maximum:D,attendee_time_zone:A,tfhb_time_format:M,payment_type:u,meeting_price:N,payment_amount:B,stripe_public_key:k,payment_currency:v};P=Object.assign(a,P),p==1&&u==""&&setTimeout(function(){t.find(".tfhb-notice").append(tfhbTranslate("Payment Method Required.")),t.find(".tfhb-notice").show(),t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove(),t.find(".tfhb-booking-submit").remove(".tfhb-submit-preloader"),t.find(".tfhb-booking-submit").removeAttr("disabled")},1e3),(p!=1||p==1&&u=="woo_payment"||p==1&&u=="paypal_payment"||p==1&&u=="stripe_payment")&&$.ajax({url:tfhb_app_booking.ajax_url,type:"POST",action:"tfhb_meeting_form_submit",data:P,success:function(c){if(t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove(),t.find(".tfhb-booking-submit").removeAttr("disabled"),c.success){if(t.find(".tfhb-booking-submit").remove(".tfhb-submit-preloader"),t.find(".tfhb-booking-submit").removeAttr("disabled"),p==1&&u=="paypal_payment"&&c.data.data){tfhb_render_paypal_payment(t,c.data);return}if(p==1&&u=="stripe_payment"&&c.data.data){tfhb_render_stripe_payment(t,c.data,k,d);return}if(c.data.redirect){window.location.href=c.data.redirect;return}else t.find(".tfhb-meeting-card").html(""),t.find(".tfhb-meeting-card").append(c.data.confirmation_template),c.data.action=="rescheduled"&&t.find(".tfhb-meeting-hostinfo").append(`
+		  </circle><g></g></g><!-- [ldio] generated by https://loading.io --></svg><span>`),t.find(".tfhb-booking-submit").attr("disabled","disabled"),t.find(".tfhb-notice").hide(),t.find(".tfhb-notice").html("");var o=t.find(".tfhb-meeting-details h2").text(),c=t.find("#meeting_id").val(),l=t.find("#host_id").val(),h=t.find("#meeting_duration").val(),n=t.find("#meeting_dates").val(),T=t.find("#meeting_time_start").val(),L=t.find("#meeting_time_end").val(),w=t.find("#booking_hash").val(),I=t.find("#action_type").val(),S=t.find("#reschedule_nonce").val(),N=t.find("#meeting_price").val(),M=t.find("#recurring_maximum").val(),A=t.find("#attendee_time_zone_"+i.meeting_id).val(),F=t.find("#tfhb_time_format").val();t.find("#name").val(),t.find("#email").val(),t.find("#address").val();var u=t.find("#payment_method").val(),N=t.find("#meeting_price").val(),B=t.find("#payment_amount").val(),k=t.find("#stpublic_key").val();t.find("#paypal_public_key").val();var v=t.find("#payment_currency").val(),p=i.payment_status,P={action:"tfhb_meeting_form_submit",nonce:tfhb_app_booking.nonce,meeting_id:c,host_id:l,meeting_dates:n,meeting_duration:h,meeting_time_start:T,meeting_time_end:L,meeting_start_utc:t.find("#meeting_start_utc").val()||"",booking_hash:w,action_type:I,reschedule_nonce:S,recurring_maximum:M,attendee_time_zone:A,tfhb_time_format:F,payment_type:u,meeting_price:N,payment_amount:B,stripe_public_key:k,payment_currency:v};P=Object.assign(a,P),p==1&&u==""&&setTimeout(function(){t.find(".tfhb-notice").append(tfhbTranslate("Payment Method Required.")),t.find(".tfhb-notice").show(),t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove(),t.find(".tfhb-booking-submit").remove(".tfhb-submit-preloader"),t.find(".tfhb-booking-submit").removeAttr("disabled")},1e3),(p!=1||p==1&&u=="woo_payment"||p==1&&u=="paypal_payment"||p==1&&u=="stripe_payment")&&$.ajax({url:tfhb_app_booking.ajax_url,type:"POST",action:"tfhb_meeting_form_submit",data:P,success:function(m){if(t.find(".tfhb-booking-submit .tfhb-submit-preloader").remove(),t.find(".tfhb-booking-submit").removeAttr("disabled"),m.success){if(t.find(".tfhb-booking-submit").remove(".tfhb-submit-preloader"),t.find(".tfhb-booking-submit").removeAttr("disabled"),p==1&&u=="paypal_payment"&&m.data.data){tfhb_render_paypal_payment(t,m.data);return}if(p==1&&u=="stripe_payment"&&m.data.data){tfhb_render_stripe_payment(t,m.data,k,o);return}if(m.data.redirect){window.location.href=m.data.redirect;return}else t.find(".tfhb-meeting-card").html(""),t.find(".tfhb-meeting-card").append(m.data.confirmation_template),m.data.action=="rescheduled"&&t.find(".tfhb-meeting-hostinfo").append(`
 										   <div class="tfhb-notice " > 
-										   <span>`+c.data.message+` </span>
-									   </div>`)}else return t.find(".tfhb-notice").append(c.data.message),t.find(".tfhb-notice").show(),!1},error:function(c){console.log(c)}})}function tfhb_date_manipulate(t,e,a,i,o,d){const m=t.find(".tfhb-calendar-dates"),l=t.find(".tfhb-calendar-weekdays"),h=t.find(".tfhb-calendar-current-date");let n=e,T=n.availability,L=T.date_slots,w=T.time_slots;n.availability_range;let z=n.availability_range_type,S=n.availability_range.start,D=n.availability_range.end,A=null,M=null;S&&(A=S.includes("T")||S.includes(" ")?new Date(S):new Date(S+"T00:00:00")),D&&(M=D.includes("T")||D.includes(" ")?new Date(D):new Date(D+"T23:59:59.999"));let u=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],N=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],B=[],k=tfhb_app_booking.general_settings.week_start_from||"Sunday",v=u.indexOf(k);v===-1&&(v=0);let p=[];for(let r=0;r<7;r++){let F=(v+r)%7;p.push(`<li>${tfhbTranslate(N[F])}</li>`)}l.html(p.join(""));for(let r=0;r<w.length;r++)(w[r].status===!1||w[r].status==!1)&&B.push(w[r].day);let c=(new Date(a,i,1).getDay()-v+7)%7,s=new Date(a,i+1,0).getDate(),E=(new Date(a,i,s).getDay()-v+7)%7,I=new Date(a,i,0).getDate(),j="";for(let r=c;r>0;r--)j+=`<li class="inactive">${tfhbTranslateNumber(I-r+1)}</li>`;for(let r=1;r<=s;r++){let F=r===o.getDate()&&i===new Date().getMonth()&&a===new Date().getFullYear()?"active":"",g=`${a}-${(i+1).toString().padStart(2,"0")}-${r.toString().padStart(2,"0")}`,x=typeof L<"u"?L.find(y=>y.date.match(g)):"",C=typeof x<"u"&&x!==""&&x.available==!0?"inactive ":" ",b="available";new Date>new Date(a,i,r)&&r!==o.getDate()&&(C="inactive ",b="unavailable");let f=u[new Date(a,i,r).getDay()];if(B.includes(f)&&(C="inactive ",b="unavailable",F=""),z!=="indefinitely"&&A&&M){let y=new Date(a,i,r);(y<A||y>M)&&(C="inactive ",b="unavailable",F="")}typeof x<"u"&&x!==""&&x.available==""&&(C=" ",b="available"),F==="active"&&(C=" "),j+=`<li data-date="${g}" data-available="${b}" class="${F} current ${C}">${tfhbTranslateNumber(r)}</li>`}for(let r=E;r<6;r++)j+=`<li class="inactive">${tfhbTranslateNumber(r-E+1)}</li>`;h.text(`${tfhbTranslate(d[i])} ${tfhbTranslateNumber(a)}`),m.html(j)}function tfhb_times_manipulate(t,e,a,i=null){var o=t.find(".tfhb-calendar-dates li.active");t.find(".tfhb-available-times").addClass("inactive"),t.find(".tfhb-calendar-body").addClass("inactive");var d=t.find("input[name='meeting_id']").val(),m=e;o.attr("data-available");var l=t.find('input[name="tfhb_time_format"]:checked').val(),h=t.find(".tfhb-time-zone-select").val();$.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{action:"tfhb_already_booked_times",nonce:tfhb_app_booking.nonce,selected_date:m,meeting_id:d,time_format:l,time_zone:h},success:function(n){n.success==!0&&(t.find(".tfhb-calendar-body").removeClass("inactive"),n.data,a.calander_available_time_slot=n.data,typeof i=="function"&&i()),n.success==!1&&(t.find(".tfhb-available-times").removeClass("inactive"),t.find(".tfhb-calendar-body").removeClass("inactive"),t.find(".tfhb-available-times").html(""),t.find(".tfhb-available-times").append("<ul></ul>"),t.find(".tfhb-available-times ul").append("<li > <p>"+n.data.message+"</p></li>"),t.find(".tfhb-meeting-times").css("display","block").animate({left:"0",opacity:1,width:224},400))},error:function(n){console.log(n)}})}})})(jQuery);
+										   <span>`+m.data.message+` </span>
+									   </div>`)}else return t.find(".tfhb-notice").append(m.data.message),t.find(".tfhb-notice").show(),!1},error:function(m){console.log(m)}})}function tfhb_date_manipulate(t,e,a,i,r,o){const c=t.find(".tfhb-calendar-dates"),l=t.find(".tfhb-calendar-weekdays"),h=t.find(".tfhb-calendar-current-date");let n=e,T=n.availability,L=T.date_slots,w=T.time_slots;n.availability_range;let I=n.availability_range_type,S=n.availability_range.start,M=n.availability_range.end,A=null,F=null;S&&(A=S.includes("T")||S.includes(" ")?new Date(S):new Date(S+"T00:00:00")),M&&(F=M.includes("T")||M.includes(" ")?new Date(M):new Date(M+"T23:59:59.999"));let u=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],N=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],B=[],k=tfhb_app_booking.general_settings.week_start_from||"Sunday",v=u.indexOf(k);v===-1&&(v=0);let p=[];for(let d=0;d<7;d++){let D=(v+d)%7;p.push(`<li>${tfhbTranslate(N[D])}</li>`)}l.html(p.join(""));for(let d=0;d<w.length;d++)(w[d].status===!1||w[d].status==!1)&&B.push(w[d].day);let m=(new Date(a,i,1).getDay()-v+7)%7,s=new Date(a,i+1,0).getDate(),E=(new Date(a,i,s).getDay()-v+7)%7,z=new Date(a,i,0).getDate(),j="";for(let d=m;d>0;d--)j+=`<li class="inactive">${tfhbTranslateNumber(z-d+1)}</li>`;for(let d=1;d<=s;d++){let D=d===r.getDate()&&i===new Date().getMonth()&&a===new Date().getFullYear()?"active":"",g=`${a}-${(i+1).toString().padStart(2,"0")}-${d.toString().padStart(2,"0")}`,x=typeof L<"u"?L.find(y=>y.date.match(g)):"",C=typeof x<"u"&&x!==""&&x.available==!0?"inactive ":" ",b="available";new Date>new Date(a,i,d)&&d!==r.getDate()&&(C="inactive ",b="unavailable");let f=u[new Date(a,i,d).getDay()];if(B.includes(f)&&(C="inactive ",b="unavailable",D=""),I!=="indefinitely"&&A&&F){let y=new Date(a,i,d);(y<A||y>F)&&(C="inactive ",b="unavailable",D="")}typeof x<"u"&&x!==""&&x.available==""&&(C=" ",b="available"),D==="active"&&(C=" "),j+=`<li data-date="${g}" data-available="${b}" class="${D} current ${C}">${tfhbTranslateNumber(d)}</li>`}for(let d=E;d<6;d++)j+=`<li class="inactive">${tfhbTranslateNumber(d-E+1)}</li>`;h.text(`${tfhbTranslate(o[i])} ${tfhbTranslateNumber(a)}`),c.html(j)}function tfhbMonthStartKey(t,e){let a=new Date(t,e,1);return`${a.getFullYear()}-${(a.getMonth()+1).toString().padStart(2,"0")}-01`}function tfhb_apply_slot_availability(t,e){let a=e.calander_available_time_slot||{};t.find(".tfhb-calendar-dates li[data-date]").each(function(){let i=$(this),r=a[i.attr("data-date")];typeof r>"u"||(r.length>0?i.removeClass("inactive").attr("data-available","available"):i.addClass("inactive").removeClass("active").attr("data-available","unavailable"))})}function tfhb_times_manipulate(t,e,a,i=null){var r=t.find(".tfhb-calendar-dates li.active");t.find(".tfhb-available-times").addClass("inactive"),t.find(".tfhb-calendar-body").addClass("inactive");var o=t.find("input[name='meeting_id']").val(),c=e;r.attr("data-available");var l=t.find('input[name="tfhb_time_format"]:checked').val(),h=t.find(".tfhb-time-zone-select").val();$.ajax({url:tfhb_app_booking.ajax_url,type:"POST",data:{action:"tfhb_already_booked_times",nonce:tfhb_app_booking.nonce,selected_date:c,meeting_id:o,time_format:l,time_zone:h},success:function(n){n.success==!0&&(t.find(".tfhb-calendar-body").removeClass("inactive"),n.data,a.calander_available_time_slot=n.data,tfhb_apply_slot_availability(t,a),typeof i=="function"&&i()),n.success==!1&&(t.find(".tfhb-available-times").removeClass("inactive"),t.find(".tfhb-calendar-body").removeClass("inactive"),t.find(".tfhb-available-times").html(""),t.find(".tfhb-available-times").append("<ul></ul>"),t.find(".tfhb-available-times ul").append("<li > <p>"+n.data.message+"</p></li>"),t.find(".tfhb-meeting-times").css("display","block").animate({left:"0",opacity:1,width:224},400))},error:function(n){console.log(n)}})}})})(jQuery);

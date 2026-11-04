@@ -351,9 +351,12 @@ class Migrator {
 		$booking        = new Booking();
 		$tfhb_booking   = $booking->get( 7 );
 		foreach ( $fluent_booking as $key => $value ) {
-			// 2024-04-30 04:30:00 . ge only 2024-04-30 form here
-			$meeting_dates = explode( ' ', $value->start_time );
-			$meeting_dates = $meeting_dates[0];
+			// FluentBooking stores UTC ('2024-04-30 04:30:00'). Bookings here are host-local
+			// date + 'h:i A' with the timezone they are in; the site timezone stands in for the host's.
+			$migrate_time_zone = \HydraBooking\Admin\Controller\BookingTime::tz()->getName();
+			$start_at          = \HydraBooking\Admin\Controller\BookingTime::instant( substr( $value->start_time, 0, 10 ), substr( $value->start_time, 11 ), 'UTC' );
+			$end_at            = \HydraBooking\Admin\Controller\BookingTime::instant( substr( $value->end_time, 0, 10 ), substr( $value->end_time, 11 ), 'UTC' );
+			$meeting_dates     = $start_at ? \HydraBooking\Admin\Controller\BookingTime::format( $start_at, $migrate_time_zone, 'Y-m-d' ) : substr( $value->start_time, 0, 10 );
 
 			$data = array(
 				'meeting_id'         => $value->event_id,
@@ -364,8 +367,9 @@ class Migrator {
 				'order_id'           => '',
 				'attendee_time_zone' => $value->person_time_zone,
 				'meeting_dates'      => $meeting_dates,
-				'start_time'         => $value->start_time,
-				'end_time'           => $value->end_time,
+				'availability_time_zone' => $migrate_time_zone,
+				'start_time'         => $start_at ? \HydraBooking\Admin\Controller\BookingTime::format( $start_at, $migrate_time_zone, 'h:i A' ) : $value->start_time,
+				'end_time'           => $end_at ? \HydraBooking\Admin\Controller\BookingTime::format( $end_at, $migrate_time_zone, 'h:i A' ) : $value->end_time,
 				'slot_minutes'       => $value->event_id,
 				'duration'           => $value->slot_minutes,
 				'attendee_name'      => $value->first_name . ' ' . $value->last_name,

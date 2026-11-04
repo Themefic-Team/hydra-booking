@@ -17,7 +17,7 @@ $login_page_id =  isset($settings['login']['login_page']) && !empty($settings['l
 $registration_page_id = isset($settings['signup']['registration_page']) && !empty($settings['signup']['registration_page']) ? $settings['signup']['registration_page'] :  get_option( 'tfhb_register_page_id' );
 $tfhb_dashboard_page_id = isset($settings['login']['after_login_redirect']) && !empty($settings['login']['after_login_redirect']) ? $settings['login']['after_login_redirect'] :  get_option( 'tfhb_dashboard_page_id' );
                    
-get_header(); 
+tfhb_get_header(); 
  
 
 if( is_user_logged_in() ) {
@@ -201,4 +201,4 @@ if( is_user_logged_in() ) {
 </div>
 <?php 
 }
-get_footer(); 
+tfhb_get_footer(); 

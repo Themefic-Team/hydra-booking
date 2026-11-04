@@ -39,10 +39,14 @@ class ScheduleController
 		}
 
 		add_filter('cron_schedules', array($this, 'tfhb_custom_cart_cron_job_schedule'));
-		// Schedule Cron Job Before Booking Completed specific time
-		if (! wp_next_scheduled('tfhb_cart_auto_remover_schedule')) {
-			// Create custom interverl for 60 minutes
-			wp_schedule_event(time(), 'tfhb_cart_remover', 'tfhb_cart_auto_remover_schedule');
+		// The cart remover reads WooCommerce sessions, so it only runs while WooCommerce is active
+		if (class_exists('WooCommerce')) {
+			if (! wp_next_scheduled('tfhb_cart_auto_remover_schedule')) {
+				// Create custom interverl for 60 minutes
+				wp_schedule_event(time(), 'tfhb_cart_remover', 'tfhb_cart_auto_remover_schedule');
+			}
+		} elseif (wp_next_scheduled('tfhb_cart_auto_remover_schedule')) {
+			wp_clear_scheduled_hook('tfhb_cart_auto_remover_schedule');
 		}
 
 		add_filter('cron_schedules', array($this, 'tfhb_google_calendar_cron_schedule'));
@@ -88,15 +92,16 @@ class ScheduleController
 
 
 		$after_booking_completed = isset($general_settings['after_booking_completed']) ? $general_settings['after_booking_completed'] : 60; // minutes
-		// Get all bookings current date before 60 minutes of Current Time and status is confirmed
-		$time = gmdate('H:i:s', strtotime('-' . $after_booking_completed . ' minutes', strtotime(gmdate('H:i:s'))));
-		// meeting_dates 2024-06-06
-		$meeting_dates = gmdate('Y-m-d', strtotime(gmdate('Y-m-d')));
+
+		// meeting_dates are host-local, so today in UTC can be yesterday or tomorrow for a host.
+		// Looking back a week also catches bookings missed while WP-Cron did not run.
+		$today_utc     = BookingTime::now()->format('Y-m-d');
+		$meeting_dates = BookingTime::date_range(BookingTime::now()->modify('-7 days')->format('Y-m-d'), $today_utc, 1);
 		$booking       = new Booking();
 
 		$where = array(
 			array('status', '=', 'confirmed'),
-			array('meeting_dates', '=', $meeting_dates),
+			array('meeting_dates', 'IN_DATES', $meeting_dates),
 		);
 		$bookings = $booking->getBookingWithAttendees(
 			$where,
@@ -104,28 +109,24 @@ class ScheduleController
 			'DESC',
 		);
 
-		foreach ($bookings as $key => $value) {
+		foreach (is_array($bookings) ? $bookings : array() as $key => $value) {
 
-			if (empty($value->availability_time_zone)) {
+			// Completed once the last occurrence ended at least after_booking_completed minutes ago,
+			// compared as absolute moments in the booking's own timezone.
+			if (! BookingTime::is_past($value, (int) $after_booking_completed * 60)) {
 				continue;
 			}
-			$DateTime = new DateTimeController($value->availability_time_zone);
-			// Time format if has AM and PM into start time
-			$time_format              = strpos($value->start_time, 'AM') || strpos($value->start_time, 'PM') ? '12' : '24';
-			$before_booking_completed = $DateTime->convert_time_based_on_timezone('', gmdate('Y-m-d H:i:s', strtotime('-' . $after_booking_completed . ' minutes')), 'UTC', $value->availability_time_zone, $time_format);
 
-
-			if ($value->end_time < $before_booking_completed) {
-
-				$booking_meta            = get_post_meta($value->id, '_tfhb_booking_opt', true);
-				$$booking_meta['status'] = 'completed';
-				update_post_meta($value->id, '_tfhb_booking_opt', $booking_meta);
-				$update = array(
-					'id'     => $value->id,
-					'status' => 'completed',
-				);
-				$booking->update($update);
+			$booking_meta = ! empty($value->post_id) ? get_post_meta($value->post_id, '_tfhb_booking_opt', true) : array();
+			if (is_array($booking_meta)) {
+				$booking_meta['status'] = 'completed';
+				update_post_meta($value->post_id, '_tfhb_booking_opt', $booking_meta);
 			}
+			$update = array(
+				'id'     => $value->id,
+				'status' => 'completed',
+			);
+			$booking->update($update);
 		}
 
 		return true;
@@ -162,11 +163,23 @@ class ScheduleController
 	function tfhb_cart_auto_remover_schedule_callback()
 	{
 
+		// An event scheduled before WooCommerce was deactivated can still fire once
+		if (! class_exists('WooCommerce')) {
+			return;
+		}
+
 		// Get all WooCommerce sessions
 		global $wpdb;
 		$table = esc_sql($wpdb->prefix . 'woocommerce_sessions');
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) !== $table) {
+			return;
+		}
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sessions = $wpdb->get_results("SELECT session_key, session_value FROM {$table}");
+		if (empty($sessions)) {
+			return;
+		}
 
 		$general_settings = get_option('_tfhb_general_settings', true) ? get_option('_tfhb_general_settings', true) : array();
 		$every_minute     = ! empty($general_settings['after_cart_expire']) ? $general_settings['after_cart_expire'] : 60; // minutes

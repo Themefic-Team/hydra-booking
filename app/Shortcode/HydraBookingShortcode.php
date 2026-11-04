@@ -5,6 +5,7 @@ namespace HydraBooking\App\Shortcode;
 // use Classes
 use HydraBooking\DB\Meeting;
 use HydraBooking\Admin\Controller\DateTimeController;
+use HydraBooking\Admin\Controller\BookingTime;
 use HydraBooking\Admin\Controller\Notification;
 use HydraBooking\DB\Booking;
 use HydraBooking\DB\Attendees;
@@ -127,7 +128,8 @@ class HydraBookingShortcode
 
 
 		$hostData =  new Host();
-		$host_meta = (array) $hostData->getHostById($host_id);
+		$raw_host  = $hostData->getHostById($host_id);
+		$host_meta = ! empty($raw_host) ? (array) $raw_host : array();
 
 		// Time Zone
 		$DateTimeZone = new DateTimeController('UTC');
@@ -197,7 +199,7 @@ class HydraBookingShortcode
 				} else {
 					$availability_data = isset($data['availability_custom']) ? $data['availability_custom'] : array();
 				}
-			} elseif (isset($_tfhb_availability_settings['availability']) &&  in_array($data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
+			} elseif (isset($_tfhb_availability_settings['availability']) && is_array($_tfhb_availability_settings['availability']) && isset($data['availability_id']) && in_array($data['availability_id'], array_keys($_tfhb_availability_settings['availability']))) {
 
 				$availability_data = $_tfhb_availability_settings['availability'][$data['availability_id']];
 			} else {
@@ -214,25 +216,13 @@ class HydraBookingShortcode
 		$availability_range      = isset($data['availability_range']) ? $data['availability_range'] : array();
 		$availability_range_type = isset($data['availability_range_type']) ? $data['availability_range_type'] : '';
 
-		// Rolling window: compute today + N days/weeks/months and expose as a regular 'range'
+		// Rolling window: today + N days/weeks/months in the host's timezone, exposed as a regular 'range'
 		if ('within_days' === $availability_range_type) {
-			$_within      = isset($availability_range['within_days'][0]) ? $availability_range['within_days'][0] : array();
-			$within_value = isset($_within['limit']) ? (int) $_within['limit'] : 30;
-			$within_unit  = isset($_within['times']) ? sanitize_text_field($_within['times']) : 'days';
-
-			// Only allow safe units
-			$allowed_units = array('days', 'weeks', 'months');
-			if (! in_array($within_unit, $allowed_units, true)) {
-				$within_unit = 'days';
-			}
-
-			$today    = new \DateTime('today', wp_timezone());
-			$end_date = clone $today;
-			$end_date->modify('+' . $within_value . ' ' . $within_unit);
+			$within_range = DateTimeController::getBookingRange($data, isset($availability_data['time_zone']) ? $availability_data['time_zone'] : '');
 
 			$availability_range_type      = 'range';
-			$availability_range['start']  = $today->format('Y-m-d');
-			$availability_range['end']    = $end_date->format('Y-m-d');
+			$availability_range['start']  = $within_range['start'];
+			$availability_range['end']    = $within_range['end'];
 		}
 		$questions_type = isset($data['questions_type']) ? $data['questions_type'] : array();
 		$questions_form_type = isset($data['questions_form_type']) ? $data['questions_form_type'] : array();
@@ -372,27 +362,52 @@ class HydraBookingShortcode
 			wp_send_json_error(array('message' => esc_html(__('Please upgrade to pro version for group meeting', 'hydra-booking'))));
 			wp_die();
 		}
-		// data shuld a  '2024-12-06, 2024-12-06, 2024-12-06' 
+		// data shuld a  '2024-12-06, 2024-12-06, 2024-12-06'
 		// get the first date
-		$meeting_date = $data['meeting_dates'];
+		$meeting_dates_posted = BookingTime::dates($data['meeting_dates']);
+		$meeting_date = ! empty($meeting_dates_posted) ? $meeting_dates_posted[0] : '';
 		$date_time = new DateTimeController('UTC');
 		$availability_data = $date_time->GetAvailabilityData($MeetingData);
-		$availability_time_zone = $availability_data['time_zone'];
+		$availability_time_zone = BookingTime::tz(isset($availability_data['time_zone']) ? $availability_data['time_zone'] : '', 'UTC')->getName();
 
 
 
 		$start_time = isset($_POST['meeting_time_start']) ? sanitize_text_field(wp_unslash($_POST['meeting_time_start'])) : '';
-		$end_time = isset($_POST['meeting_time_end']) ? sanitize_text_field(wp_unslash($_POST['meeting_time_end'])) : '';
 		$attendee_time_zone = isset($_POST['attendee_time_zone']) ? sanitize_text_field(wp_unslash($_POST['attendee_time_zone'])) : '';
+		$attendee_time_zone = BookingTime::tz($attendee_time_zone, $availability_time_zone)->getName();
+		$_POST['attendee_time_zone'] = $attendee_time_zone;
 
-		$start_time = $date_time->convert_time_based_on_timezone($meeting_date, $start_time, $attendee_time_zone, $availability_time_zone, '');
+		// The slot's absolute start. Older cached scripts only post the visitor's date and time.
+		$start_at = BookingTime::from_iso(isset($_POST['meeting_start_utc']) ? sanitize_text_field(wp_unslash($_POST['meeting_start_utc'])) : '');
+		if (! $start_at) {
+			$start_at = BookingTime::instant($meeting_date, $start_time, $attendee_time_zone);
+		}
+		if (! $start_at) {
+			wp_send_json_error(array('message' => esc_html(__('Invalid booking time. Please select a time slot again.', 'hydra-booking'))));
+		}
 
-		$end_time   = $date_time->convert_time_based_on_timezone($meeting_date, $end_time, $attendee_time_zone, $availability_time_zone, '');
+		// The slot has to be one of the slots still offered, so a stale page or a crafted
+		// request can't book a closed, full or overlapping time.
+		$exclude_booking_id = 0;
+		if (isset($_POST['action_type']) && 'reschedule' == $_POST['action_type'] && ! empty($_POST['booking_hash'])) {
+			$rescheduled = (new Attendees())->getAttendeeWithBooking(
+				array(array('hash', '=', sanitize_text_field(wp_unslash($_POST['booking_hash'])))),
+				1,
+				'DESC'
+			);
+			if ($rescheduled && 'one-to-one' == $rescheduled->booking_type) {
+				$exclude_booking_id = $rescheduled->booking_id;
+			}
+		}
+		$available_slot = $date_time->findAvailableSlot($data['meeting_id'], $start_at, $attendee_time_zone, '12', $exclude_booking_id);
+		if (empty($available_slot)) {
+			wp_send_json_error(array('message' => esc_html(__('This time slot is no longer available. Please choose a different time.', 'hydra-booking'))));
+		}
 
-		$data['meeting_dates'] = $start_time->format('Y-m-d');
+		$data['meeting_dates'] = $available_slot['host_date'];
 
-		$start_time =  $start_time->format('h:i A');
-		$end_time =  $end_time->format('h:i A');
+		$start_time = $available_slot['host_start'];
+		$end_time   = $available_slot['host_end'];
 
 		// Checking Hold Booking
 		$hold_booking = new Booking();
@@ -501,6 +516,7 @@ class HydraBookingShortcode
 				unset($questions['meeting_duration']);
 				unset($questions['meeting_time_start']);
 				unset($questions['meeting_time_end']);
+				unset($questions['meeting_start_utc']);
 				unset($questions['recurring_maximum']);
 				unset($questions['attendee_time_zone']);
 				unset($questions['payment_type']);
@@ -524,9 +540,22 @@ class HydraBookingShortcode
 
 		// Recurring Meeting
 		if (isset($meta_data['recurring_status']) && $meta_data['recurring_status'] == true) {
-			$meeting_dates          = isset($_POST['meeting_dates']) ? sanitize_text_field(wp_unslash($_POST['meeting_dates'])) : '';
+			// Repeat from the host date of the first occurrence, never the visitor's date
+			$data['meeting_dates'] = apply_filters('hydra_booking/calculate_recurring_meeting_dates', $available_slot['host_date'], $meta_data);
 
-			$data['meeting_dates'] = apply_filters('hydra_booking/calculate_recurring_meeting_dates', $meeting_dates, $meta_data);
+			// Every later occurrence has to be bookable as well
+			foreach (array_slice(BookingTime::dates($data['meeting_dates']), 1) as $occurrence_date) {
+				$occurrence_start = BookingTime::instant($occurrence_date, $available_slot['host_start'], $availability_time_zone);
+				if (! $occurrence_start || ! $date_time->findAvailableSlot($data['meeting_id'], $occurrence_start, $attendee_time_zone, '12', $exclude_booking_id)) {
+					wp_send_json_error(array(
+						'message' => sprintf(
+							/* translators: %s: Date of the occurrence that is not available */
+							esc_html__('The recurring meeting on %s is not available. Please choose a different time.', 'hydra-booking'),
+							esc_html(wp_date(get_option('date_format'), $occurrence_start ? $occurrence_start->getTimestamp() : time(), BookingTime::tz($attendee_time_zone)))
+						),
+					));
+				}
+			}
 		}
 
 		// Meeting Location
@@ -717,12 +746,14 @@ class HydraBookingShortcode
 		// Get Booking Data
 		$booking = new Booking();
 
-		// Booking Frequency
-		$current_user_booking = $booking->get(array('meeting_id' => $data['meeting_id'], 'meeting_dates' => $data['meeting_dates']));
-
-
-		if ($current_user_booking) {
-			$this->tfhb_checked_booking_frequency_limit($current_user_booking, $meta_data,);
+		// Booking Frequency, checked for every occurrence. Joining an existing group slot adds no occurrence.
+		if (!isset($attendee_data['booking_id'])) {
+			$date_time = new DateTimeController('UTC');
+			foreach (BookingTime::dates($data['meeting_dates']) as $occurrence_date) {
+				if ($date_time->isBookingFrequencyReached($data['meeting_id'], $meta_data, $occurrence_date)) {
+					wp_send_json_error(array('message' => esc_html(__(' Meeting frequency limit reached. Try  another Date', 'hydra-booking'))));
+				}
+			}
 		}
 
 		if (!isset($attendee_data['booking_id'])) {
@@ -830,13 +861,38 @@ class HydraBookingShortcode
 
 		$meta_data = get_post_meta($MeetingData->post_id, '__tfhb_meeting_opt', true);
 		$meeting_type = isset($meta_data['meeting_type']) ? $meta_data['meeting_type'] : 'one-to-single';
+		$max_book_per_slot = isset($meta_data['max_book_per_slot']) ? (int) $meta_data['max_book_per_slot'] : 1;
 
+		$date_time = new DateTimeController('UTC');
+		$availability_data = $date_time->GetAvailabilityData($MeetingData);
+		$time_zone = BookingTime::tz(isset($availability_data['time_zone']) ? $availability_data['time_zone'] : '', 'UTC');
+
+		// The requested occurrences as absolute intervals
+		$requested = BookingTime::booking_instants(
+			array(
+				'meeting_dates' => $meeting_date,
+				'start_time'    => $start_time,
+				'end_time'      => $end_time,
+			),
+			$time_zone
+		);
+		if (empty($requested)) {
+			return false;
+		}
+
+		$lookup_dates = array();
+		foreach (BookingTime::dates($meeting_date) as $date) {
+			$lookup_dates = array_merge($lookup_dates, BookingTime::date_range($date, $date, 1));
+		}
+
+		// Any booking of this meeting or of the same host on those days
 		$booking = new Booking();
 		$where = array(
-			array('meeting_id', '=', $meeting_id),
-			array('meeting_dates', '=', $meeting_date),
-			array('start_time', '=', $start_time),
-			array('end_time', '=', $end_time),
+			'OR' => array(
+				array('host_id', '=', $MeetingData->host_id),
+				array('meeting_id', '=', $meeting_id),
+			),
+			array('meeting_dates', 'IN_DATES', array_values(array_unique($lookup_dates))),
 			array('status', '!=', 'canceled'),
 		);
 
@@ -844,24 +900,30 @@ class HydraBookingShortcode
 			$where[] = array('id', '!=', $exclude_booking_id);
 		}
 
-		$check_booking = $booking->getBookingWithAttendees(
-			$where,
-			1,
-			'DESC'
-		);
+		$bookings = $booking->getBookingWithAttendees($where, null, 'DESC');
 
-		if ('one-to-group' === $meeting_type) {
-			if (!empty($check_booking)) {
-				$max_book_per_slot = isset($meta_data['max_book_per_slot']) ? (int) $meta_data['max_book_per_slot'] : 1;
-				$attendees = isset($check_booking->attendees) ? $check_booking->attendees : array();
-				if (count($attendees) >= $max_book_per_slot) {
-					return false;
+		foreach (is_array($bookings) ? $bookings : array() as $existing) {
+			foreach (BookingTime::booking_instants($existing, $time_zone) as $taken) {
+				foreach ($requested as $wanted) {
+					if (! BookingTime::overlaps($wanted['start'], $wanted['end'], $taken['start'], $taken['end'])) {
+						continue;
+					}
+
+					// The same group slot of this meeting can be joined until it is full
+					$same_group_slot = 'one-to-group' === $meeting_type
+						&& $existing->meeting_id == $meeting_id
+						&& $wanted['start'] == $taken['start']
+						&& $wanted['end'] == $taken['end'];
+					$attendees = isset($existing->attendees) && is_array($existing->attendees) ? $existing->attendees : array();
+
+					if (! $same_group_slot || count($attendees) >= $max_book_per_slot) {
+						return false;
+					}
 				}
 			}
-			return true;
 		}
 
-		return empty($check_booking);
+		return true;
 	}
 
 	/**
@@ -973,40 +1035,21 @@ class HydraBookingShortcode
 	 * @param $meta_data
 	 * @return void
 	 */
+	/**
+	 * @deprecated Use DateTimeController::isBookingFrequencyReached(), which counts bookings per
+	 *             day / week / month of the meeting date in the host's timezone.
+	 */
 	public function tfhb_checked_booking_frequency_limit($current_user_booking, $meta_data)
 	{
-		$last_items_of_booking = end($current_user_booking);
+		$first = is_array($current_user_booking) ? reset($current_user_booking) : $current_user_booking;
+		if (empty($first) || empty($first->meeting_id)) {
+			return;
+		}
 
-		$booking_frequency = isset($meta_data['booking_frequency']) ? $meta_data['booking_frequency'] : array();
-		if ($booking_frequency != NULL) {
-			$booking_frequency = !is_array($booking_frequency) ? json_decode($booking_frequency, true) : $booking_frequency;
-			$created_date = $last_items_of_booking->created_at; // 2024-07-02 14:26:29
-			$current_date = gmdate('Y-m-d H:i:s');
-
-			$last_created_date = gmdate('Y-m-d', strtotime($created_date));
-
-			foreach ($booking_frequency as $key => $value) {
-				$times  = isset($value['times']) ? $value['times'] : 'days';
-				$limit = isset($value['limit']) ? $value['limit'] : 5;
-
-				$booking_frequency_date = gmdate('Y-m-d', strtotime($last_created_date . ' + ' . $limit . ' ' . $times));
-				$total_booking          = count(
-					array_filter(
-						$current_user_booking,
-						function ($booking) use ($booking_frequency_date, $last_created_date) {
-							$created_date = gmdate('Y-m-d', strtotime($booking->created_at));
-							// Check if the created date is between last_created_date and booking_frequency_date
-							return strtotime($last_created_date) >= strtotime($created_date) || strtotime($created_date) <= strtotime($booking_frequency_date);
-						}
-					)
-				);
-				// if currentdate is greater than booking_frequency_date then you can book the meeting
-				if (strtotime($current_date) > strtotime($booking_frequency_date)) {
-					continue;
-				}
-				if ($total_booking >= $limit) {
-					wp_send_json_error(array('message' => esc_html(__(' Meeting frequency limit reached. Try  another Date', 'hydra-booking'))));
-				}
+		$date_time = new DateTimeController('UTC');
+		foreach (BookingTime::dates($first->meeting_dates) as $occurrence_date) {
+			if ($date_time->isBookingFrequencyReached($first->meeting_id, $meta_data, $occurrence_date)) {
+				wp_send_json_error(array('message' => esc_html(__(' Meeting frequency limit reached. Try  another Date', 'hydra-booking'))));
 			}
 		}
 	}
@@ -1101,27 +1144,18 @@ class HydraBookingShortcode
 
 				if ($skip_before_meeting_start > 0) {
 
-					$meeting_date = $attendeeBooking->meeting_dates;  // Example: '2025-07-05'
-					$meeting_time = $attendeeBooking->start_time;     // Example: '14:00' (24-hour format)
-
-					$meeting_datetime = $meeting_date . ' ' . $meeting_time; // Combine to '2025-07-05 14:00'
-
-					$current_time = current_time('Y-m-d H:i:s'); // Current datetime with WordPress timezone
-
-					$meeting_timestamp = strtotime($meeting_datetime);
-					$current_timestamp = strtotime($current_time);
-
-					$time_difference = $meeting_timestamp - $current_timestamp; // Seconds left until meeting starts
+					// Seconds left until the (next) occurrence starts, from the stored host-timezone values
+					$time_difference = BookingTime::seconds_until_start($attendeeBooking, $data['availability_time_zone']);
 
 					// Convert allowed limit to seconds
 					$allowed_gap_in_seconds = ($skip_before_format === 'hours') ? ($skip_before_meeting_start * 3600) : ($skip_before_meeting_start * 60);
 
-					if ($time_difference < $allowed_gap_in_seconds) {
-						// Not enough time left, deny cancel
+					if (null === $time_difference || $time_difference < $allowed_gap_in_seconds) {
+						// Not enough time left, deny reschedule
 						wp_send_json_error(array('message' => esc_html(__('You can not reschedule the meeting before ', 'hydra-booking')) . $skip_before_meeting_start . ' ' . esc_html($skip_before_format)));
 					}
 
-					// Else, allow cancel
+					// Else, allow reschedule
 				}
 			}
 		}
@@ -1141,6 +1175,7 @@ class HydraBookingShortcode
 				$updat_booking['meeting_dates'] = $data['meeting_dates'];
 				$updat_booking['start_time'] = $data['start_time'];
 				$updat_booking['end_time'] = $data['end_time'];
+				$updat_booking['availability_time_zone'] = $data['availability_time_zone'];
 				// update booking
 				$booking->update($updat_booking);
 			} else {
@@ -1250,33 +1285,18 @@ class HydraBookingShortcode
 		$selected_time_format = isset($_POST['time_format']) ? sanitize_text_field(wp_unslash($_POST['time_format'])) : '12';
 		$selected_time_zone   = isset($_POST['time_zone']) ? sanitize_text_field(wp_unslash($_POST['time_zone'])) : 'UTC';
 
-		$booking = new Booking();
-		$current_user_booking = $booking->get(array('meeting_id' => $meeting_id, 'meeting_dates' => $selected_date));
-		if ($current_user_booking) {
-			$meta_data = get_post_meta($meetingData->post_id, '__tfhb_meeting_opt', true);
-
-			$this->tfhb_checked_booking_frequency_limit($current_user_booking, $meta_data,);
+		// Dates are in the visitor's timezone: from the selected date to the end of its month.
+		// Frequency limits are applied per host day inside the slot lookup.
+		$selected_date = str_replace('/', '-', $selected_date);
+		$month_start   = \DateTimeImmutable::createFromFormat('!Y-m-d', $selected_date, BookingTime::utc());
+		if (! $month_start) {
+			wp_send_json_error(array('message' => esc_html(__('No time slots are currently available.', 'hydra-booking'))));
 		}
-		// get current date time to this month end in array
-		$this_month_all_dates = array();
-		$current_date = $selected_date;
+		$this_month_all_dates = BookingTime::date_range($selected_date, $month_start->format('Y-m-t'));
 
-		$end_date = gmdate('Y-m-t', strtotime($selected_date));
-		// now get all dates between current date and this month end
-		$begin = new \DateTime($current_date);
-		$end = new \DateTime($end_date);
-		$end = $end->modify('+1 day');
-		$interval = new \DateInterval('P1D');
-		$daterange = new \DatePeriod($begin, $interval, $end);
-		foreach ($daterange as $date) {
-			$this_month_all_dates[] = $date->format("Y-m-d");
-		}
-
-		$all_month_data = array();
-		$date_time = new DateTimeController($selected_time_zone);
-		foreach ($this_month_all_dates as $date) {
-			$all_month_data[$date] = $date_time->getAvailableTimeData($meeting_id, $date, $selected_time_zone, $selected_time_format);
-		}
+		// Each key holds the slots whose date in the visitor's timezone is that day
+		$date_time      = new DateTimeController('UTC');
+		$all_month_data = $date_time->getAvailableSlotsByDate($meeting_id, $this_month_all_dates, $selected_time_zone, $selected_time_format);
 
 		if (empty($all_month_data)) {
 			wp_send_json_error(array('message' => esc_html(__('No time slots are currently available.', 'hydra-booking'))));
@@ -1341,24 +1361,15 @@ class HydraBookingShortcode
 			$skip_before_format = 'minutes';
 		}
 
-		if ($skip_before_meeting_start > 0) {
+		if ($skip_before_meeting_start > 0 && $attendeeBooking) {
 
-			$meeting_date = $attendeeBooking->meeting_dates;  // Example: '2025-07-05'
-			$meeting_time = $attendeeBooking->start_time;     // Example: '14:00' (24-hour format)
-
-			$meeting_datetime = $meeting_date . ' ' . $meeting_time; // Combine to '2025-07-05 14:00'
-
-			$current_time = current_time('Y-m-d H:i:s'); // Current datetime with WordPress timezone
-
-			$meeting_timestamp = strtotime($meeting_datetime);
-			$current_timestamp = strtotime($current_time);
-
-			$time_difference = $meeting_timestamp - $current_timestamp; // Seconds left until meeting starts
+			// Seconds left until the (next) occurrence starts, from the stored host-timezone values
+			$time_difference = BookingTime::seconds_until_start($attendeeBooking);
 
 			// Convert allowed limit to seconds
 			$allowed_gap_in_seconds = ($skip_before_format === 'hours') ? ($skip_before_meeting_start * 3600) : ($skip_before_meeting_start * 60);
 
-			if ($time_difference < $allowed_gap_in_seconds) {
+			if (null === $time_difference || $time_difference < $allowed_gap_in_seconds) {
 				// Not enough time left, deny cancel
 				wp_send_json_error(array('message' => esc_html(__('You can not cencel the meeting before ', 'hydra-booking')) . $skip_before_meeting_start . ' ' . esc_html($skip_before_format)));
 			}
@@ -1606,7 +1617,7 @@ class HydraBookingShortcode
 			wp_send_json_error(array('message' => esc_html__('PayPal is not the configured payment method for this booking.', 'hydra-booking')));
 		}
 
-		$current_payment_status = strtolower($attendee->payment_status);
+		$current_payment_status = ! empty( $attendee->payment_status ) ? strtolower( (string) $attendee->payment_status ) : '';
 		if ('completed' === $current_payment_status) {
 			$response['message'] = esc_html__('Payment has already been confirmed.', 'hydra-booking');
 			wp_send_json_success($response);

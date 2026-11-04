@@ -32,6 +32,7 @@ module.exports = (grunt) => {
                             '!src/**',
                             '!sass/**',
                             '!config/**',
+                            '!tests/**',
                             '!coverage/**',
                             '!dist/**',
                             '!*.local',

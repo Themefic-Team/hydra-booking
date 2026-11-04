@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 
  use HydraBooking\Admin\Controller\DateTimeController;
+ use HydraBooking\Admin\Controller\BookingTime;
 
 $meeting          = isset( $args['meeting'] ) ? $args['meeting'] : array();
 $host 		   = isset( $args['host'] ) ? $args['host'] : array();
@@ -23,32 +24,34 @@ $time_format      = isset( $general_settings['time_format'] ) && ! empty( $gener
 
 
 
-// Selecte suld be current date 
-$selected_date        = gmdate( 'Y-m-d' );
-$meeting_id           = isset($meeting['id']) ? $meeting['id'] : 0;
+$meeting_id          = isset($meeting['id']) ? $meeting['id'] : 0;
 
-$selected_timezone =  isset($meeting['availability_custom']['time_zone']) && !empty($meeting['availability_custom']['time_zone']) ? $meeting['availability_custom']['time_zone'] : 'UTC';
-if ( 'settings' === $meeting['availability_type'] ) {
-	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
-	if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] === 'settings' ){
+$selected_timezone = ( isset($meeting['availability_custom']) && is_array($meeting['availability_custom']) && ! empty($meeting['availability_custom']['time_zone']) ) ? $meeting['availability_custom']['time_zone'] : 'UTC';
+if ( isset($meeting['availability_type']) && 'settings' === $meeting['availability_type'] ) {
+	$meeting_user_id = isset( $meeting['user_id'] ) ? $meeting['user_id'] : 0;
+	$_tfhb_availability_settings = $meeting_user_id ? get_user_meta( $meeting_user_id, '_tfhb_host', true ) : array();
+	if ( isset( $_tfhb_availability_settings['availability_type'] ) && $_tfhb_availability_settings['availability_type'] === 'settings' ) {
 		// Get Global Settings
 		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
 		
-		$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
-		
-		if ( in_array( $key, array_keys( $_tfhb_availability_settings_global ) ) ) {
-		
-			$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+		if ( is_array( $_tfhb_availability_settings_global ) ) {
+			$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
+			
+			if ( false !== $key && isset( $_tfhb_availability_settings_global[ $key ]['time_zone'] ) ) {
+				$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+			}
 		}
 
-	}elseif (isset($_tfhb_availability_settings['availability']) &&  in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
-		 
+	} elseif ( isset( $_tfhb_availability_settings['availability'] ) && is_array( $_tfhb_availability_settings['availability'] ) && isset( $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'] ) ) {
 		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
 	}
 	
 }
 
 // $selected_timezone = isset( $booking_data->attendee_time_zone ) ? $booking_data->attendee_time_zone : $selected_timezone;
+
+// Today in the meeting's availability timezone
+$selected_date = BookingTime::format( BookingTime::now(), $selected_timezone, 'Y-m-d' );
 
 $date_time = new DateTimeController( $selected_timezone );
 $data      = $date_time->getAvailableTimeData( $meeting_id, $selected_date, $selected_timezone, $time_format );

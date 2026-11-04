@@ -58,6 +58,13 @@ class Notification {
        
             $notifications[$key]->value = json_decode($value->value);
 
+            // created_at is a TIMESTAMP read in the database session's clock; send it as ISO UTC
+            // so the browser can tell how long ago it was
+            $created_at = BookingTime::from_mysql_session( $value->created_at );
+            if ( $created_at ) {
+                $notifications[$key]->created_at = BookingTime::iso_utc( $created_at );
+            }
+
             if($value->value->status == 'unread'){
                 $total_unread++;
             }

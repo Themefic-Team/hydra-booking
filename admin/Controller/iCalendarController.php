@@ -483,21 +483,12 @@ class iCalendarController
      */
     private function formatToUTC($date, $time, $timezone)
     {
-        if (empty($timezone)) {
-            $timezone = wp_timezone_string();
-        }
-
-        $format = (stripos($time, 'AM') !== false || stripos($time, 'PM') !== false) ? 'Y-m-d h:i A' : 'Y-m-d H:i';
-
-        try {
-            $datetime = \DateTime::createFromFormat($format, trim($date) . " " . trim($time), new \DateTimeZone($timezone));
-            if ($datetime === false) {
-                return false;
-            }
-            $datetime->setTimezone(new \DateTimeZone("UTC"));
-            return $datetime->format("Ymd\THis\Z");
-        } catch (\Exception $e) {
+        // An empty or invalid timezone falls back to the site timezone, same as every other export
+        $datetime = BookingTime::instant(trim($date), $time, $timezone);
+        if (! $datetime) {
             return false;
         }
+
+        return BookingTime::format($datetime, 'UTC', "Ymd\THis\Z");
     }
 }

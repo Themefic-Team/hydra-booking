@@ -876,7 +876,8 @@ class MeetingController
 		$availabilityDataSingle = array(
 			'id'             => $new_id,
 			'title'          => __('Default Availability', 'hydra-booking'),
-			'time_zone'      => wp_timezone_string(),
+			// An IANA name the timezone dropdown can show ('+05:30' style site settings are mapped)
+			'time_zone'      => BookingTime::iana_name( wp_timezone_string(), 'UTC' ),
 			'date_status'    => 0,
 			'default_status' => true,
 			'time_slots'     => $time_slots,

@@ -25,29 +25,32 @@ $currency = ! empty( $_tfhb_general_settings['currency'] ) ? $_tfhb_general_sett
 $stripePublicKey            = ! empty( $_tfhb_integration_settings['stripe']['public_key'] ) ? $_tfhb_integration_settings['stripe']['public_key'] : '';
 $paypalPublicKey            = ! empty( $_tfhb_integration_settings['paypal']['client_id'] ) ? $_tfhb_integration_settings['paypal']['client_id'] : '';
 
-$_tfhb_host_integration_settings = get_user_meta( $host['user_id'], '_tfhb_host_integration_settings' );
+$host_user_id = isset( $host['user_id'] ) ? $host['user_id'] : 0;
+$_tfhb_host_integration_settings = $host_user_id ? get_user_meta( $host_user_id, '_tfhb_host_integration_settings', true ) : array();
 $stripePublicKey                 = ! empty( $_tfhb_host_integration_settings['stripe']['public_key'] ) ? $_tfhb_host_integration_settings['stripe']['public_key'] : $stripePublicKey;
 $paypalPublicKey                 = ! empty( $_tfhb_host_integration_settings['paypal']['client_id'] ) ? $_tfhb_host_integration_settings['paypal']['client_id'] : $paypalPublicKey;
 
 // display short.
  
-$selected_timezone = !empty($meeting['availability_custom']['time_zone'])  ? $meeting['availability_custom']['time_zone'] : 'UTC';
+$selected_timezone = ( isset($meeting['availability_custom']) && is_array($meeting['availability_custom']) && ! empty($meeting['availability_custom']['time_zone']) ) ? $meeting['availability_custom']['time_zone'] : 'UTC';
 
-if ( 'settings' === $meeting['availability_type'] ) {
-	$_tfhb_availability_settings = get_user_meta( $meeting['user_id'], '_tfhb_host', true );
+if ( isset($meeting['availability_type']) && 'settings' === $meeting['availability_type'] ) {
+	$meeting_user_id = isset( $meeting['user_id'] ) ? $meeting['user_id'] : 0;
+	$_tfhb_availability_settings = $meeting_user_id ? get_user_meta( $meeting_user_id, '_tfhb_host', true ) : array();
 	// tfhb_print_r( $host );
-	if(isset($_tfhb_availability_settings['availability_type']) && $_tfhb_availability_settings['availability_type'] === 'settings' ){
+	if ( isset( $_tfhb_availability_settings['availability_type'] ) && $_tfhb_availability_settings['availability_type'] === 'settings' ) {
 		// Get Global Settings
 		$_tfhb_availability_settings_global = get_option( '_tfhb_availability_settings' ); 
 		
-		$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
+		if ( is_array( $_tfhb_availability_settings_global ) ) {
+			$key = array_search( $meeting['availability_id'], array_column( $_tfhb_availability_settings_global, 'id' ) );
 
-		if ( in_array( $key, array_keys( $_tfhb_availability_settings_global ) ) ) {
-			$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+			if ( false !== $key && isset( $_tfhb_availability_settings_global[ $key ]['time_zone'] ) ) {
+				$selected_timezone = $_tfhb_availability_settings_global[ $key ]['time_zone']; 
+			}
 		}
 
-
-	}elseif ( isset($_tfhb_availability_settings['availability']) && in_array( $meeting['availability_id'], array_keys( $_tfhb_availability_settings['availability'] ) ) ) {
+	} elseif ( isset( $_tfhb_availability_settings['availability'] ) && is_array( $_tfhb_availability_settings['availability'] ) && isset( $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'] ) ) {
 		$selected_timezone = $_tfhb_availability_settings['availability'][ $meeting['availability_id'] ]['time_zone'];
 	}
 		
@@ -66,6 +69,7 @@ $host_feature_image_link = isset($host['featured_image']) && !empty($host['featu
 		<input type="hidden" id="meeting_dates" name="meeting_dates" value="">
 		<input type="hidden" id="meeting_time_start" name="meeting_time_start" value="">
 		<input type="hidden" id="meeting_time_end" name="meeting_time_end" value="">
+		<input type="hidden" id="meeting_start_utc" name="meeting_start_utc" value="">
 		<input type="hidden" id="payment_method" name="payment_method" value="<?php echo esc_attr($meeting['payment_method']); ?>">
 		<input type="hidden" id="payment_amount" name="payment_amount" value="<?php echo ! empty( $meeting['meeting_price'] ) ? esc_attr($meeting['meeting_price']) : ''; ?>">
 		<input type="hidden" id="payment_currency" name="payment_currency" value="<?php echo ! empty( $currency ) ? esc_attr($currency) : esc_attr('USD'); ?>">
