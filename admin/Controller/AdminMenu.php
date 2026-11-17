@@ -35,7 +35,7 @@ class AdminMenu {
 		add_menu_page(
 			esc_html__( 'Hydra Booking', 'hydra-booking' ),
 			esc_html__( 'Hydra Booking', 'hydra-booking' ),
-			'tfhb_manage_options',
+			$this->get_menu_capability(),
 			// array($this, 'hydra_booking_access'),
 			'hydra-booking',
 			array( $this, 'hydra_booking_page' ),
@@ -72,7 +72,9 @@ class AdminMenu {
 			array(
 				'id'         => 'settings',
 				'Title'      => esc_html__( 'Settings', 'hydra-booking' ),
-				'capability' => 'tfhb_manage_options',
+				// Matches the Vue route guard (meta.Capabilities) and the
+				// "Allow host to adjust system and personal settings" permission.
+				'capability' => 'tfhb_manage_settings',
 			),
 			array(
 				'id'         => 'setup-wizard',
@@ -108,6 +110,39 @@ class AdminMenu {
 				'https://hydrabooking.com/'
 			);
 		}
+	}
+
+	/**
+	 * Capability for the top-level "Hydra Booking" page.
+	 *
+	 * Since the v1.2.4 security fix the tfhb_host role no longer holds
+	 * tfhb_manage_options, so gating the top-level page on it blocked every
+	 * host ("Sorry, you are not allowed to access this page."). The Vue app
+	 * gates each route by its own capability, so the page itself only needs
+	 * the user to hold at least one Hydra Booking capability.
+	 *
+	 * @return string
+	 */
+	private function get_menu_capability() {
+		$caps = array(
+			'tfhb_manage_options',
+			'tfhb_manage_dashboard',
+			'tfhb_manage_meetings',
+			'tfhb_manage_booking',
+			'tfhb_manage_hosts',
+			'tfhb_manage_settings',
+			'tfhb_manage_custom_availability',
+			'tfhb_manage_integrations',
+		);
+
+		foreach ( $caps as $cap ) {
+			if ( current_user_can( $cap ) ) {
+				return $cap;
+			}
+		}
+
+		// No Hydra Booking capability: keep the page admin-only (hidden).
+		return 'tfhb_manage_options';
 	}
 
 	public function hydra_booking_page() {

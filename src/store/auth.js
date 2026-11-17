@@ -1,7 +1,10 @@
 import { reactive } from 'vue';
 import axios from 'axios';
+
+const initialUser = (typeof tfhb_core_apps !== 'undefined' && tfhb_core_apps.user) ? tfhb_core_apps.user : [];
+
 const AuthData = reactive({
-    Auth: [], 
+    Auth: initialUser, 
 
     async fetchAuth() { 
 

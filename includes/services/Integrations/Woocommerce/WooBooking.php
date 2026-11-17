@@ -58,6 +58,33 @@ class WooBooking {
 				continue;
 			}
 
+			$current_attendee = $attendees->getAttendeeWithBooking(
+				array(
+					array( 'id', '=', $attendee_id ),
+				),
+				1,
+				'DESC'
+			);
+
+			if ( ! $current_attendee ) {
+				continue;
+			}
+
+			$previous_booking_status = ! empty( $current_attendee->status ) ? $current_attendee->status : '';
+
+			// Always sync payment_status to match WooCommerce order state.
+			$attendees->update(
+				array(
+					'id'             => $attendee_id,
+					'payment_status' => $new_status,
+				)
+			);
+
+			// Prevent duplicate notifications and emails if the booking status did not change.
+			if ( $previous_booking_status === $booking_status ) {
+				continue;
+			}
+
 			$booking->update(
 				array(
 					'id'     => $booking_id,
@@ -67,9 +94,8 @@ class WooBooking {
 
 			$attendees->update(
 				array(
-					'id'             => $attendee_id,
-					'status'         => $booking_status,
-					'payment_status' => $new_status,
+					'id'     => $attendee_id,
+					'status' => $booking_status,
 				)
 			);
 

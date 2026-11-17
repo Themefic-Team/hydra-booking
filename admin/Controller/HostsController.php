@@ -71,7 +71,7 @@ class HostsController
 			array(
 				'methods'  => 'GET',
 				'callback' => array($this, 'getTheHostData'),
-				'permission_callback' =>  array(new RouteController(), 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController(), 'tfhb_manage_hosts_permission'),
 			)
 		);
 		register_rest_route(
@@ -122,7 +122,7 @@ class HostsController
 			array(
 				'methods'  => 'POST',
 				'callback' => array($this, 'DeleteAvailabilitySettings'),
-				'permission_callback' =>  array(new RouteController(), 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController(), 'tfhb_manage_custom_availability_permission'),
 			)
 		);
 
@@ -164,7 +164,7 @@ class HostsController
 			array(
 				'methods'  => 'GET',
 				'callback' => array($this, 'filterHosts'),
-				'permission_callback' =>  array(new RouteController(), 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController(), 'tfhb_manage_hosts_permission'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',
