@@ -1213,13 +1213,71 @@ class HostsController
 		return rest_ensure_response($data);
 	}
 
+	/**
+	 * Resolve the Host record whose availability a request may change.
+	 *
+	 * SECURITY: non-admins can only act on their own WordPress user, and the
+	 * Host is always looked up server-side from that user. A request-supplied
+	 * `host` must match it, so it can never point at another host's rows.
+	 *
+	 * @return object|\WP_REST_Response Host row on success, error response otherwise.
+	 */
+	private function resolve_availability_owner($request)
+	{
+		$deny = rest_ensure_response(
+			array(
+				'status'  => false,
+				'message' => __('You do not have permission to update this host.', 'hydra-booking'),
+			)
+		);
+
+		if (! is_array($request) || empty($request['user_id'])) {
+			return $deny;
+		}
+
+		$user_id = absint($request['user_id']);
+
+		if (! current_user_can('manage_options') && $user_id !== get_current_user_id()) {
+			return $deny;
+		}
+
+		$host       = new Host();
+		$owner_host = $host->getHostByUserId($user_id);
+
+		if (empty($owner_host)) {
+			return $deny;
+		}
+
+		if (isset($request['host']) && '' !== $request['host'] && absint($request['host']) !== (int) $owner_host->id) {
+			return $deny;
+		}
+
+		return $owner_host;
+	}
+
 	// Delete Availability Settings
 	public function DeleteAvailabilitySettings()
 	{
 		$request = json_decode(file_get_contents('php://input'), true);
 
+		// SECURITY: only admins, or the host themselves, may delete this host's availability
+		$owner_host = $this->resolve_availability_owner($request);
+		if ($owner_host instanceof \WP_REST_Response) {
+			return $owner_host;
+		}
+
 		// Get Host Data
-		$_tfhb_host_availability_settings = get_user_meta($request['user_id'], '_tfhb_host', true);
+		$_tfhb_host_availability_settings = get_user_meta(absint($request['user_id']), '_tfhb_host', true);
+
+		if (! isset($request['key']) || ! is_array($_tfhb_host_availability_settings) || ! isset($_tfhb_host_availability_settings['availability'][$request['key']])) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __('Availability not found.', 'hydra-booking'),
+				)
+			);
+		}
+
 		// Delete Key
 		unset($_tfhb_host_availability_settings['availability'][$request['key']]);
 		// Data Update
@@ -1249,18 +1307,48 @@ class HostsController
 			return rest_ensure_response($data);
 		}
 
-		// Only allow admins, or the host themselves, to update this host's availability
-		if (! current_user_can('manage_options') && (int) $request['user_id'] !== get_current_user_id()) {
-			return rest_ensure_response(
-				array(
-					'status'  => false,
-					'message' => __('You do not have permission to update this host.', 'hydra-booking'),
-				)
-			);
+		// SECURITY: only admins, or the host themselves, may update this host's availability.
+		// The Host ID comes from the server-side lookup, never from the request.
+		$owner_host = $this->resolve_availability_owner($request);
+		if ($owner_host instanceof \WP_REST_Response) {
+			return $owner_host;
 		}
+		$owner_host_id      = (int) $owner_host->id;
+		$request['user_id'] = absint($request['user_id']);
+		$request['host']    = $owner_host_id;
 
 		$_tfhb_host_info        = !empty(get_user_meta($request['user_id'], '_tfhb_host', true)) ? get_user_meta($request['user_id'], '_tfhb_host', true) : array();
 		$tfhb_host_availability = ! empty($_tfhb_host_info['availability']) ? $_tfhb_host_info['availability'] : array();
+
+		$is_update = isset($request['id']) && '' !== (string) $request['id'];
+
+		if ($is_update) {
+			// The meta entry being edited must exist in this host's own list.
+			if (! array_key_exists($request['id'], $tfhb_host_availability)) {
+				return rest_ensure_response(
+					array(
+						'status'  => false,
+						'message' => __('Availability not found.', 'hydra-booking'),
+					)
+				);
+			}
+
+			// The DB row being edited must exist and belong to this host.
+			$available_id = ! empty($request['available_id']) ? absint($request['available_id']) : 0;
+			if ($available_id) {
+				$availabilityDB = new Availability();
+				$existing_row   = $availabilityDB->get($available_id);
+				if (empty($existing_row) || (int) $existing_row->host !== $owner_host_id) {
+					return rest_ensure_response(
+						array(
+							'status'  => false,
+							'message' => __('You do not have permission to update this availability.', 'hydra-booking'),
+						)
+					);
+				}
+			}
+			$request['available_id'] = $available_id;
+		}
 
 		$availability['id']          = isset($request['id']) ? sanitize_text_field($request['id']) : '';
 		$availability['user_id']     = isset($request['user_id']) ? sanitize_text_field($request['user_id']) : '';
@@ -1362,10 +1450,14 @@ class HostsController
 				'updated_at'  => gmdate('y-m-d'),
 			);
 
-			$hostAvailability = new Availability();
-			$hostAvailability->update($availbility_data);
+			// Ownership was verified above; the update is also scoped by host in SQL.
+			// Legacy entries without a DB row (available_id = 0) only update user meta.
+			if ($request['available_id']) {
+				$hostAvailability = new Availability();
+				$hostAvailability->updateByHost($availbility_data, $owner_host_id);
 
-			$_tfhb_host_info['availability'][$request['id']]['available_id'] = $request['available_id'];
+				$_tfhb_host_info['availability'][$request['id']]['available_id'] = $request['available_id'];
+			}
 		}
 
 		// update user meta

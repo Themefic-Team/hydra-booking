@@ -118,6 +118,56 @@ class Availability {
 		}
 	}
 	/**
+	 * Update an availability row only if it belongs to the given host.
+	 *
+	 * SECURITY: the WHERE clause is scoped by both id and host so a caller
+	 * can never overwrite another host's availability by guessing an id.
+	 */
+	public function updateByHost( $request, $host_id ) {
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+		$host_id    = absint( $host_id );
+		$id         = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
+
+		if ( ! $id || ! $host_id ) {
+			return false;
+		}
+
+		if ( isset( $request['time_slots'] ) ) {
+			$request['time_slots'] = maybe_serialize( $request['time_slots'] );
+		}
+		if ( isset( $request['date_status'] ) ) {
+			$request['date_status'] = maybe_serialize( $request['date_status'] );
+		}
+		if ( isset( $request['date_slots'] ) ) {
+			$request['date_slots'] = maybe_serialize( $request['date_slots'] );
+		}
+
+		unset( $request['id'] );
+		// Ownership never changes through this method.
+		$request['host'] = $host_id;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result = $wpdb->update(
+			$table_name,
+			$request,
+			array(
+				'id'   => $id,
+				'host' => $host_id,
+			)
+		);
+
+		if ( $result === false ) {
+			return false;
+		}
+
+		return array(
+			'status' => true,
+		);
+	}
+	/**
 	 * Get all  availability Data.
 	 */
 	public function get( $where = null, $join = false, $FirstOrFaill = false, $limit = false ) {
