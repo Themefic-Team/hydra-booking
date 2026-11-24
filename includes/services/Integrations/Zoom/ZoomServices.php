@@ -471,8 +471,8 @@ class ZoomServices {
 			return $data;
 		}
 
-		$zoom_meeting['type']              = sanitize_text_field( $data['meeting'] );
-		$zoom_meeting['status']            = sanitize_text_field( $data['status'] );
+		$zoom_meeting['type']              = isset( $data['meeting'] ) ? sanitize_text_field( $data['meeting'] ) : '';
+		$zoom_meeting['status']            = isset( $data['status'] ) ? sanitize_text_field( $data['status'] ) : '';
 		$zoom_meeting['connection_status'] = 1;
 		$zoom_meeting['account_id']        = sanitize_text_field( $data['account_id'] );
 		$zoom_meeting['app_client_id']     = sanitize_text_field( $data['app_client_id'] );

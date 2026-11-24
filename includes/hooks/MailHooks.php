@@ -39,6 +39,19 @@ class MailHooks {
 		add_action( 'hydra_booking/send_booking_with_all_attendees_schedule', array( $this, 'send_booking_with_all_attendees_schedule' ), 10, 1 );
 	}
 
+	/**
+	 * Prepare UTF-8 HTML for DOMDocument::loadHTML(): every non-ASCII character
+	 * becomes a numeric entity so DOMDocument (which assumes ISO-8859-1) keeps it.
+	 * Same result as the old mb_convert_encoding( ..., 'HTML-ENTITIES', 'UTF-8' ),
+	 * which is deprecated since PHP 8.2.
+	 *
+	 * @param string $html
+	 * @return string
+	 */
+	private function html_for_dom( $html ) {
+		return mb_encode_numericentity( (string) $html, array( 0x80, 0x10FFFF, 0, 0x1FFFFF ), 'UTF-8' );
+	}
+
 	private function get_activity_datetime() {
 		$helper = new Helper();
 		return wp_date( $helper->get_date_time_format_from_settings( 'M d, Y', 'h:i A' ) );
@@ -847,7 +860,7 @@ class MailHooks {
 		if ( ! $links_allowed && false !== strpos( $template, '#tfhb-calendar-hidden' ) ) {
 			libxml_use_internal_errors( true );
 			$dom = new \DOMDocument();
-			$dom->loadHTML( mb_convert_encoding( $template, 'HTML-ENTITIES', 'UTF-8' ) );
+			$dom->loadHTML( $this->html_for_dom( $template ) );
 			$xpath = new \DOMXPath( $dom );
 
 			$remove = array();
@@ -875,7 +888,7 @@ class MailHooks {
 		if ($attendeeBooking->attendee_can_cancel != 1 && $attendeeBooking->attendee_can_reschedule != 1) {
 			libxml_use_internal_errors(true); // Suppress warnings for invalid HTML
 			$dom = new \DOMDocument();
-			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+			$dom->loadHTML($this->html_for_dom( $template ));
 
 			$xpath = new \DOMXPath($dom);
 			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-cancel-reschedule-btn ')]") as $node) {
@@ -888,7 +901,7 @@ class MailHooks {
 			// Remove only cancel button
 			libxml_use_internal_errors(true);
 			$dom = new \DOMDocument();
-			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+			$dom->loadHTML($this->html_for_dom( $template ));
 
 			$xpath = new \DOMXPath($dom);
 			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-reschedule-btn ')]") as $node) {
@@ -901,7 +914,7 @@ class MailHooks {
 			// Remove only cancel button
 			libxml_use_internal_errors(true);
 			$dom = new \DOMDocument();
-			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+			$dom->loadHTML($this->html_for_dom( $template ));
 
 			$xpath = new \DOMXPath($dom);
 			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-cancel-btn ')]") as $node) {

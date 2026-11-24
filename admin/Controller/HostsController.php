@@ -449,10 +449,7 @@ class HostsController
 		// Get Host
 		$host     = new Host();
 		$HostData = $host->getHostById($id);
-		$_tfhb_host_availability_settings = get_user_meta($HostData->user_id, '_tfhb_host', true);
-		if (! empty($_tfhb_host_availability_settings['availability'])) {
-			$HostData->availability = $_tfhb_host_availability_settings['availability'];
-		}
+		// Check the host exists before reading its user_id.
 		if (empty($HostData)) {
 			return rest_ensure_response(
 				array(
@@ -460,6 +457,10 @@ class HostsController
 					'message' => __('Invalid Host', 'hydra-booking'),
 				)
 			);
+		}
+		$_tfhb_host_availability_settings = get_user_meta($HostData->user_id, '_tfhb_host', true);
+		if (! empty($_tfhb_host_availability_settings['availability'])) {
+			$HostData->availability = $_tfhb_host_availability_settings['availability'];
 		}
 		if (! empty($HostData->others_information)) {
 			$HostData->others_information = json_decode($HostData->others_information);
