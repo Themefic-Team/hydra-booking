@@ -123,6 +123,18 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 							
 							if($key == 'zoom'){
 								$address = isset($location['address']['link']) ? $location['address']['link'] : $key;
+								// Group meeting with Zoom registration: show the attendee's own link.
+								$personal_links = tfhb_zoom_personal_join_urls( $data );
+								if ( ! empty( $personal_links ) ) {
+									$address = implode( ' | ', $personal_links );
+								}
+							}
+							// No meeting link until the booking is confirmed (a pending group attendee
+							// must not see the shared link of the people who already paid).
+							if ( in_array( $key, array( 'zoom', 'meet' ), true ) && ! tfhb_booking_links_allowed( $data ) ) {
+								$address = 'pending' === strtolower( (string) $data->status )
+									? __( 'The meeting link will be sent after your booking is confirmed.', 'hydra-booking' )
+									: ( 'zoom' === $key ? 'Zoom' : 'Google Meet' );
 							}
 							if($location['location'] == 'Attendee Phone Number' || $location['location'] == 'Organizer Phone Number'){
 								$icon = '<img src="'.esc_url(TFHB_URL . 'assets/app/images/phone.svg').'" alt="Phone">';
@@ -168,28 +180,12 @@ $getBookmark = $Bookmark->getMeetingBookmarks($data );
 				<?php
 
 				if ( true == $data->attendee_can_cancel ) {
-					$cancel = add_query_arg(
-						array(
-							'hydra-booking' => 'booking',
-							'hash'          => $data->hash,
-							'meetingId'    => $data->meeting_id,
-							'type'          => 'cancel',
-						),
-						home_url()
-					);
+					$cancel = tfhb_booking_action_url( $data->hash, 'cancel' );
 					echo '<a href="' . esc_url( $cancel ) . '">'.esc_html__('Cancel booking', 'hydra-booking').'</a>';
 				}
 				if ( true == $data->attendee_can_reschedule ) {
 
-					$reschedule_url = add_query_arg(
-						array(
-							'hydra-booking' => 'booking',
-							'hash'          => $data->hash,
-							'meetingId'    => $data->meeting_id,
-							'type'          => 'reschedule',
-						),
-						home_url()
-					);
+					$reschedule_url = tfhb_booking_action_url( $data->hash, 'reschedule' );
 
 					echo '<a href="' . esc_url( $reschedule_url ) . '">'.esc_html__('Reschedule', 'hydra-booking').'</a>';
 				}

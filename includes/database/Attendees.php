@@ -89,6 +89,37 @@ class Attendees {
 	/**
 	 * Update the database Booking.
 	 */
+	/**
+	 * Atomically move an attendee from one status to another.
+	 *
+	 * Returns true only for the request that actually made the change. When two
+	 * requests handle the same event at the same time (e.g. WooCommerce saving
+	 * one order status change twice), only one of them gets true, so emails and
+	 * integrations run once.
+	 *
+	 * @param int    $id              Attendee id.
+	 * @param string $expected_status Status the row must still have.
+	 * @param string $new_status      Status to set.
+	 * @return bool
+	 */
+	public function claimStatusChange( $id, $expected_status, $new_status ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . $this->table;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$affected = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$table_name} SET status = %s WHERE id = %d AND status = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$new_status,
+				absint( $id ),
+				(string) $expected_status
+			)
+		);
+
+		return 1 === (int) $affected;
+	}
+
 	public function update( $request ) {
 
 		global $wpdb;

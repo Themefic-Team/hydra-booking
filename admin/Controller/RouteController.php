@@ -49,6 +49,31 @@ class RouteController
 		add_action('rest_api_init', array($class, $function));
 	}
 
+	public function tfhb_logged_in_permission()
+	{
+		return is_user_logged_in();
+	}
+	public function tfhb_manage_dashboard_permission()
+	{
+		if (current_user_can('manage_options')) {
+			return true;
+		}
+		return current_user_can('tfhb_manage_dashboard');
+	}
+	public function tfhb_manage_meetings_permission()
+	{
+		if (current_user_can('manage_options')) {
+			return true;
+		}
+		return current_user_can('tfhb_manage_meetings');
+	}
+	public function tfhb_manage_booking_permission()
+	{
+		if (current_user_can('manage_options')) {
+			return true;
+		}
+		return current_user_can('tfhb_manage_booking');
+	}
 	public function tfhb_manage_options_permission()
 	{
 		if (current_user_can('manage_options')) {
@@ -58,14 +83,23 @@ class RouteController
 	}
 	public function tfhb_manage_integrations_permission()
 	{
+		if (current_user_can('manage_options')) {
+			return true;
+		}
 		return current_user_can('tfhb_manage_integrations');
 	}
 	public function tfhb_manage_hosts_permission()
 	{
+		if (current_user_can('manage_options')) {
+			return true;
+		}
 		return current_user_can('tfhb_manage_hosts');
 	}
 	public function tfhb_manage_custom_availability_permission()
 	{
+		if (current_user_can('manage_options')) {
+			return true;
+		}
 		return current_user_can('tfhb_manage_custom_availability');
 	}
 	public function tfhb_manage_settings_permission()

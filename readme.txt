@@ -4,7 +4,7 @@ Tags: appointments, booking, calendar, scheduling, appointment booking
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.11
+Stable tag: 1.2.12
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -217,6 +217,19 @@ There are several well-known appointment booking plugins available for WordPress
 13. Slack, Twilio, Telegram Settings
 
 == Changelog ==
+
+= 1.2.12 – Nov 24, 2026 = 
+- Improved: Security and System stability improved.
+- Security: Fixed shortcode injection on the reschedule page.
+- Security: Fixed CSRF in the admin booking update screen.
+- Security: Hardened PayPal payment verification.
+- Security: Removed sensitive meeting data from public booking responses.
+- Security: WooCommerce bookings are confirmed only after payment.
+- Security: Fixed email verification bypass and hardened booking links.
+- Fix: Group meetings with WooCommerce now handle carts, refunds and seats correctly.
+- Fix: Duplicate cancellation emails on WooCommerce order cancel.
+- Improved: Zoom and calendar events are created only for confirmed bookings.
+- Improved: Zoom group meetings support personal join links on paid Zoom plans.
 
 = 1.2.11 – Nov 15, 2026 = 
 - Improved: System stability has been improved.

@@ -56,13 +56,15 @@ const routes = [
                 component: () => import('../view/booking/booking-create.vue')
             },
             {
-                path: 'update/:id',
+                // Ids are digits only, so a crafted hash link cannot carry a
+                // payload that later ends up in a REST request URL.
+                path: 'update/:id(\\d+)',
                 name: 'bookingUpdate',
                 meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-update.vue')
             }, 
             {
-                path: 'details/:id',
+                path: 'details/:id(\\d+)',
                 name: 'bookingDetails',
                 meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-details.vue')
@@ -91,7 +93,7 @@ const routes = [
             }, 
             
             {
-                path: 'profile/:id',
+                path: 'profile/:id(\\d+)',
                 name: 'HostsProfile',
                 meta: { Capabilities: 'tfhb_manage_hosts' },
                 props: true,
@@ -138,7 +140,7 @@ const routes = [
         redirect: { name: 'MeetingsLists' },
         children: [ 
             {
-                path: 'create-meeting-single/:id',
+                path: 'create-meeting-single/:id(\\d+)',
                 props: true,
                 name: 'MeetingsCreateSingle',
                 meta: { Capabilities: 'tfhb_manage_meetings' },
@@ -158,7 +160,7 @@ const routes = [
             }, 
             
             {
-                path: 'single/:id',
+                path: 'single/:id(\\d+)',
                 name: 'MeetingsCreate',
                 meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-create.vue'),
@@ -386,7 +388,7 @@ const routes = [
     {
         path: '/frontend-dashboard/profile',
         name: 'FrontendDashboardProfile',
-        meta: { Capabilities: 'tfhb_manage_options' },
+        meta: { Capabilities: 'tfhb_manage_hosts' },
         props: true,
         component: () => import('../view/FrontendDashboard/userProfile.vue'),
         redirect: { name: 'FrontendDashboardInformation' },
@@ -474,8 +476,7 @@ router.beforeEach(async (to, from, next) => {
             if(  user_role == 'tfhb_host' && to.name == 'HostsLists' ){
                 // next({ name: 'HostsProfile', params: { id: user_id } }); 
                 next({ name: 'HostsProfile', params: { id: host_id } });
-        
-                
+                return;
             }
             // User has the required capabilities, continue to the next route
             next();
@@ -483,19 +484,18 @@ router.beforeEach(async (to, from, next) => {
             // User lacks the required capability for this route
             // Redirect to the dashboard and let them know why
             alert((tfhb_core_apps.trans['Sorry, you are not allowed to access this page.'] || 'Sorry, you are not allowed to access this page.'));
-            next({ name: 'dashboard' });
+            if (to.name !== 'dashboard') {
+                next({ name: 'dashboard' });
+            }
         }
-
-        
-       
- 
-
     } catch (error) {
         // Handle error if fetching authentication data fails
         console.error('Error fetching authentication data:', error);
         // Redirect to the home page or display an alert
         alert((tfhb_core_apps.trans['An error occurred while fetching authentication data.'] || 'An error occurred while fetching authentication data.'));
-        next({ name: 'dashboard' });
+        if (to.name !== 'dashboard') {
+            next({ name: 'dashboard' });
+        }
     }
 });
 

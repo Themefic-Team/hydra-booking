@@ -345,7 +345,7 @@ class GoogleCalendar
 		$body     = wp_remote_retrieve_body($response);
 		$body     = json_decode($body, true);
 
-		if ($body['access_token']) {
+		if (is_array($body) && ! empty($body['access_token'])) {
 
 			$this->accessToken = $body['access_token'];
 		} else {
@@ -578,10 +578,10 @@ class GoogleCalendar
 
 			$host = new Host();
 			$hostData = $host->get($booking->host_id);
-			$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
+			$_tfhb_host_integration_settings = is_array(get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true)) ? get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true) : array();
 
 			$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
-			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : $google_calendar['tfhb_google_calendar']['email'];
+			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : (isset($google_calendar['tfhb_google_calendar']['email']) ? $google_calendar['tfhb_google_calendar']['email'] : '');
 
 
 			if ($calendarId) {
@@ -739,7 +739,7 @@ class GoogleCalendar
 			return;
 		}
 
-		$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
+		$_tfhb_host_integration_settings = is_array(get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true)) ? get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true) : array();
 		$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
 		$calendarId                      = isset($google_calendar['selected_calendar_id']) && ! empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : (isset($google_calendar['tfhb_google_calendar']['email']) ? $google_calendar['tfhb_google_calendar']['email'] : '');
 
@@ -773,6 +773,11 @@ class GoogleCalendar
 
 	public function remove_attendde_event_from_existing_booking($old_booking_id, $attendee)
 	{
+		// A booking that was still pending (or canceled) has no Google event yet;
+		// moving it must not create one. It is created when the booking is confirmed.
+		if (function_exists('tfhb_reschedule_had_live_meeting') && ! tfhb_reschedule_had_live_meeting($attendee)) {
+			return;
+		}
 
 
 		if ($old_booking_id != 0) {
@@ -850,9 +855,9 @@ class GoogleCalendar
 
 					$event->attendees = $attendees_data;
 
-					$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
+					$_tfhb_host_integration_settings = is_array(get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true)) ? get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true) : array();
 					$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
-					$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : $google_calendar['tfhb_google_calendar']['email'];
+					$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : (isset($google_calendar['tfhb_google_calendar']['email']) ? $google_calendar['tfhb_google_calendar']['email'] : '');
 
 
 					if ($calendarId) {
@@ -945,9 +950,9 @@ class GoogleCalendar
 				}
 			}
 
-			$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
+			$_tfhb_host_integration_settings = is_array(get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true)) ? get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true) : array();
 			$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
-			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : $google_calendar['tfhb_google_calendar']['email'];
+			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : (isset($google_calendar['tfhb_google_calendar']['email']) ? $google_calendar['tfhb_google_calendar']['email'] : '');
 
 
 			if ($calendarId) {
@@ -1056,8 +1061,12 @@ class GoogleCalendar
 			}
 		}
 
+		// $data is an attendee row: its `id` is the attendee id, the event is stored
+		// under the booking id.
+		$booking_row_id = ! empty($data->booking_id) ? $data->booking_id : $data->id;
+
 		$bookingMeta = new BookingMeta();
-		$booking_calendarData = $bookingMeta->getWithIdKey($data->id, 'booking_calendar', 1);
+		$booking_calendarData = $bookingMeta->getWithIdKey($booking_row_id, 'booking_calendar', 1);
 
 
 		// if booking calendar data is not found then return false
@@ -1076,9 +1085,9 @@ class GoogleCalendar
 		foreach ($events as $event) {
 			$event_id = $event->id;
 
-			$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
+			$_tfhb_host_integration_settings = is_array(get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true)) ? get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true) : array();
 			$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
-			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : $google_calendar['tfhb_google_calendar']['email'];
+			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : (isset($google_calendar['tfhb_google_calendar']['email']) ? $google_calendar['tfhb_google_calendar']['email'] : '');
 
 
 			if ($calendarId) {
@@ -1105,12 +1114,12 @@ class GoogleCalendar
 		if ($delete) {
 			// update meeting location
 			$updateBooking = new Booking();
-			$updateBookingData = $updateBooking->get($data->id);
-			$meeting_loaction  = json_decode($updateBookingData->meeting_locations);
-			$meeting_loaction->meet->address = 'Cancelled';
-
-
-			$updateBooking->update(array('id' => $data->id, 'meeting_locations' => $meeting_loaction));
+			$updateBookingData = $updateBooking->get($booking_row_id);
+			$meeting_loaction  = $updateBookingData ? json_decode($updateBookingData->meeting_locations) : null;
+			if (is_object($meeting_loaction) && isset($meeting_loaction->meet)) {
+				$meeting_loaction->meet->address = 'Cancelled';
+				$updateBooking->update(array('id' => $booking_row_id, 'meeting_locations' => $meeting_loaction));
+			}
 
 
 			return true;
@@ -1157,9 +1166,9 @@ class GoogleCalendar
 
 			$event->attendees = $attendees;
 
-			$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
+			$_tfhb_host_integration_settings = is_array(get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true)) ? get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true) : array();
 			$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
-			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : $google_calendar['tfhb_google_calendar']['email'];
+			$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : (isset($google_calendar['tfhb_google_calendar']['email']) ? $google_calendar['tfhb_google_calendar']['email'] : '');
 
 
 			if ($calendarId) {
@@ -1314,9 +1323,9 @@ class GoogleCalendar
 		$host     = new Host();
 		$hostData = $host->get($data->host_id);
 
-		$_tfhb_host_integration_settings = is_array(get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true)) ? get_user_meta($hostData->user_id, '_tfhb_host_integration_settings', true) : array();
+		$_tfhb_host_integration_settings = is_array(get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true)) ? get_user_meta(! empty($hostData->user_id) ? $hostData->user_id : 0, '_tfhb_host_integration_settings', true) : array();
 		$google_calendar                 = isset($_tfhb_host_integration_settings['google_calendar']) ? $_tfhb_host_integration_settings['google_calendar'] : array();
-		$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : $google_calendar['tfhb_google_calendar']['email'];
+		$calendarId                      = isset($google_calendar['selected_calendar_id']) && !empty($google_calendar['selected_calendar_id']) ? $google_calendar['selected_calendar_id'] : (isset($google_calendar['tfhb_google_calendar']['email']) ? $google_calendar['tfhb_google_calendar']['email'] : '');
 
 
 		$google_calendar_body = array();

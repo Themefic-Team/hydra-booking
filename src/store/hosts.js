@@ -1,4 +1,5 @@
 import { reactive } from 'vue';
+import { tfhbRestUrl } from '@/utils/rest-url';
 
 const Host = reactive({
     hosts: [],
@@ -31,7 +32,7 @@ const Host = reactive({
     },
 
     async fetchHost(HostId){
-        const apiUrl = tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/' + HostId;
+        const apiUrl = tfhbRestUrl('hydra-booking/v1/hosts/', HostId);
         try {
             const response = await fetch(apiUrl, {
                 method: 'GET',

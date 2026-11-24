@@ -39,6 +39,19 @@ class MailHooks {
 		add_action( 'hydra_booking/send_booking_with_all_attendees_schedule', array( $this, 'send_booking_with_all_attendees_schedule' ), 10, 1 );
 	}
 
+	/**
+	 * Prepare UTF-8 HTML for DOMDocument::loadHTML(): every non-ASCII character
+	 * becomes a numeric entity so DOMDocument (which assumes ISO-8859-1) keeps it.
+	 * Same result as the old mb_convert_encoding( ..., 'HTML-ENTITIES', 'UTF-8' ),
+	 * which is deprecated since PHP 8.2.
+	 *
+	 * @param string $html
+	 * @return string
+	 */
+	private function html_for_dom( $html ) {
+		return mb_encode_numericentity( (string) $html, array( 0x80, 0x10FFFF, 0, 0x1FFFFF ), 'UTF-8' );
+	}
+
 	private function get_activity_datetime() {
 		$helper = new Helper();
 		return wp_date( $helper->get_date_time_format_from_settings( 'M d, Y', 'h:i A' ) );
@@ -754,11 +767,11 @@ class MailHooks {
 		
 		if($attendeeBooking->attendee_can_cancel == 1){ 
 		
-			$cancel_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id  . '&type=cancel' );
+			$cancel_link = tfhb_booking_action_url( $attendeeBooking->hash, 'cancel' );
 			$replacements['{{booking.cancel_link}}'] = $cancel_link;
 		}
 		if( $attendeeBooking->attendee_can_reschedule == 1){ 
-			$rescheduled_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id . '&type=reschedule' );
+			$rescheduled_link = tfhb_booking_action_url( $attendeeBooking->hash, 'reschedule' );
 			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
 		}
 		
@@ -785,31 +798,97 @@ class MailHooks {
 			$replacements[ $tag ] = $this->localize_mail_tag_value( $tag, $value, $attendeeBooking, $locale );
 		}
  
+		// Meeting links (Zoom / Google Meet join link, add-to-calendar) only exist once a
+		// booking is confirmed; pending and canceled emails must not carry them.
+		$links_allowed = tfhb_booking_links_allowed( $attendeeBooking );
+		$status        = strtolower( (string) $attendeeBooking->status );
+		$online_keys   = apply_filters( 'hydra_booking/online_location_keys', array( 'zoom', 'meet' ) );
+
 		if( !empty($attendeeBooking->meeting_locations) && $attendeeBooking->meeting_locations != NULL  ){
-			$booking_locations = json_decode($attendeeBooking->meeting_locations); 
-			
+			$booking_locations = json_decode($attendeeBooking->meeting_locations);
+
 			$booking_locations_html = '';
-			foreach ($booking_locations as $key => $value) { 
-				if($key == 'zoom'){
-					$link = $value->address->link;
-					$password = $value->address->password;  
-					$booking_locations_html .= '<b>'.$value->location.' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a> <br> <b>Password :</b> '.esc_html($password).'<br>';
+			foreach ( (array) $booking_locations as $key => $value) {
+				$location_name = is_object( $value ) && isset( $value->location ) ? $value->location : $key;
+				$address       = is_object( $value ) && isset( $value->address ) ? $value->address : '';
+
+				if ( in_array( $key, $online_keys, true ) ) {
+					$link     = is_object( $address ) && ! empty( $address->link ) ? $address->link : ( is_string( $address ) && 0 === strpos( $address, 'http' ) ? $address : '' );
+					$password = is_object( $address ) && isset( $address->password ) ? $address->password : '';
+
+					// Group meeting with Zoom registration: the attendee gets their own join link
+					// (the host keeps the shared one). Canceling it blocks only this attendee.
+					$personal_links = ( 'zoom' === $key && $links_allowed && 'host' !== $recipient ) ? tfhb_zoom_personal_join_urls( $attendeeBooking ) : array();
+
+					if ( ! empty( $personal_links ) ) {
+						foreach ( $personal_links as $personal_link ) {
+							$booking_locations_html .= '<b>'.esc_html( $location_name ).' :</b> <a href="'.esc_url( $personal_link ).'" target="_blank">Join Meeting</a> <br>';
+						}
+						$booking_locations_html .= '<small>'.esc_html__( 'This link is personal to you. Please do not share it.', 'hydra-booking' ).'</small><br>';
+					} elseif ( $links_allowed && '' !== $link ) {
+						$booking_locations_html .= '<b>'.esc_html( $location_name ).' :</b> <a href="'.esc_url($link).'" target="_blank">Join Meeting</a>';
+						if ( '' !== (string) $password ) {
+							$booking_locations_html .= ' <br> <b>Password :</b> '.esc_html($password);
+						}
+						$booking_locations_html .= '<br>';
+					} elseif ( 'pending' === $status ) {
+						$booking_locations_html .= '<b>'.esc_html( $location_name ).' :</b> '.esc_html__( 'The meeting link will be sent after your booking is confirmed.', 'hydra-booking' ).'<br>';
+					} else {
+						$booking_locations_html .= '<b>'.esc_html( $location_name ).'</b><br>';
+					}
 				}else{
-					$booking_locations_html .= '<b>'.$value->location.' :</b> '.$value->address.'<br>'; 
+					$booking_locations_html .= '<b>'.esc_html( $location_name ).' :</b> '.( is_scalar( $address ) ? esc_html( (string) $address ) : '' ).'<br>';
 				}
 			}
 
 			$replacements['{{booking.location_details_html}}'] = $booking_locations_html;
-		}  
+		}
+
+		// No add-to-calendar links for a booking that is not confirmed.
+		if ( ! $links_allowed ) {
+			$calendar_marker = '#tfhb-calendar-hidden';
+			foreach ( array( 'google', 'outlook', 'yahoo', 'other' ) as $calendar_type ) {
+				$replacements[ '{{booking.add_to_calendar.' . $calendar_type . '}}' ] = $calendar_marker;
+			}
+		}
 		$tags   = array_keys( $replacements );
 		$values = array_values( $replacements ); 
 		$template = str_replace( $tags, $values, $template );
 		$template = $this->translate_default_template_copy( $template, $attendeeBooking, $locale );
 
+		// Drop the "Add To Calendar" block (its table, title and icons) for unconfirmed bookings.
+		if ( ! $links_allowed && false !== strpos( $template, '#tfhb-calendar-hidden' ) ) {
+			libxml_use_internal_errors( true );
+			$dom = new \DOMDocument();
+			$dom->loadHTML( $this->html_for_dom( $template ) );
+			$xpath = new \DOMXPath( $dom );
+
+			$remove = array();
+			foreach ( $xpath->query( "//a[@href='#tfhb-calendar-hidden']" ) as $anchor ) {
+				$block = $xpath->query( 'ancestor::table[1]', $anchor )->item( 0 );
+				// Only remove the surrounding table when it is just the calendar block
+				// (default template: "Add To Calendar" + icons). In a custom layout where the
+				// icons sit inside a bigger table, remove the icons only.
+				$is_small_block = $block && strlen( trim( preg_replace( '/\s+/', ' ', $block->textContent ) ) ) <= 60;
+				$remove[] = $is_small_block ? $block : $anchor;
+			}
+			foreach ( $remove as $node ) {
+				if ( $node->parentNode ) {
+					$node->parentNode->removeChild( $node );
+				}
+			}
+
+			$body = $dom->getElementsByTagName( 'body' )->item( 0 );
+			if ( $body ) {
+				$template = preg_replace( '/^<body>|<\/body>$/', '', $dom->saveHTML( $body ) );
+			}
+			libxml_clear_errors();
+		}
+
 		if ($attendeeBooking->attendee_can_cancel != 1 && $attendeeBooking->attendee_can_reschedule != 1) {
 			libxml_use_internal_errors(true); // Suppress warnings for invalid HTML
 			$dom = new \DOMDocument();
-			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+			$dom->loadHTML($this->html_for_dom( $template ));
 
 			$xpath = new \DOMXPath($dom);
 			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-cancel-reschedule-btn ')]") as $node) {
@@ -822,7 +901,7 @@ class MailHooks {
 			// Remove only cancel button
 			libxml_use_internal_errors(true);
 			$dom = new \DOMDocument();
-			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+			$dom->loadHTML($this->html_for_dom( $template ));
 
 			$xpath = new \DOMXPath($dom);
 			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-reschedule-btn ')]") as $node) {
@@ -835,7 +914,7 @@ class MailHooks {
 			// Remove only cancel button
 			libxml_use_internal_errors(true);
 			$dom = new \DOMDocument();
-			$dom->loadHTML(mb_convert_encoding($template, 'HTML-ENTITIES', 'UTF-8'));
+			$dom->loadHTML($this->html_for_dom( $template ));
 
 			$xpath = new \DOMXPath($dom);
 			foreach ($xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' tfhb-cancel-btn ')]") as $node) {

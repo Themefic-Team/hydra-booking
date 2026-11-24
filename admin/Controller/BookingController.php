@@ -60,7 +60,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getBookingsData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -69,7 +69,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getAvailabilityDates' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -78,7 +78,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getAvailabilityTimeSlot' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -87,7 +87,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'ReBookCencelMeeting' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -96,7 +96,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'CreateBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -105,7 +105,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'DeleteBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		// Get Single Booking based on id
@@ -115,7 +115,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getBookingData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		// Get Single Booking based on id
@@ -125,7 +125,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getBookingDetails' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		// Change Attendee email Attendee.
@@ -135,7 +135,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'changeBookingDetailsStatus' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		// Cancel Booking Attendee.
@@ -145,7 +145,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'cancelBookingAttendee' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 
@@ -155,7 +155,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateBooking' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -164,7 +164,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateBulkStatus' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 
@@ -175,7 +175,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'sendReminderEmail' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		// booking reminder email Attendee.
@@ -185,7 +185,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'sendReminderAttendeeEmail' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		// Change Attendee email Attendee.
@@ -195,7 +195,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'changeAttendeeStatus' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 
@@ -206,7 +206,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'updateInternalNotes' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		
@@ -218,7 +218,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'getPreBookingsData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -227,7 +227,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getpreMeetingData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 		register_rest_route(
@@ -236,7 +236,7 @@ class BookingController {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'getAvailableTimeData' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 			)
 		);
 
@@ -258,7 +258,7 @@ class BookingController {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'filterBookings' ),
-				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_options_permission'),
+				'permission_callback' =>  array(new RouteController() , 'tfhb_manage_booking_permission'),
 				'args'     => array(
 					'title' => array(
 						'sanitize_callback' => 'sanitize_text_field',

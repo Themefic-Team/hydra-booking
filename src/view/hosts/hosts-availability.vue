@@ -2,6 +2,7 @@
 import { __ } from '@wordpress/i18n';
 import { ref, reactive, onBeforeMount } from 'vue';
 import axios from 'axios'  
+import { tfhbRestUrl } from '@/utils/rest-url';
 import Icon from '@/components/icon/LucideIcon.vue' 
 import HbButton from '@/components/form-fields/HbButton.vue'
 import AvailabilityPopupSingle from '@/components/availability/AvailabilityPopupSingle.vue';
@@ -155,7 +156,7 @@ const closeModal = () => {
 const Settings_avalibility = ref();
 const fetchAvailabilitySingle = async (setting) => {
     try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/'+setting, {
+        const response = await axios.get(tfhbRestUrl('hydra-booking/v1/settings/availability/', setting), {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 
@@ -258,7 +259,7 @@ const deleteAvailabilitySettings = async (key, id, user_id ) => {
 // Default Availability
 const fetchDefaultAvailabilitySingle = async (setting) => {
     try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/settings/availability/'+setting, {
+        const response = await axios.get(tfhbRestUrl('hydra-booking/v1/settings/availability/', setting), {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 

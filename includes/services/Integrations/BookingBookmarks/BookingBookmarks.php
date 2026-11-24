@@ -22,30 +22,12 @@ class BookingBookmarks
     public function GetBookingConfirmationUrl($data)
     {
 
-        $confirmation = add_query_arg(
-            array(
-                'hydra-booking' => 'booking',
-                'hash'          => $data->hash,
-                'meetingId'    => $data->meeting_id,
-                'type'          => 'confirmation',
-            ),
-            home_url()
-        );
-        return $confirmation;
+        return tfhb_booking_action_url( $data->hash, 'confirmation' );
     }
 
     public function GetBookingIcsUrl($data)
     {
-        $confirmation = add_query_arg(
-            array(
-                'hydra-booking' => 'booking',
-                'hash'          => $data->hash,
-                'meetingId'    => $data->meeting_id,
-                'type'          => 'download_ics',
-            ),
-            home_url()
-        );
-        return $confirmation;
+        return tfhb_booking_action_url( $data->hash, 'download_ics' );
     }
     public function getMeetingBookmarks($data)
     {

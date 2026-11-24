@@ -1,3 +1,15 @@
+# Internal docs (security notes, test plans) - not shipped
+docs/
+
+# Security fix unit tests - kept local, not committed
+tests/Unit/MeetingDataSanitizationTest.php
+tests/Unit/PayPalVerificationTest.php
+tests/Unit/WooBookingPaymentGateTest.php
+tests/Unit/SecureLinksTest.php
+tests/Unit/BookingLifecycleTest.php
+tests/Unit/GroupMeetingWooTest.php
+tests/Unit/ZoomGroupRegistrationTest.php
+
 # Logs
 logs
 *.log

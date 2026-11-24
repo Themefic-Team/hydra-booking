@@ -86,9 +86,6 @@ class SetupWizard {
 
 		// Update General Settings available
 		$availability_settings =  !empty( get_option( '_tfhb_availability_settings' ) ) && get_option( '_tfhb_availability_settings' ) != 'false' ? get_option( '_tfhb_availability_settings' ) : array();
-		// get last array data
-		$last_data                    = ! empty( $availability_settings ) ? end( $availability_settings ) : array();
-		$new_id                       =  isset($last_data['id']) ? $last_data['id'] + 1 : 1;
 		$availabilityDataSingle       = $request['availabilityDataSingle'];
 
 
@@ -131,15 +128,23 @@ class SetupWizard {
 			$availabilityDataSingle['date_slots'] = array_values($availabilityDataSingle['date_slots']);
 		}
 		
-		$availabilityDataSingle['id'] = $new_id;
-		$availability_settings[]      = $availabilityDataSingle;
+		// Let the DB assign the id (AUTO_INCREMENT). An id derived from the
+		// option can already exist in the table and cause a duplicate-key error.
+		unset( $availabilityDataSingle['id'] );
 
 		// Insert into database
-
 		$insert_availability = $Availability->add( $availabilityDataSingle );
-		if ( $insert_availability['status'] === true ) {
-			$availabilityDataSingle['id'] = $insert_availability['insert_id'];
+		if ( empty( $insert_availability['status'] ) ) {
+			return rest_ensure_response(
+				array(
+					'status'  => false,
+					'message' => __( 'Error while creating availability', 'hydra-booking' ),
+				)
+			);
 		}
+
+		$availabilityDataSingle['id'] = $insert_availability['insert_id'];
+		$availability_settings[]      = $availabilityDataSingle;
 		update_option( '_tfhb_availability_settings', $availability_settings, true );
 		
 		// GET Current User

@@ -12,7 +12,8 @@ class BookingLocation {
 	public function __construct() {
 		add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'addLocation_after_booking_confirmed' ),  11, 1); 
 		// add_action( 'hydra_booking/after_booking_confirmed', array( $this, 'addLocation_after_booking_confirmed' ), 10, 1 );
-		// add_action( 'hydra_booking/after_booking_canceled', array( $this, 'pushBookingToCanceled' ), 10, 1 );
+		// Cancel the Zoom meeting when a confirmed booking is canceled (before the cancel email at priority 20).
+		add_action( 'hydra_booking/after_booking_canceled', array( $this, 'removeLocation_after_booking_canceled' ), 10, 1 );
 		add_action( 'hydra_booking/after_booking_schedule', array( $this, 'pushBookingToscheduled' ), 10, 2 );
 		// add_action( 'hydra_booking/send_booking_reminder', array( $this, 'send_booking_reminder' ), 10, 1 );
 	
@@ -75,8 +76,56 @@ class BookingLocation {
 	 * @return void
 	 */
 
-	 public function pushBookingToscheduled( $old_booking_id, $attendee ) { 
-		
+	/**
+	 * Delete the booking's Zoom meeting when it is canceled, so the old join
+	 * link stops working. In a one-to-group meeting the shared Zoom meeting is
+	 * kept while another confirmed attendee is still on the booking.
+	 *
+	 * @param object $attendee Attendee row with booking data.
+	 * @return void
+	 */
+	public function removeLocation_after_booking_canceled( $attendee ) {
+		if ( ! is_object( $attendee ) || empty( $attendee->booking_id ) ) {
+			return;
+		}
+
+		$locations = ! empty( $attendee->meeting_locations ) ? $attendee->meeting_locations : array();
+		$locations = ! is_array( $locations ) && ! is_object( $locations ) ? json_decode( $locations ) : $locations;
+		$zoom_location = null;
+		if ( is_object( $locations ) && isset( $locations->zoom ) ) {
+			$zoom_location = $locations->zoom;
+		} elseif ( is_array( $locations ) && isset( $locations['zoom'] ) ) {
+			$zoom_location = $locations['zoom'];
+		}
+		$zoom_address = is_object( $zoom_location ) ? ( isset( $zoom_location->address ) ? $zoom_location->address : null ) : ( is_array( $zoom_location ) && isset( $zoom_location['address'] ) ? $zoom_location['address'] : null );
+		$zoom_link    = is_object( $zoom_address ) ? ( isset( $zoom_address->link ) ? $zoom_address->link : '' ) : ( is_array( $zoom_address ) && isset( $zoom_address['link'] ) ? $zoom_address['link'] : '' );
+
+		// No Zoom meeting was created (e.g. the booking was never confirmed): nothing to cancel.
+		if ( empty( $zoom_link ) ) {
+			return;
+		}
+
+		$attendee_id = isset( $attendee->id ) ? $attendee->id : 0;
+		$zoom        = new ZoomServices();
+
+		if ( tfhb_other_confirmed_attendees_count( $attendee->booking_id, $attendee_id ) > 0 ) {
+			// Group meeting still in use: block only this attendee (cancels their
+			// personal registration link when the meeting uses Zoom registration).
+			$zoom->tfhb_cancel_zoom_registrant( $attendee );
+			return;
+		}
+
+		$zoom->tfhb_cancel_zoom_meeting( $attendee );
+	}
+
+	 public function pushBookingToscheduled( $old_booking_id, $attendee ) {
+
+		// A booking that was still pending (or canceled) never had a Zoom meeting:
+		// moving it must not create one. It is created when the booking is confirmed.
+		if ( ! tfhb_reschedule_had_live_meeting( $attendee ) ) {
+			return;
+		}
+
 		if($old_booking_id !=0 ){
 			$booking_id = $old_booking_id; 
 			//  Get Booking With Attendee
