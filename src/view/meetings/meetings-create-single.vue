@@ -16,6 +16,7 @@ import HbPopup from '@/components/widgets/HbPopup.vue';
 import useValidators from '@/store/validator';
 import { toast } from "vue3-toastify"; 
 import axios from 'axios' 
+import { tfhbRestUrl } from '@/utils/rest-url';
 import useDateFormat from '@/store/dateformat'
 const { errors, isEmpty } = useValidators();
 const { Tfhb_Date } = useDateFormat();
@@ -333,7 +334,7 @@ const formatTimeSlots = (timeSlots) =>  {
 const fetchHostAvailability = async (host) => { 
   
     try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/single-host-availability/'+host, {
+        const response = await axios.get(tfhbRestUrl('hydra-booking/v1/meetings/single-host-availability/', host), {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 

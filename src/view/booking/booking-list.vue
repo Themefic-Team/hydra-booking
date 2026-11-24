@@ -466,7 +466,7 @@ const displayTotalAttendeesWithCount = (attendees) => {
 // Filter  
 const goForReschedule = (attendee) => {
   
-    let url = tfhb_core_apps.admin_url+'/?hydra-booking=booking&hash='+attendee.hash+'&meetingId='+attendee.meeting_id+'&type=reschedule';
+    let url = tfhb_core_apps.admin_url+'/?hydra-booking=booking&hash='+encodeURIComponent(attendee.hash)+'&type=reschedule';
     window.open(url, '_blank');
 }
 

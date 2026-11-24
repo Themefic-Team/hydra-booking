@@ -2,6 +2,7 @@
 import { reactive, onBeforeMount, ref, nextTick } from 'vue';
 import { useRouter, useRoute, RouterView } from 'vue-router' 
 import axios from 'axios'  
+import { tfhbRestUrl } from '@/utils/rest-url';
 import { toast } from "vue3-toastify";
 import Icon from '@/components/icon/LucideIcon.vue'
 import useValidators from '@/store/validator'
@@ -134,7 +135,7 @@ const UpdateHostsInformation = async (validator_field) => {
  // Fetch generalSettings
  const fetchHost = async () => { 
     try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/hosts/'+hostId , {
+        const response = await axios.get(tfhbRestUrl('hydra-booking/v1/hosts/', hostId) , {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 

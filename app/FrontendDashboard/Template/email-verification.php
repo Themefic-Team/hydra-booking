@@ -14,13 +14,16 @@ if($page != "email-verification" || !$tfhb_verification) {
     return ;
 }
  
-$data = base64_decode($tfhb_verification);
- 
-$data = json_decode($data, true);
+$data = base64_decode($tfhb_verification, true);
 
-$user_id = $data ? $data['id'] : '';
-$data_code = $data ? $data['code'] : '';
-$saved_code = !empty($user_id) ? get_user_meta($user_id, 'tfhb_user_activation_code', true) : '';
+$data = false !== $data ? json_decode($data, true) : null;
+
+// The link is user-controlled: accept only a numeric user id and a string code.
+// A JSON boolean (e.g. {"code":true}) must never be compared loosely with the saved code.
+$user_id   = is_array($data) && isset($data['id']) && is_numeric($data['id']) ? absint($data['id']) : '';
+$data_code = is_array($data) && isset($data['code']) && is_string($data['code']) ? $data['code'] : '';
+$saved_code = !empty($user_id) ? (string) get_user_meta($user_id, 'tfhb_user_activation_code', true) : '';
+$code_matches = tfhb_verification_code_matches($saved_code, $data_code);
 $tfhb_user_is_activated = !empty($user_id) ? get_user_meta($user_id, 'tfhb_user_is_activated', true) : '';
 
 
@@ -52,7 +55,7 @@ tfhb_get_header();
                     
                     
                 }
-                elseif(!empty($saved_code) && $saved_code == $data_code) { 
+                elseif($code_matches) {
                     $host  = new Host();
                     $getHost = $host->getHostByUserId($user_id);
                     if($getHost) { 
@@ -92,7 +95,7 @@ tfhb_get_header();
                         Mailer::send( $email, $subject, $body, $headers );
                     }
 
-                } elseif (!empty($saved_code) && $saved_code != $data_code) {
+                } elseif (!empty($saved_code) && ! $code_matches) {
 
                     /* translators: 1: opening tag, 2: closing tag and opening link, 3: closing link */
                     printf( esc_html__( '%1$s Invalid email verification url! %2$sResend email%3$s', 'hydra-booking' ), '<h3>', '<br><a class="tfhb-from-btn" href="" class="resend-email-verification" data-id="' .esc_attr($user_id). '">', '</a></h3>' );

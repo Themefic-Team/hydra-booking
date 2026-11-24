@@ -49,6 +49,9 @@ class App
 
 		add_filter('template_include', array($this, 'tfhb_single_page_template'));
 
+		// Pages whose URL carries a secret token (booking hash, reset or verification code).
+		add_action('template_redirect', array($this, 'tfhb_protect_token_pages'));
+
 
 
 		add_rewrite_rule(
@@ -230,6 +233,32 @@ class App
 		return $query_vars;
 	}
 
+	/**
+	 * Keep secret URL tokens private on the pages that receive them.
+	 *
+	 * - Referrer-Policy: no-referrer stops the browser sending the full URL
+	 *   (with the hash or code) to other sites, CDNs or analytics the page loads.
+	 * - noindex keeps search engines from indexing these one-person pages.
+	 */
+	public function tfhb_protect_token_pages()
+	{
+		$page        = get_query_var('hydra-booking');
+		$token_pages = array('booking', 'forgot-password', 'email-verification');
+
+		if (! in_array($page, $token_pages, true)) {
+			return;
+		}
+
+		if (! headers_sent()) {
+			header('Referrer-Policy: no-referrer');
+			header('X-Robots-Tag: noindex, nofollow', true);
+		}
+
+		if (function_exists('wp_robots_no_robots')) {
+			add_filter('wp_robots', 'wp_robots_no_robots');
+		}
+	}
+
 	public function tfhb_single_page_template($template)
 	{
 
@@ -257,8 +286,33 @@ class App
 
 
 		// Reschedule Page
-		if (get_query_var('hydra-booking') === 'booking' && get_query_var('hash') && get_query_var('type') === 'reschedule') {
-			$custom_template = load_template(TFHB_PATH . '/app/Content/Template/reschedule.php', false);
+		if (get_query_var('hydra-booking') === 'booking' && get_query_var('type') === 'reschedule') {
+			// Booking hashes are generated as alphanumeric tokens; reject anything else.
+			$hash = (string) get_query_var('hash');
+			if (! preg_match('/^[A-Za-z0-9]{16,64}$/', $hash)) {
+				return $template;
+			}
+
+			// Only load the reschedule page for an existing attendee booking.
+			$Attendee        = new Attendees();
+			$attendeeBooking = $Attendee->getAttendeeWithBooking(
+				array(
+					array('hash', '=', $hash),
+				),
+				1,
+				'DESC'
+			);
+			if (! $attendeeBooking) {
+				return $template;
+			}
+
+			$custom_template = load_template(
+				TFHB_PATH . '/app/Content/Template/reschedule.php',
+				false,
+				array(
+					'attendeeBooking' => $attendeeBooking,
+				)
+			);
 			return $custom_template;
 		}
 		// Cenceled And Confirmation Page and download ics

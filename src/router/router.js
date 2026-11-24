@@ -56,13 +56,15 @@ const routes = [
                 component: () => import('../view/booking/booking-create.vue')
             },
             {
-                path: 'update/:id',
+                // Ids are digits only, so a crafted hash link cannot carry a
+                // payload that later ends up in a REST request URL.
+                path: 'update/:id(\\d+)',
                 name: 'bookingUpdate',
                 meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-update.vue')
             }, 
             {
-                path: 'details/:id',
+                path: 'details/:id(\\d+)',
                 name: 'bookingDetails',
                 meta: { Capabilities: 'tfhb_manage_booking' },
                 component: () => import('../view/booking/booking-details.vue')
@@ -91,7 +93,7 @@ const routes = [
             }, 
             
             {
-                path: 'profile/:id',
+                path: 'profile/:id(\\d+)',
                 name: 'HostsProfile',
                 meta: { Capabilities: 'tfhb_manage_hosts' },
                 props: true,
@@ -138,7 +140,7 @@ const routes = [
         redirect: { name: 'MeetingsLists' },
         children: [ 
             {
-                path: 'create-meeting-single/:id',
+                path: 'create-meeting-single/:id(\\d+)',
                 props: true,
                 name: 'MeetingsCreateSingle',
                 meta: { Capabilities: 'tfhb_manage_meetings' },
@@ -158,7 +160,7 @@ const routes = [
             }, 
             
             {
-                path: 'single/:id',
+                path: 'single/:id(\\d+)',
                 name: 'MeetingsCreate',
                 meta: { Capabilities: 'tfhb_manage_meetings' },
                 component: () => import('../view/meetings/meetings-create.vue'),

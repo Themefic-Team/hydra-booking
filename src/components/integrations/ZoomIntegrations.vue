@@ -29,9 +29,19 @@ const props = defineProps([
 ])
 const emit = defineEmits([ "update-integrations", 'popup-open-control', 'popup-close-control' ]); 
 
-const closePopup = () => { 
+const closePopup = () => {
     emit('popup-close-control', false)
 }
+
+// Every Zoom API scope the plugin uses (meetings and meeting registrants).
+const zoomRequiredScopes = [
+    'meeting:write:meeting:admin',
+    'meeting:update:meeting:admin',
+    'meeting:delete:meeting:admin',
+    'meeting:write:registrant:admin',
+    'meeting:read:registrant:admin',
+    'meeting:update:registrant_status:admin',
+];
 
 </script>
 
@@ -77,6 +87,13 @@ const closePopup = () => {
                     <p>
                         {{ $tfhb_trans('Please read the documentation here for step by step guide to know how you can get api credentials from Zoom Account') }} <a href="https://themefic.com/docs/hydrabooking/hydrabooking-settings/integrations/zoom-integration/" target="_blank" class="tfhb-btn tfhb-flexbox tfhb-gap-8">{{ $tfhb_trans('Read Documentation') }}</a>
                     </p>
+                    <details class="tfhb-zoom-required-scopes">
+                        <summary>{{ $tfhb_trans('Required scopes') }}</summary>
+                        <p>{{ $tfhb_trans('Add these scopes to your Zoom Server-to-Server OAuth app (Scopes → Add Scopes → Meeting).') }}</p>
+                        <ul>
+                            <li v-for="scope in zoomRequiredScopes" :key="scope"><code>{{ scope }}</code></li>
+                        </ul>
+                    </details>
                     <HbText  
                         v-model="zoom_meeting.account_id"  
                         required= "true"  
@@ -125,4 +142,21 @@ const closePopup = () => {
 </template>
 
 <style scoped>
+.tfhb-zoom-required-scopes {
+    margin: 4px 0 16px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.tfhb-zoom-required-scopes summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+.tfhb-zoom-required-scopes p {
+    margin: 8px 0 4px;
+}
+.tfhb-zoom-required-scopes ul {
+    margin: 0;
+    padding-left: 18px;
+    list-style: disc;
+}
 </style> 

@@ -196,11 +196,11 @@ class Telegram {
 		
 		if($attendeeBooking->attendee_can_cancel == 1){ 
 		
-			$cancel_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id  . '&type=cancel' );
+			$cancel_link = tfhb_booking_action_url( $attendeeBooking->hash, 'cancel' );
 			$replacements['{{booking.cancel_link}}'] = $cancel_link;
 		}
-		if( $attendeeBooking->attendee_can_cancel == 1){ 
-			$rescheduled_link = home_url( '?hydra-booking=booking&hash=' . $attendeeBooking->hash . '&meetingId=' . $attendeeBooking->meeting_id . '&type=reschedule' );
+		if( $attendeeBooking->attendee_can_reschedule == 1){
+			$rescheduled_link = tfhb_booking_action_url( $attendeeBooking->hash, 'reschedule' );
 			$replacements['{{booking.rescheduled_link}}'] = $rescheduled_link;
 		}
 		// Date/time tags from the stored host-timezone values; this notification goes to the host

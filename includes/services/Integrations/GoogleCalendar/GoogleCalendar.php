@@ -773,6 +773,11 @@ class GoogleCalendar
 
 	public function remove_attendde_event_from_existing_booking($old_booking_id, $attendee)
 	{
+		// A booking that was still pending (or canceled) has no Google event yet;
+		// moving it must not create one. It is created when the booking is confirmed.
+		if (function_exists('tfhb_reschedule_had_live_meeting') && ! tfhb_reschedule_had_live_meeting($attendee)) {
+			return;
+		}
 
 
 		if ($old_booking_id != 0) {
@@ -1056,8 +1061,12 @@ class GoogleCalendar
 			}
 		}
 
+		// $data is an attendee row: its `id` is the attendee id, the event is stored
+		// under the booking id.
+		$booking_row_id = ! empty($data->booking_id) ? $data->booking_id : $data->id;
+
 		$bookingMeta = new BookingMeta();
-		$booking_calendarData = $bookingMeta->getWithIdKey($data->id, 'booking_calendar', 1);
+		$booking_calendarData = $bookingMeta->getWithIdKey($booking_row_id, 'booking_calendar', 1);
 
 
 		// if booking calendar data is not found then return false
@@ -1105,12 +1114,12 @@ class GoogleCalendar
 		if ($delete) {
 			// update meeting location
 			$updateBooking = new Booking();
-			$updateBookingData = $updateBooking->get($data->id);
-			$meeting_loaction  = json_decode($updateBookingData->meeting_locations);
-			$meeting_loaction->meet->address = 'Cancelled';
-
-
-			$updateBooking->update(array('id' => $data->id, 'meeting_locations' => $meeting_loaction));
+			$updateBookingData = $updateBooking->get($booking_row_id);
+			$meeting_loaction  = $updateBookingData ? json_decode($updateBookingData->meeting_locations) : null;
+			if (is_object($meeting_loaction) && isset($meeting_loaction->meet)) {
+				$meeting_loaction->meet->address = 'Cancelled';
+				$updateBooking->update(array('id' => $booking_row_id, 'meeting_locations' => $meeting_loaction));
+			}
 
 
 			return true;

@@ -8,7 +8,8 @@ import HbButton from '@/components/form-fields/HbButton.vue';
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import { toast } from "vue3-toastify"; 
-import { useRouter, useRoute } from 'vue-router' 
+import { useRouter, useRoute } from 'vue-router'
+import { tfhbIsPositiveInt, tfhbRestUrl } from '@/utils/rest-url';
 const router = useRouter();
 const route = useRoute();
 
@@ -185,8 +186,13 @@ const MeetingGetEndTime = (e) => {
 // Get Single Booking
 const bookingId = route.params.id;
 const fetchSingleBooking = async () => {
-    try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/booking/'+bookingId, {
+    // The id comes from the URL hash; only a positive integer may reach the REST URL.
+    if (!tfhbIsPositiveInt(bookingId)) {
+        router.push({ name: 'BookingLists' });
+        return;
+    }
+    try {
+        const response = await axios.get(tfhbRestUrl('hydra-booking/v1/booking/', bookingId), {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Hydra Booking — Appointment Scheduling & Booking Calendar
  * Plugin URI: https://hydrabooking.com/

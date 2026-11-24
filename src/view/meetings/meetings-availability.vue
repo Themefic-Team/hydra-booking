@@ -2,6 +2,7 @@
 import { __ } from '@wordpress/i18n';
 import {ref, onBeforeMount, onMounted, reactive, computed} from 'vue'
 import axios from 'axios'  
+import { tfhbRestUrl } from '@/utils/rest-url';
 import HbDateTime from '@/components/form-fields/HbDateTime.vue';
 import Icon from '@/components/icon/LucideIcon.vue'
 import HbText from '@/components/form-fields/HbText.vue';
@@ -99,7 +100,7 @@ const HostAvailabilities = reactive([]);
 const host_availble_type = ref('settings');
 const fetchHostAvailability = async (host) => {
     try { 
-        const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/single-host-availability/'+host, {
+        const response = await axios.get(tfhbRestUrl('hydra-booking/v1/meetings/single-host-availability/', host), {
             headers: {
                 'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
             } 

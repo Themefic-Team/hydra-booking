@@ -1,6 +1,7 @@
 import { reactive, nextTick } from 'vue'
 import { toast } from "vue3-toastify"; 
 import axios from 'axios'  
+import { tfhbRestUrl } from '@/utils/rest-url';
 const Meeting = reactive({
     meetings: [],
     skeleton: true,
@@ -378,7 +379,7 @@ const Meeting = reactive({
     async fetchSingleMeeting(meetingId){
         this.skeleton = true; 
         try { 
-            const response = await axios.get(tfhb_core_apps.rest_route + 'hydra-booking/v1/meetings/'+meetingId, {
+            const response = await axios.get(tfhbRestUrl('hydra-booking/v1/meetings/', meetingId), {
                 headers: {
                     'X-WP-Nonce': tfhb_core_apps.rest_nonce, 
                 } 
