@@ -88,6 +88,7 @@ class THB_INIT
 		// load Promo Notice
 		new HydraBooking\Admin\Controller\PromoNotice();
 		new HydraBooking\Admin\Controller\DashboardWidget();
+		new HydraBooking\Admin\Controller\BlackFridayPromo2026();
 
 		// Load App Class
 		new HydraBooking\App\App();
